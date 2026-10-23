@@ -237,3 +237,22 @@ signal that would tell us we are wrong. Feedback: the pinned Discussion of the r
 - **Cost**: the address and the password keep their own forms (two sections on the Security route: each needs the
   password, a different act from the profile's save).
 - **Signal we are wrong**: people change the language and do not expect the page to move to it; the undo is never used.
+
+## 14. Checking a document: drop first, the kind as a choice, the options once the files are known, the run on the drop
+
+- **Decision** (2026-10-23, the UX review's Y4, #281; the CTO's answer to question 2): on « Vérifier un document » the
+  drop zone comes first and large, « Quel document ? » under it as a choice grid (Automatique first; the URL is the
+  state), and the options (keep the document, « these photos are one document ») fold under the zone once files are
+  known — the grouping only with two photos or more. A file that landed opens on its report: the check starts at once
+  when the kind is sure (the person named it, or Yomizaka recognised it with high confidence), otherwise the report tab
+  asks to confirm. The rules follow the kind — Québec's named rulesets for an invoice or a contract, said in one line; a
+  lease keeps its jurisdiction. While it runs, a step progress (Lecture › Contrôle › Règles › Rapport) tops the tab.
+- **Problem**: the kind picker was a tab bar glued to the top with no question; two checkboxes made no sense before a
+  file was chosen; the thing to do came fourth; after the upload the person landed on « Informations » and had to decide
+  again on another tab; an invoice still showed the lease's jurisdiction.
+- **Principle**: the thing to do first; ask once the question makes sense; one decision, not two.
+- **Refused**: starting a run on an uncertain kind (a wrong file still costs a run); a jurisdiction menu for a kind whose
+  rules are Québec's by name.
+- **Cost**: a drop of several photos is grouped by the default (one document) before the option is visible; the option
+  rules the next drop.
+- **Signal we are wrong**: people cancel runs started on the drop; « Autre » is chosen to avoid the automatic start.

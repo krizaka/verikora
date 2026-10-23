@@ -87,6 +87,13 @@ describe("the library home (yomizaka#275, the UX review's Y3)", () => {
     expect(html.match(/<h1\b/g)).toHaveLength(1);
   });
 
+  it("keeps a collection the person made reachable even with no document yet (no empty state over it)", () => {
+    const html = render({ recents: [], latest: [], libraries: [{ id: "l1", name: "L", collections: [collection({ files: 0, lastCheck: null }), collection({ id: "c2", name: "Immeuble Rosemont", isDefault: false, files: 0, lastCheck: null })] }] });
+    expect(html).not.toContain('data-testid="library-empty"');
+    expect(html).toContain('href="/fr/app/bibliotheque/l1/c2"');
+    expect(readable(html)).toContain("Immeuble Rosemont");
+  });
+
   it("shows the recent documents as the table once files exist", () => {
     const html = render({ recents: [doc(1, "checked"), doc(2, "stored")] });
     expect(html).toContain("<table");

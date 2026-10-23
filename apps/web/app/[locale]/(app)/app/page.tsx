@@ -8,7 +8,7 @@ import { listChecks } from "@/lib/checks";
 import { query } from "@/lib/db";
 import { documentsByIds } from "@/lib/documents";
 import { appEnvironment } from "@/lib/env";
-import { availableFlows, flowsFor } from "@/lib/flows";
+import { availableFlows, flowsFor, offerFor } from "@/lib/flows";
 import { asLocale, getDictionary } from "@/lib/i18n";
 import { onboardingTarget } from "@/lib/library-screen";
 import * as org from "@/lib/organisation/store";
@@ -33,5 +33,5 @@ export default async function LibraryPage({ params }: { params: Promise<{ locale
   await purgeExpired(query, new Date());
   await org.ensureLibrary(query, owner, getDictionary(locale).console.organisation.library);
   const [libraries, recents, tags, latest] = await Promise.all([org.overview(query, owner), org.recentIds(query, owner, 20).then((ids) => documentsByIds(owner, ids)), org.listTags(query, owner), listChecks(query, owner, 5)]);
-  return <LibraryView libraries={libraries} recents={recents} latest={latest} tags={tags} perspective={perspective} screening={screeningOffered} examples={SAMPLES} />;
+  return <LibraryView libraries={libraries} recents={recents} latest={latest} tags={tags} perspective={perspective} screening={screeningOffered} examples={SAMPLES} jurisdictions={offerFor(flows, perspective).jurisdictions} />;
 }

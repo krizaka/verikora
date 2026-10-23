@@ -10,10 +10,11 @@ import { DocumentViewer, type Located } from "@krizaka/ui/document-viewer";
 import { createKrizakaForm } from "@krizaka/ui/form";
 import { PageHeader } from "@krizaka/ui/page-header";
 import { Spinner } from "@krizaka/ui/spinner";
+import { StepProgress } from "@krizaka/ui/step-progress";
 import { Tabs } from "@krizaka/ui/tabs";
-import { type Analysis, analysis as analysisSchema, type Audience, AUTHENTICITY_MAX_BYTES, type AuthenticityReport, checkSteps,type ComplianceReport, type DocumentView as DocumentViewData, documentView, DOCX_MIME, isSeededCheck, type Jurisdiction, JURISDICTIONS, ODT_MIME, passages, queryKeys, type Studio, type TextSource } from "@yomizaka/core";
+import { type Analysis, analysis as analysisSchema, type Audience, AUTHENTICITY_MAX_BYTES, type AuthenticityReport, checkSteps,type ComplianceReport, type DocumentView as DocumentViewData, documentView, DOCX_MIME, isSeededCheck, type Jurisdiction, JURISDICTIONS, ODT_MIME, passages, queryKeys, STEP_STATE, type Studio, type TextSource } from "@yomizaka/core";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { type ComponentProps, useEffect, useMemo, useRef, useState } from "react";
 import { z } from "zod";
 
@@ -296,8 +297,10 @@ function StartCompliance({ documentId, disabled, jurisdictions, types, initialTy
   const { say, locale } = useSay();
   const client = useQueryClient();
   const [reused, setReused] = useState(false);
-  const [problem, setProblem] = useState<string | null>(null);
-  const [paywall, setPaywall] = useState<"PAYWALL" | "FAIR_USE" | null>(null);
+  // A check the task page tried to start on the drop and the engine refused arrives as `?refused=<code>`: said here, above the form.
+  const refused = useSearchParams()?.get("refused") ?? null;
+  const [problem, setProblem] = useState<string | null>(refused && refused !== "PAYWALL" && refused !== "FAIR_USE" ? say(`errors.${refused}`) : null);
+  const [paywall, setPaywall] = useState<"PAYWALL" | "FAIR_USE" | null>(refused === "PAYWALL" || refused === "FAIR_USE" ? refused : null);
   const start = useMutation({
     // The Québec invoice is a named ruleset of the Studio (and Québec's alone); a lease keeps the jurisdiction's own.
     mutationFn: (body: { documentType: "lease" | "invoice" | "contract"; jurisdiction: string; asOf: string }) =>
@@ -330,7 +333,18 @@ function StartCompliance({ documentId, disabled, jurisdictions, types, initialTy
       {types.length ? (
         <form.Select name="documentType" label={say("analysis.documentType")} options={(["lease", ...types] as const).map((k) => ({ value: k, label: say(`analysis.documentTypes.${k}`) }))} />
       ) : null}
-      <form.Select name="jurisdiction" label={say("analysis.jurisdiction")} options={jurisdictions.map((j) => ({ value: j, label: say(`analysis.jurisdictions.${j}`) }))} />
+      {/* The rules derive from the kind chosen now (the review's C5): Québec's named rulesets for an invoice or a contract, said in one line; a lease keeps its jurisdiction menu. */}
+      <form.Field name="documentType">
+        {(field) =>
+          field.value !== "lease" ? (
+            <p className="m-0 text-sm text-fg-secondary" data-testid="rules-line">
+              {say("analysis.rulesLine", { kind: say(`analysis.kindWords.${String(field.value)}`) })}
+            </p>
+          ) : (
+            <form.Select name="jurisdiction" label={say("analysis.jurisdiction")} options={jurisdictions.map((j) => ({ value: j, label: say(`analysis.jurisdictions.${j}`) }))} />
+          )
+        }
+      </form.Field>
       <form.DateField name="asOf" label={say("analysis.asOf")} />
       {paywall ? <Paywall reason={paywall} /> : null}
       {reused ? <Alert tone="info">{say("analysis.reused")}</Alert> : null}
@@ -428,6 +442,10 @@ export function DocumentView({ initial, tab, perspective = null, offer }: { init
     () => (latestReport?.findings ?? []).filter((f) => f.evidenceSpan?.quote).map((f) => ({ id: f.ruleId, quote: f.evidenceSpan!.quote, label: f.title ?? f.ruleId })),
     [latestReport],
   );
+  // While a check runs, where it stands (Lecture › Contrôle › Règles › Rapport), at the top of the tab (the review's C4).
+  const runningStudio = (["compliance-check", "document-authenticity"] as const).find((s) => running(s)) ?? null;
+  const runningSteps = runningStudio ? checkSteps({ hasText: doc.hasText, analysis: { studio: runningStudio, status: "running" } }) : [];
+  const runningStep = Math.max(1, runningSteps.findIndex((s) => s.state === STEP_STATE.current) + 1);
   const selection: Selection = {
     activeId,
     found,
@@ -510,6 +528,7 @@ export function DocumentView({ initial, tab, perspective = null, offer }: { init
               </h2>
               <p className="text-sm text-fg-secondary">{say(`document.checksLeadBy.${wordingOf(perspective)}`)}</p>
             </div>
+            {runningStudio ? <StepProgress step={runningStep} total={runningSteps.length} label={(step, total) => say("steps.progress", { step, total })} data-testid="run-progress" /> : null}
             <div className="grid gap-4 md:grid-cols-2">
               {(firstCheck(perspective, doc.kind) === "compliance-check" ? [complianceCard, authenticityCard] : [authenticityCard, complianceCard]).filter((c) => offer.studios.includes(c.key as Studio))}
             </div>

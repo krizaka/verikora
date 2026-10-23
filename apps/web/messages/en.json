@@ -186,6 +186,8 @@
       "refusedType": "{name}: only PDF, text files and photos",
       "refusedCount": "{name}: too many files at once",
       "kindPick": "Which document?",
+      "options": "Options",
+      "informative": "An informative check, not legal advice.",
       "kindHints": {
         "auto": "Yomizaka recognises it",
         "lease": "Rent, term, tenant's rights",
@@ -344,6 +346,11 @@
     "analysis": {
       "complianceTitle": "Against the law",
       "complianceText": "The text, rule by rule, against the rules of a jurisdiction on a date.",
+      "rulesLine": "Checked against Québec's rules for {kind}.",
+      "kindWords": {
+        "invoice": "a supplier invoice",
+        "contract": "a service contract"
+      },
       "authenticityTitle": "Signs of editing",
       "authenticityText": "The PDF file itself: producer, dates, successive saves, fonts.",
       "jurisdiction": "Jurisdiction",
@@ -1404,6 +1411,7 @@
     "steps": {
       "label": "Check progress",
       "working": "Working…",
+      "progress": "Step {step} of {total}",
       "read": "Reading",
       "preflight": "Pre-check",
       "report": "Report",

@@ -9,7 +9,8 @@ import fr from "@/messages/fr.json";
 
 import { DocumentView } from "./DocumentView";
 
-vi.mock("next/navigation", () => ({ useRouter: () => ({ refresh() {}, push() {}, replace() {} }), usePathname: () => "/fr/app/documents/d1/verifications", useSearchParams: () => new URLSearchParams() }));
+const nav = vi.hoisted(() => ({ search: "" }));
+vi.mock("next/navigation", () => ({ useRouter: () => ({ refresh() {}, push() {}, replace() {} }), usePathname: () => "/fr/app/documents/d1/verifications", useSearchParams: () => new URLSearchParams(nav.search) }));
 
 const MESSAGES = { en: { console: en.console }, fr: { console: fr.console } } as const;
 const readable = (html: string) => html.replace(/<[^>]*>/g, " ").replace(/&#x27;|&#39;/g, "'").replace(/&[a-z#0-9]+;/gi, " ").replace(/\s+/g, " ");
@@ -77,5 +78,15 @@ describe("a document's checks tab with a seeded demo check (krizaka/yomizaka#274
     const html = render({ jurisdiction: "QC", asOf: "2026-10-23" });
     expect(html).toContain('data-testid="report-download"');
     expect(html).not.toContain('data-testid="seeded-note"');
+  });
+});
+
+describe("a check the task page could not start on the drop (the review's Y4)", () => {
+  it("says the engine's refusal above the form when it arrives in the address, and nothing otherwise", () => {
+    nav.search = "refused=RATE_LIMITED";
+    const html = render({ jurisdiction: "QC" });
+    expect(readable(html)).toContain(fr.console.errors.RATE_LIMITED ?? fr.console.errors.UNKNOWN);
+    nav.search = "";
+    expect(readable(render({ jurisdiction: "QC" }))).not.toContain(fr.console.errors.UNKNOWN);
   });
 });

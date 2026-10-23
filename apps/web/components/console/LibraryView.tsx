@@ -8,7 +8,7 @@ import { EmptyState } from "@krizaka/ui/empty-state";
 import { LinkCard } from "@krizaka/ui/link-card";
 import { Mascot } from "@krizaka/ui/mascots";
 import { PageHeader } from "@krizaka/ui/page-header";
-import { type Audience, type DocumentSummary } from "@yomizaka/core";
+import { type Audience, type DocumentSummary, type Jurisdiction } from "@yomizaka/core";
 import Link from "next/link";
 
 import type { CheckSummary } from "@/lib/checks";
@@ -35,10 +35,12 @@ export type ExampleDocuments = Record<"tenant" | "landlord", { title: string; fi
  * and their last check; the recent documents. A file dropped anywhere on the page is checked (`LibraryDrop`). With nothing
  * yet: the owl, one sentence, the only drop zone, and two examples.
  */
-export function LibraryView({ libraries, recents, latest = [], tags, perspective = null, screening = false, examples }: { libraries: LibraryOverview[]; recents: DocumentSummary[]; latest?: CheckSummary[]; tags: TagOption[]; perspective?: Audience | null; screening?: boolean; examples?: ExampleDocuments }) {
+export function LibraryView({ libraries, recents, latest = [], tags, perspective = null, screening = false, examples, jurisdictions = ["QC"] }: { libraries: LibraryOverview[]; recents: DocumentSummary[]; latest?: CheckSummary[]; tags: TagOption[]; perspective?: Audience | null; screening?: boolean; examples?: ExampleDocuments; jurisdictions?: readonly Jurisdiction[] }) {
   const { say, locale } = useSay();
   const collections = libraries.flatMap((l) => l.collections);
   const screen = libraryScreen({ documents: recents.length, screening });
+  // The teaching empty state only when there is nothing at all: a collection the person made stays reachable, documents or not.
+  const nothingYet = screen.emptyDropzone && collections.every((c) => c.isDefault && c.files === 0);
   const order = (perspective === "landlord" ? ["landlord", "tenant"] : ["tenant", "landlord"]) as ("tenant" | "landlord")[];
   const first = libraries[0];
   const mine = say("organisation.defaultName");
@@ -60,7 +62,7 @@ export function LibraryView({ libraries, recents, latest = [], tags, perspective
       }
     />
   );
-  if (screen.emptyDropzone) {
+  if (nothingYet) {
     return (
       <div className="flex flex-col gap-8">
         {header}
@@ -68,6 +70,7 @@ export function LibraryView({ libraries, recents, latest = [], tags, perspective
           <EmptyState icon={<Mascot bird="owl" mood="welcome" size={120} />} title={say("library.emptyTitle")} description={say("library.emptyPitch")} />
           <LibraryDrop
             zone
+            jurisdictions={jurisdictions}
             examples={(add) =>
               examples ? (
                 <div className="flex flex-wrap items-center gap-2" data-testid="library-examples">
@@ -89,7 +92,7 @@ export function LibraryView({ libraries, recents, latest = [], tags, perspective
   return (
     <div className="flex flex-col gap-8">
       {header}
-      <LibraryDrop />
+      <LibraryDrop jurisdictions={jurisdictions} />
 
       <section className="flex flex-col gap-3" aria-label={say("organisation.latestChecks")} data-testid="latest-checks">
         <div className="flex flex-wrap items-baseline justify-between gap-2">

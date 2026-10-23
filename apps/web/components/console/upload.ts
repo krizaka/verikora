@@ -5,7 +5,7 @@ export const ACCEPT = "application/pdf,text/plain,application/vnd.openxmlformats
 /** The same, as the rules `DropOverlay` takes. */
 export const ACCEPT_RULES: readonly string[] = ACCEPT.split(",");
 
-export const isPhotoFile = (file: File) => /^image\/(png|jpeg|heic|heif)$/.test(file.type) || /\.(png|jpe?g|heic|heif)$/i.test(file.name);
+export const isPhotoFile = (file: { name: string; type?: string }) => /^image\/(png|jpeg|heic|heif)$/.test(file.type ?? "") || /\.(png|jpe?g|heic|heif)$/i.test(file.name);
 
 /** Where a dropped file lands: a collection, a folder of it, or the default collection (nothing). */
 export interface Placement {
@@ -35,3 +35,9 @@ export function send(files: File[], kind: DocumentKind | "auto", placement: Plac
 
 /** The code the BFF refused with, or UNKNOWN. */
 export const refusalCode = (error: unknown): string => (error as { body?: { code?: string } })?.body?.code ?? "UNKNOWN";
+
+/** The refusal in the person's words, its code kept on the error (the queue's retry rule reads it). */
+export const translated = (error: unknown, say: (key: string) => string): Error => {
+  const code = refusalCode(error);
+  return Object.assign(new Error(say(`errors.${code}`)), { body: { code } });
+};

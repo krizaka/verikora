@@ -6,7 +6,7 @@ import { Button } from "@krizaka/ui/button";
 import { DropOverlay } from "@krizaka/ui/drop-overlay";
 import { Dropzone, type FileRejection, type UploadItem, useUploadQueue } from "@krizaka/ui/file-upload";
 import { QueueStatus, tally, TaskTray, UploadQueue, type UploadQueueItem } from "@krizaka/ui/upload-queue";
-import { MAX_FILE_BYTES, STORAGE_MODE, STORAGE_MODES } from "@yomizaka/core";
+import { type Jurisdiction, MAX_FILE_BYTES, STORAGE_MODE, STORAGE_MODES } from "@yomizaka/core";
 import { useRouter } from "next/navigation";
 import { type ReactNode, useState } from "react";
 import { z } from "zod";
@@ -15,7 +15,8 @@ import { useAppConfig } from "@/lib/app-config-client";
 import { useSay } from "@/lib/i18n-client";
 import { pluralKey } from "@/lib/plural";
 
-import { ACCEPT, ACCEPT_RULES, refusalCode, send } from "./upload";
+import { startIfSure } from "./start-check";
+import { ACCEPT, ACCEPT_RULES, refusalCode, send, translated } from "./upload";
 
 type Say = (key: string, vars?: Record<string, string | number>) => string;
 
@@ -62,7 +63,7 @@ export function UploadTray({ items }: { items: readonly UploadQueueItem[] }) {
  * (the empty library's only one) takes a click, and the tray follows the queue while the person keeps browsing. One path
  * (`send`) with the kind left to Yomizaka and the owner's keeping preference; the lists refresh as each file lands.
  */
-export function LibraryDrop({ zone = false, examples }: { zone?: boolean; examples?: (add: (files: File[]) => void) => ReactNode }) {
+export function LibraryDrop({ zone = false, examples, jurisdictions = ["QC"] }: { zone?: boolean; examples?: (add: (files: File[]) => void) => ReactNode; jurisdictions?: readonly Jurisdiction[] }) {
   const { say } = useSay();
   const router = useRouter();
   const app = useAppConfig();
@@ -74,12 +75,15 @@ export function LibraryDrop({ zone = false, examples }: { zone?: boolean; exampl
     retries: 1,
     shouldRetry: (error) => refusalCode(error) === "NETWORK",
     upload: async (file, { signal, onProgress }) => {
+      let stored;
       try {
-        await send([file], "auto", undefined, keep, signal, onProgress);
-        router.refresh();
+        stored = await send([file], "auto", undefined, keep, signal, onProgress);
       } catch (error) {
-        throw new Error(say(`errors.${refusalCode(error)}`));
+        throw translated(error, say);
       }
+      // A file dropped on the library is checked like one dropped on the task page: at once when its kind is sure (the review's Y4).
+      if (!stored.duplicate) await startIfSure(stored.document.id, "auto", jurisdictions);
+      router.refresh();
     },
   });
   const refusal = (r: FileRejection) => say(REFUSAL[r.reason] ?? "library.refusedCount", { name: r.file.name });

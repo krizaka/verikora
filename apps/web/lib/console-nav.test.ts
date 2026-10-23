@@ -131,10 +131,11 @@ describe("the shell follows Orazaka's pattern (krizaka/yomizaka#278, the UX revi
       expect(JSON.stringify(m)).not.toMatch(/Ouvrir la plateforme|Open the platform/i);
     }
   });
-  it("the type picker is a labelled choice with « auto » preselected and a hint each", () => {
+  it("the type picker is a labelled choice (a choice grid under the drop zone, Y4) with « auto » preselected and a hint each", () => {
     const view = read("components/console/CheckView.tsx");
     expect(view).toContain("library.kindPick");
-    expect(view).toContain("RadioGroup.Button");
+    expect(view).toContain("<ChoiceGrid");
+    expect(view).toContain("library.kindHints");
     expect(view).not.toContain("RadioGroup.Segment");
     expect(ROUTE_STATES.checkKind.state.fallback).toBe("auto");
   });

@@ -186,6 +186,8 @@
       "refusedType": "{name} : seulement des PDF, des fichiers texte et des photos",
       "refusedCount": "{name} : trop de fichiers à la fois",
       "kindPick": "Quel document ?",
+      "options": "Options",
+      "informative": "Vérification informative, pas un avis juridique.",
       "kindHints": {
         "auto": "Yomizaka le reconnaît",
         "lease": "Loyer, durée, droits du locataire",
@@ -344,6 +346,11 @@
     "analysis": {
       "complianceTitle": "Au regard de la loi",
       "complianceText": "Le texte, règle par règle, au regard des règles d'une juridiction à une date.",
+      "rulesLine": "Vérifiée selon les règles du Québec pour {kind}.",
+      "kindWords": {
+        "invoice": "une facture de fournisseur",
+        "contract": "un contrat de service"
+      },
       "authenticityTitle": "Traces de modification",
       "authenticityText": "Le fichier PDF lui-même : producteur, dates, enregistrements successifs, polices.",
       "jurisdiction": "Juridiction",
@@ -1404,6 +1411,7 @@
     "steps": {
       "label": "Progression de la vérification",
       "working": "En cours…",
+      "progress": "Étape {step} sur {total}",
       "read": "Lecture",
       "preflight": "Contrôle préalable",
       "report": "Rapport",
