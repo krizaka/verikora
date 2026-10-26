@@ -761,6 +761,14 @@ INSERT INTO public.krizaka_module_versions (module, version, checksum) VALUES
 ON CONFLICT (module, version) DO NOTHING;`,
   },
   {
+    version: "0044_document_source_sha",
+    // yomizaka#8: a photo document keeps its recognised words as an invisible text layer, so its file is no longer the bytes first assembled.
+    // `sha256` is the file kept (what the report names); `source_sha256` is the assembled photos, so the same photos sent again are still recognised.
+    sql: `ALTER TABLE documents ADD COLUMN source_sha256 text;
+CREATE INDEX documents_source_sha256 ON documents (owner_id, source_sha256) WHERE source_sha256 IS NOT NULL;
+`,
+  },
+  {
     version: "0046_mail",
     // yomizaka#48: what the mail layer remembers. `mail_suppressions`: addresses the provider reported (a hard bounce, a complaint, an
     // unsubscribe), never mailed again. `mail_intentions`: one row per link already mailed (a retry sends nothing twice).
