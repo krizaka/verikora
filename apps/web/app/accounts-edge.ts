@@ -3,14 +3,14 @@ import { hashPassword, verifyPassword } from "@krizaka/auth";
 
 import { query, transaction } from "@/lib/db";
 import { env } from "@/lib/env";
-import { mailerFor } from "@/lib/mailer";
+import { fromAuthMail, mailerFor } from "@/lib/mailer";
 import { resetLinkMinutes } from "@/lib/password-reset";
 import { tokenHash } from "@/lib/session";
 
 /** The account service of this deployment (the edge wires the adapter: its data store, the mailer, the password hashing). */
 export const accountService = (options: { passwordResetTtlMinutes?: number } = {}) => {
   const e = env();
-  return postgresAccounts({ query: async (sql, params) => query(sql, params) as never, transaction: (work) => transaction((run) => work(run as never)), passwordResetTtlMinutes: options.passwordResetTtlMinutes, mail: mailerFor(e), baseUrl: e.APP_PUBLIC_URL, product: "Yomizaka", tokenPrefix: "ye", tokenHash: (token) => tokenHash(token), passwords: { hash: hashPassword, verify: verifyPassword } });
+  return postgresAccounts({ query: async (sql, params) => query(sql, params) as never, transaction: (work) => transaction((run) => work(run as never)), passwordResetTtlMinutes: options.passwordResetTtlMinutes, mail: (mail) => mailerFor(e)(fromAuthMail(mail)), baseUrl: e.APP_PUBLIC_URL, product: "Yomizaka", tokenPrefix: "ye", tokenHash: (token) => tokenHash(token), passwords: { hash: hashPassword, verify: verifyPassword } });
 };
 
 /** Whether e-mails can be sent (no key, no e-mail change: it fails closed, like sign-up). */

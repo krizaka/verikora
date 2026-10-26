@@ -758,7 +758,21 @@ CREATE TABLE IF NOT EXISTS public.krizaka_module_versions (
 );
 INSERT INTO public.krizaka_module_versions (module, version, checksum) VALUES
   ('auth_sessions', 1, '25ebd4e197a9af3c91386dd4142abcb58c58aac7142bfe4fb18efa2a282f8421')
-ON CONFLICT (module, version) DO NOTHING;
+ON CONFLICT (module, version) DO NOTHING;`,
+  },
+  {
+    version: "0046_mail",
+    // yomizaka#48: what the mail layer remembers. `mail_suppressions`: addresses the provider reported (a hard bounce, a complaint, an
+    // unsubscribe), never mailed again. `mail_intentions`: one row per link already mailed (a retry sends nothing twice).
+    sql: `CREATE TABLE mail_suppressions (
+  email  text PRIMARY KEY,
+  reason text NOT NULL CHECK (reason IN ('bounce', 'complaint', 'unsubscribed')),
+  at     timestamptz NOT NULL DEFAULT now()
+);
+CREATE TABLE mail_intentions (
+  key        text PRIMARY KEY,
+  claimed_at timestamptz NOT NULL DEFAULT now()
+);
 `,
   },
 ];

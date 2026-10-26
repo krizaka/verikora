@@ -30,6 +30,7 @@ const PUBLIC: Record<string, string> = {
   "showcase": "the home's recorded sample, nothing personal",
   "showcase/file": "the home's recorded sample, nothing personal",
   "webhooks/payments": "signed by the payment vendor, refused without its signature",
+  "webhooks/mail": "signed by the mail vendor (bounces, complaints), refused without its signature (yomizaka#48)",
   "batches/template": "the CSV template: a static file",
   "v1/openapi.json": "the public contract of the API",
 };

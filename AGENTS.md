@@ -43,6 +43,10 @@
   signed text; verification checks that each page starts with the folio of its place (a moved page is `ALTERED`).
 - A report is shown as Orazaka returned it (`packages/core` `reportOf`): a shape it did not send is `null`, never a guess.
   The home's proof shows **the recorded tenant run**; the landlord's is kept beside it: a fictitious sample lease sent to Orazaka's compliance Studio on dev (Québec ruleset), the answer kept exactly as Orazaka returned it in `apps/web/content/recorded-runs/<side>.json` — written by `scripts/record-runs.mjs` (key from the environment, never by hand; re-run it when the ruleset or the Studio changes). `lib/recorded-runs.ts` validates both at build: a page without a recorded run does not build (`lib/recorded-runs.test.ts`). The platform's own showcase (an administrator promotes a check on a sample document, `lib/showcase.ts`, `/api/showcase/*`) stays available but the page no longer depends on it.
+- **E-mail** (yomizaka#48): every message is a template of `@krizaka/email` in Yomizaka's brand — `confirmEmail` (sign-up), `passwordReset`, `emailChange` — sent by
+  `lib/mailer.ts` through the `MAIL_*` provider; no hand-written text or HTML. One send per link (`mail_intentions`), never to an address the provider reported
+  (`mail_suppressions`, fed by `POST /api/webhooks/mail`, signed with `MAIL_WEBHOOK_SIGNING_KEY`), a delivery log that holds a hash of the recipient. A new
+  email is a template added to the package first.
 
 ## 3. The product is independent
 

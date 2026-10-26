@@ -39,7 +39,7 @@
       "where": "api.mailgun.net, the provider's default endpoint; the location of its servers is not stated in the code or the spec",
       "outsideQuebec": true,
       "outsideCanada": null,
-      "env": ["MAIL_PROVIDER", "MAIL_API_KEY", "MAIL_DOMAIN", "MAIL_API_URL", "MAIL_FROM"],
+      "env": ["MAIL_PROVIDER", "MAIL_API_KEY", "MAIL_DOMAIN", "MAIL_API_URL", "MAIL_FROM", "MAIL_WEBHOOK_SIGNING_KEY"],
       "hosts": ["api.mailgun.net"]
     },
     {

@@ -49,6 +49,8 @@ export const envSchema = z.object({
   MAIL_DOMAIN: z.string().optional(),
   MAIL_API_URL: z.string().url().default("https://api.mailgun.net"),
   MAIL_FROM: z.string().optional(),
+  /** The key the provider signs its bounce and complaint webhooks with (`/api/webhooks/mail`). Unset: that route answers 404. */
+  MAIL_WEBHOOK_SIGNING_KEY: z.string().optional(),
   /** Payments: the vendor is a value (`stripe`); the key's prefix decides test or live. Without provider, key and webhook secret, payments are off. */
   PAYMENTS_PROVIDER: z.enum(["stripe"]).optional(),
   PAYMENTS_STRIPE_SECRET_KEY: z.string().optional(),
