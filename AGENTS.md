@@ -25,6 +25,11 @@
   `node scripts/dev-deploy.mjs service-account yomizaka --studios compliance-check,document-authenticity --out …`, stored
   in DigitalOcean as a SECRET). `lib/orazaka.ts` is the only client.
 - **Every analysis keeps its Orazaka run id**, shown in the UI: the trace of what ran, on which Studio version.
+- **Photos** (ADR-0010, yomizaka#8): JPEG, PNG and HEIC (several make one document) are cleaned (orientation, skew, crop, EXIF dropped after reading) and
+  held to a **quality gate** (`lib/images/quality.ts`, thresholds as data in `rules.ts`): a blurred, glared or cut-off photo is refused with what to do
+  (`PHOTO_BLURRY`, `PHOTO_GLARE`, `PHOTO_CUT_OFF`) before anything is stored or read. The text is read locally (Tesseract) and the recognised words are laid
+  invisibly on each photo in the stored PDF, so a finding's passage is lit on the photo by the same viewer as on a text PDF. `documents.sha256` is the file
+  kept; `source_sha256` is the assembled photos, so the same photos sent again are still one document.
 - Reading a file's **text layer** (pdf.js through `unpdf`) is parsing, not analysis: it feeds the compliance Studio and
   search. A scanned PDF has no text layer — the UI says so; reading images would be Orazaka's job. pdf.js never runs in the web
   process: `lib/extraction/isolated.ts` reads the PDF in a `node:worker_threads` worker with its own heap (384 MB), a 10 s deadline

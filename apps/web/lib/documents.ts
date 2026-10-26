@@ -1,3 +1,5 @@
+import { createHash } from "node:crypto";
+
 import { type AcceptedType, type Analysis, type AnalysisStatus, type AuthenticityReport, type CloudOwner, type ComplianceReport, type DocumentDetail, type DocumentInsight, type DocumentKind, type DocumentStatus, type DocumentSummary, DOCX_MIME, type ExtractionStatus, ODT_MIME, type StorageKind, type Studio, type TextSource } from "@yomizaka/core";
 
 import { query } from "./db";
@@ -251,7 +253,7 @@ export interface StoragePolicy {
 }
 
 /** The text of a document that has no text layer — read only if the document is new (a duplicate is never read twice). */
-export type TextReader = () => Promise<{ text: string; source: TextSource }>;
+export type TextReader = () => Promise<{ text: string; source: TextSource; /** The file to keep instead of the one received (photos: the same pages with their recognised words as an invisible text layer). */ file?: Uint8Array }>;
 
 /** What the isolated PDF reader's failures say to the person: too long, too heavy to read in time, or simply not readable. */
 export function extractionRefusal(error: ExtractionError): HttpError {
@@ -267,11 +269,11 @@ export function extractionRefusal(error: ExtractionError): HttpError {
 }
 
 /** The text of a new document: from the reader given (a photo), or from its text layer; an unreadable file is a 422. */
-async function readNewDocument(mimeType: AcceptedType, bytes: Uint8Array, pages: number | null, textOf?: TextReader): Promise<{ read: { text: string; pages: number | null }; source: TextSource | null }> {
+async function readNewDocument(mimeType: AcceptedType, bytes: Uint8Array, pages: number | null, textOf?: TextReader): Promise<{ read: { text: string; pages: number | null }; source: TextSource | null; file?: Uint8Array }> {
   try {
     if (!textOf) return { read: await readText(mimeType, bytes), source: null };
     const recognised = await textOf();
-    return { read: { text: recognised.text, pages }, source: recognised.source };
+    return { read: { text: recognised.text, pages }, source: recognised.source, ...(recognised.file ? { file: recognised.file } : {}) };
   } catch (error) {
     if (error instanceof HttpError) throw error;
     if (error instanceof ExtractionError) throw extractionRefusal(error);
@@ -280,16 +282,16 @@ async function readNewDocument(mimeType: AcceptedType, bytes: Uint8Array, pages:
 }
 
 /** Writes the document's row: restores a purged duplicate in place, or inserts a new one. */
-async function saveDocumentRow(args: { ownerId: string; existingId: string | null; file: { filename: string; mimeType: AcceptedType; kind: DocumentKind; sha256: string; pages: number | null }; bytes: Uint8Array; text: string; where: StorageKind; deadline: Date | null; source: TextSource | null; extraction: "queued" | "done" }): Promise<DocumentRow> {
+async function saveDocumentRow(args: { ownerId: string; existingId: string | null; file: { filename: string; mimeType: AcceptedType; kind: DocumentKind; sha256: string; sourceSha256: string | null; pages: number | null }; bytes: Uint8Array; text: string; where: StorageKind; deadline: Date | null; source: TextSource | null; extraction: "queued" | "done" }): Promise<DocumentRow> {
   const { ownerId, existingId, file, bytes, text, where, deadline, source, extraction } = args;
   const [row] = existingId
-    ? await query<DocumentRow>(`WITH d AS (UPDATE documents SET content = $3, text = $4, storage = $5, retain_until = $6, text_source = $7, extraction = $8, extraction_error = NULL, extraction_at = now() WHERE owner_id = $1 AND id = $2 RETURNING *) SELECT ${SUMMARY_COLUMNS} FROM d`, [ownerId, existingId, Buffer.from(bytes), text, where, deadline, source, extraction])
+    ? await query<DocumentRow>(`WITH d AS (UPDATE documents SET content = $3, text = $4, storage = $5, retain_until = $6, text_source = $7, extraction = $8, extraction_error = NULL, extraction_at = now(), sha256 = $9, source_sha256 = $10 WHERE owner_id = $1 AND id = $2 RETURNING *) SELECT ${SUMMARY_COLUMNS} FROM d`, [ownerId, existingId, Buffer.from(bytes), text, where, deadline, source, extraction, file.sha256, file.sourceSha256])
     : await query<DocumentRow>(
         `WITH d AS (
-           INSERT INTO documents (owner_id, title, filename, mime_type, kind, size_bytes, sha256, pages, content, text, storage, retain_until, text_source, extraction)
-           VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14) RETURNING *)
+           INSERT INTO documents (owner_id, title, filename, mime_type, kind, size_bytes, sha256, pages, content, text, storage, retain_until, text_source, extraction, source_sha256)
+           VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15) RETURNING *)
          SELECT ${SUMMARY_COLUMNS} FROM d`,
-        [ownerId, titleFor(file.filename, text), file.filename, file.mimeType, file.kind, bytes.length, file.sha256, file.pages, Buffer.from(bytes), text, where, deadline, source, extraction],
+        [ownerId, titleFor(file.filename, text), file.filename, file.mimeType, file.kind, bytes.length, file.sha256, file.pages, Buffer.from(bytes), text, where, deadline, source, extraction, file.sourceSha256],
       );
   return row!;
 }
@@ -308,18 +310,20 @@ async function moveToStore(policy: StoragePolicy, ownerId: string, id: string, m
 export async function storeDocument(ownerId: string, file: { name: string; type: string; size: number }, bytes: Uint8Array, requested: DocumentKind | "auto", policy?: StoragePolicy, textOf?: TextReader, options: { defer?: boolean } = {}): Promise<{ summary: DocumentSummary; duplicate: boolean; finish?: () => Promise<void> }> {
   const { mimeType, sha256, pages } = await checkUpload(file, bytes, policy?.rules);
   const where = policy ? storageFor(policy.keep, policy.store.describe()) : "database";
-  const [existing] = await query<DocumentRow & { purged: boolean }>(`SELECT ${SUMMARY_COLUMNS}, (d.storage = 'none' AND octet_length(d.content) = 0 AND d.text = '') AS purged FROM documents d WHERE d.owner_id = $1 AND d.sha256 = $2`, [ownerId, sha256]);
+  const [existing] = await query<DocumentRow & { purged: boolean }>(`SELECT ${SUMMARY_COLUMNS}, (d.storage = 'none' AND octet_length(d.content) = 0 AND d.text = '') AS purged FROM documents d WHERE d.owner_id = $1 AND (d.sha256 = $2 OR d.source_sha256 = $2)`, [ownerId, sha256]);
   // The same file again: reused as it is — unless it was purged and the person now keeps it, then it is restored below; or its reading failed, then it is read again.
   if (existing && existing.extraction !== "failed" && !(existing.purged && where !== "none")) return { summary: summary(existing), duplicate: true };
   const filename = safeFilename(file.name);
   const deadline = where === "none" && policy ? purgeDeadline(policy.now, policy.purgeAfterHours) : null;
   // Deferred (the upload route): the row is saved at once with its text still to read — an isolated worker reads it after the answer (yomizaka#21).
   const deferred = options.defer === true && !textOf;
-  const { read, source } = deferred ? { read: { text: "", pages }, source: null } : await readNewDocument(mimeType, bytes, pages, textOf);
+  const { read, source, file: kept } = deferred ? { read: { text: "", pages }, source: null, file: undefined } : await readNewDocument(mimeType, bytes, pages, textOf);
+  // The file kept is the one received, unless the reader made a richer one of it (photos: with their words as an invisible text layer).
+  const content = kept ?? bytes;
   const kind = requested !== "auto" ? requested : deferred ? "other" : kindFromNature(understanding.understand(read.text, { pages: read.pages }).nature?.id ?? null);
   // The bytes sit in the database until the document is placed (and, if not kept, until its check has run).
-  const row = await saveDocumentRow({ ownerId, existingId: existing?.id ?? null, file: { filename, mimeType, kind, sha256, pages: read.pages }, bytes, text: read.text, where, deadline, source, extraction: deferred ? "queued" : "done" });
-  if (policy && EXTERNAL.has(where)) await moveToStore(policy, ownerId, row.id, mimeType, bytes);
+  const row = await saveDocumentRow({ ownerId, existingId: existing?.id ?? null, file: { filename, mimeType, kind, sha256: kept ? createHash("sha256").update(kept).digest("hex") : sha256, sourceSha256: kept ? sha256 : null, pages: read.pages }, bytes: content, text: read.text, where, deadline, source, extraction: deferred ? "queued" : "done" });
+  if (policy && EXTERNAL.has(where)) await moveToStore(policy, ownerId, row.id, mimeType, content);
   return { summary: summary(row), duplicate: false, ...(deferred ? { finish: () => finishExtraction({ ownerId, id: row.id, filename, mimeType, requested, bytes }) } : {}) };
 }
 
