@@ -2,7 +2,7 @@ import type { DocumentKind, DocumentSummary, PhotoOrigin } from "@yomizaka/core"
 
 import { inspectUpload, type StoragePolicy, storeDocument } from "./documents";
 import { refuse } from "./http";
-import { createImageCleaner, type ImageCleaner, ImageError, type ImageRules, pagesToPdf, type PhotoFacts, type PhotoKind, YOMIZAKA_IMAGE_RULES } from "./images";
+import { createImageCleaner, type ImageCleaner, ImageError, type ImageRules, pagesToPdf, type PhotoFacts, type PhotoKind, type QualityProblem, qualityProblem, YOMIZAKA_IMAGE_RULES } from "./images";
 import { logError } from "./log";
 import { type OcrEngine, type OcrRules, readPhotoText, tesseractEngine, type VisionReader, YOMIZAKA_OCR_RULES } from "./ocr";
 import { sniff } from "./preflight/inspector";
@@ -32,6 +32,9 @@ export interface PhotoDeps {
 
 export const defaultPhotoDeps = (): PhotoDeps => ({ cleaner: createImageCleaner(YOMIZAKA_IMAGE_RULES), ocr: tesseractEngine(), vision: null, ocrRules: YOMIZAKA_OCR_RULES, imageRules: YOMIZAKA_IMAGE_RULES });
 
+/** The code the page translates (messages `console.errors.*`) for each thing a photo can be refused for. */
+export const PHOTO_QUALITY_CODE: Record<QualityProblem, string> = { BLURRY: "PHOTO_BLURRY", GLARE: "PHOTO_GLARE", CUT_OFF: "PHOTO_CUT_OFF" };
+
 const IMAGE_KINDS = new Set<string>(["png", "jpeg", "heic"]);
 
 /** Whether the bytes are a photo (PNG, JPEG, HEIC) — by their signature, never the name or the type the browser declared. */
@@ -51,7 +54,7 @@ export async function storePhotos(ownerId: string, files: readonly PhotoFile[], 
   if (files.length > deps.imageRules.maxPhotos) throw refuse(422, "TOO_MANY_PHOTOS", `At most ${deps.imageRules.maxPhotos} photos make one document`);
 
   const cleaned: Awaited<ReturnType<ImageCleaner["clean"]>>[] = [];
-  for (const file of files) {
+  for (const [index, file] of files.entries()) {
     const { fileKind } = await inspectUpload({ name: file.name, type: file.type, size: file.bytes.length }, file.bytes, rules);
     if (!IMAGE_KINDS.has(fileKind)) throw refuse(415, "UNSUPPORTED_TYPE", "Photos only: a PDF or a text file is sent on its own");
     try {
@@ -59,6 +62,9 @@ export async function storePhotos(ownerId: string, files: readonly PhotoFile[], 
     } catch (error) {
       throw error instanceof ImageError ? refuse(422, error.code, "This photo cannot be read") : error;
     }
+    // The quality gate (yomizaka#8): a photo too blurred, glared or cut off is refused with what to do, before anything is stored or read.
+    const problem = qualityProblem(cleaned.at(-1)!.page.quality, deps.imageRules.quality);
+    if (problem) throw refuse(422, PHOTO_QUALITY_CODE[problem], `Photo ${index + 1} cannot be read: ${problem}`, { photo: index + 1 });
   }
 
   const pdf = await pagesToPdf(cleaned.map((c) => c.page));
@@ -68,7 +74,10 @@ export async function storePhotos(ownerId: string, files: readonly PhotoFile[], 
   const policy = options.policy ? { ...options.policy, rules: { ...rules, allowedKinds: [...new Set([...rules.allowedKinds, "pdf" as const])] } } : undefined;
   return storeDocument(ownerId, { name, type: "application/pdf", size: pdf.length }, pdf, requested, policy, async () => {
     try {
-      return await readPhotoText(cleaned.map((c) => c.page.jpeg), { ocr: deps.ocr, vision: deps.vision, rules: deps.ocrRules, origin });
+      const read = await readPhotoText(cleaned.map((c) => c.page.jpeg), { ocr: deps.ocr, vision: deps.vision, rules: deps.ocrRules, origin });
+      // The file kept carries the recognised words, invisible, where they sit on each photo: a finding's passage is lit on the photo
+      // like on a text PDF (yomizaka#8). Its identity (duplicates) stays that of the photos alone.
+      return { text: read.text, source: read.source, ...(read.words?.some((w) => w.length) ? { file: await pagesToPdf(cleaned.map((c) => c.page), read.words) } : {}) };
     } catch (error) {
       logError("[yomizaka] reading a photo failed:", error);
       throw refuse(422, "OCR_FAILED", "The text of this photo could not be read");
