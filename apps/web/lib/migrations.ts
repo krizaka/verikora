@@ -610,4 +610,19 @@ ALTER TABLE documents ADD COLUMN extraction_error text;
 ALTER TABLE documents ADD COLUMN extraction_at timestamptz NOT NULL DEFAULT now();
 `,
   },
+  {
+    version: "0038_mail",
+    // yomizaka#48: what the mail layer remembers. `mail_suppressions`: addresses the provider reported (a hard bounce, a complaint, an
+    // unsubscribe), never mailed again. `mail_intentions`: one row per link already mailed (a retry sends nothing twice).
+    sql: `CREATE TABLE mail_suppressions (
+  email  text PRIMARY KEY,
+  reason text NOT NULL CHECK (reason IN ('bounce', 'complaint', 'unsubscribed')),
+  at     timestamptz NOT NULL DEFAULT now()
+);
+CREATE TABLE mail_intentions (
+  key        text PRIMARY KEY,
+  claimed_at timestamptz NOT NULL DEFAULT now()
+);
+`,
+  },
 ];

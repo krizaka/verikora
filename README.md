@@ -119,6 +119,7 @@ Every variable is declared once in `apps/web/lib/env.ts` (see `.env.example`); a
 | `MAIL_DOMAIN` | the sending domain |
 | `MAIL_API_URL` | the vendor's API address (default `https://api.mailgun.net`) |
 | `MAIL_FROM` | the sender (default `Yomizaka <no-reply@MAIL_DOMAIN>`) |
+| `MAIL_WEBHOOK_SIGNING_KEY` | the key the mail provider signs its bounce and complaint webhooks with (`/api/webhooks/mail`; 404 while unset) |
 | `AUTH_ALLOWED_IPS` | the addresses of the administration (empty in production = nobody) |
 | `ABUSE_CLIENT_IP_HEADER`, `ABUSE_TRUSTED_PROXY_HOPS` | where the client address is read |
 | `AI_PROVIDER`, `AI_API_URL`, `AI_API_KEY` | Orazaka's edge and the service key (`oz_…`) |

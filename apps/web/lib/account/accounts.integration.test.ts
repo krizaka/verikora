@@ -1,11 +1,10 @@
 import crypto from "node:crypto";
 
-import { postgresAccounts } from "@krizaka/auth";
+import { type Mail, postgresAccounts } from "@krizaka/auth";
 import { addHours } from "date-fns";
 import { beforeAll, describe, expect, it } from "vitest";
 
 import { migrate, query } from "../db";
-import type { Mail } from "../mailer";
 import { hashPassword, verifyPassword } from "../password";
 import { tokenHash } from "../session";
 
