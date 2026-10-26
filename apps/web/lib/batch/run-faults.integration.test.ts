@@ -70,7 +70,7 @@ describe.runIf(enabled)("a batch against a busy engine and awkward files", () =>
     expect((await advanceBatch(account, created.id, await ctx())).finishedAt).not.toBeNull();
   });
 
-  it("a photo in a row is stored as a document (a blank one says it has no text); a file that cannot be stored refuses its row only", async () => {
+  it("a photo in a row goes through the quality gate (a blank one is refused as blurred, nothing stored); a file that cannot be stored refuses its row only", async () => {
     const jpeg = await sharp({ create: { width: 640, height: 480, channels: 3, background: "#f4f0e6" } }).jpeg().toBuffer();
     const created = await createBatch(
       account,
@@ -79,9 +79,10 @@ describe.runIf(enabled)("a batch against a busy engine and awkward files", () =>
       [{ name: "lease-photo.jpg", type: "image/jpeg", bytes: new Uint8Array(jpeg) }, { name: "notes.exe", type: "application/octet-stream", bytes: new Uint8Array([0x4d, 0x5a, 0x90, 0x00]) }, await pdf("lease-ok.pdf", "BAIL PHOTOS OK")],
       await ctx(),
     );
-    expect(created.items.map((i) => i.state)).toEqual(["failed", "refused", "running"]);
-    expect(created.items[0]).toMatchObject({ error: "NO_TEXT" });
-    expect(created.items[0]!.documentId).not.toBeNull();
+    // A flat photo has no edges: the gate of yomizaka#8 refuses its row before anything is stored or read.
+    expect(created.items.map((i) => i.state)).toEqual(["refused", "refused", "running"]);
+    expect(created.items[0]).toMatchObject({ error: "PHOTO_BLURRY" });
+    expect(created.items[0]!.documentId).toBeNull();
     expect(created.items[1]!.error).toBeTruthy();
     expect(created.items[1]!.documentId).toBeNull();
     finishAll();
