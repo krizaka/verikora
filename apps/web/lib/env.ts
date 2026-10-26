@@ -31,6 +31,10 @@ export const envSchema = z.object({
   APP_DEMO_ACCOUNT_PASSWORD: z.string().optional(),
   /** The development address (`dev.yomizaka.com`): every page goes to www (308); only the API, auth callbacks, webhooks, /.well-known and /healthz keep serving there, all noindex (lib/indexing.ts). Unset: no dev host. */
   APP_DEV_HOST: z.string().optional(),
+  /** The Apple team that signs the iOS app: the prefix of its app id in `/.well-known/apple-app-site-association` (universal links, yomizaka#155). Unset: that file is not served. */
+  APP_IOS_TEAM_ID: z.string().regex(/^[A-Z0-9]{10}$/).optional(),
+  /** The SHA-256 fingerprint(s) of the Android app's signing certificate, comma-separated (`AB:CD:…`): `/.well-known/assetlinks.json`. Unset: that file is not served. */
+  APP_ANDROID_CERT_SHA256: z.string().optional(),
   /** PostgreSQL (the cluster krizaka-dev-pg in dev: database yomizaka_db, role yomizaka_db). */
   DATABASE_URL: z.string().optional(),
   /** The same database reached directly, not through the PgBouncer pool (`pool-yomizaka`): session advisory locks (migrations, ticks) need one backend for their whole life. Unset: DATABASE_URL. */

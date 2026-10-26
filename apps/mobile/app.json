@@ -11,7 +11,11 @@
       "supportsTablet": false,
       "infoPlist": {
         "ITSAppUsesNonExemptEncryption": false
-      }
+      },
+      "associatedDomains": [
+        "applinks:www.yomizaka.com",
+        "applinks:dev.yomizaka.com"
+      ]
     },
     "android": {
       "package": "com.krizaka.yomizaka",

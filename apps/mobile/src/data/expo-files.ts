@@ -6,6 +6,15 @@ import { createDeviceStore, type FilePort } from "./device-store";
 const files: FilePort = {
   ensureDirectory: (uri) => new Directory(uri).create({ idempotent: true, intermediates: true }),
   copy: (from, to) => new File(from).copy(new File(to)),
+  write: (uri, bytes) => {
+    const file = new File(uri);
+    if (!file.exists) file.create();
+    file.writeSync(bytes);
+  },
+  read: (uri) => {
+    const file = new File(uri);
+    return file.exists ? file.bytesSync() : null;
+  },
   names: (directoryUri) => {
     const directory = new Directory(directoryUri);
     return directory.exists ? directory.list().map((entry) => entry.name) : [];

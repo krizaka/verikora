@@ -24,7 +24,8 @@
     "demo:seed": "node scripts/demo-seed/cli.mjs",
     "check:overflow": "node scripts/check-overflow.mjs",
     "check:admin-live": "node scripts/check-admin-live.mjs",
-    "payments:setup": "pnpm --filter @yomizaka/web exec krizaka-payments-setup --catalogue ../../deploy/payments-catalogue.json"
+    "payments:setup": "pnpm --filter @yomizaka/web exec krizaka-payments-setup --catalogue ../../deploy/payments-catalogue.json",
+    "check:app-links": "pnpm --filter @yomizaka/web exec vitest run lib/app-links.test.ts"
   },
   "devDependencies": {
     "@ast-grep/cli": "0.51.0",

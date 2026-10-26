@@ -6,7 +6,8 @@
   "type": "module",
   "exports": {
     ".": "./src/index.ts",
-    "./document-store/contract": "./src/document-store.contract.ts"
+    "./document-store/contract": "./src/document-store.contract.ts",
+    "./document-store/contract-kit": "./src/document-store.contract-kit.ts"
   },
   "scripts": {
     "lint": "tsc --noEmit -p tsconfig.json",
