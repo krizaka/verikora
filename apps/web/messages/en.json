@@ -2868,9 +2868,6 @@
       "title": "A request to check your application",
       "lead": "{landlord} asks your agreement to check your rental application. You decide: nothing is checked without your consent.",
       "whatTitle": "What would be checked",
-      "scope": {
-        "payment-history": "Your payment history"
-      },
       "provider": "Provider: {provider}",
       "why": "Why: the landlord is assessing your application for a dwelling.",
       "notAsked": "Never asked: social insurance number, bank details, employer, salary, criminal record.",
@@ -2895,18 +2892,20 @@
       "resultTitle": "Your result",
       "band": {
         "no-concern": "Nothing to report",
-        "review": "To review"
+        "review": "To review",
+        "incomplete": "Not complete yet"
       },
-      "item": {
-        "payment-history": "Payment history",
-        "identity-match": "Identity"
-      },
+      "item": {},
       "outcome": {
         "clear": "nothing to report",
-        "review": "to review"
+        "review": "to review",
+        "pending": "in progress",
+        "unavailable": "not available right now",
+        "soon": "not available yet"
       },
       "deleteOn": "Deleted on {date}.",
-      "contested": "Your contestation: « {comment} »"
+      "contested": "Your contestation: « {comment} »",
+      "incompleteNote": "Some checks have not answered. Nothing here is a result for those: they are shown as they stand."
     },
     "landlord": {
       "title": "Tenant application",
@@ -2919,9 +2918,6 @@
       "name": "Applicant's name",
       "email": "Applicant's e-mail",
       "scope": "What will be checked",
-      "scopeItem": {
-        "payment-history": "Payment history"
-      },
       "request": "Ask for their consent",
       "created": "Hand this link to the applicant (it will not be shown again):",
       "copy": "Copy the link",
@@ -2938,7 +2934,8 @@
       "shownTitle": "Result passed on",
       "hidden": "The result is visible only once the applicant passes it on.",
       "demo": "Demonstration provider: fictitious data.",
-      "reviewNote": "« To review » is not a verdict: talk to the applicant before any decision."
+      "reviewNote": "« To review » is not a verdict: talk to the applicant before any decision.",
+      "noneOffered": "No check is available to you yet."
     }
   },
   "terms": {

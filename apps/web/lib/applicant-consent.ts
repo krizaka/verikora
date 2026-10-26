@@ -23,9 +23,8 @@ export { APPLICATION_ERASED };
 /** How consent was given: the applicant's own form, on the link they received. */
 export const CONSENT_MEANS = { WEB_FORM: "web-form" } as const;
 
-/** Which purpose a screening scope needs: the payment history is the Québec rental history (court records). */
-export const SCOPE_PURPOSES: Record<string, ConsentPurpose> = { "payment-history": CONSENT_PURPOSE.COURT_RECORDS };
-export const purposesOfScope = (scope: readonly string[]): ConsentPurpose[] => [...new Set(scope.map((s) => SCOPE_PURPOSES[s]).filter((p): p is ConsentPurpose => !!p))];
+/** The consent purposes a set of check types needs: each type names the engine purpose it runs under (data, yomizaka#132). */
+export const purposesOfTypes = (types: readonly { purpose: string }[]): ConsentPurpose[] => [...new Set(types.map((t) => t.purpose).filter((p): p is ConsentPurpose => p === CONSENT_PURPOSE.COURT_RECORDS || p === CONSENT_PURPOSE.CREDIT))];
 
 /** Pure: is a purpose granted in a list of active purposes? */
 export const hasConsent = (active: readonly string[], purpose: ConsentPurpose): boolean => active.includes(purpose);

@@ -7,7 +7,8 @@ import en from "@/messages/en.json";
 import fr from "@/messages/fr.json";
 
 import { decideFlow, seedFlows } from "./flows";
-import { demoProvider, effectiveState, landlordView, RETENTION_DAYS, SCREENING_SCOPES, SCREENING_STATUS, screeningResult, tenantView } from "./screening";
+import { bandOf, DEMO_PROVIDER, effectiveState, itemOf, landlordView, namesOf, RETENTION_DAYS, SCREENING_STATUS, screeningResult, tenantView } from "./screening";
+import { demoProvider } from "./screening-checks/providers";
 
 const NOW = new Date("2026-10-17T12:00:00Z");
 const day = (n: number) => new Date(NOW.getTime() + n * 86_400_000);
@@ -34,8 +35,7 @@ const row = (over: Record<string, unknown> = {}) => ({
 const result = { band: "no-concern", items: [{ key: "payment-history", outcome: "clear" }], provider: "demo", generatedAt: NOW.toISOString() };
 
 describe("tenant screening — what the law lets a landlord ask (docs/product/tenant-screening-research.md)", () => {
-  it("offers no criminal-record scope: the only lawful scope today is payment history", () => {
-    expect([...SCREENING_SCOPES]).toEqual(["payment-history"]);
+  it("keeps the code free of any criminal-record, SIN or identity-document data", () => {
     expect(JSON.stringify([en.screening, fr.screening])).not.toMatch(/casier judiciaire\s*:?\s*(oui|vérif)/i);
     const code = readFileSync(join(__dirname, "screening.ts"), "utf8").replace(/\/\*[\s\S]*?\*\//g, "").replace(/\/\/.*$/gm, "");
     // The code asks for, stores and returns no criminal-record or SIN data: those words do not appear outside comments.
@@ -83,11 +83,38 @@ describe("minimal data", () => {
   });
   it("the demo provider is fictitious, deterministic, and says so", async () => {
     expect(demoProvider.demo).toBe(true);
-    const clear = await demoProvider.check({ name: "A", email: "a@x.test" }, ["payment-history"], NOW);
-    const flagged = await demoProvider.check({ name: "A", email: "flag@x.test" }, ["payment-history"], NOW);
-    expect(clear.band).toBe("no-concern");
-    expect(flagged.band).toBe("review");
-    expect(Object.keys(clear).sort()).toEqual(["band", "generatedAt", "items", "provider"]);
+    expect(DEMO_PROVIDER).toBe("demo");
+    const call = (lastName: string) => ({ userId: "u", runId: "r", subject: { subjectId: "s", firstName: "A", lastName }, region: "QC" });
+    expect(await demoProvider.submit("COURT_RECORDS", call("Fictif"))).toMatchObject({ outcome: "NO_MATCH" });
+    expect(await demoProvider.submit("COURT_RECORDS", call("Flag"))).toMatchObject({ outcome: "MATCH", category: "TAL_OTHER" });
+  });
+});
+
+describe("every outcome is shown as it stands (yomizaka#132)", () => {
+  const out = (outcome: string, refusal: string | null = null) => itemOf("credit", { outcome, refusal } as never).outcome;
+  it("reads MATCH as « to review » (a file found is not a verdict) and NO_MATCH as clear", () => {
+    expect(out("MATCH")).toBe("review");
+    expect(out("NO_MATCH")).toBe("clear");
+  });
+  it("says « not available yet » for NOT_CONFIGURED and NO_KEY, « in progress » for PENDING, « unavailable » for the rest — never a result", () => {
+    expect(out("REFUSED", "NOT_CONFIGURED")).toBe("soon");
+    expect(out("REFUSED", "NO_KEY")).toBe("soon");
+    expect(out("PENDING")).toBe("pending");
+    expect(out("REFUSED", "NO_CONSENT")).toBe("unavailable");
+    expect(out("REFUSED", "BUDGET_EXHAUSTED")).toBe("unavailable");
+    expect(out("PROVIDER_ERROR")).toBe("unavailable");
+    expect(out("TIMEOUT")).toBe("unavailable");
+  });
+  it("never calls a set « nothing to report » while a check has not answered", () => {
+    expect(bandOf([{ outcome: "clear" }, { outcome: "soon" }])).toBe("incomplete");
+    expect(bandOf([{ outcome: "clear" }, { outcome: "pending" }])).toBe("incomplete");
+    expect(bandOf([{ outcome: "review" }, { outcome: "soon" }])).toBe("review");
+    expect(bandOf([{ outcome: "clear" }])).toBe("no-concern");
+  });
+  it("splits a full name for the search, the last name being the rest", () => {
+    expect(namesOf("Camille Fictif")).toEqual({ firstName: "Camille", lastName: "Fictif" });
+    expect(namesOf("Anne De La Rue")).toEqual({ firstName: "Anne", lastName: "De La Rue" });
+    expect(namesOf("Madonna")).toEqual({ firstName: "Madonna", lastName: "Madonna" });
   });
 });
 

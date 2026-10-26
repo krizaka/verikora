@@ -2,61 +2,52 @@ import crypto from "node:crypto";
 
 import { z } from "zod";
 
-import { CONSENT_MEANS, grantConsent, NOTICE_VERSION, purposesOfScope, requireConsent } from "./applicant-consent";
+import { CONSENT_MEANS, grantConsent, NOTICE_VERSION, purposesOfTypes, requireConsent } from "./applicant-consent";
 import { audit } from "./audit";
 import { query } from "./db";
 import { refuse } from "./http";
+import { allowedFor, type CheckTypeRow, providerById, typesByKey } from "./screening-checks/catalogue";
+import { CHECK_STATE, type CheckResult, type CheckState, stateOf } from "./screening-checks/model";
+import { adapterFor, type CheckProvider } from "./screening-checks/providers";
 
 /*
  * Checking a tenant's application (« dossier ») — provider-agnostic, with explicit tenant consent
  * (docs/product/tenant-screening-research.md). The landlord asks; the TENANT consents or declines, sees the result FIRST and
  * shares it or contests it. Minimal data: a short summary, never a provider's raw report, deleted after the retention window.
- * There is no criminal-record scope, and none can be added without a new flow version and a lawyer's opinion.
+ * What may be asked is DATA (check types and each owner's row, lib/screening-checks): a type is offered only while its row is enabled and
+ * allowed for the owner. The sensitive type stays off until the compliance gate says a lawyer confirmed it (yomizaka#135).
  */
 export const SCREENING_STATUS = { requested: "requested", consented: "consented", shared: "shared", declined: "declined", contested: "contested", expired: "expired", erased: "erased" } as const;
 export type ScreeningStatus = (typeof SCREENING_STATUS)[keyof typeof SCREENING_STATUS];
-
-/** What a request may ask. Payment history only today; the list is the law's limit, not a roadmap. */
-export const SCREENING_SCOPES = ["payment-history"] as const;
 
 // @fixed: the days a request can be answered — a tenant needs time to read it; two weeks, then it expires unanswered.
 export const REQUEST_VALID_DAYS = 14;
 // @fixed: how long the result is kept after the tenant's consent (Law 25: only as long as necessary); the landlord decides within a month.
 export const RETENTION_DAYS = 30;
 
-export const screeningItem = z.object({ key: z.enum(["payment-history", "identity-match"]), outcome: z.enum(["clear", "review"]) });
+/** What one check shows: an answered check says « clear » or « to review »; one that has not answered says why, never a guess. */
+export const screeningItem = z.object({ key: z.string().min(1).max(40), outcome: z.enum(["clear", "review", "pending", "unavailable", "soon"]) });
 /** What is kept of a provider's answer: a band and a few items — nothing else. No score, no account, no address. */
-export const screeningResult = z.object({ band: z.enum(["no-concern", "review"]), items: z.array(screeningItem).max(4), provider: z.string(), generatedAt: z.string() });
+export const screeningResult = z.object({ band: z.enum(["no-concern", "review", "incomplete"]), items: z.array(screeningItem).max(8), provider: z.string(), generatedAt: z.string() });
 export type ScreeningResult = z.infer<typeof screeningResult>;
 
-export interface ScreeningSubject {
-  name: string;
-  email: string;
-}
-/** A provider turns the consenting tenant's identity into a minimal result. The real ones need contracts; the demo is fictitious. */
-export interface ScreeningProvider {
-  id: string;
-  /** True for the providers whose data is fictitious: the pages say so. */
-  demo: boolean;
-  check(subject: ScreeningSubject, scope: readonly string[], now: Date): Promise<ScreeningResult>;
-}
+/** The provider id the pages call fictitious. */
+export const DEMO_PROVIDER = "demo";
 
-/** The demo provider: fictitious, deterministic — an address starting with « flag » returns a « review » band, any other is clear. */
-export const demoProvider: ScreeningProvider = {
-  id: "demo",
-  demo: true,
-  async check(subject, scope, now) {
-    const flagged = subject.email.startsWith("flag");
-    const items = scope.map((key) => ({ key: key as "payment-history", outcome: (flagged ? "review" : "clear") as "clear" | "review" }));
-    return { band: flagged ? "review" : "no-concern", items, provider: "demo", generatedAt: now.toISOString() };
-  },
-};
-const PROVIDERS: Record<string, ScreeningProvider> = { [demoProvider.id]: demoProvider };
-export const providerById = (id: string): ScreeningProvider => {
-  const p = PROVIDERS[id];
-  if (!p) throw refuse(503, "PROVIDER_UNAVAILABLE", "No such screening provider");
-  return p;
-};
+/** One check's line: MATCH is « to review » (a file found is not a verdict), NO_MATCH « clear », the rest says where it stands. Pure. */
+export function itemOf(key: string, result: Pick<CheckResult, "outcome" | "refusal">): z.infer<typeof screeningItem> {
+  const state: CheckState = stateOf(result);
+  if (state === CHECK_STATE.answered) return { key, outcome: result.outcome === "MATCH" ? "review" : "clear" };
+  return { key, outcome: state };
+}
+/** Pure: the band of a set of lines. A line to review wins; otherwise any check not answered keeps the whole « incomplete » — never « nothing to report ». */
+export const bandOf = (items: readonly { outcome: string }[]): ScreeningResult["band"] => (items.some((i) => i.outcome === "review") ? "review" : items.every((i) => i.outcome === "clear") ? "no-concern" : "incomplete");
+
+/** « Camille Fictif » → first name, last name (the rest). The engine searches by names; Yomizaka keeps no more than the application already holds. */
+export function namesOf(fullName: string): { firstName: string; lastName: string } {
+  const [first = "", ...rest] = fullName.trim().split(/\s+/);
+  return { firstName: first, lastName: rest.join(" ") || first };
+}
 
 /** The token is 256 random bits: a plain SHA-256 is enough to keep only its hash (nothing to guess, nothing to key). */
 export const hash = (token: string) => crypto.createHash("sha256").update(token).digest("hex");
@@ -137,26 +128,30 @@ export function effectiveState(row: Pick<Row, "status" | "expires_at" | "result_
 export const landlordView = (row: Row, now: Date): LandlordView => {
   const state = effectiveState(row, now);
   const visible = state.status === SCREENING_STATUS.shared && state.resultAlive;
-  return { id: row.id, tenantName: row.tenant_name, tenantEmail: row.tenant_email, status: state.status, createdAt: row.created_at.toISOString(), expiresAt: row.expires_at.toISOString(), result: visible ? parseResult(row.result) : null, provider: row.provider, demo: providerById(row.provider).demo };
+  return { id: row.id, tenantName: row.tenant_name, tenantEmail: row.tenant_email, status: state.status, createdAt: row.created_at.toISOString(), expiresAt: row.expires_at.toISOString(), result: visible ? parseResult(row.result) : null, provider: row.provider, demo: row.provider === DEMO_PROVIDER };
 };
 export const tenantView = (row: Row, now: Date): TenantView => {
   const state = effectiveState(row, now);
-  return { status: state.status, landlord: row.landlord_email ?? "", tenantName: row.tenant_name, scope: row.scope, provider: row.provider, demo: providerById(row.provider).demo, expiresAt: row.expires_at.toISOString(), retentionDays: RETENTION_DAYS, result: state.resultAlive ? parseResult(row.result) : null, resultExpiresAt: row.result_expires_at?.toISOString() ?? null, contestComment: row.contest_comment };
+  return { status: state.status, landlord: row.landlord_email ?? "", tenantName: row.tenant_name, scope: row.scope, provider: row.provider, demo: row.provider === DEMO_PROVIDER, expiresAt: row.expires_at.toISOString(), retentionDays: RETENTION_DAYS, result: state.resultAlive ? parseResult(row.result) : null, resultExpiresAt: row.result_expires_at?.toISOString() ?? null, contestComment: row.contest_comment };
 };
 
 type Landlord = { id: string; email: string };
 
-/** The landlord asks. Returns the token ONCE (only its hash is kept): the landlord hands the link to the applicant. */
-export async function requestScreening(landlord: Landlord, input: { tenantName: string; tenantEmail: string; scope: readonly string[]; provider?: string }, now: Date, headers?: Headers): Promise<{ id: string; token: string }> {
-  const scope = [...new Set(input.scope)].filter((s) => (SCREENING_SCOPES as readonly string[]).includes(s));
-  if (scope.length === 0) throw refuse(400, "BAD_REQUEST", "Nothing lawful to check");
-  const provider = providerById(input.provider ?? demoProvider.id);
+/** The landlord asks. Returns the token ONCE (only its hash is kept): the landlord hands the link to the applicant. Only the check types the landlord's row allows are accepted. */
+export async function requestScreening(landlord: Landlord, input: { tenantName: string; tenantEmail: string; scope: readonly string[] }, now: Date, headers?: Headers): Promise<{ id: string; token: string }> {
+  const allowed = await allowedFor(landlord.id);
+  const types = allowed.filter((t) => input.scope.includes(t.key));
+  if (types.length === 0) throw refuse(400, "BAD_REQUEST", "Nothing lawful to check");
+  const scope = types.map((t) => t.key);
+  const providers = await Promise.all(types.map((t) => providerById(t.provider_id)));
+  // One fictitious type makes the whole request say so.
+  const provider = providers.some((p) => p?.adapter === "demo") ? DEMO_PROVIDER : types[0]!.provider_id;
   const token = newToken();
   const [row] = await query<{ id: string }>(
     "INSERT INTO screenings (landlord_id, tenant_name, tenant_email, scope, provider, token_hash, expires_at) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING id",
-    [landlord.id, input.tenantName.trim(), input.tenantEmail.trim().toLowerCase(), scope, provider.id, hash(token), addDays(now, REQUEST_VALID_DAYS)],
+    [landlord.id, input.tenantName.trim(), input.tenantEmail.trim().toLowerCase(), scope, provider, hash(token), addDays(now, REQUEST_VALID_DAYS)],
   );
-  await audit({ action: "screening.requested", actorId: landlord.id, actorLabel: landlord.email, targetId: row!.id, detail: { scope, provider: provider.id }, headers });
+  await audit({ action: "screening.requested", actorId: landlord.id, actorLabel: landlord.email, targetId: row!.id, detail: { scope, provider }, headers });
   return { id: row!.id, token };
 }
 
@@ -186,20 +181,64 @@ const screeningRow = async (token: string): Promise<Row> => {
 
 const actor = (row: Row) => ({ actorId: null, actorLabel: `tenant:${row.tenant_email}` });
 
+interface Answer {
+  type: CheckTypeRow;
+  runId: string;
+  result: CheckResult;
+  item: z.infer<typeof screeningItem>;
+}
+/** Asks each check type's provider (chosen by its row's adapter). A provider that fails is a line « unavailable », never an invented result. */
+async function runChecks(row: Row, types: readonly CheckTypeRow[]): Promise<Answer[]> {
+  const adapters = new Map<string, CheckProvider>();
+  const answers: Answer[] = [];
+  for (const type of types) {
+    let provider = adapters.get(type.provider_id);
+    if (!provider) {
+      const providerRow = await providerById(type.provider_id);
+      if (!providerRow?.enabled) throw refuse(503, "PROVIDER_UNAVAILABLE", "No such screening provider");
+      provider = adapterFor(providerRow.adapter);
+      adapters.set(type.provider_id, provider);
+    }
+    const runId = crypto.randomUUID();
+    const call = { userId: row.landlord_id, runId, subject: { subjectId: row.id, ...namesOf(row.tenant_name) }, region: type.region };
+    let result: CheckResult;
+    try {
+      result = await provider.submit(type.purpose, call);
+    } catch {
+      result = { outcome: "PROVIDER_ERROR", refusal: null, category: "NONE", providerRef: null };
+    }
+    answers.push({ type, runId, result, item: itemOf(type.key, result) });
+  }
+  return answers;
+}
+/** One row per check: its closed outcome, the provider's opaque reference and the run id. Never a raw report, never a name. */
+async function recordChecks(screeningId: string, answers: readonly Answer[], now: Date): Promise<void> {
+  for (const a of answers) {
+    await query(
+      "INSERT INTO screening_checks (screening_id, check_type, state, outcome, refusal, category, provider_ref, run_id, submitted_at, answered_at) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) ON CONFLICT (screening_id, check_type) DO NOTHING",
+      [screeningId, a.type.key, stateOf(a.result), a.result.outcome, a.result.refusal, a.result.category, a.result.providerRef, a.runId, now, stateOf(a.result) === CHECK_STATE.answered ? now : null],
+    );
+  }
+}
+
 /** The tenant consents: the provider is called, a minimal result is kept for the retention window, and the tenant sees it first. */
 export async function consent(token: string, now: Date, headers?: Headers): Promise<TenantView> {
   const row = await screeningRow(token);
   const state = effectiveState(row, now);
   if (state.status !== SCREENING_STATUS.requested) throw refuse(409, "NOT_PENDING", "This request is no longer waiting for an answer");
+  const types = await typesByKey(row.scope);
+  const purposes = purposesOfTypes(types);
   // The consent per purpose is recorded first (notice version, date, means); the check then runs only while each stands (yomizaka#131).
-  for (const purpose of purposesOfScope(row.scope)) await grantConsent(row.id, purpose, { noticeVersion: NOTICE_VERSION, means: CONSENT_MEANS.WEB_FORM }, now, headers);
-  for (const purpose of purposesOfScope(row.scope)) await requireConsent(row.id, purpose);
-  const result = await providerById(row.provider).check({ name: row.tenant_name, email: row.tenant_email }, row.scope, now);
+  for (const purpose of purposes) await grantConsent(row.id, purpose, { noticeVersion: NOTICE_VERSION, means: CONSENT_MEANS.WEB_FORM }, now, headers);
+  for (const purpose of purposes) await requireConsent(row.id, purpose);
+  const answers = await runChecks(row, types);
+  const result: ScreeningResult = { band: bandOf(answers.map((a) => a.item)), items: answers.map((a) => a.item), provider: row.provider, generatedAt: now.toISOString() };
   const [updated] = await query<Row>(
     "UPDATE screenings SET status = 'consented', consented_at = $2, result = $3, result_expires_at = $4 WHERE id = $1 AND status = 'requested' RETURNING *",
     [row.id, now, JSON.stringify(result), addDays(now, RETENTION_DAYS)],
   );
   if (!updated) throw refuse(409, "NOT_PENDING", "This request is no longer waiting for an answer");
+  await recordChecks(row.id, answers, now);
   await audit({ ...actor(row), action: "screening.consented", targetId: row.id, detail: { scope: row.scope, provider: row.provider }, headers });
   return tenantView({ ...updated, landlord_email: row.landlord_email }, now);
 }

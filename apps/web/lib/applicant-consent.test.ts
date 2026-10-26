@@ -15,7 +15,7 @@ import {
   grantConsent,
   hasConsent,
   NOTICE_VERSION,
-  purposesOfScope,
+  purposesOfTypes,
   requireConsent,
   withdrawConsent,
 } from "./applicant-consent";
@@ -33,9 +33,9 @@ describe("the purposes are the engine's names (orazaka-ai-engine CheckPurpose) p
     expect(CONSENT_PURPOSE.CREDIT).toBe("CREDIT");
   });
   it("maps the screening scope to the Québec history purpose, and nothing else", () => {
-    expect(purposesOfScope(["payment-history"])).toEqual(["COURT_RECORDS"]);
-    expect(purposesOfScope(["payment-history", "payment-history"])).toEqual(["COURT_RECORDS"]);
-    expect(purposesOfScope(["criminal-record"])).toEqual([]);
+    expect(purposesOfTypes([{ purpose: "COURT_RECORDS" }])).toEqual(["COURT_RECORDS"]);
+    expect(purposesOfTypes([{ purpose: "COURT_RECORDS" }, { purpose: "COURT_RECORDS" }, { purpose: "CREDIT" }])).toEqual(["COURT_RECORDS", "CREDIT"]);
+    expect(purposesOfTypes([{ purpose: "IDENTITY" }])).toEqual([]);
   });
   it("hasConsent answers only for an active purpose", () => {
     expect(hasConsent(["COURT_RECORDS"], CONSENT_PURPOSE.COURT_RECORDS)).toBe(true);

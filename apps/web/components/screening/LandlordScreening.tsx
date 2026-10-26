@@ -5,6 +5,7 @@ import { Alert } from "@krizaka/ui/alert";
 import { Badge } from "@krizaka/ui/badge";
 import { Button } from "@krizaka/ui/button";
 import { Card } from "@krizaka/ui/card";
+import { Checkbox } from "@krizaka/ui/checkbox";
 import { createKrizakaForm } from "@krizaka/ui/form";
 import { useState } from "react";
 import { z } from "zod";
@@ -13,6 +14,12 @@ import { errorKey } from "@/lib/client";
 import type { LandlordView } from "@/lib/screening";
 
 import { type ResultWords, ScreeningResultCard } from "./ScreeningResultCard";
+
+/** A check type this owner may ask, labelled in the page's language (the labels are data, yomizaka#132). */
+export interface OfferedCheck {
+  key: string;
+  label: string;
+}
 
 export interface LandlordWords {
   title: string;
@@ -25,7 +32,7 @@ export interface LandlordWords {
   name: string;
   email: string;
   scope: string;
-  scopeItem: Record<string, string>;
+  noneOffered: string;
   request: string;
   created: string;
   copy: string;
@@ -39,8 +46,8 @@ export interface LandlordWords {
 }
 
 const form = createKrizakaForm({
-  schema: z.object({ tenantName: z.string().trim().min(1).max(120), tenantEmail: z.string().trim().min(3).email().max(254), paymentHistory: z.boolean() }),
-  defaultValues: { tenantName: "", tenantEmail: "", paymentHistory: true },
+  schema: z.object({ tenantName: z.string().trim().min(1).max(120), tenantEmail: z.string().trim().min(3).email().max(254) }),
+  defaultValues: { tenantName: "", tenantEmail: "" },
 });
 
 const TONE: Record<string, "neutral" | "success" | "warning" | "danger"> = { requested: "neutral", consented: "warning", shared: "success", declined: "neutral", contested: "danger", expired: "neutral" };
@@ -49,10 +56,11 @@ const TONE: Record<string, "neutral" | "success" | "warning" | "danger"> = { req
  * The landlord's side: accept the undertaking once (a consent the flow requires), ask an applicant's consent, hand them the
  * link, follow the answers. The result appears only once the applicant has passed it on; « contested » shows no result.
  */
-export function LandlordScreening({ initial, undertakingGiven, words, locale }: Readonly<{ initial: LandlordView[]; undertakingGiven: boolean; words: LandlordWords; locale: string }>) {
+export function LandlordScreening({ initial, offered, undertakingGiven, words, locale }: Readonly<{ initial: LandlordView[]; offered: OfferedCheck[]; undertakingGiven: boolean; words: LandlordWords; locale: string }>) {
   const client = useQueryClient();
   const [given, setGiven] = useState(undertakingGiven);
   const [link, setLink] = useState<string | null>(null);
+  const [chosen, setChosen] = useState<string[]>(() => offered.slice(0, 1).map((o) => o.key));
   const [problem, setProblem] = useState<string | null>(null);
   const list = useQuery({ queryKey: ["screenings"], queryFn: () => krizakaFetch("/api/screenings").then((r) => (r as { screenings: LandlordView[] }).screenings), initialData: initial, enabled: given });
   const accept = useMutation({ mutationFn: () => krizakaFetch("/api/consents", { method: "POST", json: { key: "screening-landlord-undertaking" } }), onSuccess: () => setGiven(true) });
@@ -68,7 +76,7 @@ export function LandlordScreening({ initial, undertakingGiven, words, locale }: 
     onSubmit: async (v) => {
       setProblem(null);
       try {
-        await ask.mutateAsync({ tenantName: v.tenantName, tenantEmail: v.tenantEmail, scope: v.paymentHistory ? ["payment-history"] : [] });
+        await ask.mutateAsync({ tenantName: v.tenantName, tenantEmail: v.tenantEmail, scope: chosen });
       } catch (error) {
         setProblem(`${words.error} (${errorKey(error)})`);
       }
@@ -93,7 +101,12 @@ export function LandlordScreening({ initial, undertakingGiven, words, locale }: 
             </div>
             <fieldset className="flex flex-col gap-2 border-0 p-0">
               <legend className="mb-1 text-sm font-semibold text-fg">{words.scope}</legend>
-              <f.Checkbox name="paymentHistory" label={words.scopeItem["payment-history"] ?? ""} />
+              {offered.length === 0 ? <p className="m-0 text-sm text-fg-muted">{words.noneOffered}</p> : null}
+              {offered.map((o) => (
+                <Checkbox key={o.key} checked={chosen.includes(o.key)} onCheckedChange={(on) => setChosen((c) => (on === true ? [...new Set([...c, o.key])] : c.filter((k) => k !== o.key)))} data-testid={`check-${o.key}`}>
+                  {o.label}
+                </Checkbox>
+              ))}
             </fieldset>
             {problem ? <Alert tone="danger">{problem}</Alert> : null}
             <f.Submit>{words.request}</f.Submit>

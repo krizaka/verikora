@@ -17,7 +17,7 @@ describe.runIf(enabled)("tenant screening (database)", () => {
     [landlord] = (await query<{ id: string; email: string }>("INSERT INTO accounts (email) VALUES ($1) RETURNING id, email", [`screening-landlord-${stamp}@yomizaka.test`])) as [typeof landlord];
   });
 
-  const ask = (email: string) => requestScreening(landlord, { tenantName: "Camille Fictif", tenantEmail: email, scope: ["payment-history"] }, NOW);
+  const ask = (email: string, tenantName = "Camille Fictif", scope: string[] = ["payment-history"]) => requestScreening(landlord, { tenantName, tenantEmail: email, scope }, NOW);
   const actions = async (id: string) => (await query<{ action: string }>("SELECT action FROM audit_log WHERE target_id = $1 ORDER BY id", [id])).map((a) => a.action);
 
   it("keeps only the token's hash, and the landlord sees a request waiting — no result", async () => {
@@ -61,7 +61,7 @@ describe.runIf(enabled)("tenant screening (database)", () => {
   });
 
   it("a contested result is never shown to the landlord, who sees « contested »", async () => {
-    const { id, token } = await ask(`flag-${stamp}@exemple.test`);
+    const { id, token } = await ask(`g-${stamp}@exemple.test`, "Flag Fictif");
     expect((await consent(token, NOW)).result?.band).toBe("review");
     await contest(token, "Ce n'est pas exact.", NOW);
     const seen = (await listForLandlord(landlord.id, NOW)).find((s) => s.id === id)!;
@@ -83,6 +83,35 @@ describe.runIf(enabled)("tenant screening (database)", () => {
     const [open] = await query<{ status: string }>("SELECT status FROM screenings WHERE id = $1", [unanswered.id]);
     expect(open!.status).toBe("expired");
     expect(await actions(consented.id)).toContain("screening.purged");
+  });
+
+  it("offers only the types the owner's row allows: credit needs a row, then runs and says « not available yet » while no provider account exists", async () => {
+    await expect(ask(`h-${stamp}@exemple.test`, "Camille Fictif", ["credit"])).rejects.toMatchObject({ status: 400 });
+    await query("INSERT INTO tenant_check_setting (owner_id, check_type, allowed) VALUES ($1, 'credit', true)", [landlord.id]);
+    const { id, token } = await ask(`h-${stamp}@exemple.test`, "Camille Fictif", ["payment-history", "credit"]);
+    const view = await consent(token, NOW);
+    expect(view.result).toMatchObject({ band: "incomplete", items: [{ key: "payment-history", outcome: "clear" }, { key: "credit", outcome: "soon" }] });
+    const checks = await query<{ check_type: string; state: string; outcome: string; refusal: string | null }>("SELECT check_type, state, outcome, refusal FROM screening_checks WHERE screening_id = $1 ORDER BY check_type", [id]);
+    expect(checks).toEqual([
+      { check_type: "credit", state: "soon", outcome: "REFUSED", refusal: "NOT_CONFIGURED" },
+      { check_type: "payment-history", state: "answered", outcome: "NO_MATCH", refusal: null },
+    ]);
+    const purposes = await query<{ purpose: string }>("SELECT purpose FROM application_consents WHERE screening_id = $1 ORDER BY purpose", [id]);
+    expect(purposes.map((p) => p.purpose)).toEqual(["COURT_RECORDS", "CREDIT"]);
+    await query("DELETE FROM tenant_check_setting WHERE owner_id = $1", [landlord.id]);
+  });
+
+  it("keeps the criminal-record type as a disabled row, never requestable, even if an owner's row allows it", async () => {
+    const [type] = await query<{ enabled: boolean; default_on: boolean; requires_lawyer: string }>("SELECT enabled, default_on, requires_lawyer FROM check_type WHERE key = 'criminal-record'");
+    expect(type).toMatchObject({ enabled: false, default_on: false, requires_lawyer: "criminal-records-lawful" });
+    await query("INSERT INTO tenant_check_setting (owner_id, check_type, allowed) VALUES ($1, 'criminal-record', true)", [landlord.id]);
+    await expect(ask(`i-${stamp}@exemple.test`, "Camille Fictif", ["criminal-record"])).rejects.toMatchObject({ status: 400 });
+    await query("DELETE FROM tenant_check_setting WHERE owner_id = $1", [landlord.id]);
+  });
+
+  it("stores no raw report: the columns of a check hold a closed outcome, a reference and a run id — nothing else", async () => {
+    const cols = await query<{ column_name: string }>("SELECT column_name FROM information_schema.columns WHERE table_name = 'screening_checks' ORDER BY column_name");
+    expect(cols.map((c) => c.column_name)).toEqual(["answered_at", "category", "check_type", "id", "outcome", "provider_ref", "refusal", "run_id", "screening_id", "state", "submitted_at"]);
   });
 
   it("refuses an unknown link, and a scope the law does not allow", async () => {

@@ -761,4 +761,64 @@ INSERT INTO public.krizaka_module_versions (module, version, checksum) VALUES
 ON CONFLICT (module, version) DO NOTHING;
 `,
   },
+  {
+    version: "0039_screening_providers",
+    // yomizaka#132: the screening providers, the check types and what each owner may request are DATA. A provider row names an
+    // adapter (demo, or the engine's door); a check type names a provider and the engine purpose it needs, its labels, its price
+    // as cost + margin, and the consent notice version. Adding a type or switching a provider is a row, no deploy.
+    // screening_checks keeps one check's honest outcome: a closed outcome, the provider's opaque reference and the engine run id —
+    // never a raw report (yomizaka#134).
+    sql: `
+CREATE TABLE screening_provider (
+  id       text PRIMARY KEY CHECK (id ~ '^[a-z][a-z0-9-]{1,39}$'),
+  adapter  text NOT NULL CHECK (adapter IN ('demo', 'engine')),
+  label    text NOT NULL,
+  region   text NOT NULL DEFAULT 'CA',
+  enabled  boolean NOT NULL DEFAULT false,
+  note     text
+);
+CREATE TABLE check_type (
+  key                    text PRIMARY KEY CHECK (key ~ '^[a-z][a-z0-9-]{1,39}$'),
+  provider_id            text NOT NULL REFERENCES screening_provider(id),
+  purpose                text NOT NULL CHECK (purpose IN ('COURT_RECORDS', 'CREDIT')),
+  label_fr               text NOT NULL,
+  label_en               text NOT NULL,
+  provider_cost_cents    integer NOT NULL DEFAULT 0 CHECK (provider_cost_cents >= 0),
+  margin_cents           integer NOT NULL DEFAULT 0 CHECK (margin_cents >= 0),
+  currency               text NOT NULL DEFAULT 'CAD' CHECK (currency = 'CAD'),
+  region                 text NOT NULL DEFAULT 'QC',
+  consent_notice_version text NOT NULL,
+  enabled                boolean NOT NULL DEFAULT false,
+  default_on             boolean NOT NULL DEFAULT false,
+  requires_lawyer        text,
+  note                   text
+);
+CREATE TABLE tenant_check_setting (
+  owner_id   uuid NOT NULL REFERENCES accounts(id) ON DELETE CASCADE,
+  check_type text NOT NULL REFERENCES check_type(key),
+  allowed    boolean NOT NULL,
+  PRIMARY KEY (owner_id, check_type)
+);
+CREATE TABLE screening_checks (
+  id           uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  screening_id uuid NOT NULL REFERENCES screenings(id) ON DELETE CASCADE,
+  check_type   text NOT NULL REFERENCES check_type(key),
+  state        text NOT NULL CHECK (state IN ('answered', 'pending', 'unavailable', 'soon')),
+  outcome      text NOT NULL CHECK (outcome IN ('MATCH', 'NO_MATCH', 'PENDING', 'PROVIDER_ERROR', 'TIMEOUT', 'REFUSED')),
+  refusal      text CHECK (refusal IN ('NO_CONSENT', 'NO_KEY', 'BUDGET_EXHAUSTED', 'NOT_CONFIGURED')),
+  category     text NOT NULL DEFAULT 'NONE' CHECK (category IN ('TAL_NON_PAYMENT', 'TAL_OTHER', 'CRIMINAL', 'CIVIL', 'NONE')),
+  provider_ref text,
+  run_id       uuid NOT NULL,
+  submitted_at timestamptz NOT NULL DEFAULT now(),
+  answered_at  timestamptz,
+  UNIQUE (screening_id, check_type)
+);
+INSERT INTO screening_provider (id, adapter, label, enabled, note) VALUES
+  ('demo', 'demo', 'Demonstration', true, 'Fictitious data, deterministic.'),
+  ('engine', 'engine', 'Orazaka external checks', true, 'Routes to the vendors by data. Every call answers NOT_CONFIGURED until a provider account exists and the compliance gate is open.');
+INSERT INTO check_type (key, provider_id, purpose, label_fr, label_en, consent_notice_version, enabled, default_on, requires_lawyer, note) VALUES
+  ('payment-history', 'demo', 'COURT_RECORDS', 'Historique de paiement', 'Payment history', '2026-10-24.2', true, true, NULL, 'Demonstration only until a provider agreement is signed.'),
+  ('credit', 'engine', 'CREDIT', 'Rapport de crédit', 'Credit report', '2026-10-24.2', true, false, NULL, 'Price to be set when the provider agreement is signed. Offered to an owner by a tenant_check_setting row.'),
+  ('criminal-record', 'engine', 'COURT_RECORDS', 'Antécédents judiciaires', 'Criminal record', '2026-10-24.2', false, false, 'criminal-records-lawful', 'OFF. Not offered to Québec landlords until a lawyer confirms it is lawful for rental (Charter, CDPDJ).');`,
+  },
 ];

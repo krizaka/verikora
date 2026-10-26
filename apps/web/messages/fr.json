@@ -2868,9 +2868,6 @@
       "title": "Une demande de vérification de votre dossier",
       "lead": "{landlord} demande votre accord pour vérifier votre dossier de candidature. Vous décidez : rien n'est vérifié sans votre consentement.",
       "whatTitle": "Ce qui serait vérifié",
-      "scope": {
-        "payment-history": "Votre historique de paiement"
-      },
       "provider": "Fournisseur : {provider}",
       "why": "Pourquoi : le propriétaire évalue votre candidature à un logement.",
       "notAsked": "Ce qui n'est jamais demandé : numéro d'assurance sociale, coordonnées bancaires, employeur, salaire, casier judiciaire.",
@@ -2895,18 +2892,20 @@
       "resultTitle": "Votre résultat",
       "band": {
         "no-concern": "Rien à signaler",
-        "review": "À examiner"
+        "review": "À examiner",
+        "incomplete": "Pas encore complet"
       },
-      "item": {
-        "payment-history": "Historique de paiement",
-        "identity-match": "Identité"
-      },
+      "item": {},
       "outcome": {
         "clear": "rien à signaler",
-        "review": "à examiner"
+        "review": "à examiner",
+        "pending": "en cours",
+        "unavailable": "indisponible pour le moment",
+        "soon": "bientôt disponible"
       },
       "deleteOn": "Supprimé le {date}.",
-      "contested": "Votre contestation : « {comment} »"
+      "contested": "Votre contestation : « {comment} »",
+      "incompleteNote": "Certaines vérifications n'ont pas répondu. Rien ici n'est un résultat pour celles-ci : elles sont montrées telles qu'elles en sont."
     },
     "landlord": {
       "title": "Dossier du locataire",
@@ -2919,9 +2918,6 @@
       "name": "Nom du candidat",
       "email": "Courriel du candidat",
       "scope": "Ce qui sera vérifié",
-      "scopeItem": {
-        "payment-history": "Historique de paiement"
-      },
       "request": "Demander son consentement",
       "created": "Remettez ce lien au candidat (il ne sera plus affiché) :",
       "copy": "Copier le lien",
@@ -2938,7 +2934,8 @@
       "shownTitle": "Résultat transmis",
       "hidden": "Le résultat n'est visible qu'une fois transmis par le candidat.",
       "demo": "Fournisseur de démonstration : données fictives.",
-      "reviewNote": "« À examiner » n'est pas un verdict : parlez-en au candidat avant toute décision."
+      "reviewNote": "« À examiner » n'est pas un verdict : parlez-en au candidat avant toute décision.",
+      "noneOffered": "Aucune vérification ne vous est offerte pour le moment."
     }
   },
   "terms": {
