@@ -7,7 +7,7 @@ import { YOMIZAKA_API_KEY_RULES } from "../api-keys";
  * scopes, the check words, the row codes), so the document cannot drift from what the routes accept; `openapi.test.ts` also
  * refuses a route without an entry here, and an entry without a route.
  */
-const [WRITE, READ] = YOMIZAKA_API_KEY_RULES.scopes;
+const [WRITE, READ, SEAL] = YOMIZAKA_API_KEY_RULES.scopes;
 
 const ref = (name: string) => ({ $ref: `#/components/schemas/${name}` });
 const json = (schema: unknown) => ({ "application/json": { schema } });
@@ -124,6 +124,34 @@ export function openApiDocument(serverUrl: string) {
           responses: { "200": { description: "The archive.", content: { "application/zip": { schema: { type: "string", format: "binary" } } } }, "404": failure("`NOT_FOUND`."), "413": failure("`EXPORT_TOO_LARGE`: export fewer rows."), ...COMMON },
         },
       },
+      "/api/v1/contracts/seal": {
+        post: {
+          operationId: "sealContract",
+          summary: "Seal a contract",
+          description:
+            "Renders a contract's content and parties as a PDF and signs it (Ed25519, folios, a visible signature page, the attestation embedded). The same request is the same contract: a retry answers 200 with the first seal. Yomizaka seals — it verifies no identity, no age and no law; `complianceRuleset` is shown as the partner's own statement. The file is kept in the zone of `X-Data-Residency-Zone` (`CA` by default) or the request is refused (`ZONE_UNAVAILABLE`).",
+          security: secured(SEAL),
+          parameters: [{ name: "x-data-residency-zone", in: "header", required: false, schema: { type: "string", pattern: "^CA(-[A-Z]{2})?$", default: "CA" }, description: "Where the sealed file may be kept: `CA`, or a province like `CA-ON`." }],
+          requestBody: { required: true, content: json(ref("SealRequest")) },
+          responses: {
+            "200": { description: "The seal already made for this request.", content: json(ref("Sealed")) },
+            "201": { description: "Sealed.", content: json(ref("Sealed")) },
+            "400": failure("`BAD_REQUEST` (with the `fields` that are wrong) or `BAD_ZONE`."),
+            "409": failure("`ZONE_UNAVAILABLE`: no store in that zone yet."),
+            ...COMMON,
+          },
+        },
+      },
+      "/api/v1/contracts/{id}/file": {
+        get: {
+          operationId: "getSealedContract",
+          summary: "The sealed PDF",
+          description: "The file as it was sealed, for the account that sealed it. Anyone can check a copy at `/verify/contract/{sha256}` (public: the answer shows no name and no content).",
+          security: secured(SEAL),
+          parameters: [{ name: "id", in: "path", required: true, schema: { type: "string", pattern: "^ctr_[0-9a-f]{24}$" } }],
+          responses: { "200": { description: "The PDF.", content: { "application/pdf": { schema: { type: "string", format: "binary" } } } }, "404": failure("`NOT_FOUND`."), ...COMMON },
+        },
+      },
       "/api/v1/openapi.json": {
         get: { operationId: "getOpenApi", summary: "This document", security: [], responses: { "200": { description: "The OpenAPI 3.1 document.", content: json({ type: "object" }) } } },
       },
@@ -135,6 +163,34 @@ export function openApiDocument(serverUrl: string) {
     components: {
       securitySchemes: { apiKey: { type: "http", scheme: "bearer", description: `\`Authorization: Bearer ${YOMIZAKA_API_KEY_RULES.prefix}_…\`, created in the account (Pro). Scopes: ${YOMIZAKA_API_KEY_RULES.scopes.join(", ")}.` } },
       schemas: {
+        SealRequest: {
+          type: "object",
+          required: ["partnerId", "documentType", "contractPayload", "parties", "complianceRuleset"],
+          properties: {
+            partnerId: { type: "string", pattern: "^[a-z][a-z0-9-]{1,39}$" },
+            documentType: { type: "string", pattern: "^[A-Z][A-Z0-9_]{2,79}$", example: "CREATOR_PARTNERSHIP_CONTRACT" },
+            contractPayload: { type: "object", description: "The content to seal (at most 100 000 bytes as canonical JSON)." },
+            parties: {
+              type: "array",
+              minItems: 1,
+              maxItems: 20,
+              items: { type: "object", required: ["role", "signedAt"], properties: { role: { type: "string", pattern: "^[A-Z][A-Z0-9_]{1,39}$" }, name: { type: "string" }, userId: { type: "string" }, attestationId: { type: "string" }, signedAt: { type: "string", format: "date-time" } }, description: "At least a `name` or a `userId`." },
+            },
+            complianceRuleset: { type: "string", description: "The framework the partner says it follows: shown on the seal as the partner's own." },
+            locale: { type: "string", enum: ["fr", "en"], default: "fr", description: "The language of the seal's words." },
+          },
+        },
+        Sealed: {
+          type: "object",
+          properties: {
+            success: { const: true },
+            contractId: { type: "string" },
+            sha256: { type: "string", description: "SHA-256 of the sealed PDF." },
+            signedPdfUri: { type: "string", format: "uri" },
+            sealedAt: { type: "string", format: "date-time" },
+            attestation: { type: "object", properties: { signature: { type: "string" }, publicKey: { type: "string" }, keyId: { type: "string" } } },
+          },
+        },
         Error: { type: "object", required: ["code", "error"], properties: { code: { type: "string", description: "A stable code; the message is for logs." }, error: { type: "string" } } },
         State: { type: "string", enum: ["pending", "reused", "running", "done", "failed", "refused"] },
         RowError: { type: "string", description: `Why a row did not run: ${Object.values(BATCH_ROW_ERROR).join(", ")} (several, comma-separated, for a refused row), \`PAYWALL\`, \`DAILY_LIMIT\`, \`FAIR_USE\` (the batch waits), \`FAILED\` or \`CANCELLED\` (the run), or the code of the single check that refused it (\`NO_TEXT\`, \`NOT_A_PDF\`…).` },
