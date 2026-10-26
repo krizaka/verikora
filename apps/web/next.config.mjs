@@ -51,7 +51,7 @@ const nextConfig = {
   transpilePackages: ["@yomizaka/core"],
   // The pool, the PDF reader and the photo stack (image library, HEIC decoder, OCR with its worker thread) stay Node modules, required at run time
   // (the OCR's own files are carried into the image by the Dockerfile: the tracer cannot see a worker thread's requires — ADR-0010).
-  serverExternalPackages: ["pg", "unpdf", "sharp", "heic-decode", "tesseract.js", "tesseract.js-core"],
+  serverExternalPackages: ["@krizaka/email", "pg", "unpdf", "sharp", "heic-decode", "tesseract.js", "tesseract.js-core"],
   // The pages removed by « Simplify Yomizaka » (lib/removed-urls.mjs): 308 to their new home, in both languages.
   async redirects() {
     return redirectRules();
