@@ -758,7 +758,14 @@ CREATE TABLE IF NOT EXISTS public.krizaka_module_versions (
 );
 INSERT INTO public.krizaka_module_versions (module, version, checksum) VALUES
   ('auth_sessions', 1, '25ebd4e197a9af3c91386dd4142abcb58c58aac7142bfe4fb18efa2a282f8421')
-ON CONFLICT (module, version) DO NOTHING;
+ON CONFLICT (module, version) DO NOTHING;`,
+  },
+  {
+    version: "0044_document_source_sha",
+    // yomizaka#8: a photo document keeps its recognised words as an invisible text layer, so its file is no longer the bytes first assembled.
+    // `sha256` is the file kept (what the report names); `source_sha256` is the assembled photos, so the same photos sent again are still recognised.
+    sql: `ALTER TABLE documents ADD COLUMN source_sha256 text;
+CREATE INDEX documents_source_sha256 ON documents (owner_id, source_sha256) WHERE source_sha256 IS NOT NULL;
 `,
   },
   {

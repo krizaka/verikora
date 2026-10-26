@@ -3,6 +3,7 @@ import sharp, { type Sharp } from "sharp";
 import { estimateSkew, type Gray, pageBox } from "./deskew";
 import { readFacts } from "./exif";
 import { type ImageCleaner, ImageError, type ImageRules, PHOTO_KIND, type PhotoInput } from "./port";
+import { assessQuality } from "./quality";
 
 /** HEIC is decoded in WebAssembly (the prebuilt image library has no HEIC codec: its patents). The decoder applies the camera's rotation itself. */
 export async function decodeHeic(bytes: Uint8Array): Promise<Sharp> {
@@ -58,8 +59,11 @@ export function createImageCleaner(rules: ImageRules): ImageCleaner {
           cropped = true;
         }
 
+        // 4. how readable it is, on the cropped page before the contrast is stretched (a glare is still a glare).
+        const quality = assessQuality(await grayOf(image, 1000), rules.quality, !cropped);
+
         const out = await image.grayscale().normalise().jpeg({ quality: rules.jpegQuality, mozjpeg: false }).toBuffer({ resolveWithObject: true });
-        return { page: { jpeg: new Uint8Array(out.data), width: out.info.width, height: out.info.height, steps: { orientation: input.kind !== PHOTO_KIND.heic, skewDegrees, cropped } }, facts };
+        return { page: { jpeg: new Uint8Array(out.data), width: out.info.width, height: out.info.height, steps: { orientation: input.kind !== PHOTO_KIND.heic, skewDegrees, cropped }, quality }, facts };
       } catch (error) {
         if (error instanceof ImageError) throw error;
         throw new ImageError("UNREADABLE_IMAGE");

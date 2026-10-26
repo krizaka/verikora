@@ -4,7 +4,7 @@ import os from "node:os";
 import path from "node:path";
 
 import { normaliseText } from "../pdf-text";
-import { type OcrEngine, OcrError, type OcrPage } from "./port";
+import { type OcrEngine, OcrError, type OcrPage, type OcrWord } from "./port";
 
 const require = createRequire(import.meta.url);
 
@@ -41,6 +41,11 @@ function languageData(languages: readonly string[]): string {
 
 const TIMEOUT_MS = 90_000;
 
+/** The words of a recognised page with their boxes, in reading order (blocks → paragraphs → lines → words). */
+export function wordsOf(blocks: ReadonlyArray<{ paragraphs: ReadonlyArray<{ lines: ReadonlyArray<{ words: ReadonlyArray<{ text: string; bbox: OcrWord["bbox"] }> }> }> }> | null | undefined): OcrWord[] {
+  return (blocks ?? []).flatMap((b) => b.paragraphs.flatMap((p) => p.lines.flatMap((l) => l.words.filter((w) => w.text.trim()).map((w) => ({ text: w.text.trim(), bbox: { x0: w.bbox.x0, y0: w.bbox.y0, x1: w.bbox.x1, y1: w.bbox.y1 } })))));
+}
+
 /**
  * Tesseract (Apache-2.0, WebAssembly) in-process: free, local, no network. One worker per document, ended when it is read, so
  * no engine memory is held between uploads. Pages are read one after the other.
@@ -59,8 +64,8 @@ export function tesseractEngine(): OcrEngine {
       try {
         const pages: OcrPage[] = [];
         for (const image of images) {
-          const { data } = await worker.recognize(Buffer.from(image));
-          pages.push({ text: normaliseText(data.text), confidence: data.confidence });
+          const { data } = await worker.recognize(Buffer.from(image), {}, { blocks: true });
+          pages.push({ text: normaliseText(data.text), confidence: data.confidence, words: wordsOf(data.blocks) });
         }
         const weight = pages.map((p) => Math.max(1, p.text.replace(/\s/g, "").length));
         const total = weight.reduce((a, b) => a + b, 0);

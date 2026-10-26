@@ -1,3 +1,5 @@
+import type { PhotoQuality, QualityRules } from "./quality";
+
 /**
  * The PHOTO CLEANING port (ADR-0010). Generic on purpose — no import from this app, so another Krizaka product can lift the
  * folder. A photo of a document (PNG, JPEG, HEIC) goes in; a clean, upright, cropped page comes out, with its metadata
@@ -24,6 +26,8 @@ export interface ImageRules {
   deskewStepDegrees: number;
   /** A crop is applied only when the page fills at least this share of the frame (else the photo is left whole). */
   minPageShare: number;
+  /** The gate: when a photo is too blurred, glared or cut off to be read (lib/images/quality.ts). */
+  quality: QualityRules;
 }
 
 /** What a photo says about where it comes from — read before the metadata is dropped. Never a verdict. */
@@ -43,6 +47,8 @@ export interface CleanedPage {
   height: number;
   /** What was done, for the record and the tests: the orientation applied from the camera, the skew corrected, whether it was cropped. */
   steps: { orientation: boolean; skewDegrees: number; cropped: boolean };
+  /** How readable the page is — measured before its contrast is stretched. */
+  quality: PhotoQuality;
 }
 
 export interface ImageCleaner {

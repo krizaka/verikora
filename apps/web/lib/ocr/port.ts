@@ -4,10 +4,18 @@
  * fallback a product may supply (Orazaka's vision model) for what the local engine cannot read; it is asked only when the
  * local confidence is low, and what it returns is always marked as such. Neither ever decides what the text means.
  */
+/** One recognised word and where it sits on the page image, in the image's pixels (origin top left). */
+export interface OcrWord {
+  text: string;
+  bbox: { x0: number; y0: number; x1: number; y1: number };
+}
+
 export interface OcrPage {
   text: string;
   /** 0–100, as the engine reports it. */
   confidence: number;
+  /** The words with their boxes, in reading order: what lets a finding be lit on the photo (an invisible text layer in the stored PDF). */
+  words?: OcrWord[];
 }
 
 export interface OcrResult {

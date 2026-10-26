@@ -1,4 +1,7 @@
+import { createHash } from "node:crypto";
+
 import { PDFDocument } from "pdf-lib";
+import sharp from "sharp";
 import { beforeAll, describe, expect, it } from "vitest";
 
 import { migrate, query } from "./db";
@@ -56,6 +59,31 @@ describe.runIf(enabled)("photos become one document", () => {
     const again = await storePhotos(owner, photos, "auto", { deps: deps(counting) });
     expect(again).toMatchObject({ duplicate: true, summary: { id: first.summary.id } });
     expect(reads).toBe(1);
+  });
+
+  it("keeps the recognised words as an invisible text layer on the photo, names the file kept by its own hash, and still recognises the same photos", async () => {
+    const withWords: OcrEngine = {
+      name: "tesseract",
+      read: async (images) => ({ text: LEASE, confidence: 92, pages: images.map(() => ({ text: LEASE, confidence: 92, words: [{ text: "Loyer", bbox: { x0: 40, y0: 40, x1: 200, y1: 90 } }] })) }),
+    };
+    const photos = [await file("layer.jpg", 3)];
+    const first = await storePhotos(owner, photos, "auto", { deps: deps(withWords) });
+    const stored = (await getFile(owner, first.summary.id)).content;
+    const [row] = await query<{ sha256: string; source_sha256: string | null }>("SELECT sha256, source_sha256 FROM documents WHERE id = $1", [first.summary.id]);
+    expect(row!.source_sha256).toMatch(/^[0-9a-f]{64}$/);
+    expect(row!.sha256).not.toBe(row!.source_sha256);
+    expect(createHash("sha256").update(stored).digest("hex")).toBe(row!.sha256);
+    const again = await storePhotos(owner, photos, "auto", { deps: deps(withWords) });
+    expect(again).toMatchObject({ duplicate: true, summary: { id: first.summary.id } });
+  });
+
+  it("refuses a photo too blurred to read, with what to do — before anything is stored or read", async () => {
+    let reads = 0;
+    const counting: OcrEngine = { name: "tesseract", read: async (images, languages) => (reads++, engine(90).read(images, languages)) };
+    const sharpPhoto = await photoOfPage();
+    const blurred = new Uint8Array(await sharp(sharpPhoto).blur(6).jpeg().toBuffer());
+    await expect(storePhotos(owner, [{ name: "blur.jpg", type: "image/jpeg", bytes: blurred }], "auto", { deps: deps(counting) })).rejects.toMatchObject({ status: 422, body: { code: "PHOTO_BLURRY", photo: 1 } });
+    expect(reads).toBe(0);
   });
 
   it("a low reading is flagged; with a model available it reads instead and is marked with its run", async () => {
