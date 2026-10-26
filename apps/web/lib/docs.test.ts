@@ -48,7 +48,7 @@ describe("/docs", () => {
   it("takes the scope of each route from the document: a route that needs a key names it", () => {
     const secured = apiOperations().filter((o) => o.scope);
     expect(secured.length).toBeGreaterThan(0);
-    for (const op of secured) expect(["checks:write", "reports:read"]).toContain(op.scope);
+    for (const op of secured) expect(["checks:write", "reports:read", "contracts:seal"]).toContain(op.scope);
   });
 
   it("reads what a signed report guarantees from the words of the verification page", async () => {

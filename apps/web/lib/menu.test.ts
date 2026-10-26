@@ -6,7 +6,7 @@ import { describe, expect, it } from "vitest";
 import config from "../next.config.mjs";
 import { DOWNLOADS, downloadsOffered } from "./downloads";
 import { HOME_ANCHORS, MENU, menuHref, signInPath } from "./nav";
-import { OLD_AUDIENCE_SLUGS, PARKED_PAGES, redirectRules } from "./removed-urls.mjs";
+import { ALIAS_RULES, OLD_AUDIENCE_SLUGS, PARKED_PAGES, redirectRules } from "./removed-urls.mjs";
 import { pagePath, PAGES } from "./site";
 
 /**
@@ -86,7 +86,7 @@ describe("every removed address redirects (308) to its new home", () => {
   const redirects = (config as { redirects: () => Promise<{ source: string; destination: string; permanent: boolean }[]> }).redirects;
 
   it("next.config serves exactly these rules, all permanent (308)", async () => {
-    expect(await redirects()).toEqual(rules);
+    expect(await redirects()).toEqual([...rules, ...ALIAS_RULES]);
     for (const rule of rules) expect(rule.permanent).toBe(true);
   });
 

@@ -1,10 +1,13 @@
 import crypto from "node:crypto";
 
-import { PDFDict, PDFDocument, type PDFFont, PDFName, PDFString, rgb, StandardFonts } from "pdf-lib";
+import { PDFDict, PDFDocument, type PDFFont, PDFName, PDFString } from "pdf-lib";
 import { z } from "zod";
 
 import { LINE, type LineKind, noteLines } from "./closing-note/render";
 import { numberFindings } from "./document-face";
+import { drawPages, embedFonts, type Face, foldToWinAnsi, type Fonts, LINE_HEIGHT, PAGE, paginate, printable, signedBodyOf, wrap } from "./pdf-layout";
+
+export { foldToWinAnsi };
 import { type Attestation, fill, REPORT_SCHEMA, type ReportLabels, type ReportPayload, reportPayload, sha256, signedMessage, type Verification, type VerifyFailure } from "./report";
 import { type SigningKey } from "./report-key";
 import { SITE_URL } from "./site";
@@ -21,7 +24,6 @@ import { SITE_URL } from "./site";
  * It does NOT sign the PDF's bytes (a viewer that re-saves a file changes them): it signs what the file says.
  */
 export const ATTESTATION_KEY = "YomizakaAttestation";
-const PAGE = { w: 595.28, h: 841.89, margin: 56 };
 
 /** How each kind of line of the closing note is printed. */
 const NOTE_STYLE: Record<LineKind, { size: number; bold?: boolean; gap?: number }> = {
@@ -135,16 +137,6 @@ export function reportBlocks(payload: ReportPayload, labels: ReportLabels): Bloc
   ];
 }
 
-/** What French typography and common symbols become where the standard fonts have no glyph: their plain equivalent, not « ? ». */
-const FOLD: Record<string, string> = { "\u202f": " ", "\u2009": " ", "\u2002": " ", "\u2003": " ", "\u2011": "-", "\u2212": "-", "\u2192": "->", "\u2190": "<-", "\u2265": ">=", "\u2264": "<=", "\u2713": "ok", "\u2714": "ok", "\u2717": "x", "\u2715": "x", "\u2022": "\u2022" };
-export const foldToWinAnsi = (text: string) => [...text].map((ch) => FOLD[ch] ?? ch).join("");
-
-/** A PDF's standard fonts print WinAnsi: what has no plain equivalent becomes « ? » — in the signed text too, so both sides agree. */
-const printable = (text: string, font: PDFFont) => {
-  const ok = font.getCharacterSet();
-  return [...foldToWinAnsi(text.replace(/[\r\n\t]+/g, " "))].map((ch) => (ok.includes(ch.codePointAt(0)!) ? ch : "?")).join("");
-};
-
 /** The blocks in the order the pages print them: the footnotes first (they sit at the foot of the first page, which prints them first), then the body. */
 const inPrintOrder = (blocks: Block[]) => [...blocks.filter((b) => b.footnote), ...blocks.filter((b) => !b.footnote)];
 
@@ -154,32 +146,6 @@ const printedText = (b: Block) => (b.footnote ? `${MARKS[b.footnote - 1]} ${b.te
 /** The text the signature covers: the blocks in print order, printable, with every whitespace removed (wrapping must not matter). The folios are not part of it. */
 export const signedText = (blocks: Block[], font: PDFFont) => inPrintOrder(blocks).map((b) => printable(printedText(b), font)).join("").replace(/\s+/g, "");
 
-function wrap(text: string, font: PDFFont, size: number, width: number): string[] {
-  const lines: string[] = [];
-  let line = "";
-  const push = (w: string) => {
-    // A single token wider than the line (a hash) is cut where it stops fitting.
-    let rest = w;
-    while (font.widthOfTextAtSize(rest, size) > width) {
-      let n = rest.length;
-      while (n > 1 && font.widthOfTextAtSize(rest.slice(0, n), size) > width) n -= 1;
-      lines.push(rest.slice(0, n));
-      rest = rest.slice(n);
-    }
-    line = rest;
-  };
-  for (const word of text.split(" ")) {
-    const test = line ? `${line} ${word}` : word;
-    if (font.widthOfTextAtSize(test, size) <= width) line = test;
-    else {
-      if (line) lines.push(line);
-      push(word);
-    }
-  }
-  if (line) lines.push(line);
-  return lines;
-}
-
 export interface IssuedPdf {
   bytes: Uint8Array;
   /** SHA-256 of the file as delivered. */
@@ -187,51 +153,12 @@ export interface IssuedPdf {
   attestation: Attestation;
 }
 
-type Face = "regular" | "bold" | "mono";
-/** One printed line: where it goes on its page, and in what face. */
-interface PrintedLine {
-  text: string;
-  size: number;
-  face: Face;
-  y: number;
-}
-
-const LINE_HEIGHT = 1.4;
-/** The folio sits in the bottom margin, centred; the body stops above it. */
-const FOLIO = { size: 8, y: 30 };
-
-/**
- * Lays blocks out on pages: each wrapped to the width, a new page when the next line would cross the bottom margin. The first page
- * keeps `reserve` points at its foot for the footnotes. Pure and deterministic: the same blocks give the same pages.
- */
-function paginate(blocks: ReadonlyArray<{ text: string; size: number; face: Face; gap: number }>, fonts: Record<Face, PDFFont>, reserve: number): PrintedLine[][] {
-  const width = PAGE.w - PAGE.margin * 2;
-  const pages: PrintedLine[][] = [[]];
-  let y = PAGE.h - PAGE.margin;
-  const floor = () => PAGE.margin + (pages.length === 1 ? reserve : 0);
-  for (const b of blocks) {
-    for (const text of wrap(b.text, fonts[b.face], b.size, width)) {
-      if (y < floor() + b.size) {
-        pages.push([]);
-        y = PAGE.h - PAGE.margin;
-      }
-      pages.at(-1)!.push({ text, size: b.size, face: b.face, y });
-      y -= b.size * LINE_HEIGHT;
-    }
-    y -= b.gap;
-  }
-  return pages;
-}
-
 const faceOf = (b: Block): Face => (b.mono ? "mono" : b.bold ? "bold" : "regular");
-
-/** The folio of a page: « 2 / 4 », language-free, so that it can be told from the report's text at verification. */
-export const folio = (page: number, total: number) => `${page} / ${total}`;
 
 /** Lays out, hashes the text, signs, embeds. Each page carries its folio and the first one its footnotes; the findings are numbered as on the screen. */
 export async function issuePdf(payload: ReportPayload, labels: ReportLabels, key: SigningKey): Promise<IssuedPdf> {
   const doc = await PDFDocument.create();
-  const fonts: Record<Face, PDFFont> = { regular: await doc.embedFont(StandardFonts.Helvetica), bold: await doc.embedFont(StandardFonts.HelveticaBold), mono: await doc.embedFont(StandardFonts.Courier) };
+  const fonts: Fonts = await embedFonts(doc);
   const blocks = reportBlocks(payload, labels);
   const printable_ = (b: Block) => ({ text: printable(printedText(b), fonts.regular), size: b.size, face: faceOf(b), gap: b.gap ?? 4 });
   const width = PAGE.w - PAGE.margin * 2;
@@ -263,21 +190,15 @@ export async function issuePdf(payload: ReportPayload, labels: ReportLabels, key
   );
   const pages = [...body, signaturePage!];
 
-  const ink = rgb(0.08, 0.09, 0.12);
-  for (const [index, lines] of pages.entries()) {
-    const page = doc.addPage([PAGE.w, PAGE.h]);
-    // The folio is drawn first: a page's text always starts with it, which is how verification tells it from the report's words.
-    const label = folio(index + 1, pages.length);
-    page.drawText(label, { x: (PAGE.w - fonts.regular.widthOfTextAtSize(label, FOLIO.size)) / 2, y: FOLIO.y, size: FOLIO.size, font: fonts.regular, color: ink });
-    if (index === 0 && footLines.length) {
-      let y = PAGE.margin + footLines.reduce((sum, l) => sum + l.size * LINE_HEIGHT, 0) - footLines[0]!.size;
-      for (const n of footLines) {
-        page.drawText(n.text, { x: PAGE.margin, y, size: n.size, font: fonts[n.face], color: ink });
-        y -= n.size * LINE_HEIGHT;
-      }
-    }
-    for (const l of lines) page.drawText(l.text, { x: PAGE.margin, y: l.y, size: l.size, font: fonts[l.face], color: ink });
-  }
+  // The footnotes sit at the foot of the first page: their lines, placed bottom-up above the margin.
+  const noteHeight = footLines.reduce((sum, l) => sum + l.size * LINE_HEIGHT, 0);
+  let noteY = PAGE.margin + noteHeight - (footLines[0]?.size ?? 0);
+  const foot = footLines.map((n) => {
+    const placed = { ...n, y: noteY };
+    noteY -= n.size * LINE_HEIGHT;
+    return placed;
+  });
+  drawPages(doc, fonts, pages, foot);
 
   const finished = new Date(payload.check.finishedAt);
   doc.setTitle(payload.document.title);
@@ -323,10 +244,9 @@ export async function verifyPdf(bytes: Uint8Array, key: Pick<SigningKey, "keyId"
     const pdf = await getDocumentProxy(new Uint8Array(bytes));
     const pages = (await extractText(pdf, { mergePages: false })).text as string[];
     // Each page starts with its folio (« 2 / 4 »): it must be the right one for its place, and it is not part of what was signed.
-    const total = pages.length;
-    const body = pages.slice(0, -1).map((p) => p.replace(/\s+/g, ""));
-    if (body.some((p, i) => !p.startsWith(`${i + 1}/${total}`))) return fail("ALTERED");
-    text = body.map((p, i) => p.slice(`${i + 1}/${total}`.length)).join("");
+    const body = signedBodyOf(pages);
+    if (body === null) return fail("ALTERED");
+    text = body;
   } catch {
     return fail("UNREADABLE");
   }

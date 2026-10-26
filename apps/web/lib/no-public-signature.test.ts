@@ -15,13 +15,25 @@ import { signingKey } from "./report-signer";
 const ROOT = join(__dirname, "..");
 const routes = (dir: string): string[] => readdirSync(dir).flatMap((n) => (statSync(join(dir, n)).isDirectory() ? routes(join(dir, n)) : n === "route.ts" ? [join(dir, n)] : []));
 const API = join(ROOT, "app/api");
-const isPrivate = (src: string) => /requireSession|requireAdmin/.test(src);
+const isPrivate = (src: string) => /requireSession|requireAdmin|apiCaller/.test(src);
+/**
+ * The one public check there is: a sealed contract, asked by the SHA-256 of its file (yomizaka#71). It serves no signed artifact — only whether
+ * Yomizaka sealed that hash, when and under which key — and never a report: it may read the seal's key, nothing of the reports' signing.
+ */
+const CONTRACT_CHECK = join(API, "verify/contract/[sha256]/route.ts");
 
 describe("no public route serves a signed artifact", () => {
   it("every route that is not behind a session leaves the signing code alone", () => {
-    const publicRoutes = routes(API).filter((f) => !isPrivate(readFileSync(f, "utf8")));
+    const publicRoutes = routes(API).filter((f) => !isPrivate(readFileSync(f, "utf8")) && f !== CONTRACT_CHECK);
     expect(publicRoutes.length).toBeGreaterThan(0);
     for (const f of publicRoutes) expect(readFileSync(f, "utf8"), f).not.toMatch(/issueReport|recordedReport|showcaseReport|signingKey|reportFor|attestation|signature/i);
+  });
+
+  it("the public check of a sealed contract answers about a hash and serves no file, no report and no personal information", () => {
+    const src = readFileSync(CONTRACT_CHECK, "utf8");
+    expect(src).not.toMatch(/issueReport|recordedReport|showcaseReport|reportFor|reportPdfFor|new Response\(|content-disposition/i);
+    expect(src).not.toMatch(/parties|\.name\b|userId|attestationId|contractPayload/);
+    expect(src).toContain("limit(");
   });
 
   it("the two public report downloads are gone (the routes do not exist: 404)", () => {

@@ -80,6 +80,13 @@
 
 - **The live DO spec must equal `deploy/digitalocean/dev.app.yaml`** (the repository is the intent; `doctl apps update` is not run by CI). The sitemap was a 404 because the live app still had `APP_SEARCH_INDEXING=off` while the file said `on`: after any spec change, run `node scripts/check-seo-family.mjs --base https://www.yomizaka.com --host https://www.yomizaka.com`. **`dev.*` is never indexed** (www is production; dev redirects to it today and becomes a separate dev environment later): `indexableOn` is false for any `dev.*` host, tested in `lib/indexing.test.ts`.
 
+- **Sealed contracts** (`lib/contracts/`, yomizaka#71): `POST /api/v1/contracts/seal` (API key, scope `contracts:seal`) renders a partner's contract — its content,
+  its parties, the framework the partner *names* — as a PDF signed like a report (folios, signature page, Ed25519 attestation embedded; `lib/pdf-layout.ts` is the
+  layout both share). It seals; it verifies no identity, no age and no law, and says so on the file. The same request is the same contract (id by content: a retry
+  is 200, nothing sealed twice). The file is kept in the database (Toronto): `X-Data-Residency-Zone` is answered only for a zone the file is in (`CA`, `CA-ON`),
+  `CA-QC` is refused (`ZONE_UNAVAILABLE`) until a store there exists. `/verify/contract/<sha256>` (308 to `/api/verify/contract/…`) is public and shows who sealed it
+  and when, never a name, an account or the content.
+
 ## 5. Storage and cost
 
 - Documents (≤ 10 MB) are kept **in the database** (`documents.content`, bytea) for the MVP: no storage service to pay

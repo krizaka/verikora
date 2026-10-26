@@ -3147,5 +3147,26 @@
       "signature": "Nom et signature du locateur : ____________    Date : ____________",
       "disclaimer": "Préparé avec Yomizaka à titre informatif, ce n’est pas un avis juridique. Le locateur le vérifie, le signe et l’envoie lui-même : Yomizaka n’envoie rien au nom de quiconque."
     }
+  },
+  "contractSeal": {
+    "eyebrow": "Yomizaka — sceau d’un contrat",
+    "partner": "Partenaire",
+    "contractId": "Contrat",
+    "documentType": "Type de document",
+    "ruleset": "Cadre indiqué par le partenaire",
+    "parties": "Parties",
+    "partyRole": "Rôle",
+    "partyName": "Nom",
+    "partyUser": "Compte",
+    "partyAttestation": "Attestation du partenaire",
+    "partySignedAt": "Signé le",
+    "payloadHeading": "Contenu scellé",
+    "payloadSha": "SHA-256 du contenu",
+    "sealedAt": "Scellé le",
+    "zone": "Zone des données",
+    "guaranteeHeading": "Ce que ce sceau dit",
+    "guarantees": "Ce fichier est scellé avec la clé de Yomizaka (Ed25519, détenue par Krizaka) : il atteste que ce contenu, ces parties et ces dates existaient sous cette forme au moment du scellement et n’ont pas été modifiés depuis.",
+    "notGuaranteed": "Il ne vérifie ni l’identité de quiconque, ni l’âge de quiconque, ni la validité du contrat en droit, ni les déclarations du partenaire : Yomizaka vérifie des documents, il ne décide pas. Informatif, pas un avis juridique.",
+    "verify": "Pour vérifier une copie, prenez son SHA-256 et ouvrez {url} suivi de cette valeur : la réponse dit si Yomizaka l’a scellée et quand, sans montrer aucun renseignement personnel."
   }
 }

@@ -758,7 +758,24 @@ CREATE TABLE IF NOT EXISTS public.krizaka_module_versions (
 );
 INSERT INTO public.krizaka_module_versions (module, version, checksum) VALUES
   ('auth_sessions', 1, '25ebd4e197a9af3c91386dd4142abcb58c58aac7142bfe4fb18efa2a282f8421')
-ON CONFLICT (module, version) DO NOTHING;
+ON CONFLICT (module, version) DO NOTHING;`,
+  },
+  {
+    version: "0045_sealed_contracts",
+    // yomizaka#71: the contracts a partner platform has sealed. The file is the evidence (bytes kept as sealed, content and parties
+    // inside it); the columns hold no personal information, so the public check can answer from them.
+    sql: `CREATE TABLE sealed_contracts (
+  id            text PRIMARY KEY,
+  owner_id      uuid NOT NULL REFERENCES accounts(id) ON DELETE CASCADE,
+  partner_id    text NOT NULL,
+  document_type text NOT NULL,
+  sha256        text NOT NULL UNIQUE,
+  zone          text NOT NULL,
+  key_id        text NOT NULL,
+  sealed_at     timestamptz NOT NULL,
+  content       bytea NOT NULL
+);
+CREATE INDEX sealed_contracts_owner ON sealed_contracts (owner_id, sealed_at DESC);
 `,
   },
 ];

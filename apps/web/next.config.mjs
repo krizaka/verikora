@@ -1,7 +1,7 @@
 import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 
-import { redirectRules } from "./lib/removed-urls.mjs";
+import { ALIAS_RULES, redirectRules } from "./lib/removed-urls.mjs";
 
 const packageVersion = JSON.parse(readFileSync(new URL("./package.json", import.meta.url), "utf8")).version;
 // package.json's version + the short commit DigitalOcean passes at build (APP_COMMIT_SHA): the version every page shows.
@@ -54,7 +54,7 @@ const nextConfig = {
   serverExternalPackages: ["pg", "unpdf", "sharp", "heic-decode", "tesseract.js", "tesseract.js-core"],
   // The pages removed by « Simplify Yomizaka » (lib/removed-urls.mjs): 308 to their new home, in both languages.
   async redirects() {
-    return redirectRules();
+    return [...redirectRules(), ...ALIAS_RULES];
   },
   async headers() {
     return [{ source: "/:path*", headers: securityHeaders }];

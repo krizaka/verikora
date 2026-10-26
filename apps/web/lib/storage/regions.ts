@@ -16,6 +16,8 @@ export const COUNTRY_OF_REGION: Readonly<Record<string, string>> = {
   "canada-central": "CA",
   canadacentral: "CA",
   canadaeast: "CA",
+  // OVHcloud Beauharnois (Québec).
+  bhs: "CA",
   // Bunny Storage zones (`<region>.storage.bunnycdn.com`).
   ny: "US",
   la: "US",

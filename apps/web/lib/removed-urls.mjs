@@ -44,6 +44,13 @@ const RENAMED_APP = [
  */
 export const PARKED_PAGES = ["/download"];
 
+/**
+ * Short addresses that are served by a route of the API, not removed pages: the public check of a sealed contract
+ * (`/verify/contract/<sha256>`, yomizaka#71) answers 308 to its route.
+ * @type {RemovedRule[]}
+ */
+export const ALIAS_RULES = [{ source: "/verify/contract/:sha256([0-9a-f]{64})", destination: "/api/verify/contract/:sha256", permanent: true }];
+
 /** @returns {RemovedRule[]} */
 export function redirectRules() {
   const rules = [];
