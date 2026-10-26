@@ -46,6 +46,8 @@ services:
       period_seconds: 15
     envs:
       - { key: APP_PUBLIC_URL, scope: RUN_AND_BUILD_TIME, value: "https://www.yomizaka.com" }
+      # The stage (yomizaka#364): `dev` shows the « development version » notice on every screen; `prod` hides it. Read at build too (the pages are static).
+      - { key: APP_ENVIRONMENT, scope: RUN_AND_BUILD_TIME, value: "dev" }
       - { key: APP_DEV_HOST, scope: RUN_TIME, value: "dev.yomizaka.com" }
       # www is indexed (krizaka-com AGENTS §2.4): robots allows, sitemap, no noindex. dev. and admin. are closed by host (lib/indexing.ts).
       - { key: APP_SEARCH_INDEXING, scope: RUN_AND_BUILD_TIME, value: "on" }

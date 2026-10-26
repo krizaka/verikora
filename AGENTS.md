@@ -32,7 +32,6 @@
   once (`documents.extraction`: queued → running → done | failed, with `extraction_error`), the worker reads it after the answer, a check waits (`409 EXTRACTING`),
   `@yomizaka/client`'s `uploadDocument` and the web's `startIfSure` wait for `done` (`waitForExtraction`, `packages/core`), the document page polls. A reading left
   queued or running for 3 minutes (the process restarted) shows as failed.
-  search. A scanned PDF has no text layer — the UI says so; reading images would be Orazaka's job.
 - **The TAL renewal radar** (`lib/brief/`, yomizaka#228): Yomizaka's first detector of the Monday brief, on `@krizaka/brief` (`renewalRadar`, pure). The notice
   windows of art. 1942 C.c.Q. and the TAL's yearly figures are **data** (`content/tal/renewal-radar.json`: one entry per year, each with its source page and the day
   it was entered; no year, no figure — the radar says so and shows the table's source). Never a percentage in code, never an invented figure: the shipped table has
@@ -74,6 +73,7 @@
 - A production server refuses to start without `DATABASE_URL`, `AUTH_SESSION_SECRET` (≥ 32), an `oz_` key and, for a TLS
   database, its CA (`lib/env.ts`). Secrets only in DO as SECRET and in the maintainer's local files — never in the
   repository, never printed (read them with `~/.krizaka-worktrees/tools/secret.sh`).
+- **The stage notice** (yomizaka#364): every surface (web root layout, phone, Mac) renders `EnvironmentNotice` of `@krizaka/ui` — « development version, data can be reset, not a commercial offer » — driven by `APP_ENVIRONMENT` (`dev` | `prod`; the apps: `EXPO_PUBLIC_APP_ENV` / `VITE_APP_ENV`). `prod` renders nothing; the words are the `stage` messages (shared by the apps in `@yomizaka/client`). Never a banner of our own, never an `if` per page.
 - Environment variables are named by bounded context (`APP_`, `DATABASE_`, `AUTH_`, `ABUSE_`, `AI_`), never by product or
   vendor; each is declared once in `apps/web/lib/env.ts`.
 

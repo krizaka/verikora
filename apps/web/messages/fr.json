@@ -2699,5 +2699,9 @@
       "signature": "Nom et signature du locateur : ____________    Date : ____________",
       "disclaimer": "Préparé avec Yomizaka à titre informatif, ce n’est pas un avis juridique. Le locateur le vérifie, le signe et l’envoie lui-même : Yomizaka n’envoie rien au nom de quiconque."
     }
+  },
+  "stage": {
+    "title": "Version de développement",
+    "message": "Les données peuvent être réinitialisées à tout moment. Ce n'est pas encore une offre commerciale."
   }
 }

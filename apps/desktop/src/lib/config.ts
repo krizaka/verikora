@@ -1,4 +1,4 @@
-import { browserStorage, createApiClient, createAppDiscovery, createSessionStore } from "@krizaka/app-client";
+import { appEnvironmentFrom, browserStorage, createApiClient, createAppDiscovery, createSessionStore } from "@krizaka/app-client";
 import { fetch as tauriFetch } from "@tauri-apps/plugin-http";
 import { createQueries, createYomizakaApi } from "@yomizaka/client";
 
@@ -14,6 +14,9 @@ const BAKED = { apiBase: "https://dev.yomizaka.com", webBase: "https://dev.yomiz
 
 /** The session lives in the Keychain (tauri-plugin-krizaka), never in the page's storage: the same store as the phone's. */
 export const session = createSessionStore({ storage: keychain, key: "yomizaka.session" });
+
+/** The stage this build follows (`dev` | `prod`): `prod` hides the development-version notice (yomizaka#364). */
+export const stage = appEnvironmentFrom(import.meta.env.VITE_APP_ENV);
 
 export const discovery = createAppDiscovery({
   product: PRODUCT,
