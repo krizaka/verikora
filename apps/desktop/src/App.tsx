@@ -3,19 +3,21 @@ import { useQuery } from "@krizaka/query";
 import { YomizakaLogo } from "@krizaka/ui";
 import { AccountMenu } from "@krizaka/ui/account-menu";
 import { AppShell } from "@krizaka/ui/app-shell";
+import { isProductionStage } from "@krizaka/ui/environment-notice";
 import { Tabs } from "@krizaka/ui/tabs";
 import { ThemeToggle } from "@krizaka/ui/theme";
 import { CHECKS_TABS, type ChecksTab, type SectionId } from "@yomizaka/core";
 import { useCallback, useEffect, useState } from "react";
 
 import { BatchesView, BatchView } from "./components/Batches";
+import { EnvironmentBand } from "./components/EnvironmentBand";
 import { CheckView } from "./components/CheckView";
 import { Library } from "./components/Library";
 import { DocumentView, ReportsView } from "./components/Reports";
 import { Settings } from "./components/Settings";
 import { SignIn } from "./components/SignIn";
 import { I18nProvider, type Locale, LOCALES, currentLocale, rememberLocale, useI18n } from "./i18n";
-import { APP_VERSION, queries, yomizaka } from "./lib/config";
+import { APP_ENV, APP_VERSION, queries, yomizaka } from "./lib/config";
 import { bridge, folders, followLinks, setNativeMenu } from "./lib/desktop";
 import { macSections, MENU_IDS, menuSpec } from "./lib/menu";
 import { hashOf, type Route, routeOfLink, sectionOf } from "./lib/route";
@@ -30,7 +32,11 @@ export function App() {
   }, []);
   return (
     <I18nProvider locale={locale} setLocale={choose}>
-      <Gate onLocale={choose} />
+      <EnvironmentBand stage={APP_ENV} />
+      {/* The window is the viewport less the band (AppShell reads --kz-window-height); production has no band. */}
+      <div className={isProductionStage(APP_ENV) ? undefined : "[--kz-window-height:calc(100dvh-2.25rem)]"}>
+        <Gate onLocale={choose} />
+      </div>
     </I18nProvider>
   );
 }

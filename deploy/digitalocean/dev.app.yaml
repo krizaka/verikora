@@ -48,6 +48,8 @@ services:
       - { key: APP_PUBLIC_URL, scope: RUN_AND_BUILD_TIME, value: "https://www.yomizaka.com" }
       - { key: APP_DEV_HOST, scope: RUN_TIME, value: "dev.yomizaka.com" }
       # www is indexed (krizaka-com AGENTS §2.4): robots allows, sitemap, no noindex. dev. and admin. are closed by host (lib/indexing.ts).
+      # The stage drives the « development version » notice on every screen (yomizaka#364); a production spec says "prod".
+      - { key: APP_ENVIRONMENT, scope: RUN_AND_BUILD_TIME, value: "dev" }
       - { key: APP_SEARCH_INDEXING, scope: RUN_AND_BUILD_TIME, value: "on" }
       - { key: APP_COMMIT_SHA, scope: BUILD_TIME, value: "${_self.COMMIT_HASH}" }
       - { key: DATABASE_URL, scope: RUN_TIME, type: SECRET, value: "__DATABASE_URL__" }

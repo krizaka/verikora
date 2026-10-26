@@ -6,6 +6,8 @@ import { ThemeProvider, ThemeScript } from "@krizaka/ui/theme";
 import type { Metadata, Viewport } from "next";
 import { notFound } from "next/navigation";
 
+import { EnvironmentBand } from "@/components/EnvironmentBand";
+import { appEnvironment } from "@/lib/env";
 import { getDictionary, type Locale, LOCALES } from "@/lib/i18n";
 import { SITE_URL } from "@/lib/site";
 
@@ -41,6 +43,7 @@ export default async function LocaleLayout({ children, params }: { children: Rea
       </head>
       <body className="min-h-screen bg-surface-0 text-fg antialiased selection:bg-accent selection:text-on-accent">
         <ThemeProvider defaultMode="dark">
+          <EnvironmentBand locale={locale as Locale} stage={appEnvironment()} />
           <PageTransition>{children}</PageTransition>
           <MotionObserver />
         </ThemeProvider>

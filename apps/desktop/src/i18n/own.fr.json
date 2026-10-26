@@ -116,5 +116,9 @@
     "addFolder": "Ajouter un dossier…",
     "go": "Aller",
     "settings": "Réglages…"
+  },
+  "environment": {
+    "title": "Version de développement",
+    "message": "Les données peuvent être réinitialisées à tout moment. Ce n'est pas encore une offre commerciale."
   }
 }

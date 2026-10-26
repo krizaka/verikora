@@ -116,5 +116,9 @@
     "addFolder": "Add a Folder…",
     "go": "Go",
     "settings": "Settings…"
+  },
+  "environment": {
+    "title": "Development version",
+    "message": "Data can be reset at any time. This is not a commercial offer yet."
   }
 }

@@ -1,4 +1,4 @@
-import { createApiClient, createAppDiscovery, createSessionStore, secureStorage } from "@krizaka/app-client";
+import { appEnvironmentFrom, createApiClient, createAppDiscovery, createSessionStore, secureStorage } from "@krizaka/app-client";
 import { createQueries, createYomizakaApi } from "@yomizaka/client";
 import Constants from "expo-constants";
 import * as SecureStore from "expo-secure-store";
@@ -10,6 +10,8 @@ import { currentLocale } from "./i18n";
  * build; `EXPO_PUBLIC_APP_URL` points a development build at another machine, `EXPO_PUBLIC_APP_ENV` picks the manifest entry.
  */
 export const PRODUCT = "yomizaka";
+/** The stage of this build (`EXPO_PUBLIC_APP_ENV`: dev or prod, dev when unset): the « development version » notice follows it. */
+export const APP_ENV = appEnvironmentFrom(process.env.EXPO_PUBLIC_APP_ENV);
 export const APP_VERSION = Constants.expoConfig?.version ?? "0.0.0";
 
 /** Until a verified manifest answers: the address of the dev deployment. */
@@ -26,7 +28,7 @@ export const discovery = createAppDiscovery({
   appVersion: APP_VERSION,
   baked: BAKED,
   storage,
-  env: { url: process.env.EXPO_PUBLIC_APP_URL, environment: process.env.EXPO_PUBLIC_APP_ENV },
+  env: { url: process.env.EXPO_PUBLIC_APP_URL, environment: APP_ENV },
 });
 
 export const api = createApiClient({

@@ -1,4 +1,4 @@
-import { browserStorage, createApiClient, createAppDiscovery, createSessionStore } from "@krizaka/app-client";
+import { appEnvironmentFrom, browserStorage, createApiClient, createAppDiscovery, createSessionStore } from "@krizaka/app-client";
 import { fetch as tauriFetch } from "@tauri-apps/plugin-http";
 import { createQueries, createYomizakaApi } from "@yomizaka/client";
 
@@ -7,6 +7,8 @@ import { keychain } from "./desktop";
 
 /** The Mac app's wiring, once. The backend comes from the signed manifest on krizaka.com (ADR-003), like the phone's. */
 export const PRODUCT = "yomizaka";
+/** The stage of this build (`VITE_APP_ENV`: dev or prod, dev when unset): the « development version » notice follows it. */
+export const APP_ENV = appEnvironmentFrom(import.meta.env.VITE_APP_ENV);
 export const APP_VERSION = import.meta.env.VITE_APP_VERSION ?? "0.1.0";
 // @fixed: a call that waits longer is a Mac that has lost its network
 const API_TIMEOUT_MS = 30_000;
@@ -21,7 +23,7 @@ export const discovery = createAppDiscovery({
   appVersion: APP_VERSION,
   baked: BAKED,
   storage: browserStorage(() => window.localStorage),
-  env: { url: import.meta.env.VITE_APP_URL, environment: import.meta.env.VITE_APP_ENV },
+  env: { url: import.meta.env.VITE_APP_URL, environment: APP_ENV },
 });
 
 /** The calls go through Rust's HTTP client (no CORS): the page may reach Yomizaka's own addresses and nothing else. */
