@@ -13,9 +13,10 @@ import { CheckView } from "./components/CheckView";
 import { Library } from "./components/Library";
 import { DocumentView, ReportsView } from "./components/Reports";
 import { Settings } from "./components/Settings";
+import { StageNotice } from "./components/StageNotice";
 import { SignIn } from "./components/SignIn";
 import { I18nProvider, type Locale, LOCALES, currentLocale, rememberLocale, useI18n } from "./i18n";
-import { APP_VERSION, queries, yomizaka } from "./lib/config";
+import { APP_VERSION, queries, stage, yomizaka } from "./lib/config";
 import { bridge, folders, followLinks, setNativeMenu } from "./lib/desktop";
 import { macSections, MENU_IDS, menuSpec } from "./lib/menu";
 import { hashOf, type Route, routeOfLink, sectionOf } from "./lib/route";
@@ -30,6 +31,7 @@ export function App() {
   }, []);
   return (
     <I18nProvider locale={locale} setLocale={choose}>
+      <StageNotice stage={stage} />
       <Gate onLocale={choose} />
     </I18nProvider>
   );

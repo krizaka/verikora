@@ -3147,5 +3147,9 @@
       "signature": "Landlord's name and signature: ____________    Date: ____________",
       "disclaimer": "Prepared with Yomizaka as information, not legal advice. The landlord checks it, signs it and sends it themselves: Yomizaka sends nothing on anyone's behalf."
     }
+  },
+  "stage": {
+    "title": "Development version",
+    "message": "Data can be reset at any time. This is not a commercial offer yet."
   }
 }

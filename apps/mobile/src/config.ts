@@ -1,4 +1,4 @@
-import { createApiClient, createAppDiscovery, createSessionStore, secureStorage } from "@krizaka/app-client";
+import { appEnvironmentFrom, createApiClient, createAppDiscovery, createSessionStore, secureStorage } from "@krizaka/app-client";
 import { createQueries, createYomizakaApi } from "@yomizaka/client";
 import Constants from "expo-constants";
 import * as SecureStore from "expo-secure-store";
@@ -19,6 +19,9 @@ const API_TIMEOUT_MS = 20_000;
 
 const storage = secureStorage(SecureStore);
 export const session = createSessionStore({ storage, key: "yomizaka.session" });
+
+/** The stage this build follows (`dev` | `prod`): `prod` hides the development-version notice (yomizaka#364). */
+export const stage = appEnvironmentFrom(process.env.EXPO_PUBLIC_APP_ENV);
 
 export const discovery = createAppDiscovery({
   product: PRODUCT,
