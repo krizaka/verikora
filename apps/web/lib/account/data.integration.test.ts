@@ -1,10 +1,10 @@
-import { postgresAccounts } from "@krizaka/auth";
-import { hashPassword, verifyPassword } from "@krizaka/auth";
 import { beforeAll, describe, expect, it } from "vitest";
 
 import { seedAudits } from "../audit-credits.testkit";
 import { migrate, query } from "../db";
 import { type StoragePolicy,storeDocument } from "../documents";
+import { grantConsent, grantedConsents, revokeConsent } from "../flows";
+import { accountSubject, privacyFor, purposesOf } from "../privacy";
 import { memoryStore } from "../storage/memory";
 import { noneStore } from "../storage/none";
 import { eraseAccount, exportData } from "./data";
@@ -17,7 +17,6 @@ describe.runIf(enabled)("export and erasure (Loi 25)", () => {
   beforeAll(async () => {
     await migrate();
   });
-  const accounts = postgresAccounts({ query: async (sql, params) => query(sql, params) as never, mail: async () => undefined, baseUrl: "https://x", product: "Yomizaka", tokenPrefix: "ye", tokenHash: (t) => t, passwords: { hash: hashPassword, verify: verifyPassword } });
   const account = async (extra = "") => (await query<{ id: string }>(`INSERT INTO accounts (email, password_hash, email_verified_at, name ${extra ? ", " + extra.split("=")[0] : ""}) VALUES ($1, 'x', now(), 'Éric' ${extra ? ", " + extra.split("=")[1] : ""}) RETURNING id`, [`d-${Math.random().toString(36).slice(2)}@yomizaka.test`]))[0]!.id;
   const dev = () => memoryStore({ kind: "bunny", devOnly: true, owner: "krizaka", residency: "elsewhere" });
   const policy = (keep: boolean, store: ReturnType<typeof dev> | ReturnType<typeof noneStore>): StoragePolicy => ({ keep, store, now: NOW, purgeAfterHours: 24 });
@@ -55,7 +54,7 @@ describe.runIf(enabled)("export and erasure (Loi 25)", () => {
     const doc = await storeDocument(owner, file, bytes("e"), "lease", policy(true, store));
     await query("INSERT INTO audit_log (actor_id, actor_label, action, target_id, detail, ip) VALUES ($1, 'eric@example.test', 'document.uploaded', $2, '{\"size\":1}', '203.0.113.9')", [owner, doc.summary.id]);
     expect(store.size()).toBe(1);
-    await eraseAccount({ query, stores: () => store, accounts }, owner);
+    await eraseAccount({ query, stores: () => store }, owner);
     expect(store.size()).toBe(0);
     expect(await query("SELECT 1 FROM accounts WHERE id = $1", [owner])).toHaveLength(0);
     expect(await query("SELECT 1 FROM documents WHERE owner_id = $1", [owner])).toHaveLength(0);
@@ -69,7 +68,7 @@ describe.runIf(enabled)("export and erasure (Loi 25)", () => {
     const store = dev();
     await storeDocument(owner, file, bytes("g"), "lease", policy(true, store));
     await seedAudits(owner, { credits: 4, freeUsed: true });
-    await eraseAccount({ query, stores: () => store, accounts }, owner);
+    await eraseAccount({ query, stores: () => store }, owner);
     expect(store.size()).toBe(0);
     expect(await query("SELECT 1 FROM accounts WHERE id = $1", [owner])).toHaveLength(0);
     // the ledger is an accounting record: the lines are all there and the balance is as it was, but the id leads to no one
@@ -79,10 +78,64 @@ describe.runIf(enabled)("export and erasure (Loi 25)", () => {
     expect((await query<{ n: number }>('SELECT count(*)::int AS n FROM credits."grant" WHERE account_id = $1', [owner]))[0]!.n).toBe(2);
   });
 
+  it("the export lists every module's data: the person's part, screenings, credits, consents and the trail (yomizaka#264)", async () => {
+    const owner = await account();
+    const label = `${owner}@yomizaka.test`;
+    const store = dev();
+    await storeDocument(owner, file, bytes("x"), "lease", policy(true, store));
+    await seedAudits(owner, { credits: 2 });
+    await query("INSERT INTO screenings (landlord_id, tenant_name, tenant_email, provider, token_hash, expires_at) VALUES ($1, 'Ana', 'ana@example.test', 'test', $2, now() + interval '1 day')", [owner, `t-${owner}`]);
+    await grantConsent({ id: owner, email: label }, "screening-landlord-undertaking", undefined, "flow@1");
+    await query(`INSERT INTO audit.entry (at, actor_id, actor_label, action) VALUES (now(), $1, '${label}', 'document.uploaded')`, [owner]);
+    const out = await privacyFor({ stores: () => store, purposes: await purposesOf(owner), now: NOW }).exportSubject(query, accountSubject(owner));
+    expect(Object.keys(out.modules).sort()).toEqual(["audit", "consents", "credits", "identity", "screenings", "yomizaka"]);
+    const mine = out.modules.yomizaka as { documents: unknown[]; profile: { id: string } };
+    expect(mine.profile.id).toBe(owner);
+    expect(mine.documents).toHaveLength(1);
+    expect(out.modules.screenings as unknown[]).toHaveLength(1);
+    expect(JSON.stringify(out.modules.screenings)).not.toContain(`t-${owner}`); // never the link's hash
+    expect((out.modules.credits as { amount: number }[]).reduce((n, l) => n + l.amount, 0)).toBe(2);
+    expect(out.modules.consents as unknown[]).toHaveLength(1);
+    expect(out.modules.audit as unknown[]).toHaveLength(2); // the consent given and the upload
+    expect(JSON.stringify(out)).not.toContain("password");
+  });
+
+  it("consents are granted, read and withdrawn through the privacy module, each change a line (yomizaka#264)", async () => {
+    const owner = await account();
+    const label = `${owner}@yomizaka.test`;
+    const who = { id: owner, email: label };
+    await grantConsent(who, "screening-landlord-undertaking", undefined, "flow@2");
+    await grantConsent(who, "screening-landlord-undertaking", undefined, "flow@2"); // already given: no second line
+    expect(await grantedConsents(owner)).toEqual(["screening-landlord-undertaking"]);
+    await revokeConsent(who, "screening-landlord-undertaking");
+    expect(await grantedConsents(owner)).toEqual([]);
+    await grantConsent(who, "screening-landlord-undertaking", undefined, "flow@3");
+    const lines = await query<{ granted: boolean; version: string }>("SELECT granted, version FROM privacy.consent WHERE subject_id = $1 ORDER BY seq", [owner]);
+    expect(lines.map((l) => [l.granted, l.version])).toEqual([[true, "flow@2"], [false, "withdrawal"], [true, "flow@3"]]);
+  });
+
+  it("an erasure withdraws the live consents, records the request without naming the person, and leaves the trail without them (yomizaka#264)", async () => {
+    const owner = await account();
+    const label = `${owner}@yomizaka.test`;
+    const store = dev();
+    await grantConsent({ id: owner, email: label }, "screening-landlord-undertaking", undefined, "flow@1");
+    await query(`INSERT INTO audit.entry (at, actor_id, actor_label, action, ip) VALUES (now(), $1, '${label}', 'document.uploaded', '203.0.113.9')`, [owner]);
+    await eraseAccount({ query, stores: () => store }, owner);
+    expect(await query("SELECT 1 FROM accounts WHERE id = $1", [owner])).toHaveLength(0);
+    const consents = await query<{ granted: boolean; means: string }>("SELECT granted, means FROM privacy.consent WHERE subject_id = $1 ORDER BY seq", [owner]);
+    expect(consents.map((c) => c.granted)).toEqual([true, false]);
+    expect(consents[1]!.means).toBe("erasure");
+    const [request] = await query<{ kind: string; status: string; subject_id: string; failure: string | null }>("SELECT kind, status, subject_id, failure FROM privacy.request WHERE subject_id = $1", [owner]);
+    expect(request).toEqual({ kind: "erasure", status: "completed", subject_id: owner, failure: null });
+    const trail = await query<{ actor_id: string | null; actor_label: string; ip: string | null }>("SELECT actor_id, actor_label, host(ip) AS ip FROM audit.entry WHERE action = 'document.uploaded' AND actor_label <> '${label}' AND detail = '{}'::jsonb ORDER BY id DESC LIMIT 1");
+    expect(trail[0]).toMatchObject({ actor_id: null, ip: null });
+    expect(JSON.stringify(await query("SELECT * FROM audit.entry WHERE actor_label = '${label}'"))).toBe("[]");
+  });
+
   it("refuses while a subscription is active: cancel it in the portal first", async () => {
     const owner = await account("plan='PRO'");
     await query("UPDATE accounts SET subscription_status = 'active' WHERE id = $1", [owner]);
-    await expect(eraseAccount({ query, stores: () => noneStore(), accounts }, owner)).rejects.toMatchObject({ status: 409, body: { code: "CANCEL_SUBSCRIPTION_FIRST" } });
+    await expect(eraseAccount({ query, stores: () => noneStore() }, owner)).rejects.toMatchObject({ status: 409, body: { code: "CANCEL_SUBSCRIPTION_FIRST" } });
     expect(await query("SELECT 1 FROM accounts WHERE id = $1", [owner])).toHaveLength(1);
   });
 });
