@@ -1582,6 +1582,10 @@
           "screeningBilling": {
             "label": "Facturation des vérifications de dossier",
             "hint": "Facture chaque vérification de dossier (coût plus marge, taxes comprises). Désactivée : rien n'est facturé. Mode test seulement tant que la grille de conformité n'est pas ouverte."
+          },
+          "screeningLive": {
+            "label": "Vérifications de dossier en direct",
+            "hint": "Vrais fournisseurs, vraies personnes. Refusé tant que chaque point de la grille de conformité n'est pas fait, preuve à l'appui. À garder désactivé."
           }
         },
         "limits": {

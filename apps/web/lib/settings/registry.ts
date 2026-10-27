@@ -59,6 +59,8 @@ export const SETTINGS = {
   /** Signed webhooks when a batch or a check finishes (yomizaka#241): the global switch; what a plan holds is below. */
   "features.webhooks": flag(GROUP.features, true, WORKSPACE),
   /** Per-check billing of the screening checks (yomizaka#133): OFF. Nothing is charged while it is off; it also needs a payments port that can charge a check. */
+  /** Live screening checks (real providers, real people): Oussama's switch only, OFF. Refused at start, and at every call, unless every blocker of the compliance gate is done (yomizaka#135). */
+  "features.screeningLive": flag(GROUP.features, false),
   "features.screeningBilling": flag(GROUP.features, false),
   "features.avatarSet": subset(GROUP.features, AVATAR_SEED_CHOICES, [...AVATAR_SEED_CHOICES]),
   // Limits: what one document and one account may do.

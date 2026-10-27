@@ -1582,6 +1582,10 @@
           "screeningBilling": {
             "label": "Screening checks billing",
             "hint": "Charges each screening check (cost plus margin, with taxes). Off: nothing is charged. Test mode only until the compliance gate is open."
+          },
+          "screeningLive": {
+            "label": "Live screening checks",
+            "hint": "Real providers, real people. Refused unless every blocker of the compliance gate is done with evidence. Keep OFF."
           }
         },
         "limits": {

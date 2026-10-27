@@ -186,6 +186,36 @@ describe.runIf(enabled)("tenant screening (database)", () => {
     await query("DELETE FROM tenant_check_setting WHERE owner_id = $1", [landlord.id]);
   });
 
+  it("the compliance gate: every blocker is open at first; done needs a date and a reference; the criminal type stays unrequestable until its blocker is done", async () => {
+    const { gateState, loadGate } = await import("./screening-checks/gate");
+    const { setBlocker } = await import("./compliance-gate");
+    const open = await loadGate();
+    expect(open.filter((r) => r.required_live).every((r) => r.status === "open")).toBe(true);
+    expect(gateState(true, open).open).toBe(false);
+    await expect(query("UPDATE compliance_gate SET status = 'done' WHERE blocker = 'efvp'")).rejects.toThrow();
+    // Enabled and allowed by the owner's row, the type still waits for the lawyer's confirmation.
+    await query("UPDATE check_type SET enabled = true WHERE key = 'criminal-record'");
+    await query("INSERT INTO tenant_check_setting (owner_id, check_type, allowed) VALUES ($1, 'criminal-record', true) ON CONFLICT (owner_id, check_type) DO UPDATE SET allowed = true", [landlord.id]);
+    try {
+      await expect(ask(`q-${stamp}@exemple.test`, "Camille Fictif", ["criminal-record"])).rejects.toMatchObject({ status: 400 });
+      await setBlocker({ id: landlord.id, email: landlord.email }, { blocker: "criminal-records-lawful", status: "done", evidenceOn: "2026-11-02", evidenceRef: "opinion letter" });
+      await expect(ask(`r-${stamp}@exemple.test`, "Camille Fictif", ["criminal-record"])).resolves.toBeDefined();
+    } finally {
+      await setBlocker({ id: landlord.id, email: landlord.email }, { blocker: "criminal-records-lawful", status: "open" });
+      await query("UPDATE check_type SET enabled = false WHERE key = 'criminal-record'");
+      await query("DELETE FROM tenant_check_setting WHERE owner_id = $1", [landlord.id]);
+    }
+    expect(await query("SELECT 1 FROM audit_log WHERE action = 'compliance_gate.updated' AND actor_id = $1", [landlord.id])).not.toHaveLength(0);
+  });
+
+  it("the consent logs the notice version, the price and the payer it showed", async () => {
+    const { id, token } = await ask(`s-${stamp}@exemple.test`);
+    await consent(token, NOW);
+    const [c] = await query<{ notice_version: string; price_cents: number; currency: string; payer: string }>("SELECT notice_version, price_cents, currency, payer FROM application_consents WHERE screening_id = $1", [id]);
+    expect(c).toMatchObject({ price_cents: 0, currency: "CAD", payer: "owner" });
+    expect(c!.notice_version).toMatch(/^\d{4}-\d{2}-\d{2}\.\d+$/);
+  });
+
   it("stores no raw report: the columns of a check hold a closed outcome, a reference and a run id — nothing else", async () => {
     const cols = await query<{ column_name: string }>("SELECT column_name FROM information_schema.columns WHERE table_name = 'screening_checks' ORDER BY column_name");
     expect(cols.map((c) => c.column_name)).toEqual(["answered_at", "category", "check_type", "id", "outcome", "provider_ref", "refusal", "run_id", "screening_id", "state", "submitted_at"]);

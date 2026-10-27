@@ -42,13 +42,13 @@ export async function activeConsents(screeningId: string): Promise<ConsentPurpos
 }
 
 /** Records a consent. The notice version must be the current one; a repeat of an active consent changes nothing. */
-export async function grantConsent(screeningId: string, purpose: ConsentPurpose, input: { noticeVersion: string; means: string }, now: Date, headers?: Headers): Promise<boolean> {
+export async function grantConsent(screeningId: string, purpose: ConsentPurpose, input: { noticeVersion: string; means: string; priceCents?: number; currency?: string; payer?: string }, now: Date, headers?: Headers): Promise<boolean> {
   if (input.noticeVersion !== NOTICE_VERSION) throw refuse(409, "NOTICE_CHANGED", "The notice changed: read it again before consenting", { noticeVersion: NOTICE_VERSION });
   const rows = await query<{ id: string }>(
-    "INSERT INTO application_consents (screening_id, purpose, notice_version, means, granted_at) VALUES ($1, $2, $3, $4, $5) ON CONFLICT (screening_id, purpose) WHERE withdrawn_at IS NULL DO NOTHING RETURNING id",
-    [screeningId, purpose, input.noticeVersion, input.means, now],
+    "INSERT INTO application_consents (screening_id, purpose, notice_version, means, granted_at, price_cents, currency, payer) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) ON CONFLICT (screening_id, purpose) WHERE withdrawn_at IS NULL DO NOTHING RETURNING id",
+    [screeningId, purpose, input.noticeVersion, input.means, now, input.priceCents ?? null, input.currency ?? null, input.payer ?? null],
   );
-  if (rows.length) await audit({ action: "consent.granted", actorId: null, actorLabel: "applicant", targetId: screeningId, detail: { purpose, noticeVersion: input.noticeVersion, means: input.means }, headers });
+  if (rows.length) await audit({ action: "consent.granted", actorId: null, actorLabel: "applicant", targetId: screeningId, detail: { purpose, noticeVersion: input.noticeVersion, means: input.means, priceCents: input.priceCents ?? null, payer: input.payer ?? null }, headers });
   return rows.length > 0;
 }
 

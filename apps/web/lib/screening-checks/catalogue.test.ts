@@ -35,7 +35,7 @@ describe("which check types an owner may request (data, no deploy)", () => {
 describe("the engine's door while no provider account exists", () => {
   const call = { userId: "u", runId: "r", subject: { subjectId: "s", firstName: "A", lastName: "B" }, region: "QC" };
   it("answers NOT_CONFIGURED to a submission and to a collection, never a result", async () => {
-    const provider = engineProvider(closedDoor);
+    const provider = engineProvider(closedDoor, async () => true);
     expect(await provider.submit("CREDIT", call)).toEqual(NOT_CONFIGURED);
     expect(await provider.collect("CREDIT", call, "ref")).toEqual(NOT_CONFIGURED);
     expect(NOT_CONFIGURED).toMatchObject({ outcome: "REFUSED", refusal: "NOT_CONFIGURED" });

@@ -32,6 +32,9 @@ async function start() {
   const { query } = await import("./lib/db");
   await assertModules(query, MODULES);
   const { seedDatabase } = await import("./lib/flows");
+  // Live screening is refused at start unless the compliance gate is open (yomizaka#135).
+  const { assertLiveGate } = await import("./lib/screening-checks/gate");
+  await assertLiveGate();
   const seeded = await seedDatabase();
   if (seeded.length) logInfo(`[yomizaka] flows seeded: ${seeded.join(", ")}`);
   // The organised workspace's defaults (the decision set, the system views, the tag rules): written once, then the database is the source of truth (yomizaka#324).

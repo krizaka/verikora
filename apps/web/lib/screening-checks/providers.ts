@@ -1,4 +1,5 @@
 import { refuse } from "../http";
+import { liveGate } from "./gate";
 import { CHECK_OUTCOME, CHECK_REFUSAL, type CheckCall, type CheckPurpose, type CheckResult } from "./model";
 
 /**
@@ -30,7 +31,15 @@ export interface ChecksDoor {
 }
 export const closedDoor: ChecksDoor = { submit: async () => NOT_CONFIGURED, collect: async () => NOT_CONFIGURED };
 
-export const engineProvider = (door: ChecksDoor = closedDoor): CheckProvider => ({ demo: false, submit: (p, c) => door.submit(p, c), collect: (p, c, ref) => door.collect(p, c, ref) });
+/**
+ * A live adapter is wrapped by the compliance gate (yomizaka#135): while the gate is closed the door is never reached and the
+ * answer is NOT_CONFIGURED — whatever the door is. The gate is read on every call, so closing a blocker stops live calls at once.
+ */
+export const engineProvider = (door: ChecksDoor = closedDoor, open: () => Promise<boolean> = async () => (await liveGate()).open): CheckProvider => ({
+  demo: false,
+  submit: async (p, c) => ((await open()) ? door.submit(p, c) : NOT_CONFIGURED),
+  collect: async (p, c, ref) => ((await open()) ? door.collect(p, c, ref) : NOT_CONFIGURED),
+});
 
 /**
  * The demo: fictitious and deterministic, by the last name. « Flag… » is a file found; « Wait… » is accepted and answered on the

@@ -882,4 +882,31 @@ INSERT INTO retention_rule (subject, policy_id) VALUES ('screening-result', 'thi
 
 ALTER TABLE documents ADD COLUMN keep_consent_at timestamptz;`,
   },
+  {
+    version: "0043_compliance_gate",
+    // yomizaka#135: the blockers before any live screening resale. Each is a row, open until Oussama marks it done WITH the date of its
+    // evidence. the setting features.screeningLive is refused unless every required row is done. The consent logs the price and the payer it showed.
+    sql: `
+CREATE TABLE compliance_gate (
+  blocker       text PRIMARY KEY CHECK (blocker ~ '^[a-z][a-z0-9-]{2,60}$'),
+  label         text NOT NULL,
+  required_live boolean NOT NULL DEFAULT true,
+  status        text NOT NULL DEFAULT 'open' CHECK (status IN ('open', 'done')),
+  evidence_on   date,
+  evidence_ref  text,
+  CONSTRAINT compliance_gate_done_has_evidence CHECK (status = 'open' OR (evidence_on IS NOT NULL AND length(coalesce(evidence_ref, '')) > 0))
+);
+INSERT INTO compliance_gate (blocker, label, required_live) VALUES
+  ('reseller-agreements', 'Signed reseller/partner agreement with each provider (permissible purpose, resale)', true),
+  ('lawyer-credit-for-rental', 'Lawyer sign-off on credit checks for rental', true),
+  ('efvp', 'Privacy impact assessment (EFVP, Loi 25) completed and filed', true),
+  ('consent-text', 'Per-check consent text (specific, written; logged with version, price and payer) reviewed by the lawyer', true),
+  ('provider-residency', 'Provider data residency verified as Canada', true),
+  ('adverse-action-wording', 'Adverse-action wording reviewed by a lawyer', true),
+  ('criminal-records-lawful', 'A lawyer confirms criminal-record checks are lawful for rental (only for that check type; not needed for credit)', false);
+
+ALTER TABLE application_consents ADD COLUMN price_cents integer CHECK (price_cents IS NULL OR price_cents >= 0);
+ALTER TABLE application_consents ADD COLUMN currency text;
+ALTER TABLE application_consents ADD COLUMN payer text CHECK (payer IS NULL OR payer IN ('firm', 'owner', 'applicant'));`,
+  },
 ];

@@ -12,6 +12,7 @@ import { policyFor, resultDays, SUBJECT } from "./retention-policy";
 import { chargeCheck, invoiceLine, isChargeable, PAYER, type Payer, payerAllowed, quoteOf, totalCents } from "./screening-checks/billing";
 import { screeningBillingPort } from "./screening-checks/billing-config";
 import { allowedFor, type CheckTypeRow, priceCents, providerById, typesByKey } from "./screening-checks/catalogue";
+import { lawyerCleared, loadGate } from "./screening-checks/gate";
 import { CHECK_STATE, type CheckResult, type CheckState, stateOf } from "./screening-checks/model";
 import { adapterFor, type CheckProvider } from "./screening-checks/providers";
 
@@ -146,7 +147,9 @@ type Landlord = { id: string; email: string };
 /** The landlord asks. Returns the token ONCE (only its hash is kept): the landlord hands the link to the applicant. Only the check types the landlord's row allows are accepted. */
 export async function requestScreening(landlord: Landlord, input: { tenantName: string; tenantEmail: string; scope: readonly string[]; payer?: Payer }, now: Date, headers?: Headers): Promise<{ id: string; token: string }> {
   const allowed = await allowedFor(landlord.id);
-  const types = allowed.filter((t) => input.scope.includes(t.key));
+  const gate = await loadGate();
+  // A type that waits for a lawyer is never requestable until that blocker is done with its evidence (the compliance gate).
+  const types = allowed.filter((t) => input.scope.includes(t.key) && lawyerCleared(t.requires_lawyer, gate));
   if (types.length === 0) throw refuse(400, "BAD_REQUEST", "Nothing lawful to check");
   const scope = types.map((t) => t.key);
   const payer = input.payer ?? PAYER.owner;
@@ -259,7 +262,11 @@ export async function consent(token: string, now: Date, headers?: Headers): Prom
   const types = await typesByKey(row.scope);
   const purposes = purposesOfTypes(types);
   // The consent per purpose is recorded first (notice version, date, means); the check then runs only while each stands (yomizaka#131).
-  for (const purpose of purposes) await grantConsent(row.id, purpose, { noticeVersion: NOTICE_VERSION, means: CONSENT_MEANS.WEB_FORM }, now, headers);
+  // The consent logs what the applicant was shown: the notice version, the price of the checks under that purpose and who pays.
+  for (const purpose of purposes) {
+    const priceCentsOfPurpose = types.filter((t) => t.purpose === purpose).reduce((sum, t) => sum + priceCents(t), 0);
+    await grantConsent(row.id, purpose, { noticeVersion: NOTICE_VERSION, means: CONSENT_MEANS.WEB_FORM, priceCents: priceCentsOfPurpose, currency: "CAD", payer: row.payer ?? PAYER.owner }, now, headers);
+  }
   for (const purpose of purposes) await requireConsent(row.id, purpose);
   const answers = await runChecks(row, types);
   const result: ScreeningResult = { band: bandOf(answers.map((a) => a.item)), items: answers.map((a) => a.item), provider: row.provider, generatedAt: now.toISOString() };
