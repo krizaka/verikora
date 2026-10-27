@@ -3,6 +3,7 @@ import { readFileSync } from "node:fs";
 import type { OrazakaRun } from "@yomizaka/core";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 
+import { seedAudits } from "../audit-credits.testkit";
 import { migrate, query } from "../db";
 import { seedDatabase } from "../flows";
 import { useOrazakaClient } from "../orazaka";
@@ -63,7 +64,8 @@ describe.runIf(enabled)("a batch of checks (yomizaka#232)", () => {
 
   it("an account that cannot pay pauses the pending rows with the reason, instead of failing them one by one", async () => {
     // A self-serve account (it accepted the terms) with no credit and its free audit spent: nothing left to pay a check with.
-    await query("UPDATE accounts SET audit_credits = 0, free_audit_used_at = now(), terms_accepted_at = now() WHERE id = $1", [account.id]);
+    await query("UPDATE accounts SET terms_accepted_at = now() WHERE id = $1", [account.id]);
+    await seedAudits(account.id, { freeUsed: true });
     const settings = await settingsFor(account.id);
     const created = await createBatch(account, "Sans crédit", "file,check\nd.pdf,compliance\ne.pdf,compliance", [await pdf("d.pdf", "BAIL D"), await pdf("e.pdf", "BAIL E")], { settings, now: new Date(), environment: "dev" });
     expect(created.pausedBy).toBe("PAYWALL");

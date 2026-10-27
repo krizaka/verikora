@@ -15,10 +15,13 @@ describe("the adopted Krizaka modules", () => {
     expect(adoption.sql).not.toMatch(/CREATE TABLE (?!IF NOT EXISTS public\.krizaka_module_versions)|ALTER TABLE|DROP /);
   });
 
-  it("emitted by 0037 are the text `emitMigration` prints today", () => {
-    const migration = MIGRATIONS.find((m) => m.version === "0037_audit_package");
-    expect(migration).toBeDefined();
-    for (const { schema, context } of EMITTED) expect(migration!.sql, schema.module).toContain(emitMigration(schema, 1, context).trim());
+  it("emitted by their own migration are the text `emitMigration` prints today", () => {
+    const EMITTED_BY: Record<string, string> = { audit: "0037_audit_package", credits: "0050_credits_ledger" };
+    for (const { schema, context } of EMITTED) {
+      const migration = MIGRATIONS.find((m) => m.version === EMITTED_BY[schema.module]);
+      expect(migration, schema.module).toBeDefined();
+      expect(migration!.sql, schema.module).toContain(emitMigration(schema, 1, context).trim());
+    }
   });
 
   it("list a module after the modules it requires", () => {

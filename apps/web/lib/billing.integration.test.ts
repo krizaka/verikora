@@ -94,6 +94,32 @@ describe.runIf(enabled)("billing", () => {
     expect(await reserveAudit(query, id, NOW, caps())).toBe("free");
   });
 
+  it("a failed run gives back the pot it drew from: the free audit stays the free audit, the paid credit the paid credit (yomizaka#261)", async () => {
+    const id = await account();
+    await applyPaymentEvent(transaction, { id: `evt-two-${id}`, type: "payment_paid", kind: "audit", accountId: id, customerId: null, ...FACTS });
+    const first = await reserveAudit(query, id, NOW, caps());
+    const second = await reserveAudit(query, id, NOW, caps());
+    expect([first, second]).toEqual(["free", "credit"]);
+    await expect(reserveAudit(query, id, NOW, caps())).rejects.toMatchObject({ status: 402, body: { code: "PAYWALL" } });
+    const [doc] = await query<{ id: string }>("INSERT INTO documents (owner_id, title, filename, mime_type, size_bytes, sha256, content, text) VALUES ($1, 't', 'a.txt', 'text/plain', 1, $2, 'x', 'x') RETURNING id", [id, `two-${id}`]);
+    const failed = async (via: string) => (await query<{ id: string }>("INSERT INTO analyses (document_id, studio, status, billed_via) VALUES ($1, 'document-authenticity', 'failed', $2) RETURNING id", [doc!.id, via]))[0]!.id;
+    const [a1, a2] = [await failed("free"), await failed("credit")];
+    expect(await refundFailedAudit(query, a1)).toBe(true);
+    expect(await reserveAudit(query, id, NOW, caps())).toBe("free");
+    await expect(reserveAudit(query, id, NOW, caps())).rejects.toMatchObject({ status: 402 });
+    expect(await refundFailedAudit(query, a2)).toBe(true);
+    expect(await refundFailedAudit(query, a2)).toBe(false);
+    expect(await reserveAudit(query, id, NOW, caps())).toBe("credit");
+    expect((await entitlementOf(query, id, NOW)).credits).toBe(0);
+  });
+  it("the entitlement reads the ledger: paid credits left, and the free audit given and gone", async () => {
+    const id = await account();
+    expect(await entitlementOf(query, id, NOW)).toMatchObject({ credits: 0, freeAuditUsed: false });
+    await applyPaymentEvent(transaction, { id: `evt-led-${id}`, type: "payment_paid", kind: "audit", accountId: id, customerId: null, ...FACTS });
+    expect(await entitlementOf(query, id, NOW)).toMatchObject({ credits: 1, freeAuditUsed: false });
+    await reserveAudit(query, id, NOW, caps());
+    expect(await entitlementOf(query, id, NOW)).toMatchObject({ credits: 1, freeAuditUsed: true });
+  });
   it("the daily cap of a plan refuses past its number (0 = no cap), whatever the plan", async () => {
     const id = await account();
     const [doc] = await query<{ id: string }>("INSERT INTO documents (owner_id, title, filename, mime_type, size_bytes, sha256, content, text) VALUES ($1, 't', 'a.txt', 'text/plain', 1, $2, 'x', 'x') RETURNING id", [id, `d-${id}`]);

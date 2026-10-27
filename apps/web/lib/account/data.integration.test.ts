@@ -2,6 +2,7 @@ import { postgresAccounts } from "@krizaka/auth";
 import { hashPassword, verifyPassword } from "@krizaka/auth";
 import { beforeAll, describe, expect, it } from "vitest";
 
+import { seedAudits } from "../audit-credits.testkit";
 import { migrate, query } from "../db";
 import { type StoragePolicy,storeDocument } from "../documents";
 import { memoryStore } from "../storage/memory";
@@ -61,6 +62,21 @@ describe.runIf(enabled)("export and erasure (Loi 25)", () => {
     // The package's table clears the actor with the account (ON DELETE SET NULL): the entry is found by its target, no longer by the person.
     const [trail] = await query<{ actor_label: string; ip: string | null; detail: unknown; actor_id: string | null }>("SELECT actor_label, ip, detail, actor_id FROM audit_log WHERE target_id = $1", [doc.summary.id]);
     expect(trail).toEqual({ actor_label: "deleted account", ip: null, detail: {}, actor_id: null });
+  });
+
+  it("an account that holds a credits ledger is erased like any other: the ledger keeps its lines under a bare id, nothing points at the person (yomizaka#261)", async () => {
+    const owner = await account();
+    const store = dev();
+    await storeDocument(owner, file, bytes("g"), "lease", policy(true, store));
+    await seedAudits(owner, { credits: 4, freeUsed: true });
+    await eraseAccount({ query, stores: () => store, accounts }, owner);
+    expect(store.size()).toBe(0);
+    expect(await query("SELECT 1 FROM accounts WHERE id = $1", [owner])).toHaveLength(0);
+    // the ledger is an accounting record: the lines are all there and the balance is as it was, but the id leads to no one
+    const [ledger] = await query<{ n: number; total: number }>("SELECT count(*)::int AS n, COALESCE(sum(amount), 0)::int AS total FROM credits.entry WHERE account_id = $1", [owner]);
+    expect(ledger!.total).toBe(4);
+    expect(ledger!.n).toBe(3); // the free grant, its spend, the purchase
+    expect((await query<{ n: number }>('SELECT count(*)::int AS n FROM credits."grant" WHERE account_id = $1', [owner]))[0]!.n).toBe(2);
   });
 
   it("refuses while a subscription is active: cancel it in the portal first", async () => {

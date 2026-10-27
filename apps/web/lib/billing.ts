@@ -1,6 +1,11 @@
+import { dbCreditStore } from "@krizaka/credits";
+import type { Query as DbQuery } from "@krizaka/db";
+import { localDay } from "@krizaka/intl/date";
 import { applyOnceInTransaction, type PaymentEvent, type Transaction } from "@krizaka/payments";
 import type { QueryResultRow } from "pg";
 
+import { addPurchased, ensureFreeAudit, FREE_AUDIT_SOURCE, giveBackAudit, spendAudit } from "./audit-credits";
+import { transaction } from "./db";
 import { refuse } from "./http";
 import type { AuditCaps } from "./settings/boundary";
 
@@ -27,15 +32,33 @@ export interface Entitlement {
   priceVersionId: string | null;
 }
 
-const ROW = `SELECT (terms_accepted_at IS NOT NULL) AS self_serve, (free_audit_used_at IS NOT NULL) AS free_used, audit_credits, plan,
+const ROW = `SELECT (terms_accepted_at IS NOT NULL) AS self_serve, plan,
   subscription_status, current_period_end, (payment_customer_id IS NOT NULL) AS has_customer, subscription_price_key, subscription_price_version FROM accounts WHERE id = $1`;
 
 export async function entitlementOf(query: Query, accountId: string, now: Date): Promise<Entitlement> {
-  const [r] = await query<{ self_serve: boolean; free_used: boolean; audit_credits: number; plan: string; subscription_status: string | null; current_period_end: Date | null; has_customer: boolean; subscription_price_key: string | null; subscription_price_version: string | null }>(ROW, [accountId]);
+  const [r] = await query<{ self_serve: boolean; plan: string; subscription_status: string | null; current_period_end: Date | null; has_customer: boolean; subscription_price_key: string | null; subscription_price_version: string | null }>(ROW, [accountId]);
   if (!r) throw refuse(404, "NOT_FOUND", "No such account");
   const live = r.subscription_status === "active" || r.subscription_status === "trialing";
   const pro = r.plan === "PRO" && live && (!r.current_period_end || r.current_period_end > now);
-  return { selfServe: r.self_serve, freeAuditUsed: r.free_used, credits: r.audit_credits, pro, proUntil: r.current_period_end?.toISOString() ?? null, subscriptionStatus: r.subscription_status, hasCustomer: r.has_customer, planKey: r.subscription_price_key, priceVersionId: r.subscription_price_version };
+  const { credits, freeAuditUsed } = await ledgerState(query, accountId, now);
+  return { selfServe: r.self_serve, freeAuditUsed, credits, pro, proUntil: r.current_period_end?.toISOString() ?? null, subscriptionStatus: r.subscription_status, hasCustomer: r.has_customer, planKey: r.subscription_price_key, priceVersionId: r.subscription_price_version };
+}
+
+/** The calendar the ledger counts a pot's daily and monthly use in: not read here (the audit pots have no caps), so the day in UTC. */
+const calendarOf = (now: Date) => {
+  const day = localDay(now, "UTC");
+  return { timeZone: "UTC", day, month: day.slice(0, 7) };
+};
+
+/** What the ledger says of an account: the paid credits left, and whether the free first audit was given and is gone (spent or lapsed). */
+export async function ledgerState(query: Query, accountId: string, now: Date): Promise<{ credits: number; freeAuditUsed: boolean }> {
+  const states = await dbCreditStore(query as unknown as DbQuery).grantStates(accountId, calendarOf(now));
+  const live = states.filter((s) => !s.closed && (s.grant.expiresAt === null || s.grant.expiresAt > now));
+  const free = states.find((s) => s.grant.source === FREE_AUDIT_SOURCE);
+  return {
+    credits: live.filter((s) => s.grant.bucket === "purchased").reduce((n, s) => n + s.remaining, 0),
+    freeAuditUsed: free !== undefined && !(live.includes(free) && free.remaining > 0),
+  };
 }
 
 export type Plan = "free" | "pro";
@@ -66,24 +89,26 @@ export async function reserveAudit(query: Query, accountId: string, now: Date, c
     if ((await used("month")) >= caps.perMonth) throw refuse(429, "FAIR_USE", "Monthly fair-use limit reached", { limit: caps.perMonth });
     return "pro";
   }
-  if (caps.freeFirst && (await query("UPDATE accounts SET free_audit_used_at = $2 WHERE id = $1 AND free_audit_used_at IS NULL RETURNING id", [accountId, now])).length) return "free";
-  if ((await query("UPDATE accounts SET audit_credits = audit_credits - 1 WHERE id = $1 AND audit_credits > 0 RETURNING id", [accountId])).length) return "credit";
-  throw refuse(402, "PAYWALL", "Payment required");
+  return transaction(async (tx) => {
+    if (caps.freeFirst) await ensureFreeAudit(tx, accountId);
+    return spendAudit(tx, accountId);
+  });
 }
 
-export async function releaseAudit(query: Query, accountId: string, via: AuditVia): Promise<void> {
-  if (via === "free") await query("UPDATE accounts SET free_audit_used_at = NULL WHERE id = $1", [accountId]);
-  if (via === "credit") await query("UPDATE accounts SET audit_credits = audit_credits + 1 WHERE id = $1", [accountId]);
+/** Gives the audit back when the run could not start: the free first audit or the paid credit it spent (Pro and exempt spent nothing). */
+export async function releaseAudit(_query: Query, accountId: string, via: AuditVia): Promise<void> {
+  if (via === "free" || via === "credit") await transaction((tx) => giveBackAudit(tx, accountId, via));
 }
 
-/** A run that failed gives its audit back, once: the free audit or the credit it spent (Pro and exempt accounts spent nothing). */
-export async function refundFailedAudit(query: Query, analysisId: string): Promise<boolean> {
-  const [done] = await query<{ billed_via: string; document_id: string }>("UPDATE analyses SET billed_via = billed_via || '-refunded' WHERE id = $1 AND billed_via IN ('free', 'credit') RETURNING billed_via, document_id", [analysisId]);
-  if (!done) return false;
-  const [owner] = await query<{ owner_id: string }>("SELECT owner_id FROM documents WHERE id = $1", [done.document_id]);
-  if (!owner) return false;
-  await releaseAudit(query, owner.owner_id, done.billed_via.startsWith("free") ? "free" : "credit");
-  return true;
+/** A run that failed gives its audit back, once: the free audit or the credit it spent (Pro and exempt accounts spent nothing). The mark and the give-back commit together. */
+export async function refundFailedAudit(_query: Query, analysisId: string): Promise<boolean> {
+  return transaction(async (tx) => {
+    const [done] = await tx<{ billed_via: string; document_id: string }>("UPDATE analyses SET billed_via = billed_via || '-refunded' WHERE id = $1 AND billed_via IN ('free', 'credit') RETURNING billed_via, document_id", [analysisId]);
+    if (!done) return false;
+    const [owner] = await tx<{ owner_id: string }>("SELECT owner_id FROM documents WHERE id = $1", [done.document_id]);
+    if (!owner) return false;
+    return giveBackAudit(tx, owner.owner_id, done.billed_via.startsWith("free") ? "free" : "credit");
+  });
 }
 
 /** What a one-off payment of each kind buys, in audit credits (data: a new one-off kind is a line here; `audit` is the checkout kind sold before the catalogue). */
@@ -110,7 +135,7 @@ export async function applyPaymentEvent(transaction: Transaction, event: Payment
         const credits = CREDITS_PER_KIND[e.kind];
         if (!credits) return "ignored";
         if (e.customerId) await tx("UPDATE accounts SET payment_customer_id = COALESCE(payment_customer_id, $2) WHERE id = $1", [e.accountId, e.customerId]);
-        await tx("UPDATE accounts SET audit_credits = audit_credits + $2 WHERE id = $1", [e.accountId, credits]);
+        await addPurchased(tx, e.accountId, credits, `pay-${e.id}`);
         return undefined;
       },
       subscription_started: async (e, tx) => {
