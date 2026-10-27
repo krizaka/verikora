@@ -25,6 +25,32 @@ describe.runIf(enabled)("keep or purge (ADR-0007)", () => {
     return a!.id;
   };
 
+  it("a purge is verifiable: the content and text are empty and an audit row « document.purged » exists", async () => {
+    const owner = await account();
+    const { summary } = await storeDocument(owner, file, bytes("audit"), "lease", policy(false));
+    await finish(summary.id);
+    expect(await purgeIfDone(query, summary.id)).toBe(true);
+    const [row] = await query<{ n: number; t: string }>("SELECT octet_length(content) AS n, text AS t FROM documents WHERE id = $1", [summary.id]);
+    expect(row).toEqual({ n: 0, t: "" });
+    expect(await query("SELECT 1 FROM audit_log WHERE action = 'document.purged' AND target_id = $1", [summary.id])).toHaveLength(1);
+  });
+
+  it("a keep is recorded with its date", async () => {
+    const owner = await account();
+    const { summary } = await storeDocument(owner, file, bytes("kept"), "lease", policy(true));
+    const [row] = await query<{ keep_consent_at: Date | null }>("SELECT keep_consent_at FROM documents WHERE id = $1", [summary.id]);
+    expect(row!.keep_consent_at?.toISOString()).toBe(NOW.toISOString());
+  });
+
+  it("the policy is a row: an owner's rule changes the window of the screening result, no deploy", async () => {
+    const owner = await account();
+    const { policyFor, resultDays, SUBJECT } = await import("./retention-policy");
+    expect(resultDays(await policyFor(owner, SUBJECT.screeningResult))).toBe(30);
+    await query("INSERT INTO retention_policies (id, purge_on, days) VALUES ('seven-days', 'days', 7) ON CONFLICT DO NOTHING");
+    await query("INSERT INTO retention_rule (owner_id, subject, policy_id) VALUES ($1, 'screening-result', 'seven-days')", [owner]);
+    expect(resultDays(await policyFor(owner, SUBJECT.screeningResult))).toBe(7);
+  });
+
   it("a document is NOT kept by default: after its check the file and the text are purged and the report stays", async () => {
     const owner = await account();
     const { summary } = await storeDocument(owner, file, bytes("a"), "lease", policy(false));

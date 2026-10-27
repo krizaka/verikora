@@ -857,4 +857,29 @@ CREATE TABLE screening_charge (
   UNIQUE (screening_id, check_type)
 );`,
   },
+  {
+    version: "0042_retention_rules",
+    // yomizaka#125: retention is DATA. A policy is a row (after-check, after-decision, or a number of days); a document type points
+    // at one (0031); an owner may override it, and a non-document subject (the screening result) has its global default here.
+    // The day a document was kept by the owner's choice is recorded. Changing a row changes the behaviour, no deploy.
+    sql: `
+ALTER TABLE retention_policies DROP CONSTRAINT IF EXISTS retention_policies_purge_on_check;
+ALTER TABLE retention_policies ADD CONSTRAINT retention_policies_purge_on_check CHECK (purge_on IN ('after-check', 'after-decision', 'days'));
+ALTER TABLE retention_policies ADD COLUMN days integer CHECK (days IS NULL OR days BETWEEN 1 AND 3650);
+ALTER TABLE retention_policies ADD CONSTRAINT retention_policies_days_iff_days CHECK ((purge_on = 'days') = (days IS NOT NULL));
+INSERT INTO retention_policies (id, purge_on, days) VALUES ('thirty-days', 'days', 30);
+
+CREATE TABLE retention_rule (
+  id        uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  owner_id  uuid REFERENCES accounts(id) ON DELETE CASCADE,
+  subject   text NOT NULL CHECK (subject ~ '^[a-z0-9-]{2,40}$'),
+  policy_id text NOT NULL REFERENCES retention_policies(id)
+);
+-- One rule per owner and subject; owner_id NULL is the global default.
+CREATE UNIQUE INDEX retention_rule_owner ON retention_rule(owner_id, subject) WHERE owner_id IS NOT NULL;
+CREATE UNIQUE INDEX retention_rule_global ON retention_rule(subject) WHERE owner_id IS NULL;
+INSERT INTO retention_rule (subject, policy_id) VALUES ('screening-result', 'thirty-days');
+
+ALTER TABLE documents ADD COLUMN keep_consent_at timestamptz;`,
+  },
 ];

@@ -7,9 +7,10 @@ import en from "@/messages/en.json";
 import fr from "@/messages/fr.json";
 
 import { decideFlow, seedFlows } from "./flows";
-import { bandOf, DEMO_PROVIDER, effectiveState, itemOf, landlordView, namesOf, RETENTION_DAYS, SCREENING_STATUS, screeningResult, tenantView } from "./screening";
+import { bandOf, DEMO_PROVIDER, effectiveState, itemOf, landlordView, namesOf, SCREENING_STATUS, screeningResult, tenantView } from "./screening";
 import { demoProvider } from "./screening-checks/providers";
 
+const RETENTION_DAYS = 30; // the seeded rule, passed in: the view never types it
 const NOW = new Date("2026-10-17T12:00:00Z");
 const day = (n: number) => new Date(NOW.getTime() + n * 86_400_000);
 const row = (over: Record<string, unknown> = {}) => ({
@@ -64,7 +65,7 @@ describe("the consent flow: the tenant decides, sees first, can contest", () => 
     expect(JSON.stringify(view)).not.toContain("faux");
   });
   it("shows the tenant their own result as soon as they consented, with who asked and how long it is kept", () => {
-    const view = tenantView(row({ status: SCREENING_STATUS.consented, result, result_expires_at: day(30) }) as never, NOW);
+    const view = tenantView(row({ status: SCREENING_STATUS.consented, result, result_expires_at: day(30) }) as never, NOW, undefined, RETENTION_DAYS);
     expect(view).toMatchObject({ landlord: "proprio@exemple.test", retentionDays: RETENTION_DAYS, demo: true, result: { band: "no-concern" } });
   });
   it("expires a request nobody answered, and stops showing a result past its retention", () => {

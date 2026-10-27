@@ -1,7 +1,7 @@
 import { beforeAll, describe, expect, it } from "vitest";
 
 import { migrate, query } from "./db";
-import { consent, contest, copyForTenant,decline, listForLandlord, purgeExpired, requestScreening, RETENTION_DAYS, share, viewForTenant } from "./screening";
+import { consent, contest, copyForTenant,decline, listForLandlord, purgeExpired, requestScreening, share, viewForTenant } from "./screening";
 import { type BillingPort, chargeCheck, refundCheck } from "./screening-checks/billing";
 import { collectOne, collectPending, dueChecks } from "./screening-checks/collect";
 import { demoProvider } from "./screening-checks/providers";
@@ -9,6 +9,8 @@ import { demoProvider } from "./screening-checks/providers";
 /** The consent flow against a real PostgreSQL (CI's service; locally `YOMIZAKA_DB_IT=1 DATABASE_URL=… pnpm test`). */
 const enabled = process.env.YOMIZAKA_DB_IT === "1" && !!process.env.DATABASE_URL;
 const DAY = 86_400_000;
+/** The seeded global rule of « screening-result » (retention policy « thirty-days »): a row, not a constant. */
+const RETENTION_DAYS = 30;
 
 describe.runIf(enabled)("tenant screening (database)", () => {
   const stamp = Date.now();

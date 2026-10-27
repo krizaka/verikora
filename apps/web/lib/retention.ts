@@ -2,6 +2,7 @@ import { STORAGE_KIND, type StorageKind } from "@yomizaka/core";
 import { addHours } from "date-fns";
 import type { QueryResultRow } from "pg";
 
+import { audit } from "./audit";
 import type { StoreDescriptor } from "./storage/port";
 
 /**
@@ -29,8 +30,10 @@ export const objectKey = (owner: string, document: string, mimeType: string) => 
 export const purgeDeadline = (now: Date, hours: number): Date => addHours(now, hours);
 
 /** Purges one not-kept document: its file and its text go, its title, hash and reports stay. True when something was purged. */
-export async function purgeDocument(q: Query, documentId: string): Promise<boolean> {
+export async function purgeDocument(q: Query, documentId: string, reason = "after-check"): Promise<boolean> {
   const rows = await q("UPDATE documents SET content = ''::bytea, text = '', retain_until = NULL WHERE id = $1 AND storage = 'none' AND (octet_length(content) > 0 OR text <> '') RETURNING id", [documentId]);
+  // The purge is verifiable: one audit row per document (the file and its text go; the hash, the report and the signed certificate stay).
+  for (const r of rows) await audit({ action: "document.purged", actorId: null, actorLabel: "retention", targetId: String(r.id), detail: { reason } });
   return rows.length > 0;
 }
 
@@ -46,5 +49,6 @@ export async function purgeIfDone(q: Query, documentId: string): Promise<boolean
 /** The sweep: not-kept documents past their deadline (never checked). Returns how many were purged. */
 export async function purgeExpired(q: Query, now: Date): Promise<number> {
   const rows = await q("UPDATE documents SET content = ''::bytea, text = '', retain_until = NULL WHERE storage = 'none' AND retain_until IS NOT NULL AND retain_until <= $1 AND (octet_length(content) > 0 OR text <> '') RETURNING id", [now]);
+  for (const r of rows) await audit({ action: "document.purged", actorId: null, actorLabel: "retention", targetId: String(r.id), detail: { reason: "window" } });
   return rows.length;
 }

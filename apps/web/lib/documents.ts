@@ -319,6 +319,8 @@ export async function storeDocument(ownerId: string, file: { name: string; type:
   const kind = requested !== "auto" ? requested : deferred ? "other" : kindFromNature(understanding.understand(read.text, { pages: read.pages }).nature?.id ?? null);
   // The bytes sit in the database until the document is placed (and, if not kept, until its check has run).
   const row = await saveDocumentRow({ ownerId, existingId: existing?.id ?? null, file: { filename, mimeType, kind, sha256, pages: read.pages }, bytes, text: read.text, where, deadline, source, extraction: deferred ? "queued" : "done" });
+  // Kept by the owner's choice: the day is recorded (a keep is a consent, with a date).
+  if (policy && where !== "none") await query("UPDATE documents SET keep_consent_at = COALESCE(keep_consent_at, $2) WHERE id = $1", [row.id, policy.now]);
   if (policy && EXTERNAL.has(where)) await moveToStore(policy, ownerId, row.id, mimeType, bytes);
   return { summary: summary(row), duplicate: false, ...(deferred ? { finish: () => finishExtraction({ ownerId, id: row.id, filename, mimeType, requested, bytes }) } : {}) };
 }

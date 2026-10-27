@@ -56,6 +56,13 @@ async function start() {
     run: async () => {
       const report = await tickBatches(new Date(), appEnvironment(), (message, error) => logError(`[yomizaka] ${message}`, error));
       if (report.advanced || report.failed) logInfo(`[yomizaka] batch tick: ${report.advanced} advanced, ${report.failed} failed`);
+      // The retention sweep (yomizaka#125): documents past their window, screening results past their policy's days.
+      const { purgeExpired: purgeDocuments } = await import("./lib/retention");
+      const { purgeExpired: purgeResults } = await import("./lib/screening");
+      const { query: sweepQuery } = await import("./lib/db");
+      const purgedDocuments = await purgeDocuments(sweepQuery, new Date());
+      const purgedResults = await purgeResults(new Date());
+      if (purgedDocuments || purgedResults) logInfo(`[yomizaka] retention: ${purgedDocuments} documents, ${purgedResults} results purged`);
       // The screening checks a provider accepted without answering are collected on the same look (yomizaka#134).
       const { collectPending } = await import("./lib/screening-checks/collect");
       const collected = await collectPending(new Date());

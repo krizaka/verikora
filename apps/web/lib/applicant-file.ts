@@ -10,6 +10,7 @@ import { query, withBlockingLock } from "./db";
 import { type AnalysisRow, inspectUpload, isUuid, type StoragePolicy, storeDocument } from "./documents";
 import { codeOf, HttpError, refuse } from "./http";
 import { EXTERNAL, objectKey, purgeIfDone } from "./retention";
+import { policyFor } from "./retention-policy";
 import { addDays, hash, newToken, REQUEST_VALID_DAYS } from "./screening";
 import type { DocumentStore } from "./storage/port";
 import { DECISION, KIND, WORKSPACE } from "./workspace/decl";
@@ -175,7 +176,7 @@ export async function uploadApplicantDocument(token: string, typeId: string, fil
   // The consent to the document check comes first (yomizaka#131): no byte is stored without it.
   await assertUploadForApplication(link.landlord_id, link.id);
   const keepConsent = hasConsent(await activeConsents(link.id), CONSENT_PURPOSE.DOCUMENT_KEEP);
-  const retention = retentionOf(type.retentionPolicy, keepConsent);
+  const retention = retentionOf((await policyFor(link.landlord_id, typeId))?.purgeOn ?? type.retentionPolicy, keepConsent);
   const keep = retention === "after-decision" && ctx.keepAllowed;
 
   return withBlockingLock(`applicant-file:${link.id}`, async () => {
@@ -234,6 +235,7 @@ export async function purgeApplicationFiles(ownerId: string, screeningId: string
     "UPDATE documents SET content = ''::bytea, text = '', storage = 'none', retain_until = NULL WHERE owner_id = $1 AND screening_id = $2 AND (storage <> 'none' OR octet_length(content) > 0 OR text <> '') RETURNING id",
     [ownerId, screeningId],
   );
+  for (const p of purged) await audit({ action: "document.purged", actorId: ownerId, actorLabel: "decision", targetId: p.id, detail: { reason: "after-decision", application: screeningId } });
   return purged.length;
 }
 

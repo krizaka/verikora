@@ -8,6 +8,7 @@ import { audit } from "./audit";
 import { query } from "./db";
 import { refuse } from "./http";
 import { getDictionary } from "./i18n";
+import { policyFor, resultDays, SUBJECT } from "./retention-policy";
 import { chargeCheck, invoiceLine, isChargeable, PAYER, type Payer, payerAllowed, quoteOf, totalCents } from "./screening-checks/billing";
 import { screeningBillingPort } from "./screening-checks/billing-config";
 import { allowedFor, type CheckTypeRow, priceCents, providerById, typesByKey } from "./screening-checks/catalogue";
@@ -26,8 +27,6 @@ export type ScreeningStatus = (typeof SCREENING_STATUS)[keyof typeof SCREENING_S
 
 // @fixed: the days a request can be answered — a tenant needs time to read it; two weeks, then it expires unanswered.
 export const REQUEST_VALID_DAYS = 14;
-// @fixed: how long the result is kept after the tenant's consent (Law 25: only as long as necessary); the landlord decides within a month.
-export const RETENTION_DAYS = 30;
 
 /** What one check shows: an answered check says « clear » or « to review »; one that has not answered says why, never a guess. */
 export const screeningItem = z.object({ key: z.string().min(1).max(40), outcome: z.enum(["clear", "review", "pending", "unavailable", "soon"]) });
@@ -137,9 +136,9 @@ export const landlordView = (row: Row, now: Date): LandlordView => {
   const visible = state.status === SCREENING_STATUS.shared && state.resultAlive;
   return { id: row.id, tenantName: row.tenant_name, tenantEmail: row.tenant_email, status: state.status, createdAt: row.created_at.toISOString(), expiresAt: row.expires_at.toISOString(), result: visible ? parseResult(row.result) : null, provider: row.provider, demo: row.provider === DEMO_PROVIDER };
 };
-export const tenantView = (row: Row, now: Date, quote: TenantView["quote"] = { lines: [], totalCents: 0, payer: row.payer ?? PAYER.owner }): TenantView => {
+export const tenantView = (row: Row, now: Date, quote: TenantView["quote"] = { lines: [], totalCents: 0, payer: row.payer ?? PAYER.owner }, retentionDays = 0): TenantView => {
   const state = effectiveState(row, now);
-  return { status: state.status, landlord: row.landlord_email ?? "", tenantName: row.tenant_name, scope: row.scope, provider: row.provider, demo: row.provider === DEMO_PROVIDER, expiresAt: row.expires_at.toISOString(), retentionDays: RETENTION_DAYS, result: state.resultAlive ? parseResult(row.result) : null, resultExpiresAt: row.result_expires_at?.toISOString() ?? null, contestComment: row.contest_comment, quote };
+  return { status: state.status, landlord: row.landlord_email ?? "", tenantName: row.tenant_name, scope: row.scope, provider: row.provider, demo: row.provider === DEMO_PROVIDER, expiresAt: row.expires_at.toISOString(), retentionDays, result: state.resultAlive ? parseResult(row.result) : null, resultExpiresAt: row.result_expires_at?.toISOString() ?? null, contestComment: row.contest_comment, quote };
 };
 
 type Landlord = { id: string; email: string };
@@ -191,7 +190,8 @@ const screeningRow = async (token: string): Promise<Row> => {
 /** The tenant's view with the price of each check and who pays, read from the rows. */
 async function viewOf(row: Row, now: Date): Promise<TenantView> {
   const lines = quoteOf(await typesByKey(row.scope));
-  return tenantView(row, now, { lines, totalCents: totalCents(lines), payer: row.payer ?? PAYER.owner });
+  const days = resultDays(await policyFor(row.landlord_id, SUBJECT.screeningResult));
+  return tenantView(row, now, { lines, totalCents: totalCents(lines), payer: row.payer ?? PAYER.owner }, days);
 }
 
 const actor = (row: Row) => ({ actorId: null, actorLabel: `tenant:${row.tenant_email}` });
@@ -265,7 +265,7 @@ export async function consent(token: string, now: Date, headers?: Headers): Prom
   const result: ScreeningResult = { band: bandOf(answers.map((a) => a.item)), items: answers.map((a) => a.item), provider: row.provider, generatedAt: now.toISOString() };
   const [updated] = await query<Row>(
     "UPDATE screenings SET status = 'consented', consented_at = $2, result = $3, result_expires_at = $4 WHERE id = $1 AND status = 'requested' RETURNING *",
-    [row.id, now, JSON.stringify(result), addDays(now, RETENTION_DAYS)],
+    [row.id, now, JSON.stringify(result), addDays(now, resultDays(await policyFor(row.landlord_id, SUBJECT.screeningResult)))],
   );
   if (!updated) throw refuse(409, "NOT_PENDING", "This request is no longer waiting for an answer");
   await recordChecks(row.id, answers, now);
