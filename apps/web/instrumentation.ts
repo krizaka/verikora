@@ -56,6 +56,10 @@ async function start() {
     run: async () => {
       const report = await tickBatches(new Date(), appEnvironment(), (message, error) => logError(`[yomizaka] ${message}`, error));
       if (report.advanced || report.failed) logInfo(`[yomizaka] batch tick: ${report.advanced} advanced, ${report.failed} failed`);
+      // The screening checks a provider accepted without answering are collected on the same look (yomizaka#134).
+      const { collectPending } = await import("./lib/screening-checks/collect");
+      const collected = await collectPending(new Date());
+      if (collected.polled) logInfo(`[yomizaka] screening checks: ${collected.polled} polled, ${collected.settled} settled`);
       // The webhooks queued by closed batches ride the same tick (yomizaka#241).
       const sent = await deliverWebhooks(sessionSecret(), new Date(), { timeoutMs: 8000 });
       if (sent && (sent.delivered || sent.retried || sent.failed)) logInfo(`[yomizaka] webhooks: ${sent.delivered} delivered, ${sent.retried} to retry, ${sent.failed} given up`);

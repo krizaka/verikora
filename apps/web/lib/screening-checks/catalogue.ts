@@ -12,6 +12,9 @@ export interface ProviderRow {
   region: string;
   enabled: boolean;
   note: string | null;
+  /** A pending answer is asked again after this many minutes, at most `poll_max` times (data, yomizaka#134). */
+  poll_minutes: number;
+  poll_max: number;
 }
 export interface CheckTypeRow {
   key: string;
@@ -49,7 +52,7 @@ export function allowedTypes(types: readonly CheckTypeRow[], settings: readonly 
 /** Pure: the charge of a check — the provider's cost plus the margin, both from the row. */
 export const priceCents = (t: Pick<CheckTypeRow, "provider_cost_cents" | "margin_cents">): number => t.provider_cost_cents + t.margin_cents;
 
-export const loadProviders = () => query<ProviderRow>("SELECT id, adapter, label, region, enabled, note FROM screening_provider ORDER BY id");
+export const loadProviders = () => query<ProviderRow>("SELECT id, adapter, label, region, enabled, note, poll_minutes, poll_max FROM screening_provider ORDER BY id");
 export const loadCheckTypes = () => query<CheckTypeRow>("SELECT * FROM check_type ORDER BY key");
 
 /** The types this owner may request now. */
@@ -64,7 +67,7 @@ export async function typesByKey(keys: readonly string[]): Promise<CheckTypeRow[
   return query<CheckTypeRow>("SELECT * FROM check_type WHERE key = ANY($1)", [keys]);
 }
 export async function providerById(id: string): Promise<ProviderRow | undefined> {
-  return (await query<ProviderRow>("SELECT id, adapter, label, region, enabled, note FROM screening_provider WHERE id = $1", [id]))[0];
+  return (await query<ProviderRow>("SELECT id, adapter, label, region, enabled, note, poll_minutes, poll_max FROM screening_provider WHERE id = $1", [id]))[0];
 }
 
 /** The labels of every check type in one language (data): the pages name a check by its row, never by a message key typed in code. */

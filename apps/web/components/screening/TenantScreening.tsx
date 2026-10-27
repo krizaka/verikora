@@ -27,6 +27,7 @@ export interface TenantWords {
   decline: string;
   share: string;
   contest: string;
+  copy: string;
   comment: string;
   send: string;
   demo: string;
@@ -61,6 +62,20 @@ export function TenantScreening({ token, initial, words, locale }: Readonly<{ to
       setProblem(`${words.error} (${errorKey(error)})`);
     }
   };
+  const takeCopy = async () => {
+    setProblem(null);
+    try {
+      const r = (await krizakaFetch("/api/screenings/respond", { method: "POST", json: { token, action: "copy", locale } })) as { copy: { fileName: string; text: string } };
+      const url = URL.createObjectURL(new Blob([r.copy.text], { type: "text/plain;charset=utf-8" }));
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = r.copy.fileName;
+      a.click();
+      URL.revokeObjectURL(url);
+    } catch (error) {
+      setProblem(`${words.error} (${errorKey(error)})`);
+    }
+  };
   const pending = view.status === "requested";
   return (
     <div className="flex max-w-2xl flex-col gap-5" data-testid="tenant-screening">
@@ -87,6 +102,13 @@ export function TenantScreening({ token, initial, words, locale }: Readonly<{ to
         {words.state[view.status]}
       </output>
       {view.result ? <ScreeningResultCard result={view.result} words={words.result} demo={view.demo ? words.demo : null} /> : null}
+      {view.result ? (
+        <div>
+          <Button size="md" variant="ghost" onClick={() => void takeCopy()} data-testid="copy-result">
+            {words.copy}
+          </Button>
+        </div>
+      ) : null}
       {view.resultExpiresAt && view.result ? <p className="m-0 text-xs text-fg-muted">{words.deleteOn.replace("{date}", new Date(view.resultExpiresAt).toLocaleDateString(INTL[locale], { dateStyle: "long" }))}</p> : null}
       {view.contestComment ? <p className="m-0 text-sm text-fg-secondary">{words.contested.replace("{comment}", view.contestComment)}</p> : null}
       {problem ? <Alert tone="danger">{problem}</Alert> : null}

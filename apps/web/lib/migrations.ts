@@ -821,4 +821,15 @@ INSERT INTO check_type (key, provider_id, purpose, label_fr, label_en, consent_n
   ('credit', 'engine', 'CREDIT', 'Rapport de crédit', 'Credit report', '2026-10-24.2', true, false, NULL, 'Price to be set when the provider agreement is signed. Offered to an owner by a tenant_check_setting row.'),
   ('criminal-record', 'engine', 'COURT_RECORDS', 'Antécédents judiciaires', 'Criminal record', '2026-10-24.2', false, false, 'criminal-records-lawful', 'OFF. Not offered to Québec landlords until a lawyer confirms it is lawful for rental (Charter, CDPDJ).');`,
   },
+  {
+    version: "0040_screening_polling",
+    // yomizaka#134: a PENDING check is collected by polling its provider (webhooks later, yomizaka#426). The interval and the number of
+    // tries are DATA on the provider row; a check that never answers is given up as « unavailable », never kept pending for good.
+    sql: `
+ALTER TABLE screening_provider ADD COLUMN poll_minutes integer NOT NULL DEFAULT 15 CHECK (poll_minutes BETWEEN 1 AND 1440);
+ALTER TABLE screening_provider ADD COLUMN poll_max integer NOT NULL DEFAULT 96 CHECK (poll_max BETWEEN 1 AND 1000);
+ALTER TABLE screening_checks ADD COLUMN next_poll_at timestamptz;
+ALTER TABLE screening_checks ADD COLUMN polls integer NOT NULL DEFAULT 0;
+CREATE INDEX screening_checks_due ON screening_checks(next_poll_at) WHERE state = 'pending';`,
+  },
 ];

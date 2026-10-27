@@ -63,6 +63,7 @@ export async function withdrawConsent(screeningId: string, purpose: ConsentPurpo
   if (purpose === CONSENT_PURPOSE.COURT_RECORDS || purpose === CONSENT_PURPOSE.CREDIT) {
     await query("UPDATE screenings SET status = 'declined' WHERE id = $1 AND status = 'requested'", [screeningId]);
     await query("UPDATE screenings SET result = NULL, result_expires_at = NULL, contest_comment = NULL, purged_at = $2 WHERE id = $1 AND result IS NOT NULL", [screeningId, now]);
+    await query("DELETE FROM screening_checks WHERE screening_id = $1", [screeningId]);
   }
   await audit({ action: "consent.withdrawn", actorId: null, actorLabel: "applicant", targetId: screeningId, detail: { purpose }, headers });
   return true;
@@ -108,6 +109,7 @@ export async function eraseApplication(screeningId: string, ownerId: string, sto
     "UPDATE screenings SET status = 'erased', tenant_name = '', tenant_email = $2, result = NULL, result_expires_at = NULL, contest_comment = NULL, purged_at = $3 WHERE id = $1 AND status <> 'erased'",
     [screeningId, `erased+${screeningId}@erased.invalid`, now],
   );
+  await query("DELETE FROM screening_checks WHERE screening_id = $1", [screeningId]);
   await audit({ action: "applicant.erased", actorId: null, actorLabel: "applicant", targetId: screeningId, detail: { documents: docs.length }, headers });
   return { documents: docs.length };
 }

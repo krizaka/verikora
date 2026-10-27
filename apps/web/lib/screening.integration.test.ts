@@ -1,7 +1,9 @@
 import { beforeAll, describe, expect, it } from "vitest";
 
 import { migrate, query } from "./db";
-import { consent, contest, decline, listForLandlord, purgeExpired, requestScreening, RETENTION_DAYS, share, viewForTenant } from "./screening";
+import { consent, contest, copyForTenant,decline, listForLandlord, purgeExpired, requestScreening, RETENTION_DAYS, share, viewForTenant } from "./screening";
+import { collectOne, collectPending, dueChecks } from "./screening-checks/collect";
+import { demoProvider } from "./screening-checks/providers";
 
 /** The consent flow against a real PostgreSQL (CI's service; locally `YOMIZAKA_DB_IT=1 DATABASE_URL=… pnpm test`). */
 const enabled = process.env.YOMIZAKA_DB_IT === "1" && !!process.env.DATABASE_URL;
@@ -99,6 +101,46 @@ describe.runIf(enabled)("tenant screening (database)", () => {
     const purposes = await query<{ purpose: string }>("SELECT purpose FROM application_consents WHERE screening_id = $1 ORDER BY purpose", [id]);
     expect(purposes.map((p) => p.purpose)).toEqual(["COURT_RECORDS", "CREDIT"]);
     await query("DELETE FROM tenant_check_setting WHERE owner_id = $1", [landlord.id]);
+  });
+
+  it("collects a pending check by polling: in progress first, then settled once, with an audit row and a copy for the applicant", async () => {
+    const { id, token } = await ask(`j-${stamp}@exemple.test`, "Camille Wait");
+    const view = await consent(token, NOW);
+    expect(view.result).toMatchObject({ band: "incomplete", items: [{ key: "payment-history", outcome: "pending" }] });
+    const [check] = await query<{ state: string; provider_ref: string; next_poll_at: Date }>("SELECT state, provider_ref, next_poll_at FROM screening_checks WHERE screening_id = $1", [id]);
+    expect(check).toMatchObject({ state: "pending", provider_ref: "demo-pending-01" });
+    const later = new Date(NOW.getTime() + 16 * 60_000);
+    expect((await dueChecks(NOW, 50)).some((d) => d.screening_id === id)).toBe(false);
+    const due = (await dueChecks(later, 50)).find((d) => d.screening_id === id)!;
+    expect(await collectOne(due, demoProvider, later)).toBe(true);
+    // A replay changes nothing twice.
+    expect(await collectOne(due, demoProvider, later)).toBe(false);
+    expect((await viewForTenant(token, later)).result).toMatchObject({ band: "no-concern", items: [{ key: "payment-history", outcome: "clear" }] });
+    expect((await actions(id)).filter((a) => a === "screening.check.collected")).toHaveLength(1);
+    const copy = await copyForTenant(token, { "payment-history": "Payment history" }, { outcome: { clear: "nothing to report" }, band: { "no-concern": "Nothing to report" }, keptUntil: "Deleted on {date}.", title: "Your result" }, later);
+    expect(copy.text).toContain("- Payment history: nothing to report");
+    expect(await actions(id)).toContain("screening.copy");
+  });
+
+  it("gives up a check that never answers, and the purge removes what the checks kept", async () => {
+    const { id, token } = await ask(`k-${stamp}@exemple.test`, "Camille Waitforever");
+    await consent(token, NOW);
+    await query("UPDATE screening_provider SET poll_max = 2 WHERE id = 'demo'");
+    try {
+      let at = NOW;
+      for (let n = 0; n < 3; n++) {
+        at = new Date(at.getTime() + 16 * 60_000);
+        await collectPending(at);
+      }
+    } finally {
+      await query("UPDATE screening_provider SET poll_max = 96 WHERE id = 'demo'");
+    }
+    const [check] = await query<{ state: string; outcome: string }>("SELECT state, outcome FROM screening_checks WHERE screening_id = $1", [id]);
+    expect(check).toMatchObject({ state: "unavailable", outcome: "TIMEOUT" });
+    expect((await viewForTenant(token, NOW)).result?.items[0]?.outcome).toBe("unavailable");
+    await purgeExpired(new Date(NOW.getTime() + (RETENTION_DAYS + 1) * DAY));
+    expect(await query("SELECT 1 FROM screening_checks WHERE screening_id = $1", [id])).toHaveLength(0);
+    expect(await actions(id)).toContain("screening.purged");
   });
 
   it("keeps the criminal-record type as a disabled row, never requestable, even if an owner's row allows it", async () => {

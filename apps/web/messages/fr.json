@@ -2905,7 +2905,8 @@
       },
       "deleteOn": "Supprimé le {date}.",
       "contested": "Votre contestation : « {comment} »",
-      "incompleteNote": "Certaines vérifications n'ont pas répondu. Rien ici n'est un résultat pour celles-ci : elles sont montrées telles qu'elles en sont."
+      "incompleteNote": "Certaines vérifications n'ont pas répondu. Rien ici n'est un résultat pour celles-ci : elles sont montrées telles qu'elles en sont.",
+      "copy": "Obtenir une copie de mon résultat"
     },
     "landlord": {
       "title": "Dossier du locataire",

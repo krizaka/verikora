@@ -32,14 +32,19 @@ export const closedDoor: ChecksDoor = { submit: async () => NOT_CONFIGURED, coll
 
 export const engineProvider = (door: ChecksDoor = closedDoor): CheckProvider => ({ demo: false, submit: (p, c) => door.submit(p, c), collect: (p, c, ref) => door.collect(p, c, ref) });
 
-/** The demo: fictitious and deterministic. A last name starting with « Flag » is a file found; any other is none. */
+/**
+ * The demo: fictitious and deterministic, by the last name. « Flag… » is a file found; « Wait… » is accepted and answered on the
+ * first collection (no file); « Waitforever… » stays pending; any other is no file.
+ */
 export const demoProvider: CheckProvider = {
   demo: true,
   async submit(_purpose, call) {
-    return call.subject.lastName.toLowerCase().startsWith("flag") ? result(CHECK_OUTCOME.MATCH, { category: "TAL_OTHER", providerRef: "demo-fixture-01" }) : result(CHECK_OUTCOME.NO_MATCH);
+    const name = call.subject.lastName.toLowerCase();
+    if (name.startsWith("wait")) return result(CHECK_OUTCOME.PENDING, { providerRef: name.startsWith("waitforever") ? "demo-pending-forever" : "demo-pending-01" });
+    return name.startsWith("flag") ? result(CHECK_OUTCOME.MATCH, { category: "TAL_OTHER", providerRef: "demo-fixture-01" }) : result(CHECK_OUTCOME.NO_MATCH);
   },
-  async collect(purpose, call) {
-    return this.submit(purpose, call);
+  async collect(_purpose, _call, providerRef) {
+    return providerRef === "demo-pending-forever" ? result(CHECK_OUTCOME.PENDING, { providerRef }) : result(CHECK_OUTCOME.NO_MATCH);
   },
 };
 

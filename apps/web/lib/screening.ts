@@ -1,5 +1,6 @@
 import crypto from "node:crypto";
 
+import { addMinutes } from "@krizaka/time";
 import { z } from "zod";
 
 import { CONSENT_MEANS, grantConsent, NOTICE_VERSION, purposesOfTypes, requireConsent } from "./applicant-consent";
@@ -186,28 +187,30 @@ interface Answer {
   runId: string;
   result: CheckResult;
   item: z.infer<typeof screeningItem>;
+  /** When a pending answer is asked again. */
+  pollMinutes: number;
 }
 /** Asks each check type's provider (chosen by its row's adapter). A provider that fails is a line « unavailable », never an invented result. */
 async function runChecks(row: Row, types: readonly CheckTypeRow[]): Promise<Answer[]> {
-  const adapters = new Map<string, CheckProvider>();
+  const adapters = new Map<string, { provider: CheckProvider; pollMinutes: number }>();
   const answers: Answer[] = [];
   for (const type of types) {
-    let provider = adapters.get(type.provider_id);
-    if (!provider) {
+    let entry = adapters.get(type.provider_id);
+    if (!entry) {
       const providerRow = await providerById(type.provider_id);
       if (!providerRow?.enabled) throw refuse(503, "PROVIDER_UNAVAILABLE", "No such screening provider");
-      provider = adapterFor(providerRow.adapter);
-      adapters.set(type.provider_id, provider);
+      entry = { provider: adapterFor(providerRow.adapter), pollMinutes: providerRow.poll_minutes };
+      adapters.set(type.provider_id, entry);
     }
     const runId = crypto.randomUUID();
     const call = { userId: row.landlord_id, runId, subject: { subjectId: row.id, ...namesOf(row.tenant_name) }, region: type.region };
     let result: CheckResult;
     try {
-      result = await provider.submit(type.purpose, call);
+      result = await entry.provider.submit(type.purpose, call);
     } catch {
       result = { outcome: "PROVIDER_ERROR", refusal: null, category: "NONE", providerRef: null };
     }
-    answers.push({ type, runId, result, item: itemOf(type.key, result) });
+    answers.push({ type, runId, result, item: itemOf(type.key, result), pollMinutes: entry.pollMinutes });
   }
   return answers;
 }
@@ -215,8 +218,8 @@ async function runChecks(row: Row, types: readonly CheckTypeRow[]): Promise<Answ
 async function recordChecks(screeningId: string, answers: readonly Answer[], now: Date): Promise<void> {
   for (const a of answers) {
     await query(
-      "INSERT INTO screening_checks (screening_id, check_type, state, outcome, refusal, category, provider_ref, run_id, submitted_at, answered_at) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) ON CONFLICT (screening_id, check_type) DO NOTHING",
-      [screeningId, a.type.key, stateOf(a.result), a.result.outcome, a.result.refusal, a.result.category, a.result.providerRef, a.runId, now, stateOf(a.result) === CHECK_STATE.answered ? now : null],
+      "INSERT INTO screening_checks (screening_id, check_type, state, outcome, refusal, category, provider_ref, run_id, submitted_at, answered_at, next_poll_at) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11) ON CONFLICT (screening_id, check_type) DO NOTHING",
+      [screeningId, a.type.key, stateOf(a.result), a.result.outcome, a.result.refusal, a.result.category, a.result.providerRef, a.runId, now, stateOf(a.result) === CHECK_STATE.answered ? now : null, stateOf(a.result) === CHECK_STATE.pending ? addMinutes(now, a.pollMinutes) : null],
     );
   }
 }
@@ -241,6 +244,21 @@ export async function consent(token: string, now: Date, headers?: Headers): Prom
   await recordChecks(row.id, answers, now);
   await audit({ ...actor(row), action: "screening.consented", targetId: row.id, detail: { scope: row.scope, provider: row.provider }, headers });
   return tenantView({ ...updated, landlord_email: row.landlord_email }, now);
+}
+
+/** « 2026-10-27 », the day in UTC. */
+const isoDay = (d: Date) => new Intl.DateTimeFormat("en-CA", { timeZone: "UTC" }).format(d);
+
+/** The applicant's copy of their result (Loi 25: access): what was asked, when, what each check said, how long it is kept. Plain text, no score. Audited. */
+export async function copyForTenant(token: string, labels: Readonly<Record<string, string>>, say: Readonly<{ outcome: Record<string, string>; band: Record<string, string>; keptUntil: string; title: string }>, now: Date, headers?: Headers): Promise<{ fileName: string; text: string }> {
+  const row = await screeningRow(token);
+  const state = effectiveState(row, now);
+  const result = state.resultAlive ? parseResult(row.result) : null;
+  if (!result) throw refuse(404, "NOT_FOUND", "There is no result to copy");
+  const lines = [say.title, `${isoDay(row.created_at)} — ${row.landlord_email ?? ""}`, "", `${say.band[result.band]}`, ...result.items.map((i) => `- ${labels[i.key] ?? i.key}: ${say.outcome[i.outcome] ?? i.outcome}`)];
+  if (row.result_expires_at) lines.push("", say.keptUntil.replace("{date}", isoDay(row.result_expires_at)));
+  await audit({ ...actor(row), action: "screening.copy", targetId: row.id, headers });
+  return { fileName: `result-${row.id.slice(0, 8)}.txt`, text: `${lines.join("\n")}\n` };
 }
 
 export async function decline(token: string, now: Date, headers?: Headers): Promise<TenantView> {
@@ -275,6 +293,8 @@ export async function contest(token: string, comment: string, now: Date, headers
 export async function purgeExpired(now: Date): Promise<number> {
   const purged = await query<{ id: string }>("UPDATE screenings SET result = NULL, purged_at = $1, contest_comment = NULL WHERE result IS NOT NULL AND result_expires_at <= $1 RETURNING id", [now]);
   await query("UPDATE screenings SET status = 'expired' WHERE status = 'requested' AND expires_at <= $1", [now]);
+  // What the checks kept (their outcomes, references and run ids) goes with the summary: the fact of the request stays, nothing else.
+  if (purged.length) await query("DELETE FROM screening_checks WHERE screening_id = ANY($1)", [purged.map((p) => p.id)]);
   for (const p of purged) await audit({ action: "screening.purged", actorId: null, actorLabel: "retention", targetId: p.id });
   return purged.length;
 }

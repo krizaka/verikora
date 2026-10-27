@@ -2905,7 +2905,8 @@
       },
       "deleteOn": "Deleted on {date}.",
       "contested": "Your contestation: « {comment} »",
-      "incompleteNote": "Some checks have not answered. Nothing here is a result for those: they are shown as they stand."
+      "incompleteNote": "Some checks have not answered. Nothing here is a result for those: they are shown as they stand.",
+      "copy": "Get a copy of my result"
     },
     "landlord": {
       "title": "Tenant application",
