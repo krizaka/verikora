@@ -1,26 +1,13 @@
-import { locateQuote, type PageText, type TextItem } from "@krizaka/ui/document-viewer";
+import { locateQuote } from "@krizaka/ui/document-viewer";
 import { describe, expect, it } from "vitest";
 
 import { YOMIZAKA_OCR_RULES } from "../ocr/rules";
 import { tesseractEngine } from "../ocr/tesseract";
+import { textLayer } from "../test-pdf";
 import { createImageCleaner } from "./clean";
 import { photoOfPage } from "./fixtures";
 import { pagesToPdf } from "./pdf";
 import { YOMIZAKA_IMAGE_RULES } from "./rules";
-
-/** A photo's recognised words, laid invisibly on the page, are what lights a finding on the photo (yomizaka#8): the same text positions as a text PDF. */
-async function textLayer(pdf: Uint8Array): Promise<PageText[]> {
-  const { getDocumentProxy } = await import("unpdf");
-  const doc = await getDocumentProxy(pdf.slice());
-  const pages: PageText[] = [];
-  for (let n = 1; n <= doc.numPages; n++) {
-    const page = await doc.getPage(n);
-    const vp = page.getViewport({ scale: 1 });
-    const content = await page.getTextContent();
-    pages.push({ page: n, width: vp.width, height: vp.height, items: content.items.filter((i): i is typeof i & TextItem => "str" in i) as TextItem[] });
-  }
-  return pages;
-}
 
 describe("the recognised words of a photo, as the text layer of its PDF", () => {
   it("finds a quote on the photo, where the words are", async () => {

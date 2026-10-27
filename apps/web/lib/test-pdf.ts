@@ -1,3 +1,5 @@
+import type { PageText, TextItem } from "@krizaka/ui/document-viewer";
+
 /** A minimal text PDF for tests: Helvetica, one line per entry, `linesPerPage` lines on each page (A4-ish, 612 × 792). */
 export function textPdf(lines: readonly string[], linesPerPage = 40): Uint8Array {
   const pages: string[][] = [];
@@ -26,4 +28,18 @@ export function textPdf(lines: readonly string[], linesPerPage = 40): Uint8Array
   const entries = offsets.map((o) => `${String(o).padStart(10, "0")} 00000 n \n`).join("");
   const table = `xref\n0 ${objects.length + 1}\n0000000000 65535 f \n${entries}`;
   return new Uint8Array(Buffer.concat([out, latin1(`${table}trailer\n<< /Size ${objects.length + 1} /Root 1 0 R >>\nstartxref\n${xref}\n%%EOF\n`)]));
+}
+
+/** The text positions of a PDF as the viewer reads them in the browser: the same pdf.js Yomizaka reads text with on the server (unpdf). */
+export async function textLayer(pdf: Uint8Array): Promise<PageText[]> {
+  const { getDocumentProxy } = await import("unpdf");
+  const doc = await getDocumentProxy(pdf.slice());
+  const pages: PageText[] = [];
+  for (let n = 1; n <= doc.numPages; n++) {
+    const page = await doc.getPage(n);
+    const vp = page.getViewport({ scale: 1 });
+    const content = await page.getTextContent();
+    pages.push({ page: n, width: vp.width, height: vp.height, items: content.items.filter((i): i is typeof i & TextItem => "str" in i) as TextItem[] });
+  }
+  return pages;
 }

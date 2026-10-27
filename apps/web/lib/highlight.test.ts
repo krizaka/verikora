@@ -1,8 +1,8 @@
-import { locateQuote, type PageText, type TextItem } from "@krizaka/ui/document-viewer";
+import { locateQuote } from "@krizaka/ui/document-viewer";
 import { describe, expect, it } from "vitest";
 
 import { readText } from "./pdf-text";
-import { textPdf } from "./test-pdf";
+import { textLayer, textPdf } from "./test-pdf";
 
 // The lease Yomizaka's demo uses (lib/sample-lease.ts) — Latin-1 only so a plain Helvetica PDF holds it.
 const LEASE = [
@@ -15,20 +15,6 @@ const LEASE = [
   "La locataire remet douze cheques postdates.",
   "Il est interdit d'avoir des enfants dans le logement.",
 ];
-
-async function textLayer(pdf: Uint8Array): Promise<PageText[]> {
-  // The same pdf.js Yomizaka reads text with on the server (unpdf): its text positions are what the viewer's are in the browser.
-  const { getDocumentProxy } = await import("unpdf");
-  const doc = await getDocumentProxy(pdf.slice());
-  const pages: PageText[] = [];
-  for (let n = 1; n <= doc.numPages; n++) {
-    const page = await doc.getPage(n);
-    const vp = page.getViewport({ scale: 1 });
-    const content = await page.getTextContent();
-    pages.push({ page: n, width: vp.width, height: vp.height, items: content.items.filter((i): i is typeof i & TextItem => "str" in i) as TextItem[] });
-  }
-  return pages;
-}
 
 describe("a finding's quote, from Yomizaka's text to a box on the PDF", () => {
   const pdf = textPdf([...LEASE, ...Array.from({ length: 40 }, (_, i) => `Clause ${i + 1} generique du bail.`), "Fin du bail : le locataire quitte les lieux le 30 juin 2027."], 20);
