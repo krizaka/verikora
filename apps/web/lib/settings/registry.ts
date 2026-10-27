@@ -1,4 +1,5 @@
 import { authSettings } from "@krizaka/auth/settings";
+import { creditsSettings } from "@krizaka/credits/settings";
 import { ALL_SCOPES, bilingual, choice, defineSettings, flag, integer, type Registry, SCOPE, subset, WORKSPACE_SCOPES } from "@krizaka/settings";
 import type { z } from "zod";
 
@@ -44,6 +45,10 @@ export const SETTINGS = {
   "payments.enabled": flag(GROUP.general, true, WORKSPACE),
   "payments.display": choice(GROUP.general, [PAYMENT_DISPLAY.test, PAYMENT_DISPLAY.live], PAYMENT_DISPLAY.test),
   "audit.freeFirst": flag(GROUP.general, true, WORKSPACE),
+  /** How long the free first audit, once given, can be used (yomizaka#261: it is a pot of the credits ledger, and a pot lapses). */
+  "audit.freeValidDays": integer(GROUP.general, 3650, { min: 1, max: 36500, unit: "days" }),
+  // The credits ledger's knobs (the zone days and months are counted in, how long a hold keeps credits back): @krizaka/credits'.
+  ...inGroup(GROUP.general, creditsSettings),
   // Features: each can be switched off for everyone, a workspace or one person (a beta).
   "features.documentInsight": flag(GROUP.features, true, ALL),
   "features.personalInfo": flag(GROUP.features, true, WORKSPACE),

@@ -1,5 +1,6 @@
 import { beforeAll, describe, expect, it } from "vitest";
 
+import { seedAudits } from "../audit-credits.testkit";
 import { migrate, query } from "../db";
 import { storeDocument } from "../documents";
 import { cleanPdf, javascriptPdf } from "../preflight/fixtures";
@@ -40,7 +41,7 @@ describe.runIf(enabled)("the preview of a batch (yomizaka#232)", () => {
     const bytes = await cleanPdf("BAIL DÉJÀ VÉRIFIÉ");
     const { summary } = await storeDocument(owner, { name: "deja.pdf", type: "application/pdf", size: bytes.length }, bytes, "auto");
     await query("INSERT INTO analyses (document_id, studio, status, run_id, blueprint_version, inputs) VALUES ($1, 'compliance-check', 'succeeded', 'run-batch-1', '1.0.0', $2)", [summary.id, JSON.stringify({ jurisdiction: "QC" })]);
-    await query("UPDATE accounts SET audit_credits = 5 WHERE id = $1", [owner]);
+    await seedAudits(owner, { credits: 5 });
     const preview = await previewBatch(owner, "file,check\ndeja.pdf,compliance\nneuf.pdf,compliance", [pdf("deja.pdf", bytes), pdf("neuf.pdf", await cleanPdf("BAIL NEUF"))], await settingsFor(owner), new Date());
     expect(preview.rows.map((r) => r.state)).toEqual(["reuse", "check"]);
     expect(preview.cost).toMatchObject({ audits: 1, covered: true, credits: 5 });

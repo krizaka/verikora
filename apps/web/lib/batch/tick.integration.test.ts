@@ -3,6 +3,7 @@ import { readFileSync } from "node:fs";
 import type { OrazakaRun } from "@yomizaka/core";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 
+import { seedAudits } from "../audit-credits.testkit";
 import { migrate, pool, query } from "../db";
 import { withAdvisoryLock } from "../db";
 import { seedDatabase } from "../flows";
@@ -83,7 +84,8 @@ describe.runIf(enabled)("the batch tick", () => {
   });
 
   it("a batch waiting for the account to pay is left alone for a while, not hammered at every look", async () => {
-    await query("UPDATE accounts SET terms_accepted_at = now(), audit_credits = 0, free_audit_used_at = now() WHERE id = $1", [other.id]);
+    await query("UPDATE accounts SET terms_accepted_at = now() WHERE id = $1", [other.id]);
+    await seedAudits(other.id, { freeUsed: true });
     const created = await open(other, "sans crédit", "tick-c.pdf");
     expect(created.pausedBy).toBe("PAYWALL");
     await tickBatches(new Date(), "dev", undefined, [owner.id, other.id]);

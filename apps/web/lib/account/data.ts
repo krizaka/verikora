@@ -1,13 +1,14 @@
+import type { AccountService } from "@krizaka/auth";
 import type { CloudOwner, StorageKind } from "@yomizaka/core";
 import type { QueryResultRow } from "pg";
 
+import { ledgerState } from "../billing";
 import { refuse } from "../http";
 import { EXTERNAL, objectKey } from "../retention";
 import type { DocumentStore } from "../storage/port";
 
 /** The store that holds a document: Krizaka's configured one, or the owner's own cloud. */
 export type StoresOf = (owner: CloudOwner) => DocumentStore | null;
-import type { AccountService } from "@krizaka/auth";
 
 /**
  * What belongs to Yomizaka and not to the account port: exporting a person's data and erasing it (Loi 25: access and
@@ -46,11 +47,12 @@ export interface DataExport {
 
 /** Everything the person has with Yomizaka, as one JSON document: their profile, organisation, documents (kept files included) and reports. */
 export async function exportData(q: Query, accountId: string, stores: StoresOf, now: Date): Promise<DataExport> {
-  const [a] = await q<{ id: string; email: string; name: string | null; locale: string; perspective: string | null; created_at: Date; terms_accepted_at: Date | null; privacy_accepted_at: Date | null; plan: string; audit_credits: number; free_audit_used_at: Date | null; subscription_status: string | null; current_period_end: Date | null }>(
-    "SELECT id, email, name, locale, perspective, created_at, terms_accepted_at, privacy_accepted_at, plan, audit_credits, free_audit_used_at, subscription_status, current_period_end FROM accounts WHERE id = $1",
+  const [a] = await q<{ id: string; email: string; name: string | null; locale: string; perspective: string | null; created_at: Date; terms_accepted_at: Date | null; privacy_accepted_at: Date | null; plan: string; subscription_status: string | null; current_period_end: Date | null }>(
+    "SELECT id, email, name, locale, perspective, created_at, terms_accepted_at, privacy_accepted_at, plan, subscription_status, current_period_end FROM accounts WHERE id = $1",
     [accountId],
   );
   if (!a) throw refuse(404, "NOT_FOUND", "No such account");
+  const ledger = await ledgerState(q, accountId, now);
   const libs = await q<{ id: string; name: string }>("SELECT id, name FROM libraries WHERE owner_id = $1 ORDER BY created_at", [accountId]);
   const cols = await q<{ id: string; library_id: string; name: string; is_default: boolean }>("SELECT c.id, c.library_id, c.name, c.is_default FROM collections c WHERE c.owner_id = $1 ORDER BY c.name", [accountId]);
   const folders = await q<{ id: string; collection_id: string; name: string }>("SELECT f.id, f.collection_id, f.name FROM folders f JOIN collections c ON c.id = f.collection_id JOIN libraries l ON l.id = c.library_id WHERE l.owner_id = $1 ORDER BY f.name", [accountId]);
@@ -83,7 +85,7 @@ export async function exportData(q: Query, accountId: string, stores: StoresOf, 
   return {
     exportedAt: now.toISOString(),
     profile: { id: a.id, email: a.email, name: a.name, locale: a.locale, perspective: a.perspective, createdAt: a.created_at.toISOString(), termsAcceptedAt: a.terms_accepted_at?.toISOString() ?? null, privacyAcceptedAt: a.privacy_accepted_at?.toISOString() ?? null },
-    billing: { plan: a.plan, auditCredits: a.audit_credits, freeAuditUsed: !!a.free_audit_used_at, subscriptionStatus: a.subscription_status, currentPeriodEnd: a.current_period_end?.toISOString() ?? null },
+    billing: { plan: a.plan, auditCredits: ledger.credits, freeAuditUsed: ledger.freeAuditUsed, subscriptionStatus: a.subscription_status, currentPeriodEnd: a.current_period_end?.toISOString() ?? null },
     libraries: libs.map((l) => ({ id: l.id, name: l.name, collections: cols.filter((c) => c.library_id === l.id).map((c) => ({ id: c.id, name: c.name, isDefault: c.is_default, tags: colTags.get(c.id) ?? [], folders: folders.filter((f) => f.collection_id === c.id).map((f) => ({ id: f.id, name: f.name, tags: folderTags.get(f.id) ?? [] })) })) })),
     tags,
     documents: await Promise.all(
