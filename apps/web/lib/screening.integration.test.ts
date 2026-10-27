@@ -66,7 +66,7 @@ describe.runIf(enabled)("tenant screening (database)", () => {
   });
 
   it("a contested result is never shown to the landlord, who sees « contested »", async () => {
-    const { id, token } = await ask(`g-${stamp}@exemple.test`, "Flag Fictif");
+    const { id, token } = await ask(`g-${stamp}@exemple.test`, "Camille Flag");
     expect((await consent(token, NOW)).result?.band).toBe("review");
     await contest(token, "Ce n'est pas exact.", NOW);
     const seen = (await listForLandlord(landlord.id, NOW)).find((s) => s.id === id)!;
@@ -218,7 +218,7 @@ describe.runIf(enabled)("tenant screening (database)", () => {
 
   it("stores no raw report: the columns of a check hold a closed outcome, a reference and a run id — nothing else", async () => {
     const cols = await query<{ column_name: string }>("SELECT column_name FROM information_schema.columns WHERE table_name = 'screening_checks' ORDER BY column_name");
-    expect(cols.map((c) => c.column_name)).toEqual(["answered_at", "category", "check_type", "id", "outcome", "provider_ref", "refusal", "run_id", "screening_id", "state", "submitted_at"]);
+    expect(cols.map((c) => c.column_name)).toEqual(["answered_at", "category", "check_type", "id", "next_poll_at", "outcome", "polls", "provider_ref", "refusal", "run_id", "screening_id", "state", "submitted_at"]);
   });
 
   it("refuses an unknown link, and a scope the law does not allow", async () => {

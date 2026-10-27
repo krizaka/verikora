@@ -45,7 +45,7 @@ describe.runIf(enabled)("adopted Krizaka modules", () => {
         [person],
       );
       const old = (await pool.query("SELECT count(*)::int AS n FROM audit_log")).rows[0].n;
-      expect(await runMigrations(connect, MIGRATIONS, { lockKey: MIGRATION_LOCK_KEY })).toEqual(["0037_audit_package", "0038_adopt_sessions"]);
+      expect(await runMigrations(connect, MIGRATIONS.filter((m) => m.version <= "0038_adopt_sessions"), { lockKey: MIGRATION_LOCK_KEY })).toEqual(["0037_audit_package", "0038_adopt_sessions"]);
       const rows = (await pool.query("SELECT actor_id, actor_label, action, target_type, target_id, host(ip) AS ip FROM audit.entry ORDER BY at")).rows;
       expect(rows).toHaveLength(old);
       expect((await pool.query("SELECT count(*)::int AS n FROM audit_log")).rows[0].n).toBe(old);
