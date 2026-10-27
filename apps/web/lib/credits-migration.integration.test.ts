@@ -1,9 +1,9 @@
 import { createCredits } from "@krizaka/credits";
 import { migrate as runMigrations } from "@krizaka/db";
-import pg from "pg";
 import { describe, expect, it } from "vitest";
 
 import { MIGRATION_LOCK_KEY } from "./db";
+import { withScratchDatabase } from "./migration-testkit";
 import { MIGRATIONS } from "./migrations";
 
 /** Migration 0050 turns the columns of the entitlements into the credits ledger, losing nothing (skipped without YOMIZAKA_DB_IT=1 and a database). */
@@ -12,18 +12,7 @@ const NOW = new Date("2026-10-27T12:00:00Z");
 
 describe.runIf(enabled)("0050_credits_ledger", () => {
   it("keeps every paid credit and every used free audit, and a replay of the runtime's keys changes nothing", async () => {
-    const admin = new pg.Pool({ connectionString: process.env.DATABASE_URL, max: 1 });
-    const name = `b53_credits_${Date.now()}`;
-    await admin.query(`CREATE DATABASE ${name}`);
-    const url = new URL(process.env.DATABASE_URL!);
-    url.pathname = `/${name}`;
-    const pool = new pg.Pool({ connectionString: url.toString(), max: 2 });
-    const connect = async () => {
-      const client = await pool.connect();
-      return { query: (text: string, values?: unknown[]) => client.query(text, values), release: () => client.release() };
-    };
-    const run = async (text: string, values?: unknown[]) => (await pool.query(text, values)).rows as never;
-    try {
+    await withScratchDatabase("b53_credits", async ({ connect, run, pool }) => {
       await runMigrations(connect, MIGRATIONS.filter((m) => m.version < "0050_credits_ledger"), { lockKey: MIGRATION_LOCK_KEY });
       const make = async (email: string, credits: number, freeUsed: boolean, selfServe = true) =>
         ((await pool.query("INSERT INTO accounts (email, audit_credits, free_audit_used_at, terms_accepted_at) VALUES ($1, $2, $3, $4) RETURNING id", [email, credits, freeUsed ? "2026-10-01T10:00:00Z" : null, selfServe ? "2026-09-01T10:00:00Z" : null])).rows[0] as { id: string }).id;
@@ -50,10 +39,6 @@ describe.runIf(enabled)("0050_credits_ledger", () => {
       expect((await balance(paid)).purchased).toBe(7);
       // the columns stay for one release, untouched
       expect((await pool.query("SELECT audit_credits FROM accounts WHERE id = $1", [paid])).rows[0].audit_credits).toBe(7);
-    } finally {
-      await pool.end();
-      await admin.query(`DROP DATABASE ${name}`);
-      await admin.end();
-    }
+    });
   });
 });
