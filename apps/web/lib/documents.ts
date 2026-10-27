@@ -308,7 +308,7 @@ async function moveToStore(policy: StoragePolicy, ownerId: string, id: string, m
 }
 
 /** The kind asked for; for « auto », what the text turns out to be — « other » while a deferred document's text is still to be read. */
-function chooseKind(requested: DocumentKind | "auto", deferred: boolean, read: { text: string; pages: number }): DocumentKind {
+function chooseKind(requested: DocumentKind | "auto", deferred: boolean, read: { text: string; pages: number | null }): DocumentKind {
   if (requested !== "auto") return requested;
   if (deferred) return "other";
   return kindFromNature(understanding.understand(read.text, { pages: read.pages }).nature?.id ?? null);
