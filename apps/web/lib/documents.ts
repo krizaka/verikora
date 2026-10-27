@@ -307,6 +307,13 @@ async function moveToStore(policy: StoragePolicy, ownerId: string, id: string, m
   await query("UPDATE documents SET content = ''::bytea, storage_owner = $2 WHERE id = $1", [id, policy.store.describe().owner === "workspace" ? "workspace" : "krizaka"]);
 }
 
+/** The kind asked for; for « auto », what the text turns out to be — « other » while a deferred document's text is still to be read. */
+function chooseKind(requested: DocumentKind | "auto", deferred: boolean, read: { text: string; pages: number }): DocumentKind {
+  if (requested !== "auto") return requested;
+  if (deferred) return "other";
+  return kindFromNature(understanding.understand(read.text, { pages: read.pages }).nature?.id ?? null);
+}
+
 export async function storeDocument(ownerId: string, file: { name: string; type: string; size: number }, bytes: Uint8Array, requested: DocumentKind | "auto", policy?: StoragePolicy, textOf?: TextReader, options: { defer?: boolean } = {}): Promise<{ summary: DocumentSummary; duplicate: boolean; finish?: () => Promise<void> }> {
   const { mimeType, sha256, pages } = await checkUpload(file, bytes, policy?.rules);
   const where = policy ? storageFor(policy.keep, policy.store.describe()) : "database";
@@ -320,7 +327,7 @@ export async function storeDocument(ownerId: string, file: { name: string; type:
   const { read, source, file: kept } = deferred ? { read: { text: "", pages }, source: null, file: undefined } : await readNewDocument(mimeType, bytes, pages, textOf);
   // The file kept is the one received, unless the reader made a richer one of it (photos: with their words as an invisible text layer).
   const content = kept ?? bytes;
-  const kind = requested !== "auto" ? requested : deferred ? "other" : kindFromNature(understanding.understand(read.text, { pages: read.pages }).nature?.id ?? null);
+  const kind = chooseKind(requested, deferred, read);
   // The bytes sit in the database until the document is placed (and, if not kept, until its check has run).
   const row = await saveDocumentRow({ ownerId, existingId: existing?.id ?? null, file: { filename, mimeType, kind, sha256: kept ? createHash("sha256").update(kept).digest("hex") : sha256, sourceSha256: kept ? sha256 : null, pages: read.pages }, bytes: content, text: read.text, where, deadline, source, extraction: deferred ? "queued" : "done" });
   if (policy && EXTERNAL.has(where)) await moveToStore(policy, ownerId, row.id, mimeType, content);
