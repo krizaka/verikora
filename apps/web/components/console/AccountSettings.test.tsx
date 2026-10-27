@@ -1,8 +1,10 @@
+import { createElement } from "react";
+import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it } from "vitest";
 
 import fr from "@/messages/fr.json";
 
-import { billingRows, type Entitlement } from "./AccountSettings";
+import { BillingActions, billingRows, type Entitlement } from "./AccountSettings";
 
 const say = (key: string, vars?: Record<string, string | number>) => {
   const words = key.split(".").reduce<unknown>((o, k) => (o as Record<string, unknown>)?.[k], fr.console) as string;
@@ -27,5 +29,23 @@ describe("billing as flat rows (the review's E3)", () => {
       ["credits", "0"],
       ["until", "2026-11-23"],
     ]);
+  });
+});
+
+describe("the billing buttons (extracted from BillingSection, behaviour unchanged)", () => {
+  const call = { pending: false, go: () => undefined };
+  const html = (e: Entitlement | undefined) => renderToStaticMarkup(createElement(BillingActions, { entitlement: e, buy: call, portal: call, say })).replaceAll("&#x27;", "'");
+  it("a free account is offered the three purchases and no portal until it is a customer", () => {
+    const out = html(FREE);
+    expect(out).toContain(fr.console.paywall.agency);
+    expect(out).toContain(fr.console.paywall.firm);
+    expect(out).toContain(fr.console.paywall.payOne);
+    expect(out).not.toContain(fr.console.settings.billing.portal);
+  });
+  it("a subscriber with a customer sees only the portal; nothing before the entitlement loads", () => {
+    const out = html({ ...FREE, pro: true, hasCustomer: true });
+    expect(out).toContain(fr.console.settings.billing.portal);
+    expect(out).not.toContain(fr.console.paywall.agency);
+    expect(html(undefined)).not.toContain("<button");
   });
 });

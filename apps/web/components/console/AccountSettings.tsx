@@ -107,6 +107,35 @@ export function billingRows(e: Entitlement, say: Say, date: (iso: string) => str
   ];
 }
 
+type Call<T> = { pending: boolean; go: (input: T, then?: () => void) => void | Promise<void> };
+
+/** The billing section's buttons (behaviour unchanged): the offers while the plan is free, then the portal once a customer exists. */
+export function BillingActions({ entitlement: e, buy, portal, say }: Readonly<{ entitlement: Entitlement | undefined; buy: Call<SoldKind>; portal: Call<null>; say: Say }>) {
+  const free = !!e && !e.pro;
+  return (
+    <div className="flex flex-wrap items-center gap-3">
+      {free ? (
+        <>
+          <Button size="md" variant="primary" shape="cut" loading={buy.pending} onClick={() => buy.go("agency", () => undefined)}>
+            {say("paywall.agency")}
+          </Button>
+          <Button size="md" variant="secondary" loading={buy.pending} onClick={() => buy.go("firm", () => undefined)}>
+            {say("paywall.firm")}
+          </Button>
+          <Button size="md" variant="secondary" loading={buy.pending} onClick={() => buy.go("document", () => undefined)}>
+            {say("paywall.payOne")}
+          </Button>
+        </>
+      ) : null}
+      {e?.hasCustomer ? (
+        <Button size="md" variant="ghost" loading={portal.pending} onClick={() => portal.go(null, () => undefined)}>
+          {say("settings.billing.portal")}
+        </Button>
+      ) : null}
+    </div>
+  );
+}
+
 /** The plan and its billing: the rows, then one primary (« Passer à Pro »), the audit, and the portal (subscription, payment method, invoices). */
 export function BillingSection() {
   const { say, locale } = useSay();
@@ -121,32 +150,7 @@ export function BillingSection() {
       title={say("settings.billing.title")}
       description={say("settings.billing.portalHint")}
       data-testid="settings-facturation"
-      footer={
-        info.data?.paymentsOn ? (
-          <div className="flex flex-wrap items-center gap-3">
-            {e && !e.pro ? (
-              <Button size="md" variant="primary" shape="cut" loading={buy.pending} onClick={() => buy.go("agency", () => undefined)}>
-                {say("paywall.agency")}
-              </Button>
-            ) : null}
-            {e && !e.pro ? (
-              <Button size="md" variant="secondary" loading={buy.pending} onClick={() => buy.go("firm", () => undefined)}>
-                {say("paywall.firm")}
-              </Button>
-            ) : null}
-            {e && !e.pro ? (
-              <Button size="md" variant="secondary" loading={buy.pending} onClick={() => buy.go("document", () => undefined)}>
-                {say("paywall.payOne")}
-              </Button>
-            ) : null}
-            {e?.hasCustomer ? (
-              <Button size="md" variant="ghost" loading={portal.pending} onClick={() => portal.go(null, () => undefined)}>
-                {say("settings.billing.portal")}
-              </Button>
-            ) : null}
-          </div>
-        ) : null
-      }
+      footer={info.data?.paymentsOn ? <BillingActions entitlement={e} buy={buy} portal={portal} say={say} /> : null}
     >
       {e
         ? billingRows(e, say, date).map((row) => (
