@@ -4,6 +4,7 @@ import { accountsSchema, sessionsSchema } from "@krizaka/auth";
 import { creditsSchema } from "@krizaka/credits";
 import type { ComposedModule } from "@krizaka/db";
 import { workspaceSchema } from "@krizaka/organize";
+import { privacySchema } from "@krizaka/privacy";
 import { pricesSchema, settingsSchema } from "@krizaka/settings";
 import { webhooksSchema } from "@krizaka/webhooks";
 
@@ -25,10 +26,11 @@ export const ADOPTED: readonly ComposedModule[] = [
   { schema: workspaceSchema(WORKSPACE), context: { tables: {} } },
 ];
 
-/** The modules whose tables this product created through `emitMigration` (committed in its own sequence): `audit` (0037, yomizaka#259), `credits` (0050, yomizaka#261). */
+/** The modules whose tables this product created through `emitMigration` (committed in its own sequence): `audit` (0037, yomizaka#259), `credits` (0050, yomizaka#261), `privacy` (0051, yomizaka#264). */
 export const EMITTED: readonly ComposedModule[] = [
   { schema: auditSchema, context: { tables: { owner: "accounts" } } },
   { schema: creditsSchema, context: { tables: { owner: "accounts" } } },
+  { schema: privacySchema, context: { tables: {} } },
 ];
 
 export const MODULES: readonly ComposedModule[] = [...ADOPTED, ...EMITTED];

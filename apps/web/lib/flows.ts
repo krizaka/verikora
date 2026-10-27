@@ -1,10 +1,12 @@
 import { type Audience, AUDIENCE_STATUS, AUDIENCES, FLOW_STATUS, type FlowDefinition, flowDefinition, type FlowEnvironment, type FlowVersionStatus, offerOf, STEP_KIND, type Studio, VERSION_STATUS } from "@yomizaka/core";
 
 import { audit } from "./audit";
+import { purposeOfKey } from "./consent-purpose";
 import { query, withBlockingLock } from "./db";
 import { SEED_FLOWS } from "./flows-seed";
 import { refuse } from "./http";
 import { logError } from "./log";
+import { accountSubject, consentsFor } from "./privacy";
 
 /**
  * Flows are data (ADR-0003): defined and administered in the database by the platform administrator, read by the app. This
@@ -83,19 +85,30 @@ export const vocabularyStatus = AUDIENCE_STATUS;
 
 /* ---- consents ---- */
 
+/** The purposes the person has consented to (the last word of each one is a yes): for a conforming key, the key itself (`purposeOfKey`). */
 export async function grantedConsents(accountId: string): Promise<string[]> {
-  const rows = await query<{ key: string }>("SELECT key FROM consents WHERE account_id = $1 AND revoked_at IS NULL", [accountId]);
-  return rows.map((r) => r.key);
+  const last = new Map<string, boolean>();
+  for (const c of await consentsFor([]).consentHistory(query, accountSubject(accountId))) last.set(c.purpose, c.granted);
+  return [...last].filter(([, granted]) => granted).map(([purpose]) => purpose);
 }
 
-export async function grantConsent(account: { id: string; email: string }, key: string, headers?: Headers): Promise<void> {
-  const rows = await query("INSERT INTO consents (account_id, key) VALUES ($1, $2) ON CONFLICT DO NOTHING RETURNING id", [account.id, key]);
-  if (rows.length) await audit({ action: "consent.granted", actorId: account.id, actorLabel: account.email, targetId: account.id, detail: { key }, headers });
+/** Records the consent of a flow (its notice version is the flow's, the proof of what was agreed to); a person who already consented is left as they are. */
+export async function grantConsent(account: { id: string; email: string }, key: string, headers?: Headers, noticeVersion = "flow"): Promise<void> {
+  const purpose = purposeOfKey(key);
+  const privacy = consentsFor([purpose]);
+  const subject = accountSubject(account.id);
+  if (await privacy.hasConsent(query, subject, purpose)) return;
+  await privacy.recordConsent(query, { subject, purpose, version: noticeVersion, granted: true, means: "checkbox" });
+  await audit({ action: "consent.granted", actorId: account.id, actorLabel: account.email, targetId: account.id, detail: { key }, headers });
 }
 
 export async function revokeConsent(account: { id: string; email: string }, key: string, headers?: Headers): Promise<void> {
-  const rows = await query("UPDATE consents SET revoked_at = now() WHERE account_id = $1 AND key = $2 AND revoked_at IS NULL RETURNING id", [account.id, key]);
-  if (rows.length) await audit({ action: "consent.revoked", actorId: account.id, actorLabel: account.email, targetId: account.id, detail: { key }, headers });
+  const purpose = purposeOfKey(key);
+  const privacy = consentsFor([purpose]);
+  const subject = accountSubject(account.id);
+  if (!(await privacy.hasConsent(query, subject, purpose))) return;
+  await privacy.recordConsent(query, { subject, purpose, version: "withdrawal", granted: false, means: "settings" });
+  await audit({ action: "consent.revoked", actorId: account.id, actorLabel: account.email, targetId: account.id, detail: { key }, headers });
 }
 
 /**
@@ -112,9 +125,9 @@ export function decideStart(flows: readonly AvailableFlow[], audience: Audience 
   );
   if (candidates.length === 0) return { ok: false, code: "FLOW_NOT_OFFERED", missing: [] };
   // The first flow whose consents the person has given; else the first flow's missing consents are reported.
-  const runnable = candidates.find((f) => f.definition.consents.every((c) => granted.includes(c)));
+  const runnable = candidates.find((f) => f.definition.consents.every((c) => granted.includes(purposeOfKey(c))));
   if (runnable) return { ok: true, flow: runnable };
-  return { ok: false, code: "CONSENT_REQUIRED", missing: candidates[0]!.definition.consents.filter((c) => !granted.includes(c)) };
+  return { ok: false, code: "CONSENT_REQUIRED", missing: candidates[0]!.definition.consents.filter((c) => !granted.includes(purposeOfKey(c))) };
 }
 
 /** Enforced server-side before any run starts (never only hidden in the UI): the flow's version id is kept with the analysis. */
@@ -230,7 +243,7 @@ async function seedOnce(): Promise<string[]> {
 export function decideFlow(flows: readonly AvailableFlow[], audience: Audience | null, key: string, granted: readonly string[]): { ok: true; flow: AvailableFlow } | { ok: false; code: "FLOW_NOT_OFFERED" | "CONSENT_REQUIRED"; missing: string[] } {
   const flow = flowsFor(flows, audience).find((f) => f.key === key);
   if (!flow) return { ok: false, code: "FLOW_NOT_OFFERED", missing: [] };
-  const missing = flow.definition.consents.filter((c) => !granted.includes(c));
+  const missing = flow.definition.consents.filter((c) => !granted.includes(purposeOfKey(c)));
   return missing.length ? { ok: false, code: "CONSENT_REQUIRED", missing } : { ok: true, flow };
 }
 

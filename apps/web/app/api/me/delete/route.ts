@@ -19,7 +19,7 @@ export const POST = (req: Request) => accountAct(req, "delete-account", async (s
   const accounts = accountService();
   await accounts.confirmPassword(s.account.id, input.password);
   const stores = await storesOf(s.account.id);
-  await eraseAccount({ query, stores: stores.of, accounts }, s.account.id);
+  await eraseAccount({ query, stores: stores.of }, s.account.id);
   await audit({ action: "account.deleted", actorId: null, actorLabel: "deleted account", headers: req.headers });
   (await cookies()).delete(SESSION_COOKIE);
   return { ok: true };

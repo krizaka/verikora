@@ -17,8 +17,9 @@ export function POST(req: Request) {
     await limit("consent", req, session.account.id);
     const { key } = await readJson(req, body);
     const flows = await availableFlows(appEnvironment(), { fallback: false });
-    if (!flows.some((f) => f.definition.consents.includes(key))) throw refuse(404, "NOT_FOUND", "No flow asks for this consent");
-    await grantConsent({ id: session.account.id, email: session.account.email }, key, req.headers);
+    const asking = flows.find((f) => f.definition.consents.includes(key));
+    if (!asking) throw refuse(404, "NOT_FOUND", "No flow asks for this consent");
+    await grantConsent({ id: session.account.id, email: session.account.email }, key, req.headers, `${asking.key}@${asking.version}`);
     return Response.json({ key, granted: true }, { status: 201 });
   });
 }

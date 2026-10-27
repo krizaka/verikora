@@ -16,7 +16,7 @@ describe("the adopted Krizaka modules", () => {
   });
 
   it("emitted by their own migration are the text `emitMigration` prints today", () => {
-    const EMITTED_BY: Record<string, string> = { audit: "0037_audit_package", credits: "0050_credits_ledger" };
+    const EMITTED_BY: Record<string, string> = { audit: "0037_audit_package", credits: "0050_credits_ledger", privacy: "0051_privacy_consents" };
     for (const { schema, context } of EMITTED) {
       const migration = MIGRATIONS.find((m) => m.version === EMITTED_BY[schema.module]);
       expect(migration, schema.module).toBeDefined();
