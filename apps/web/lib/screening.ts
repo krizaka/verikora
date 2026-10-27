@@ -7,7 +7,10 @@ import { CONSENT_MEANS, grantConsent, NOTICE_VERSION, purposesOfTypes, requireCo
 import { audit } from "./audit";
 import { query } from "./db";
 import { refuse } from "./http";
-import { allowedFor, type CheckTypeRow, providerById, typesByKey } from "./screening-checks/catalogue";
+import { getDictionary } from "./i18n";
+import { chargeCheck, invoiceLine, isChargeable, PAYER, type Payer, payerAllowed, quoteOf, totalCents } from "./screening-checks/billing";
+import { screeningBillingPort } from "./screening-checks/billing-config";
+import { allowedFor, type CheckTypeRow, priceCents, providerById, typesByKey } from "./screening-checks/catalogue";
 import { CHECK_STATE, type CheckResult, type CheckState, stateOf } from "./screening-checks/model";
 import { adapterFor, type CheckProvider } from "./screening-checks/providers";
 
@@ -84,6 +87,7 @@ interface Row {
   revoked_at: Date | null;
   submitted_at: Date | null;
   closed_at: Date | null;
+  payer?: Payer;
 }
 
 /** What the landlord sees: the result only once the tenant has shared it. A contested result is never shown. */
@@ -112,6 +116,8 @@ export interface TenantView {
   result: ScreeningResult | null;
   resultExpiresAt: string | null;
   contestComment: string | null;
+  /** What each check costs and who pays, shown before the applicant consents (yomizaka#133). Prices are data; taxes are added where they apply. */
+  quote: { lines: { key: string; cents: number; currency: string }[]; totalCents: number; payer: Payer };
 }
 
 const parseResult = (r: unknown): ScreeningResult | null => {
@@ -131,28 +137,30 @@ export const landlordView = (row: Row, now: Date): LandlordView => {
   const visible = state.status === SCREENING_STATUS.shared && state.resultAlive;
   return { id: row.id, tenantName: row.tenant_name, tenantEmail: row.tenant_email, status: state.status, createdAt: row.created_at.toISOString(), expiresAt: row.expires_at.toISOString(), result: visible ? parseResult(row.result) : null, provider: row.provider, demo: row.provider === DEMO_PROVIDER };
 };
-export const tenantView = (row: Row, now: Date): TenantView => {
+export const tenantView = (row: Row, now: Date, quote: TenantView["quote"] = { lines: [], totalCents: 0, payer: row.payer ?? PAYER.owner }): TenantView => {
   const state = effectiveState(row, now);
-  return { status: state.status, landlord: row.landlord_email ?? "", tenantName: row.tenant_name, scope: row.scope, provider: row.provider, demo: row.provider === DEMO_PROVIDER, expiresAt: row.expires_at.toISOString(), retentionDays: RETENTION_DAYS, result: state.resultAlive ? parseResult(row.result) : null, resultExpiresAt: row.result_expires_at?.toISOString() ?? null, contestComment: row.contest_comment };
+  return { status: state.status, landlord: row.landlord_email ?? "", tenantName: row.tenant_name, scope: row.scope, provider: row.provider, demo: row.provider === DEMO_PROVIDER, expiresAt: row.expires_at.toISOString(), retentionDays: RETENTION_DAYS, result: state.resultAlive ? parseResult(row.result) : null, resultExpiresAt: row.result_expires_at?.toISOString() ?? null, contestComment: row.contest_comment, quote };
 };
 
 type Landlord = { id: string; email: string };
 
 /** The landlord asks. Returns the token ONCE (only its hash is kept): the landlord hands the link to the applicant. Only the check types the landlord's row allows are accepted. */
-export async function requestScreening(landlord: Landlord, input: { tenantName: string; tenantEmail: string; scope: readonly string[] }, now: Date, headers?: Headers): Promise<{ id: string; token: string }> {
+export async function requestScreening(landlord: Landlord, input: { tenantName: string; tenantEmail: string; scope: readonly string[]; payer?: Payer }, now: Date, headers?: Headers): Promise<{ id: string; token: string }> {
   const allowed = await allowedFor(landlord.id);
   const types = allowed.filter((t) => input.scope.includes(t.key));
   if (types.length === 0) throw refuse(400, "BAD_REQUEST", "Nothing lawful to check");
   const scope = types.map((t) => t.key);
+  const payer = input.payer ?? PAYER.owner;
+  if (!payerAllowed(payer, types)) throw refuse(400, "PAYER_NOT_ALLOWED", "The applicant cannot be asked to pay this check");
   const providers = await Promise.all(types.map((t) => providerById(t.provider_id)));
   // One fictitious type makes the whole request say so.
   const provider = providers.some((p) => p?.adapter === "demo") ? DEMO_PROVIDER : types[0]!.provider_id;
   const token = newToken();
   const [row] = await query<{ id: string }>(
-    "INSERT INTO screenings (landlord_id, tenant_name, tenant_email, scope, provider, token_hash, expires_at) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING id",
-    [landlord.id, input.tenantName.trim(), input.tenantEmail.trim().toLowerCase(), scope, provider, hash(token), addDays(now, REQUEST_VALID_DAYS)],
+    "INSERT INTO screenings (landlord_id, tenant_name, tenant_email, scope, provider, token_hash, expires_at, payer) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING id",
+    [landlord.id, input.tenantName.trim(), input.tenantEmail.trim().toLowerCase(), scope, provider, hash(token), addDays(now, REQUEST_VALID_DAYS), payer],
   );
-  await audit({ action: "screening.requested", actorId: landlord.id, actorLabel: landlord.email, targetId: row!.id, detail: { scope, provider }, headers });
+  await audit({ action: "screening.requested", actorId: landlord.id, actorLabel: landlord.email, targetId: row!.id, detail: { scope, provider, payer }, headers });
   return { id: row!.id, token };
 }
 
@@ -170,7 +178,7 @@ export async function byToken(token: string): Promise<Row> {
 
 export async function viewForTenant(token: string, now: Date): Promise<TenantView> {
   await purgeExpired(now);
-  return tenantView(await screeningRow(token), now);
+  return viewOf(await screeningRow(token), now);
 }
 
 /** The answer to a screening request by its token: an applicant file (yomizaka#127) has its own routes, never this one. */
@@ -179,6 +187,12 @@ const screeningRow = async (token: string): Promise<Row> => {
   if (row.flow !== "screening") throw refuse(404, "NOT_FOUND", "No such request");
   return row;
 };
+
+/** The tenant's view with the price of each check and who pays, read from the rows. */
+async function viewOf(row: Row, now: Date): Promise<TenantView> {
+  const lines = quoteOf(await typesByKey(row.scope));
+  return tenantView(row, now, { lines, totalCents: totalCents(lines), payer: row.payer ?? PAYER.owner });
+}
 
 const actor = (row: Row) => ({ actorId: null, actorLabel: `tenant:${row.tenant_email}` });
 
@@ -224,6 +238,19 @@ async function recordChecks(screeningId: string, answers: readonly Answer[], now
   }
 }
 
+/** Per-check billing: only when the flag is on, and only a check the provider accepted (answered or pending). Never blocks the check. */
+async function billAnswers(row: Row, answers: readonly Answer[]): Promise<void> {
+  const port = await screeningBillingPort();
+  if (!port) return;
+  const [account] = await query<{ locale: "en" | "fr" }>("SELECT locale FROM accounts WHERE id = $1", [row.landlord_id]);
+  const template = getDictionary(account?.locale ?? "fr").screening.invoice.line;
+  for (const a of answers) {
+    if (!isChargeable(stateOf(a.result), priceCents(a.type))) continue;
+    const label = { fr: a.type.label_fr, en: a.type.label_en }[account?.locale ?? "fr"];
+    await chargeCheck(port, { screeningId: row.id, type: a.type, payer: row.payer ?? PAYER.owner, description: invoiceLine(template, label) });
+  }
+}
+
 /** The tenant consents: the provider is called, a minimal result is kept for the retention window, and the tenant sees it first. */
 export async function consent(token: string, now: Date, headers?: Headers): Promise<TenantView> {
   const row = await screeningRow(token);
@@ -242,8 +269,9 @@ export async function consent(token: string, now: Date, headers?: Headers): Prom
   );
   if (!updated) throw refuse(409, "NOT_PENDING", "This request is no longer waiting for an answer");
   await recordChecks(row.id, answers, now);
-  await audit({ ...actor(row), action: "screening.consented", targetId: row.id, detail: { scope: row.scope, provider: row.provider }, headers });
-  return tenantView({ ...updated, landlord_email: row.landlord_email }, now);
+  await billAnswers(row, answers);
+  await audit({ ...actor(row), action: "screening.consented", targetId: row.id, detail: { scope: row.scope, provider: row.provider, payer: row.payer ?? PAYER.owner, quote: quoteOf(types) }, headers });
+  return viewOf({ ...updated, landlord_email: row.landlord_email }, now);
 }
 
 /** « 2026-10-27 », the day in UTC. */
@@ -266,7 +294,7 @@ export async function decline(token: string, now: Date, headers?: Headers): Prom
   if (effectiveState(row, now).status !== SCREENING_STATUS.requested) throw refuse(409, "NOT_PENDING", "This request is no longer waiting for an answer");
   const [updated] = await query<Row>("UPDATE screenings SET status = 'declined' WHERE id = $1 AND status = 'requested' RETURNING *", [row.id]);
   await audit({ ...actor(row), action: "screening.declined", targetId: row.id, headers });
-  return tenantView({ ...updated!, landlord_email: row.landlord_email }, now);
+  return viewOf({ ...updated!, landlord_email: row.landlord_email }, now);
 }
 
 /** The tenant releases their result to the landlord. */
@@ -276,7 +304,7 @@ export async function share(token: string, now: Date, headers?: Headers): Promis
   if (state.status !== SCREENING_STATUS.consented || !state.resultAlive) throw refuse(409, "NOT_SHAREABLE", "There is no result to share");
   const [updated] = await query<Row>("UPDATE screenings SET status = 'shared', shared_at = $2 WHERE id = $1 AND status = 'consented' RETURNING *", [row.id, now]);
   await audit({ ...actor(row), action: "screening.shared", targetId: row.id, headers });
-  return tenantView({ ...updated!, landlord_email: row.landlord_email }, now);
+  return viewOf({ ...updated!, landlord_email: row.landlord_email }, now);
 }
 
 /** The tenant contests the result: the landlord never sees it, only « contested ». */
@@ -286,7 +314,7 @@ export async function contest(token: string, comment: string, now: Date, headers
   if ((state.status !== SCREENING_STATUS.consented && state.status !== SCREENING_STATUS.shared) || !state.resultAlive) throw refuse(409, "NOT_CONTESTABLE", "There is no result to contest");
   const [updated] = await query<Row>("UPDATE screenings SET status = 'contested', contested_at = $2, contest_comment = $3 WHERE id = $1 AND status IN ('consented', 'shared') RETURNING *", [row.id, now, comment.trim().slice(0, 500)]);
   await audit({ ...actor(row), action: "screening.contested", targetId: row.id, headers });
-  return tenantView({ ...updated!, landlord_email: row.landlord_email }, now);
+  return viewOf({ ...updated!, landlord_email: row.landlord_email }, now);
 }
 
 /** Retention: results past their window are deleted (the summary goes, the fact of the request stays), and unanswered requests expire. */

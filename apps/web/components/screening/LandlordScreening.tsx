@@ -33,6 +33,7 @@ export interface LandlordWords {
   email: string;
   scope: string;
   noneOffered: string;
+  payer: { label: string; firm: string; owner: string; applicant: string };
   request: string;
   created: string;
   copy: string;
@@ -46,8 +47,8 @@ export interface LandlordWords {
 }
 
 const form = createKrizakaForm({
-  schema: z.object({ tenantName: z.string().trim().min(1).max(120), tenantEmail: z.string().trim().min(3).email().max(254) }),
-  defaultValues: { tenantName: "", tenantEmail: "" },
+  schema: z.object({ tenantName: z.string().trim().min(1).max(120), tenantEmail: z.string().trim().min(3).email().max(254), payer: z.enum(["firm", "owner", "applicant"]) }),
+  defaultValues: { tenantName: "", tenantEmail: "", payer: "owner" as "firm" | "owner" | "applicant" },
 });
 
 const TONE: Record<string, "neutral" | "success" | "warning" | "danger"> = { requested: "neutral", consented: "warning", shared: "success", declined: "neutral", contested: "danger", expired: "neutral" };
@@ -65,7 +66,7 @@ export function LandlordScreening({ initial, offered, undertakingGiven, words, l
   const list = useQuery({ queryKey: ["screenings"], queryFn: () => krizakaFetch("/api/screenings").then((r) => (r as { screenings: LandlordView[] }).screenings), initialData: initial, enabled: given });
   const accept = useMutation({ mutationFn: () => krizakaFetch("/api/consents", { method: "POST", json: { key: "screening-landlord-undertaking" } }), onSuccess: () => setGiven(true) });
   const ask = useMutation({
-    mutationFn: (body: { tenantName: string; tenantEmail: string; scope: string[] }) => krizakaFetch("/api/screenings", { method: "POST", json: body }) as Promise<{ token: string }>,
+    mutationFn: (body: { tenantName: string; tenantEmail: string; scope: string[]; payer: string }) => krizakaFetch("/api/screenings", { method: "POST", json: body }) as Promise<{ token: string }>,
     onSuccess: (r) => {
       setLink(`${globalThis.location.origin}/${locale}/screening/${r.token}`);
       void client.invalidateQueries({ queryKey: ["screenings"] });
@@ -76,7 +77,7 @@ export function LandlordScreening({ initial, offered, undertakingGiven, words, l
     onSubmit: async (v) => {
       setProblem(null);
       try {
-        await ask.mutateAsync({ tenantName: v.tenantName, tenantEmail: v.tenantEmail, scope: chosen });
+        await ask.mutateAsync({ tenantName: v.tenantName, tenantEmail: v.tenantEmail, scope: chosen, payer: v.payer });
       } catch (error) {
         setProblem(`${words.error} (${errorKey(error)})`);
       }
@@ -99,6 +100,7 @@ export function LandlordScreening({ initial, offered, undertakingGiven, words, l
               <f.TextField name="tenantName" label={words.name} />
               <f.TextField name="tenantEmail" label={words.email} type="email" autoComplete="off" />
             </div>
+            <f.Select name="payer" label={words.payer.label} options={(["firm", "owner", "applicant"] as const).map((p) => ({ value: p, label: words.payer[p] }))} />
             <fieldset className="flex flex-col gap-2 border-0 p-0">
               <legend className="mb-1 text-sm font-semibold text-fg">{words.scope}</legend>
               {offered.length === 0 ? <p className="m-0 text-sm text-fg-muted">{words.noneOffered}</p> : null}

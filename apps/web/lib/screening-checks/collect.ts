@@ -4,6 +4,8 @@ import { audit } from "../audit";
 import { query } from "../db";
 import { logError } from "../log";
 import { bandOf, itemOf, namesOf, type ScreeningResult } from "../screening";
+import { isRefundable, refundCheck } from "./billing";
+import { screeningBillingPort } from "./billing-config";
 import { CHECK_OUTCOME, CHECK_STATE, type CheckPurpose, type CheckResult, stateOf } from "./model";
 import { adapterFor, type CheckProvider } from "./providers";
 
@@ -86,6 +88,7 @@ export async function collectOne(due: Due, provider: CheckProvider, now: Date): 
   );
   if (settled.length === 0) return false;
   await refreshResult(due.screening_id, now);
+  if (isRefundable(state)) await refundIfBilled(due.screening_id, due.check_type, now);
   await audit({ action: "screening.check.collected", actorId: null, actorLabel: "collector", targetId: due.screening_id, detail: { checkType: due.check_type, outcome: final.outcome, state, runId: due.run_id } });
   return state !== CHECK_STATE.pending;
 }
@@ -102,4 +105,14 @@ export async function collectPending(now: Date, limit = 50): Promise<{ polled: n
     }
   }
   return { polled: due.length, settled };
+}
+
+/** A charged check whose provider never answered is refunded (only while billing is on; a refusal of the port is logged and retried by the next look at the charge). */
+async function refundIfBilled(screeningId: string, checkType: string, now: Date): Promise<void> {
+  try {
+    const port = await screeningBillingPort();
+    if (port) await refundCheck(port, screeningId, checkType, now);
+  } catch (error) {
+    logError("screening: a refund failed", error);
+  }
 }

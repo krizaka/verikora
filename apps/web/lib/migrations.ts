@@ -832,4 +832,29 @@ ALTER TABLE screening_checks ADD COLUMN next_poll_at timestamptz;
 ALTER TABLE screening_checks ADD COLUMN polls integer NOT NULL DEFAULT 0;
 CREATE INDEX screening_checks_due ON screening_checks(next_poll_at) WHERE state = 'pending';`,
   },
+  {
+    version: "0041_screening_charges",
+    // yomizaka#133: per-check billing. The payer is chosen per request (the applicant pays only where the check type allows it:
+    // C.c.Q. art. 1904 limits the fees a tenant may be charged, a lawyer decides). A charge snapshots cost + margin and the invoice
+    // line, so a later price change never rewrites what was billed. Nothing is written while features.screeningBilling is off.
+    sql: `
+ALTER TABLE screenings ADD COLUMN payer text NOT NULL DEFAULT 'owner' CHECK (payer IN ('firm', 'owner', 'applicant'));
+ALTER TABLE check_type ADD COLUMN applicant_may_pay boolean NOT NULL DEFAULT false;
+CREATE TABLE screening_charge (
+  id                  uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  screening_id        uuid NOT NULL REFERENCES screenings(id) ON DELETE CASCADE,
+  check_type          text NOT NULL REFERENCES check_type(key),
+  payer               text NOT NULL CHECK (payer IN ('firm', 'owner', 'applicant')),
+  provider_cost_cents integer NOT NULL CHECK (provider_cost_cents >= 0),
+  margin_cents        integer NOT NULL CHECK (margin_cents >= 0),
+  amount_cents        integer NOT NULL CHECK (amount_cents = provider_cost_cents + margin_cents),
+  currency            text NOT NULL DEFAULT 'CAD',
+  description         text NOT NULL,
+  state               text NOT NULL CHECK (state IN ('charged', 'refunded', 'failed')),
+  charge_ref          text,
+  created_at          timestamptz NOT NULL DEFAULT now(),
+  refunded_at         timestamptz,
+  UNIQUE (screening_id, check_type)
+);`,
+  },
 ];

@@ -6,7 +6,7 @@ import { closedDoor, engineProvider, NOT_CONFIGURED } from "./providers";
 const provider = (id: string, enabled = true): ProviderRow => ({ id, adapter: id === "demo" ? "demo" : "engine", label: id, region: "CA", enabled, note: null, poll_minutes: 15, poll_max: 96 });
 const type = (key: string, over: Partial<CheckTypeRow> = {}): CheckTypeRow => ({
   key, provider_id: "engine", purpose: "CREDIT", label_fr: key, label_en: key, provider_cost_cents: 0, margin_cents: 0, currency: "CAD", region: "QC",
-  consent_notice_version: "v1", enabled: true, default_on: false, requires_lawyer: null, note: null, ...over,
+  consent_notice_version: "v1", enabled: true, default_on: false, requires_lawyer: null, applicant_may_pay: false, note: null, ...over,
 });
 const setting = (check_type: string, allowed: boolean): SettingRow => ({ owner_id: "o1", check_type, allowed });
 

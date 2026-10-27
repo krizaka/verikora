@@ -1578,6 +1578,10 @@
           "webhooks": {
             "label": "Webhooks",
             "hint": "Off: no webhook is sent and none can be registered, whatever the plan."
+          },
+          "screeningBilling": {
+            "label": "Screening checks billing",
+            "hint": "Charges each screening check (cost plus margin, with taxes). Off: nothing is charged. Test mode only until the compliance gate is open."
           }
         },
         "limits": {
@@ -2906,7 +2910,16 @@
       "deleteOn": "Deleted on {date}.",
       "contested": "Your contestation: « {comment} »",
       "incompleteNote": "Some checks have not answered. Nothing here is a result for those: they are shown as they stand.",
-      "copy": "Get a copy of my result"
+      "copy": "Get a copy of my result",
+      "quoteTitle": "Price and who pays",
+      "quoteLine": "{check}: {price}",
+      "quoteFree": "no charge",
+      "quotePayer": {
+        "firm": "Paid by the property-management firm.",
+        "owner": "Paid by the building owner.",
+        "applicant": "Paid by you."
+      },
+      "quoteTaxes": "Taxes (GST/QST) are added where they apply."
     },
     "landlord": {
       "title": "Tenant application",
@@ -2936,7 +2949,16 @@
       "hidden": "The result is visible only once the applicant passes it on.",
       "demo": "Demonstration provider: fictitious data.",
       "reviewNote": "« To review » is not a verdict: talk to the applicant before any decision.",
-      "noneOffered": "No check is available to you yet."
+      "noneOffered": "No check is available to you yet.",
+      "payer": {
+        "label": "Who pays for the checks",
+        "firm": "The property-management firm",
+        "owner": "The building owner",
+        "applicant": "The applicant (only where allowed)"
+      }
+    },
+    "invoice": {
+      "line": "Check: {check} — a Krizaka service"
     }
   },
   "terms": {

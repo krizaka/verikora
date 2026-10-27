@@ -58,6 +58,8 @@ export const SETTINGS = {
   "features.batches": flag(GROUP.features, true, WORKSPACE),
   /** Signed webhooks when a batch or a check finishes (yomizaka#241): the global switch; what a plan holds is below. */
   "features.webhooks": flag(GROUP.features, true, WORKSPACE),
+  /** Per-check billing of the screening checks (yomizaka#133): OFF. Nothing is charged while it is off; it also needs a payments port that can charge a check. */
+  "features.screeningBilling": flag(GROUP.features, false),
   "features.avatarSet": subset(GROUP.features, AVATAR_SEED_CHOICES, [...AVATAR_SEED_CHOICES]),
   // Limits: what one document and one account may do.
   "limits.maxFileMb": integer(GROUP.limits, PLATFORM_MAX_FILE_MB, { min: 1, max: PLATFORM_MAX_FILE_MB, unit: "MB" }, WORKSPACE),

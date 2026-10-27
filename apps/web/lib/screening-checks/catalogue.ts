@@ -34,6 +34,8 @@ export interface CheckTypeRow {
   default_on: boolean;
   /** Set on a type that stays off until a lawyer confirms it is lawful (the compliance gate, yomizaka#135). */
   requires_lawyer: string | null;
+  /** The applicant may be asked to pay this check only where a lawyer confirmed it (C.c.Q. art. 1904): off by default. */
+  applicant_may_pay: boolean;
   note: string | null;
 }
 export interface SettingRow {

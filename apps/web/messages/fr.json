@@ -1578,6 +1578,10 @@
           "webhooks": {
             "label": "Webhooks",
             "hint": "Désactivé : aucun webhook n'est envoyé ni enregistré, quel que soit le forfait."
+          },
+          "screeningBilling": {
+            "label": "Facturation des vérifications de dossier",
+            "hint": "Facture chaque vérification de dossier (coût plus marge, taxes comprises). Désactivée : rien n'est facturé. Mode test seulement tant que la grille de conformité n'est pas ouverte."
           }
         },
         "limits": {
@@ -2906,7 +2910,16 @@
       "deleteOn": "Supprimé le {date}.",
       "contested": "Votre contestation : « {comment} »",
       "incompleteNote": "Certaines vérifications n'ont pas répondu. Rien ici n'est un résultat pour celles-ci : elles sont montrées telles qu'elles en sont.",
-      "copy": "Obtenir une copie de mon résultat"
+      "copy": "Obtenir une copie de mon résultat",
+      "quoteTitle": "Prix et qui paie",
+      "quoteLine": "{check} : {price}",
+      "quoteFree": "sans frais",
+      "quotePayer": {
+        "firm": "Payé par la société de gestion immobilière.",
+        "owner": "Payé par le propriétaire de l'immeuble.",
+        "applicant": "Payé par vous."
+      },
+      "quoteTaxes": "Les taxes (TPS/TVQ) s'ajoutent lorsqu'elles s'appliquent."
     },
     "landlord": {
       "title": "Dossier du locataire",
@@ -2936,7 +2949,16 @@
       "hidden": "Le résultat n'est visible qu'une fois transmis par le candidat.",
       "demo": "Fournisseur de démonstration : données fictives.",
       "reviewNote": "« À examiner » n'est pas un verdict : parlez-en au candidat avant toute décision.",
-      "noneOffered": "Aucune vérification ne vous est offerte pour le moment."
+      "noneOffered": "Aucune vérification ne vous est offerte pour le moment.",
+      "payer": {
+        "label": "Who pays for the checks",
+        "firm": "La société de gestion immobilière",
+        "owner": "Le propriétaire de l'immeuble",
+        "applicant": "Le candidat (seulement là où c'est permis)"
+      }
+    },
+    "invoice": {
+      "line": "Vérification : {check} — service Krizaka"
     }
   },
   "terms": {

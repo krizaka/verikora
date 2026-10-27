@@ -28,7 +28,7 @@ export function POST(req: Request) {
     const session = await requireSession(req);
     await limit("screeningRequest", req, session.account.id);
     await resolveFlow(session.account, FLOW, appEnvironment());
-    const input = await readJson(req, z.object({ tenantName: z.string().trim().min(1).max(120), tenantEmail: z.string().trim().toLowerCase().email().max(254), scope: z.array(z.string().max(40)).min(1).max(8) }));
+    const input = await readJson(req, z.object({ tenantName: z.string().trim().min(1).max(120), tenantEmail: z.string().trim().toLowerCase().email().max(254), scope: z.array(z.string().max(40)).min(1).max(8), payer: z.enum(["firm", "owner", "applicant"]).default("owner") }));
     const made = await requestScreening({ id: session.account.id, email: session.account.email }, input, new Date(), req.headers);
     return Response.json(made, { status: 201, headers: { "Cache-Control": "no-store" } });
   });

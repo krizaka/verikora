@@ -2,6 +2,7 @@ import { beforeAll, describe, expect, it } from "vitest";
 
 import { migrate, query } from "./db";
 import { consent, contest, copyForTenant,decline, listForLandlord, purgeExpired, requestScreening, RETENTION_DAYS, share, viewForTenant } from "./screening";
+import { type BillingPort, chargeCheck, refundCheck } from "./screening-checks/billing";
 import { collectOne, collectPending, dueChecks } from "./screening-checks/collect";
 import { demoProvider } from "./screening-checks/providers";
 
@@ -141,6 +142,38 @@ describe.runIf(enabled)("tenant screening (database)", () => {
     await purgeExpired(new Date(NOW.getTime() + (RETENTION_DAYS + 1) * DAY));
     expect(await query("SELECT 1 FROM screening_checks WHERE screening_id = $1", [id])).toHaveLength(0);
     expect(await actions(id)).toContain("screening.purged");
+  });
+
+  it("bills a check once with cost + margin and an invoice line, refunds it once, and bills nothing for a refusal (fixture port, test mode)", async () => {
+    const charges: string[] = [];
+    const port: BillingPort = { charge: async (r) => (charges.push(`${r.amountCents} ${r.description} ${r.taxCode}`), { ref: `fx_${charges.length}` }), refund: async (ref) => void charges.push(`refund ${ref}`) };
+    const { id } = await ask(`l-${stamp}@exemple.test`);
+    const [type] = await query<never>("SELECT * FROM check_type WHERE key = 'payment-history'");
+    const priced = { ...(type as Record<string, unknown>), provider_cost_cents: 1200, margin_cents: 700 } as never;
+    expect(await chargeCheck(port, { screeningId: id, type: priced, payer: "owner", description: "Vérification : Historique de paiement — service Krizaka" })).toBe("charged");
+    expect(await chargeCheck(port, { screeningId: id, type: priced, payer: "owner", description: "x" })).toBe("duplicate");
+    const [row] = await query<{ amount_cents: number; provider_cost_cents: number; margin_cents: number; state: string }>("SELECT amount_cents, provider_cost_cents, margin_cents, state FROM screening_charge WHERE screening_id = $1", [id]);
+    expect(row).toEqual({ amount_cents: 1900, provider_cost_cents: 1200, margin_cents: 700, state: "charged" });
+    expect(charges).toEqual(["1900 Vérification : Historique de paiement — service Krizaka software-as-a-service"]);
+    expect(await refundCheck(port, id, "payment-history", NOW)).toBe(true);
+    expect(await refundCheck(port, id, "payment-history", NOW)).toBe(false);
+    expect(charges.at(-1)).toBe("refund fx_1");
+    // Billing is off: a consent writes no charge.
+    const { id: other, token } = await ask(`m-${stamp}@exemple.test`);
+    await consent(token, NOW);
+    expect(await query("SELECT 1 FROM screening_charge WHERE screening_id = $1", [other])).toHaveLength(0);
+  });
+
+  it("refuses the applicant as payer unless the check type allows it, and shows the tenant the price and the payer before consent", async () => {
+    await expect(requestScreening(landlord, { tenantName: "X Y", tenantEmail: `n-${stamp}@exemple.test`, scope: ["payment-history"], payer: "applicant" }, NOW)).resolves.toBeDefined(); // free check: nothing to pay
+    await query("UPDATE check_type SET margin_cents = 500 WHERE key = 'payment-history'");
+    try {
+      await expect(requestScreening(landlord, { tenantName: "X Y", tenantEmail: `o-${stamp}@exemple.test`, scope: ["payment-history"], payer: "applicant" }, NOW)).rejects.toMatchObject({ body: { code: "PAYER_NOT_ALLOWED" } });
+      const { token } = await requestScreening(landlord, { tenantName: "X Y", tenantEmail: `p-${stamp}@exemple.test`, scope: ["payment-history"], payer: "firm" }, NOW);
+      expect((await viewForTenant(token, NOW)).quote).toEqual({ lines: [{ key: "payment-history", cents: 500, currency: "CAD" }], totalCents: 500, payer: "firm" });
+    } finally {
+      await query("UPDATE check_type SET margin_cents = 0 WHERE key = 'payment-history'");
+    }
   });
 
   it("keeps the criminal-record type as a disabled row, never requestable, even if an owner's row allows it", async () => {

@@ -28,6 +28,11 @@ export interface TenantWords {
   share: string;
   contest: string;
   copy: string;
+  quoteTitle: string;
+  quoteLine: string;
+  quoteFree: string;
+  quotePayer: Record<string, string>;
+  quoteTaxes: string;
   comment: string;
   send: string;
   demo: string;
@@ -90,6 +95,18 @@ export function TenantScreening({ token, initial, words, locale }: Readonly<{ to
             <li key={s}>{words.scope[s]}</li>
           ))}
         </ul>
+        {view.quote.totalCents > 0 ? (
+          <div className="flex flex-col gap-1" data-testid="screening-quote">
+            <h3 className="m-0 text-sm font-semibold text-fg">{words.quoteTitle}</h3>
+            {view.quote.lines.map((l) => (
+              <p key={l.key} className="m-0 text-sm text-fg-secondary">
+                {words.quoteLine.replace("{check}", words.scope[l.key] ?? l.key).replace("{price}", l.cents > 0 ? new Intl.NumberFormat(INTL[locale], { style: "currency", currency: l.currency }).format(l.cents / 100) : words.quoteFree)}
+              </p>
+            ))}
+            <p className="m-0 text-sm font-semibold text-fg">{words.quotePayer[view.quote.payer]}</p>
+            <p className="m-0 text-xs text-fg-muted">{words.quoteTaxes}</p>
+          </div>
+        ) : null}
         <p className="m-0 text-sm text-fg-secondary">{words.provider.replace("{provider}", view.provider)}</p>
         <p className="m-0 text-sm text-fg-secondary">{words.why}</p>
         <p className="m-0 text-sm text-fg-secondary">{words.notAsked}</p>
