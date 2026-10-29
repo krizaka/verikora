@@ -15,6 +15,7 @@ Every place below is outside Québec as the register states (the application its
 | `database` | Accounts, document records, analyses, audit, applicant files | DigitalOcean managed PostgreSQL (cluster `krizaka-dev-pg`) | Toronto (`tor`) | No |
 | `documents-bunny` | Kept documents, development only, fictional data | Bunny Storage, private zone, token-authenticated pull zone | New York; the pull zone is a CDN | Yes |
 | `documents-s3` | Kept documents in production, or a workspace's own bucket | DigitalOcean Spaces, or the customer's S3 endpoint | Toronto (`tor1`); the customer's choice for its own bucket | No for `tor1` |
+| `documents-user-cloud` | The documents a person chooses to keep, in a folder of this app in their own cloud; the sealed refresh token stays here | Dropbox, Google Drive or Microsoft OneDrive, the one the person connected | The provider's, under the person's own account | Not stated |
 | `mail` | The recipient's address and the message of verification and notice e-mails | Mailgun | Not stated (default endpoint `api.mailgun.net`) | Not stated |
 | `payments` | The account e-mail, the plan, payment events | Stripe | Not stated | Not stated |
 | `engine` | The text of a document sent for a check; the run id comes back | Orazaka (Krizaka's engine) | `dev.orazaka.com/edge`; hosting described in Orazaka's repository | Not stated here |
@@ -29,6 +30,7 @@ The factors of the article: sensitivity, purposes, protection measures (contract
   Canada. No real person's document is sent there by design; the assessment for real data is that it must not be used.
 - `documents-s3` — Production store: a Canadian region (`tor1`), encrypted before sending. A customer's own bucket is the
   customer's decision; its residency is read from the region and shown.
+- `documents-user-cloud` — Purpose: keep the person's documents where they already have storage. Only after the person connects it (OAuth with PKCE, the app's folder only), and the administrator opened it; disconnecting revokes the grant and forgets the token, the files stay in their cloud. Residency is the provider's and the person's to judge.
 - `mail` — Purpose: deliver a link or a notice. Content: the address and the message text. The server location is not stated
   in the code; to be confirmed from the provider's terms before opening.
 - `payments` — Purpose: payment and invoices (ADR-0004). The server location is not stated in the code; to be confirmed.
@@ -41,6 +43,7 @@ The factors of the article: sensitivity, purposes, protection measures (contract
 | `database` | DigitalOcean terms and data processing addendum | to be linked and reviewed |
 | `documents-bunny` | Bunny terms | not needed for production (refused there) |
 | `documents-s3` | DigitalOcean terms and data processing addendum | to be linked and reviewed |
+| `documents-user-cloud` | The provider's own terms, accepted by the person with their own account | the person's own relationship with it |
 | `mail` | Mailgun data processing addendum | to be linked and reviewed |
 | `payments` | Stripe data processing agreement | to be linked and reviewed |
 | `engine` | Between Krizaka products: the intra-group agreement | to be written |

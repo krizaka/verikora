@@ -33,6 +33,16 @@
       "hosts": ["tor1.digitaloceanspaces.com"]
     },
     {
+      "id": "documents-user-cloud",
+      "role": "Kept documents in the person's own cloud (Dropbox, Google Drive or OneDrive), once they connect it from Settings > Storage: the documents they choose to keep, in a folder of this app only; the sealed refresh token stays here, never the password",
+      "provider": "The cloud the person connected: Dropbox, Google Drive or Microsoft OneDrive (OAuth 2.0 with PKCE; the app's folder or files it creates only)",
+      "where": "The provider's own infrastructure under the person's own account with it; the location is theirs to judge and is not stated by this service",
+      "outsideQuebec": true,
+      "outsideCanada": null,
+      "env": ["MEDIA_CLOUD_DROPBOX_CLIENT_ID", "MEDIA_CLOUD_DROPBOX_CLIENT_SECRET", "MEDIA_CLOUD_GOOGLE_CLIENT_ID", "MEDIA_CLOUD_GOOGLE_CLIENT_SECRET", "MEDIA_CLOUD_MICROSOFT_CLIENT_ID", "MEDIA_CLOUD_MICROSOFT_CLIENT_SECRET"],
+      "hosts": ["api.dropboxapi.com", "content.dropboxapi.com", "www.googleapis.com", "oauth2.googleapis.com", "graph.microsoft.com", "login.microsoftonline.com"]
+    },
+    {
       "id": "mail",
       "role": "Outgoing e-mail (verification and e-mail change links, sharing notices): the recipient's address and the message",
       "provider": "Mailgun (MAIL_PROVIDER=mailgun)",
