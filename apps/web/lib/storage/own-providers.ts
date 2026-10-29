@@ -48,6 +48,18 @@ export async function storedSecret(own: Pick<OwnProviders, "store" | "vault">, p
   return credentials.secretAccessKey ?? null;
 }
 
+/** The registry tests a new provider; a red test leaves nothing in use, a green one makes it the default of the person's documents. */
+async function verifiedDefault(own: Pick<OwnProviders, "service">, actor: Actor, id: string, scope: ReturnType<typeof userScope>): Promise<string> {
+  const tested = await own.service.test(actor, id);
+  const outcome: string = tested.status;
+  if (outcome !== "verified") {
+    await own.service.disable(actor, id).catch(() => undefined);
+    throw refuse(422, "CONNECTION_FAILED", "The connection test failed", { steps: tested.lastTest?.steps ?? [] });
+  }
+  await own.service.setDefault(actor, id, scope, DATA_KIND.documents);
+  return id;
+}
+
 /** Registers a person's S3 in the registry: created, tested by the registry, made the default of their documents. A red test leaves nothing in use. */
 export async function registerOwnS3(own: Pick<OwnProviders, "service">, actor: Actor, owner: string, s3: OwnS3Coordinates & { accessKeyId: string; secretAccessKey: string }): Promise<string> {
   const scope = userScope(owner);
@@ -59,14 +71,7 @@ export async function registerOwnS3(own: Pick<OwnProviders, "service">, actor: A
     coordinates: { endpoint: s3.endpoint, region: s3.region, bucket: s3.bucket, prefix: OWN_PREFIX },
     credentials: { accessKeyId: s3.accessKeyId, secretAccessKey: s3.secretAccessKey },
   });
-  const tested = await own.service.test(actor, created.id);
-  const outcome: string = tested.status;
-  if (outcome !== "verified") {
-    await own.service.disable(actor, created.id).catch(() => undefined);
-    throw refuse(422, "CONNECTION_FAILED", "The connection test failed", { steps: tested.lastTest?.steps ?? [] });
-  }
-  await own.service.setDefault(actor, created.id, scope, DATA_KIND.documents);
-  return created.id;
+  return verifiedDefault(own, actor, created.id, scope);
 }
 
 /** New credentials for the same bucket: the registry tests them first and refuses a red one. */
@@ -208,14 +213,7 @@ export async function registerCloud(own: Pick<OwnProviders, "service">, actor: A
     coordinates: { clientId: grant.clientId, prefix: OWN_PREFIX },
     credentials: { refreshToken: grant.refreshToken, ...(grant.clientSecret ? { clientSecret: grant.clientSecret } : {}) },
   });
-  const tested = await own.service.test(actor, created.id);
-  const outcome: string = tested.status;
-  if (outcome !== "verified") {
-    await own.service.disable(actor, created.id).catch(() => undefined);
-    throw refuse(422, "CONNECTION_FAILED", "The connection test failed", { steps: tested.lastTest?.steps ?? [] });
-  }
-  await own.service.setDefault(actor, created.id, scope, DATA_KIND.documents);
-  return created.id;
+  return verifiedDefault(own, actor, created.id, scope);
 }
 
 /** The grant of a connected cloud, opened to be revoked at the provider (never sent to a browser). Null when none is stored. */

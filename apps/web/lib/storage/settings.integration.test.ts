@@ -59,7 +59,7 @@ describe.runIf(enabled)("a person's own S3 in the registry (ADR-005)", () => {
   const sealedInRow = async (owner: string) => (await query<{ s: string | null }>("SELECT s3_secret_sealed AS s FROM storage_settings WHERE owner_id = $1", [owner]))[0]!.s;
 
   it("defaults to Krizaka's store, keeping off by default", async () => {
-    expect(await loadSettings(query, await account())).toEqual({ mode: "krizaka", keepDefault: false, s3: null, testedAt: null });
+    expect(await loadSettings(query, await account())).toEqual({ mode: "krizaka", keepDefault: false, s3: null, cloud: null, testedAt: null });
   });
 
   it("saves an own S3 as a user-scope provider: sealed in the registry, never in the settings row, never returned", async () => {
