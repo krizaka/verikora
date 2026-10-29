@@ -1,5 +1,5 @@
+import { type CloudConnector, cloudConnector, type CloudConnectorName, type ConnectorApp, finishConnection, open, revokeConnection, seal, startConnection } from "@krizaka/storage";
 import { addMinutes, isBefore } from "@krizaka/time";
-import { type CloudConnector, type CloudConnectorName, cloudConnector, type ConnectorApp, finishConnection, open, revokeConnection, seal, startConnection } from "@krizaka/storage";
 
 import { refuse } from "../http";
 
@@ -83,8 +83,7 @@ export const connectorOf = (name: CloudName): CloudConnector => cloudConnector(C
 export function beginConnection(flow: CloudFlow, owner: string, name: CloudName): { url: string } {
   const app = flow.registration(name);
   if (!app) throw refuse(404, "CLOUD_NOT_OFFERED", "This cloud is not available on this deployment");
-  const { url, state, verifier } = startConnection(flow.connector(name), app);
-  void state;
+  const { url, verifier } = startConnection(flow.connector(name), app);
   // The provider's own `state` is replaced by ours: the verifier travels sealed inside it.
   const target = new URL(url);
   target.searchParams.set("state", sealState(flow.vaultKey, { owner, cloud: name, verifier, nonce: flow.nonce() }, flow.now()));

@@ -3,7 +3,7 @@ import { providers } from "@/app/storage-providers";
 import { accountAct } from "@/lib/account/act";
 import { audit } from "@/lib/audit";
 import { query } from "@/lib/db";
-import { CLOUD_NAMES, CLOUD, revokeGrant } from "@/lib/storage/cloud-connect";
+import { CLOUD, CLOUD_NAMES, revokeGrant } from "@/lib/storage/cloud-connect";
 import { forgetGrant, storedRefreshToken } from "@/lib/storage/own-providers";
 import { ownProviderId, saveDisconnected } from "@/lib/storage/settings";
 

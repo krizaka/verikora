@@ -4,7 +4,7 @@ import { cloudConnector } from "@krizaka/storage";
 
 import { env } from "@/lib/env";
 import { assertUserConnectors } from "@/lib/settings/guards";
-import { type CloudFlow, CLOUD, offeredClouds, registrationOf } from "@/lib/storage/cloud-connect";
+import { CLOUD, type CloudFlow, offeredClouds, registrationOf } from "@/lib/storage/cloud-connect";
 import { vaultFrom } from "@/lib/storage/providers";
 
 import { systemClock } from "./system-clock";

@@ -5,7 +5,7 @@ import type { AddressInfo } from "node:net";
 import { cloudConnector } from "@krizaka/storage";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 
-import { beginConnection, type CloudFlow, type CloudName, CLOUD, completeConnection, offeredClouds, registrationOf, revokeGrant, sealState } from "./cloud-connect";
+import { beginConnection, CLOUD, type CloudFlow, type CloudName, completeConnection, offeredClouds, registrationOf, revokeGrant, sealState } from "./cloud-connect";
 import { disconnectedStore } from "./own-providers";
 
 /** A fake OAuth server: the authorization code is exchanged only with the verifier whose S256 challenge the authorize step saw (PKCE), and the revocation is recorded. */
