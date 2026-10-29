@@ -1781,6 +1781,26 @@
             "hint": "Test mode: a notice says no real card is charged."
           }
         },
+        "tal": {
+          "rate": {
+            "year": {
+              "label": "TAL rate: year",
+              "hint": "The year the TAL percentage applies to (the lease starts in it)."
+            },
+            "basisPoints": {
+              "label": "TAL rate: percentage (basis points)",
+              "hint": "The TAL base percentage for the rent, in hundredths of a percent (310 = 3.1 %). 0: nothing entered, the Section G check makes no claim."
+            },
+            "sourceUrl": {
+              "label": "TAL rate: source page",
+              "hint": "The page the figure was read from; shown beside every figure."
+            },
+            "enteredOn": {
+              "label": "TAL rate: entered on",
+              "hint": "The day it was entered (YYYY-MM-DD)."
+            }
+          }
+        },
         "pricing": {
           "announcedCode": {
             "label": "Announced promo code",

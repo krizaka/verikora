@@ -1781,6 +1781,26 @@
             "hint": "Mode test : un avis dit qu'aucune vraie carte n'est débitée."
           }
         },
+        "tal": {
+          "rate": {
+            "year": {
+              "label": "Taux du TAL : année",
+              "hint": "L'année à laquelle s'applique le pourcentage du TAL (le bail y commence)."
+            },
+            "basisPoints": {
+              "label": "Taux du TAL : pourcentage (points de base)",
+              "hint": "Le pourcentage de base du TAL pour le loyer, en centièmes de pour cent (310 = 3,1 %). 0 : rien d'inscrit, la vérification de la section G ne fait aucune affirmation."
+            },
+            "sourceUrl": {
+              "label": "Taux du TAL : page source",
+              "hint": "La page où le chiffre a été lu ; affichée à côté de chaque chiffre."
+            },
+            "enteredOn": {
+              "label": "Taux du TAL : inscrit le",
+              "hint": "Le jour de l'inscription (AAAA-MM-JJ)."
+            }
+          }
+        },
         "pricing": {
           "announcedCode": {
             "label": "Code promo annoncé",

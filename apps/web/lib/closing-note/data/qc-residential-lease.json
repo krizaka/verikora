@@ -158,6 +158,20 @@
         "fr": "Relisez les clauses qui vous semblent injustes et demandez conseil au besoin.",
         "en": "Read again the clauses that seem unfair to you, and ask for advice if needed."
       }
+    },
+    "TS-G-001": {
+      "ok": {
+        "fr": "Le loyer précédent est indiqué à la section G et la hausse reste dans le pourcentage du Tribunal administratif du logement.",
+        "en": "The previous rent is stated in Section G and the increase is within the percentage of the housing tribunal."
+      },
+      "attention": {
+        "fr": "Le loyer précédent est absent ou modifié, ou la hausse dépasse le pourcentage du Tribunal administratif du logement.",
+        "en": "The previous rent is missing or altered, or the increase is above the percentage of the housing tribunal."
+      },
+      "advice": {
+        "fr": "Comparez avec l'avis de votre propriétaire. Vous pouvez demander au Tribunal administratif du logement de fixer le loyer.",
+        "en": "Compare with your landlord's notice. You may ask the housing tribunal to fix the rent."
+      }
     }
   },
   "unknown": {
@@ -214,6 +228,10 @@
     "QC-LEASE-020": {
       "fr": "Clause abusive",
       "en": "Abusive clause"
+    },
+    "TS-G-001": {
+      "fr": "Loyer précédent de la section G et pourcentage du Tribunal",
+      "en": "Previous rent in Section G and the tribunal's percentage"
     }
   }
 }
