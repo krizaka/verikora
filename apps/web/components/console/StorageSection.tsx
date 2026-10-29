@@ -8,8 +8,8 @@ import { createKrizakaForm } from "@krizaka/ui/form";
 import { SettingsRow, SettingsSection } from "@krizaka/ui/settings-layout";
 import { Switch } from "@krizaka/ui/switch";
 import { STORAGE_MODE, STORAGE_MODES, type StorageMode } from "@yomizaka/core";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { Suspense, useState } from "react";
 import { z } from "zod";
 
 import { errorKey } from "@/lib/client";
@@ -20,9 +20,12 @@ import { useSay } from "@/lib/i18n-client";
 const step = z.object({ name: z.enum(["write", "read", "delete"]), ok: z.boolean(), ms: z.number(), error: z.string().optional() });
 const verification = z.object({ verification: z.object({ ok: z.boolean(), steps: z.array(step), host: z.string().nullable(), region: z.string(), residency: z.enum(["canada", "elsewhere"]), error: z.string().nullable() }) });
 const current = z.object({
-  settings: z.object({ mode: z.enum(STORAGE_MODES), keepDefault: z.boolean(), s3: z.object({ endpoint: z.string(), region: z.string(), bucket: z.string(), accessKeyId: z.string(), hasSecret: z.boolean() }).nullable(), testedAt: z.string().nullable() }),
+  settings: z.object({ mode: z.enum(STORAGE_MODES), keepDefault: z.boolean(), cloud: z.object({ connector: z.string(), connected: z.boolean() }).nullable().default(null), s3: z.object({ endpoint: z.string(), region: z.string(), bucket: z.string(), accessKeyId: z.string(), hasSecret: z.boolean() }).nullable(), testedAt: z.string().nullable() }),
   canStoreCredentials: z.boolean(),
+  /** The clouds the deployment holds a registration for and the administrator opened (empty: the cloud panel is hidden). */
+  clouds: z.array(z.string()).default([]),
 });
+const cloudStart = z.object({ url: z.string().url() });
 
 const s3Form = createKrizakaForm({
   schema: z.object({ endpoint: z.string().trim().min(1), region: z.string().trim().min(1), bucket: z.string().trim().min(1), accessKeyId: z.string().trim().min(1), secretAccessKey: z.string().max(400) }),
@@ -37,7 +40,76 @@ export function StorageSection() {
   const router = useRouter();
   const info = useQuery({ queryKey: ["storage-settings"], queryFn: () => krizakaFetch("/api/me/storage", { schema: current }), staleTime: 0 });
   if (!info.data) return null;
-  return <StorageForm key={info.data.settings.testedAt ?? "new"} initial={info.data.settings} canStoreCredentials={info.data.canStoreCredentials} say={say} locale={locale} onSaved={() => { void info.refetch(); router.refresh(); }} />;
+  const refresh = () => { void info.refetch(); router.refresh(); };
+  const { settings, clouds } = info.data;
+  // A connected cloud is the home of the kept documents: its panel replaces the choice until the person disconnects it.
+  if (settings.mode === STORAGE_MODE.cloud) return <CloudPanel settings={settings} clouds={clouds} say={say} onChanged={refresh} />;
+  return (
+    <>
+      <StorageForm key={settings.testedAt ?? "new"} initial={settings} canStoreCredentials={info.data.canStoreCredentials} say={say} locale={locale} onSaved={refresh} />
+      {clouds.length > 0 || settings.cloud ? <CloudPanel settings={settings} clouds={clouds} say={say} onChanged={refresh} /> : null}
+    </>
+  );
+}
+
+const CLOUD_NAME_OF: Readonly<Record<string, string>> = { dropbox: "dropbox", google: "google-drive", microsoft: "onedrive" };
+const CLOUD_LABEL_KEY = (connector: string) => `settings.storage.clouds.${connector}`;
+
+/** The return of the provider's consent screen: `?cloud=connected`, or the reason it did not end in a connection. */
+function CloudResult({ say }: Readonly<{ say: Say }>) {
+  const result = useSearchParams().get("cloud");
+  if (!result) return null;
+  if (result === "connected") return <Alert tone="success">{say("settings.storage.cloudResultConnected")}</Alert>;
+  return <Alert tone="danger">{say(result === "denied" ? "settings.storage.cloudResultDenied" : "settings.storage.cloudResultFailed")}</Alert>;
+}
+
+/** Connect a cloud the person already has (Dropbox, Google Drive, OneDrive): the provider's own consent screen, the app's folder only; and disconnect it. */
+function CloudPanel({ settings, clouds, say, onChanged }: Readonly<{ settings: z.infer<typeof current>["settings"]; clouds: string[]; say: Say; onChanged: () => void }>) {
+  const [problem, setProblem] = useState<string | null>(null);
+  const connect = useMutation({ mutationFn: (cloud: string) => krizakaFetch(`/api/me/storage/cloud/${cloud}`, { method: "POST", schema: cloudStart }) });
+  const disconnect = useMutation({ mutationFn: () => krizakaFetch("/api/me/storage/cloud/disconnect", { method: "POST" }) });
+  const go = async (cloud: string) => {
+    setProblem(null);
+    try {
+      window.location.assign((await connect.mutateAsync(cloud)).url);
+    } catch (error) {
+      setProblem(say(`errors.${errorKey(error)}`));
+    }
+  };
+  const leave = async () => {
+    setProblem(null);
+    try {
+      await disconnect.mutateAsync();
+      onChanged();
+    } catch (error) {
+      setProblem(say(`errors.${errorKey(error)}`));
+    }
+  };
+  const label = settings.cloud ? say(CLOUD_LABEL_KEY(settings.cloud.connector)) : "";
+  return (
+    <SettingsSection variant="flat" title={say("settings.storage.cloudTitle")} description={say("settings.storage.cloudLead")} data-testid="settings-cloud">
+      <Suspense fallback={null}><CloudResult say={say} /></Suspense>
+      {settings.cloud?.connected ? (
+        <>
+          <Alert tone="success">{say("settings.storage.cloudConnected", { cloud: label })}</Alert>
+          <div><Button type="button" variant="secondary" size="md" loading={disconnect.isPending} onClick={leave}>{say("settings.storage.cloudDisconnect")}</Button></div>
+        </>
+      ) : (
+        <>
+          {settings.cloud ? <Alert tone="warning">{say("settings.storage.cloudWasDisconnected", { cloud: label })}</Alert> : null}
+          <div className="flex flex-wrap gap-3">
+            {Object.entries(CLOUD_NAME_OF).filter(([id]) => clouds.includes(id)).map(([id, connector]) => (
+              <Button key={id} type="button" variant="secondary" size="md" loading={connect.isPending && connect.variables === id} onClick={() => go(id)}>
+                {say("settings.storage.cloudConnect", { cloud: say(CLOUD_LABEL_KEY(connector)) })}
+              </Button>
+            ))}
+          </div>
+          <p className="m-0 text-sm text-fg-secondary">{say("settings.storage.cloudScope")}</p>
+        </>
+      )}
+      {problem ? <Alert tone="danger">{problem}</Alert> : null}
+    </SettingsSection>
+  );
 }
 
 type Say = (k: string, v?: Record<string, string | number>) => string;

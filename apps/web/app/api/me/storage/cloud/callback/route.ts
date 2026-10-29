@@ -19,7 +19,7 @@ export const GET = (req: Request) =>
   handle(async () => {
     const session = await requireSession(req);
     const url = new URL(req.url);
-    const back = (result: string) => Response.redirect(new URL(`/settings/storage?cloud=${encodeURIComponent(result)}`, env().APP_PUBLIC_URL), 303);
+    const back = (result: string) => Response.redirect(new URL(`/${session.account.locale}/app/settings/stockage?cloud=${encodeURIComponent(result)}`, env().APP_PUBLIC_URL), 303);
     const code = url.searchParams.get("code");
     const state = url.searchParams.get("state");
     if (url.searchParams.get("error") || !code || !state) return back("denied");

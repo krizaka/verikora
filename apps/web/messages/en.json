@@ -1637,7 +1637,18 @@
         "keepDefault": "Tick “Keep my documents” by default",
         "save": "Save",
         "saved": "Saved.",
-        "noKey": "This installation cannot store credentials: your own S3 storage is unavailable."
+        "noKey": "This installation cannot store credentials: your own S3 storage is unavailable.",
+        "cloudTitle": "Or connect a cloud you already have",
+        "cloudLead": "Dropbox, Google Drive or OneDrive: your kept documents go into a folder of your own cloud, not to us.",
+        "cloudConnect": "Connect {cloud}",
+        "cloudDisconnect": "Disconnect",
+        "cloudConnected": "Connected to {cloud}. Your kept documents go to a folder of the app in your cloud.",
+        "cloudWasDisconnected": "{cloud} was disconnected. The documents kept there cannot be opened until you connect it again; new ones go to Krizaka's storage.",
+        "cloudScope": "You sign in on your provider's own page. Yomizaka only sees the folder it creates; you can disconnect at any time, and your files stay where they are.",
+        "cloudResultConnected": "Your cloud is connected.",
+        "cloudResultDenied": "The connection was not allowed, or was cancelled. Nothing changed.",
+        "cloudResultFailed": "The connection could not be completed. Nothing changed: try again.",
+        "clouds": {"dropbox": "Dropbox", "google-drive": "Google Drive", "onedrive": "OneDrive"}
       },
       "appearance": {
         "lead": "How the app looks on this device. Kept in this browser.",

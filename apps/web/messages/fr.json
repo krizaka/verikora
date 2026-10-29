@@ -1637,7 +1637,18 @@
         "keepDefault": "Cocher « Conserver mes documents » par défaut",
         "save": "Enregistrer",
         "saved": "Enregistré.",
-        "noKey": "Cette installation ne peut pas enregistrer d'identifiants : le stockage S3 personnel est indisponible."
+        "noKey": "Cette installation ne peut pas enregistrer d'identifiants : le stockage S3 personnel est indisponible.",
+        "cloudTitle": "Ou connecter un nuage que vous avez déjà",
+        "cloudLead": "Dropbox, Google Drive ou OneDrive : vos documents gardés vont dans un dossier de votre propre nuage, pas chez nous.",
+        "cloudConnect": "Connecter {cloud}",
+        "cloudDisconnect": "Déconnecter",
+        "cloudConnected": "Connecté à {cloud}. Vos documents gardés vont dans un dossier de l'application dans votre nuage.",
+        "cloudWasDisconnected": "{cloud} a été déconnecté. Les documents gardés là ne peuvent plus être ouverts avant de le reconnecter ; les nouveaux vont au stockage de Krizaka.",
+        "cloudScope": "Vous vous connectez sur la page de votre fournisseur. Yomizaka ne voit que le dossier qu'il crée ; vous pouvez déconnecter à tout moment, et vos fichiers restent où ils sont.",
+        "cloudResultConnected": "Votre nuage est connecté.",
+        "cloudResultDenied": "La connexion n'a pas été autorisée, ou a été annulée. Rien n'a changé.",
+        "cloudResultFailed": "La connexion n'a pas pu aboutir. Rien n'a changé : réessayez.",
+        "clouds": {"dropbox": "Dropbox", "google-drive": "Google Drive", "onedrive": "OneDrive"}
       },
       "appearance": {
         "lead": "L’allure de l’application sur cet appareil. Gardé dans ce navigateur.",
