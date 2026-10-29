@@ -7,7 +7,7 @@ docker run --rm --memory=512m -v "$PWD/deploy/docker/smoke:/smoke:ro" --entrypoi
 docker run --rm --memory=512m -v "$PWD/deploy/docker/smoke:/smoke:ro" --entrypoint node "$CI_IMAGE" /smoke/pdf.cjs
 docker run --rm --memory=512m -v "$PWD/deploy/docker/smoke:/smoke:ro" --entrypoint node "$CI_IMAGE" /smoke/opendal.cjs
 # The image-size budget (deploy/docker/image-size-budget-mb): the uncompressed size of the image just built. Measured 244 MB in CI on 2026-10-29 (was 310 MB on
-# the full node image; the « 120 MB » once quoted was the compressed size of a local containerd store, not this figure). OpenDAL's musl binary (+ about 60 MB) raised it to the figure CI measured with it (2026-10-29, yomizaka#530); a dependency that ships a native binary raises it in the same PR, with its reason, never silently.
+# the full node image; the « 120 MB » once quoted was the compressed size of a local containerd store, not this figure). OpenDAL's musl binary (+ about 60 MB) raised it to 304 MB measured in CI with it (2026-10-29, yomizaka#530; budget 310); a dependency that ships a native binary raises it in the same PR, with its reason, never silently.
 budget_mb=$(tr -d '[:space:]' < deploy/docker/image-size-budget-mb)
 size_mb=$(( $(docker image inspect "$CI_IMAGE" --format '{{.Size}}') / 1048576 ))
 echo "image size: ${size_mb} MB (budget ${budget_mb} MB)"
