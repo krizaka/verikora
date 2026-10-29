@@ -156,6 +156,14 @@ export const finding = z.object({
 });
 export type Finding = z.infer<typeof finding>;
 
+/** A figure the ruleset declares it reads (rents for Section G, yomizaka#554): found with its cents, blank (the label with no amount) or absent. */
+export const reportFact = z.discriminatedUnion("status", [
+  z.object({ status: z.literal("found"), cents: z.number().int().positive(), evidenceSpan: z.object({ quote: z.string() }).passthrough().optional() }),
+  z.object({ status: z.literal("blank"), evidenceSpan: z.object({ quote: z.string() }).passthrough().optional() }),
+  z.object({ status: z.literal("absent") }),
+]);
+export type ReportFact = z.infer<typeof reportFact>;
+
 export const complianceReport = z.object({
   rulesetId: z.string(),
   rulesetVersion: z.string(),
@@ -168,6 +176,8 @@ export const complianceReport = z.object({
   reviewNote: z.string().optional(),
   summary: z.object({ byVerdict: z.record(z.string(), z.number()), blockingFailures: z.number(), rulesEvaluated: z.number() }).partial().optional(),
   findings: z.array(finding),
+  /** The figures the ruleset declares it reads; a shape this version does not know is dropped, never the report. */
+  facts: z.record(z.string(), reportFact).optional().catch(undefined),
 });
 export type ComplianceReport = z.infer<typeof complianceReport>;
 

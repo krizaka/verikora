@@ -11,7 +11,9 @@ import { refuse } from "./http";
 import { withLines } from "./lease-lines";
 import { orazaka } from "./orazaka";
 import { purgeIfDone } from "./retention";
+import { withSectionG } from "./rules/section-g-report";
 import { LAW_TIME_ZONE } from "./rulesets";
+import { appSettings } from "./settings/instance";
 import type { DocumentStore } from "./storage/port";
 
 /**
@@ -77,7 +79,9 @@ export async function refresh(row: AnalysisRow, known?: OrazakaRun): Promise<Ana
   if (!isTerminal(status)) return toAnalysis(row);
   const read = status === "succeeded" ? reportOf(row.studio, run.outputs) : null;
   // The line of each finding is read now: the text is purged once the check has run (yomizaka#129).
-  const report = read && "findings" in read ? withLines(read, (await query<{ text: string }>("SELECT text FROM documents WHERE id = $1", [row.document_id]))[0]?.text ?? "") : read;
+  const lined = read && "findings" in read ? withLines(read, (await query<{ text: string }>("SELECT text FROM documents WHERE id = $1", [row.document_id]))[0]?.text ?? "") : read;
+  // Section G (yomizaka#554): when the lease ruleset exposed the rents, the check compares them with the TAL's rate.
+  const report = lined && "findings" in lined ? await withSectionG(lined, appSettings()) : lined;
   const noReport = report ? null : "Orazaka finished without a report Yomizaka can read";
   const error = status === "succeeded" ? noReport : (run.errorMessage ?? `The run ended ${run.status}`);
   const [updated] = await query<AnalysisRow>(
