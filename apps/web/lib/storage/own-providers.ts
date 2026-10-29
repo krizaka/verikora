@@ -6,7 +6,7 @@ import type { QueryResultRow } from "pg";
 
 import { refuse } from "../http";
 import { documentStoreOver } from "./adapter";
-import type { DocumentStore } from "./port";
+import type { DocumentStore, StoreDescriptor } from "./port";
 import { DATA_KIND, MAX_SIGNED_URL_SECONDS } from "./providers";
 import { asDescriptor } from "./where";
 
@@ -160,4 +160,72 @@ async function moveRow(q: Query, own: Pick<OwnProviders, "store" | "vault">, row
   await own.store.setDefault(scope, DATA_KIND.documents, id);
   await q("UPDATE documents SET provider_id = $1 WHERE owner_id = $2 AND storage_owner = 'workspace' AND provider_id IS NULL", [id, row.owner_id]);
   await q("UPDATE storage_settings SET provider_id = $1, s3_secret_sealed = NULL WHERE owner_id = $2 AND provider_id IS NULL", [id, row.owner_id]);
+}
+
+/** The store of a connected cloud: the registry opens it (the grant is renewed there and resealed when the cloud rotates it); the descriptor says it is theirs, and which cloud. */
+export async function cloudBucketStore(own: Pick<OwnProviders, "service">, providerId: string, connector: string): Promise<DocumentStore> {
+  const objects = await own.service.open(providerId);
+  return documentStoreOver(objects, cloudDescriptor(connector), MAX_SIGNED_URL_SECONDS);
+}
+
+const cloudDescriptor = (connector: string): StoreDescriptor => ({ kind: "cloud", endpoint: connector, region: null, residency: "unknown", encrypted: false, owner: "workspace", devOnly: false });
+
+/**
+ * What stands in for a cloud the person disconnected: a read says `STORAGE_DISCONNECTED` (409, the page offers to connect again), nothing
+ * is written, and a delete is a no-op because the file is in their cloud: an erasure or a purge never waits for a cloud we cannot reach.
+ */
+export function disconnectedStore(connector: string): DocumentStore {
+  const gone = () => refuse(409, "STORAGE_DISCONNECTED", "The cloud that holds this document is disconnected: connect it again to read it");
+  return {
+    async put() {
+      throw gone();
+    },
+    async get() {
+      throw gone();
+    },
+    async signedUrl() {
+      throw gone();
+    },
+    async delete() {},
+    describe: () => cloudDescriptor(connector),
+  };
+}
+
+export interface CloudGrant {
+  connector: string;
+  clientId: string;
+  clientSecret: string | null;
+  refreshToken: string;
+}
+
+/** Registers a connected cloud in the registry's user scope: created (the grant sealed), tested by the registry (a probe object written, read, deleted), made the default of their documents. A red test leaves nothing in use. */
+export async function registerCloud(own: Pick<OwnProviders, "service">, actor: Actor, owner: string, grant: CloudGrant): Promise<string> {
+  const scope = userScope(owner);
+  const created = await own.service.create(actor, {
+    scope,
+    kind: grant.connector,
+    label: `My ${grant.connector}`,
+    coordinates: { clientId: grant.clientId, prefix: OWN_PREFIX },
+    credentials: { refreshToken: grant.refreshToken, ...(grant.clientSecret ? { clientSecret: grant.clientSecret } : {}) },
+  });
+  const tested = await own.service.test(actor, created.id);
+  const outcome: string = tested.status;
+  if (outcome !== "verified") {
+    await own.service.disable(actor, created.id).catch(() => undefined);
+    throw refuse(422, "CONNECTION_FAILED", "The connection test failed", { steps: tested.lastTest?.steps ?? [] });
+  }
+  await own.service.setDefault(actor, created.id, scope, DATA_KIND.documents);
+  return created.id;
+}
+
+/** The grant of a connected cloud, opened to be revoked at the provider (never sent to a browser). Null when none is stored. */
+export async function storedRefreshToken(own: Pick<OwnProviders, "store" | "vault">, providerId: string | null): Promise<string | null> {
+  const record = providerId ? await own.store.get(providerId) : null;
+  if (!record) return null;
+  return (JSON.parse(openEnvelope(record.sealedCredentials, own.vault.ring)) as { refreshToken?: string }).refreshToken ?? null;
+}
+
+/** After a disconnect: the sealed grant is replaced by nothing and the provider is disabled, so no store can be opened from it. The row stays, because the documents in their cloud still name it. */
+export async function forgetGrant(own: Pick<OwnProviders, "store" | "vault">, providerId: string, now: Date): Promise<void> {
+  await own.store.update(providerId, { status: "disabled", sealedCredentials: sealEnvelope("{}", own.vault.key, own.vault.keyId), keyId: own.vault.keyId, updatedAt: now });
 }

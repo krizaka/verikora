@@ -12,12 +12,13 @@ import { readJson, refuse } from "@/lib/http";
 import { assertFeature } from "@/lib/settings/guards";
 import { actorOf } from "@/lib/storage/providers";
 import { loadSettings, saveSettings } from "@/lib/storage/settings";
+import { cloudsOffered } from "@/app/cloud-flow";
 import { verifyS3 } from "@/lib/storage/verify";
 
 
 export const dynamic = "force-dynamic";
 
-export const GET = (req: Request) => accountAct(req, "storage", async (s) => ({ settings: await loadSettings(query, s.account.id), canStoreCredentials: providers() !== null }));
+export const GET = (req: Request) => accountAct(req, "storage", async (s) => ({ settings: await loadSettings(query, s.account.id), canStoreCredentials: providers() !== null, clouds: await cloudsOffered() }));
 
 /**
  * Saves where kept documents live: none, Krizaka's store, or the owner's own S3. An own S3 is verified (public https address,
@@ -27,7 +28,8 @@ export const PUT = (req: Request) => accountAct(req, "storage", async (s) => {
   const input = await readJson(req, z.object({ mode: z.enum(STORAGE_MODES), keepDefault: z.boolean(), s3: s3Body.optional() }));
   const owner = s.account.id;
   const current = await loadSettings(query, owner);
-  const leaving = current.mode === STORAGE_MODE.s3 && (input.mode !== STORAGE_MODE.s3 || input.s3?.endpoint.replace(/\/$/, "") !== current.s3?.endpoint || input.s3?.bucket !== current.s3?.bucket);
+  if (input.mode === STORAGE_MODE.cloud && current.mode !== STORAGE_MODE.cloud) throw refuse(400, "BAD_REQUEST", "A cloud is connected from its provider's page, not saved");
+  const leaving = (current.mode === STORAGE_MODE.cloud && input.mode !== STORAGE_MODE.cloud) || current.mode === STORAGE_MODE.s3 && (input.mode !== STORAGE_MODE.s3 || input.s3?.endpoint.replace(/\/$/, "") !== current.s3?.endpoint || input.s3?.bucket !== current.s3?.bucket);
   if (leaving) {
     const [inUse] = await query("SELECT 1 FROM documents WHERE owner_id = $1 AND storage_owner = 'workspace' AND storage <> 'none' LIMIT 1", [owner]);
     if (inUse) throw refuse(409, "STORAGE_IN_USE", "Documents are kept on this storage: export or delete them first");

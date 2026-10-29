@@ -2409,6 +2409,12 @@
             "label": "Un remboursement complet rend l'utilisation",
             "hint": "Désactivé par défaut, pour qu'un remboursement ne remette pas un code à usage unique en jeu."
           }
+        },
+        "storage": {
+          "userConnectors": {
+            "label": "Connexions à un nuage (Dropbox, Google Drive, OneDrive)",
+            "hint": "Permet de connecter un nuage que la personne a déjà pour garder ses documents. Fermé tant que les inscriptions des applications ne sont pas faites."
+          }
         }
       },
       "history": {

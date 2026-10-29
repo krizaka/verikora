@@ -80,7 +80,11 @@ export async function exportData(q: Query, accountId: string, stores: StoresOf, 
   const fileOf = async (d: (typeof docs)[number]) => {
     // A file in the store (ADR-0012) is read by its key from whoever holds it.
     if (d.object_key) {
-      const held = await (await holderFrom(stores)({ owner_id: accountId, storage: d.storage, storage_owner: d.storage_owner, object_key: d.object_key }))?.get(d.object_key);
+      // A cloud the person disconnected cannot be read: the export says so for that file instead of failing as a whole (the file is in their own cloud).
+      const held = await (await holderFrom(stores)({ owner_id: accountId, storage: d.storage, storage_owner: d.storage_owner, object_key: d.object_key }))?.get(d.object_key).catch((error: unknown) => {
+        if ((error as { body?: { code?: unknown } }).body?.code === "STORAGE_DISCONNECTED") return null;
+        throw error;
+      });
       return held ? { contentType: d.mime_type, base64: Buffer.from(held.bytes).toString("base64") } : null;
     }
     const store = stores(d.storage_owner);

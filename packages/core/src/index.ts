@@ -297,7 +297,7 @@ export type DocumentInsight = z.infer<typeof documentInsight>;
 const valuesOf = <T extends Record<string, string>>(set: T) => Object.values(set) as [T[keyof T], ...T[keyof T][]];
 
 /** Where a document lives: the DocumentStore adapters, the database (the home of a document kept with Krizaka) and the person's device. */
-export const STORAGE_KIND = { none: "none", database: "database", bunny: "bunny", s3: "s3", device: "device" } as const;
+export const STORAGE_KIND = { none: "none", database: "database", bunny: "bunny", s3: "s3", cloud: "cloud", device: "device" } as const;
 export type StorageKind = (typeof STORAGE_KIND)[keyof typeof STORAGE_KIND];
 
 /** Whose storage it is: Krizaka's, the workspace's own cloud, or the person's device. */
@@ -313,8 +313,8 @@ export type StorageResidency = (typeof STORAGE_RESIDENCY)[keyof typeof STORAGE_R
 export const STORAGE_PROVIDERS = [STORAGE_KIND.none, STORAGE_KIND.bunny, STORAGE_KIND.s3] as const;
 export type StorageProvider = (typeof STORAGE_PROVIDERS)[number];
 
-/** What a person chooses for their kept documents: nothing, Krizaka's store, or their own S3. */
-export const STORAGE_MODE = { none: "none", krizaka: "krizaka", s3: "s3" } as const;
+/** What a person chooses for their kept documents: nothing, Krizaka's store, their own S3, or a cloud they connected (Dropbox, Google Drive, OneDrive). */
+export const STORAGE_MODE = { none: "none", krizaka: "krizaka", s3: "s3", cloud: "cloud" } as const;
 export type StorageMode = (typeof STORAGE_MODE)[keyof typeof STORAGE_MODE];
 export const STORAGE_MODES = valuesOf(STORAGE_MODE);
 

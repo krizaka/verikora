@@ -14,7 +14,7 @@ import type { StoreDescriptor } from "./storage/port";
 export type Query = <T extends QueryResultRow>(text: string, values?: unknown[]) => Promise<T[]>;
 
 /** The stores that hold a document's file outside the database. */
-export const EXTERNAL = new Set<StorageKind>([STORAGE_KIND.bunny, STORAGE_KIND.s3]);
+export const EXTERNAL = new Set<StorageKind>([STORAGE_KIND.bunny, STORAGE_KIND.s3, STORAGE_KIND.cloud]);
 
 /** Where a new document goes, from the person's choice and the store configured now. */
 export function storageFor(keep: boolean, active: StoreDescriptor): StorageKind {

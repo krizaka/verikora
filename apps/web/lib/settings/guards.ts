@@ -27,6 +27,11 @@ export async function assertFeature(feature: Feature, userId: string | null): Pr
   if (!(await featureOn(feature, userId))) throw refuse(403, "FEATURE_OFF", "This feature is switched off", { feature });
 }
 
+/** 403 FEATURE_OFF when the administrator has not opened user cloud connections (`storage.userConnectors`, off by default: a new data flow is opened on purpose). */
+export async function assertUserConnectors(): Promise<void> {
+  if ((await appSettings().get("storage.userConnectors" as SettingKey)) !== true) throw refuse(403, "FEATURE_OFF", "Connecting a cloud is switched off", { feature: "storage.userConnectors" });
+}
+
 /** The two feature switches the document view depends on, resolved for this person. */
 export async function insightFeatures(userId: string | null): Promise<{ documentInsight: boolean; personalInfo: boolean }> {
   const [documentInsight, personalInfo] = await Promise.all([featureOn("documentInsight", userId), featureOn("personalInfo", userId)]);

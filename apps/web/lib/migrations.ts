@@ -1415,4 +1415,15 @@ CREATE TABLE storage_moves (
 CREATE UNIQUE INDEX storage_moves_one_open ON storage_moves ((true)) WHERE status <> 'done';
 `,
   },
+  {
+    version: "0062_storage_cloud",
+    // yomizaka#530: a person may connect a cloud (Dropbox, Google Drive, OneDrive) as the home of their kept documents. The connection is a user-scope provider of the registry; the settings row names the connector.
+    sql: `
+ALTER TABLE storage_settings DROP CONSTRAINT storage_settings_mode_check;
+ALTER TABLE storage_settings ADD CONSTRAINT storage_settings_mode_check CHECK (mode IN ('none', 'krizaka', 's3', 'cloud'));
+ALTER TABLE storage_settings ADD COLUMN cloud_connector text;
+ALTER TABLE documents DROP CONSTRAINT documents_storage_check;
+ALTER TABLE documents ADD CONSTRAINT documents_storage_check CHECK (storage IN ('none', 'database', 'bunny', 's3', 'cloud', 'device'));
+`,
+  },
 ];

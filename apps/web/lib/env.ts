@@ -78,6 +78,13 @@ export const envSchema = z.object({
   APP_SETTINGS_ENCRYPTION_KEY: z.string().optional(),
   /** The key-encryption key of the storage providers (ADR-005): 32 bytes in base64, a DO SECRET. The admin's providers and their credentials live in the database, sealed under it; it is the only storage variable the deployment needs. */
   MEDIA_VAULT_KEY: z.string().optional(),
+  /** The app registrations at the clouds a person may connect (yomizaka#530; each needs its redirect address `APP_PUBLIC_URL/api/me/storage/cloud/callback`). A cloud without its client id is not offered. */
+  MEDIA_CLOUD_DROPBOX_CLIENT_ID: z.string().optional(),
+  MEDIA_CLOUD_DROPBOX_CLIENT_SECRET: z.string().optional(),
+  MEDIA_CLOUD_GOOGLE_CLIENT_ID: z.string().optional(),
+  MEDIA_CLOUD_GOOGLE_CLIENT_SECRET: z.string().optional(),
+  MEDIA_CLOUD_MICROSOFT_CLIENT_ID: z.string().optional(),
+  MEDIA_CLOUD_MICROSOFT_CLIENT_SECRET: z.string().optional(),
   /** The `MEDIA_DOCUMENTS_*`, `MEDIA_STORAGE_*` and `MEDIA_S3_*` values below only bootstrap: read once to import the provider a deployment already used (`bootstrapFromEnvironment`), never to choose a store afterwards. */
   MEDIA_DOCUMENTS_PREFIX: z.string().default("yomizaka"),
   /** AES-256-GCM key (32 bytes, base64) that encrypts every kept document before it leaves; the provider only holds ciphertext. */

@@ -2409,6 +2409,12 @@
             "label": "A full refund gives the use back",
             "hint": "Off by default, so a refund cannot reset a single-use code."
           }
+        },
+        "storage": {
+          "userConnectors": {
+            "label": "Cloud connections (Dropbox, Google Drive, OneDrive)",
+            "hint": "Lets people connect a cloud they already have as the home of their kept documents. Off until the app registrations are in place."
+          }
         }
       },
       "history": {
