@@ -1,4 +1,4 @@
-import { describeStore, type Keyring, parseVaultKey, STORAGE_CODE, StorageError } from "@krizaka/storage";
+import { describeStore, type LocalKeys, parseVaultKey, STORAGE_CODE, StorageError } from "@krizaka/storage";
 import { type Actor, type ProviderService, type ProviderStore, type PublicProvider } from "@krizaka/storage/provider-admin";
 import { STORAGE_KIND } from "@yomizaka/core";
 
@@ -50,7 +50,7 @@ const given = (values: Record<string, string | undefined>): Record<string, strin
  * The key that seals the credentials (`MEDIA_VAULT_KEY`). Until it is deployed, the settings key that sealed a workspace's own S3 keeps the
  * product working; both stay in the ring, so a value sealed under either opens and `rotateVaultKey` moves it to the current one. Null with neither.
  */
-export function vaultFrom(e: VaultEnv): { keyId: string; key: Uint8Array; ring: Keyring } | null {
+export function vaultFrom(e: VaultEnv): { keyId: string; key: Uint8Array; ring: LocalKeys } | null {
   const media = e.MEDIA_VAULT_KEY ? parseVaultKey(e.MEDIA_VAULT_KEY) : null;
   const settings = e.APP_SETTINGS_ENCRYPTION_KEY ? parseVaultKey(e.APP_SETTINGS_ENCRYPTION_KEY) : null;
   const current = media ?? settings;

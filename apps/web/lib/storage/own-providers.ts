@@ -1,6 +1,6 @@
 import { createHash } from "node:crypto";
 
-import { describeStore, type Keyring, openEnvelope, sealEnvelope, StorageError } from "@krizaka/storage";
+import { describeStore, type LocalKeys, openEnvelope, sealEnvelope, StorageError } from "@krizaka/storage";
 import type { Actor, ProviderService, ProviderStore } from "@krizaka/storage/provider-admin";
 import type { QueryResultRow } from "pg";
 
@@ -18,7 +18,7 @@ import { asDescriptor } from "./where";
 export interface OwnProviders {
   service: ProviderService;
   store: ProviderStore;
-  vault: { keyId: string; key: Uint8Array; ring: Keyring };
+  vault: { keyId: string; key: Uint8Array; ring: LocalKeys };
 }
 
 type Query = <T extends QueryResultRow>(text: string, values?: unknown[]) => Promise<T[]>;
@@ -121,7 +121,7 @@ export async function migrateOwnS3(q: Query, own: Pick<OwnProviders, "store" | "
 }
 
 /** The secret of a complete row, or null: an incomplete row, or one sealed under a key this deployment no longer holds, is left for a later start. */
-function openLegacySecret(row: LegacyRow, ring: Keyring): string | null {
+function openLegacySecret(row: LegacyRow, ring: LocalKeys): string | null {
   if (!row.s3_region || !row.s3_bucket || !row.s3_access_key_id) return null;
   try {
     return openEnvelope(row.s3_secret_sealed, ring) || null;

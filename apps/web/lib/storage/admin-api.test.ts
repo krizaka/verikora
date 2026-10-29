@@ -43,13 +43,13 @@ const bunny = createProviderInput.parse({ kind: "bunny", label: "Dev zone", coor
 
 describe("the kinds the form offers", () => {
   it("hide a dev-only kind in production, and offer only what an admin can open", () => {
-    expect(adminKinds("server", "dev").map((k) => k.kind).sort()).toEqual(["bunny", "s3"]);
-    expect(adminKinds("server", "prod").map((k) => k.kind)).toEqual(["s3"]);
+    expect(adminKinds("server", "dev").map((k) => k.kind).sort()).toEqual(["azblob", "b2", "bunny", "gcs", "s3", "webdav"]);
+    expect(adminKinds("server", "prod").map((k) => k.kind).sort()).toEqual(["azblob", "b2", "gcs", "s3", "webdav"]);
     expect(adminKinds("server", "dev").map((k) => k.kind)).not.toContain("folder");
     expect(adminKinds("dev", "dev").map((k) => k.kind)).not.toContain("device");
   });
   it("carry the field names only, so no value can ride along", () => {
-    for (const kind of adminKinds("server", "dev")) expect(JSON.stringify(kind)).not.toMatch(/secret-|password/);
+    for (const kind of adminKinds("server", "dev")) expect(JSON.stringify(kind).replaceAll(/"name":"[^"]*"/g, "")).not.toMatch(/secret-|password/);
   });
 });
 

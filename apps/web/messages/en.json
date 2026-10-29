@@ -1638,6 +1638,7 @@
         "save": "Save",
         "saved": "Saved.",
         "noKey": "This installation cannot store credentials: your own S3 storage is unavailable.",
+        "cloudTitleConnected": "Your cloud",
         "cloudTitle": "Or connect a cloud you already have",
         "cloudLead": "Dropbox, Google Drive or OneDrive: your kept documents go into a folder of your own cloud, not to us.",
         "cloudConnect": "Connect {cloud}",

@@ -51,7 +51,7 @@ export async function verifyS3(
     if (error instanceof StorageError) return { ...base, ok: false, error: "ENDPOINT_NOT_ALLOWED" };
     throw error;
   }
-  const opened = openProvider("s3", { endpoint: origin, region: candidate.region, bucket: candidate.bucket }, { accessKeyId: candidate.accessKeyId, secretAccessKey: candidate.secretAccessKey }, deps.ctx);
+  const opened = await openProvider("s3", { endpoint: origin, region: candidate.region, bucket: candidate.bucket }, { accessKeyId: candidate.accessKeyId, secretAccessKey: candidate.secretAccessKey }, deps.ctx);
   const out = await testConnection(deps.store ?? opened.store, deps.probeId, () => deps.ctx.clock.now().getTime());
   return { ok: out.ok, steps: out.steps, origin, host: new URL(origin).host, region: candidate.region, residency: residencyOfEndpoint(origin, candidate.region), error: null };
 }

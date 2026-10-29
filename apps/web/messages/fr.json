@@ -1638,6 +1638,7 @@
         "save": "Enregistrer",
         "saved": "Enregistré.",
         "noKey": "Cette installation ne peut pas enregistrer d'identifiants : le stockage S3 personnel est indisponible.",
+        "cloudTitleConnected": "Votre nuage",
         "cloudTitle": "Ou connecter un nuage que vous avez déjà",
         "cloudLead": "Dropbox, Google Drive ou OneDrive : vos documents gardés vont dans un dossier de votre propre nuage, pas chez nous.",
         "cloudConnect": "Connecter {cloud}",

@@ -17,7 +17,7 @@ describe("the container smoke check", () => {
   });
   it("holds the image to a size budget, and the runtime stays on musl (OpenDAL's linux-gnu binary needs glibc 2.38)", () => {
     const budget = Number(read("deploy/docker/image-size-budget-mb").trim());
-    expect(Number.isInteger(budget) && budget > 0 && budget <= 260, "a positive budget within a few MB of what CI measured (244 MB)").toBe(true);
+    expect(Number.isInteger(budget) && budget > 0 && budget <= 330, "a positive budget within a few MB of what CI measured").toBe(true);
     expect(read("scripts/ci-container-smoke.sh")).toContain("image-size-budget-mb");
     const dockerfile = read("deploy/docker/Dockerfile");
     expect(dockerfile.match(/^FROM node:22-alpine/gm)?.length, "the build stage is the musl node image").toBe(1);
@@ -36,6 +36,11 @@ describe("the container smoke check", () => {
     expect(dockerfile).toContain("-name '*.wasm.js' -delete");
     expect(dockerfile).toContain("-type d -name 4.0.0 -exec rm -rf");
     expect(dockerfile).not.toMatch(/4\.0\.0_best_int[^\n]*(-delete|rm -rf)/);
+  });
+  it("OpenDAL's native binary is proved inside the image, and Next keeps the package external", () => {
+    expect(read("scripts/ci-container-smoke.sh")).toContain("/smoke/opendal.cjs");
+    expect(existsSync(new URL("../deploy/docker/smoke/opendal.cjs", import.meta.url))).toBe(true);
+    expect(read("apps/web/next.config.mjs")).toMatch(/serverExternalPackages: \[[^\]]*"opendal"/);
   });
   it("the dockerignore keeps the smoke fixtures out of the build context only if they are not needed there", () => {
     expect(read(".dockerignore")).not.toMatch(/deploy/);

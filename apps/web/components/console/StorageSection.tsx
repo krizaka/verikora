@@ -13,6 +13,7 @@ import { Suspense, useState } from "react";
 import { z } from "zod";
 
 import { errorKey } from "@/lib/client";
+import { storageCards } from "@/lib/storage/cards";
 import { formI18n } from "@/lib/form-i18n";
 import { useSay } from "@/lib/i18n-client";
 
@@ -59,7 +60,7 @@ const CLOUD_LABEL_KEY = (connector: string) => `settings.storage.clouds.${connec
 function CloudResult({ say }: Readonly<{ say: Say }>) {
   const result = useSearchParams().get("cloud");
   if (!result) return null;
-  if (result === "connected") return <Alert tone="success">{say("settings.storage.cloudResultConnected")}</Alert>;
+  if (result === "connected") return null; // the connected panel says it
   return <Alert tone="danger">{say(result === "denied" ? "settings.storage.cloudResultDenied" : "settings.storage.cloudResultFailed")}</Alert>;
 }
 
@@ -87,7 +88,8 @@ function CloudPanel({ settings, clouds, say, onChanged }: Readonly<{ settings: z
   };
   const label = settings.cloud ? say(CLOUD_LABEL_KEY(settings.cloud.connector)) : "";
   return (
-    <SettingsSection variant="flat" title={say("settings.storage.cloudTitle")} description={say("settings.storage.cloudLead")} data-testid="settings-cloud">
+    <SettingsSection variant="flat" title={say(settings.cloud?.connected ? "settings.storage.cloudTitleConnected" : "settings.storage.cloudTitle")} description={say("settings.storage.cloudLead")} data-testid="settings-cloud">
+      <div className="flex flex-col gap-3">
       <Suspense fallback={null}><CloudResult say={say} /></Suspense>
       {settings.cloud?.connected ? (
         <>
@@ -108,6 +110,7 @@ function CloudPanel({ settings, clouds, say, onChanged }: Readonly<{ settings: z
         </>
       )}
       {problem ? <Alert tone="danger">{problem}</Alert> : null}
+      </div>
     </SettingsSection>
   );
 }
@@ -183,10 +186,10 @@ function StorageForm({ initial, canStoreCredentials, say, locale, onSaved }: Rea
   const needsTest = mode === STORAGE_MODE.s3 && !verified?.ok;
   return (
     <SettingsSection variant="flat" title={say("settings.storage.title")} description={say("settings.storage.lead")} data-testid="settings-stockage">
-      {/* The person's own S3 is offered only where this installation can keep its credentials (the review's E4): never a choice that cannot be taken. */}
+      {/* A connected cloud is not a card: it is connected from its own panel below. The person's own S3 is offered only where this installation can keep its credentials (the review's E4): never a choice that cannot be taken. */}
       <ChoiceCards
         label={say("settings.storage.modeLabel")}
-        options={STORAGE_MODES.filter((m) => m !== STORAGE_MODE.s3 || canStoreCredentials).map((m) => ({ id: m, title: say(`settings.storage.${m}`), description: say(`settings.storage.${m}Hint`) }))}
+        options={storageCards(canStoreCredentials).map((m) => ({ id: m, title: say(`settings.storage.${m}`), description: say(`settings.storage.${m}Hint`) }))}
         value={mode}
         onValueChange={(v) => {
           setMode(v as StorageMode);
