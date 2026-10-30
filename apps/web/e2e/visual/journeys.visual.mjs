@@ -60,12 +60,10 @@ async function settleHeaderLive(page) {
     [...document.images].some((img) => img.getBoundingClientRect().top < 120 && img.complete && img.naturalWidth > 0),
   );
 }
-/** The dates of a list are stamped by the database at seed time (real, not frozen): the masked box still takes the width of its text, and a table sizes its columns from it, so a day with other digits moved the columns by a pixel. They read the same text before the shot. */
+/** The dates of a list are stamped by the database at seed time (real, not frozen): the masked box still takes the width of its text, and a table sizes its columns from it, so a day with other digits moved the columns by a pixel. They get one width, by style: a text swap raced the page's own rendering after hydration (98 px one run, 81 px the next, yomizaka#641). */
 async function fixListDates(page) {
   await page.locator('time:not([data-testid="today"])').first().waitFor({ state: "attached" });
-  await page.evaluate(() => {
-    for (const t of document.querySelectorAll('time:not([data-testid="today"])')) t.replaceChildren("00 mmm. 0000");
-  });
+  await page.addStyleTag({ content: 'time:not([data-testid="today"]) { display: inline-block; width: 7rem; white-space: nowrap; overflow: hidden; text-align: right; }' });
 }
 /** A finding stays inside its card: no long address pushes the page wider than the screen (the TAL address on a phone). */
 const staysInside = (ruleId) => async (page) => {

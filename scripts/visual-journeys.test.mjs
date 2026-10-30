@@ -17,20 +17,13 @@ test("the pending first paint settles the date and the account picture before th
   assert.match(body, /naturalWidth/, "waits for the account picture to be decoded");
 });
 
-test("the library fixes the dates of its rows before the shot (the table sizes its columns from their text)", () => {
+test("the library gives the dates of its rows one width, by style (the table sizes its columns from their box)", () => {
   const documents = source.split("\n").find((line) => line.includes('name: "documents"')) ?? "";
   assert.match(documents, /ready: fixListDates/, "the documents journey must run fixListDates");
   const body = source.slice(source.indexOf("async function fixListDates"));
-  assert.match(body, /replaceChildren\(/, "every row date reads the same text, whatever the day of the seed");
-});
-
-test("every journey with JavaScript starts from a settled stream and unique ids (#635: two elements with one id)", () => {
-  assert.match(source, /\]\.map\(withSettledDom\)/, "the journeys go through withSettledDom");
-  const settle = source.slice(source.indexOf("async function settleStream"), source.indexOf("async function expectUniqueIds"));
-  assert.match(settle, /\[hidden\]\[id\^="S:"\]/, "waits for React's hidden streaming containers to be moved into place");
-  const unique = source.slice(source.indexOf("async function expectUniqueIds"), source.indexOf("const withSettledDom"));
-  assert.match(unique, /querySelectorAll\("\[id\]"\)/, "reads every id of the page");
-  assert.match(unique, /toEqual\(\[\]\)/, "fails on a duplicate, naming where it is");
-  const wrap = source.slice(source.indexOf("const withSettledDom"));
-  assert.match(wrap, /firstPaint === true/, "the page without JavaScript keeps its streamed containers: not settled");
+  // A style, not a text swap: the page re-renders its dates after hydration and gave the swapped text back on some runs
+  // (the « Ajouté » column was 98 px wide on one run, 81 px on the next: yomizaka#641).
+  assert.match(body, /addStyleTag/, "the width is a stylesheet the page cannot rewrite");
+  assert.match(body, /inline-block/, "the date box has a fixed width of its own");
+  assert.doesNotMatch(body, /replaceChildren\(/, "no text swap: it raced the page's own rendering");
 });
