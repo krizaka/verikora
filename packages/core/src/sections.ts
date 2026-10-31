@@ -43,7 +43,11 @@ export const SECTIONS: readonly Section[] = [
     gated: "applicantFiles",
     pending: { web: FROM_THE_HOME, phone: NO_APPLICANT_SCREEN, mac: NO_APPLICANT_SCREEN },
   },
-  { id: "documents", path: "/app/documents", pending: { web: FROM_THE_HOME, phone: NO_DOCUMENTS_LIST, mac: NO_DOCUMENTS_LIST } },
+  {
+    id: "documents",
+    path: "/app/documents",
+    pending: { web: FROM_THE_HOME, phone: NO_DOCUMENTS_LIST, mac: NO_DOCUMENTS_LIST },
+  },
   { id: "checks", path: "/app/verifications", tabs: CHECKS_TABS, pending: {} },
 ];
 

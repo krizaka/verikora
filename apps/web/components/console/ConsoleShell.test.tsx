@@ -50,10 +50,7 @@ describe("the signed-in shell, B2 (P14)", () => {
   it("the rail holds two items, Accueil · Vérifications, from the one section map, the active one from the route (krizaka-internal#2001)", () => {
     const html = render();
     const links = railLinks(html);
-    expect(links.map((l) => l.match(/href="([^"]+)"/)![1])).toEqual([
-      "/fr/app",
-      "/fr/app/verifications",
-    ]);
+    expect(links.map((l) => l.match(/href="([^"]+)"/)![1])).toEqual(["/fr/app", "/fr/app/verifications"]);
     expect(links[1]).toContain('aria-current="page"');
     expect(links[0]).not.toContain("aria-current");
     expect(html).not.toMatch(/<a [^>]*data-rail-item[^>]*href="\/fr\/app\/(settings|check|search)"/);
