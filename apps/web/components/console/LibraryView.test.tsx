@@ -93,6 +93,16 @@ describe("the home (krizaka-internal#1898)", () => {
     expect(render({}, "en")).toMatch(/<h1[^>]*>Home</);
   });
 
+  it("offers « Vérifier un document » as a button before the drop zone (krizaka-internal#2001), in both languages", () => {
+    const html = render({});
+    expect(html).toMatch(/<a [^>]*data-testid="home-check-button"[^>]*href="\/fr\/app\/check"/);
+    expect(html.indexOf('data-testid="home-check-button"')).toBeLessThan(
+      html.indexOf('data-testid="library-dropzone"'),
+    );
+    expect(readable(html)).toContain(fr.console.shell.checkAction);
+    expect(readable(render({}, "en"))).toContain(en.console.shell.checkAction);
+  });
+
   it("offers « Vérifier un document » first: the drop zone is on the home, before the dossiers", () => {
     const html = render({});
     expect(html.match(/data-testid="library-dropzone"/g)).toHaveLength(1);

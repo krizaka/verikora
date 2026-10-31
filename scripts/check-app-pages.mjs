@@ -96,6 +96,33 @@ export async function discover(page, base, locale) {
 export const ownerReportPath = (persona = "eric") => `/rapport/${demoOwnerTokens(persona).live}`;
 export const revokedReportPath = (persona = "eric") => `/rapport/${demoOwnerTokens(persona).revoked}`;
 
+/** The home's primary action as the page reads it: the `data-testid` element, its role, name and place on the first screen. */
+export const homePrimaryInfo = () => {
+  const el = document.querySelector("[data-testid='home-check-button']");
+  if (!el) return null;
+  const r = el.getBoundingClientRect();
+  return {
+    role: el.getAttribute("role") ?? (el.tagName === "A" ? "link" : el.tagName.toLowerCase()),
+    name: (el.getAttribute("aria-label") ?? el.textContent ?? "").trim(),
+    visible: r.width > 0 && r.height > 0,
+    inFirstScreen: r.top >= 0 && r.bottom <= window.innerHeight,
+  };
+};
+
+/** The home's first screen offers « Check a document » as a button (krizaka-internal#2001), visible without scrolling; pure, tested. */
+export function homePrimaryProblems(where, info, label) {
+  if (!info) return [`${where}: no primary « ${label} » button on the home`];
+  const found = [];
+  if (!info.visible || !info.inFirstScreen)
+    found.push(`${where}: the primary « ${label} » button is not on the first screen`);
+  if (info.name !== label) found.push(`${where}: the primary button is named « ${info.name} », not « ${label} »`);
+  if (!["link", "button"].includes(info.role))
+    found.push(`${where}: the primary action is a ${info.role}, not a button`);
+  return found;
+}
+
+const HOME_LABEL = { en: "Check a document", fr: "Vérifier un document" };
+
 /** One page at one width in one theme: the audit's problems, the axe findings recorded, the optional screenshot. */
 async function auditAt({ page, path, width, theme, base, locale, shots, a11y, errors }) {
   const publicPage = path.startsWith("/rapport/");
@@ -106,6 +133,8 @@ async function auditAt({ page, path, width, theme, base, locale, shots, a11y, er
   const where = `${publicPage ? "/rapport/<demo token>" : path} @${width} ${theme}`;
   // The home (/app) has no header "+": its one primary action is the drop zone itself (journey home-check-and-dossiers).
   const found = problemsOf(where, result, { errors, h1: true, headerAction: !publicPage && path !== "/app" });
+  if (path === "/app")
+    found.push(...homePrimaryProblems(where, await page.evaluate(homePrimaryInfo), HOME_LABEL[locale]));
   if (A11Y_WIDTHS.includes(width))
     a11y.add({ route: publicPage ? "/rapport/<demo token>" : path, theme }, await auditA11y(page));
   if (shots) {

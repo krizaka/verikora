@@ -47,32 +47,24 @@ const railLinks = (html: string) => [...html.matchAll(/<a [^>]*data-rail-item[^>
 const headerOf = (html: string) => html.slice(html.indexOf("<header"), html.indexOf("</header>"));
 
 describe("the signed-in shell, B2 (P14)", () => {
-  it("the rail holds Accueil · Documents · Vérifications from the one section map, the active one from the route", () => {
+  it("the rail holds two items, Accueil · Vérifications, from the one section map, the active one from the route (krizaka-internal#2001)", () => {
     const html = render();
     const links = railLinks(html);
     expect(links.map((l) => l.match(/href="([^"]+)"/)![1])).toEqual([
       "/fr/app",
-      "/fr/app/documents",
       "/fr/app/verifications",
     ]);
-    expect(links[2]).toContain('aria-current="page"');
+    expect(links[1]).toContain('aria-current="page"');
     expect(links[0]).not.toContain("aria-current");
     expect(html).not.toMatch(/<a [^>]*data-rail-item[^>]*href="\/fr\/app\/(settings|check|search)"/);
   });
 
-  it("is the section map of core, in its order, for the people offered the applicant files: Accueil · Dossiers · Documents · Vérifications", () => {
+  it("is the section map of core, in its order, and the same two items for the people offered the applicant files", () => {
     const links = railLinks(render({ applicantFiles: true }));
     expect(links.map((l) => l.match(/href="([^"]+)"/)![1])).toEqual(
       sectionsFor("web", { applicantFiles: true }).map((s) => `/fr${s.path}`),
     );
-    expect(links).toHaveLength(4);
-  });
-
-  it("counts the files to decide on « Dossiers », in words for a screen reader, and shows nothing at zero", () => {
-    const withCount = railLinks(render({ applicantFiles: true, toDecide: 2 }))[1]!;
-    expect(withCount).toContain("2 dossiers à décider");
-    expect(railLinks(render({ applicantFiles: true, toDecide: 1 }))[1]).toContain("1 dossier à décider");
-    expect(railLinks(render({ applicantFiles: true, toDecide: 0 }))[1]).not.toContain("à décider");
+    expect(links).toHaveLength(2);
   });
 
   it("the header names the product and carries the DEV chip", () => {

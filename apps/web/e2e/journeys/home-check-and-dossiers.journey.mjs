@@ -31,8 +31,10 @@ for (const screen of SCREENS) {
     const list = page.getByRole("list", { name: "Vos dossiers" });
     await expect(list.getByRole("link", { name: /Immeuble Rosemont/ }), "his dossiers are listed").toBeVisible();
 
-    const box = await drop.boundingBox();
-    expect(box && box.y + box.height <= screen.viewport.height, "the drop zone is on the first screen").toBe(true);
+    const button = page.getByTestId("home-check-button");
+    await expect(button, "the primary action is a named button").toHaveText("Vérifier un document");
+    const box = await button.boundingBox();
+    expect(box && box.y + box.height <= screen.viewport.height, "the primary button is on the first screen").toBe(true);
     const row = await list.getByRole("link").first().boundingBox();
     expect(row && row.y < screen.viewport.height, "the list starts on the first screen").toBe(true);
 

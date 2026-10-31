@@ -97,16 +97,34 @@ export function LibraryView({
           </Link>
         </div>
         <p className="m-0 text-sm text-fg-secondary">{say("home.check.lead")}</p>
+        <CheckButton />
         <LibraryDrop zone jurisdictions={jurisdictions} examples={examplesSlot(examples, order, say)} />
       </section>
       <DossiersList rows={rows} screening={screen.secondary} firstId={libraries[0]?.id} />
       {credits ? <UsageLine figure={credits} /> : null}
-      <StickyAction hideWhileVisible="#home-check [data-testid='library-dropzone']">
+      <StickyAction hideWhileVisible="[data-testid='home-check-button']">
         <ButtonLink href={`/${locale}${CONSOLE_ROUTES.check}`} variant="primary" shape="cut" size="lg">
           {say("shell.checkAction")}
         </ButtonLink>
       </StickyAction>
     </div>
+  );
+}
+
+/** The home's one primary action (krizaka-internal#2001): a button on the first screen, desktop and phone; the drop zone below it is the same first step by another way. */
+function CheckButton() {
+  const { say, locale } = useSay();
+  return (
+    <ButtonLink
+      href={`/${locale}${CONSOLE_ROUTES.check}`}
+      variant="primary"
+      shape="cut"
+      size="lg"
+      className="self-start"
+      data-testid="home-check-button"
+    >
+      {say("shell.checkAction")}
+    </ButtonLink>
   );
 }
 
@@ -214,6 +232,9 @@ function LibraryEmpty({
         title={say("library.emptyTitle")}
         description={say("library.emptyPitch")}
       />
+      <div className="flex justify-center">
+        <CheckButton />
+      </div>
       <LibraryDrop zone jurisdictions={jurisdictions} examples={examplesSlot(examples, order, say)} />
       <p className="m-0 text-center text-sm text-fg-secondary" data-testid="library-empty-dossiers">
         {say("library.emptyDossiers")}
