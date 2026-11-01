@@ -120,6 +120,7 @@ describe("sign-up", () => {
     expect(new Set(db.tokens.map((t) => t.token_hash)).size).toBe(2);
   });
 
+  // TODO(krizaka-internal#2038): @krizaka/email still renders the code name; the package must read @krizaka/org.
   it("the mail promises nothing about the check, in its language: it confirms an address, in Yomizaka's brand and no other", async () => {
     for (const locale of ["fr", "en"] as const) {
       const mail = await renderEmail(
@@ -127,7 +128,7 @@ describe("sign-up", () => {
         { brand: "yomizaka", confirmUrl: "https://www.yomizaka.com/fr/verify-email?token=x", hours: VERIFY_TTL_HOURS },
         { locale },
       );
-      expect(mail.text).toContain("Verikora");
+      expect(mail.text).toContain("Yomizaka");
       expect(mail.text).not.toMatch(/conforme|compliant|garanti|guarantee|approuv|approved/i);
       expect(mail.html + mail.text).not.toMatch(/Orazaka|Akinaza/);
     }
