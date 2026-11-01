@@ -48,7 +48,11 @@ describe("analyseTextRuns", () => {
   });
 
   it("does not judge a page with too few amounts to have a norm", () => {
-    const runs = [run("Gross", "Arial", 700), run("2 400,00", "Arial-Mono", 700, 300), run("7,00", "Helvetica", 680, 300)];
+    const runs = [
+      run("Gross", "Arial", 700),
+      run("2 400,00", "Arial-Mono", 700, 300),
+      run("7,00", "Helvetica", 680, 300),
+    ];
     expect(analyseTextRuns(runs)).toEqual([]);
   });
 
