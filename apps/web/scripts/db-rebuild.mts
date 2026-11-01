@@ -9,6 +9,9 @@ import { seedConfig } from "../lib/config-seed";
 import { migrate, pool, query } from "../lib/db";
 import { diffSnapshot, readSnapshot, type SchemaSnapshot } from "../lib/schema-check";
 
+/** A refusal whose text is written in this file, safe to print. */
+class RebuildRefusal extends Error {}
+
 const EXPECTED = new URL("lib/schema-expected.json", `file://${process.cwd()}/`);
 const flag = (name: string) => process.argv.includes(`--${name}`);
 const LOCAL = new Set(["localhost", "127.0.0.1", "::1", "[::1]", "postgres", "db"]);
@@ -16,10 +19,10 @@ const LOCAL = new Set(["localhost", "127.0.0.1", "::1", "[::1]", "postgres", "db
 async function main(): Promise<void> {
   const url = new URL(process.env.DATABASE_URL ?? "");
   if (process.env.APP_ENVIRONMENT === "production") {
-    throw new Error("db:rebuild never runs against production");
+    throw new RebuildRefusal("db:rebuild never runs against production");
   }
   if (!LOCAL.has(url.hostname) && !flag("yes")) {
-    throw new Error(`${url.hostname}/${url.pathname.slice(1)} is not local: pass --yes to rebuild it`);
+    throw new RebuildRefusal(`${url.hostname}/${url.pathname.slice(1)} is not local: pass --yes to rebuild it`);
   }
   console.log(LOCAL.has(url.hostname) ? "db:rebuild: local database" : "db:rebuild: remote database (--yes)");
   const schemas = await query<{ nspname: string }>(
@@ -40,7 +43,7 @@ async function main(): Promise<void> {
   } else {
     const problems = diffSnapshot(JSON.parse(await readFile(EXPECTED, "utf8")) as SchemaSnapshot, actual);
     if (problems.length) {
-      throw new Error(`schema check failed:\n  ${problems.join("\n  ")}`);
+      throw new RebuildRefusal(`schema check failed:\n  ${problems.join("\n  ")}`);
     }
   }
   console.log(`schema check: ${Object.keys(actual.tables).length} tables, configuration present`);
@@ -51,7 +54,7 @@ async function main(): Promise<void> {
       env: process.env,
     });
     if (run.status !== 0) {
-      throw new Error("the cast seed failed");
+      throw new RebuildRefusal("the cast seed failed");
     }
   }
   process.exit(0);
@@ -60,6 +63,7 @@ async function main(): Promise<void> {
 try {
   await main();
 } catch (error) {
-  console.error(String(error instanceof Error ? error.message : error).slice(0, 2000));
+  // Only our own refusals carry a message written here; any other error (driver, network) may hold a connection string.
+  console.error(error instanceof RebuildRefusal ? error.message.slice(0, 2000) : "db:rebuild failed (details withheld)");
   process.exit(1);
 }
