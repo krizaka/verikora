@@ -49,4 +49,8 @@ describe("db", () => {
     expect([...versions].sort()).toEqual(versions);
     expect(versions[0]).toBe("0001_baseline");
   });
+
+  it("has no gap in the numbering after the baseline (two branches adding the same number must land in order)", () => {
+    MIGRATIONS.map((m) => Number(m.version.slice(0, 4))).forEach((n, i) => expect(n).toBe(1 + i));
+  });
 });
