@@ -13,7 +13,7 @@ const EXPECTED = new URL("lib/schema-expected.json", `file://${process.cwd()}/`)
 const flag = (name: string) => process.argv.includes(`--${name}`);
 const LOCAL = new Set(["localhost", "127.0.0.1", "::1", "[::1]", "postgres", "db"]);
 
-async function main() {
+async function main(): Promise<void> {
   const url = new URL(process.env.DATABASE_URL ?? "");
   if (process.env.APP_ENVIRONMENT === "production") {
     throw new Error("db:rebuild never runs against production");
@@ -21,9 +21,9 @@ async function main() {
   if (!LOCAL.has(url.hostname) && !flag("yes")) {
     throw new Error(`${url.hostname}/${url.pathname.slice(1)} is not local: pass --yes to rebuild it`);
   }
-  console.log(`db:rebuild ${url.hostname}/${url.pathname.slice(1)}`);
+  console.log(LOCAL.has(url.hostname) ? "db:rebuild: local database" : "db:rebuild: remote database (--yes)");
   const schemas = await query<{ nspname: string }>(
-    `SELECT nspname FROM pg_namespace WHERE nspname NOT IN ('pg_catalog', 'information_schema', 'public') AND nspname NOT LIKE 'pg\\_%'`,
+    String.raw`SELECT nspname FROM pg_namespace WHERE nspname NOT IN ('pg_catalog', 'information_schema', 'public') AND nspname NOT LIKE 'pg\_%'`,
   );
   for (const { nspname } of schemas) {
     await query(`DROP SCHEMA "${nspname}" CASCADE`);
@@ -57,7 +57,9 @@ async function main() {
   process.exit(0);
 }
 
-main().catch((error) => {
+try {
+  await main();
+} catch (error) {
   console.error(String(error instanceof Error ? error.message : error).slice(0, 2000));
   process.exit(1);
-});
+}

@@ -15,7 +15,7 @@ export interface Migration {
 export const MIGRATIONS: readonly Migration[] = [
   {
     version: "0001_baseline",
-    sql: `
+    sql: String.raw`
 CREATE SCHEMA audit;
 
 CREATE SCHEMA coupons;
@@ -157,7 +157,7 @@ CREATE TABLE audit.entry (
     target_id text,
     detail jsonb DEFAULT '{}'::jsonb NOT NULL,
     ip inet,
-    CONSTRAINT entry_action_check CHECK (((action ~ '^[a-z][a-z0-9_]*(\\.[a-z0-9_]+)*$'::text) AND (char_length(action) <= 80))),
+    CONSTRAINT entry_action_check CHECK (((action ~ '^[a-z][a-z0-9_]*(\.[a-z0-9_]+)*$'::text) AND (char_length(action) <= 80))),
     CONSTRAINT entry_actor_label_check CHECK (((char_length(actor_label) >= 1) AND (char_length(actor_label) <= 120))),
     CONSTRAINT entry_target_id_check CHECK (((target_id IS NULL) OR (char_length(target_id) <= 200))),
     CONSTRAINT entry_target_type_check CHECK (((target_type IS NULL) OR (char_length(target_type) <= 40)))
