@@ -16,8 +16,7 @@ interface PdfItem {
   width: number;
   height: number;
 }
-const isItem = (item: unknown): item is PdfItem =>
-  typeof item === "object" && item !== null && "str" in item && "transform" in item;
+const isItem = (item: object): item is PdfItem => "str" in item && "transform" in item;
 
 type Pdf = Awaited<ReturnType<typeof getDocumentProxy>>;
 
@@ -25,7 +24,8 @@ const readPage = async (pdf: Pdf, number: number): Promise<TextRun[]> => {
   const page = await pdf.getPage(number);
   const content = await page.getTextContent();
   await page.getOperatorList();
-  return content.items
+  const items: object[] = content.items;
+  return items
     .filter((item): item is PdfItem => isItem(item) && item.str.trim() !== "")
     .map((item) => ({
       page: number,
