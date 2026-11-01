@@ -52,8 +52,8 @@ export const pageCount = (lines) => Math.max(1, Math.ceil(lines.length / LINES_P
 export async function renderPdf(title, lines) {
   const pdf = await PDFDocument.create({ updateMetadata: false });
   pdf.setTitle(title);
-  pdf.setProducer("Yomizaka demo-documents");
-  pdf.setCreator("Yomizaka demo-documents");
+  pdf.setProducer("Verikora demo-documents");
+  pdf.setCreator("Verikora demo-documents");
   pdf.setCreationDate(FIXED_DATE);
   pdf.setModificationDate(FIXED_DATE);
   const font = await pdf.embedFont(StandardFonts.Helvetica);
