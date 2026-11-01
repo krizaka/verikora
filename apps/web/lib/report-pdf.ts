@@ -34,6 +34,7 @@ import {
 } from "./report";
 import { type SigningKey } from "./report-key";
 import { SITE_URL } from "./site";
+import { PRODUCT_NAME } from "@/lib/brand";
 
 /*
  * The signed PDF report of a compliance check — for the owner and the members the owner gave access to (ADR-0002).
@@ -262,9 +263,9 @@ export async function issuePdf(payload: ReportPayload, labels: ReportLabels, key
 
   const finished = new Date(payload.check.finishedAt);
   doc.setTitle(payload.document.title);
-  doc.setSubject(`Yomizaka — ${payload.check.runId}`);
-  doc.setProducer("Yomizaka");
-  doc.setCreator("Yomizaka");
+  doc.setSubject(`${PRODUCT_NAME} — ${payload.check.runId}`);
+  doc.setProducer(PRODUCT_NAME);
+  doc.setCreator(PRODUCT_NAME);
   doc.setCreationDate(finished);
   doc.setModificationDate(finished);
   const info = doc.context.lookup(doc.context.trailerInfo.Info, PDFDict);

@@ -14,6 +14,7 @@ import {
 } from "pdf-lib";
 
 import type { CleanedPage } from "./port";
+import { PRODUCT_NAME } from "@/lib/brand";
 
 const LETTER = { width: 612, height: 792 };
 const FIXED_DATE = new Date("2000-01-01T00:00:00Z");
@@ -75,8 +76,8 @@ export async function pagesToPdf(
   words: ReadonlyArray<readonly PageWord[] | undefined> = [],
 ): Promise<Uint8Array> {
   const doc = await PDFDocument.create({ updateMetadata: false });
-  doc.setProducer("Yomizaka (photos assembled into one document)");
-  doc.setCreator("Yomizaka");
+  doc.setProducer(`${PRODUCT_NAME} (photos assembled into one document)`);
+  doc.setCreator(PRODUCT_NAME);
   doc.setTitle("");
   doc.setCreationDate(FIXED_DATE);
   doc.setModificationDate(FIXED_DATE);

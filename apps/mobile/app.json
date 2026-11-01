@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "Yomizaka",
+    "name": "Verikora",
     "slug": "yomizaka",
     "scheme": "yomizaka",
     "version": "0.1.0",
@@ -46,8 +46,8 @@
       [
         "expo-image-picker",
         {
-          "cameraPermission": "Yomizaka scanne vos documents avec l'appareil photo.",
-          "photosPermission": "Yomizaka lit la photo d'un document que vous choisissez."
+          "cameraPermission": "Verikora scanne vos documents avec l'appareil photo.",
+          "photosPermission": "Verikora lit la photo d'un document que vous choisissez."
         }
       ],
       "./plugins/with-release-signing"

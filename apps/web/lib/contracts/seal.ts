@@ -9,6 +9,7 @@ import { canonicalJson, sha256 } from "../report";
 import type { SigningKey } from "../report-key";
 import { SITE_URL } from "../site";
 import type { SealParty, SealRequest } from "./request";
+import { PRODUCT_NAME } from "@/lib/brand";
 
 /*
  * A sealed contract (yomizaka#71): a partner platform sends a contract's content and its parties; Yomizaka renders it as a PDF —
@@ -231,9 +232,9 @@ export async function sealPdf(
 
   const sealed = new Date(payload.sealedAt);
   doc.setTitle(payload.documentType);
-  doc.setSubject(`Yomizaka — ${payload.contractId}`);
-  doc.setProducer("Yomizaka");
-  doc.setCreator("Yomizaka");
+  doc.setSubject(`${PRODUCT_NAME} — ${payload.contractId}`);
+  doc.setProducer(PRODUCT_NAME);
+  doc.setCreator(PRODUCT_NAME);
   doc.setCreationDate(sealed);
   doc.setModificationDate(sealed);
   const info = doc.context.lookup(doc.context.trailerInfo.Info, PDFDict);

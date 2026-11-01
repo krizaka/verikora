@@ -27,6 +27,7 @@ import { useSay } from "@/lib/i18n-client";
 import { pluralKey } from "@/lib/plural";
 
 import { ConsoleSearch } from "./ConsoleSearch";
+import { PRODUCT_NAME } from "@/lib/brand";
 
 const BUILD = process.env.NEXT_PUBLIC_APP_VERSION ?? "";
 const ADMIN_URL = "https://admin.yomizaka.com";
@@ -105,7 +106,7 @@ export function ConsoleShell({
         {say("shell.skip")}
       </a>
       <AppFrame
-        name="Yomizaka"
+        name={PRODUCT_NAME}
         mark={<YomizakaLogo size={28} animated={false} />}
         headerMark={<YomizakaLogo size={26} animated={false} />}
         homeHref={href(CONSOLE_ROUTES.library)}
@@ -123,7 +124,7 @@ export function ConsoleShell({
           ) : undefined
         }
         // The signed-in person is always visible (yomizaka#243): the name only when there is one, never the raw e-mail address
-        // (the review's A4); the menu's identity header carries both. No messages (Yomizaka has no messaging) and no notifications
+        // (the review's A4); the menu's identity header carries both. No messages (the product has no messaging) and no notifications
         // until `@krizaka/notifications` gives it something to say (krizaka-ts#60): an empty slot is hidden, never invented.
         account={{
           // A person with no name is "Account" beside the avatar, never the raw address (the frame shows the e-mail when it has no name).

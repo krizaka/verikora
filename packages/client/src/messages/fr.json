@@ -14,13 +14,13 @@
   "preflight": {
     "empty": "Le fichier est vide.",
     "tooLarge": "Le fichier est trop volumineux ({megabytes} Mo au maximum).",
-    "unsupportedType": "Yomizaka lit les PDF et les fichiers texte."
+    "unsupportedType": "Verikora lit les PDF et les fichiers texte."
   },
   "check": {
     "compliance": "Conformité au droit québécois",
     "authenticity": "Authenticité du fichier",
     "start": "Lancer la vérification",
-    "run": "Vérification Orazaka {runId}"
+    "run": "Vérification Sovkora {runId}"
   },
   "result": {
     "title": "Résultat",
@@ -28,7 +28,7 @@
     "sharing": "Préparation du rapport…",
     "shareFailed": "Le rapport n'a pas pu être préparé.",
     "signed": "Rapport signé, empreinte SHA-256 vérifiable sur yomizaka.com/app/verifications/report.",
-    "runningHint": "Orazaka lit le document. Cela prend généralement moins d'une minute.",
+    "runningHint": "Sovkora lit le document. Cela prend généralement moins d'une minute.",
     "failedHint": "La vérification n'a pas abouti. Vous pouvez la relancer."
   },
   "document": {
@@ -48,7 +48,7 @@
   },
   "common": {
     "retry": "Réessayer",
-    "offline": "Yomizaka ne répond pas. Vérifiez votre connexion.",
+    "offline": "Verikora ne répond pas. Vérifiez votre connexion.",
     "error": "Une erreur est survenue. Réessayez dans un instant.",
     "loading": "Chargement…",
     "close": "Fermer"

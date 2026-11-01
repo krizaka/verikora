@@ -10,6 +10,7 @@ import type { Mailer } from "./mailer";
 import { type OwnerReport, ownerReportOf, shareDays, type ShareState, shareState } from "./owner-report";
 import { LAW_TIME_ZONE } from "./rulesets";
 import { addDays, hash, newToken } from "./screening";
+import { PRODUCT_NAME } from "@/lib/brand";
 
 /** The owner link of an applicant file's verification report (yomizaka#128): create, list, revoke by the file's manager; open by token. */
 
@@ -163,7 +164,7 @@ export async function emailShare(
     to,
     locale: input.locale,
     url: `${deps.origin}/${input.locale}/rapport/${input.token}`,
-    senderName: (owner.name?.trim() || "Yomizaka").slice(0, 80),
+    senderName: (owner.name?.trim() || PRODUCT_NAME).slice(0, 80),
     expiresOn: localDay(row.expires_at, LAW_TIME_ZONE),
     ...(message ? { message } : {}),
   });

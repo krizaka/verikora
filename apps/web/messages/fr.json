@@ -1,12 +1,12 @@
 {
   "meta": {
-    "siteName": "Yomizaka",
-    "titleTemplate": "{title} · Yomizaka",
-    "description": "Gestionnaires d'immeubles et propriétaires : Yomizaka lit le bail selon le Code civil du Québec, examine le talon de paie comme un fichier, et montre la ligne exacte derrière chaque constat."
+    "siteName": "Verikora",
+    "titleTemplate": "{title} · Verikora",
+    "description": "Gestionnaires d'immeubles et propriétaires : Verikora lit le bail selon le Code civil du Québec, examine le talon de paie comme un fichier, et montre la ligne exacte derrière chaque constat."
   },
   "chrome": {
-    "brandHome": "Yomizaka, accueil",
-    "navLabel": "Yomizaka",
+    "brandHome": "Verikora, accueil",
+    "navLabel": "Verikora",
     "nav": {
       "what": "Ce que ça fait",
       "proof": "Un cas réel",
@@ -29,7 +29,7 @@
     "download": "Télécharger",
     "openApp": "Ouvrir mes documents",
     "myDocuments": "Mes documents",
-    "tryIt": "Essayer Yomizaka",
+    "tryIt": "Essayer Verikora",
     "account": "Compte",
     "settings": "Réglages",
     "signOut": "Se déconnecter",
@@ -37,7 +37,7 @@
   },
   "landing": {
     "title": "Lisez avant de signer.",
-    "lead": "Pour les gestionnaires d’immeubles et les propriétaires qui évaluent des candidats au Québec : déposez le bail et les pièces du dossier. Yomizaka fait la vérification documentaire et le tri du dossier : il les lit selon des matrices d’extraction documentaire et des gabarits technologiques paramétrables, et vous montre la ligne exacte derrière chaque constat.",
+    "lead": "Pour les gestionnaires d’immeubles et les propriétaires qui évaluent des candidats au Québec : déposez le bail et les pièces du dossier. Verikora fait la vérification documentaire et le tri du dossier : il les lit selon des matrices d’extraction documentaire et des gabarits technologiques paramétrables, et vous montre la ligne exacte derrière chaque constat.",
     "status": {
       "label": "Statut",
       "development": "En développement : les inscriptions sont fermées pendant nos essais sur de vrais baux québécois.",
@@ -47,7 +47,7 @@
       "before": "Le bail",
       "after": "Le constat",
       "leaseCaption": "Une clause du bail, en évidence",
-      "findingCaption": "Ce que Yomizaka renvoie, avec sa source"
+      "findingCaption": "Ce que Verikora renvoie, avec sa source"
     },
     "signIn": "Se connecter",
     "openApp": "Ouvrir mes documents",
@@ -79,7 +79,7 @@
       "runLabel": "Numéro d'exécution",
       "dateLabel": "Enregistrée le",
       "rulesetLabel": "Règles du Québec",
-      "powered": "Propulsé par Orazaka.",
+      "powered": "Propulsé par Sovkora.",
       "owlLabel": "Ce que la chouette promet"
     },
     "who": {
@@ -95,7 +95,7 @@
     },
     "showcase": {
       "title": "L'app, telle qu'elle est",
-      "lead": "Trois écrans de Yomizaka, dessinés avec ses propres composants sur des données fictives. Rien ici n'est une capture d'écran.",
+      "lead": "Trois écrans de Verikora, dessinés avec ses propres composants sur des données fictives. Rien ici n'est une capture d'écran.",
       "demo": "Données fictives",
       "findings": {
         "title": "Chaque constat cite sa ligne",
@@ -131,11 +131,11 @@
   "privacy": {
     "title": "Confidentialité",
     "updated": "Mis à jour le {date}",
-    "body": "Vos documents vous appartiennent : gardés seulement si vous le choisissez, vérifiés par Orazaka, jamais vendus, jamais utilisés pour entraîner un modèle. Le détail, en courtes sections.",
+    "body": "Vos documents vous appartiennent : gardés seulement si vous le choisissez, vérifiés par Sovkora, jamais vendus, jamais utilisés pour entraîner un modèle. Le détail, en courtes sections.",
     "sections": [
       {
         "h": "Qui est responsable",
-        "p": "Krizaka, une entreprise établie à Montréal, publie Yomizaka. La personne responsable de la protection des renseignements personnels (Loi 25) peut être jointe par le formulaire de contact de krizaka.com. [À COMPLÉTER : titre et adresse directe du responsable.]"
+        "p": "Krizaka, une entreprise établie à Montréal, publie Verikora. La personne responsable de la protection des renseignements personnels (Loi 25) peut être jointe par le formulaire de contact de krizaka.com. [À COMPLÉTER : titre et adresse directe du responsable.]"
       },
       {
         "h": "Ce que nous recueillons et pourquoi",
@@ -143,11 +143,11 @@
       },
       {
         "h": "Où ils sont conservés",
-        "p": "Votre compte et vos vérifications sont dans une base de données à Toronto, au Canada, hors Québec. Les documents sont envoyés à Orazaka, le moteur d’analyse de Krizaka, par HTTPS pour être vérifiés. Un document gardé est stocké là où son panneau d’information le dit : aujourd’hui, à New York (États-Unis)."
+        "p": "Votre compte et vos vérifications sont dans une base de données à Toronto, au Canada, hors Québec. Les documents sont envoyés à Sovkora, le moteur d’analyse de Krizaka, par HTTPS pour être vérifiés. Un document gardé est stocké là où son panneau d’information le dit : aujourd’hui, à New York (États-Unis)."
       },
       {
         "h": "Qui les traite",
-        "p": "Orazaka, le moteur d’analyse de Krizaka, lit un document quand vous demandez une vérification, par HTTPS. Stripe traite le paiement. Notre fournisseur de base de données héberge votre compte à Toronto."
+        "p": "Sovkora, le moteur d’analyse de Krizaka, lit un document quand vous demandez une vérification, par HTTPS. Stripe traite le paiement. Notre fournisseur de base de données héberge votre compte à Toronto."
       },
       {
         "h": "Combien de temps nous les gardons",
@@ -177,7 +177,7 @@
       "documents": "Documents"
     },
     "signIn": {
-      "promise": "Vos documents, lus et vérifiés par Yomizaka.",
+      "promise": "Vos documents, lus et vérifiés par Verikora.",
       "asideFooter": "Chaque constat cite sa règle et la ligne sur laquelle il repose.",
       "title": "Connexion",
       "description": "Avec le compte que notre équipe vous a remis.",
@@ -185,7 +185,7 @@
       "password": "Mot de passe",
       "submit": "Se connecter",
       "closedTitle": "L'inscription est fermée.",
-      "closed": "Yomizaka est en développement ; les comptes sont créés par notre équipe.",
+      "closed": "Verikora est en développement ; les comptes sont créés par notre équipe.",
       "contact": "Nous parler",
       "legalPrefix": "En vous connectant, vous acceptez l'",
       "privacy": "avis de confidentialité",
@@ -242,7 +242,7 @@
         "none": "Aucune vérification ne correspond à cette recherche.",
         "chosen": "Vérification choisie : {kind}",
         "change": "Changer",
-        "listLabel": "Les vérifications que Yomizaka fait",
+        "listLabel": "Les vérifications que Verikora fait",
         "items": {
           "qc-residential-lease": {
             "title": "Bail de logement, Québec",
@@ -382,7 +382,7 @@
       },
       "check": {
         "title": "Vérifier un document",
-        "lead": "Déposez un bail, un contrat ou une facture : Yomizaka le lit et vous dit quoi regarder.",
+        "lead": "Déposez un bail, un contrat ou une facture : Verikora le lit et vous dit quoi regarder.",
         "import": "Importer un lot"
       },
       "dossiers": {
@@ -406,7 +406,7 @@
     },
     "shell": {
       "skip": "Aller au contenu",
-      "sidebarLabel": "Yomizaka",
+      "sidebarLabel": "Verikora",
       "closeMenu": "Fermer le menu",
       "openMenu": "Ouvrir le menu",
       "collapse": "Replier le menu",
@@ -461,11 +461,11 @@
       "refusedType": "{name} : seulement des PDF, des fichiers texte et des photos",
       "refusedCount": "{name} : trop de fichiers à la fois",
       "kindPick": "Quel document ?",
-      "kindUnsure": "Yomizaka n’a pas reconnu « {name} » avec certitude : dites quel document c’est, et la vérification démarre.",
+      "kindUnsure": "Verikora n’a pas reconnu « {name} » avec certitude : dites quel document c’est, et la vérification démarre.",
       "options": "Options",
       "informative": "Vérification informative, pas un avis juridique.",
       "kindHints": {
-        "auto": "Yomizaka le reconnaît",
+        "auto": "Verikora le reconnaît",
         "lease": "Loyer, durée, droits du locataire",
         "contract": "Clauses, obligations, pénalités",
         "invoice": "Montants, taxes, bénéficiaire",
@@ -473,7 +473,7 @@
       },
       "kindLabel": "Type des prochains documents",
       "lead": "Vos documents, par collection — et chaque rapport.",
-      "emptyPitch": "Déposez un bail, une fiche de paie ou une facture : Yomizaka le lit selon les règles du Québec et cite la ligne de chaque constat.",
+      "emptyPitch": "Déposez un bail, une fiche de paie ou une facture : Verikora le lit selon les règles du Québec et cite la ligne de chaque constat.",
       "tryExamples": "Ou essayez :",
       "dropAnywhere": "Déposez pour vérifier",
       "dropAnywhereHint": "PDF, Word, texte ou photo — 10 Mo",
@@ -570,7 +570,7 @@
       "failed": "Échec de la vérification"
     },
     "document": {
-      "reading": "Yomizaka lit le document…",
+      "reading": "Verikora lit le document…",
       "back": "Bibliothèque",
       "details": "Détails",
       "file": "Fichier",
@@ -587,7 +587,7 @@
       "deleteConfirm": "Supprimer définitivement",
       "deleted": "Supprimé.",
       "checks": "Vérifications",
-      "checksLead": "Chaque vérification est un run du moteur de Yomizaka (Orazaka) ; son identifiant est la trace de ce qui a tourné.",
+      "checksLead": "Chaque vérification est un run du moteur de Verikora (Sovkora) ; son identifiant est la trace de ce qui a tourné.",
       "passageOf": "Passage cité par {rule}",
       "loadingPdf": "Chargement du document…",
       "pdfFailed": "Le fichier n’a pas pu être affiché. Ouvrez-le avec le bouton ci-dessus.",
@@ -595,11 +595,11 @@
       "onPage": "Passage à la page {page} :",
       "notFound": "Ce passage n’est pas dans la couche de texte du PDF :",
       "checksLeadBy": {
-        "neutral": "Choisissez ce que Yomizaka doit lire : le texte au regard de la loi, ou le fichier PDF lui-même.",
+        "neutral": "Choisissez ce que Verikora doit lire : le texte au regard de la loi, ou le fichier PDF lui-même.",
         "tenant": "Avant de signer : le texte de votre bail au regard des règles du Québec, puis, si une pièce vous paraît douteuse, le fichier lui-même.",
         "landlord": "Avant d'envoyer : votre modèle de bail au regard des règles du Québec ; pour une pièce du locataire en PDF, l'examen du fichier lui-même.",
-        "freelancer": "Choisissez ce que Yomizaka lit : votre facture au regard des mentions obligatoires du Québec et du format des numéros de TPS et de TVQ, votre contrat de services au regard des règles fédérales sur l'intérêt et le droit d'auteur, ou le fichier PDF lui-même. Les règles du Code civil arrivent bientôt.",
-        "business": "Choisissez ce que Yomizaka lit : une facture de fournisseur au regard des mentions obligatoires du Québec et du format des numéros de TPS et de TVQ, ou le fichier PDF lui-même. Les règles des contrats arrivent bientôt."
+        "freelancer": "Choisissez ce que Verikora lit : votre facture au regard des mentions obligatoires du Québec et du format des numéros de TPS et de TVQ, votre contrat de services au regard des règles fédérales sur l'intérêt et le droit d'auteur, ou le fichier PDF lui-même. Les règles du Code civil arrivent bientôt.",
+        "business": "Choisissez ce que Verikora lit : une facture de fournisseur au regard des mentions obligatoires du Québec et du format des numéros de TPS et de TVQ, ou le fichier PDF lui-même. Les règles des contrats arrivent bientôt."
       },
       "tabs": {
         "rapport": "Rapport",
@@ -668,8 +668,8 @@
       "expectedIssuer": "Émetteur attendu (facultatif)",
       "expectedIssuerHint": "Qui devrait l'avoir produit, par exemple le nom de l'agence.",
       "run": "Lancer la vérification",
-      "running": "Yomizaka lit…",
-      "runId": "Run Orazaka",
+      "running": "Verikora lit…",
+      "runId": "Run Sovkora",
       "blueprint": "Version du Studio",
       "ruleset": "Règles",
       "started": "Lancé",
@@ -706,15 +706,15 @@
       "language": "Les rapports sont rédigés en français, la langue de leurs règles.",
       "history": "Runs précédents",
       "noPdf": "Seuls les fichiers PDF, Word (.docx) et OpenDocument (.odt) s'examinent en tant que fichiers.",
-      "tooLarge": "Yomizaka examine les fichiers jusqu'à 5 Mo.",
+      "tooLarge": "Verikora examine les fichiers jusqu'à 5 Mo.",
       "toReview": "Corpus québécois à faire relire par un avocat : un tri de démonstration, pas un avis juridique.",
       "showInFile": "Voir dans le fichier",
       "findingPage": "Page {page}",
       "findingPageOnly": "Page {page} (emplacement exact introuvable)",
       "findingNotFound": "Introuvable dans la couche de texte du fichier",
-      "orazakaRun": "Exécution Orazaka",
+      "orazakaRun": "Exécution Sovkora",
       "exportReport": "Rapport d’audit",
-      "exportHint": "Un rapport signé en fichier HTML et en PDF (les pages du rapport, puis une page de signature visible ; l'attestation est intégrée au fichier) : SHA-256 du document, version des règles, date, chaque constat avec son passage et son article, l'identifiant d'exécution Orazaka.",
+      "exportHint": "Un rapport signé en fichier HTML et en PDF (les pages du rapport, puis une page de signature visible ; l'attestation est intégrée au fichier) : SHA-256 du document, version des règles, date, chaque constat avec son passage et son article, l'identifiant d'exécution Sovkora.",
       "exportDownload": "Télécharger le rapport",
       "exportVerify": "Vérifier un rapport",
       "exportSha": "SHA-256 du rapport",
@@ -730,7 +730,7 @@
           "alteration": "Ce n'est pas un constat qu'un document a été modifié de mauvaise foi, et elle ne dit rien de la personne.",
           "ordinary": "Beaucoup d'étapes ordinaires laissent les mêmes traces : signer, remplir un formulaire, fusionner des pages, compresser, convertir depuis un courriel, réimprimer.",
           "absence": "Un document sans trace n'est pas déclaré authentique : un fichier refait de zéro n'en laisse aucune.",
-          "person": "Une personne décide. Yomizaka ne décide rien."
+          "person": "Une personne décide. Verikora ne décide rien."
         },
         "notExamined": "Non examiné : {list}.",
         "families": {
@@ -746,7 +746,7 @@
         "field": "Champ : {field}",
         "ordinaryLabel": "Explications ordinaires",
         "askForLabel": "Quoi demander",
-        "run": "Exécution Orazaka {runId}",
+        "run": "Exécution Sovkora {runId}",
         "answerLabel": "Explication de la personne, {date}",
         "ordinary": {
           "history": "Signer, remplir un formulaire, fusionner des pages, compresser le fichier ou le convertir depuis un courriel laissent les mêmes traces qu'une modification.",
@@ -882,19 +882,19 @@
       "UNREADABLE_FILE": "Ce fichier ne peut pas être ouvert : il est endommagé ou n’est pas un document valide.",
       "NO_TEXT": "Ce document n'a pas de couche texte à vérifier.",
       "TEXT_TOO_LONG": "Ce document dépasse ce que la vérification lit (60 000 caractères).",
-      "NOT_A_PDF": "Yomizaka examine les fichiers PDF, Word (.docx) et OpenDocument (.odt).",
-      "PDF_TOO_LARGE": "Yomizaka examine les fichiers jusqu'à 5 Mo.",
+      "NOT_A_PDF": "Verikora examine les fichiers PDF, Word (.docx) et OpenDocument (.odt).",
+      "PDF_TOO_LARGE": "Verikora examine les fichiers jusqu'à 5 Mo.",
       "ALREADY_RUNNING": "Cette vérification est déjà en cours.",
-      "EXTRACTING": "Yomizaka lit encore ce document. Réessayez dans un instant.",
-      "ORAZAKA_NOT_CONFIGURED": "La connexion à Orazaka n'est pas configurée.",
-      "ORAZAKA_UNAVAILABLE": "Orazaka n'a pas répondu. Réessayez dans un instant.",
-      "ORAZAKA_KEY": "Orazaka a refusé la clé de Yomizaka.",
-      "ORAZAKA_LOCKED": "Ce Studio n'est pas ouvert à Yomizaka sur Orazaka.",
-      "ORAZAKA_CREDITS": "Orazaka n'a plus de crédits pour cette vérification.",
-      "ORAZAKA_INPUT": "Orazaka a refusé le document tel qu'envoyé.",
-      "ORAZAKA_STUDIO_OLD": "Orazaka ne lit pas encore ce type de document sur le compte de Yomizaka.",
-      "ORAZAKA_NOT_FOUND": "Orazaka ne connaît pas ce run.",
-      "ORAZAKA_SHAPE": "La réponse d'Orazaka n'a pas pu être lue.",
+      "EXTRACTING": "Verikora lit encore ce document. Réessayez dans un instant.",
+      "ORAZAKA_NOT_CONFIGURED": "La connexion à Sovkora n'est pas configurée.",
+      "ORAZAKA_UNAVAILABLE": "Sovkora n'a pas répondu. Réessayez dans un instant.",
+      "ORAZAKA_KEY": "Sovkora a refusé la clé de Verikora.",
+      "ORAZAKA_LOCKED": "Ce Studio n'est pas ouvert à Verikora sur Sovkora.",
+      "ORAZAKA_CREDITS": "Sovkora n'a plus de crédits pour cette vérification.",
+      "ORAZAKA_INPUT": "Sovkora a refusé le document tel qu'envoyé.",
+      "ORAZAKA_STUDIO_OLD": "Sovkora ne lit pas encore ce type de document sur le compte de Verikora.",
+      "ORAZAKA_NOT_FOUND": "Sovkora ne connaît pas ce run.",
+      "ORAZAKA_SHAPE": "La réponse de Sovkora n'a pas pu être lue.",
       "BAD_REQUEST": "La demande n'est pas valide.",
       "INTERNAL": "Une erreur est survenue.",
       "NETWORK": "Le réseau n'a pas répondu.",
@@ -992,7 +992,7 @@
       "FAILED": "La vérification n'a pas abouti.",
       "CANCELLED": "La vérification a été annulée.",
       "REFUSED": "Ligne refusée.",
-      "ORAZAKA_BUSY": "Orazaka est occupé en ce moment. Le lot continue tout seul dès qu'il a de la place.",
+      "ORAZAKA_BUSY": "Sovkora est occupé en ce moment. Le lot continue tout seul dès qu'il a de la place.",
       "EXPORT_TOO_LARGE": "Les rapports de ce lot sont trop lourds pour une seule archive : exportez moins de lignes.",
       "NOT_ON_SALE": "Cette offre n’est pas en vente.",
       "PRICE_MISMATCH": "Ce prix est en cours de mise à jour. Réessayez dans un instant.",
@@ -1082,7 +1082,7 @@
         "overview": "Vue d'ensemble",
         "users": "Personnes",
         "documents": "Documents",
-        "runs": "Runs Orazaka",
+        "runs": "Runs Sovkora",
         "audit": "Journal d'audit",
         "dev": "DEV",
         "signOut": "Se déconnecter",
@@ -1103,7 +1103,7 @@
         "health": "Santé",
         "version": "Version",
         "database": "Base de données",
-        "orazaka": "Edge Orazaka",
+        "orazaka": "Edge Sovkora",
         "up": "Disponible",
         "down": "Injoignable",
         "accounts": "Comptes",
@@ -1111,12 +1111,12 @@
         "suspended": "suspendus",
         "documents": "Documents",
         "stored": "stockés",
-        "runs": "Runs Orazaka",
+        "runs": "Runs Sovkora",
         "lastRun": "Dernier run",
         "none": "Aucun pour l'instant"
       },
       "runs": {
-        "caption": "Runs Orazaka",
+        "caption": "Runs Sovkora",
         "studio": "Studio",
         "status": "Statut",
         "runId": "Identifiant du run",
@@ -1180,7 +1180,7 @@
         "deleteAccount": "Supprimer le compte et ses documents"
       },
       "signIn": {
-        "promise": "L'administration de Yomizaka.",
+        "promise": "L'administration de Verikora.",
         "asideFooter": "Administrateurs seulement, depuis une adresse autorisée.",
         "title": "Administration",
         "description": "Connectez-vous avec un compte administrateur."
@@ -1265,7 +1265,7 @@
         "pool": "Réserve de ce service : {busy} occupées sur {max} ({open} ouvertes)",
         "connections": "Connexions sur la base : {used} sur {max}",
         "poolNote": "{waiting} en attente. Une requête en attente signifie que la réserve est le goulot.",
-        "queue": "Analyses Orazaka",
+        "queue": "Analyses Sovkora",
         "status": {
           "running": "En cours",
           "succeeded": "Réussies",
@@ -1297,7 +1297,7 @@
       },
       "flows": {
         "title": "Parcours",
-        "lead": "Chaque parcours est une donnée : à qui il est offert, le Studio Orazaka et les jeux de règles de ses étapes, les consentements exigés, son prix. Une version publiée ne change jamais ; on l'active par environnement.",
+        "lead": "Chaque parcours est une donnée : à qui il est offert, le Studio Sovkora et les jeux de règles de ses étapes, les consentements exigés, son prix. Une version publiée ne change jamais ; on l'active par environnement.",
         "caption": "Les parcours",
         "columns": {
           "key": "Parcours",
@@ -1327,7 +1327,7 @@
           "leadFr": "Résumé (français)",
           "status": "Statut",
           "audiences": "Offert à",
-          "studios": "Studios Orazaka",
+          "studios": "Studios Sovkora",
           "compliance": "Contrôle de conformité (un jeu de règles par juridiction)",
           "authenticity": "Authenticité du document (le PDF examiné)",
           "jurisdictions": "Juridictions et leurs jeux de règles",
@@ -1441,7 +1441,7 @@
     },
     "share": {
       "title": "Qui peut vérifier ce rapport",
-      "hint": "Vous seul et les personnes avec qui vous le partagez, connectées avec un compte Yomizaka. Si l’adresse n’a pas encore de compte, l’invitation attend et est honorée dès que le compte existe.",
+      "hint": "Vous seul et les personnes avec qui vous le partagez, connectées avec un compte Verikora. Si l’adresse n’a pas encore de compte, l’invitation attend et est honorée dès que le compte existe.",
       "email": "Adresse courriel",
       "until": "Jusqu’au (facultatif)",
       "submit": "Partager",
@@ -1458,7 +1458,7 @@
     },
     "profile": {
       "title": "De quel côté du bail êtes-vous ?",
-      "lead": "Yomizaka adapte les vérifications proposées en premier et ses mots. Les règles, elles, sont les mêmes pour tous. Vous pouvez changer à tout moment dans les réglages.",
+      "lead": "Verikora adapte les vérifications proposées en premier et ses mots. Les règles, elles, sont les mêmes pour tous. Vous pouvez changer à tout moment dans les réglages.",
       "legend": "Votre rôle",
       "tenant": "Locataire",
       "landlord": "Propriétaire (locateur)",
@@ -1489,7 +1489,7 @@
       "sentTitle": "Vérifiez vos courriels",
       "sent": "Si cette adresse peut recevoir un message, un lien de confirmation est en route (valide 24 heures). Ouvrez-le pour activer votre compte.",
       "closedTitle": "L’inscription n’est pas encore ouverte.",
-      "closed": "Yomizaka n’accepte pas de nouveaux comptes pour le moment.",
+      "closed": "Verikora n’accepte pas de nouveaux comptes pour le moment.",
       "haveAccount": "Vous avez déjà un compte? Connectez-vous",
       "notice": "Vérification informative, ce n’est pas un avis juridique. Seuls les membres du Barreau du Québec peuvent donner un avis juridique.",
       "promise": "Un audit gratuit, puis payez à l’audit ou abonnez-vous."
@@ -1584,7 +1584,7 @@
       "source": "Source du texte",
       "sourcePhotoOcr": "photo, texte lu par reconnaissance de caractères, fiabilité {confidence} %",
       "sourcePhotoOcrPages": "{count} photos, texte lu par reconnaissance de caractères, fiabilité {confidence} %",
-      "sourcePhotoVision": "photo, texte lu par le modèle d'Orazaka (lecture d'image), exécution {runId}",
+      "sourcePhotoVision": "photo, texte lu par le modèle de Sovkora (lecture d'image), exécution {runId}",
       "sourceLow": "La lecture de cette photo est peu fiable. Vérifiez les montants, les dates et les noms avec votre document.",
       "originSoftware": "Dernier logiciel (indice, pas un verdict)",
       "originDevice": "Appareil",
@@ -1803,7 +1803,7 @@
         "cloudDisconnect": "Déconnecter",
         "cloudConnected": "Connecté à {cloud}. Vos documents gardés vont dans un dossier de l'application dans votre nuage.",
         "cloudWasDisconnected": "{cloud} a été déconnecté. Les documents gardés là ne peuvent plus être ouverts avant de le reconnecter ; les nouveaux vont au stockage de Krizaka.",
-        "cloudScope": "Vous vous connectez sur la page de votre fournisseur. Yomizaka ne voit que le dossier qu'il crée ; vous pouvez déconnecter à tout moment, et vos fichiers restent où ils sont.",
+        "cloudScope": "Vous vous connectez sur la page de votre fournisseur. Verikora ne voit que le dossier qu'il crée ; vous pouvez déconnecter à tout moment, et vos fichiers restent où ils sont.",
         "cloudResultConnected": "Votre nuage est connecté.",
         "cloudResultDenied": "La connexion n'a pas été autorisée, ou a été annulée. Rien n'a changé.",
         "cloudResultFailed": "La connexion n'a pas pu aboutir. Rien n'a changé : réessayez.",
@@ -1840,7 +1840,7 @@
       "invalid": "Ce lien est invalide ou a expiré."
     },
     "forgotPassword": {
-      "promise": "Vos documents, lus et vérifiés par Yomizaka.",
+      "promise": "Vos documents, lus et vérifiés par Verikora.",
       "title": "Mot de passe oublié ?",
       "description": "Saisissez votre adresse courriel. Si elle a un compte, nous envoyons un lien pour choisir un nouveau mot de passe.",
       "email": "Courriel",
@@ -1851,7 +1851,7 @@
       "mailOff": "L'envoi de courriels n'est pas encore disponible : un lien ne peut pas être envoyé. Parlez à notre équipe."
     },
     "resetPassword": {
-      "promise": "Vos documents, lus et vérifiés par Yomizaka.",
+      "promise": "Vos documents, lus et vérifiés par Verikora.",
       "title": "Choisir un nouveau mot de passe",
       "description": "Au moins 12 caractères. Vos autres sessions seront déconnectées.",
       "password": "Nouveau mot de passe",
@@ -1877,7 +1877,7 @@
         "plans": "Forfaits",
         "prices": "Prix",
         "packs": "Ensembles de règles",
-        "orazaka": "Orazaka",
+        "orazaka": "Sovkora",
         "organisation": "Organisation",
         "coupons": "Coupons"
       },
@@ -2075,7 +2075,7 @@
           },
           "batchConcurrency": {
             "label": "Vérifications d'un lot menées en même temps",
-            "hint": "Les autres attendent leur tour (Orazaka lance quelques vérifications à la fois pour tout le produit) ; une ligne en échec n'arrête jamais le lot."
+            "hint": "Les autres attendent leur tour (Sovkora lance quelques vérifications à la fois pour tout le produit) ; une ligne en échec n'arrête jamais le lot."
           },
           "batchTickSeconds": {
             "label": "Le serveur regarde les lots non terminés toutes les",
@@ -2655,8 +2655,8 @@
         "runs": "Exécutions lancées : {count}",
         "failed": "En échec : {count}",
         "cost": "Coût estimé : {amount}",
-        "notExposed": "Le forfait et l'usage vus par Orazaka ne sont pas encore exposés par son API : ils ne sont pas affichés plutôt que devinés.",
-        "rotate": "La rotation de la clé se fait dans Orazaka, puis dans le secret de l'application : elle n'est pas faite d'ici."
+        "notExposed": "Le forfait et l'usage vus par Sovkora ne sont pas encore exposés par son API : ils ne sont pas affichés plutôt que devinés.",
+        "rotate": "La rotation de la clé se fait dans Sovkora, puis dans le secret de l'application : elle n'est pas faite d'ici."
       },
       "organisation": {
         "owner": "Propriétaire",
@@ -2973,7 +2973,7 @@
       "import": "Importer un lot",
       "empty": {
         "title": "Aucune vérification encore",
-        "text": "Déposez un bail, une fiche de paie ou une facture : Yomizaka le lit selon les règles du Québec et le résultat arrive ici."
+        "text": "Déposez un bail, une fiche de paie ou une facture : Verikora le lit selon les règles du Québec et le résultat arrive ici."
       },
       "caption": "Vos vérifications",
       "runCopy": "Copier le run {id}",
@@ -3012,7 +3012,7 @@
       "unchecked": {
         "UNSUPPORTED_KIND": {
           "title": "Pas encore de règles pour ce type de document",
-          "hint": "Rien n'a été vérifié : Yomizaka n'a pas encore de règles pour ce type de document. Ce n'est pas un résultat sans problème."
+          "hint": "Rien n'a été vérifié : Verikora n'a pas encore de règles pour ce type de document. Ce n'est pas un résultat sans problème."
         },
         "KIND_UNKNOWN": {
           "title": "Impossible de dire de quel type de document il s'agit",
@@ -3037,7 +3037,7 @@
       "oneRun": "Une seule exécution pour l’instant.",
       "notChecked": "Pas encore vérifié",
       "notCheckedText": "Lancez une vérification : le verdict d’abord, puis chaque constat avec sa ligne.",
-      "fileAndText": "Le fichier, son texte, et ce que Yomizaka y a lu.",
+      "fileAndText": "Le fichier, son texte, et ce que Verikora y a lu.",
       "seeInFile": "Voir dans le fichier",
       "more": "Détails",
       "downloadReport": "Télécharger le rapport",
@@ -3109,8 +3109,8 @@
         "failed": "En échec",
         "refused": "Refusé"
       },
-      "engineBusy": "Orazaka est occupé par d'autres vérifications : les lignes restantes attendent leur tour et démarrent toutes seules. Rien à faire.",
-      "exportReadme": "Yomizaka — rapports d'un lot de vérifications.\n\nlot.csv liste chaque ligne : son état, la raison quand elle n'a pas été vérifiée, et son fichier ici.\nrapports/ contient le PDF signé de chaque vérification de conformité.\nsignaux/ contient les signaux de chaque vérification d'authenticité, tels qu'Orazaka les a rendus.\n\nCe sont des vérifications informatives, pas un avis juridique. Pour vérifier un rapport signé, connectez-vous à Yomizaka et ouvrez https://www.yomizaka.com/app/verifications/report (seules les personnes à qui le propriétaire du rapport a donné accès le peuvent).\nLes règles du Québec restent à faire relire par un avocat.\n",
+      "engineBusy": "Sovkora est occupé par d'autres vérifications : les lignes restantes attendent leur tour et démarrent toutes seules. Rien à faire.",
+      "exportReadme": "Verikora — rapports d'un lot de vérifications.\n\nlot.csv liste chaque ligne : son état, la raison quand elle n'a pas été vérifiée, et son fichier ici.\nrapports/ contient le PDF signé de chaque vérification de conformité.\nsignaux/ contient les signaux de chaque vérification d'authenticité, tels qu'Sovkora les a rendus.\n\nCe sont des vérifications informatives, pas un avis juridique. Pour vérifier un rapport signé, connectez-vous à Verikora et ouvrez https://www.yomizaka.com/app/verifications/report (seules les personnes à qui le propriétaire du rapport a donné accès le peuvent).\nLes règles du Québec restent à faire relire par un avocat.\n",
       "exportZip": "Rapports (ZIP)"
     },
     "notFound": {
@@ -3162,7 +3162,7 @@
       },
       "empty": {
         "title": "Aucun dossier pour l'instant",
-        "text": "Demandez ses documents à un candidat : Yomizaka vérifie chacun, et vous décidez."
+        "text": "Demandez ses documents à un candidat : Verikora vérifie chacun, et vous décidez."
       },
       "form": {
         "title": "Demander des documents",
@@ -3445,8 +3445,8 @@
   },
   "report": {
     "title": "Rapport d’audit — {name}",
-    "eyebrow": "Yomizaka · rapport d’audit de conformité",
-    "disclaimer": "Vérification informative, ce n’est pas un avis juridique. Yomizaka fait la vérification documentaire et le tri d’un dossier avec des matrices d’extraction documentaire et des gabarits technologiques paramétrables, des outils techniques validés par le conseiller juridique du client; ce n’est pas une opinion juridique, et seuls les membres du Barreau du Québec peuvent donner un avis juridique. Un résultat n’est jamais une garantie de conformité.",
+    "eyebrow": "Verikora · rapport d’audit de conformité",
+    "disclaimer": "Vérification informative, ce n’est pas un avis juridique. Verikora fait la vérification documentaire et le tri d’un dossier avec des matrices d’extraction documentaire et des gabarits technologiques paramétrables, des outils techniques validés par le conseiller juridique du client; ce n’est pas une opinion juridique, et seuls les membres du Barreau du Québec peuvent donner un avis juridique. Un résultat n’est jamais une garantie de conformité.",
     "summary": "{failures} manquement(s) bloquant(s) sur {rules} règles vérifiées.",
     "toReview": "Règles du Québec encore à faire réviser par un avocat : un rapport de démonstration, pas un avis juridique.",
     "documentHeading": "Le document",
@@ -3455,7 +3455,7 @@
     "size": "Taille",
     "documentSha": "SHA-256 du document",
     "engine": "Moteur d’analyse",
-    "runId": "Exécution Orazaka",
+    "runId": "Exécution Sovkora",
     "jurisdiction": "Juridiction",
     "asOf": "Règles en vigueur le",
     "ruleset": "Version des règles",
@@ -3475,10 +3475,10 @@
       "NOT_APPLICABLE": "Ne s'applique pas"
     },
     "guaranteeHeading": "Ce que ce rapport garantit",
-    "guarantees": "Ce rapport est signé avec la clé de Yomizaka (Ed25519, détenue par Krizaka). La signature couvre le SHA-256 du document, la juridiction et la version des règles, le Studio et sa version, l’identifiant d’exécution Orazaka, la date de la vérification, chaque constat avec son passage et son article, et le texte complet de ce rapport. Si un seul caractère de ce fichier change, la vérification échoue.",
-    "notGuaranteed": "Elle ne prouve pas que les constats sont justes en droit : Orazaka applique les matrices d’extraction, celles du Québec restent à faire réviser par un avocat, et ce n’est pas un avis juridique. Elle ne prouve pas que l’exécution existe chez Orazaka (seul son exploitant peut le dire), ni quand le rapport a été établi au-delà des dates de vérification ci-dessus : il n’y a ni horodatage indépendant ni chaîne de blocs. Ce à quoi vous faites confiance, c’est Krizaka, détentrice de la clé de signature.",
-    "howToVerify": "Pour le vérifier, connectez-vous à Yomizaka et ouvrez {url} — seules les personnes à qui le propriétaire du rapport a donné accès le peuvent, avec leur compte Yomizaka. Donnez-lui ce fichier et, pour confirmer quel document a été vérifié, le document d’origine.",
-    "footer": "Yomizaka, un produit Krizaka — analyse par Orazaka.",
+    "guarantees": "Ce rapport est signé avec la clé de Verikora (Ed25519, détenue par Krizaka). La signature couvre le SHA-256 du document, la juridiction et la version des règles, le Studio et sa version, l’identifiant d’exécution Sovkora, la date de la vérification, chaque constat avec son passage et son article, et le texte complet de ce rapport. Si un seul caractère de ce fichier change, la vérification échoue.",
+    "notGuaranteed": "Elle ne prouve pas que les constats sont justes en droit : Sovkora applique les matrices d’extraction, celles du Québec restent à faire réviser par un avocat, et ce n’est pas un avis juridique. Elle ne prouve pas que l’exécution existe chez Sovkora (seul son exploitant peut le dire), ni quand le rapport a été établi au-delà des dates de vérification ci-dessus : il n’y a ni horodatage indépendant ni chaîne de blocs. Ce à quoi vous faites confiance, c’est Krizaka, détentrice de la clé de signature.",
+    "howToVerify": "Pour le vérifier, connectez-vous à Verikora et ouvrez {url} — seules les personnes à qui le propriétaire du rapport a donné accès le peuvent, avec leur compte Verikora. Donnez-lui ce fichier et, pour confirmer quel document a été vérifié, le document d’origine.",
+    "footer": "Verikora, un produit Krizaka — analyse par Sovkora.",
     "signatureHeading": "Page de signature",
     "signatureKey": "Clé de signature",
     "signatureAlgorithm": "Algorithme",
@@ -3490,7 +3490,7 @@
   },
   "verify": {
     "title": "Vérifier un rapport",
-    "lead": "Vérifiez qu’un rapport d’audit vient bien de Yomizaka et n’a pas été modifié. Réservé aux membres, pour un rapport qui est à vous ou dont on vous a donné l’accès.",
+    "lead": "Vérifiez qu’un rapport d’audit vient bien de Verikora et n’a pas été modifié. Réservé aux membres, pour un rapport qui est à vous ou dont on vous a donné l’accès.",
     "reportFile": "Le rapport (le fichier .html ou .pdf)",
     "reportPaste": "Ou collez son texte",
     "documentFile": "Le document d’origine (facultatif)",
@@ -3502,19 +3502,19 @@
     "okTitle": "Ce rapport est authentique et n’a pas été modifié.",
     "failTitle": "On ne peut pas se fier à ce rapport.",
     "reasons": {
-      "NOT_A_REPORT": "Ce n’est pas un rapport d’audit de Yomizaka : il n’a pas de bloc de signature.",
-      "UNREADABLE": "Le bloc de signature est abîmé ou dans un format que Yomizaka ne connaît pas.",
+      "NOT_A_REPORT": "Ce n’est pas un rapport d’audit de Verikora : il n’a pas de bloc de signature.",
+      "UNREADABLE": "Le bloc de signature est abîmé ou dans un format que Verikora ne connaît pas.",
       "BAD_SIGNATURE": "La signature ne correspond pas au contenu : le rapport a été modifié ou signé par une autre clé.",
       "ALTERED": "La signature est valide pour le rapport d’origine, mais le fichier n’est plus ce rapport : quelque chose a été changé après la signature.",
       "UNKNOWN_KEY": "Il a été signé par une clé qui n’est pas celle de ce serveur.",
-      "UNKNOWN_SCHEMA": "Ce rapport est dans un format que Yomizaka ne vérifie pas.",
+      "UNKNOWN_SCHEMA": "Ce rapport est dans un format que Verikora ne vérifie pas.",
       "SPECIMEN": "Ce rapport est un spécimen : il ne prouve rien."
     },
     "facts": {
       "fileSha": "SHA-256 de ce fichier",
       "keyId": "Clé de signature",
       "documentSha": "SHA-256 du document",
-      "runId": "Exécution Orazaka",
+      "runId": "Exécution Sovkora",
       "ruleset": "Règles",
       "checked": "Vérification terminée",
       "findings": "Constats",
@@ -3529,14 +3529,14 @@
     },
     "guaranteesTitle": "Ce que garantit un résultat vert",
     "guarantees": {
-      "a": "Le rapport a été produit par la clé de signature de Yomizaka, et pas un caractère n’a changé depuis.",
-      "b": "Une seule signature lie le SHA-256 du document, la juridiction et la version des règles, le Studio et sa version, l’identifiant d’exécution Orazaka, les dates de vérification et chaque constat avec son passage et son article.",
+      "a": "Le rapport a été produit par la clé de signature de Verikora, et pas un caractère n’a changé depuis.",
+      "b": "Une seule signature lie le SHA-256 du document, la juridiction et la version des règles, le Studio et sa version, l’identifiant d’exécution Sovkora, les dates de vérification et chaque constat avec son passage et son article.",
       "c": "Avec le document d’origine, on sait que c’est bien celui qui a été vérifié."
     },
     "limitsTitle": "Ce qu’il ne garantit pas",
     "limits": {
-      "a": "Que les constats sont justes en droit : Orazaka applique des matrices d’extraction documentaire et des gabarits technologiques, et ceux du Québec restent à faire réviser par un avocat. Ce n’est pas un avis juridique.",
-      "b": "Que l’exécution existe chez Orazaka : seul son exploitant peut confirmer un identifiant d’exécution.",
+      "a": "Que les constats sont justes en droit : Sovkora applique des matrices d’extraction documentaire et des gabarits technologiques, et ceux du Québec restent à faire réviser par un avocat. Ce n’est pas un avis juridique.",
+      "b": "Que l’exécution existe chez Sovkora : seul son exploitant peut confirmer un identifiant d’exécution.",
       "c": "Quand le rapport a été établi, au-delà des dates de vérification qu’il indique : il n’y a pas d’horodatage indépendant.",
       "d": "Rien sur le détenteur de la clé : vous faites confiance à Krizaka pour la garder. Ni chaîne de blocs ni tiers."
     },
@@ -3567,13 +3567,13 @@
       "whyTitle": "Pourquoi",
       "why": "Pour vérifier que les documents correspondent à la demande et sont cohérents entre eux. Le rapport est seulement informatif : ce n'est pas un avis juridique, et une personne chez le propriétaire décide.",
       "whoTitle": "Qui le voit",
-      "who": "Le propriétaire qui demande la vérification voit le rapport. Yomizaka et son sous-traitant pour l'analyse (Orazaka) traitent le fichier pour l'exécuter. Personne d'autre. [À RÉVISER PAR L'AVOCAT]",
+      "who": "Le propriétaire qui demande la vérification voit le rapport. Verikora et son sous-traitant pour l'analyse (Sovkora) traitent le fichier pour l'exécuter. Personne d'autre. [À RÉVISER PAR L'AVOCAT]",
       "howLongTitle": "Combien de temps c'est conservé",
       "howLong": "Par défaut, un document est supprimé dès que sa vérification est terminée. Si vous consentez à le garder (« Garder mes documents jusqu'à la décision du propriétaire »), il est gardé jusqu'à la décision du propriétaire, puis supprimé. Un résultat est supprimé {days} jours après avoir été donné. Vous pouvez toujours en demander la suppression. [À RÉVISER PAR L'AVOCAT]",
       "askTitle": "Comment demander la suppression",
       "ask": "Utilisez l'action « Supprimer mes documents » du lien que vous avez reçu. Elle supprime immédiatement vos documents et le résultat, et ne garde qu'une trace sans renseignement personnel. Vous pouvez aussi retirer un consentement ici, et demander l'accès à vos renseignements ou leur rectification.",
       "examinedTitle": "Comment vos documents sont examinés",
-      "examined": "Chaque document est aussi examiné comme un fichier : la façon dont il a été enregistré et, pour certains, si ses chiffres concordent. Quand quelque chose est remarqué, vous le voyez ici, dans les mêmes mots que le propriétaire, et vous pouvez ajouter une explication à côté. Le rapport dit ce qui a été observé; il ne conclut rien sur un document ni sur vous, et Yomizaka ne décide de rien : c'est une personne chez le propriétaire.",
+      "examined": "Chaque document est aussi examiné comme un fichier : la façon dont il a été enregistré et, pour certains, si ses chiffres concordent. Quand quelque chose est remarqué, vous le voyez ici, dans les mêmes mots que le propriétaire, et vous pouvez ajouter une explication à côté. Le rapport dit ce qui a été observé; il ne conclut rien sur un document ni sur vous, et Verikora ne décide de rien : c'est une personne chez le propriétaire.",
       "notAsked": "Jamais demandés : votre numéro d'assurance sociale (NAS), les renseignements de votre carte ou de votre compte bancaire, vos renseignements de santé ou familiaux.",
       "law": "Le présent avis suit la Loi sur la protection des renseignements personnels dans le secteur privé (Québec, telle que modifiée par la Loi 25). Ce n'est pas un avis juridique."
     },
@@ -3789,7 +3789,7 @@
       "undertaking": "Je m'engage à n'utiliser ces vérifications que pour évaluer une candidature à un logement, à ne demander que ce qui est nécessaire, et à ne jamais refuser un candidat pour un motif discriminatoire (Charte des droits et libertés de la personne ; C.c.Q., art. 1899). Je sais qu'un candidat peut refuser ou contester, et que le refus de fournir un renseignement non nécessaire n'est pas un motif de rejet.",
       "accept": "J'accepte l'engagement",
       "lawfulTitle": "Ce que la loi vous permet de demander",
-      "lawful": "Le nom, l'adresse actuelle, une pièce d'identité regardée sans en garder copie, les coordonnées du locateur précédent, et — avec son consentement — un rapport de crédit. Pas de numéro d'assurance sociale, de coordonnées bancaires, d'employeur ni de salaire. Yomizaka ne propose aucune vérification d'antécédents judiciaires.",
+      "lawful": "Le nom, l'adresse actuelle, une pièce d'identité regardée sans en garder copie, les coordonnées du locateur précédent, et — avec son consentement — un rapport de crédit. Pas de numéro d'assurance sociale, de coordonnées bancaires, d'employeur ni de salaire. Verikora ne propose aucune vérification d'antécédents judiciaires.",
       "name": "Nom du candidat",
       "email": "Courriel du candidat",
       "scope": "Ce qui sera vérifié",
@@ -3824,11 +3824,11 @@
   },
   "terms": {
     "title": "Conditions d’utilisation",
-    "status": "Version rédigée de bonne foi à partir de la loi, en attente de relecture par l’avocat avant l’ouverture publique de Yomizaka ; la politique de remboursement d’un audit à l’unité n’est pas définitive. En cas de doute, le français fait foi.",
+    "status": "Version rédigée de bonne foi à partir de la loi, en attente de relecture par l’avocat avant l’ouverture publique de Verikora ; la politique de remboursement d’un audit à l’unité n’est pas définitive. En cas de doute, le français fait foi.",
     "sections": [
       {
-        "h": "Ce qu’est Yomizaka",
-        "p": "Yomizaka compare un document que vous lui remettez (un bail, une facture, un contrat de services) à des règles publiées et vous dit, point par point, ce qu’il a trouvé, en citant votre document. C’est une vérification informative. Ce n’est pas une opinion juridique et cela ne remplace pas un avocat : seuls les membres du Barreau du Québec peuvent donner un avis juridique au Québec. Un résultat n’est jamais une garantie qu’un document est légal ou valide."
+        "h": "Ce qu’est Verikora",
+        "p": "Verikora compare un document que vous lui remettez (un bail, une facture, un contrat de services) à des règles publiées et vous dit, point par point, ce qu’il a trouvé, en citant votre document. C’est une vérification informative. Ce n’est pas une opinion juridique et cela ne remplace pas un avocat : seuls les membres du Barreau du Québec peuvent donner un avis juridique au Québec. Un résultat n’est jamais une garantie qu’un document est légal ou valide."
       },
       {
         "h": "Votre compte",
@@ -3836,7 +3836,7 @@
       },
       {
         "h": "Prix et taxes",
-        "p": "Après l’audit gratuit, un audit coûte le prix affiché au paiement, en dollars canadiens, ou vous vous abonnez au forfait Pro. La taxe sur les produits et services (TPS) et la taxe de vente du Québec (TVQ) sont ajoutées au paiement et figurent sur votre facture avec les numéros d’inscription de Krizaka. Le paiement est traité par Stripe; Yomizaka ne voit jamais votre numéro de carte."
+        "p": "Après l’audit gratuit, un audit coûte le prix affiché au paiement, en dollars canadiens, ou vous vous abonnez au forfait Pro. La taxe sur les produits et services (TPS) et la taxe de vente du Québec (TVQ) sont ajoutées au paiement et figurent sur votre facture avec les numéros d’inscription de Krizaka. Le paiement est traité par Stripe; Verikora ne voit jamais votre numéro de carte."
       },
       {
         "h": "Remboursements et annulation",
@@ -3844,11 +3844,11 @@
       },
       {
         "h": "Vos documents",
-        "p": "Vos documents sont conservés dans votre compte seulement et sont envoyés à Orazaka, le moteur d’analyse de Krizaka, pour être vérifiés. Voyez l’avis de confidentialité pour la conservation, vos droits et la façon de joindre notre responsable."
+        "p": "Vos documents sont conservés dans votre compte seulement et sont envoyés à Sovkora, le moteur d’analyse de Krizaka, pour être vérifiés. Voyez l’avis de confidentialité pour la conservation, vos droits et la façon de joindre notre responsable."
       },
       {
         "h": "Propriété intellectuelle et droit d’utilisation",
-        "p": "Yomizaka, ses logiciels, ses ensembles de règles de vérification, la mise en page de ses rapports, ses noms, ses oiseaux et ses marques appartiennent à Technologies Krizaka Inc. ou à ses concédants ; ces conditions ne vous cèdent aucun de ces droits (Loi sur le droit d’auteur, L.R.C. (1985), c. C-42). Pour la durée de votre abonnement seulement, vous recevez un droit personnel, non exclusif, non cessible et non sous-licenciable d’utiliser le service hébergé ; l’audit gratuit et les audits à l’unité vous donnent le même droit pour le résultat que vous obtenez. Vos documents restent les vôtres : vous nous autorisez seulement à les traiter pour fournir la vérification. Le code source de Yomizaka est publié sous sa propre licence, indiquée dans son dépôt : ces conditions régissent le service hébergé, cette licence régit le code, et rien ici ne retire ce que la licence vous permet."
+        "p": "Verikora, ses logiciels, ses ensembles de règles de vérification, la mise en page de ses rapports, ses noms, ses oiseaux et ses marques appartiennent à Technologies Krizaka Inc. ou à ses concédants ; ces conditions ne vous cèdent aucun de ces droits (Loi sur le droit d’auteur, L.R.C. (1985), c. C-42). Pour la durée de votre abonnement seulement, vous recevez un droit personnel, non exclusif, non cessible et non sous-licenciable d’utiliser le service hébergé ; l’audit gratuit et les audits à l’unité vous donnent le même droit pour le résultat que vous obtenez. Vos documents restent les vôtres : vous nous autorisez seulement à les traiter pour fournir la vérification. Le code source de Verikora est publié sous sa propre licence, indiquée dans son dépôt : ces conditions régissent le service hébergé, cette licence régit le code, et rien ici ne retire ce que la licence vous permet."
       },
       {
         "h": "Usages interdits",
@@ -3856,11 +3856,11 @@
       },
       {
         "h": "Noms et marques",
-        "p": "Les noms et les logos de Yomizaka et de Krizaka, et leurs oiseaux, sont des marques de Technologies Krizaka Inc. (Loi sur les marques de commerce, L.R.C. (1985), c. T-13). Ces conditions, comme la licence du code, n’accordent aucun droit sur ces marques ; leur usage est encadré par la politique publiée à https://github.com/krizaka/.github/blob/main/TRADEMARKS.md."
+        "p": "Les noms et les logos de Verikora et de Krizaka, et leurs oiseaux, sont des marques de Technologies Krizaka Inc. (Loi sur les marques de commerce, L.R.C. (1985), c. T-13). Ces conditions, comme la licence du code, n’accordent aucun droit sur ces marques ; leur usage est encadré par la politique publiée à https://github.com/krizaka/.github/blob/main/TRADEMARKS.md."
       },
       {
         "h": "Limitation de responsabilité",
-        "p": "Nous répondons de nos fautes. Yomizaka fournit une vérification informative : nous ne sommes pas responsables d’une décision que vous prenez ou ne prenez pas à partir d’un résultat (signer, refuser ou modifier un bail, retenir ou refuser un locataire), d’un document inexact ou incomplet que vous nous remettez, ni d’une interruption du service qui ne tient pas à notre faute. Sauf faute intentionnelle ou lourde, notre responsabilité totale envers vous pour un même fait est limitée aux sommes que vous avez payées à Yomizaka pendant les 12 mois précédant le fait, et nous ne répondons pas des dommages indirects (perte de profit, perte d’occasion). Aucune de ces limites ne s’applique à une faute intentionnelle ou lourde, ni à un préjudice corporel ou moral (art. 1474 C.c.Q.), ni à ce qu’un consommateur ne peut pas écarter (art. 10 de la Loi sur la protection du consommateur). Elles s’appliquent dans la mesure permise par la loi, notamment les articles 1435 à 1437 C.c.Q. sur les clauses d’un contrat d’adhésion."
+        "p": "Nous répondons de nos fautes. Verikora fournit une vérification informative : nous ne sommes pas responsables d’une décision que vous prenez ou ne prenez pas à partir d’un résultat (signer, refuser ou modifier un bail, retenir ou refuser un locataire), d’un document inexact ou incomplet que vous nous remettez, ni d’une interruption du service qui ne tient pas à notre faute. Sauf faute intentionnelle ou lourde, notre responsabilité totale envers vous pour un même fait est limitée aux sommes que vous avez payées à Verikora pendant les 12 mois précédant le fait, et nous ne répondons pas des dommages indirects (perte de profit, perte d’occasion). Aucune de ces limites ne s’applique à une faute intentionnelle ou lourde, ni à un préjudice corporel ou moral (art. 1474 C.c.Q.), ni à ce qu’un consommateur ne peut pas écarter (art. 10 de la Loi sur la protection du consommateur). Elles s’appliquent dans la mesure permise par la loi, notamment les articles 1435 à 1437 C.c.Q. sur les clauses d’un contrat d’adhésion."
       },
       {
         "h": "Droit applicable et tribunaux",
@@ -3874,7 +3874,7 @@
   },
   "download": {
     "title": "Télécharger",
-    "lead": "Yomizaka sur votre téléphone et votre Mac. Vos documents restent sur votre appareil ; seul ce qu'une vérification demande est envoyé, puis effacé.",
+    "lead": "Verikora sur votre téléphone et votre Mac. Vos documents restent sur votre appareil ; seul ce qu'une vérification demande est envoyé, puis effacé.",
     "soon": "Bientôt",
     "get": "Télécharger",
     "platforms": {
@@ -3957,7 +3957,7 @@
       "data": "Vos données"
     },
     "check": {
-      "intro": "Une vérification lit un document et dit ce qu'elle y a trouvé. Yomizaka ne juge pas le document lui-même : chaque vérification est une exécution d'Orazaka, le moteur d'analyse de Krizaka, et son identifiant est conservé avec le rapport.",
+      "intro": "Une vérification lit un document et dit ce qu'elle y a trouvé. Verikora ne juge pas le document lui-même : chaque vérification est une exécution de Sovkora, le moteur d'analyse de Krizaka, et son identifiant est conservé avec le rapport.",
       "kindsTitle": "Deux sortes de vérification",
       "compliance": "La conformité lit le texte d'un document à la lumière des règles d'un territoire (le Québec par défaut pour un bail résidentiel).",
       "authenticity": "L'authenticité examine le fichier lui-même, en tant que fichier : son producteur, ses dates et ses enregistrements successifs.",
@@ -3990,7 +3990,7 @@
       "statusLead": "Ces réponses sont données par plusieurs routes ; le tableau des routes liste les autres.",
       "errorShapeLabel": "Corps d'une erreur",
       "webhooksTitle": "Webhooks",
-      "webhooks": "Plutôt que d'interroger, enregistrez un point d'accès https dans votre compte et Yomizaka l'appelle quand le travail se termine. Chaque requête porte un nom d'événement, un identifiant d'événement stable (appliquez un événement une seule fois) et une signature. Une charge contient des identifiants et des états, jamais un document ni un rapport.",
+      "webhooks": "Plutôt que d'interroger, enregistrez un point d'accès https dans votre compte et Verikora l'appelle quand le travail se termine. Chaque requête porte un nom d'événement, un identifiant d'événement stable (appliquez un événement une seule fois) et une signature. Une charge contient des identifiants et des états, jamais un document ni un rapport.",
       "signatureTitle": "Vérifier la signature",
       "signature": "L'en-tête x-krizaka-signature a ce format. HEX est le HMAC-SHA256, avec le secret de votre point d'accès, de l'horodatage, d'un point et du corps brut. Refusez une requête dont la signature ne correspond pas.",
       "signatureLabel": "Signature",
@@ -4000,7 +4000,7 @@
     "data": {
       "intro": "Votre compte et vos vérifications sont gardés dans une base de données à Toronto, au Canada, visibles par votre seul compte. Un document n'est conservé que si vous le choisissez, et son panneau d'information dit où.",
       "retention": "Un document conservé reste jusqu'à ce que vous le supprimiez ; le supprimer efface son fichier, son texte et ses résultats, et fermer votre compte supprime vos documents.",
-      "orazaka": "Quand vous demandez une vérification, le document est envoyé à Orazaka, le moteur d'analyse de Krizaka, par HTTPS. Rien n'est vendu, partagé ni utilisé pour entraîner un modèle.",
+      "orazaka": "Quand vous demandez une vérification, le document est envoyé à Sovkora, le moteur d'analyse de Krizaka, par HTTPS. Rien n'est vendu, partagé ni utilisé pour entraîner un modèle.",
       "privacy": "Lire l'avis de confidentialité"
     }
   },
@@ -4087,7 +4087,7 @@
       "refusal": "Vous avez un mois à compter de la réception de cet avis pour refuser l’augmentation ; le locateur peut alors demander au Tribunal administratif du logement de fixer le loyer.",
       "window": "Avis donné entre le {opens} et le {closes} ({citation}).",
       "signature": "Nom et signature du locateur : ____________    Date : ____________",
-      "disclaimer": "Préparé avec Yomizaka à titre informatif, ce n’est pas un avis juridique. Le locateur le vérifie, le signe et l’envoie lui-même : Yomizaka n’envoie rien au nom de quiconque."
+      "disclaimer": "Préparé avec Verikora à titre informatif, ce n’est pas un avis juridique. Le locateur le vérifie, le signe et l’envoie lui-même : Verikora n’envoie rien au nom de quiconque."
     }
   },
   "stage": {
@@ -4095,7 +4095,7 @@
     "message": "Les données peuvent être réinitialisées à tout moment. Ce n'est pas encore une offre commerciale."
   },
   "contractSeal": {
-    "eyebrow": "Yomizaka — sceau d’un contrat",
+    "eyebrow": "Verikora — sceau d’un contrat",
     "partner": "Partenaire",
     "contractId": "Contrat",
     "documentType": "Type de document",
@@ -4111,9 +4111,9 @@
     "sealedAt": "Scellé le",
     "zone": "Zone des données",
     "guaranteeHeading": "Ce que ce sceau dit",
-    "guarantees": "Ce fichier est scellé avec la clé de Yomizaka (Ed25519, détenue par Krizaka) : il atteste que ce contenu, ces parties et ces dates existaient sous cette forme au moment du scellement et n’ont pas été modifiés depuis.",
-    "notGuaranteed": "Il ne vérifie ni l’identité de quiconque, ni l’âge de quiconque, ni la validité du contrat en droit, ni les déclarations du partenaire : Yomizaka vérifie des documents, il ne décide pas. Informatif, pas un avis juridique.",
-    "verify": "Pour vérifier une copie, prenez son SHA-256 et ouvrez {url} suivi de cette valeur : la réponse dit si Yomizaka l’a scellée et quand, sans montrer aucun renseignement personnel."
+    "guarantees": "Ce fichier est scellé avec la clé de Verikora (Ed25519, détenue par Krizaka) : il atteste que ce contenu, ces parties et ces dates existaient sous cette forme au moment du scellement et n’ont pas été modifiés depuis.",
+    "notGuaranteed": "Il ne vérifie ni l’identité de quiconque, ni l’âge de quiconque, ni la validité du contrat en droit, ni les déclarations du partenaire : Verikora vérifie des documents, il ne décide pas. Informatif, pas un avis juridique.",
+    "verify": "Pour vérifier une copie, prenez son SHA-256 et ouvrez {url} suivi de cette valeur : la réponse dit si Verikora l’a scellée et quand, sans montrer aucun renseignement personnel."
   },
   "ownerReport": {
     "title": "Rapport de vérification",
@@ -4132,7 +4132,7 @@
     "findings": "Règles vérifiées",
     "noFindings": "Aucune règle n'a été vérifiée sur ce document.",
     "notExamined": "Non examiné",
-    "runs": "Exécutions Orazaka",
+    "runs": "Exécutions Sovkora",
     "run": "{studio}, exécution {runId}, version {version}",
     "versionNone": "non précisée",
     "ruleset": "Jeu de règles {id} version {version} ({jurisdiction})",
@@ -4140,10 +4140,10 @@
     "limits": "Ce que ce rapport ne montre pas : les documents eux-mêmes, le nom ou les coordonnées de la personne, toute cote ou tout classement. Les signaux sont des observations sur un fichier, jamais un jugement sur une personne.",
     "download": "Télécharger le PDF signé",
     "expires": "Ce lien est valable jusqu’au {date}.",
-    "guarantees": "Ce PDF est signé avec la clé de Yomizaka (Ed25519, détenue par Krizaka). La signature couvre chaque élément de ce rapport (documents, signaux, règles vérifiées, exécutions, versions), l’expiration du lien et le texte complet des pages. Si un seul caractère change, la vérification échoue.",
+    "guarantees": "Ce PDF est signé avec la clé de Verikora (Ed25519, détenue par Krizaka). La signature couvre chaque élément de ce rapport (documents, signaux, règles vérifiées, exécutions, versions), l’expiration du lien et le texte complet des pages. Si un seul caractère change, la vérification échoue.",
     "notGuaranteed": "Elle ne prouve pas que les signaux ou les constats sont justes, ni qui détient le dossier : elle n’affiche aucun nom, aucune coordonnée, aucun nom de fichier ni aucun extrait cité. Informatif, pas un avis juridique ; une personne décide.",
     "signatureNote": "L’attestation (contenu, empreinte du texte et signature) est intégrée au PDF. Toute modification du texte des pages précédentes fait échouer la vérification.",
-    "footer": "Yomizaka, un produit Krizaka — analyse par Orazaka.",
+    "footer": "Verikora, un produit Krizaka — analyse par Sovkora.",
     "verdict": {
       "PASS": "Aucun problème signalé",
       "FAIL": "Problème signalé",
@@ -4165,7 +4165,7 @@
     "not-above-previous": "Le nouveau loyer ne dépasse pas le loyer précédent indiqué à la section G.",
     "no-rate": "Aucune conclusion : le taux du TAL pour cette année n'est pas saisi, ou les montants sont inutilisables, donc l'augmentation n'est pas comparée.",
     "recourse": "Recours : le locataire peut demander au Tribunal administratif du logement de fixer le loyer (C.c.Q., art. 1950).",
-    "disclaimer": "Information sur les montants et les dates du bail, pas un avis juridique et aucun jugement sur le locateur. Vérifiez l'article et la page du TAL, ou demandez au TAL : il vous dit le formulaire et les frais éventuels, et comment compter les jours et les mois. Yomizaka ne dépose rien."
+    "disclaimer": "Information sur les montants et les dates du bail, pas un avis juridique et aucun jugement sur le locateur. Vérifiez l'article et la page du TAL, ou demandez au TAL : il vous dit le formulaire et les frais éventuels, et comment compter les jours et les mois. Verikora ne dépose rien."
   },
   "paymentClauses": {
     "advance-over-one-month": "Le bail demande plus d'un mois de loyer d'avance. Le locateur ne peut exiger d'avance que le premier terme, dans la limite d'un mois (C.c.Q., art. 1904).",

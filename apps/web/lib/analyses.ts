@@ -33,6 +33,7 @@ import { withTenantShield } from "./rules/tenant-shield-report";
 import { LAW_TIME_ZONE } from "./rulesets";
 import { appSettings } from "./settings/instance";
 import type { DocumentStore } from "./storage/port";
+import { PRODUCT_NAME } from "@/lib/brand";
 
 /**
  * An analysis is an Orazaka run. Starting one sends the document to the Studio that does the job — the compliance
@@ -226,7 +227,7 @@ export async function refresh(row: AnalysisRow, known?: OrazakaRun): Promise<Ana
       : read;
   // Tenant shield (yomizaka#104): when the lease ruleset exposed its figures, Section G (#554) compares the rents with the TAL's rate, and the payment clauses (#560) are read against art. 1904.
   const report = lined && "findings" in lined ? await withTenantShield(lined, appSettings()) : lined;
-  const noReport = report ? null : "Orazaka finished without a report Yomizaka can read";
+  const noReport = report ? null : `The engine finished without a report ${PRODUCT_NAME} can read`;
   const error = status === "succeeded" ? noReport : (run.errorMessage ?? `The run ended ${run.status}`);
   const [updated] = await query<AnalysisRow>(
     `UPDATE analyses SET status = $2, report = $3, error = $4, search_text = $5, blueprint_version = coalesce($6, blueprint_version), finished_at = coalesce($7::timestamptz, now())

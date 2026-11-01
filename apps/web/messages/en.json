@@ -1,12 +1,12 @@
 {
   "meta": {
-    "siteName": "Yomizaka",
-    "titleTemplate": "{title} · Yomizaka",
-    "description": "For property managers and landlords in Québec: Yomizaka reads the lease against the Civil Code of Québec, examines the pay stub as a file, and shows the exact line behind every finding."
+    "siteName": "Verikora",
+    "titleTemplate": "{title} · Verikora",
+    "description": "For property managers and landlords in Québec: Verikora reads the lease against the Civil Code of Québec, examines the pay stub as a file, and shows the exact line behind every finding."
   },
   "chrome": {
-    "brandHome": "Yomizaka, home",
-    "navLabel": "Yomizaka",
+    "brandHome": "Verikora, home",
+    "navLabel": "Verikora",
     "nav": {
       "what": "What it does",
       "proof": "A real run",
@@ -29,7 +29,7 @@
     "download": "Download",
     "openApp": "Open my documents",
     "myDocuments": "My documents",
-    "tryIt": "Try Yomizaka",
+    "tryIt": "Try Verikora",
     "account": "Account",
     "settings": "Settings",
     "signOut": "Sign out",
@@ -37,7 +37,7 @@
   },
   "landing": {
     "title": "Read before you sign.",
-    "lead": "For property managers and landlords who screen applicants in Québec: drop the lease and the applicant's papers. Yomizaka verifies the documents and screens the file: it reads them against extraction matrices and technical templates, and shows you the exact line behind every finding.",
+    "lead": "For property managers and landlords who screen applicants in Québec: drop the lease and the applicant's papers. Verikora verifies the documents and screens the file: it reads them against extraction matrices and technical templates, and shows you the exact line behind every finding.",
     "status": {
       "label": "Status",
       "development": "In development: sign-up is closed while we test it on real Québec leases.",
@@ -47,7 +47,7 @@
       "before": "The lease",
       "after": "The finding",
       "leaseCaption": "One clause of the lease, lit",
-      "findingCaption": "What Yomizaka returns, with its source"
+      "findingCaption": "What Verikora returns, with its source"
     },
     "signIn": "Sign in",
     "openApp": "Open my documents",
@@ -79,7 +79,7 @@
       "runLabel": "Run id",
       "dateLabel": "Recorded",
       "rulesetLabel": "Québec rules",
-      "powered": "Powered by Orazaka.",
+      "powered": "Powered by Sovkora.",
       "owlLabel": "What the owl promises"
     },
     "who": {
@@ -95,7 +95,7 @@
     },
     "showcase": {
       "title": "The app, as it is",
-      "lead": "Three screens of Yomizaka, drawn with its own components on fictitious data. Nothing here is a screenshot.",
+      "lead": "Three screens of Verikora, drawn with its own components on fictitious data. Nothing here is a screenshot.",
       "demo": "Fictitious data",
       "findings": {
         "title": "Every finding quotes its line",
@@ -131,11 +131,11 @@
   "privacy": {
     "title": "Privacy",
     "updated": "Updated {date}",
-    "body": "Your documents are yours: kept only if you choose, checked by Orazaka, never sold, never used to train a model. The details, in short sections.",
+    "body": "Your documents are yours: kept only if you choose, checked by Sovkora, never sold, never used to train a model. The details, in short sections.",
     "sections": [
       {
         "h": "Who is responsible",
-        "p": "Krizaka, a company based in Montréal, publishes Yomizaka. The person in charge of the protection of personal information (Loi 25) can be reached through the contact form of krizaka.com. [TO BE COMPLETED: title and direct address of the privacy officer.]"
+        "p": "Krizaka, a company based in Montréal, publishes Verikora. The person in charge of the protection of personal information (Loi 25) can be reached through the contact form of krizaka.com. [TO BE COMPLETED: title and direct address of the privacy officer.]"
       },
       {
         "h": "What we collect and why",
@@ -143,11 +143,11 @@
       },
       {
         "h": "Where it is kept",
-        "p": "Your account and your checks are in a database in Toronto, Canada, outside Québec. Documents are sent to Orazaka, Krizaka's analysis engine, over HTTPS to be checked. A kept document is stored where its information panel says: today, in New York (United States)."
+        "p": "Your account and your checks are in a database in Toronto, Canada, outside Québec. Documents are sent to Sovkora, Krizaka's analysis engine, over HTTPS to be checked. A kept document is stored where its information panel says: today, in New York (United States)."
       },
       {
         "h": "Who processes it",
-        "p": "Orazaka, Krizaka's analysis engine, reads a document when you ask for a check, over HTTPS. Stripe handles payment. Our database provider hosts your account in Toronto."
+        "p": "Sovkora, Krizaka's analysis engine, reads a document when you ask for a check, over HTTPS. Stripe handles payment. Our database provider hosts your account in Toronto."
       },
       {
         "h": "How long we keep it",
@@ -177,7 +177,7 @@
       "documents": "Documents"
     },
     "signIn": {
-      "promise": "Your documents, read and checked by Yomizaka.",
+      "promise": "Your documents, read and checked by Verikora.",
       "asideFooter": "Every finding quotes its rule and the line it rests on.",
       "title": "Sign in",
       "description": "With the account our team gave you.",
@@ -185,7 +185,7 @@
       "password": "Password",
       "submit": "Sign in",
       "closedTitle": "Sign-up is closed.",
-      "closed": "Yomizaka is in development; accounts are created by our team.",
+      "closed": "Verikora is in development; accounts are created by our team.",
       "contact": "Talk to us",
       "legalPrefix": "By signing in you accept the",
       "privacy": "privacy notice",
@@ -242,7 +242,7 @@
         "none": "No check matches this search.",
         "chosen": "Check chosen: {kind}",
         "change": "Change",
-        "listLabel": "The checks Yomizaka runs",
+        "listLabel": "The checks Verikora runs",
         "items": {
           "qc-residential-lease": {
             "title": "Residential lease, Québec",
@@ -382,7 +382,7 @@
       },
       "check": {
         "title": "Check a document",
-        "lead": "Drop a lease, a contract or an invoice: Yomizaka reads it and tells you what to look at.",
+        "lead": "Drop a lease, a contract or an invoice: Verikora reads it and tells you what to look at.",
         "import": "Import a batch"
       },
       "dossiers": {
@@ -406,7 +406,7 @@
     },
     "shell": {
       "skip": "Skip to content",
-      "sidebarLabel": "Yomizaka",
+      "sidebarLabel": "Verikora",
       "closeMenu": "Close the menu",
       "openMenu": "Open the menu",
       "collapse": "Fold the menu",
@@ -461,11 +461,11 @@
       "refusedType": "{name}: only PDF, text files and photos",
       "refusedCount": "{name}: too many files at once",
       "kindPick": "Which document?",
-      "kindUnsure": "Yomizaka did not recognise « {name} » for sure: say which document it is, and the check starts.",
+      "kindUnsure": "Verikora did not recognise « {name} » for sure: say which document it is, and the check starts.",
       "options": "Options",
       "informative": "An informative check, not legal advice.",
       "kindHints": {
-        "auto": "Yomizaka recognises it",
+        "auto": "Verikora recognises it",
         "lease": "Rent, term, tenant's rights",
         "contract": "Clauses, duties, penalties",
         "invoice": "Amounts, taxes, payee",
@@ -473,7 +473,7 @@
       },
       "kindLabel": "Kind of the next documents",
       "lead": "Your documents, by collection — and every report.",
-      "emptyPitch": "Drop a lease, a pay stub or an invoice: Yomizaka reads it against Québec's rules and quotes the line behind every finding.",
+      "emptyPitch": "Drop a lease, a pay stub or an invoice: Verikora reads it against Québec's rules and quotes the line behind every finding.",
       "tryExamples": "Or try:",
       "dropAnywhere": "Drop to check",
       "dropAnywhereHint": "PDF, Word, text or photo — 10 MB",
@@ -570,7 +570,7 @@
       "failed": "Check failed"
     },
     "document": {
-      "reading": "Yomizaka is reading the document…",
+      "reading": "Verikora is reading the document…",
       "back": "Library",
       "details": "Details",
       "file": "File",
@@ -587,7 +587,7 @@
       "deleteConfirm": "Delete for good",
       "deleted": "Deleted.",
       "checks": "Checks",
-      "checksLead": "Each check is a run of Yomizaka's engine (Orazaka); its id is the trace of what ran.",
+      "checksLead": "Each check is a run of Verikora's engine (Sovkora); its id is the trace of what ran.",
       "passageOf": "Passage quoted by {rule}",
       "loadingPdf": "Loading the document…",
       "pdfFailed": "The file could not be displayed. Open it with the button above.",
@@ -595,11 +595,11 @@
       "onPage": "Passage on page {page}:",
       "notFound": "This passage is not in the PDF's text layer:",
       "checksLeadBy": {
-        "neutral": "Choose what Yomizaka reads: the text against the law, or the PDF file itself.",
+        "neutral": "Choose what Verikora reads: the text against the law, or the PDF file itself.",
         "tenant": "Before signing: your lease's text against Québec's rules, then, if a paper looks doubtful, the file itself.",
         "landlord": "Before sending: your lease template against Québec's rules; for a tenant's PDF paper, the examination of the file itself.",
-        "freelancer": "Choose what Yomizaka reads: your invoice against Québec's mandatory mentions and the GST/QST number formats, your service contract against the federal rules on interest and copyright, or the PDF file itself. Civil Code rules are coming soon.",
-        "business": "Choose what Yomizaka reads: a supplier's invoice against Québec's mandatory mentions and the GST/QST number formats, or the PDF file itself. Contract rules are coming soon."
+        "freelancer": "Choose what Verikora reads: your invoice against Québec's mandatory mentions and the GST/QST number formats, your service contract against the federal rules on interest and copyright, or the PDF file itself. Civil Code rules are coming soon.",
+        "business": "Choose what Verikora reads: a supplier's invoice against Québec's mandatory mentions and the GST/QST number formats, or the PDF file itself. Contract rules are coming soon."
       },
       "tabs": {
         "rapport": "Report",
@@ -668,8 +668,8 @@
       "expectedIssuer": "Expected issuer (optional)",
       "expectedIssuerHint": "Who should have produced it, e.g. the agency's name.",
       "run": "Run the check",
-      "running": "Yomizaka is reading…",
-      "runId": "Orazaka run",
+      "running": "Verikora is reading…",
+      "runId": "Sovkora run",
       "blueprint": "Studio version",
       "ruleset": "Rules",
       "started": "Started",
@@ -706,15 +706,15 @@
       "language": "Reports are written in French, the language of their rules.",
       "history": "Earlier runs",
       "noPdf": "Only PDF, Word (.docx) and OpenDocument (.odt) files are examined as files.",
-      "tooLarge": "Yomizaka examines files up to 5 MB.",
+      "tooLarge": "Verikora examines files up to 5 MB.",
       "toReview": "Québec rules still to be reviewed by a lawyer: a demonstration screen, not legal advice.",
       "showInFile": "Show in the file",
       "findingPage": "Page {page}",
       "findingPageOnly": "Page {page} (exact place not found)",
       "findingNotFound": "Not found in the file's text layer",
-      "orazakaRun": "Orazaka run",
+      "orazakaRun": "Sovkora run",
       "exportReport": "Audit report",
-      "exportHint": "A signed report as an HTML file and as a PDF (the report's pages, then a visible signature page; the attestation is embedded in the file): document SHA-256, rules version, date, every finding with its passage and article, the Orazaka run id.",
+      "exportHint": "A signed report as an HTML file and as a PDF (the report's pages, then a visible signature page; the attestation is embedded in the file): document SHA-256, rules version, date, every finding with its passage and article, the Sovkora run id.",
       "exportDownload": "Download the report",
       "exportVerify": "Verify a report",
       "exportSha": "Report SHA-256",
@@ -730,7 +730,7 @@
           "alteration": "It is not a finding that a document was altered dishonestly, and it says nothing about the person.",
           "ordinary": "Many ordinary steps leave the same traces: signing, filling in a form, merging pages, compressing, converting from an e-mail, printing again.",
           "absence": "A document with no trace is not declared genuine: a file made again from scratch leaves none.",
-          "person": "A person decides. Yomizaka decides nothing."
+          "person": "A person decides. Verikora decides nothing."
         },
         "notExamined": "Not examined: {list}.",
         "families": {
@@ -746,7 +746,7 @@
         "field": "Field: {field}",
         "ordinaryLabel": "Ordinary explanations",
         "askForLabel": "What to ask for",
-        "run": "Orazaka run {runId}",
+        "run": "Sovkora run {runId}",
         "answerLabel": "Applicant's explanation, {date}",
         "ordinary": {
           "history": "Signing, filling in a form, merging pages, compressing the file or converting it from an e-mail leave the same traces as an edit.",
@@ -882,19 +882,19 @@
       "UNREADABLE_FILE": "This file cannot be opened: it is damaged or not a valid document.",
       "NO_TEXT": "This document has no text layer to check.",
       "TEXT_TOO_LONG": "This document is longer than the check reads (60 000 characters).",
-      "NOT_A_PDF": "Yomizaka examines PDF, Word (.docx) and OpenDocument (.odt) files.",
-      "PDF_TOO_LARGE": "Yomizaka examines files up to 5 MB.",
+      "NOT_A_PDF": "Verikora examines PDF, Word (.docx) and OpenDocument (.odt) files.",
+      "PDF_TOO_LARGE": "Verikora examines files up to 5 MB.",
       "ALREADY_RUNNING": "This check is already running.",
-      "EXTRACTING": "Yomizaka is still reading this document. Try again in a moment.",
-      "ORAZAKA_NOT_CONFIGURED": "The connection to Orazaka is not configured.",
-      "ORAZAKA_UNAVAILABLE": "Orazaka did not answer. Try again in a moment.",
-      "ORAZAKA_KEY": "Orazaka refused Yomizaka's key.",
-      "ORAZAKA_LOCKED": "This Studio is not open to Yomizaka on Orazaka.",
-      "ORAZAKA_CREDITS": "Orazaka has no credits left for this check.",
-      "ORAZAKA_INPUT": "Orazaka refused the document as sent.",
-      "ORAZAKA_STUDIO_OLD": "Orazaka does not read this kind of document yet on Yomizaka's account.",
-      "ORAZAKA_NOT_FOUND": "Orazaka does not know this run.",
-      "ORAZAKA_SHAPE": "Orazaka's answer could not be read.",
+      "EXTRACTING": "Verikora is still reading this document. Try again in a moment.",
+      "ORAZAKA_NOT_CONFIGURED": "The connection to Sovkora is not configured.",
+      "ORAZAKA_UNAVAILABLE": "Sovkora did not answer. Try again in a moment.",
+      "ORAZAKA_KEY": "Sovkora refused Verikora's key.",
+      "ORAZAKA_LOCKED": "This Studio is not open to Verikora on Sovkora.",
+      "ORAZAKA_CREDITS": "Sovkora has no credits left for this check.",
+      "ORAZAKA_INPUT": "Sovkora refused the document as sent.",
+      "ORAZAKA_STUDIO_OLD": "Sovkora does not read this kind of document yet on Verikora's account.",
+      "ORAZAKA_NOT_FOUND": "Sovkora does not know this run.",
+      "ORAZAKA_SHAPE": "Sovkora's answer could not be read.",
       "BAD_REQUEST": "The request is not valid.",
       "INTERNAL": "Something went wrong.",
       "NETWORK": "The network did not answer.",
@@ -992,7 +992,7 @@
       "FAILED": "The check did not complete.",
       "CANCELLED": "The check was cancelled.",
       "REFUSED": "Row refused.",
-      "ORAZAKA_BUSY": "Orazaka is busy right now. The batch goes on by itself as soon as it has room.",
+      "ORAZAKA_BUSY": "Sovkora is busy right now. The batch goes on by itself as soon as it has room.",
       "EXPORT_TOO_LARGE": "The reports of this batch are too heavy for one archive: export fewer rows.",
       "NOT_ON_SALE": "This offer is not on sale.",
       "PRICE_MISMATCH": "This price is being updated. Try again in a moment.",
@@ -1082,7 +1082,7 @@
         "overview": "Overview",
         "users": "People",
         "documents": "Documents",
-        "runs": "Orazaka runs",
+        "runs": "Sovkora runs",
         "audit": "Audit log",
         "dev": "DEV",
         "signOut": "Sign out",
@@ -1103,7 +1103,7 @@
         "health": "Health",
         "version": "Version",
         "database": "Database",
-        "orazaka": "Orazaka edge",
+        "orazaka": "Sovkora edge",
         "up": "Up",
         "down": "Unreachable",
         "accounts": "Accounts",
@@ -1111,12 +1111,12 @@
         "suspended": "suspended",
         "documents": "Documents",
         "stored": "stored",
-        "runs": "Orazaka runs",
+        "runs": "Sovkora runs",
         "lastRun": "Last run",
         "none": "None yet"
       },
       "runs": {
-        "caption": "Orazaka runs",
+        "caption": "Sovkora runs",
         "studio": "Studio",
         "status": "Status",
         "runId": "Run id",
@@ -1180,7 +1180,7 @@
         "deleteAccount": "Delete the account and its documents"
       },
       "signIn": {
-        "promise": "The administration of Yomizaka.",
+        "promise": "The administration of Verikora.",
         "asideFooter": "Administrators only, from an allowed address.",
         "title": "Administration",
         "description": "Sign in with an administrator account."
@@ -1265,7 +1265,7 @@
         "pool": "This service's pool: {busy} busy of {max} ({open} open)",
         "connections": "Connections on the database: {used} of {max}",
         "poolNote": "{waiting} waiting. A waiting request means the pool is the bottleneck.",
-        "queue": "Orazaka runs",
+        "queue": "Sovkora runs",
         "status": {
           "running": "Running",
           "succeeded": "Succeeded",
@@ -1297,7 +1297,7 @@
       },
       "flows": {
         "title": "Flows",
-        "lead": "Each flow is data: who it is offered to, the Orazaka Studio and rulesets of its steps, the consents it requires, its price. A published version never changes; enable it per environment.",
+        "lead": "Each flow is data: who it is offered to, the Sovkora Studio and rulesets of its steps, the consents it requires, its price. A published version never changes; enable it per environment.",
         "caption": "The flows",
         "columns": {
           "key": "Flow",
@@ -1327,7 +1327,7 @@
           "leadFr": "Lead (French)",
           "status": "Status",
           "audiences": "Offered to",
-          "studios": "Orazaka Studios",
+          "studios": "Sovkora Studios",
           "compliance": "Compliance check (a ruleset per jurisdiction)",
           "authenticity": "Document authenticity (the PDF examined)",
           "jurisdictions": "Jurisdictions and their rulesets",
@@ -1441,7 +1441,7 @@
     },
     "share": {
       "title": "Who can verify this report",
-      "hint": "Only you and the people you share it with, signed in with a Yomizaka account. If the address has no account yet, the invitation waits and is honoured when the account exists.",
+      "hint": "Only you and the people you share it with, signed in with a Verikora account. If the address has no account yet, the invitation waits and is honoured when the account exists.",
       "email": "E-mail address",
       "until": "Until (optional)",
       "submit": "Share",
@@ -1458,7 +1458,7 @@
     },
     "profile": {
       "title": "Which side of the lease are you on?",
-      "lead": "Yomizaka adapts the checks it offers first and its words. The rules are the same for everyone. You can change this at any time in settings.",
+      "lead": "Verikora adapts the checks it offers first and its words. The rules are the same for everyone. You can change this at any time in settings.",
       "legend": "Your role",
       "tenant": "Tenant",
       "landlord": "Landlord",
@@ -1489,7 +1489,7 @@
       "sentTitle": "Check your mail",
       "sent": "If this address can receive a message, a confirmation link is on its way (valid 24 hours). Open it to activate your account.",
       "closedTitle": "Sign-up is not open yet.",
-      "closed": "Yomizaka is not accepting new accounts at the moment.",
+      "closed": "Verikora is not accepting new accounts at the moment.",
       "haveAccount": "Already have an account? Sign in",
       "notice": "Informative check, not legal advice. Only a member of the Barreau du Québec can give legal advice.",
       "promise": "One free audit, then pay per audit or subscribe."
@@ -1584,7 +1584,7 @@
       "source": "Where the text comes from",
       "sourcePhotoOcr": "photo, text read by character recognition, reliability {confidence} %",
       "sourcePhotoOcrPages": "{count} photos, text read by character recognition, reliability {confidence} %",
-      "sourcePhotoVision": "photo, text read by Orazaka's model (image reading), run {runId}",
+      "sourcePhotoVision": "photo, text read by Sovkora's model (image reading), run {runId}",
       "sourceLow": "The reading of this photo is not very reliable. Check the amounts, the dates and the names against your document.",
       "originSoftware": "Last software (a hint, not a verdict)",
       "originDevice": "Device",
@@ -1803,7 +1803,7 @@
         "cloudDisconnect": "Disconnect",
         "cloudConnected": "Connected to {cloud}. Your kept documents go to a folder of the app in your cloud.",
         "cloudWasDisconnected": "{cloud} was disconnected. The documents kept there cannot be opened until you connect it again; new ones go to Krizaka's storage.",
-        "cloudScope": "You sign in on your provider's own page. Yomizaka only sees the folder it creates; you can disconnect at any time, and your files stay where they are.",
+        "cloudScope": "You sign in on your provider's own page. Verikora only sees the folder it creates; you can disconnect at any time, and your files stay where they are.",
         "cloudResultConnected": "Your cloud is connected.",
         "cloudResultDenied": "The connection was not allowed, or was cancelled. Nothing changed.",
         "cloudResultFailed": "The connection could not be completed. Nothing changed: try again.",
@@ -1840,7 +1840,7 @@
       "invalid": "This link is invalid or has expired."
     },
     "forgotPassword": {
-      "promise": "Your documents, read and checked by Yomizaka.",
+      "promise": "Your documents, read and checked by Verikora.",
       "title": "Forgot your password?",
       "description": "Type your e-mail address. If it has an account, we send a link to choose a new password.",
       "email": "E-mail",
@@ -1851,7 +1851,7 @@
       "mailOff": "E-mail sending is not available yet, so a link cannot be sent. Talk to our team."
     },
     "resetPassword": {
-      "promise": "Your documents, read and checked by Yomizaka.",
+      "promise": "Your documents, read and checked by Verikora.",
       "title": "Choose a new password",
       "description": "At least 12 characters. Your other sessions will be signed out.",
       "password": "New password",
@@ -1877,7 +1877,7 @@
         "plans": "Plans",
         "prices": "Prices",
         "packs": "Rules packs",
-        "orazaka": "Orazaka",
+        "orazaka": "Sovkora",
         "organisation": "Organisation",
         "coupons": "Coupons"
       },
@@ -2075,7 +2075,7 @@
           },
           "batchConcurrency": {
             "label": "A batch's checks run at once",
-            "hint": "The others wait their turn (Orazaka runs a few checks at once for the whole product); a failed row never stops the batch."
+            "hint": "The others wait their turn (Sovkora runs a few checks at once for the whole product); a failed row never stops the batch."
           },
           "batchTickSeconds": {
             "label": "The server looks at unfinished batches every",
@@ -2655,8 +2655,8 @@
         "runs": "Runs started: {count}",
         "failed": "Failed: {count}",
         "cost": "Estimated cost: {amount}",
-        "notExposed": "Orazaka's own plan and usage figures are not exposed by its API yet: they are not shown rather than guessed.",
-        "rotate": "Rotating the key is done in Orazaka, then in the app's secret: it is not done from here."
+        "notExposed": "Sovkora's own plan and usage figures are not exposed by its API yet: they are not shown rather than guessed.",
+        "rotate": "Rotating the key is done in Sovkora, then in the app's secret: it is not done from here."
       },
       "organisation": {
         "owner": "Owner",
@@ -2973,7 +2973,7 @@
       "import": "Import a batch",
       "empty": {
         "title": "No check yet",
-        "text": "Drop a lease, a pay stub or an invoice: Yomizaka reads it against Québec's rules and the result lands here."
+        "text": "Drop a lease, a pay stub or an invoice: Verikora reads it against Québec's rules and the result lands here."
       },
       "caption": "Your checks",
       "runCopy": "Copy run {id}",
@@ -3012,7 +3012,7 @@
       "unchecked": {
         "UNSUPPORTED_KIND": {
           "title": "No rules for this kind of document yet",
-          "hint": "Nothing was checked: Yomizaka has no rules for this kind of document yet. This is not a clean result."
+          "hint": "Nothing was checked: Verikora has no rules for this kind of document yet. This is not a clean result."
         },
         "KIND_UNKNOWN": {
           "title": "Could not tell what kind of document this is",
@@ -3037,7 +3037,7 @@
       "oneRun": "One run so far.",
       "notChecked": "Not checked yet",
       "notCheckedText": "Start a check: the verdict comes first, then every finding with its line.",
-      "fileAndText": "The file, its text, and what Yomizaka read in it.",
+      "fileAndText": "The file, its text, and what Verikora read in it.",
       "seeInFile": "See in the file",
       "more": "Details",
       "downloadReport": "Download the report",
@@ -3109,8 +3109,8 @@
         "failed": "Failed",
         "refused": "Refused"
       },
-      "engineBusy": "Orazaka is busy with other checks: the remaining rows wait their turn and start by themselves. Nothing to do.",
-      "exportReadme": "Yomizaka — reports of a batch of checks.\n\nlot.csv lists every row: its state, the reason when it did not run, and its file here.\nrapports/ holds the signed PDF of each compliance check.\nsignaux/ holds the signals of each authenticity check, as Orazaka returned them.\n\nThese are informative checks, not legal advice. To verify a signed report, sign in to Yomizaka and open https://www.yomizaka.com/app/verifications/report (only the people the report's owner gave access to can).\nThe Québec rules are still to be reviewed by a lawyer.\n",
+      "engineBusy": "Sovkora is busy with other checks: the remaining rows wait their turn and start by themselves. Nothing to do.",
+      "exportReadme": "Verikora — reports of a batch of checks.\n\nlot.csv lists every row: its state, the reason when it did not run, and its file here.\nrapports/ holds the signed PDF of each compliance check.\nsignaux/ holds the signals of each authenticity check, as Sovkora returned them.\n\nThese are informative checks, not legal advice. To verify a signed report, sign in to Verikora and open https://www.yomizaka.com/app/verifications/report (only the people the report's owner gave access to can).\nThe Québec rules are still to be reviewed by a lawyer.\n",
       "exportZip": "Reports (ZIP)"
     },
     "notFound": {
@@ -3162,7 +3162,7 @@
       },
       "empty": {
         "title": "No applicant file yet",
-        "text": "Ask an applicant for their documents: Yomizaka checks each one, and you decide."
+        "text": "Ask an applicant for their documents: Verikora checks each one, and you decide."
       },
       "form": {
         "title": "Ask for documents",
@@ -3445,8 +3445,8 @@
   },
   "report": {
     "title": "Audit report — {name}",
-    "eyebrow": "Yomizaka · compliance audit report",
-    "disclaimer": "Informative check, not legal advice. Yomizaka verifies a document and screens a file with configurable extraction matrices and technical templates, tools validated by the client's counsel; it is not a legal opinion, and only a member of the Barreau du Québec can give legal advice. A result is never a guarantee of compliance.",
+    "eyebrow": "Verikora · compliance audit report",
+    "disclaimer": "Informative check, not legal advice. Verikora verifies a document and screens a file with configurable extraction matrices and technical templates, tools validated by the client's counsel; it is not a legal opinion, and only a member of the Barreau du Québec can give legal advice. A result is never a guarantee of compliance.",
     "summary": "{failures} blocking failure(s) out of {rules} rules checked.",
     "toReview": "Québec rules still to be reviewed by a lawyer: a demonstration report, not legal advice.",
     "documentHeading": "The document",
@@ -3455,7 +3455,7 @@
     "size": "Size",
     "documentSha": "Document SHA-256",
     "engine": "Analysis engine",
-    "runId": "Orazaka run",
+    "runId": "Sovkora run",
     "jurisdiction": "Jurisdiction",
     "asOf": "Rules in force on",
     "ruleset": "Rules version",
@@ -3475,10 +3475,10 @@
       "NOT_APPLICABLE": "Does not apply"
     },
     "guaranteeHeading": "What this report guarantees",
-    "guarantees": "This report is signed with Yomizaka's key (Ed25519, held by Krizaka). The signature covers the document's SHA-256, the jurisdiction and rules version, the Studio and its version, the Orazaka run id, the date of the check, every finding with its passage and article, and the full text of this report. If a single character of this file changes, verification fails.",
-    "notGuaranteed": "It does not prove that the findings are legally right: Orazaka applies the extraction matrices, the Québec matrices are still to be reviewed by a lawyer, and this is not legal advice. It does not prove that the run exists on Orazaka's side (only its operator can say), nor when the report was made beyond the check dates above: there is no independent time-stamp and no blockchain. What you trust is Krizaka, the holder of the signing key.",
-    "howToVerify": "To verify it, sign in to Yomizaka and open {url} — only the people the report's owner gave access to can, with their Yomizaka account. Give it this file and, to confirm which document was checked, the original document.",
-    "footer": "Yomizaka, a Krizaka product — analysis by Orazaka.",
+    "guarantees": "This report is signed with Verikora's key (Ed25519, held by Krizaka). The signature covers the document's SHA-256, the jurisdiction and rules version, the Studio and its version, the Sovkora run id, the date of the check, every finding with its passage and article, and the full text of this report. If a single character of this file changes, verification fails.",
+    "notGuaranteed": "It does not prove that the findings are legally right: Sovkora applies the extraction matrices, the Québec matrices are still to be reviewed by a lawyer, and this is not legal advice. It does not prove that the run exists on Sovkora's side (only its operator can say), nor when the report was made beyond the check dates above: there is no independent time-stamp and no blockchain. What you trust is Krizaka, the holder of the signing key.",
+    "howToVerify": "To verify it, sign in to Verikora and open {url} — only the people the report's owner gave access to can, with their Verikora account. Give it this file and, to confirm which document was checked, the original document.",
+    "footer": "Verikora, a Krizaka product — analysis by Sovkora.",
     "signatureHeading": "Signature page",
     "signatureKey": "Signing key",
     "signatureAlgorithm": "Algorithm",
@@ -3490,7 +3490,7 @@
   },
   "verify": {
     "title": "Verify a report",
-    "lead": "Check that an audit report really comes from Yomizaka and has not been changed. Members only, for a report you own or were given access to.",
+    "lead": "Check that an audit report really comes from Verikora and has not been changed. Members only, for a report you own or were given access to.",
     "reportFile": "The report (the .html or .pdf file)",
     "reportPaste": "Or paste its text",
     "documentFile": "The original document (optional)",
@@ -3502,19 +3502,19 @@
     "okTitle": "This report is authentic and unchanged.",
     "failTitle": "This report cannot be trusted.",
     "reasons": {
-      "NOT_A_REPORT": "This is not a Yomizaka audit report: it has no signature block.",
-      "UNREADABLE": "The signature block is damaged or not in a format Yomizaka knows.",
+      "NOT_A_REPORT": "This is not a Verikora audit report: it has no signature block.",
+      "UNREADABLE": "The signature block is damaged or not in a format Verikora knows.",
       "BAD_SIGNATURE": "The signature does not match the content: the report was modified or signed by another key.",
       "ALTERED": "The signature is valid for the original report, but the file is not that report any more: something was changed after signing.",
       "UNKNOWN_KEY": "It was signed by a key that is not this server's.",
-      "UNKNOWN_SCHEMA": "This report uses a format Yomizaka does not verify.",
+      "UNKNOWN_SCHEMA": "This report uses a format Verikora does not verify.",
       "SPECIMEN": "This report is a specimen: it proves nothing."
     },
     "facts": {
       "fileSha": "This file's SHA-256",
       "keyId": "Signing key",
       "documentSha": "Document SHA-256",
-      "runId": "Orazaka run",
+      "runId": "Sovkora run",
       "ruleset": "Rules",
       "checked": "Check finished",
       "findings": "Findings",
@@ -3529,14 +3529,14 @@
     },
     "guaranteesTitle": "What a green result guarantees",
     "guarantees": {
-      "a": "The report was produced by Yomizaka's signing key, and not one character of it has changed since.",
-      "b": "It binds, in one signature, the document's SHA-256, the jurisdiction and rules version, the Studio and its version, the Orazaka run id, the check dates and every finding with its passage and article.",
+      "a": "The report was produced by Verikora's signing key, and not one character of it has changed since.",
+      "b": "It binds, in one signature, the document's SHA-256, the jurisdiction and rules version, the Studio and its version, the Sovkora run id, the check dates and every finding with its passage and article.",
       "c": "Given the original document, it is the one that was checked."
     },
     "limitsTitle": "What it does not guarantee",
     "limits": {
-      "a": "That the findings are right in law: Orazaka applies extraction matrices and technical templates, and the Québec ones are still to be reviewed by a lawyer. This is not legal advice.",
-      "b": "That the run exists on Orazaka's side: only its operator can confirm a run id.",
+      "a": "That the findings are right in law: Sovkora applies extraction matrices and technical templates, and the Québec ones are still to be reviewed by a lawyer. This is not legal advice.",
+      "b": "That the run exists on Sovkora's side: only its operator can confirm a run id.",
       "c": "When the report was made, beyond the check dates it states: there is no independent time-stamp.",
       "d": "Anything about the key holder: you trust Krizaka to keep the key. No blockchain, no third party."
     },
@@ -3567,13 +3567,13 @@
       "whyTitle": "Why",
       "why": "To check that the documents match the application and are consistent with each other. The report is informative only: it is not a legal opinion, and a person at the owner decides.",
       "whoTitle": "Who sees it",
-      "who": "The owner who asked for the check sees the report. Yomizaka and its processor for the analysis (Orazaka) handle the file to run it. Nobody else. [TO BE REVIEWED BY THE LAWYER]",
+      "who": "The owner who asked for the check sees the report. Verikora and its processor for the analysis (Sovkora) handle the file to run it. Nobody else. [TO BE REVIEWED BY THE LAWYER]",
       "howLongTitle": "How long it is kept",
       "howLong": "By default, a document is deleted as soon as its check is done. If you consent to keep it (\"Keep my documents until the owner decides\"), it is kept until the owner's decision, then deleted. A result is deleted {days} days after it was given. You can still ask for its deletion. [TO BE REVIEWED BY THE LAWYER]",
       "askTitle": "How to ask for deletion",
       "ask": "Use the « Delete my documents » action on the link you received. It deletes your documents and the result at once, and keeps only a record with no personal information. You can also withdraw any consent here, and ask for access to or correction of your information.",
       "examinedTitle": "How your documents are examined",
-      "examined": "Each document is also examined as a file: how it was saved and, for some, whether its figures add up. When something is noticed, you see it here, in the same words as the owner, and you can add an explanation next to it. The report states what was observed; it concludes nothing about a document or about you, and Yomizaka decides nothing: a person at the owner does.",
+      "examined": "Each document is also examined as a file: how it was saved and, for some, whether its figures add up. When something is noticed, you see it here, in the same words as the owner, and you can add an explanation next to it. The report states what was observed; it concludes nothing about a document or about you, and Verikora decides nothing: a person at the owner does.",
       "notAsked": "Never asked: your social insurance number (SIN), your bank card or account details, your health or family information.",
       "law": "This notice follows the Act respecting the protection of personal information in the private sector (Quebec, as amended by the Act 25). It is not legal advice."
     },
@@ -3789,7 +3789,7 @@
       "undertaking": "I undertake to use these checks only to assess an application for a dwelling, to ask only what is necessary, and never to refuse an applicant on a discriminatory ground (Charter of human rights and freedoms; C.c.Q., art. 1899). I know an applicant may decline or contest, and that refusing to give unnecessary information is not a ground for rejection.",
       "accept": "I accept the undertaking",
       "lawfulTitle": "What the law lets you ask",
-      "lawful": "The name, the current address, an identity document looked at without keeping a copy, the previous landlord's contact — and, with consent, a credit report. No social insurance number, bank details, employer or salary. Yomizaka offers no criminal-record check.",
+      "lawful": "The name, the current address, an identity document looked at without keeping a copy, the previous landlord's contact — and, with consent, a credit report. No social insurance number, bank details, employer or salary. Verikora offers no criminal-record check.",
       "name": "Applicant's name",
       "email": "Applicant's e-mail",
       "scope": "What will be checked",
@@ -3824,11 +3824,11 @@
   },
   "terms": {
     "title": "Terms of use",
-    "status": "Written in good faith from the law, awaiting review by the lawyer before Yomizaka opens to the public; the refund policy for a single audit is not final. If in doubt, French prevails.",
+    "status": "Written in good faith from the law, awaiting review by the lawyer before Verikora opens to the public; the refund policy for a single audit is not final. If in doubt, French prevails.",
     "sections": [
       {
-        "h": "What Yomizaka is",
-        "p": "Yomizaka compares a document you give it (a lease, an invoice, a service contract) with published rules and tells you, point by point, what it found, quoting your document. It is an informative check. It is not a legal opinion and it does not replace a lawyer: only a member of the Barreau du Québec can give legal advice in Québec. A result is never a guarantee that a document is lawful or valid."
+        "h": "What Verikora is",
+        "p": "Verikora compares a document you give it (a lease, an invoice, a service contract) with published rules and tells you, point by point, what it found, quoting your document. It is an informative check. It is not a legal opinion and it does not replace a lawyer: only a member of the Barreau du Québec can give legal advice in Québec. A result is never a guarantee that a document is lawful or valid."
       },
       {
         "h": "Your account",
@@ -3836,7 +3836,7 @@
       },
       {
         "h": "Prices and taxes",
-        "p": "After the free audit, an audit costs the price shown at checkout in Canadian dollars, or you subscribe to the Pro plan. Goods and services tax (GST) and Québec sales tax (QST) are added at checkout and shown on your invoice with Krizaka's registration numbers. Payment is handled by Stripe; Yomizaka never sees your card number."
+        "p": "After the free audit, an audit costs the price shown at checkout in Canadian dollars, or you subscribe to the Pro plan. Goods and services tax (GST) and Québec sales tax (QST) are added at checkout and shown on your invoice with Krizaka's registration numbers. Payment is handled by Stripe; Verikora never sees your card number."
       },
       {
         "h": "Refunds and cancellation",
@@ -3844,11 +3844,11 @@
       },
       {
         "h": "Your documents",
-        "p": "Your documents are kept in your account only and are sent to Orazaka, Krizaka's analysis engine, to be checked. See the privacy notice for retention, your rights and how to reach our privacy officer."
+        "p": "Your documents are kept in your account only and are sent to Sovkora, Krizaka's analysis engine, to be checked. See the privacy notice for retention, your rights and how to reach our privacy officer."
       },
       {
         "h": "Intellectual property and your right to use the service",
-        "p": "Yomizaka, its software, its sets of verification rules, the layout of its reports, its names, its birds and its marks belong to Technologies Krizaka Inc. or its licensors; these terms assign you none of those rights (Copyright Act, R.S.C. 1985, c. C-42). For the length of your subscription only, you receive a personal, non-exclusive, non-transferable, non-sublicensable right to use the hosted service; the free audit and single audits give you the same right over the result you obtain. Your documents stay yours: you only authorise us to process them to provide the check. Yomizaka's source code is published under its own licence, stated in its repository: these terms govern the hosted service, that licence governs the code, and nothing here removes what the licence allows you."
+        "p": "Verikora, its software, its sets of verification rules, the layout of its reports, its names, its birds and its marks belong to Technologies Krizaka Inc. or its licensors; these terms assign you none of those rights (Copyright Act, R.S.C. 1985, c. C-42). For the length of your subscription only, you receive a personal, non-exclusive, non-transferable, non-sublicensable right to use the hosted service; the free audit and single audits give you the same right over the result you obtain. Your documents stay yours: you only authorise us to process them to provide the check. Verikora's source code is published under its own licence, stated in its repository: these terms govern the hosted service, that licence governs the code, and nothing here removes what the licence allows you."
       },
       {
         "h": "Prohibited uses",
@@ -3856,11 +3856,11 @@
       },
       {
         "h": "Names and marks",
-        "p": "The names and logos of Yomizaka and Krizaka, and their birds, are marks of Technologies Krizaka Inc. (Trademarks Act, R.S.C. 1985, c. T-13). These terms, like the code licence, grant no right to those marks; their use is governed by the policy published at https://github.com/krizaka/.github/blob/main/TRADEMARKS.md."
+        "p": "The names and logos of Verikora and Krizaka, and their birds, are marks of Technologies Krizaka Inc. (Trademarks Act, R.S.C. 1985, c. T-13). These terms, like the code licence, grant no right to those marks; their use is governed by the policy published at https://github.com/krizaka/.github/blob/main/TRADEMARKS.md."
       },
       {
         "h": "Limitation of liability",
-        "p": "We answer for our faults. Yomizaka provides an informative check: we are not responsible for a decision you make or do not make from a result (signing, refusing or amending a lease, accepting or refusing a tenant), for an inaccurate or incomplete document you give us, or for an interruption of the service that is not our fault. Except for intentional or gross fault, our total liability to you for a single event is limited to the amounts you paid Yomizaka in the 12 months before the event, and we are not liable for indirect damage (loss of profit, loss of opportunity). None of these limits applies to intentional or gross fault, or to bodily or moral injury (art. 1474 C.c.Q.), or to what a consumer cannot waive (art. 10 of the Consumer Protection Act). They apply to the extent the law allows, notably arts. 1435 to 1437 C.c.Q. on the clauses of a contract of adhesion."
+        "p": "We answer for our faults. Verikora provides an informative check: we are not responsible for a decision you make or do not make from a result (signing, refusing or amending a lease, accepting or refusing a tenant), for an inaccurate or incomplete document you give us, or for an interruption of the service that is not our fault. Except for intentional or gross fault, our total liability to you for a single event is limited to the amounts you paid Verikora in the 12 months before the event, and we are not liable for indirect damage (loss of profit, loss of opportunity). None of these limits applies to intentional or gross fault, or to bodily or moral injury (art. 1474 C.c.Q.), or to what a consumer cannot waive (art. 10 of the Consumer Protection Act). They apply to the extent the law allows, notably arts. 1435 to 1437 C.c.Q. on the clauses of a contract of adhesion."
       },
       {
         "h": "Governing law and courts",
@@ -3874,7 +3874,7 @@
   },
   "download": {
     "title": "Download",
-    "lead": "Yomizaka on your phone and your Mac. Your documents stay on your device; only what a check needs is sent, then erased.",
+    "lead": "Verikora on your phone and your Mac. Your documents stay on your device; only what a check needs is sent, then erased.",
     "soon": "Coming soon",
     "get": "Download",
     "platforms": {
@@ -3957,7 +3957,7 @@
       "data": "Your data"
     },
     "check": {
-      "intro": "A check reads one document and says what it found. Yomizaka does not judge the document itself: every check is a run of Orazaka, Krizaka's analysis engine, and the run id is kept with the report.",
+      "intro": "A check reads one document and says what it found. Verikora does not judge the document itself: every check is a run of Sovkora, Krizaka's analysis engine, and the run id is kept with the report.",
       "kindsTitle": "Two kinds of check",
       "compliance": "Compliance reads the text of a document against the rules of a jurisdiction (Québec by default for a residential lease).",
       "authenticity": "Authenticity examines the file itself as a file: its producer, its dates and its successive saves.",
@@ -3990,7 +3990,7 @@
       "statusLead": "These answers are given by several routes; the table of routes lists the rest.",
       "errorShapeLabel": "Error body",
       "webhooksTitle": "Webhooks",
-      "webhooks": "Instead of polling, register an https endpoint in your account and Yomizaka calls it when work finishes. Each request carries an event name, a stable event id (apply an event once) and a signature. A payload holds ids and states, never a document or a report.",
+      "webhooks": "Instead of polling, register an https endpoint in your account and Verikora calls it when work finishes. Each request carries an event name, a stable event id (apply an event once) and a signature. A payload holds ids and states, never a document or a report.",
       "signatureTitle": "Verify the signature",
       "signature": "The x-krizaka-signature header has this format. HEX is the HMAC-SHA256, with your endpoint's secret, of the timestamp, a dot and the raw body. Refuse a request whose signature does not match.",
       "signatureLabel": "Signature",
@@ -4000,7 +4000,7 @@
     "data": {
       "intro": "Your account and your checks are kept in a database in Toronto, Canada, visible to your account alone. A document is kept only if you choose it, and its information panel says where.",
       "retention": "A kept document stays until you delete it; deleting it deletes its file, its text and its results, and closing your account deletes your documents.",
-      "orazaka": "When you ask for a check, the document is sent to Orazaka, Krizaka's analysis engine, over HTTPS. Nothing is sold, shared or used to train a model.",
+      "orazaka": "When you ask for a check, the document is sent to Sovkora, Krizaka's analysis engine, over HTTPS. Nothing is sold, shared or used to train a model.",
       "privacy": "Read the privacy notice"
     }
   },
@@ -4087,7 +4087,7 @@
       "refusal": "You have one month from receiving this notice to refuse the increase; the landlord may then ask the Tribunal administratif du logement to set the rent.",
       "window": "Notice given between {opens} and {closes} ({citation}).",
       "signature": "Landlord's name and signature: ____________    Date: ____________",
-      "disclaimer": "Prepared with Yomizaka as information, not legal advice. The landlord checks it, signs it and sends it themselves: Yomizaka sends nothing on anyone's behalf."
+      "disclaimer": "Prepared with Verikora as information, not legal advice. The landlord checks it, signs it and sends it themselves: Verikora sends nothing on anyone's behalf."
     }
   },
   "stage": {
@@ -4095,7 +4095,7 @@
     "message": "Data can be reset at any time. This is not a commercial offer yet."
   },
   "contractSeal": {
-    "eyebrow": "Yomizaka — seal of a contract",
+    "eyebrow": "Verikora — seal of a contract",
     "partner": "Partner",
     "contractId": "Contract",
     "documentType": "Document type",
@@ -4111,9 +4111,9 @@
     "sealedAt": "Sealed on",
     "zone": "Data zone",
     "guaranteeHeading": "What this seal says",
-    "guarantees": "This file is sealed with Yomizaka's key (Ed25519, held by Krizaka): it attests that this content, these parties and these dates existed in this form at the time of sealing and have not been changed since.",
-    "notGuaranteed": "It does not verify anyone's identity, the age of anyone, the validity of the contract in law or the partner's statements: Yomizaka checks documents, it does not decide. Informative, not legal advice.",
-    "verify": "To check a copy, take its SHA-256 and open {url} followed by that value: the answer says whether Yomizaka sealed it and when, and shows no personal information."
+    "guarantees": "This file is sealed with Verikora's key (Ed25519, held by Krizaka): it attests that this content, these parties and these dates existed in this form at the time of sealing and have not been changed since.",
+    "notGuaranteed": "It does not verify anyone's identity, the age of anyone, the validity of the contract in law or the partner's statements: Verikora checks documents, it does not decide. Informative, not legal advice.",
+    "verify": "To check a copy, take its SHA-256 and open {url} followed by that value: the answer says whether Verikora sealed it and when, and shows no personal information."
   },
   "ownerReport": {
     "title": "Verification report",
@@ -4132,7 +4132,7 @@
     "findings": "Rules checked",
     "noFindings": "No rule was checked on this document.",
     "notExamined": "Not examined",
-    "runs": "Orazaka runs",
+    "runs": "Sovkora runs",
     "run": "{studio}, run {runId}, version {version}",
     "versionNone": "unspecified",
     "ruleset": "Ruleset {id} version {version} ({jurisdiction})",
@@ -4140,10 +4140,10 @@
     "limits": "What this report does not show: the documents themselves, the person's name or contact, any grade or ranking. The signals are observations about a file, never a judgement of a person.",
     "download": "Download the signed PDF",
     "expires": "This link is valid until {date}.",
-    "guarantees": "This PDF is signed with Yomizaka's key (Ed25519, held by Krizaka). The signature covers every item of this report (documents, signals, rules checked, runs, versions), the link's expiry and the full text of the pages. If a single character changes, verification fails.",
+    "guarantees": "This PDF is signed with Verikora's key (Ed25519, held by Krizaka). The signature covers every item of this report (documents, signals, rules checked, runs, versions), the link's expiry and the full text of the pages. If a single character changes, verification fails.",
     "notGuaranteed": "It does not prove that the signals or findings are right, nor who holds the file: it shows no name, contact, file name or quoted passage. Informative, not legal advice; a person decides.",
     "signatureNote": "The attestation (payload, text fingerprint and signature) is embedded in the PDF. Any change to the text of the earlier pages makes verification fail.",
-    "footer": "Yomizaka, a Krizaka product — analysis by Orazaka.",
+    "footer": "Verikora, a Krizaka product — analysis by Sovkora.",
     "verdict": {
       "PASS": "No issue reported",
       "FAIL": "Issue reported",
@@ -4165,7 +4165,7 @@
     "not-above-previous": "The new rent is not above the previous rent stated in Section G.",
     "no-rate": "No claim: the TAL's rate for this year is not entered, or the figures are not usable, so the increase is not compared.",
     "recourse": "Recourse: the tenant may ask the Tribunal administratif du logement to fix the rent (C.c.Q., art. 1950).",
-    "disclaimer": "Information about the figures and dates of the lease, not legal advice and no judgement on the landlord. Check the article and the TAL's page, or ask the TAL: it tells you the form and any fee, and how days and months are counted. Yomizaka files nothing."
+    "disclaimer": "Information about the figures and dates of the lease, not legal advice and no judgement on the landlord. Check the article and the TAL's page, or ask the TAL: it tells you the form and any fee, and how days and months are counted. Verikora files nothing."
   },
   "paymentClauses": {
     "advance-over-one-month": "The lease asks for more than one month of rent in advance. A landlord may require only the first term, within one month (C.c.Q., art. 1904).",

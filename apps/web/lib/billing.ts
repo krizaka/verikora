@@ -17,6 +17,7 @@ import { transaction } from "./db";
 import { refuse } from "./http";
 import { chargeOverage, type OverageBiller, refundOverage } from "./overage";
 import type { AuditCaps } from "./settings/boundary";
+import { PRODUCT_NAME } from "@/lib/brand";
 
 /**
  * Entitlements — the domain, vendor-free (it speaks the payments port's events, never a processor's). A self-serve account
@@ -196,7 +197,7 @@ async function billOverage(
   biller: OverageBiller,
   sale: { accountId: string; customerId: string; documentId: string; cents: number; now: Date },
 ): Promise<AuditVia> {
-  await chargeOverage(query, biller, { ...sale, description: "Yomizaka — dossier beyond the included volume" });
+  await chargeOverage(query, biller, { ...sale, description: `${PRODUCT_NAME} — dossier beyond the included volume` });
   return "overage";
 }
 

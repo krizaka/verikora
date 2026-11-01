@@ -98,7 +98,7 @@ describe("withSectionG: the deadline and the facts to take to the TAL", () => {
     expect(f.explanationEn).toContain("within two months of the start of the lease");
     expect(f.explanationEn).toContain("September 1, 2026");
     expect(f.explanationEn).toContain("Facts to take to the TAL");
-    expect(f.explanationEn).toContain("Yomizaka files nothing");
+    expect(f.explanationEn).toContain("Verikora files nothing");
     expect(f.explanationEn).toContain("not legal advice");
   });
 

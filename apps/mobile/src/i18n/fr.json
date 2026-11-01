@@ -1,6 +1,6 @@
 {
   "app": {
-    "name": "Yomizaka"
+    "name": "Verikora"
   },
   "tabs": {
     "label": "Navigation principale"
@@ -27,7 +27,7 @@
   },
   "verify": {
     "title": "Vérifier un document",
-    "lead": "Un bail, un contrat, une facture : choisissez le document, Yomizaka le lit et vous dit ce qui mérite votre attention.",
+    "lead": "Un bail, un contrat, une facture : choisissez le document, Verikora le lit et vous dit ce qui mérite votre attention.",
     "camera": "Scanner avec l'appareil photo",
     "photo": "Choisir une photo",
     "pdf": "Choisir un PDF",

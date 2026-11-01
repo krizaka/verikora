@@ -1,6 +1,6 @@
 {
   "app": {
-    "name": "Yomizaka"
+    "name": "Verikora"
   },
   "tabs": {
     "label": "Main navigation"
@@ -27,7 +27,7 @@
   },
   "verify": {
     "title": "Check a document",
-    "lead": "A lease, a contract, an invoice: pick the document, Yomizaka reads it and tells you what deserves your attention.",
+    "lead": "A lease, a contract, an invoice: pick the document, Verikora reads it and tells you what deserves your attention.",
     "camera": "Scan with the camera",
     "photo": "Choose a photo",
     "pdf": "Choose a PDF",

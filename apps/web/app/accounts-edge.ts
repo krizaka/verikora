@@ -6,6 +6,7 @@ import { env } from "@/lib/env";
 import { fromAuthMail, mailerFor } from "@/lib/mailer";
 import { resetLinkMinutes } from "@/lib/password-reset";
 import { tokenHash } from "@/lib/session";
+import { PRODUCT_NAME } from "@/lib/brand";
 
 /** The account service of this deployment (the edge wires the adapter: its data store, the mailer, the password hashing). */
 export const accountService = (options: { passwordResetTtlMinutes?: number } = {}) => {
@@ -16,7 +17,7 @@ export const accountService = (options: { passwordResetTtlMinutes?: number } = {
     passwordResetTtlMinutes: options.passwordResetTtlMinutes,
     mail: (mail) => mailerFor(e)(fromAuthMail(mail)),
     baseUrl: e.APP_PUBLIC_URL,
-    product: "Yomizaka",
+    product: PRODUCT_NAME,
     tokenPrefix: "ye",
     tokenHash: (token) => tokenHash(token),
     passwords: { hash: hashPassword, verify: verifyPassword },

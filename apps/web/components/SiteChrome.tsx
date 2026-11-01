@@ -11,6 +11,7 @@ import { BarActions, BarQueryRoot } from "@/components/BarSession";
 import { type Locale, translator } from "@/lib/i18n";
 import { menuHref, menuItems } from "@/lib/nav";
 import { type PageId, pagePath, REPO_URL } from "@/lib/site";
+import { PRODUCT_NAME } from "@/lib/brand";
 
 /**
  * The bar of a Krizaka product (products independent): the animated mark, the three places of the site (lib/nav.ts),
@@ -44,7 +45,7 @@ export function SiteHeader({
             <NavBar.Brand asChild>
               <Link href={home} aria-label={t("chrome.brandHome")}>
                 <YomizakaLogo size={26} />
-                Yomizaka
+                {PRODUCT_NAME}
               </Link>
             </NavBar.Brand>
             <NavBar.Items>

@@ -179,7 +179,7 @@ describe("the shell follows Orazaka's pattern (krizaka/yomizaka#278, the UX revi
     expect(shell).not.toMatch(/RailNav|PlusIcon\s*size=\{22\}/);
   });
   it("the header names the product, carries the DEV chip, and « Vérifier un document » as its gradient cut button, in the `primary` slot (B2, P14)", () => {
-    expect(shell).toContain('name="Yomizaka"');
+    expect(shell).toContain('name="Verikora"');
     expect(shell).not.toContain("titleOf(");
     expect(shell).toMatch(/chips=\{[\s\S]*data-testid="app-version"/);
     expect(shell).toMatch(

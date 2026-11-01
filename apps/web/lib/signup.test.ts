@@ -127,7 +127,7 @@ describe("sign-up", () => {
         { brand: "yomizaka", confirmUrl: "https://www.yomizaka.com/fr/verify-email?token=x", hours: VERIFY_TTL_HOURS },
         { locale },
       );
-      expect(mail.text).toContain("Yomizaka");
+      expect(mail.text).toContain("Verikora");
       expect(mail.text).not.toMatch(/conforme|compliant|garanti|guarantee|approuv|approved/i);
       expect(mail.html + mail.text).not.toMatch(/Orazaka|Akinaza/);
     }

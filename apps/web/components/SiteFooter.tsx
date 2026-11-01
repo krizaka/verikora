@@ -7,6 +7,7 @@ import { type Locale, translator } from "@/lib/i18n";
 import { indexable } from "@/lib/indexing";
 import { isListed } from "@/lib/listed";
 import { APP_VERSION, contactHref, pagePath, REPO_URL } from "@/lib/site";
+import { PRODUCT_NAME } from "@/lib/brand";
 
 /**
  * The footer is @krizaka/ui's SiteFooter in product mode (`family={false}`): the product's pages, its source and contact,
@@ -26,7 +27,7 @@ export function SiteFooter({ locale }: Readonly<{ locale: Locale }>) {
       env={indexable() ? undefined : "DEV"}
       data-testid="app-version"
     >
-      <SiteFooterColumn title="Yomizaka">
+      <SiteFooterColumn title={PRODUCT_NAME}>
         {isListed("download") ? (
           <SiteFooterLink asChild>
             <Link href={pagePath(locale, "download")}>{t("chrome.download")}</Link>

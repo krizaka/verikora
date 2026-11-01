@@ -39,7 +39,7 @@ export const api = createApiClient({
   session,
   fetch: (input, init) => tauriFetch(input, init),
   language: currentLocale,
-  productName: "Yomizaka",
+  productName: "Verikora",
   timeoutMs: API_TIMEOUT_MS,
 });
 

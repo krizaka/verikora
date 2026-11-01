@@ -12,6 +12,7 @@ import { drawPages, embedFonts, type Face, type Fonts, paginate, printable, sign
 import { canonicalJson, sha256 } from "./report";
 import { type SigningKey } from "./report-key";
 import { ATTESTATION_KEY } from "./report-pdf";
+import { PRODUCT_NAME } from "@/lib/brand";
 
 /*
  * The signed PDF of the owner report (yomizaka#481): the redacted report of an applicant file (hashes, signals, rules,
@@ -274,9 +275,9 @@ export async function issueOwnerReportPdf(payload: OwnerReportPayload, key: Sign
   drawPages(doc, fonts, [...body, signaturePage!]);
   const issued = new Date(payload.issuedAt);
   doc.setTitle(`${w.title} ${payload.reference}`);
-  doc.setSubject(`Yomizaka — ${payload.reference}`);
-  doc.setProducer("Yomizaka");
-  doc.setCreator("Yomizaka");
+  doc.setSubject(`${PRODUCT_NAME} — ${payload.reference}`);
+  doc.setProducer(PRODUCT_NAME);
+  doc.setCreator(PRODUCT_NAME);
   doc.setCreationDate(issued);
   doc.setModificationDate(issued);
   const info = doc.context.lookup(doc.context.trailerInfo.Info, PDFDict);

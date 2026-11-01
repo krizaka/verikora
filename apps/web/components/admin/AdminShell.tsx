@@ -14,6 +14,7 @@ import { Fragment } from "react";
 
 import { ADMIN_GROUPS, ADMIN_PAGES } from "@/lib/admin-nav";
 import { useSay } from "@/lib/i18n-client";
+import { PRODUCT_NAME } from "@/lib/brand";
 
 const VERSION = process.env.NEXT_PUBLIC_APP_VERSION ?? "";
 
@@ -57,7 +58,7 @@ export function AdminShell({
         label={say("adminConsole.shell.title")}
         brand={
           <Link href={home} className="inline-flex items-center gap-2">
-            <YomizakaLogo size={24} animated={false} /> Yomizaka{" "}
+            <YomizakaLogo size={24} animated={false} /> {PRODUCT_NAME}{" "}
             <Badge tone="warning">{say("adminConsole.shell.dev")}</Badge>
           </Link>
         }

@@ -81,11 +81,11 @@ describe("plain words, in both languages", () => {
     });
     it(`${name}: Yomizaka is the subject; Orazaka, the engine, is named once on the home, in the quiet line under the proof`, () => {
       expect(words(d.landing).filter((w) => /orazaka/i.test(w))).toEqual([d.landing.proof.powered]);
-      expect(d.landing.proof.powered).toMatch(/^(Powered by|Propulsé par) Orazaka\.$/);
+      expect(d.landing.proof.powered).toMatch(/^(Powered by|Propulsé par) Sovkora\.$/);
     });
     it(`${name}: the app says Checks, with the engine in small print`, () => {
-      expect(d.console.document.checks).not.toMatch(/Orazaka/);
-      expect(d.console.document.checksLead).toMatch(/Orazaka/);
+      expect(d.console.document.checks).not.toMatch(/Sovkora/);
+      expect(d.console.document.checksLead).toMatch(/Sovkora/);
     });
   }
   it("the home shows the engine line", () => {

@@ -3,11 +3,11 @@
 <plist version="1.0">
 <dict>
   <key>NSDocumentsFolderUsageDescription</key>
-  <string>Yomizaka reads the folders you choose for your library, nothing else.</string>
+  <string>Verikora reads the folders you choose for your library, nothing else.</string>
   <key>NSDesktopFolderUsageDescription</key>
-  <string>Yomizaka reads the folders you choose for your library, nothing else.</string>
+  <string>Verikora reads the folders you choose for your library, nothing else.</string>
   <key>NSDownloadsFolderUsageDescription</key>
-  <string>Yomizaka reads the folders you choose for your library, nothing else.</string>
+  <string>Verikora reads the folders you choose for your library, nothing else.</string>
   <key>CFBundleURLTypes</key>
   <array>
     <dict>

@@ -16,7 +16,7 @@ const en = { ...ownEn, ...sharedEn };
 describe("the native menu bar", () => {
   it("is built in the app's words, its « Aller » menu from the section map with ⌘1 to ⌘4 (yomizaka#319)", () => {
     const spec = menuSpec(fr);
-    expect(spec.labels.quit).toBe("Quitter Yomizaka");
+    expect(spec.labels.quit).toBe("Quitter Verikora");
     expect(spec.menus.map((m) => m.title)).toEqual(["Fichier", "Aller"]);
     expect(spec.menus.flatMap((m) => m.items.map((i) => [i.id, i.label, i.accelerator]))).toEqual([
       [MENU_IDS.addFolder, fr.menu.addFolder, "CmdOrCtrl+O"],

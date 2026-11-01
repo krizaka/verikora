@@ -56,7 +56,7 @@ const world = (status = 200) => {
 
 describe("the sender", () => {
   it("defaults to Yomizaka at the sending domain, and keeps the one the deployment sets", () => {
-    expect(mailEnvOf(CONFIG).MAIL_FROM).toBe("Yomizaka <no-reply@mg.example.test>");
+    expect(mailEnvOf(CONFIG).MAIL_FROM).toBe("Verikora <no-reply@mg.example.test>");
     expect(mailEnvOf({ ...CONFIG, MAIL_FROM: "Yomizaka <bonjour@yomizaka.com>" }).MAIL_FROM).toBe(
       "Yomizaka <bonjour@yomizaka.com>",
     );
@@ -76,7 +76,7 @@ describe("sending the three links", () => {
     expect(sent[0]!.url).toBe("https://api.mail.example.test/v3/mg.example.test/messages");
     const form = sent[0]!.form;
     expect(form.get("to")).toBe(mail.to.toLowerCase());
-    expect(form.get("from")).toBe("Yomizaka <no-reply@mg.example.test>");
+    expect(form.get("from")).toBe("Verikora <no-reply@mg.example.test>");
     expect(form.get("subject")).toMatch(subject);
     expect(form.get("text")).toContain(link);
     expect(form.get("html")).toContain(link.replaceAll("&", "&amp;"));
