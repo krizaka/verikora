@@ -39,14 +39,18 @@ function norm<T>(values: readonly T[]): { value: T; share: number } {
 }
 
 function pageAnomalies(page: number, amounts: readonly TextRun[]): Anomaly[] {
-  if (amounts.length < MIN_AMOUNTS_PER_PAGE) return [];
+  if (amounts.length < MIN_AMOUNTS_PER_PAGE) {
+    return [];
+  }
   const font = norm(amounts.map((r) => r.font));
   const size = norm(amounts.map((r) => r.size));
   const found: Anomaly[] = [];
   for (const r of amounts) {
     const wrongFont = font.share >= NORM_SHARE && r.font !== font.value;
     const wrongSize = size.share >= NORM_SHARE && Math.abs(r.size - size.value) > SIZE_TOLERANCE;
-    if (!wrongFont && !wrongSize) continue;
+    if (!wrongFont && !wrongSize) {
+      continue;
+    }
     const why = wrongFont
       ? `« ${r.text.trim()} » is set in ${r.font}, the other amounts of the page in ${font.value}`
       : `« ${r.text.trim()} » is set at ${r.size} pt, the other amounts of the page at ${size.value} pt`;
@@ -73,7 +77,9 @@ export function analyseTextRuns(runs: readonly TextRun[]): Anomaly[] {
 /** Adds the typography findings to a report read from the bytes. */
 export function withTextRuns(report: FraudReport, runs: readonly TextRun[]): FraudReport {
   const found = analyseTextRuns(runs);
-  if (found.length === 0) return report;
+  if (found.length === 0) {
+    return report;
+  }
   return {
     ...report,
     anomalies: [...report.anomalies, ...found],

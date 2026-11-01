@@ -19,28 +19,32 @@ interface PdfItem {
 const isItem = (item: unknown): item is PdfItem =>
   typeof item === "object" && item !== null && "str" in item && "transform" in item;
 
+type Pdf = Awaited<ReturnType<typeof getDocumentProxy>>;
+
+const readPage = async (pdf: Pdf, number: number): Promise<TextRun[]> => {
+  const page = await pdf.getPage(number);
+  const content = await page.getTextContent();
+  await page.getOperatorList();
+  return content.items
+    .filter((item): item is PdfItem => isItem(item) && item.str.trim() !== "")
+    .map((item) => ({
+      page: number,
+      text: item.str,
+      font: (page.commonObjs.get(item.fontName) as { name?: string } | undefined)?.name ?? item.fontName,
+      size: Math.round(Math.hypot(item.transform[2] ?? 0, item.transform[3] ?? 0) * 100) / 100,
+      x: item.transform[4] ?? 0,
+      y: item.transform[5] ?? 0,
+      width: item.width,
+      height: item.height,
+    }));
+};
+
 export const readTextRuns: TextRunReader = async (bytes) => {
   const pdf = await getDocumentProxy(new Uint8Array(bytes));
   try {
     const runs: TextRun[] = [];
     for (let number = 1; number <= pdf.numPages; number++) {
-      const page = await pdf.getPage(number);
-      const content = await page.getTextContent();
-      await page.getOperatorList();
-      for (const item of content.items) {
-        if (!isItem(item) || item.str.trim() === "") continue;
-        const font = (page.commonObjs.get(item.fontName) as { name?: string } | undefined)?.name ?? item.fontName;
-        runs.push({
-          page: number,
-          text: item.str,
-          font,
-          size: Math.round(Math.hypot(item.transform[2] ?? 0, item.transform[3] ?? 0) * 100) / 100,
-          x: item.transform[4] ?? 0,
-          y: item.transform[5] ?? 0,
-          width: item.width,
-          height: item.height,
-        });
-      }
+      runs.push(...(await readPage(pdf, number)));
     }
     return runs;
   } finally {
