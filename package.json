@@ -31,7 +31,8 @@
     "check:app-links": "pnpm --filter @yomizaka/web exec vitest run lib/app-links.test.ts",
     "test:visual": "playwright test -c apps/web/e2e/visual/playwright.config.mjs",
     "format": "prettier --write \"**/*.{ts,tsx,js,jsx,mjs,cjs,json,css}\"",
-    "format:check": "prettier --check \"**/*.{ts,tsx,js,jsx,mjs,cjs,json,css}\""
+    "format:check": "prettier --check \"**/*.{ts,tsx,js,jsx,mjs,cjs,json,css}\"",
+    "db:rebuild": "pnpm --filter @yomizaka/web db:rebuild"
   },
   "devDependencies": {
     "@ast-grep/cli": "0.51.0",

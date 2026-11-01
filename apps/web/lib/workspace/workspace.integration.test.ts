@@ -1,11 +1,9 @@
 import { BULK_MAX, filterSql } from "@krizaka/organize";
 import { memoryStore } from "@yomizaka/core";
-import type pg from "pg";
-import { afterAll, beforeAll, describe, expect, it } from "vitest";
+import { beforeAll, describe, expect, it } from "vitest";
 
 import { countApplicantFiles, listApplicantFiles, requestApplicantFile } from "../applicant-file";
-import { migrate, pool, query } from "../db";
-import { MIGRATIONS } from "../migrations";
+import { migrate, query } from "../db";
 import { browse } from "../organisation/store";
 import { binderPlan } from "./binder";
 import { DECISION, KIND, WORKSPACE } from "./decl";
@@ -339,88 +337,5 @@ describe.runIf(enabled)("the organised workspace (yomizaka#324)", () => {
         w.views.create(eric.id, actorOf(eric), KIND.applicantFile, { name: "Bad", filters: { status: ["nope"] } }),
       ),
     ).toBe("BAD_REQUEST");
-  });
-});
-
-/**
- * Migration 0033 on the data of before: the documents' tags move to the layer with their names and markers, the old join table
- * goes, the collections' tags stay. Run in a schema of its own, the layer's schema renamed, so the shared database is not touched.
- */
-describe.runIf(enabled)("migration 0033 on the data of before (yomizaka#324)", () => {
-  let client: pg.PoolClient;
-  beforeAll(async () => {
-    client = await pool().connect();
-    await client.query("DROP SCHEMA IF EXISTS move_test CASCADE");
-    await client.query("DROP SCHEMA IF EXISTS organize_move CASCADE");
-    await client.query("CREATE SCHEMA move_test");
-    await client.query("SET search_path = move_test, public");
-  });
-  afterAll(async () => {
-    await client.query("RESET search_path");
-    await client.query("DROP SCHEMA IF EXISTS move_test CASCADE");
-    await client.query("DROP SCHEMA IF EXISTS organize_move CASCADE");
-    client.release();
-  });
-
-  it("keeps every tag a document wore, once, and leaves the collections' tags alone", async () => {
-    const before = MIGRATIONS.filter((m) => m.version < "0033_workspace_organised");
-    const after = MIGRATIONS.find((m) => m.version === "0033_workspace_organised")!;
-    for (const m of before) await client.query(m.sql);
-    const q = async <T extends pg.QueryResultRow>(text: string, values: unknown[] = []) =>
-      (await client.query<T>(text, values)).rows;
-    const [owner] = await q<{ id: string }>(
-      "INSERT INTO accounts (email) VALUES ('eric-move@yomizaka.test') RETURNING id",
-    );
-    const [col] = await q<{ id: string }>("SELECT id FROM collections WHERE owner_id = $1 AND is_default", [owner!.id]);
-    const doc = async (n: number) =>
-      (
-        await q<{ id: string }>(
-          "INSERT INTO documents (owner_id, collection_id, title, filename, mime_type, size_bytes, sha256, content) VALUES ($1, $2, 't', 'f.txt', 'text/plain', 1, $3, 'x') RETURNING id",
-          [owner!.id, col!.id, `m-${n}`],
-        )
-      )[0]!.id;
-    const [d1, d2] = [await doc(1), await doc(2)];
-    const tag = async (name: string, color: string) =>
-      (
-        await q<{ id: string }>("INSERT INTO tags (owner_id, name, color) VALUES ($1, $2, $3) RETURNING id", [
-          owner!.id,
-          name,
-          color,
-        ])
-      )[0]!.id;
-    const [bail, garant, onlyCollection] = [
-      await tag("Bail", "green"),
-      await tag("Garant", "amber"),
-      await tag("Immeuble", "blue"),
-    ];
-    await q("INSERT INTO document_tags (document_id, tag_id) VALUES ($1, $2), ($1, $3), ($4, $3)", [
-      d1,
-      bail,
-      garant,
-      d2,
-    ]);
-    await q("INSERT INTO collections_tags (collection_id, tag_id) VALUES ($1, $2)", [col!.id, onlyCollection]);
-
-    await client.query(after.sql.replaceAll("organize", "organize_move"));
-
-    const moved = await q<{ name: string; marker: string; origin: string }>(
-      "SELECT name, marker, origin FROM organize_move.tag WHERE scope_id = $1 AND kind = 'document' ORDER BY name",
-      [owner!.id],
-    );
-    expect(moved).toEqual([
-      { name: "Bail", marker: "green", origin: "user" },
-      { name: "Garant", marker: "amber", origin: "user" },
-    ]);
-    const worn = await q<{ entity_id: string; name: string }>(
-      "SELECT w.entity_id, t.name FROM organize_move.document_tag w JOIN organize_move.tag t ON t.id = w.tag_id",
-    );
-    expect(worn.map((r) => `${r.entity_id === d1 ? "d1" : "d2"} ${r.name}`).sort(byText)).toEqual([
-      "d1 Bail",
-      "d1 Garant",
-      "d2 Garant",
-    ]);
-    expect(await q("SELECT to_regclass('move_test.document_tags') AS t")).toEqual([{ t: null }]);
-    expect(await q("SELECT 1 FROM collections_tags WHERE collection_id = $1", [col!.id])).toHaveLength(1);
-    expect(await q("SELECT 1 FROM tags WHERE id = $1", [onlyCollection])).toHaveLength(1);
   });
 });

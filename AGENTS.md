@@ -104,8 +104,8 @@
 
 - Documents (≤ 10 MB) are kept **in the database** (`documents.content`, bytea) for the MVP: no storage service to pay
   for or secure. Database `yomizaka_db` on the shared dev cluster `krizaka-dev-pg` (its own role, trusted source = the
-  app). Migrations are code (`lib/migrations.ts`), applied at start by `@krizaka/db`'s `migrate` under an advisory lock (key 73191, history `schema_migrations`; on `DATABASE_DIRECT_URL`); a deployed migration is never
-  edited. The Krizaka modules whose tables pre-date the package are adopted (markers only, `lib/modules.ts`, migration 0036) and `assertModules` runs at boot.
+  app). Migrations are code (`lib/migrations.ts`), applied at start by `@krizaka/db`'s `migrate` under an advisory lock (key 73191, history `schema_migrations`; on `DATABASE_DIRECT_URL`).
+  **One baseline** (`0001_baseline`, krizaka-internal#2044: no production yet, no history kept); a change of schema is a new entry after it, never an edit of a merged one. The configuration rows (document types, retention, screening providers, check types, compliance gates) are **code** (`lib/config-seed.ts`, idempotent, run by `migrate`). `pnpm db:rebuild` (`--yes` for a non-local host, `--cast` for the demo cast, `--write-expected` after a schema change) drops every schema, migrates from zero, seeds the configuration and checks the schema against `lib/schema-expected.json` (`lib/schema-check.ts`); CI builds a database from zero and runs the same check (`lib/db-rebuild.integration.test.ts`). Dev is rebuilt with it, never patched by hand.
 - Deployed on DigitalOcean App Platform, project `yomizaka`, the smallest service (`apps-s-1vcpu-0.5gb`, $5/month),
   `dev.yomizaka.com`. Budget mode: nothing recurring above that without a written decision.
 
