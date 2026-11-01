@@ -43,14 +43,10 @@ describe("db", () => {
     expect(sessionPoolConfig({ DATABASE_URL: url }).connectionString).toBe(url);
   });
 
-  it("keeps ordered, unique migrations", () => {
+  it("keeps ordered, unique migrations, the first one the baseline", () => {
     const versions = MIGRATIONS.map((m) => m.version);
     expect(new Set(versions).size).toBe(versions.length);
     expect([...versions].sort()).toEqual(versions);
-  });
-
-  it("has no gap in the numbering since 0058 (two branches adding 0060 and 0061 must land in order)", () => {
-    const numbers = MIGRATIONS.map((m) => Number(m.version.slice(0, 4))).filter((n) => n >= 58);
-    numbers.forEach((n, i) => expect(n).toBe(58 + i));
+    expect(versions[0]).toBe("0001_baseline");
   });
 });

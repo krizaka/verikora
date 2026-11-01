@@ -1,0 +1,63 @@
+// pnpm db:rebuild — DROP every schema of the database in DATABASE_URL, migrate from zero, seed the configuration from code,
+// verify the schema (krizaka-internal#2044). No production yet, dev data is demo: the demo cast is seeded after, by
+// `node scripts/demo-seed/cli.mjs --cast` (or `--cast` here, locally). Flags: --yes (required for a non-local host),
+// --cast (run the cast seed after), --write-expected (rewrite lib/schema-expected.json from the fresh build).
+import { spawnSync } from "node:child_process";
+import { readFile, writeFile } from "node:fs/promises";
+
+import { seedConfig } from "../lib/config-seed";
+import { migrate, pool, query } from "../lib/db";
+import { diffSnapshot, readSnapshot, type SchemaSnapshot } from "../lib/schema-check";
+
+const EXPECTED = new URL("lib/schema-expected.json", `file://${process.cwd()}/`);
+const flag = (name: string) => process.argv.includes(`--${name}`);
+const LOCAL = new Set(["localhost", "127.0.0.1", "::1", "[::1]", "postgres", "db"]);
+
+async function main() {
+  const url = new URL(process.env.DATABASE_URL ?? "");
+  if (process.env.APP_ENVIRONMENT === "production") {
+    throw new Error("db:rebuild never runs against production");
+  }
+  if (!LOCAL.has(url.hostname) && !flag("yes")) {
+    throw new Error(`${url.hostname}/${url.pathname.slice(1)} is not local: pass --yes to rebuild it`);
+  }
+  console.log(`db:rebuild ${url.hostname}/${url.pathname.slice(1)}`);
+  const schemas = await query<{ nspname: string }>(
+    `SELECT nspname FROM pg_namespace WHERE nspname NOT IN ('pg_catalog', 'information_schema', 'public') AND nspname NOT LIKE 'pg\\_%'`,
+  );
+  for (const { nspname } of schemas) {
+    await query(`DROP SCHEMA "${nspname}" CASCADE`);
+  }
+  await query("DROP SCHEMA public CASCADE");
+  await query("CREATE SCHEMA public");
+  const applied = await migrate();
+  console.log(`migrated: ${applied.join(", ")}`);
+  await seedConfig(query);
+  const actual = await readSnapshot(query);
+  if (flag("write-expected")) {
+    await writeFile(EXPECTED, `${JSON.stringify(actual, null, 2)}\n`);
+    console.log("lib/schema-expected.json written");
+  } else {
+    const problems = diffSnapshot(JSON.parse(await readFile(EXPECTED, "utf8")) as SchemaSnapshot, actual);
+    if (problems.length) {
+      throw new Error(`schema check failed:\n  ${problems.join("\n  ")}`);
+    }
+  }
+  console.log(`schema check: ${Object.keys(actual.tables).length} tables, configuration present`);
+  await pool().end();
+  if (flag("cast")) {
+    const run = spawnSync(process.execPath, ["../../scripts/demo-seed/cli.mjs", "--cast", "--check"], {
+      stdio: "inherit",
+      env: process.env,
+    });
+    if (run.status !== 0) {
+      throw new Error("the cast seed failed");
+    }
+  }
+  process.exit(0);
+}
+
+main().catch((error) => {
+  console.error(String(error instanceof Error ? error.message : error).slice(0, 2000));
+  process.exit(1);
+});

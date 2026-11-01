@@ -9,11 +9,9 @@ import {
   statusOrder,
   undoOf,
   viewHref,
-  workspaceMigration,
 } from "@krizaka/organize";
 import { describe, expect, it } from "vitest";
 
-import { MIGRATIONS } from "../migrations";
 import { DECISION, isKind, KIND, OWNER_ROLE, WORKSPACE } from "./decl";
 import { DECISION_SET, DEFAULT_CONFIGS } from "./defaults";
 import { decisionOrder, sortByDecision } from "./order";
@@ -242,20 +240,5 @@ describe("the layer as Yomizaka wires it", () => {
     expect(isKind("document")).toBe(true);
     expect(isKind("screening")).toBe(false);
     expect(isKind(undefined)).toBe(false);
-  });
-});
-
-describe("the migration", () => {
-  it("is the package's SQL for the declaration, embedded whole (drift test)", () => {
-    const migration = MIGRATIONS.find((m) => m.version === "0033_workspace_organised");
-    expect(migration, "the workspace migration is in the sequence").toBeDefined();
-    expect(migration!.sql).toContain(workspaceMigration(WORKSPACE));
-  });
-
-  it("moves the tags of the documents to the layer, then drops the old table: one source of truth", () => {
-    const sql = MIGRATIONS.find((m) => m.version === "0033_workspace_organised")!.sql;
-    expect(sql).toContain("INSERT INTO organize.tag");
-    expect(sql).toContain("INSERT INTO organize.document_tag");
-    expect(sql).toContain("DROP TABLE document_tags");
   });
 });

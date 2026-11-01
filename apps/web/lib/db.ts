@@ -1,6 +1,7 @@
 import { type Connection, migrate as runMigrations, type Query, transaction as dbTransaction } from "@krizaka/db";
 import pg from "pg";
 
+import { seedConfig } from "./config-seed";
 import { readEnv } from "./env";
 import { MIGRATIONS } from "./migrations";
 
@@ -96,9 +97,18 @@ async function connectionOf(source: pg.Pool): Promise<Connection> {
 // @fixed: the advisory-lock key every deployed instance already takes; changing it would let two instances migrate at once
 export const MIGRATION_LOCK_KEY = 73191;
 
-/** Applies the migrations not applied yet, one transaction each, under an advisory lock (two instances never race). */
+/**
+ * Applies the migrations not applied yet, one transaction each, under an advisory lock (two instances never race), then the
+ * configuration rows from code (`lib/config-seed.ts`, idempotent): the database a caller gets is the schema AND what the code expects in it.
+ */
 export async function migrate(client?: pg.Pool): Promise<string[]> {
-  return runMigrations(() => connectionOf(client ?? lockPool()), MIGRATIONS, { lockKey: MIGRATION_LOCK_KEY });
+  const applied = await runMigrations(() => connectionOf(client ?? lockPool()), MIGRATIONS, {
+    lockKey: MIGRATION_LOCK_KEY,
+  });
+  await seedConfig(
+    async (text, values) => (await (client ?? pool()).query(text, values as unknown[] | undefined)).rows as never,
+  );
+  return applied;
 }
 
 /**

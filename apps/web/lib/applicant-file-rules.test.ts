@@ -16,7 +16,7 @@ import {
   SEED_DOCUMENT_TYPES,
   SEED_FIELDS,
 } from "./applicant-file-rules";
-import { MIGRATIONS } from "./migrations";
+import { CONFIG_SEED } from "./config-seed";
 
 /** yomizaka#127, the rules that need no database: the link's states, what a request may ask, the retention and the words. */
 const NOW = new Date("2026-10-24T12:00:00Z");
@@ -115,11 +115,10 @@ describe("retention", () => {
 });
 
 describe("the catalogue and its words", () => {
-  it("seeds the four document types in the migration, and nothing that is refused", () => {
-    const migration = MIGRATIONS.find((m) => m.version === "0031_applicant_file");
-    expect(migration).toBeDefined();
-    for (const id of SEED_DOCUMENT_TYPES) expect(migration!.sql).toContain(`'${id}'`);
-    expect(migration!.sql).not.toMatch(/'sin'|'health-card'|'passport'|'bank-details'/);
+  it("seeds the four document types from code (lib/config-seed.ts), and nothing that is refused", () => {
+    const seed = CONFIG_SEED.filter((block) => block.includes("public.document_types")).join("\n");
+    for (const id of SEED_DOCUMENT_TYPES) expect(seed).toContain(`'${id}'`);
+    expect(seed).not.toMatch(/'sin'|'health-card'|'passport'|'bank-details'/);
   });
 
   it("gives every seeded type and field a label and a sentence, in French and in English", () => {

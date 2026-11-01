@@ -1,15 +1,12 @@
 /**
  * The schema, as ordered migrations applied once each (lib/db.ts `migrate`, at server start, under an advisory lock).
- * Kept in code rather than in .sql files so the standalone server carries them. A migration is never edited once
- * deployed: a change is a new entry.
+ * Kept in code rather than in .sql files so the standalone server carries them.
+ *
+ * ONE baseline (krizaka-internal#2044, founder 2026-10-31: no production yet, so no history to keep): the schema of the
+ * 65 migrations before it, with the Krizaka modules' version markers. The config rows (document types, retention,
+ * screening providers, check types, compliance gates) are NOT here: they are seeded from code, `lib/config-seed.ts`.
+ * A change of schema from now on is a NEW entry after this one; regenerate the baseline only by rebuilding a dev database.
  */
-import { accountsMigration } from "@krizaka/auth";
-import { pricesMigration } from "@krizaka/settings";
-import { webhooksMigration } from "@krizaka/webhooks";
-
-import { DEFAULT_COLLECTION_MIGRATION } from "./organisation/default-collection";
-import { WORKSPACE_MIGRATION } from "./workspace/migration";
-
 export interface Migration {
   version: string;
   sql: string;
@@ -17,1287 +14,41 @@ export interface Migration {
 
 export const MIGRATIONS: readonly Migration[] = [
   {
-    version: "0001_initial",
+    version: "0001_baseline",
     sql: `
-CREATE TABLE accounts (
-  id            uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-  email         text NOT NULL UNIQUE CHECK (email = lower(email)),
-  role          text NOT NULL DEFAULT 'USER' CHECK (role IN ('USER', 'ADMIN')),
-  status        text NOT NULL DEFAULT 'ACTIVE' CHECK (status IN ('ACTIVE', 'SUSPENDED')),
-  locale        text NOT NULL DEFAULT 'en' CHECK (locale IN ('en', 'fr')),
-  password_hash text,
-  created_at    timestamptz NOT NULL DEFAULT now(),
-  last_seen_at  timestamptz
-);
+CREATE SCHEMA audit;
 
--- A web session: the cookie holds a random token, the table its keyed hash (a leaked table opens nothing).
-CREATE TABLE sessions (
-  id           uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-  account_id   uuid NOT NULL REFERENCES accounts(id) ON DELETE CASCADE,
-  token_hash   text NOT NULL UNIQUE,
-  created_at   timestamptz NOT NULL DEFAULT now(),
-  expires_at   timestamptz NOT NULL,
-  ip           text,
-  user_agent   text
-);
-CREATE INDEX sessions_account ON sessions(account_id);
+CREATE SCHEMA coupons;
 
--- A document and its file. The MVP keeps the file here (bytea, ≤ 10 MB): no storage service to pay for or secure yet.
--- text is the PDF's text layer (or the text file), read at upload — the input of Orazaka's compliance Studio and of search.
-CREATE TABLE documents (
-  id          uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-  owner_id    uuid NOT NULL REFERENCES accounts(id) ON DELETE CASCADE,
-  title       text NOT NULL,
-  filename    text NOT NULL,
-  mime_type   text NOT NULL CHECK (mime_type IN ('application/pdf', 'text/plain')),
-  kind        text NOT NULL DEFAULT 'other' CHECK (kind IN ('lease', 'contract', 'invoice', 'other')),
-  size_bytes  integer NOT NULL CHECK (size_bytes > 0 AND size_bytes <= 10485760),
-  sha256      text NOT NULL,
-  pages       integer,
-  content     bytea NOT NULL,
-  text        text NOT NULL DEFAULT '',
-  created_at  timestamptz NOT NULL DEFAULT now(),
-  search      tsvector GENERATED ALWAYS AS (
-                setweight(to_tsvector('simple', coalesce(title, '')), 'A') || setweight(to_tsvector('simple', coalesce(text, '')), 'B')
-              ) STORED,
-  UNIQUE (owner_id, sha256)
-);
-CREATE INDEX documents_owner ON documents(owner_id, created_at DESC);
-CREATE INDEX documents_search ON documents USING gin(search);
+CREATE SCHEMA credits;
 
--- An analysis is an Orazaka run: its id (the trace), its status as Orazaka last said it, the report Orazaka returned.
-CREATE TABLE analyses (
-  id                uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-  document_id       uuid NOT NULL REFERENCES documents(id) ON DELETE CASCADE,
-  studio            text NOT NULL CHECK (studio IN ('compliance-check', 'document-authenticity')),
-  status            text NOT NULL DEFAULT 'running' CHECK (status IN ('running', 'succeeded', 'failed', 'cancelled')),
-  run_id            text,
-  blueprint_version text,
-  inputs            jsonb NOT NULL DEFAULT '{}',
-  report            jsonb,
-  error             text,
-  search_text       text NOT NULL DEFAULT '',
-  created_at        timestamptz NOT NULL DEFAULT now(),
-  finished_at       timestamptz
-);
-CREATE INDEX analyses_document ON analyses(document_id, created_at DESC);
-CREATE INDEX analyses_search ON analyses USING gin(to_tsvector('simple', search_text));
+CREATE SCHEMA organize;
 
-CREATE TABLE audit_log (
-  id          bigserial PRIMARY KEY,
-  at          timestamptz NOT NULL DEFAULT now(),
-  actor_id    uuid,
-  actor_label text NOT NULL,
-  action      text NOT NULL,
-  target_id   text,
-  detail      jsonb NOT NULL DEFAULT '{}',
-  ip          text
-);
-CREATE INDEX audit_log_at ON audit_log(at DESC);
-`,
-  },
-  {
-    version: "0002_showcase",
-    sql: `
--- A document an administrator has declared a sample (non-personal): the only kind a public showcase may show.
-ALTER TABLE documents ADD COLUMN sample boolean NOT NULL DEFAULT false;
--- The analysis the public page shows (at most one at a time: promoting another replaces it). Set by an administrator only.
-ALTER TABLE analyses ADD COLUMN showcase boolean NOT NULL DEFAULT false;
-CREATE INDEX analyses_showcase ON analyses(finished_at DESC) WHERE showcase;
-`,
-  },
-  {
-    version: "0003_report_grants",
-    sql: `
--- Verifying a signed report is for the people the report's owner gave access to (ADR-0002). A grant names an e-mail:
--- a member of that address has access at once, and an address with no account yet is an invitation honoured the day the
--- account exists (sign-up is closed on dev, so the row waits). Revoked or past its expiry, a grant opens nothing.
-CREATE TABLE report_grants (
-  id            uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-  analysis_id   uuid NOT NULL REFERENCES analyses(id) ON DELETE CASCADE,
-  granted_by    uuid NOT NULL REFERENCES accounts(id) ON DELETE CASCADE,
-  grantee_email text NOT NULL CHECK (grantee_email = lower(grantee_email)),
-  created_at    timestamptz NOT NULL DEFAULT now(),
-  expires_at    timestamptz,
-  revoked_at    timestamptz
-);
-CREATE UNIQUE INDEX report_grants_live ON report_grants(analysis_id, grantee_email) WHERE revoked_at IS NULL;
-CREATE INDEX report_grants_email ON report_grants(grantee_email);
+CREATE SCHEMA payments;
 
--- "Request access": a signed-in member asks the owner for a report they cannot verify; the owner sees it beside the grants.
-CREATE TABLE report_access_requests (
-  id              uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-  analysis_id     uuid NOT NULL REFERENCES analyses(id) ON DELETE CASCADE,
-  requester_id    uuid NOT NULL REFERENCES accounts(id) ON DELETE CASCADE,
-  requester_email text NOT NULL,
-  created_at      timestamptz NOT NULL DEFAULT now(),
-  handled_at      timestamptz
-);
-CREATE UNIQUE INDEX report_access_requests_open ON report_access_requests(analysis_id, requester_id) WHERE handled_at IS NULL;
-`,
-  },
-  {
-    version: "0004_perspective",
-    sql: `
--- Which side of the lease the person is on (chosen at onboarding, changeable in settings): drives the default checks and the wording.
-ALTER TABLE accounts ADD COLUMN perspective text CHECK (perspective IN ('tenant', 'landlord'));
-`,
-  },
-  {
-    version: "0005_audiences",
-    sql: `
--- « Pour qui ? » grows past the two sides of a lease: freelancers and small businesses (offered as « soon » until their rules exist).
-ALTER TABLE accounts DROP CONSTRAINT IF EXISTS accounts_perspective_check;
-ALTER TABLE accounts ADD CONSTRAINT accounts_perspective_check CHECK (perspective IN ('tenant', 'landlord', 'freelancer', 'business'));
-`,
-  },
-  {
-    version: "0006_flows",
-    sql: `
--- Flows are data, administered on admin.yomizaka.com (ADR-0003). A published version never changes.
-CREATE TABLE flows (
-  id                 uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-  key                text NOT NULL UNIQUE CHECK (key ~ '^[a-z0-9-]{1,60}$'),
-  current_version_id uuid,
-  created_at         timestamptz NOT NULL DEFAULT now()
-);
-CREATE TABLE flow_versions (
-  id           uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-  flow_id      uuid NOT NULL REFERENCES flows(id) ON DELETE CASCADE,
-  version      integer NOT NULL CHECK (version >= 1),
-  status       text NOT NULL DEFAULT 'draft' CHECK (status IN ('draft', 'published', 'retired')),
-  definition   jsonb NOT NULL,
-  created_by   uuid REFERENCES accounts(id) ON DELETE SET NULL,
-  created_at   timestamptz NOT NULL DEFAULT now(),
-  published_at timestamptz,
-  UNIQUE (flow_id, version)
-);
-ALTER TABLE flows ADD CONSTRAINT flows_current_version FOREIGN KEY (current_version_id) REFERENCES flow_versions(id) ON DELETE SET NULL;
-CREATE TABLE flow_environments (
-  flow_id     uuid NOT NULL REFERENCES flows(id) ON DELETE CASCADE,
-  environment text NOT NULL CHECK (environment IN ('dev', 'prod')),
-  enabled     boolean NOT NULL DEFAULT false,
-  PRIMARY KEY (flow_id, environment)
-);
--- What a person agreed to (a flow may require it): granted, then maybe withdrawn.
-CREATE TABLE consents (
-  id          uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-  account_id  uuid NOT NULL REFERENCES accounts(id) ON DELETE CASCADE,
-  key         text NOT NULL CHECK (key ~ '^[a-z0-9-]{1,40}$'),
-  granted_at  timestamptz NOT NULL DEFAULT now(),
-  revoked_at  timestamptz
-);
-CREATE UNIQUE INDEX consents_live ON consents(account_id, key) WHERE revoked_at IS NULL;
--- The exact flow version that produced a check: publishing a new version never touches an old analysis.
-ALTER TABLE analyses ADD COLUMN flow_version_id uuid REFERENCES flow_versions(id) ON DELETE SET NULL;
-`,
-  },
-  {
-    version: "0007_screenings",
-    sql: `
--- A landlord asks, the tenant consents (or declines), sees the result first, shares it or contests it. Minimal data: a short
--- summary is kept, never a provider's raw report, and it is deleted when result_expires_at passes (docs/product/tenant-screening-research.md).
-CREATE TABLE screenings (
-  id                uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-  landlord_id       uuid NOT NULL REFERENCES accounts(id) ON DELETE CASCADE,
-  tenant_name       text NOT NULL,
-  tenant_email      text NOT NULL CHECK (tenant_email = lower(tenant_email)),
-  scope             text[] NOT NULL DEFAULT '{payment-history}',
-  provider          text NOT NULL,
-  status            text NOT NULL DEFAULT 'requested' CHECK (status IN ('requested', 'consented', 'shared', 'declined', 'contested', 'expired')),
-  token_hash        text NOT NULL UNIQUE,
-  created_at        timestamptz NOT NULL DEFAULT now(),
-  expires_at        timestamptz NOT NULL,
-  consented_at      timestamptz,
-  shared_at         timestamptz,
-  contested_at      timestamptz,
-  contest_comment   text,
-  result            jsonb,
-  result_expires_at timestamptz,
-  purged_at         timestamptz
-);
-CREATE INDEX screenings_landlord ON screenings(landlord_id, created_at DESC);
-`,
-  },
-  {
-    version: "0008_signup",
-    sql: `
--- Self-serve sign-up (2026-10-21): the address is verified by a mailed link, the terms and the privacy notice accepted
--- (version and date kept: Loi 25 consent). Existing accounts (QA, operators) are verified by construction.
-ALTER TABLE accounts ADD COLUMN email_verified_at timestamptz;
-UPDATE accounts SET email_verified_at = created_at;
-ALTER TABLE accounts ADD COLUMN terms_version text;
-ALTER TABLE accounts ADD COLUMN terms_accepted_at timestamptz;
-ALTER TABLE accounts ADD COLUMN privacy_accepted_at timestamptz;
-CREATE TABLE email_verifications (
-  id         uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-  account_id uuid NOT NULL REFERENCES accounts(id) ON DELETE CASCADE,
-  token_hash text NOT NULL UNIQUE,
-  created_at timestamptz NOT NULL DEFAULT now(),
-  expires_at timestamptz NOT NULL,
-  used_at    timestamptz
-);
-CREATE INDEX email_verifications_account ON email_verifications(account_id);
-`,
-  },
-  {
-    version: "0009_billing",
-    sql: `
--- Entitlements (2026-10-22, ADR-0004): one free audit per self-serve account, then a paid credit or the Pro plan. The
--- processor is the source of truth; these columns mirror its notifications (vendor-free names). payment_events makes a
--- notification idempotent: an event id is applied once.
-ALTER TABLE accounts ADD COLUMN free_audit_used_at timestamptz;
-ALTER TABLE accounts ADD COLUMN audit_credits integer NOT NULL DEFAULT 0 CHECK (audit_credits >= 0);
-ALTER TABLE accounts ADD COLUMN plan text NOT NULL DEFAULT 'FREE' CHECK (plan IN ('FREE', 'PRO'));
-ALTER TABLE accounts ADD COLUMN payment_customer_id text UNIQUE;
-ALTER TABLE accounts ADD COLUMN payment_subscription_id text;
-ALTER TABLE accounts ADD COLUMN subscription_status text;
-ALTER TABLE accounts ADD COLUMN current_period_end timestamptz;
-CREATE TABLE payment_events (
-  id          text PRIMARY KEY,
-  type        text NOT NULL,
-  received_at timestamptz NOT NULL DEFAULT now()
-);
-`,
-  },
-  {
-    version: "0010_preflight_events",
-    sql: `
--- The pre-flight's outcomes (ADR-0005): what reached the engine, what was refused for nothing, what was reused. A refused or
--- reused file is an engine run avoided; the metrics count them per tenant.
-CREATE TABLE preflight_events (
-  id         uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-  account_id uuid REFERENCES accounts(id) ON DELETE SET NULL,
-  outcome    text NOT NULL CHECK (outcome IN ('accepted', 'rejected', 'reused')),
-  reason     text,
-  created_at timestamptz NOT NULL DEFAULT now()
-);
-CREATE INDEX preflight_events_account ON preflight_events(account_id, created_at DESC);
-`,
-  },
-  {
-    version: "0011_analysis_billing",
-    sql: `
--- What paid for an analysis (free audit, credit, Pro, exempt), so a run that FAILS gives its audit back exactly once
--- ('free' → 'free-refunded').
-ALTER TABLE analyses ADD COLUMN billed_via text;
-`,
-  },
-  {
-    version: "0012_organisation",
-    sql: `
--- ADR-0007: libraries > collections > folders (one level) > files, and tags (per owner). Containers cascade with their
--- owner; a document's placement is NO ACTION, so a container that still holds files cannot disappear by accident.
-CREATE TABLE libraries (
-  id         uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-  owner_id   uuid NOT NULL REFERENCES accounts(id) ON DELETE CASCADE,
-  name       text NOT NULL,
-  created_at timestamptz NOT NULL DEFAULT now(),
-  UNIQUE (owner_id, name)
-);
-CREATE TABLE collections (
-  id         uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-  library_id uuid NOT NULL REFERENCES libraries(id) ON DELETE CASCADE,
-  name       text NOT NULL,
-  created_at timestamptz NOT NULL DEFAULT now(),
-  UNIQUE (library_id, name)
-);
-CREATE TABLE folders (
-  id            uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-  collection_id uuid NOT NULL REFERENCES collections(id) ON DELETE CASCADE,
-  name          text NOT NULL,
-  created_at    timestamptz NOT NULL DEFAULT now(),
-  UNIQUE (collection_id, name)
-);
-CREATE TABLE tags (
-  id       uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-  owner_id uuid NOT NULL REFERENCES accounts(id) ON DELETE CASCADE,
-  name     text NOT NULL,
-  color    text NOT NULL CHECK (color IN ('blue', 'green', 'amber', 'red', 'violet', 'gray'))
-);
-CREATE UNIQUE INDEX tags_owner_name ON tags(owner_id, lower(name));
-CREATE TABLE collection_tags (collection_id uuid NOT NULL REFERENCES collections(id) ON DELETE CASCADE, tag_id uuid NOT NULL REFERENCES tags(id) ON DELETE CASCADE, PRIMARY KEY (collection_id, tag_id));
-CREATE TABLE folder_tags (folder_id uuid NOT NULL REFERENCES folders(id) ON DELETE CASCADE, tag_id uuid NOT NULL REFERENCES tags(id) ON DELETE CASCADE, PRIMARY KEY (folder_id, tag_id));
-CREATE TABLE document_tags (document_id uuid NOT NULL REFERENCES documents(id) ON DELETE CASCADE, tag_id uuid NOT NULL REFERENCES tags(id) ON DELETE CASCADE, PRIMARY KEY (document_id, tag_id));
-ALTER TABLE documents ADD COLUMN collection_id uuid REFERENCES collections(id);
-ALTER TABLE documents ADD COLUMN folder_id uuid REFERENCES folders(id);
-ALTER TABLE documents ADD CONSTRAINT documents_folder_in_collection CHECK (folder_id IS NULL OR collection_id IS NOT NULL);
-CREATE INDEX documents_collection ON documents(collection_id, folder_id);
-`,
-  },
-  {
-    version: "0013_document_storage",
-    sql: `
--- ADR-0007: where a document lives (the DocumentStore adapter that holds it) and, when the person or the workspace set one,
--- when it is purged. Every existing document is in the database.
-ALTER TABLE documents ADD COLUMN storage text NOT NULL DEFAULT 'database' CHECK (storage IN ('none', 'database', 'bunny', 's3', 'device'));
-ALTER TABLE documents ADD COLUMN retain_until timestamptz;
-`,
-  },
-  {
-    version: "0014_account_profile",
-    sql: `
--- ADR-0008: what the account port needs and no more — a display name, an avatar seed, and the e-mail change (a link mailed to the NEW address).
-ALTER TABLE accounts ADD COLUMN name text CHECK (name IS NULL OR char_length(name) <= 80);
-ALTER TABLE accounts ADD COLUMN avatar_seed text CHECK (avatar_seed IS NULL OR avatar_seed ~ '^[a-z0-9-]{1,40}$');
-CREATE TABLE email_changes (
-  id         uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-  account_id uuid NOT NULL REFERENCES accounts(id) ON DELETE CASCADE,
-  new_email  text NOT NULL CHECK (new_email = lower(new_email)),
-  token_hash text NOT NULL UNIQUE,
-  created_at timestamptz NOT NULL DEFAULT now(),
-  expires_at timestamptz NOT NULL,
-  used_at    timestamptz
-);
-`,
-  },
-  {
-    version: "0015_storage_settings",
-    sql: `
--- ADR-0007: where a workspace's (today: an owner's) kept documents live — Krizaka's configured store, nothing kept, or its own
--- S3-compatible cloud (the secret is sealed with the deployment's key, never stored or returned in clear).
--- Which cloud holds a document kept outside the database: Krizaka's configured store or the owner's own.
-ALTER TABLE documents ADD COLUMN storage_owner text NOT NULL DEFAULT 'krizaka' CHECK (storage_owner IN ('krizaka', 'workspace'));
-CREATE TABLE storage_settings (
-  owner_id         uuid PRIMARY KEY REFERENCES accounts(id) ON DELETE CASCADE,
-  mode             text NOT NULL DEFAULT 'krizaka' CHECK (mode IN ('none', 'krizaka', 's3')),
-  keep_default     boolean NOT NULL DEFAULT false,
-  s3_endpoint      text,
-  s3_region        text,
-  s3_bucket        text,
-  s3_access_key_id text,
-  s3_secret_sealed text,
-  tested_at        timestamptz,
-  updated_at       timestamptz NOT NULL DEFAULT now()
-);
-`,
-  },
-  {
-    version: "0016_app_settings",
-    sql: `
--- ADR-0009: the app's configuration as data. A value is set at the global level, for a workspace or for one user; the most
--- specific wins. Every change keeps its before and after.
-CREATE TABLE app_settings (
-  scope      text NOT NULL CHECK (scope IN ('global', 'workspace', 'user')),
-  scope_id   text NOT NULL DEFAULT '',
-  key        text NOT NULL CHECK (key ~ '^[a-zA-Z0-9.]{1,80}$'),
-  value      jsonb NOT NULL,
-  updated_at timestamptz NOT NULL DEFAULT now(),
-  updated_by uuid,
-  PRIMARY KEY (scope, scope_id, key),
-  CHECK ((scope = 'global') = (scope_id = ''))
-);
-CREATE TABLE settings_audit (
-  id          bigserial PRIMARY KEY,
-  at          timestamptz NOT NULL DEFAULT now(),
-  actor_id    uuid,
-  actor_label text NOT NULL,
-  scope       text NOT NULL,
-  scope_id    text NOT NULL DEFAULT '',
-  key         text NOT NULL,
-  before      jsonb,
-  after       jsonb
-);
-CREATE INDEX settings_audit_key ON settings_audit(key, id DESC);
-`,
-  },
-  {
-    version: "0017_text_source",
-    sql: `
--- ADR-0010: a document made from photos keeps how its text was read (local character recognition, or a model's reading with its
--- run), and where the photo came from (device, editor, dates, GPS yes/no). Null for a PDF or a text file.
-ALTER TABLE documents ADD COLUMN text_source jsonb;
-`,
-  },
-  { version: "0019_default_collection", sql: DEFAULT_COLLECTION_MIGRATION },
-  {
-    version: "0020_collection_avatar",
-    sql: `
--- krizaka/yomizaka#206: a collection has an avatar — {"kind":"set","seed":"plain-2"} or {"kind":"image","version":3}; null for none.
-ALTER TABLE collections ADD COLUMN avatar jsonb CHECK (avatar IS NULL OR (jsonb_typeof(avatar) = 'object' AND avatar->>'kind' IN ('set', 'image')));
-`,
-  },
-  {
-    version: "0021_api_keys",
-    sql: `
--- ADR-0011: API keys. Only a SHA-256 of the secret is kept; the public id finds the record. A rotated-out key keeps working until
--- superseded_at (its grace period); a revoked one stops at once.
-CREATE TABLE api_keys (
-  id              uuid PRIMARY KEY,
-  owner_id        uuid NOT NULL REFERENCES accounts(id) ON DELETE CASCADE,
-  name            text NOT NULL CHECK (length(name) BETWEEN 1 AND 80),
-  public_id       text NOT NULL UNIQUE CHECK (public_id ~ '^[0-9a-f]{12}$'),
-  secret_hash     text NOT NULL CHECK (secret_hash ~ '^[0-9a-f]{64}$'),
-  scopes          text[] NOT NULL CHECK (cardinality(scopes) > 0),
-  expires_at      timestamptz,
-  created_at      timestamptz NOT NULL,
-  last_used_at    timestamptz,
-  revoked_at      timestamptz,
-  rotated_from_id uuid REFERENCES api_keys(id) ON DELETE SET NULL,
-  superseded_at   timestamptz
-);
-CREATE INDEX api_keys_owner ON api_keys(owner_id, created_at);
-`,
-  },
-  {
-    version: "0022_organize_package",
-    sql: `
--- krizaka/yomizaka (ADR-006): the collections' tag join table takes the package's name, and a collection may have a description.
-ALTER TABLE collection_tags RENAME TO collections_tags;
-ALTER TABLE collections ADD COLUMN description text CHECK (description IS NULL OR length(description) <= 500);
-`,
-  },
-  {
-    version: "0023_accounts_auth_package",
-    // @krizaka/auth: what the shared account adapter needs on top of 0014 (name, avatar seed, e-mail changes) — the theme the person chose. Idempotent.
-    sql: accountsMigration(),
-  },
-  {
-    version: "0024_word_documents",
-    sql: `
--- yomizaka#229: a Word file (.docx) is a document — its text read for the checks, the file examined for authenticity.
-ALTER TABLE documents DROP CONSTRAINT IF EXISTS documents_mime_type_check;
-ALTER TABLE documents ADD CONSTRAINT documents_mime_type_check CHECK (mime_type IN ('application/pdf', 'text/plain', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'));
-`,
-  },
-  {
-    version: "0025_batches",
-    sql: `
--- yomizaka#232: a batch of checks from a CSV. The batch is rows, the source of truth; each item one row of the CSV,
--- the document it stored and the analysis it runs or reuses. Deleting the account, the batch or the document
--- takes the rows with it (the analysis keeps its own lifecycle).
-CREATE TABLE batches (
-  id          uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-  owner_id    uuid NOT NULL REFERENCES accounts(id) ON DELETE CASCADE,
-  name        text NOT NULL CHECK (length(name) BETWEEN 1 AND 200),
-  created_at  timestamptz NOT NULL DEFAULT now(),
-  finished_at timestamptz
-);
-CREATE INDEX batches_owner ON batches(owner_id, created_at DESC);
+CREATE SCHEMA privacy;
 
-CREATE TABLE batch_items (
-  id          uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-  batch_id    uuid NOT NULL REFERENCES batches(id) ON DELETE CASCADE,
-  line        integer NOT NULL CHECK (line >= 2),
-  file_name   text NOT NULL,
-  reference   text,
-  request     jsonb,
-  document_id uuid REFERENCES documents(id) ON DELETE SET NULL,
-  analysis_id uuid REFERENCES analyses(id) ON DELETE SET NULL,
-  state       text NOT NULL CHECK (state IN ('pending', 'reused', 'running', 'done', 'failed', 'refused')),
-  error       text,
-  UNIQUE (batch_id, line)
-);
-CREATE INDEX batch_items_state ON batch_items(batch_id, state);
-`,
-  },
-  {
-    version: "0026_opendocument_text",
-    sql: `
--- yomizaka#229: OpenDocument text uses the Word upload and analysis path.
-ALTER TABLE documents DROP CONSTRAINT IF EXISTS documents_mime_type_check;
-ALTER TABLE documents ADD CONSTRAINT documents_mime_type_check CHECK (mime_type IN ('application/pdf', 'text/plain', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'application/vnd.oasis.opendocument.text'));
-`,
-  },
-  {
-    version: "0028_batch_tick",
-    sql: `
--- yomizaka#240: a batch advances without anyone looking at it. A batch that waits (the account must pay, the engine is busy)
--- is not tried again before tick_after.
-ALTER TABLE batches ADD COLUMN tick_after timestamptz;
-CREATE INDEX batches_open ON batches(created_at) WHERE finished_at IS NULL;
-`,
-  },
-  {
-    version: "0029_webhooks",
-    // yomizaka#241: signed outgoing webhooks (endpoints, one queued delivery per endpoint and event, the log).
-    sql: webhooksMigration("accounts"),
-  },
-  {
-    version: "0030_application_consents",
-    // yomizaka#131 (Loi 25): consent is recorded per application (a screening) and per purpose, with the notice version shown,
-    // the date and the means. A withdrawal sets withdrawn_at (the row stays as the record). A document uploaded for an
-    // application is linked to it, so its checks are gated by the application's consent. Erasure of an application
-    // is its own status: its personal fields are blanked, its documents and result deleted.
-    sql: `
-CREATE TABLE application_consents (
-  id             uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-  screening_id   uuid NOT NULL REFERENCES screenings(id) ON DELETE CASCADE,
-  purpose        text NOT NULL CHECK (purpose IN ('DOCUMENT_CHECK', 'COURT_RECORDS', 'CREDIT')),
-  notice_version text NOT NULL CHECK (length(notice_version) BETWEEN 1 AND 40),
-  means          text NOT NULL CHECK (means IN ('web-form')),
-  granted_at     timestamptz NOT NULL DEFAULT now(),
-  withdrawn_at   timestamptz
-);
--- At most one active consent per application and purpose; a withdrawn one is kept as the record.
-CREATE UNIQUE INDEX application_consents_active ON application_consents(screening_id, purpose) WHERE withdrawn_at IS NULL;
+CREATE SCHEMA storage;
 
-ALTER TABLE documents ADD COLUMN screening_id uuid REFERENCES screenings(id) ON DELETE SET NULL;
-CREATE INDEX documents_screening ON documents(screening_id) WHERE screening_id IS NOT NULL;
-
-ALTER TABLE screenings DROP CONSTRAINT IF EXISTS screenings_status_check;
-ALTER TABLE screenings ADD CONSTRAINT screenings_status_check CHECK (status IN ('requested', 'consented', 'shared', 'declined', 'contested', 'expired', 'erased'));`,
-  },
-  {
-    version: "0031_applicant_file",
-    // yomizaka#127: the applicant file. A manager asks for a file (a screening row with flow 'file', its link and the document
-    // types asked for); the applicant consents per purpose, then uploads. Document types and retention policies are rows: a
-    // new type needs no deploy. The link is revoked, used (submitted) or closed (the manager's decision); its files are purged
-    // after the check, or after the decision when the applicant consented to keep them (DOCUMENT_KEEP).
-    sql: `
-CREATE TABLE retention_policies (
-  id       text PRIMARY KEY CHECK (id ~ '^[a-z0-9-]{2,40}$'),
-  purge_on text NOT NULL CHECK (purge_on IN ('after-check', 'after-decision'))
-);
-INSERT INTO retention_policies (id, purge_on) VALUES ('after-check', 'after-check'), ('after-decision', 'after-decision');
-
-CREATE TABLE document_types (
-  id               text PRIMARY KEY CHECK (id ~ '^[a-z0-9-]{2,40}$'),
-  accepted_kinds   text[] NOT NULL DEFAULT '{pdf}' CHECK (accepted_kinds <@ ARRAY['pdf']::text[]),
-  studios          text[] NOT NULL DEFAULT '{document-authenticity,compliance-check}' CHECK (studios <@ ARRAY['document-authenticity', 'compliance-check']::text[]),
-  fields           text[] NOT NULL DEFAULT '{}',
-  retention_policy text NOT NULL DEFAULT 'after-check' REFERENCES retention_policies(id),
-  active           boolean NOT NULL DEFAULT true,
-  position         integer NOT NULL DEFAULT 0
-);
-INSERT INTO document_types (id, fields, retention_policy, position) VALUES
-  ('pay-stub', '{employer,pay-period}', 'after-decision', 1),
-  ('bank-statement', '{statement-period}', 'after-decision', 2),
-  ('employment-letter', '{employer,position,start-date}', 'after-decision', 3),
-  ('identity-document', '{full-name}', 'after-check', 4);
-
--- The applicant may keep a document until the manager's decision (a consent, with the notice version, like the others).
-ALTER TABLE application_consents DROP CONSTRAINT IF EXISTS application_consents_purpose_check;
-ALTER TABLE application_consents ADD CONSTRAINT application_consents_purpose_check CHECK (purpose IN ('DOCUMENT_CHECK', 'COURT_RECORDS', 'CREDIT', 'DOCUMENT_KEEP'));
-
-ALTER TABLE screenings ADD COLUMN flow text NOT NULL DEFAULT 'screening' CHECK (flow IN ('screening', 'file'));
-ALTER TABLE screenings ADD COLUMN requested_types text[] NOT NULL DEFAULT '{}';
-ALTER TABLE screenings ADD COLUMN revoked_at timestamptz;
-ALTER TABLE screenings ADD COLUMN submitted_at timestamptz;
-ALTER TABLE screenings ADD COLUMN closed_at timestamptz;
-
-ALTER TABLE documents ADD COLUMN document_type text REFERENCES document_types(id);
-ALTER TABLE documents ADD COLUMN retention_policy text REFERENCES retention_policies(id);
-ALTER TABLE documents ADD COLUMN checks_skipped jsonb NOT NULL DEFAULT '[]';
-`,
-  },
-  {
-    version: "0032_password_resets",
-    // @krizaka/auth 0.5: the table of password reset links (a link mailed to the account's address, used once, time-limited). Idempotent.
-    sql: accountsMigration(),
-  },
-  {
-    version: "0033_workspace_organised",
-    // krizaka-ts ADR-003, @krizaka/organize 0.4 (yomizaka#324): tags with markers, the decision set, saved views; the documents' tags move in.
-    sql: WORKSPACE_MIGRATION,
-  },
-  {
-    version: "0034_price_catalogue",
-    // ADR-009 (krizaka/.github#253, yomizaka#367): the price versions an administrator schedules (@krizaka/settings 0.2, idempotent),
-    // and what a subscription was sold at — the catalogue entry and its version, recorded at checkout and kept when it starts.
-    sql: `${pricesMigration()}
-ALTER TABLE accounts ADD COLUMN IF NOT EXISTS checkout_price_key text;
-ALTER TABLE accounts ADD COLUMN IF NOT EXISTS checkout_price_version text;
-ALTER TABLE accounts ADD COLUMN IF NOT EXISTS subscription_price_key text;
-ALTER TABLE accounts ADD COLUMN IF NOT EXISTS subscription_price_version text;
-`,
-  },
-  {
-    version: "0035_document_extraction",
-    // yomizaka#21: a new document's text is read after the upload answered (202 Accepted). Every existing row is already read: `done`.
-    sql: `ALTER TABLE documents ADD COLUMN extraction text NOT NULL DEFAULT 'done' CHECK (extraction IN ('queued', 'running', 'done', 'failed'));
-ALTER TABLE documents ADD COLUMN extraction_error text;
-ALTER TABLE documents ADD COLUMN extraction_at timestamptz NOT NULL DEFAULT now();
-`,
-  },
-  {
-    version: "0036_adopt_krizaka_modules",
-    // krizaka-ts ADR-001 (yomizaka#258): the tables of settings (0016), prices (0034), accounts (0023), API keys (0021), webhooks (0029) and
-    // the organised workspace (0033) ran before `@krizaka/db`. Their versions are adopted: markers only, no DDL. Printed by `adoptMigration`
-    // (`lib/modules.ts`); `lib/modules.test.ts` holds this text to what it prints today.
-    sql: `-- @krizaka/db: adopt settings v1–v1 (existing tables, markers only). Generated by adoptMigration.
-CREATE TABLE IF NOT EXISTS public.krizaka_module_versions (
-  module     text NOT NULL,
-  version    integer NOT NULL,
-  checksum   text NOT NULL,
-  applied_at timestamptz NOT NULL DEFAULT now(),
-  PRIMARY KEY (module, version)
-);
-INSERT INTO public.krizaka_module_versions (module, version, checksum) VALUES
-  ('settings', 1, '051524285802ef38f829227d81f34935afd8999c2f83be821d25b1f6078ac7a1')
-ON CONFLICT (module, version) DO NOTHING;
-
--- @krizaka/db: adopt settings_prices v1–v1 (existing tables, markers only). Generated by adoptMigration.
-CREATE TABLE IF NOT EXISTS public.krizaka_module_versions (
-  module     text NOT NULL,
-  version    integer NOT NULL,
-  checksum   text NOT NULL,
-  applied_at timestamptz NOT NULL DEFAULT now(),
-  PRIMARY KEY (module, version)
-);
-INSERT INTO public.krizaka_module_versions (module, version, checksum) VALUES
-  ('settings_prices', 1, 'a2cad37a2efe0309a4114b7bfe67fa5fc9766d7a5d3aba4e1edbc4157125c11f')
-ON CONFLICT (module, version) DO NOTHING;
-
--- @krizaka/db: adopt auth v1–v1 (existing tables, markers only). Generated by adoptMigration.
-CREATE TABLE IF NOT EXISTS public.krizaka_module_versions (
-  module     text NOT NULL,
-  version    integer NOT NULL,
-  checksum   text NOT NULL,
-  applied_at timestamptz NOT NULL DEFAULT now(),
-  PRIMARY KEY (module, version)
-);
-INSERT INTO public.krizaka_module_versions (module, version, checksum) VALUES
-  ('auth', 1, 'a48bf5bf2db6f001d588c012447f75ea8fd3d57f049debd1ba1de801dc037628')
-ON CONFLICT (module, version) DO NOTHING;
-
--- @krizaka/db: adopt api_keys v1–v1 (existing tables, markers only). Generated by adoptMigration.
-CREATE TABLE IF NOT EXISTS public.krizaka_module_versions (
-  module     text NOT NULL,
-  version    integer NOT NULL,
-  checksum   text NOT NULL,
-  applied_at timestamptz NOT NULL DEFAULT now(),
-  PRIMARY KEY (module, version)
-);
-INSERT INTO public.krizaka_module_versions (module, version, checksum) VALUES
-  ('api_keys', 1, '65a8c2cee01432a016cb553fb8f9765e39a9fe51f1ad30bfab7693120a65ac20')
-ON CONFLICT (module, version) DO NOTHING;
-
--- @krizaka/db: adopt webhooks v1–v1 (existing tables, markers only). Generated by adoptMigration.
-CREATE TABLE IF NOT EXISTS public.krizaka_module_versions (
-  module     text NOT NULL,
-  version    integer NOT NULL,
-  checksum   text NOT NULL,
-  applied_at timestamptz NOT NULL DEFAULT now(),
-  PRIMARY KEY (module, version)
-);
-INSERT INTO public.krizaka_module_versions (module, version, checksum) VALUES
-  ('webhooks', 1, 'f7850a9284262b6daffebc41540647ccae5cc6ea7842fdd765fbf3b483d751e9')
-ON CONFLICT (module, version) DO NOTHING;
-
--- @krizaka/db: adopt organize_workspace v1–v1 (existing tables, markers only). Generated by adoptMigration.
-CREATE TABLE IF NOT EXISTS public.krizaka_module_versions (
-  module     text NOT NULL,
-  version    integer NOT NULL,
-  checksum   text NOT NULL,
-  applied_at timestamptz NOT NULL DEFAULT now(),
-  PRIMARY KEY (module, version)
-);
-INSERT INTO public.krizaka_module_versions (module, version, checksum) VALUES
-  ('organize_workspace', 1, '40aad1cd1db0f5cf96e43a4015934b9c633b8b993d58f3ff7273319fc0bf6a6b')
-ON CONFLICT (module, version) DO NOTHING;
-`,
-  },
-  {
-    version: "0037_audit_package",
-    // krizaka-ts `@krizaka/audit` v1 (printed by `emitMigration`, `lib/modules.ts` EMITTED; `lib/modules.test.ts` holds this text to it), then the copy of `audit_log`.
-    sql: `-- @krizaka/db: audit v1 (entries). Generated by emitMigration; never edit by hand.
-CREATE TABLE IF NOT EXISTS public.krizaka_module_versions (
-  module     text NOT NULL,
-  version    integer NOT NULL,
-  checksum   text NOT NULL,
-  applied_at timestamptz NOT NULL DEFAULT now(),
-  PRIMARY KEY (module, version)
-);
-CREATE SCHEMA IF NOT EXISTS audit;
-CREATE TABLE audit.entry (
-  id          bigserial PRIMARY KEY,
-  at          timestamptz NOT NULL,
-  actor_id    uuid REFERENCES accounts(id) ON DELETE SET NULL,
-  actor_label text NOT NULL CHECK (char_length(actor_label) BETWEEN 1 AND 120),
-  action      text NOT NULL CHECK (action ~ '^[a-z][a-z0-9_]*(\\.[a-z0-9_]+)*$' AND char_length(action) <= 80),
-  target_type text CHECK (target_type IS NULL OR char_length(target_type) <= 40),
-  target_id   text CHECK (target_id IS NULL OR char_length(target_id) <= 200),
-  detail      jsonb NOT NULL DEFAULT '{}'::jsonb,
-  ip          inet
-);
-CREATE INDEX entry_at ON audit.entry (at DESC);
-CREATE INDEX entry_action ON audit.entry (action, at DESC);
-CREATE INDEX entry_target ON audit.entry (target_type, target_id, at DESC);
-CREATE INDEX entry_actor ON audit.entry (actor_id) WHERE actor_id IS NOT NULL;
-INSERT INTO public.krizaka_module_versions (module, version, checksum) VALUES
-  ('audit', 1, '0a4bb651cf3e6b34f99bc29b22944e7ef7da1a1ce28df02807b45ca51cbf722d')
-ON CONFLICT (module, version) DO NOTHING;
-
--- yomizaka#259: the trail moves into the package's table. Every row is copied in order (an action id takes the package's alphabet: « applicant-file.closed » is
--- « applicant_file.closed »; a label is cut to 120; an actor that no longer exists is null; a target is typed by its action's domain), the counts must match,
--- then \`audit_log\` stays one release as a view over the table (a rollback of the code still writes and reads it) and is dropped in a follow-up.
-CREATE FUNCTION pg_temp.audit_inet(v text) RETURNS inet LANGUAGE plpgsql IMMUTABLE AS $$
-BEGIN
-  RETURN v::inet;
-EXCEPTION WHEN others THEN
-  RETURN NULL;
-END $$;
-INSERT INTO audit.entry (at, actor_id, actor_label, action, target_type, target_id, detail, ip)
-SELECT l.at, a.id, left(coalesce(nullif(btrim(l.actor_label), ''), 'unknown'), 120), left(regexp_replace(lower(l.action), '[^a-z0-9_.]', '_', 'g'), 80),
-       CASE WHEN l.target_id IS NULL THEN NULL ELSE left(split_part(regexp_replace(lower(l.action), '[^a-z0-9_.]', '_', 'g'), '.', 1), 40) END,
-       left(l.target_id, 200), l.detail, pg_temp.audit_inet(l.ip)
-  FROM audit_log l LEFT JOIN accounts a ON a.id = l.actor_id
- ORDER BY l.id;
-DO $$
-BEGIN
-  IF (SELECT count(*) FROM audit.entry) <> (SELECT count(*) FROM audit_log) THEN
-    RAISE EXCEPTION 'audit copy: the row counts differ';
-  END IF;
-END $$;
-DROP TABLE audit_log;
-CREATE VIEW audit_log AS SELECT id, at, actor_id, actor_label, action, target_id, detail, ip FROM audit.entry;
-ALTER VIEW audit_log ALTER COLUMN at SET DEFAULT now();
-`,
-  },
-  {
-    version: "0038_adopt_sessions",
-    // yomizaka#263: the `sessions` table (0001) is `@krizaka/auth`'s `auth_sessions` v1: adopted, markers only, no DDL. The tokens and hashes stored stay valid.
-    sql: `-- @krizaka/db: adopt auth_sessions v1–v1 (existing tables, markers only). Generated by adoptMigration.
-CREATE TABLE IF NOT EXISTS public.krizaka_module_versions (
-  module     text NOT NULL,
-  version    integer NOT NULL,
-  checksum   text NOT NULL,
-  applied_at timestamptz NOT NULL DEFAULT now(),
-  PRIMARY KEY (module, version)
-);
-INSERT INTO public.krizaka_module_versions (module, version, checksum) VALUES
-  ('auth_sessions', 1, '25ebd4e197a9af3c91386dd4142abcb58c58aac7142bfe4fb18efa2a282f8421')
-ON CONFLICT (module, version) DO NOTHING;`,
-  },
-  {
-    version: "0039_screening_providers",
-    // yomizaka#132: the screening providers, the check types and what each owner may request are DATA. A provider row names an
-    // adapter (demo, or the engine's door); a check type names a provider and the engine purpose it needs, its labels, its price
-    // as cost + margin, and the consent notice version. Adding a type or switching a provider is a row, no deploy.
-    // screening_checks keeps one check's honest outcome: a closed outcome, the provider's opaque reference and the engine run id —
-    // never a raw report (yomizaka#134).
-    sql: `
-CREATE TABLE screening_provider (
-  id       text PRIMARY KEY CHECK (id ~ '^[a-z][a-z0-9-]{1,39}$'),
-  adapter  text NOT NULL CHECK (adapter IN ('demo', 'engine')),
-  label    text NOT NULL,
-  region   text NOT NULL DEFAULT 'CA',
-  enabled  boolean NOT NULL DEFAULT false,
-  note     text
-);
-CREATE TABLE check_type (
-  key                    text PRIMARY KEY CHECK (key ~ '^[a-z][a-z0-9-]{1,39}$'),
-  provider_id            text NOT NULL REFERENCES screening_provider(id),
-  purpose                text NOT NULL CHECK (purpose IN ('COURT_RECORDS', 'CREDIT')),
-  label_fr               text NOT NULL,
-  label_en               text NOT NULL,
-  provider_cost_cents    integer NOT NULL DEFAULT 0 CHECK (provider_cost_cents >= 0),
-  margin_cents           integer NOT NULL DEFAULT 0 CHECK (margin_cents >= 0),
-  currency               text NOT NULL DEFAULT 'CAD' CHECK (currency = 'CAD'),
-  region                 text NOT NULL DEFAULT 'QC',
-  consent_notice_version text NOT NULL,
-  enabled                boolean NOT NULL DEFAULT false,
-  default_on             boolean NOT NULL DEFAULT false,
-  requires_lawyer        text,
-  note                   text
-);
-CREATE TABLE tenant_check_setting (
-  owner_id   uuid NOT NULL REFERENCES accounts(id) ON DELETE CASCADE,
-  check_type text NOT NULL REFERENCES check_type(key),
-  allowed    boolean NOT NULL,
-  PRIMARY KEY (owner_id, check_type)
-);
-CREATE TABLE screening_checks (
-  id           uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-  screening_id uuid NOT NULL REFERENCES screenings(id) ON DELETE CASCADE,
-  check_type   text NOT NULL REFERENCES check_type(key),
-  state        text NOT NULL CHECK (state IN ('answered', 'pending', 'unavailable', 'soon')),
-  outcome      text NOT NULL CHECK (outcome IN ('MATCH', 'NO_MATCH', 'PENDING', 'PROVIDER_ERROR', 'TIMEOUT', 'REFUSED')),
-  refusal      text CHECK (refusal IN ('NO_CONSENT', 'NO_KEY', 'BUDGET_EXHAUSTED', 'NOT_CONFIGURED')),
-  category     text NOT NULL DEFAULT 'NONE' CHECK (category IN ('TAL_NON_PAYMENT', 'TAL_OTHER', 'CRIMINAL', 'CIVIL', 'NONE')),
-  provider_ref text,
-  run_id       uuid NOT NULL,
-  submitted_at timestamptz NOT NULL DEFAULT now(),
-  answered_at  timestamptz,
-  UNIQUE (screening_id, check_type)
-);
-INSERT INTO screening_provider (id, adapter, label, enabled, note) VALUES
-  ('demo', 'demo', 'Demonstration', true, 'Fictitious data, deterministic.'),
-  ('engine', 'engine', 'Orazaka external checks', true, 'Routes to the vendors by data. Every call answers NOT_CONFIGURED until a provider account exists and the compliance gate is open.');
-INSERT INTO check_type (key, provider_id, purpose, label_fr, label_en, consent_notice_version, enabled, default_on, requires_lawyer, note) VALUES
-  ('payment-history', 'demo', 'COURT_RECORDS', 'Historique de paiement', 'Payment history', '2026-10-24.2', true, true, NULL, 'Demonstration only until a provider agreement is signed.'),
-  ('credit', 'engine', 'CREDIT', 'Rapport de crédit', 'Credit report', '2026-10-24.2', true, false, NULL, 'Price to be set when the provider agreement is signed. Offered to an owner by a tenant_check_setting row.'),
-  ('criminal-record', 'engine', 'COURT_RECORDS', 'Antécédents judiciaires', 'Criminal record', '2026-10-24.2', false, false, 'criminal-records-lawful', 'OFF. Not offered to Québec landlords until a lawyer confirms it is lawful for rental (Charter, CDPDJ).');`,
-  },
-  {
-    version: "0040_screening_polling",
-    // yomizaka#134: a PENDING check is collected by polling its provider (webhooks later, yomizaka#426). The interval and the number of
-    // tries are DATA on the provider row; a check that never answers is given up as « unavailable », never kept pending for good.
-    sql: `
-ALTER TABLE screening_provider ADD COLUMN poll_minutes integer NOT NULL DEFAULT 15 CHECK (poll_minutes BETWEEN 1 AND 1440);
-ALTER TABLE screening_provider ADD COLUMN poll_max integer NOT NULL DEFAULT 96 CHECK (poll_max BETWEEN 1 AND 1000);
-ALTER TABLE screening_checks ADD COLUMN next_poll_at timestamptz;
-ALTER TABLE screening_checks ADD COLUMN polls integer NOT NULL DEFAULT 0;
-CREATE INDEX screening_checks_due ON screening_checks(next_poll_at) WHERE state = 'pending';`,
-  },
-  {
-    version: "0041_screening_charges",
-    // yomizaka#133: per-check billing. The payer is chosen per request (the applicant pays only where the check type allows it:
-    // C.c.Q. art. 1904 limits the fees a tenant may be charged, a lawyer decides). A charge snapshots cost + margin and the invoice
-    // line, so a later price change never rewrites what was billed. Nothing is written while features.screeningBilling is off.
-    sql: `
-ALTER TABLE screenings ADD COLUMN payer text NOT NULL DEFAULT 'owner' CHECK (payer IN ('firm', 'owner', 'applicant'));
-ALTER TABLE check_type ADD COLUMN applicant_may_pay boolean NOT NULL DEFAULT false;
-CREATE TABLE screening_charge (
-  id                  uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-  screening_id        uuid NOT NULL REFERENCES screenings(id) ON DELETE CASCADE,
-  check_type          text NOT NULL REFERENCES check_type(key),
-  payer               text NOT NULL CHECK (payer IN ('firm', 'owner', 'applicant')),
-  provider_cost_cents integer NOT NULL CHECK (provider_cost_cents >= 0),
-  margin_cents        integer NOT NULL CHECK (margin_cents >= 0),
-  amount_cents        integer NOT NULL CHECK (amount_cents = provider_cost_cents + margin_cents),
-  currency            text NOT NULL DEFAULT 'CAD',
-  description         text NOT NULL,
-  state               text NOT NULL CHECK (state IN ('charged', 'refunded', 'failed')),
-  charge_ref          text,
-  created_at          timestamptz NOT NULL DEFAULT now(),
-  refunded_at         timestamptz,
-  UNIQUE (screening_id, check_type)
-);`,
-  },
-  {
-    version: "0042_retention_rules",
-    // yomizaka#125: retention is DATA. A policy is a row (after-check, after-decision, or a number of days); a document type points
-    // at one (0031); an owner may override it, and a non-document subject (the screening result) has its global default here.
-    // The day a document was kept by the owner's choice is recorded. Changing a row changes the behaviour, no deploy.
-    sql: `
-ALTER TABLE retention_policies DROP CONSTRAINT IF EXISTS retention_policies_purge_on_check;
-ALTER TABLE retention_policies ADD CONSTRAINT retention_policies_purge_on_check CHECK (purge_on IN ('after-check', 'after-decision', 'days'));
-ALTER TABLE retention_policies ADD COLUMN days integer CHECK (days IS NULL OR days BETWEEN 1 AND 3650);
-ALTER TABLE retention_policies ADD CONSTRAINT retention_policies_days_iff_days CHECK ((purge_on = 'days') = (days IS NOT NULL));
-INSERT INTO retention_policies (id, purge_on, days) VALUES ('thirty-days', 'days', 30);
-
-CREATE TABLE retention_rule (
-  id        uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-  owner_id  uuid REFERENCES accounts(id) ON DELETE CASCADE,
-  subject   text NOT NULL CHECK (subject ~ '^[a-z0-9-]{2,40}$'),
-  policy_id text NOT NULL REFERENCES retention_policies(id)
-);
--- One rule per owner and subject; owner_id NULL is the global default.
-CREATE UNIQUE INDEX retention_rule_owner ON retention_rule(owner_id, subject) WHERE owner_id IS NOT NULL;
-CREATE UNIQUE INDEX retention_rule_global ON retention_rule(subject) WHERE owner_id IS NULL;
-INSERT INTO retention_rule (subject, policy_id) VALUES ('screening-result', 'thirty-days');
-
-ALTER TABLE documents ADD COLUMN keep_consent_at timestamptz;`,
-  },
-  {
-    version: "0043_compliance_gate",
-    // yomizaka#135: the blockers before any live screening resale. Each is a row, open until Oussama marks it done WITH the date of its
-    // evidence. the setting features.screeningLive is refused unless every required row is done. The consent logs the price and the payer it showed.
-    sql: `
-CREATE TABLE compliance_gate (
-  blocker       text PRIMARY KEY CHECK (blocker ~ '^[a-z][a-z0-9-]{2,60}$'),
-  label         text NOT NULL,
-  required_live boolean NOT NULL DEFAULT true,
-  status        text NOT NULL DEFAULT 'open' CHECK (status IN ('open', 'done')),
-  evidence_on   date,
-  evidence_ref  text,
-  CONSTRAINT compliance_gate_done_has_evidence CHECK (status = 'open' OR (evidence_on IS NOT NULL AND length(coalesce(evidence_ref, '')) > 0))
-);
-INSERT INTO compliance_gate (blocker, label, required_live) VALUES
-  ('reseller-agreements', 'Signed reseller/partner agreement with each provider (permissible purpose, resale)', true),
-  ('lawyer-credit-for-rental', 'Lawyer sign-off on credit checks for rental', true),
-  ('efvp', 'Privacy impact assessment (EFVP, Loi 25) completed and filed', true),
-  ('consent-text', 'Per-check consent text (specific, written; logged with version, price and payer) reviewed by the lawyer', true),
-  ('provider-residency', 'Provider data residency verified as Canada', true),
-  ('adverse-action-wording', 'Adverse-action wording reviewed by a lawyer', true),
-  ('criminal-records-lawful', 'A lawyer confirms criminal-record checks are lawful for rental (only for that check type; not needed for credit)', false);
-
-ALTER TABLE application_consents ADD COLUMN price_cents integer CHECK (price_cents IS NULL OR price_cents >= 0);
-ALTER TABLE application_consents ADD COLUMN currency text;
-ALTER TABLE application_consents ADD COLUMN payer text CHECK (payer IS NULL OR payer IN ('firm', 'owner', 'applicant'));`,
-  },
-  {
-    version: "0044_document_source_sha",
-    // yomizaka#8: a photo document keeps its recognised words as an invisible text layer, so its file is no longer the bytes first assembled.
-    // `sha256` is the file kept (what the report names); `source_sha256` is the assembled photos, so the same photos sent again are still recognised.
-    sql: `ALTER TABLE documents ADD COLUMN source_sha256 text;
-CREATE INDEX documents_source_sha256 ON documents (owner_id, source_sha256) WHERE source_sha256 IS NOT NULL;
-`,
-  },
-  {
-    version: "0045_sealed_contracts",
-    // yomizaka#71: the contracts a partner platform has sealed. The file is the evidence (bytes kept as sealed, content and parties
-    // inside it); the columns hold no personal information, so the public check can answer from them.
-    sql: `CREATE TABLE sealed_contracts (
-  id            text PRIMARY KEY,
-  owner_id      uuid NOT NULL REFERENCES accounts(id) ON DELETE CASCADE,
-  partner_id    text NOT NULL,
-  document_type text NOT NULL,
-  sha256        text NOT NULL UNIQUE,
-  zone          text NOT NULL,
-  key_id        text NOT NULL,
-  sealed_at     timestamptz NOT NULL,
-  content       bytea NOT NULL
-);
-CREATE INDEX sealed_contracts_owner ON sealed_contracts (owner_id, sealed_at DESC);
-`,
-  },
-  {
-    version: "0046_mail",
-    // yomizaka#48: what the mail layer remembers. `mail_suppressions`: addresses the provider reported (a hard bounce, a complaint, an
-    // unsubscribe), never mailed again. `mail_intentions`: one row per link already mailed (a retry sends nothing twice).
-    sql: `CREATE TABLE mail_suppressions (
-  email  text PRIMARY KEY,
-  reason text NOT NULL CHECK (reason IN ('bounce', 'complaint', 'unsubscribed')),
-  at     timestamptz NOT NULL DEFAULT now()
-);
-CREATE TABLE mail_intentions (
-  key        text PRIMARY KEY,
-  claimed_at timestamptz NOT NULL DEFAULT now()
-);
-`,
-  },
-  {
-    version: "0050_credits_ledger",
-    // krizaka-ts `@krizaka/credits` v1 (printed by `emitMigration`, `lib/modules.ts` EMITTED; `lib/modules.test.ts` holds this text to it), then the copy of the columns.
-    sql: `-- @krizaka/db: credits v1 (grants, ledger and holds). Generated by emitMigration; never edit by hand.
-CREATE TABLE IF NOT EXISTS public.krizaka_module_versions (
-  module     text NOT NULL,
-  version    integer NOT NULL,
-  checksum   text NOT NULL,
-  applied_at timestamptz NOT NULL DEFAULT now(),
-  PRIMARY KEY (module, version)
-);
-CREATE SCHEMA IF NOT EXISTS credits;
-CREATE TABLE credits."grant" (
-  id            uuid PRIMARY KEY,
-  account_id    uuid NOT NULL REFERENCES accounts(id),
-  bucket        text NOT NULL CHECK (bucket IN ('granted', 'purchased')),
-  amount        bigint NOT NULL CHECK (amount > 0),
-  cap_per_day   bigint CHECK (cap_per_day IS NULL OR cap_per_day > 0),
-  cap_per_month bigint CHECK (cap_per_month IS NULL OR cap_per_month > 0),
-  expires_at    timestamptz,
-  on_exhausted  text NOT NULL CHECK (on_exhausted IN ('stop', 'fallback_paid')),
-  source        text NOT NULL CHECK (char_length(source) BETWEEN 1 AND 200),
-  created_at    timestamptz NOT NULL,
-  CHECK ((bucket = 'granted' AND expires_at IS NOT NULL)
-      OR (bucket = 'purchased' AND expires_at IS NULL AND cap_per_day IS NULL AND cap_per_month IS NULL))
-);
-CREATE INDEX grant_account ON credits."grant" (account_id, created_at);
-CREATE INDEX grant_lapse ON credits."grant" (expires_at) WHERE bucket = 'granted';
-CREATE TABLE credits.hold (
-  id             uuid PRIMARY KEY,
-  account_id     uuid NOT NULL REFERENCES accounts(id),
-  amount         bigint NOT NULL CHECK (amount > 0),
-  expires_at     timestamptz NOT NULL,
-  status         text NOT NULL CHECK (status IN ('active', 'settled', 'released')),
-  settled_amount bigint CHECK (settled_amount IS NULL OR settled_amount >= 0),
-  created_at     timestamptz NOT NULL,
-  closed_at      timestamptz,
-  operation      text NOT NULL UNIQUE
-);
-CREATE INDEX hold_active ON credits.hold (account_id) WHERE status = 'active';
-CREATE TABLE credits.entry (
-  seq             bigint GENERATED ALWAYS AS IDENTITY,
-  id              uuid PRIMARY KEY,
-  account_id      uuid NOT NULL,
-  grant_id        uuid REFERENCES credits."grant"(id),
-  type            text NOT NULL CHECK (type IN ('GRANT', 'PURCHASE', 'DEBIT', 'REFUND', 'EXPIRY', 'ADJUSTMENT')),
-  amount          bigint NOT NULL CHECK (amount <> 0 OR type = 'EXPIRY'),
-  reason          text NOT NULL CHECK (char_length(reason) BETWEEN 1 AND 300),
-  operation       text NOT NULL,
-  idempotency_key text NOT NULL UNIQUE,
-  reverses        text,
-  hold_id         uuid,
-  at              timestamptz NOT NULL
-);
-CREATE INDEX entry_account ON credits.entry (account_id, seq DESC);
-CREATE INDEX entry_grant ON credits.entry (grant_id);
-CREATE INDEX entry_operation ON credits.entry (operation);
-CREATE FUNCTION credits.entry_is_append_only() RETURNS trigger LANGUAGE plpgsql AS $fn$
+CREATE FUNCTION credits.entry_is_append_only() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
 BEGIN
   RAISE EXCEPTION 'credits.entry is append-only: % refused', TG_OP;
 END;
-$fn$;
-CREATE TRIGGER entry_append_only BEFORE UPDATE OR DELETE ON credits.entry FOR EACH ROW EXECUTE FUNCTION credits.entry_is_append_only();
-INSERT INTO public.krizaka_module_versions (module, version, checksum) VALUES
-  ('credits', 1, 'b5fe874f1d0744f78a24771c90e9a208885629585a4b783ed767c7f8ce9d3629')
-ON CONFLICT (module, version) DO NOTHING;
+$$;
 
--- The ledger keeps its lines when the person is erased (Loi 25 asks that nothing lead to them; an invoice-like record asks that the lines stay):
--- the owner's key is dropped, so deleting an account leaves the lines under a bare id that points at no one.
-ALTER TABLE credits."grant" DROP CONSTRAINT grant_account_id_fkey;
-ALTER TABLE credits.hold DROP CONSTRAINT hold_account_id_fkey;
-
--- The audit credits as a ledger (yomizaka#261). Each account's paid credits become ONE purchased pot, and a free audit already used
--- becomes a granted pot of one with its spend, under the keys the runtime uses ('import-<account>', 'free-audit-<account>'), so a replay of
--- either changes nothing. An unused free audit needs no line: the runtime grants it when the setting is on. The columns stay for one release.
-INSERT INTO credits."grant" (id, account_id, bucket, amount, on_exhausted, source, created_at)
-SELECT md5('purchase.import-' || id)::uuid, id, 'purchased', audit_credits, 'fallback_paid', 'import:audit_credits', now()
-  FROM accounts WHERE audit_credits > 0
-ON CONFLICT (id) DO NOTHING;
-INSERT INTO credits.entry (id, account_id, grant_id, type, amount, reason, operation, idempotency_key, at)
-SELECT md5('entry:purchase.import-' || id)::uuid, id, md5('purchase.import-' || id)::uuid, 'PURCHASE', audit_credits, 'import:audit_credits', 'purchase.import-' || id, 'purchase.import-' || id || ':0', now()
-  FROM accounts WHERE audit_credits > 0
-ON CONFLICT (id) DO NOTHING;
-INSERT INTO credits."grant" (id, account_id, bucket, amount, expires_at, on_exhausted, source, created_at)
-SELECT md5('grant.free-audit-' || id)::uuid, id, 'granted', 1, now() + interval '3650 days', 'fallback_paid', 'free-audit', free_audit_used_at
-  FROM accounts WHERE terms_accepted_at IS NOT NULL AND free_audit_used_at IS NOT NULL
-ON CONFLICT (id) DO NOTHING;
-INSERT INTO credits.entry (id, account_id, grant_id, type, amount, reason, operation, idempotency_key, at)
-SELECT md5('entry:grant.free-audit-' || id)::uuid, id, md5('grant.free-audit-' || id)::uuid, 'GRANT', 1, 'free-audit', 'grant.free-audit-' || id, 'grant.free-audit-' || id || ':0', free_audit_used_at
-  FROM accounts WHERE terms_accepted_at IS NOT NULL AND free_audit_used_at IS NOT NULL
-ON CONFLICT (id) DO NOTHING;
-INSERT INTO credits.entry (id, account_id, grant_id, type, amount, reason, operation, idempotency_key, at)
-SELECT md5('entry:consume.free-audit-used-' || id)::uuid, id, md5('grant.free-audit-' || id)::uuid, 'DEBIT', -1, 'audit', 'consume.free-audit-used-' || id, 'consume.free-audit-used-' || id || ':0', free_audit_used_at
-  FROM accounts WHERE terms_accepted_at IS NOT NULL AND free_audit_used_at IS NOT NULL
-ON CONFLICT (id) DO NOTHING;
-`,
-  },
-  {
-    version: "0051_privacy_consents",
-    // krizaka-ts `@krizaka/privacy` v1 (printed by `emitMigration`, `lib/modules.ts` EMITTED; `lib/modules.test.ts` holds this text to it), then the copy of the consents.
-    sql: `-- @krizaka/db: privacy v1 (consents and requests). Generated by emitMigration; never edit by hand.
-CREATE TABLE IF NOT EXISTS public.krizaka_module_versions (
-  module     text NOT NULL,
-  version    integer NOT NULL,
-  checksum   text NOT NULL,
-  applied_at timestamptz NOT NULL DEFAULT now(),
-  PRIMARY KEY (module, version)
-);
-CREATE SCHEMA IF NOT EXISTS privacy;
-CREATE TABLE privacy.consent (
-  seq          bigserial UNIQUE,
-  id           uuid PRIMARY KEY,
-  subject_kind text NOT NULL CHECK (subject_kind ~ '^[a-z][a-z0-9_]{0,39}$'),
-  subject_id   text NOT NULL CHECK (char_length(subject_id) BETWEEN 1 AND 200),
-  purpose      text NOT NULL CHECK (purpose ~ '^[a-z][a-z0-9_-]{0,39}$'),
-  version      text NOT NULL CHECK (char_length(version) BETWEEN 1 AND 100),
-  granted      boolean NOT NULL,
-  means        text CHECK (means IS NULL OR char_length(means) <= 40),
-  at           timestamptz NOT NULL
-);
-CREATE INDEX consent_subject ON privacy.consent (subject_kind, subject_id, purpose, seq DESC);
-CREATE FUNCTION privacy.consent_written_once() RETURNS trigger LANGUAGE plpgsql AS $fn$
+CREATE FUNCTION privacy.consent_written_once() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
 BEGIN
   RAISE EXCEPTION 'a consent is written once: a withdrawal is a new row' USING ERRCODE = 'restrict_violation';
 END;
-$fn$;
-CREATE TRIGGER consent_written_once BEFORE UPDATE ON privacy.consent FOR EACH ROW EXECUTE FUNCTION privacy.consent_written_once();
-CREATE TABLE privacy.request (
-  id           uuid PRIMARY KEY,
-  subject_kind text NOT NULL CHECK (subject_kind ~ '^[a-z][a-z0-9_]{0,39}$'),
-  subject_id   text NOT NULL CHECK (char_length(subject_id) BETWEEN 1 AND 200),
-  kind         text NOT NULL CHECK (kind IN ('export', 'erasure')),
-  status       text NOT NULL CHECK (status IN ('requested', 'completed', 'failed')),
-  requested_at timestamptz NOT NULL,
-  completed_at timestamptz,
-  failure      text CHECK (failure IS NULL OR char_length(failure) <= 100)
-);
-CREATE INDEX request_subject ON privacy.request (subject_kind, subject_id, requested_at DESC);
-INSERT INTO public.krizaka_module_versions (module, version, checksum) VALUES
-  ('privacy', 1, '1c0fbc2cedba58b2034b666555621389230bfef102dd6b5f7fcf54302a6d3464')
-ON CONFLICT (module, version) DO NOTHING;
+$$;
 
--- Every consent the table of flows kept becomes a line of the privacy module (yomizaka#264), none lost: a grant at the instant it was given, a
--- withdrawal at the instant it was withdrawn, in the order they happened. The notice version was never recorded (before the module): said so.
--- A key that does not start with a letter is kept under k-<8 hex of its md5> (lib/consent-purpose.ts says the same). The old table stays one release.
-INSERT INTO privacy.consent (id, subject_kind, subject_id, purpose, version, granted, means, at)
-SELECT gen_random_uuid(), 'account', e.account_id::text,
-       CASE WHEN e.key ~ '^[a-z][a-z0-9_-]{0,39}$' THEN e.key ELSE 'k-' || left(md5(e.key), 8) END,
-       'before-privacy-module', e.granted, 'import', e.at
-  FROM (
-    SELECT account_id, key, true AS granted, granted_at AS at FROM consents
-    UNION ALL
-    SELECT account_id, key, false, revoked_at FROM consents WHERE revoked_at IS NOT NULL
-  ) e
- ORDER BY e.at, e.granted DESC;
-`,
-  },
-  {
-    version: "0052_coupons",
-    // krizaka-ts `@krizaka/payments` v1 (the applied notifications move from `public.payment_events` to `payments.event`, every row kept, as `adoptPaymentEventsSql` prints; `payments.discount` remembers the processor's object per coupon terms)
-    // and `@krizaka/coupons` v1 (printed by `emitMigration`, `lib/modules.ts` EMITTED; `lib/modules.test.ts` holds this text to it) (yomizaka#262, ADR-002).
-    sql: `CREATE SCHEMA IF NOT EXISTS payments;
-DO $$ BEGIN
-  IF to_regclass('public.payment_events') IS NOT NULL AND to_regclass('payments.event') IS NULL THEN
-    ALTER TABLE public.payment_events SET SCHEMA payments;
-    ALTER TABLE payments.payment_events RENAME TO event;
-  END IF;
-END $$;
--- @krizaka/db: payments v1 (event and discount). Generated by emitMigration; never edit by hand.
-CREATE TABLE IF NOT EXISTS public.krizaka_module_versions (
-  module     text NOT NULL,
-  version    integer NOT NULL,
-  checksum   text NOT NULL,
-  applied_at timestamptz NOT NULL DEFAULT now(),
-  PRIMARY KEY (module, version)
-);
-CREATE SCHEMA IF NOT EXISTS payments;
-CREATE TABLE IF NOT EXISTS payments.event (
-  id          text PRIMARY KEY,
-  type        text NOT NULL,
-  received_at timestamptz NOT NULL DEFAULT now()
-);
-CREATE TABLE payments.discount (
-  coupon_id     text NOT NULL CHECK (char_length(coupon_id) BETWEEN 1 AND 100),
-  terms_version integer NOT NULL CHECK (terms_version >= 1),
-  provider      text NOT NULL CHECK (provider ~ '^[a-z][a-z0-9_-]{0,39}$'),
-  provider_ref  text NOT NULL,
-  PRIMARY KEY (coupon_id, terms_version, provider)
-);
-INSERT INTO public.krizaka_module_versions (module, version, checksum) VALUES
-  ('payments', 1, 'f4177a35d05450c0f9696cedb9b2dc681ec3ab9cd3739013f8b7675b7e6fbb33')
-ON CONFLICT (module, version) DO NOTHING;
-
--- @krizaka/db: coupons v1 (partners, coupons and redemptions). Generated by emitMigration; never edit by hand.
-CREATE TABLE IF NOT EXISTS public.krizaka_module_versions (
-  module     text NOT NULL,
-  version    integer NOT NULL,
-  checksum   text NOT NULL,
-  applied_at timestamptz NOT NULL DEFAULT now(),
-  PRIMARY KEY (module, version)
-);
-CREATE SCHEMA IF NOT EXISTS coupons;
-CREATE TABLE coupons.partner (
-  id            uuid PRIMARY KEY,
-  display_name  text CHECK (display_name IS NULL OR char_length(display_name) BETWEEN 1 AND 80),
-  contact_email text CHECK (contact_email IS NULL OR contact_email = lower(contact_email)),
-  status        text NOT NULL DEFAULT 'active' CHECK (status IN ('active', 'archived')),
-  created_at    timestamptz NOT NULL,
-  created_by    uuid REFERENCES accounts(id) ON DELETE SET NULL,
-  erased_at     timestamptz,
-  CHECK (erased_at IS NOT NULL OR display_name IS NOT NULL),
-  CHECK (erased_at IS NULL OR (display_name IS NULL AND contact_email IS NULL))
-);
-CREATE TABLE coupons.coupon (
-  id                 uuid PRIMARY KEY,
-  code               text NOT NULL CHECK (char_length(code) BETWEEN 4 AND 60),
-  code_key           text NOT NULL UNIQUE CHECK (code_key = upper(code_key) AND char_length(code_key) BETWEEN 4 AND 40),
-  kind               text NOT NULL CHECK (kind IN ('discount', 'credit')),
-  purpose            text NOT NULL CHECK (purpose IN ('partner', 'promo', 'demo', 'support')),
-  partner_id         uuid REFERENCES coupons.partner(id) ON DELETE RESTRICT,
-  status             text NOT NULL DEFAULT 'active' CHECK (status IN ('active', 'paused', 'archived')),
-  starts_at          timestamptz NOT NULL,
-  ends_at            timestamptz,
-  max_redemptions    integer CHECK (max_redemptions > 0),
-  max_per_account    integer NOT NULL DEFAULT 1 CHECK (max_per_account > 0),
-  new_customers_only boolean NOT NULL DEFAULT false,
-  plans              text[] NOT NULL DEFAULT '{}',
-  percent_off_bp     integer CHECK (percent_off_bp BETWEEN 1 AND 9999),
-  amount_off_minor   integer CHECK (amount_off_minor > 0),
-  currency           text CHECK (currency ~ '^[a-z]{3}$'),
-  duration           text CHECK (duration IN ('once', 'repeating', 'forever')),
-  duration_months    integer CHECK (duration_months BETWEEN 1 AND 36),
-  minimum_minor      integer CHECK (minimum_minor >= 0),
-  credits            integer CHECK (credits > 0),
-  cap_per_day        integer CHECK (cap_per_day > 0),
-  cap_per_month      integer CHECK (cap_per_month > 0),
-  credits_valid_days integer CHECK (credits_valid_days > 0),
-  on_exhausted       text CHECK (on_exhausted IN ('stop', 'fallback_paid')),
-  terms_version      integer NOT NULL DEFAULT 1,
-  created_at         timestamptz NOT NULL,
-  created_by         uuid REFERENCES accounts(id) ON DELETE SET NULL,
-  updated_at         timestamptz NOT NULL,
-  CHECK (ends_at IS NULL OR ends_at > starts_at),
-  CHECK ((purpose = 'partner') = (partner_id IS NOT NULL)),
-  CHECK (kind <> 'discount' OR (credits IS NULL AND num_nonnulls(percent_off_bp, amount_off_minor) = 1
-         AND (amount_off_minor IS NULL OR currency IS NOT NULL) AND duration IS NOT NULL
-         AND ((duration = 'repeating') = (duration_months IS NOT NULL))
-         AND (amount_off_minor IS NULL OR duration <> 'forever'))),
-  CHECK (kind <> 'credit' OR (credits IS NOT NULL AND on_exhausted IS NOT NULL
-         AND credits_valid_days IS NOT NULL
-         AND num_nulls(percent_off_bp, amount_off_minor, duration) = 3))
-);
-CREATE INDEX coupon_partner ON coupons.coupon (partner_id) WHERE partner_id IS NOT NULL;
-CREATE TABLE coupons.redemption (
-  id                    uuid PRIMARY KEY,
-  coupon_id             uuid NOT NULL REFERENCES coupons.coupon(id) ON DELETE RESTRICT,
-  account_id            uuid REFERENCES accounts(id) ON DELETE SET NULL,
-  partner_id            uuid REFERENCES coupons.partner(id) ON DELETE SET NULL,
-  status                text NOT NULL CHECK (status IN ('reserved', 'confirmed', 'released', 'revoked')),
-  idempotency_key       text NOT NULL UNIQUE,
-  reserved_until        timestamptz,
-  checkout_ref          text UNIQUE,
-  payment_ref           text UNIQUE,
-  amount_paid_minor     bigint,
-  amount_discount_minor bigint,
-  amount_refunded_minor bigint NOT NULL DEFAULT 0 CHECK (amount_refunded_minor >= 0),
-  use_restored          boolean NOT NULL DEFAULT false,
-  currency              text,
-  credit_grant_id       uuid,
-  over_limit            boolean NOT NULL DEFAULT false,
-  created_at            timestamptz NOT NULL,
-  confirmed_at          timestamptz,
-  ended_at              timestamptz
-);
-CREATE INDEX redemption_uses ON coupons.redemption (coupon_id, account_id) WHERE status <> 'released' AND NOT use_restored;
-CREATE INDEX redemption_reserved ON coupons.redemption (reserved_until) WHERE status = 'reserved';
-CREATE INDEX redemption_partner ON coupons.redemption (partner_id, confirmed_at) WHERE partner_id IS NOT NULL;
-INSERT INTO public.krizaka_module_versions (module, version, checksum) VALUES
-  ('coupons', 1, 'b89747432ea7c53478ed6cefc7d44e7463093d79324c70660909d8a66ff779f4')
-ON CONFLICT (module, version) DO NOTHING;
-`,
-  },
-  {
-    version: "0053_file_report_shares",
-    // yomizaka#128: the report of an applicant file, shared with the building owner by a link. Only the token's hash is kept; the
-    // link expires (days as data on the row), is revoked by the file's manager, and each opening is a row of file_report_views.
-    sql: `
-CREATE TABLE file_report_shares (
-  id           uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-  screening_id uuid NOT NULL REFERENCES screenings(id) ON DELETE CASCADE,
-  landlord_id  uuid NOT NULL REFERENCES accounts(id) ON DELETE CASCADE,
-  recipient    text NOT NULL DEFAULT '' CHECK (length(recipient) <= 120),
-  token_hash   text NOT NULL UNIQUE,
-  created_at   timestamptz NOT NULL DEFAULT now(),
-  expires_at   timestamptz NOT NULL,
-  revoked_at   timestamptz
-);
-CREATE INDEX file_report_shares_file ON file_report_shares(screening_id, created_at DESC);
-CREATE TABLE file_report_views (
-  id        uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-  share_id  uuid NOT NULL REFERENCES file_report_shares(id) ON DELETE CASCADE,
-  viewed_at timestamptz NOT NULL DEFAULT now(),
-  ip        text
-);
-CREATE INDEX file_report_views_share ON file_report_views(share_id, viewed_at DESC);
-`,
-  },
-  {
-    version: "0054_file_report_share_emailed_to",
-    // yomizaka#130: the address a link was e-mailed to, kept minimally to show "sent to" and cleared when the link is revoked or expires;
-    // the row's deletion removes it too. The audit log holds a hash of it, never the address.
-    sql: `
-ALTER TABLE file_report_shares ADD COLUMN emailed_to text CHECK (emailed_to IS NULL OR length(emailed_to) <= 254);
-`,
-  },
-  {
-    version: "0055_privacy_incident_register",
-    // krizaka-ts `@krizaka/privacy` v2 (printed by `emitMigration`, `lib/modules.test.ts` holds this text to it): the Law 25 confidentiality incident register (yomizaka#418), one `scope` per tenant.
-    sql: `-- @krizaka/db: privacy v2 (confidentiality incident register). Generated by emitMigration; never edit by hand.
-CREATE TABLE IF NOT EXISTS public.krizaka_module_versions (
-  module     text NOT NULL,
-  version    integer NOT NULL,
-  checksum   text NOT NULL,
-  applied_at timestamptz NOT NULL DEFAULT now(),
-  PRIMARY KEY (module, version)
-);
-CREATE SCHEMA IF NOT EXISTS privacy;
-CREATE TABLE privacy.incident (
-  id                uuid PRIMARY KEY,
-  scope             text NOT NULL CHECK (char_length(scope) BETWEEN 1 AND 100),
-  kind              text NOT NULL CHECK (kind IN ('access', 'use', 'communication', 'loss')),
-  aware_at          timestamptz NOT NULL,
-  occurred_at       timestamptz,
-  description       text NOT NULL CHECK (char_length(description) BETWEEN 1 AND 2000),
-  information       text[] NOT NULL CHECK (cardinality(information) BETWEEN 1 AND 30),
-  persons_concerned integer CHECK (persons_concerned IS NULL OR persons_concerned >= 0),
-  measures          jsonb NOT NULL DEFAULT '[]',
-  status            text NOT NULL CHECK (status IN ('open', 'assessed', 'closed')),
-  assessment        jsonb,
-  cai_notice        jsonb,
-  persons_notice    jsonb,
-  drill             boolean NOT NULL DEFAULT false,
-  opened_by         text NOT NULL,
-  opened_at         timestamptz NOT NULL,
-  closed_at         timestamptz,
-  retain_until      timestamptz NOT NULL
-);
-CREATE INDEX incident_scope ON privacy.incident (scope, aware_at, id);
-CREATE FUNCTION privacy.incident_guard() RETURNS trigger LANGUAGE plpgsql AS $fn$
+CREATE FUNCTION privacy.incident_guard() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
 BEGIN
   IF TG_OP = 'DELETE' THEN
     IF OLD.retain_until > now() THEN
@@ -1313,156 +64,1842 @@ BEGIN
   END IF;
   RETURN NEW;
 END;
-$fn$;
-CREATE TRIGGER incident_guard BEFORE UPDATE OR DELETE ON privacy.incident FOR EACH ROW EXECUTE FUNCTION privacy.incident_guard();
-INSERT INTO public.krizaka_module_versions (module, version, checksum) VALUES
-  ('privacy', 2, '17f9b2e4492024745aa5ac4c82141b8781439a26974c6dafa922da5ae1eaeee7')
-ON CONFLICT (module, version) DO NOTHING;
-`,
-  },
-  {
-    version: "0056_document_roles",
-    // yomizaka#129: a lease and its annexes are one submission. `lease_id` points an annex or the building's rules at its lease; a lease points at nothing.
-    sql: `
-ALTER TABLE documents ADD COLUMN document_role text NOT NULL DEFAULT 'lease' CHECK (document_role IN ('lease', 'annex', 'building-rules'));
-ALTER TABLE documents ADD COLUMN lease_id uuid REFERENCES documents(id) ON DELETE CASCADE;
-ALTER TABLE documents ADD CONSTRAINT documents_role_has_lease CHECK ((document_role = 'lease') = (lease_id IS NULL));
-CREATE INDEX documents_lease ON documents(lease_id) WHERE lease_id IS NOT NULL;
-`,
-  },
-  {
-    version: "0057_document_object_key",
-    // ADR-0012 (yomizaka#17): the bytes of a document leave `documents.content` for the deployment's store. `object_key` set means « the bytes are in the store under this key »; null means none (or legacy bytes still in `content`).
-    sql: `
-ALTER TABLE documents ADD COLUMN object_key text;
-CREATE INDEX documents_object_key ON documents(object_key) WHERE object_key IS NOT NULL;
-`,
-  },
-  {
-    version: "0058_storage_providers",
-    // krizaka-ts `@krizaka/storage` v1 (printed by `emitMigration`, `lib/modules.test.ts` holds this text to it): the admin's storage providers and the default per kind of data (ADR-005, yomizaka#523). Credentials are sealed in the database; no document byte is here.
-    sql: `-- @krizaka/db: storage v1 (providers). Generated by emitMigration; never edit by hand.
-CREATE TABLE IF NOT EXISTS public.krizaka_module_versions (
-  module     text NOT NULL,
-  version    integer NOT NULL,
-  checksum   text NOT NULL,
-  applied_at timestamptz NOT NULL DEFAULT now(),
-  PRIMARY KEY (module, version)
+$$;
+
+CREATE FUNCTION public.accounts_default_collection() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+BEGIN
+  PERFORM create_default_collection(NEW.id, NEW.locale);
+  RETURN NEW;
+END
+$$;
+
+CREATE FUNCTION public.collections_exactly_one_default() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+DECLARE o uuid := COALESCE(NEW.owner_id, OLD.owner_id);
+BEGIN
+  IF EXISTS (SELECT 1 FROM accounts WHERE id = o) AND (SELECT count(*) FROM collections WHERE owner_id = o AND is_default) <> 1 THEN
+    RAISE EXCEPTION 'DEFAULT_COLLECTION: an account has exactly one default collection';
+  END IF;
+  RETURN NULL;
+END
+$$;
+
+CREATE FUNCTION public.collections_fill_owner() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+BEGIN
+  SELECT owner_id INTO NEW.owner_id FROM libraries WHERE id = NEW.library_id;
+  RETURN NEW;
+END
+$$;
+
+CREATE FUNCTION public.collections_guard_default() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+BEGIN
+  IF OLD.is_default AND EXISTS (SELECT 1 FROM accounts WHERE id = OLD.owner_id) THEN
+    RAISE EXCEPTION 'DEFAULT_COLLECTION: the default collection cannot be deleted';
+  END IF;
+  RETURN OLD;
+END
+$$;
+
+CREATE FUNCTION public.create_default_collection(p_owner uuid, p_locale text) RETURNS uuid
+    LANGUAGE plpgsql
+    AS $$
+DECLARE
+  lib uuid;
+  col uuid;
+  base text := CASE p_locale WHEN 'fr' THEN 'Mes documents' ELSE 'My documents' END;
+  candidate text;
+  n int := 1;
+BEGIN
+  SELECT id INTO lib FROM libraries WHERE owner_id = p_owner ORDER BY created_at, id LIMIT 1;
+  IF lib IS NULL THEN
+    INSERT INTO libraries (owner_id, name) VALUES (p_owner, CASE p_locale WHEN 'fr' THEN 'Ma bibliothèque' ELSE 'My library' END) RETURNING id INTO lib;
+  END IF;
+  candidate := base;
+  WHILE EXISTS (SELECT 1 FROM collections WHERE library_id = lib AND name = candidate) LOOP
+    n := n + 1;
+    candidate := base || ' ' || n;
+  END LOOP;
+  INSERT INTO collections (library_id, owner_id, name, is_default) VALUES (lib, p_owner, candidate, true) RETURNING id INTO col;
+  RETURN col;
+END
+$$;
+
+CREATE FUNCTION public.documents_default_collection() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+BEGIN
+  IF NEW.collection_id IS NULL THEN
+    SELECT id INTO NEW.collection_id FROM collections WHERE owner_id = NEW.owner_id AND is_default;
+    NEW.folder_id := NULL;
+  END IF;
+  RETURN NEW;
+END
+$$;
+
+SET default_tablespace = '';
+
+SET default_table_access_method = heap;
+
+CREATE TABLE audit.entry (
+    id bigint NOT NULL,
+    at timestamp with time zone NOT NULL,
+    actor_id uuid,
+    actor_label text NOT NULL,
+    action text NOT NULL,
+    target_type text,
+    target_id text,
+    detail jsonb DEFAULT '{}'::jsonb NOT NULL,
+    ip inet,
+    CONSTRAINT entry_action_check CHECK (((action ~ '^[a-z][a-z0-9_]*(\\.[a-z0-9_]+)*$'::text) AND (char_length(action) <= 80))),
+    CONSTRAINT entry_actor_label_check CHECK (((char_length(actor_label) >= 1) AND (char_length(actor_label) <= 120))),
+    CONSTRAINT entry_target_id_check CHECK (((target_id IS NULL) OR (char_length(target_id) <= 200))),
+    CONSTRAINT entry_target_type_check CHECK (((target_type IS NULL) OR (char_length(target_type) <= 40)))
 );
-CREATE SCHEMA IF NOT EXISTS storage;
-CREATE TABLE storage.provider (
-  id                 uuid PRIMARY KEY,
-  scope              text NOT NULL CHECK (scope = 'org' OR scope ~ '^user:[A-Za-z0-9_-]{1,64}$'),
-  kind               text NOT NULL CHECK (kind ~ '^[a-z][a-z0-9-]*$'),
-  preset             text,
-  label              text NOT NULL CHECK (char_length(label) BETWEEN 1 AND 80),
-  coordinates        jsonb NOT NULL DEFAULT '{}'::jsonb,
-  sealed_credentials text NOT NULL,
-  key_id             text NOT NULL,
-  status             text NOT NULL CHECK (status IN ('draft', 'verified', 'active', 'retiring', 'disabled')),
-  source             text NOT NULL DEFAULT 'admin' CHECK (source IN ('admin', 'env')),
-  last_test          jsonb,
-  created_by         text,
-  created_at         timestamptz NOT NULL,
-  updated_at         timestamptz NOT NULL
+
+CREATE SEQUENCE audit.entry_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+ALTER SEQUENCE audit.entry_id_seq OWNED BY audit.entry.id;
+
+CREATE TABLE coupons.coupon (
+    id uuid NOT NULL,
+    code text NOT NULL,
+    code_key text NOT NULL,
+    kind text NOT NULL,
+    purpose text NOT NULL,
+    partner_id uuid,
+    status text DEFAULT 'active'::text NOT NULL,
+    starts_at timestamp with time zone NOT NULL,
+    ends_at timestamp with time zone,
+    max_redemptions integer,
+    max_per_account integer DEFAULT 1 NOT NULL,
+    new_customers_only boolean DEFAULT false NOT NULL,
+    plans text[] DEFAULT '{}'::text[] NOT NULL,
+    percent_off_bp integer,
+    amount_off_minor integer,
+    currency text,
+    duration text,
+    duration_months integer,
+    minimum_minor integer,
+    credits integer,
+    cap_per_day integer,
+    cap_per_month integer,
+    credits_valid_days integer,
+    on_exhausted text,
+    terms_version integer DEFAULT 1 NOT NULL,
+    created_at timestamp with time zone NOT NULL,
+    created_by uuid,
+    updated_at timestamp with time zone NOT NULL,
+    CONSTRAINT coupon_amount_off_minor_check CHECK ((amount_off_minor > 0)),
+    CONSTRAINT coupon_cap_per_day_check CHECK ((cap_per_day > 0)),
+    CONSTRAINT coupon_cap_per_month_check CHECK ((cap_per_month > 0)),
+    CONSTRAINT coupon_check CHECK (((ends_at IS NULL) OR (ends_at > starts_at))),
+    CONSTRAINT coupon_check1 CHECK (((purpose = 'partner'::text) = (partner_id IS NOT NULL))),
+    CONSTRAINT coupon_check2 CHECK (((kind <> 'discount'::text) OR ((credits IS NULL) AND (num_nonnulls(percent_off_bp, amount_off_minor) = 1) AND ((amount_off_minor IS NULL) OR (currency IS NOT NULL)) AND (duration IS NOT NULL) AND ((duration = 'repeating'::text) = (duration_months IS NOT NULL)) AND ((amount_off_minor IS NULL) OR (duration <> 'forever'::text))))),
+    CONSTRAINT coupon_check3 CHECK (((kind <> 'credit'::text) OR ((credits IS NOT NULL) AND (on_exhausted IS NOT NULL) AND (credits_valid_days IS NOT NULL) AND (num_nulls(percent_off_bp, amount_off_minor, duration) = 3)))),
+    CONSTRAINT coupon_code_check CHECK (((char_length(code) >= 4) AND (char_length(code) <= 60))),
+    CONSTRAINT coupon_code_key_check CHECK (((code_key = upper(code_key)) AND ((char_length(code_key) >= 4) AND (char_length(code_key) <= 40)))),
+    CONSTRAINT coupon_credits_check CHECK ((credits > 0)),
+    CONSTRAINT coupon_credits_valid_days_check CHECK ((credits_valid_days > 0)),
+    CONSTRAINT coupon_currency_check CHECK ((currency ~ '^[a-z]{3}$'::text)),
+    CONSTRAINT coupon_duration_check CHECK ((duration = ANY (ARRAY['once'::text, 'repeating'::text, 'forever'::text]))),
+    CONSTRAINT coupon_duration_months_check CHECK (((duration_months >= 1) AND (duration_months <= 36))),
+    CONSTRAINT coupon_kind_check CHECK ((kind = ANY (ARRAY['discount'::text, 'credit'::text]))),
+    CONSTRAINT coupon_max_per_account_check CHECK ((max_per_account > 0)),
+    CONSTRAINT coupon_max_redemptions_check CHECK ((max_redemptions > 0)),
+    CONSTRAINT coupon_minimum_minor_check CHECK ((minimum_minor >= 0)),
+    CONSTRAINT coupon_on_exhausted_check CHECK ((on_exhausted = ANY (ARRAY['stop'::text, 'fallback_paid'::text]))),
+    CONSTRAINT coupon_percent_off_bp_check CHECK (((percent_off_bp >= 1) AND (percent_off_bp <= 9999))),
+    CONSTRAINT coupon_purpose_check CHECK ((purpose = ANY (ARRAY['partner'::text, 'promo'::text, 'demo'::text, 'support'::text]))),
+    CONSTRAINT coupon_status_check CHECK ((status = ANY (ARRAY['active'::text, 'paused'::text, 'archived'::text])))
 );
-CREATE INDEX provider_scope ON storage.provider (scope, status);
+
+CREATE TABLE coupons.partner (
+    id uuid NOT NULL,
+    display_name text,
+    contact_email text,
+    status text DEFAULT 'active'::text NOT NULL,
+    created_at timestamp with time zone NOT NULL,
+    created_by uuid,
+    erased_at timestamp with time zone,
+    CONSTRAINT partner_check CHECK (((erased_at IS NOT NULL) OR (display_name IS NOT NULL))),
+    CONSTRAINT partner_check1 CHECK (((erased_at IS NULL) OR ((display_name IS NULL) AND (contact_email IS NULL)))),
+    CONSTRAINT partner_contact_email_check CHECK (((contact_email IS NULL) OR (contact_email = lower(contact_email)))),
+    CONSTRAINT partner_display_name_check CHECK (((display_name IS NULL) OR ((char_length(display_name) >= 1) AND (char_length(display_name) <= 80)))),
+    CONSTRAINT partner_status_check CHECK ((status = ANY (ARRAY['active'::text, 'archived'::text])))
+);
+
+CREATE TABLE coupons.redemption (
+    id uuid NOT NULL,
+    coupon_id uuid NOT NULL,
+    account_id uuid,
+    partner_id uuid,
+    status text NOT NULL,
+    idempotency_key text NOT NULL,
+    reserved_until timestamp with time zone,
+    checkout_ref text,
+    payment_ref text,
+    amount_paid_minor bigint,
+    amount_discount_minor bigint,
+    amount_refunded_minor bigint DEFAULT 0 NOT NULL,
+    use_restored boolean DEFAULT false NOT NULL,
+    currency text,
+    credit_grant_id uuid,
+    over_limit boolean DEFAULT false NOT NULL,
+    created_at timestamp with time zone NOT NULL,
+    confirmed_at timestamp with time zone,
+    ended_at timestamp with time zone,
+    CONSTRAINT redemption_amount_refunded_minor_check CHECK ((amount_refunded_minor >= 0)),
+    CONSTRAINT redemption_status_check CHECK ((status = ANY (ARRAY['reserved'::text, 'confirmed'::text, 'released'::text, 'revoked'::text])))
+);
+
+CREATE TABLE credits.entry (
+    seq bigint NOT NULL,
+    id uuid NOT NULL,
+    account_id uuid NOT NULL,
+    grant_id uuid,
+    type text NOT NULL,
+    amount bigint NOT NULL,
+    reason text NOT NULL,
+    operation text NOT NULL,
+    idempotency_key text NOT NULL,
+    reverses text,
+    hold_id uuid,
+    at timestamp with time zone NOT NULL,
+    CONSTRAINT entry_check CHECK (((amount <> 0) OR (type = 'EXPIRY'::text))),
+    CONSTRAINT entry_reason_check CHECK (((char_length(reason) >= 1) AND (char_length(reason) <= 300))),
+    CONSTRAINT entry_type_check CHECK ((type = ANY (ARRAY['GRANT'::text, 'PURCHASE'::text, 'DEBIT'::text, 'REFUND'::text, 'EXPIRY'::text, 'ADJUSTMENT'::text])))
+);
+
+ALTER TABLE credits.entry ALTER COLUMN seq ADD GENERATED ALWAYS AS IDENTITY (
+    SEQUENCE NAME credits.entry_seq_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1
+);
+
+CREATE TABLE credits."grant" (
+    id uuid NOT NULL,
+    account_id uuid NOT NULL,
+    bucket text NOT NULL,
+    amount bigint NOT NULL,
+    cap_per_day bigint,
+    cap_per_month bigint,
+    expires_at timestamp with time zone,
+    on_exhausted text NOT NULL,
+    source text NOT NULL,
+    created_at timestamp with time zone NOT NULL,
+    CONSTRAINT grant_amount_check CHECK ((amount > 0)),
+    CONSTRAINT grant_bucket_check CHECK ((bucket = ANY (ARRAY['granted'::text, 'purchased'::text]))),
+    CONSTRAINT grant_cap_per_day_check CHECK (((cap_per_day IS NULL) OR (cap_per_day > 0))),
+    CONSTRAINT grant_cap_per_month_check CHECK (((cap_per_month IS NULL) OR (cap_per_month > 0))),
+    CONSTRAINT grant_check CHECK ((((bucket = 'granted'::text) AND (expires_at IS NOT NULL)) OR ((bucket = 'purchased'::text) AND (expires_at IS NULL) AND (cap_per_day IS NULL) AND (cap_per_month IS NULL)))),
+    CONSTRAINT grant_on_exhausted_check CHECK ((on_exhausted = ANY (ARRAY['stop'::text, 'fallback_paid'::text]))),
+    CONSTRAINT grant_source_check CHECK (((char_length(source) >= 1) AND (char_length(source) <= 200)))
+);
+
+CREATE TABLE credits.hold (
+    id uuid NOT NULL,
+    account_id uuid NOT NULL,
+    amount bigint NOT NULL,
+    expires_at timestamp with time zone NOT NULL,
+    status text NOT NULL,
+    settled_amount bigint,
+    created_at timestamp with time zone NOT NULL,
+    closed_at timestamp with time zone,
+    operation text NOT NULL,
+    CONSTRAINT hold_amount_check CHECK ((amount > 0)),
+    CONSTRAINT hold_settled_amount_check CHECK (((settled_amount IS NULL) OR (settled_amount >= 0))),
+    CONSTRAINT hold_status_check CHECK ((status = ANY (ARRAY['active'::text, 'settled'::text, 'released'::text])))
+);
+
+CREATE TABLE organize.applicant_file_status (
+    entity_id uuid NOT NULL,
+    state text NOT NULL,
+    changed_at timestamp with time zone NOT NULL,
+    changed_by uuid,
+    CONSTRAINT applicant_file_status_state_check CHECK ((state ~ '^[a-z][a-z0-9_]{0,39}$'::text))
+);
+
+CREATE TABLE organize.applicant_file_tag (
+    entity_id uuid NOT NULL,
+    tag_id uuid NOT NULL,
+    kind text DEFAULT 'applicant_file'::text NOT NULL,
+    CONSTRAINT applicant_file_tag_kind_check CHECK ((kind = 'applicant_file'::text))
+);
+
+CREATE TABLE organize.document_status (
+    entity_id uuid NOT NULL,
+    state text NOT NULL,
+    changed_at timestamp with time zone NOT NULL,
+    changed_by uuid,
+    CONSTRAINT document_status_state_check CHECK ((state ~ '^[a-z][a-z0-9_]{0,39}$'::text))
+);
+
+CREATE TABLE organize.document_tag (
+    entity_id uuid NOT NULL,
+    tag_id uuid NOT NULL,
+    kind text DEFAULT 'document'::text NOT NULL,
+    CONSTRAINT document_tag_kind_check CHECK ((kind = 'document'::text))
+);
+
+CREATE TABLE organize.kind_config (
+    kind text NOT NULL,
+    config jsonb NOT NULL,
+    version integer NOT NULL,
+    updated_at timestamp with time zone NOT NULL,
+    updated_by uuid,
+    CONSTRAINT kind_config_config_check CHECK ((jsonb_typeof(config) = 'object'::text)),
+    CONSTRAINT kind_config_kind_check CHECK ((kind ~ '^[a-z][a-z0-9_]{0,39}$'::text)),
+    CONSTRAINT kind_config_version_check CHECK ((version >= 1))
+);
+
+CREATE TABLE organize.tag (
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    scope_id uuid NOT NULL,
+    kind text NOT NULL,
+    name text NOT NULL,
+    marker text NOT NULL,
+    origin text NOT NULL,
+    created_at timestamp with time zone NOT NULL,
+    CONSTRAINT tag_marker_check CHECK ((marker = ANY (ARRAY['blue'::text, 'green'::text, 'amber'::text, 'red'::text, 'violet'::text, 'gray'::text]))),
+    CONSTRAINT tag_name_check CHECK (((char_length(name) >= 1) AND (char_length(name) <= 80))),
+    CONSTRAINT tag_origin_check CHECK ((origin = ANY (ARRAY['preset'::text, 'user'::text])))
+);
+
+CREATE TABLE organize.view (
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    scope_id uuid NOT NULL,
+    kind text NOT NULL,
+    author_id uuid NOT NULL,
+    name text NOT NULL,
+    filters jsonb NOT NULL,
+    shared boolean DEFAULT false NOT NULL,
+    created_at timestamp with time zone NOT NULL,
+    CONSTRAINT view_filters_check CHECK ((jsonb_typeof(filters) = 'object'::text)),
+    CONSTRAINT view_name_check CHECK (((char_length(name) >= 1) AND (char_length(name) <= 80)))
+);
+
+CREATE TABLE payments.discount (
+    coupon_id text NOT NULL,
+    terms_version integer NOT NULL,
+    provider text NOT NULL,
+    provider_ref text NOT NULL,
+    CONSTRAINT discount_coupon_id_check CHECK (((char_length(coupon_id) >= 1) AND (char_length(coupon_id) <= 100))),
+    CONSTRAINT discount_provider_check CHECK ((provider ~ '^[a-z][a-z0-9_-]{0,39}$'::text)),
+    CONSTRAINT discount_terms_version_check CHECK ((terms_version >= 1))
+);
+
+CREATE TABLE payments.event (
+    id text NOT NULL,
+    type text NOT NULL,
+    received_at timestamp with time zone DEFAULT now() NOT NULL
+);
+
+CREATE TABLE privacy.consent (
+    seq bigint NOT NULL,
+    id uuid NOT NULL,
+    subject_kind text NOT NULL,
+    subject_id text NOT NULL,
+    purpose text NOT NULL,
+    version text NOT NULL,
+    granted boolean NOT NULL,
+    means text,
+    at timestamp with time zone NOT NULL,
+    CONSTRAINT consent_means_check CHECK (((means IS NULL) OR (char_length(means) <= 40))),
+    CONSTRAINT consent_purpose_check CHECK ((purpose ~ '^[a-z][a-z0-9_-]{0,39}$'::text)),
+    CONSTRAINT consent_subject_id_check CHECK (((char_length(subject_id) >= 1) AND (char_length(subject_id) <= 200))),
+    CONSTRAINT consent_subject_kind_check CHECK ((subject_kind ~ '^[a-z][a-z0-9_]{0,39}$'::text)),
+    CONSTRAINT consent_version_check CHECK (((char_length(version) >= 1) AND (char_length(version) <= 100)))
+);
+
+CREATE SEQUENCE privacy.consent_seq_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+ALTER SEQUENCE privacy.consent_seq_seq OWNED BY privacy.consent.seq;
+
+CREATE TABLE privacy.incident (
+    id uuid NOT NULL,
+    scope text NOT NULL,
+    kind text NOT NULL,
+    aware_at timestamp with time zone NOT NULL,
+    occurred_at timestamp with time zone,
+    description text NOT NULL,
+    information text[] NOT NULL,
+    persons_concerned integer,
+    measures jsonb DEFAULT '[]'::jsonb NOT NULL,
+    status text NOT NULL,
+    assessment jsonb,
+    cai_notice jsonb,
+    persons_notice jsonb,
+    drill boolean DEFAULT false NOT NULL,
+    opened_by text NOT NULL,
+    opened_at timestamp with time zone NOT NULL,
+    closed_at timestamp with time zone,
+    retain_until timestamp with time zone NOT NULL,
+    CONSTRAINT incident_description_check CHECK (((char_length(description) >= 1) AND (char_length(description) <= 2000))),
+    CONSTRAINT incident_information_check CHECK (((cardinality(information) >= 1) AND (cardinality(information) <= 30))),
+    CONSTRAINT incident_kind_check CHECK ((kind = ANY (ARRAY['access'::text, 'use'::text, 'communication'::text, 'loss'::text]))),
+    CONSTRAINT incident_persons_concerned_check CHECK (((persons_concerned IS NULL) OR (persons_concerned >= 0))),
+    CONSTRAINT incident_scope_check CHECK (((char_length(scope) >= 1) AND (char_length(scope) <= 100))),
+    CONSTRAINT incident_status_check CHECK ((status = ANY (ARRAY['open'::text, 'assessed'::text, 'closed'::text])))
+);
+
+CREATE TABLE privacy.request (
+    id uuid NOT NULL,
+    subject_kind text NOT NULL,
+    subject_id text NOT NULL,
+    kind text NOT NULL,
+    status text NOT NULL,
+    requested_at timestamp with time zone NOT NULL,
+    completed_at timestamp with time zone,
+    failure text,
+    CONSTRAINT request_failure_check CHECK (((failure IS NULL) OR (char_length(failure) <= 100))),
+    CONSTRAINT request_kind_check CHECK ((kind = ANY (ARRAY['export'::text, 'erasure'::text]))),
+    CONSTRAINT request_status_check CHECK ((status = ANY (ARRAY['requested'::text, 'completed'::text, 'failed'::text]))),
+    CONSTRAINT request_subject_id_check CHECK (((char_length(subject_id) >= 1) AND (char_length(subject_id) <= 200))),
+    CONSTRAINT request_subject_kind_check CHECK ((subject_kind ~ '^[a-z][a-z0-9_]{0,39}$'::text))
+);
+
+CREATE TABLE public.accounts (
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    email text NOT NULL,
+    role text DEFAULT 'USER'::text NOT NULL,
+    status text DEFAULT 'ACTIVE'::text NOT NULL,
+    locale text DEFAULT 'en'::text NOT NULL,
+    password_hash text,
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    last_seen_at timestamp with time zone,
+    perspective text,
+    email_verified_at timestamp with time zone,
+    terms_version text,
+    terms_accepted_at timestamp with time zone,
+    privacy_accepted_at timestamp with time zone,
+    free_audit_used_at timestamp with time zone,
+    audit_credits integer DEFAULT 0 NOT NULL,
+    plan text DEFAULT 'FREE'::text NOT NULL,
+    payment_customer_id text,
+    payment_subscription_id text,
+    subscription_status text,
+    current_period_end timestamp with time zone,
+    name text,
+    avatar_seed text,
+    theme text,
+    checkout_price_key text,
+    checkout_price_version text,
+    subscription_price_key text,
+    subscription_price_version text,
+    cancel_at_period_end boolean DEFAULT false NOT NULL,
+    CONSTRAINT accounts_audit_credits_check CHECK ((audit_credits >= 0)),
+    CONSTRAINT accounts_avatar_seed_check CHECK (((avatar_seed IS NULL) OR (avatar_seed ~ '^[a-z0-9-]{1,40}$'::text))),
+    CONSTRAINT accounts_email_check CHECK ((email = lower(email))),
+    CONSTRAINT accounts_locale_check CHECK ((locale = ANY (ARRAY['en'::text, 'fr'::text]))),
+    CONSTRAINT accounts_name_check CHECK (((name IS NULL) OR (char_length(name) <= 80))),
+    CONSTRAINT accounts_perspective_check CHECK ((perspective = ANY (ARRAY['tenant'::text, 'landlord'::text, 'freelancer'::text, 'business'::text]))),
+    CONSTRAINT accounts_plan_check CHECK ((plan = ANY (ARRAY['FREE'::text, 'PRO'::text]))),
+    CONSTRAINT accounts_role_check CHECK ((role = ANY (ARRAY['USER'::text, 'ADMIN'::text]))),
+    CONSTRAINT accounts_status_check CHECK ((status = ANY (ARRAY['ACTIVE'::text, 'SUSPENDED'::text]))),
+    CONSTRAINT accounts_theme_check CHECK (((theme IS NULL) OR (theme = ANY (ARRAY['light'::text, 'dark'::text, 'system'::text]))))
+);
+
+CREATE TABLE public.analyses (
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    document_id uuid NOT NULL,
+    studio text NOT NULL,
+    status text DEFAULT 'running'::text NOT NULL,
+    run_id text,
+    blueprint_version text,
+    inputs jsonb DEFAULT '{}'::jsonb NOT NULL,
+    report jsonb,
+    error text,
+    search_text text DEFAULT ''::text NOT NULL,
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    finished_at timestamp with time zone,
+    showcase boolean DEFAULT false NOT NULL,
+    flow_version_id uuid,
+    billed_via text,
+    CONSTRAINT analyses_status_check CHECK ((status = ANY (ARRAY['running'::text, 'succeeded'::text, 'failed'::text, 'cancelled'::text]))),
+    CONSTRAINT analyses_studio_check CHECK ((studio = ANY (ARRAY['compliance-check'::text, 'document-authenticity'::text])))
+);
+
+CREATE TABLE public.api_keys (
+    id uuid NOT NULL,
+    owner_id uuid NOT NULL,
+    name text NOT NULL,
+    public_id text NOT NULL,
+    secret_hash text NOT NULL,
+    scopes text[] NOT NULL,
+    expires_at timestamp with time zone,
+    created_at timestamp with time zone NOT NULL,
+    last_used_at timestamp with time zone,
+    revoked_at timestamp with time zone,
+    rotated_from_id uuid,
+    superseded_at timestamp with time zone,
+    CONSTRAINT api_keys_name_check CHECK (((length(name) >= 1) AND (length(name) <= 80))),
+    CONSTRAINT api_keys_public_id_check CHECK ((public_id ~ '^[0-9a-f]{12}$'::text)),
+    CONSTRAINT api_keys_scopes_check CHECK ((cardinality(scopes) > 0)),
+    CONSTRAINT api_keys_secret_hash_check CHECK ((secret_hash ~ '^[0-9a-f]{64}$'::text))
+);
+
+CREATE TABLE public.app_settings (
+    scope text NOT NULL,
+    scope_id text DEFAULT ''::text NOT NULL,
+    key text NOT NULL,
+    value jsonb NOT NULL,
+    updated_at timestamp with time zone DEFAULT now() NOT NULL,
+    updated_by uuid,
+    CONSTRAINT app_settings_check CHECK (((scope = 'global'::text) = (scope_id = ''::text))),
+    CONSTRAINT app_settings_key_check CHECK ((key ~ '^[a-zA-Z0-9.]{1,80}$'::text)),
+    CONSTRAINT app_settings_scope_check CHECK ((scope = ANY (ARRAY['global'::text, 'workspace'::text, 'user'::text])))
+);
+
+CREATE TABLE public.application_consents (
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    screening_id uuid NOT NULL,
+    purpose text NOT NULL,
+    notice_version text NOT NULL,
+    means text NOT NULL,
+    granted_at timestamp with time zone DEFAULT now() NOT NULL,
+    withdrawn_at timestamp with time zone,
+    price_cents integer,
+    currency text,
+    payer text,
+    CONSTRAINT application_consents_means_check CHECK ((means = 'web-form'::text)),
+    CONSTRAINT application_consents_notice_version_check CHECK (((length(notice_version) >= 1) AND (length(notice_version) <= 40))),
+    CONSTRAINT application_consents_payer_check CHECK (((payer IS NULL) OR (payer = ANY (ARRAY['firm'::text, 'owner'::text, 'applicant'::text])))),
+    CONSTRAINT application_consents_price_cents_check CHECK (((price_cents IS NULL) OR (price_cents >= 0))),
+    CONSTRAINT application_consents_purpose_check CHECK ((purpose = ANY (ARRAY['DOCUMENT_CHECK'::text, 'COURT_RECORDS'::text, 'CREDIT'::text, 'DOCUMENT_KEEP'::text])))
+);
+
+CREATE VIEW public.audit_log AS
+ SELECT id,
+    at,
+    actor_id,
+    actor_label,
+    action,
+    target_id,
+    detail,
+    ip
+   FROM audit.entry;
+
+CREATE TABLE public.batch_items (
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    batch_id uuid NOT NULL,
+    line integer NOT NULL,
+    file_name text NOT NULL,
+    reference text,
+    request jsonb,
+    document_id uuid,
+    analysis_id uuid,
+    state text NOT NULL,
+    error text,
+    CONSTRAINT batch_items_line_check CHECK ((line >= 2)),
+    CONSTRAINT batch_items_state_check CHECK ((state = ANY (ARRAY['pending'::text, 'reused'::text, 'running'::text, 'done'::text, 'failed'::text, 'refused'::text])))
+);
+
+CREATE TABLE public.batches (
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    owner_id uuid NOT NULL,
+    name text NOT NULL,
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    finished_at timestamp with time zone,
+    tick_after timestamp with time zone,
+    CONSTRAINT batches_name_check CHECK (((length(name) >= 1) AND (length(name) <= 200)))
+);
+
+CREATE TABLE public.check_type (
+    key text NOT NULL,
+    provider_id text NOT NULL,
+    purpose text NOT NULL,
+    label_fr text NOT NULL,
+    label_en text NOT NULL,
+    provider_cost_cents integer DEFAULT 0 NOT NULL,
+    margin_cents integer DEFAULT 0 NOT NULL,
+    currency text DEFAULT 'CAD'::text NOT NULL,
+    region text DEFAULT 'QC'::text NOT NULL,
+    consent_notice_version text NOT NULL,
+    enabled boolean DEFAULT false NOT NULL,
+    default_on boolean DEFAULT false NOT NULL,
+    requires_lawyer text,
+    note text,
+    applicant_may_pay boolean DEFAULT false NOT NULL,
+    CONSTRAINT check_type_currency_check CHECK ((currency = 'CAD'::text)),
+    CONSTRAINT check_type_key_check CHECK ((key ~ '^[a-z][a-z0-9-]{1,39}$'::text)),
+    CONSTRAINT check_type_margin_cents_check CHECK ((margin_cents >= 0)),
+    CONSTRAINT check_type_provider_cost_cents_check CHECK ((provider_cost_cents >= 0)),
+    CONSTRAINT check_type_purpose_check CHECK ((purpose = ANY (ARRAY['COURT_RECORDS'::text, 'CREDIT'::text])))
+);
+
+CREATE TABLE public.collections (
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    library_id uuid NOT NULL,
+    name text NOT NULL,
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    owner_id uuid NOT NULL,
+    is_default boolean DEFAULT false NOT NULL,
+    avatar jsonb,
+    description text,
+    CONSTRAINT collections_avatar_check CHECK (((avatar IS NULL) OR ((jsonb_typeof(avatar) = 'object'::text) AND ((avatar ->> 'kind'::text) = ANY (ARRAY['set'::text, 'image'::text]))))),
+    CONSTRAINT collections_description_check CHECK (((description IS NULL) OR (length(description) <= 500)))
+);
+
+CREATE TABLE public.collections_tags (
+    collection_id uuid NOT NULL,
+    tag_id uuid NOT NULL
+);
+
+CREATE TABLE public.compliance_gate (
+    blocker text NOT NULL,
+    label text NOT NULL,
+    required_live boolean DEFAULT true NOT NULL,
+    status text DEFAULT 'open'::text NOT NULL,
+    evidence_on date,
+    evidence_ref text,
+    CONSTRAINT compliance_gate_blocker_check CHECK ((blocker ~ '^[a-z][a-z0-9-]{2,60}$'::text)),
+    CONSTRAINT compliance_gate_done_has_evidence CHECK (((status = 'open'::text) OR ((evidence_on IS NOT NULL) AND (length(COALESCE(evidence_ref, ''::text)) > 0)))),
+    CONSTRAINT compliance_gate_status_check CHECK ((status = ANY (ARRAY['open'::text, 'done'::text])))
+);
+
+CREATE TABLE public.consents (
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    account_id uuid NOT NULL,
+    key text NOT NULL,
+    granted_at timestamp with time zone DEFAULT now() NOT NULL,
+    revoked_at timestamp with time zone,
+    CONSTRAINT consents_key_check CHECK ((key ~ '^[a-z0-9-]{1,40}$'::text))
+);
+
+CREATE TABLE public.document_types (
+    id text NOT NULL,
+    accepted_kinds text[] DEFAULT '{pdf}'::text[] NOT NULL,
+    studios text[] DEFAULT '{document-authenticity,compliance-check}'::text[] NOT NULL,
+    fields text[] DEFAULT '{}'::text[] NOT NULL,
+    retention_policy text DEFAULT 'after-check'::text NOT NULL,
+    active boolean DEFAULT true NOT NULL,
+    "position" integer DEFAULT 0 NOT NULL,
+    CONSTRAINT document_types_accepted_kinds_check CHECK ((accepted_kinds <@ ARRAY['pdf'::text])),
+    CONSTRAINT document_types_id_check CHECK ((id ~ '^[a-z0-9-]{2,40}$'::text)),
+    CONSTRAINT document_types_studios_check CHECK ((studios <@ ARRAY['document-authenticity'::text, 'compliance-check'::text]))
+);
+
+CREATE TABLE public.documents (
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    owner_id uuid NOT NULL,
+    title text NOT NULL,
+    filename text NOT NULL,
+    mime_type text NOT NULL,
+    kind text DEFAULT 'other'::text NOT NULL,
+    size_bytes integer NOT NULL,
+    sha256 text NOT NULL,
+    pages integer,
+    content bytea NOT NULL,
+    text text DEFAULT ''::text NOT NULL,
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    search tsvector GENERATED ALWAYS AS ((setweight(to_tsvector('simple'::regconfig, COALESCE(title, ''::text)), 'A'::"char") || setweight(to_tsvector('simple'::regconfig, COALESCE(text, ''::text)), 'B'::"char"))) STORED,
+    sample boolean DEFAULT false NOT NULL,
+    collection_id uuid,
+    folder_id uuid,
+    storage text DEFAULT 'database'::text NOT NULL,
+    retain_until timestamp with time zone,
+    storage_owner text DEFAULT 'krizaka'::text NOT NULL,
+    text_source jsonb,
+    screening_id uuid,
+    document_type text,
+    retention_policy text,
+    checks_skipped jsonb DEFAULT '[]'::jsonb NOT NULL,
+    extraction text DEFAULT 'done'::text NOT NULL,
+    extraction_error text,
+    extraction_at timestamp with time zone DEFAULT now() NOT NULL,
+    keep_consent_at timestamp with time zone,
+    source_sha256 text,
+    document_role text DEFAULT 'lease'::text NOT NULL,
+    lease_id uuid,
+    object_key text,
+    provider_id uuid,
+    CONSTRAINT documents_document_role_check CHECK ((document_role = ANY (ARRAY['lease'::text, 'annex'::text, 'building-rules'::text]))),
+    CONSTRAINT documents_extraction_check CHECK ((extraction = ANY (ARRAY['queued'::text, 'running'::text, 'done'::text, 'failed'::text]))),
+    CONSTRAINT documents_folder_in_collection CHECK (((folder_id IS NULL) OR (collection_id IS NOT NULL))),
+    CONSTRAINT documents_kind_check CHECK ((kind = ANY (ARRAY['lease'::text, 'contract'::text, 'invoice'::text, 'other'::text]))),
+    CONSTRAINT documents_mime_type_check CHECK ((mime_type = ANY (ARRAY['application/pdf'::text, 'text/plain'::text, 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'::text, 'application/vnd.oasis.opendocument.text'::text]))),
+    CONSTRAINT documents_role_has_lease CHECK (((document_role = 'lease'::text) = (lease_id IS NULL))),
+    CONSTRAINT documents_size_bytes_check CHECK (((size_bytes > 0) AND (size_bytes <= 10485760))),
+    CONSTRAINT documents_storage_check CHECK ((storage = ANY (ARRAY['none'::text, 'database'::text, 'bunny'::text, 's3'::text, 'cloud'::text, 'device'::text]))),
+    CONSTRAINT documents_storage_owner_check CHECK ((storage_owner = ANY (ARRAY['krizaka'::text, 'workspace'::text])))
+);
+
+CREATE TABLE public.email_changes (
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    account_id uuid NOT NULL,
+    new_email text NOT NULL,
+    token_hash text NOT NULL,
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    expires_at timestamp with time zone NOT NULL,
+    used_at timestamp with time zone,
+    CONSTRAINT email_changes_new_email_check CHECK ((new_email = lower(new_email)))
+);
+
+CREATE TABLE public.email_verifications (
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    account_id uuid NOT NULL,
+    token_hash text NOT NULL,
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    expires_at timestamp with time zone NOT NULL,
+    used_at timestamp with time zone
+);
+
+CREATE TABLE public.file_report_shares (
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    screening_id uuid NOT NULL,
+    landlord_id uuid NOT NULL,
+    recipient text DEFAULT ''::text NOT NULL,
+    token_hash text NOT NULL,
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    expires_at timestamp with time zone NOT NULL,
+    revoked_at timestamp with time zone,
+    emailed_to text,
+    CONSTRAINT file_report_shares_emailed_to_check CHECK (((emailed_to IS NULL) OR (length(emailed_to) <= 254))),
+    CONSTRAINT file_report_shares_recipient_check CHECK ((length(recipient) <= 120))
+);
+
+CREATE TABLE public.file_report_views (
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    share_id uuid NOT NULL,
+    viewed_at timestamp with time zone DEFAULT now() NOT NULL,
+    ip text
+);
+
+CREATE TABLE public.flow_environments (
+    flow_id uuid NOT NULL,
+    environment text NOT NULL,
+    enabled boolean DEFAULT false NOT NULL,
+    CONSTRAINT flow_environments_environment_check CHECK ((environment = ANY (ARRAY['dev'::text, 'prod'::text])))
+);
+
+CREATE TABLE public.flow_versions (
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    flow_id uuid NOT NULL,
+    version integer NOT NULL,
+    status text DEFAULT 'draft'::text NOT NULL,
+    definition jsonb NOT NULL,
+    created_by uuid,
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    published_at timestamp with time zone,
+    CONSTRAINT flow_versions_status_check CHECK ((status = ANY (ARRAY['draft'::text, 'published'::text, 'retired'::text]))),
+    CONSTRAINT flow_versions_version_check CHECK ((version >= 1))
+);
+
+CREATE TABLE public.flows (
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    key text NOT NULL,
+    current_version_id uuid,
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    CONSTRAINT flows_key_check CHECK ((key ~ '^[a-z0-9-]{1,60}$'::text))
+);
+
+CREATE TABLE public.folder_tags (
+    folder_id uuid NOT NULL,
+    tag_id uuid NOT NULL
+);
+
+CREATE TABLE public.folders (
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    collection_id uuid NOT NULL,
+    name text NOT NULL,
+    created_at timestamp with time zone DEFAULT now() NOT NULL
+);
+
+CREATE TABLE public.krizaka_module_versions (
+    module text NOT NULL,
+    version integer NOT NULL,
+    checksum text NOT NULL,
+    applied_at timestamp with time zone DEFAULT now() NOT NULL
+);
+
+CREATE TABLE public.libraries (
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    owner_id uuid NOT NULL,
+    name text NOT NULL,
+    created_at timestamp with time zone DEFAULT now() NOT NULL
+);
+
+CREATE TABLE public.mail_intentions (
+    key text NOT NULL,
+    claimed_at timestamp with time zone DEFAULT now() NOT NULL
+);
+
+CREATE TABLE public.mail_suppressions (
+    email text NOT NULL,
+    reason text NOT NULL,
+    at timestamp with time zone DEFAULT now() NOT NULL,
+    CONSTRAINT mail_suppressions_reason_check CHECK ((reason = ANY (ARRAY['bounce'::text, 'complaint'::text, 'unsubscribed'::text])))
+);
+
+CREATE TABLE public.overage_charges (
+    dossier_id uuid NOT NULL,
+    period text NOT NULL,
+    account_id uuid NOT NULL,
+    charge_ref text NOT NULL,
+    amount_cents integer NOT NULL,
+    charged_at timestamp with time zone NOT NULL,
+    refunded_at timestamp with time zone,
+    CONSTRAINT overage_charges_amount_cents_check CHECK ((amount_cents > 0)),
+    CONSTRAINT overage_charges_period_check CHECK ((period ~ '^[0-9]{4}-[0-9]{2}$'::text))
+);
+
+CREATE TABLE public.password_resets (
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    account_id uuid NOT NULL,
+    token_hash text NOT NULL,
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    expires_at timestamp with time zone NOT NULL,
+    used_at timestamp with time zone
+);
+
+CREATE TABLE public.preflight_events (
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    account_id uuid,
+    outcome text NOT NULL,
+    reason text,
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    CONSTRAINT preflight_events_outcome_check CHECK ((outcome = ANY (ARRAY['accepted'::text, 'rejected'::text, 'reused'::text])))
+);
+
+CREATE TABLE public.price_versions (
+    id bigint NOT NULL,
+    key text NOT NULL,
+    price jsonb NOT NULL,
+    before jsonb NOT NULL,
+    effective_from timestamp with time zone NOT NULL,
+    created_at timestamp with time zone NOT NULL,
+    actor_id uuid,
+    actor_label text NOT NULL,
+    CONSTRAINT price_versions_key_check CHECK ((key ~ '^[a-z][a-zA-Z0-9-]{0,39}[.][a-z][a-zA-Z0-9-]{0,39}$'::text))
+);
+
+CREATE SEQUENCE public.price_versions_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+ALTER SEQUENCE public.price_versions_id_seq OWNED BY public.price_versions.id;
+
+CREATE TABLE public.report_access_requests (
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    analysis_id uuid NOT NULL,
+    requester_id uuid NOT NULL,
+    requester_email text NOT NULL,
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    handled_at timestamp with time zone
+);
+
+CREATE TABLE public.report_grants (
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    analysis_id uuid NOT NULL,
+    granted_by uuid NOT NULL,
+    grantee_email text NOT NULL,
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    expires_at timestamp with time zone,
+    revoked_at timestamp with time zone,
+    CONSTRAINT report_grants_grantee_email_check CHECK ((grantee_email = lower(grantee_email)))
+);
+
+CREATE TABLE public.retention_policies (
+    id text NOT NULL,
+    purge_on text NOT NULL,
+    days integer,
+    CONSTRAINT retention_policies_days_check CHECK (((days IS NULL) OR ((days >= 1) AND (days <= 3650)))),
+    CONSTRAINT retention_policies_days_iff_days CHECK (((purge_on = 'days'::text) = (days IS NOT NULL))),
+    CONSTRAINT retention_policies_id_check CHECK ((id ~ '^[a-z0-9-]{2,40}$'::text)),
+    CONSTRAINT retention_policies_purge_on_check CHECK ((purge_on = ANY (ARRAY['after-check'::text, 'after-decision'::text, 'days'::text])))
+);
+
+CREATE TABLE public.retention_rule (
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    owner_id uuid,
+    subject text NOT NULL,
+    policy_id text NOT NULL,
+    CONSTRAINT retention_rule_subject_check CHECK ((subject ~ '^[a-z0-9-]{2,40}$'::text))
+);
+
+
+CREATE TABLE public.screening_charge (
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    screening_id uuid NOT NULL,
+    check_type text NOT NULL,
+    payer text NOT NULL,
+    provider_cost_cents integer NOT NULL,
+    margin_cents integer NOT NULL,
+    amount_cents integer NOT NULL,
+    currency text DEFAULT 'CAD'::text NOT NULL,
+    description text NOT NULL,
+    state text NOT NULL,
+    charge_ref text,
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    refunded_at timestamp with time zone,
+    CONSTRAINT screening_charge_check CHECK ((amount_cents = (provider_cost_cents + margin_cents))),
+    CONSTRAINT screening_charge_margin_cents_check CHECK ((margin_cents >= 0)),
+    CONSTRAINT screening_charge_payer_check CHECK ((payer = ANY (ARRAY['firm'::text, 'owner'::text, 'applicant'::text]))),
+    CONSTRAINT screening_charge_provider_cost_cents_check CHECK ((provider_cost_cents >= 0)),
+    CONSTRAINT screening_charge_state_check CHECK ((state = ANY (ARRAY['charged'::text, 'refunded'::text, 'failed'::text])))
+);
+
+CREATE TABLE public.screening_checks (
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    screening_id uuid NOT NULL,
+    check_type text NOT NULL,
+    state text NOT NULL,
+    outcome text NOT NULL,
+    refusal text,
+    category text DEFAULT 'NONE'::text NOT NULL,
+    provider_ref text,
+    run_id uuid NOT NULL,
+    submitted_at timestamp with time zone DEFAULT now() NOT NULL,
+    answered_at timestamp with time zone,
+    next_poll_at timestamp with time zone,
+    polls integer DEFAULT 0 NOT NULL,
+    CONSTRAINT screening_checks_category_check CHECK ((category = ANY (ARRAY['TAL_NON_PAYMENT'::text, 'TAL_OTHER'::text, 'CRIMINAL'::text, 'CIVIL'::text, 'NONE'::text]))),
+    CONSTRAINT screening_checks_outcome_check CHECK ((outcome = ANY (ARRAY['MATCH'::text, 'NO_MATCH'::text, 'PENDING'::text, 'PROVIDER_ERROR'::text, 'TIMEOUT'::text, 'REFUSED'::text]))),
+    CONSTRAINT screening_checks_refusal_check CHECK ((refusal = ANY (ARRAY['NO_CONSENT'::text, 'NO_KEY'::text, 'BUDGET_EXHAUSTED'::text, 'NOT_CONFIGURED'::text]))),
+    CONSTRAINT screening_checks_state_check CHECK ((state = ANY (ARRAY['answered'::text, 'pending'::text, 'unavailable'::text, 'soon'::text])))
+);
+
+CREATE TABLE public.screening_provider (
+    id text NOT NULL,
+    adapter text NOT NULL,
+    label text NOT NULL,
+    region text DEFAULT 'CA'::text NOT NULL,
+    enabled boolean DEFAULT false NOT NULL,
+    note text,
+    poll_minutes integer DEFAULT 15 NOT NULL,
+    poll_max integer DEFAULT 96 NOT NULL,
+    CONSTRAINT screening_provider_adapter_check CHECK ((adapter = ANY (ARRAY['demo'::text, 'engine'::text]))),
+    CONSTRAINT screening_provider_id_check CHECK ((id ~ '^[a-z][a-z0-9-]{1,39}$'::text)),
+    CONSTRAINT screening_provider_poll_max_check CHECK (((poll_max >= 1) AND (poll_max <= 1000))),
+    CONSTRAINT screening_provider_poll_minutes_check CHECK (((poll_minutes >= 1) AND (poll_minutes <= 1440)))
+);
+
+CREATE TABLE public.screenings (
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    landlord_id uuid NOT NULL,
+    tenant_name text NOT NULL,
+    tenant_email text NOT NULL,
+    scope text[] DEFAULT '{payment-history}'::text[] NOT NULL,
+    provider text NOT NULL,
+    status text DEFAULT 'requested'::text NOT NULL,
+    token_hash text NOT NULL,
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    expires_at timestamp with time zone NOT NULL,
+    consented_at timestamp with time zone,
+    shared_at timestamp with time zone,
+    contested_at timestamp with time zone,
+    contest_comment text,
+    result jsonb,
+    result_expires_at timestamp with time zone,
+    purged_at timestamp with time zone,
+    flow text DEFAULT 'screening'::text NOT NULL,
+    requested_types text[] DEFAULT '{}'::text[] NOT NULL,
+    revoked_at timestamp with time zone,
+    submitted_at timestamp with time zone,
+    closed_at timestamp with time zone,
+    payer text DEFAULT 'owner'::text NOT NULL,
+    CONSTRAINT screenings_flow_check CHECK ((flow = ANY (ARRAY['screening'::text, 'file'::text]))),
+    CONSTRAINT screenings_payer_check CHECK ((payer = ANY (ARRAY['firm'::text, 'owner'::text, 'applicant'::text]))),
+    CONSTRAINT screenings_status_check CHECK ((status = ANY (ARRAY['requested'::text, 'consented'::text, 'shared'::text, 'declined'::text, 'contested'::text, 'expired'::text, 'erased'::text]))),
+    CONSTRAINT screenings_tenant_email_check CHECK ((tenant_email = lower(tenant_email)))
+);
+
+CREATE TABLE public.sealed_contracts (
+    id text NOT NULL,
+    owner_id uuid NOT NULL,
+    partner_id text NOT NULL,
+    document_type text NOT NULL,
+    sha256 text NOT NULL,
+    zone text NOT NULL,
+    key_id text NOT NULL,
+    sealed_at timestamp with time zone NOT NULL,
+    content bytea NOT NULL
+);
+
+CREATE TABLE public.sessions (
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    account_id uuid NOT NULL,
+    token_hash text NOT NULL,
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    expires_at timestamp with time zone NOT NULL,
+    ip text,
+    user_agent text
+);
+
+CREATE TABLE public.settings_audit (
+    id bigint NOT NULL,
+    at timestamp with time zone DEFAULT now() NOT NULL,
+    actor_id uuid,
+    actor_label text NOT NULL,
+    scope text NOT NULL,
+    scope_id text DEFAULT ''::text NOT NULL,
+    key text NOT NULL,
+    before jsonb,
+    after jsonb
+);
+
+CREATE SEQUENCE public.settings_audit_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+ALTER SEQUENCE public.settings_audit_id_seq OWNED BY public.settings_audit.id;
+
+CREATE TABLE public.signal_answers (
+    document_id uuid NOT NULL,
+    signal_id text NOT NULL,
+    explanation text NOT NULL,
+    answered_at timestamp with time zone NOT NULL,
+    CONSTRAINT signal_answers_explanation_check CHECK (((char_length(explanation) >= 1) AND (char_length(explanation) <= 600))),
+    CONSTRAINT signal_answers_signal_id_check CHECK (((char_length(signal_id) >= 1) AND (char_length(signal_id) <= 64)))
+);
+
+CREATE TABLE public.storage_moves (
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    from_id uuid NOT NULL,
+    to_id uuid NOT NULL,
+    status text NOT NULL,
+    total integer NOT NULL,
+    moved integer DEFAULT 0 NOT NULL,
+    failures jsonb DEFAULT '[]'::jsonb NOT NULL,
+    leased_until timestamp with time zone,
+    started_by text,
+    started_at timestamp with time zone NOT NULL,
+    updated_at timestamp with time zone NOT NULL,
+    finished_at timestamp with time zone,
+    CONSTRAINT storage_moves_check CHECK ((from_id <> to_id)),
+    CONSTRAINT storage_moves_moved_check CHECK ((moved >= 0)),
+    CONSTRAINT storage_moves_status_check CHECK ((status = ANY (ARRAY['running'::text, 'paused'::text, 'attention'::text, 'done'::text]))),
+    CONSTRAINT storage_moves_total_check CHECK ((total >= 0))
+);
+
+CREATE TABLE public.storage_settings (
+    owner_id uuid NOT NULL,
+    mode text DEFAULT 'krizaka'::text NOT NULL,
+    keep_default boolean DEFAULT false NOT NULL,
+    s3_endpoint text,
+    s3_region text,
+    s3_bucket text,
+    s3_access_key_id text,
+    s3_secret_sealed text,
+    tested_at timestamp with time zone,
+    updated_at timestamp with time zone DEFAULT now() NOT NULL,
+    provider_id uuid,
+    cloud_connector text,
+    CONSTRAINT storage_settings_mode_check CHECK ((mode = ANY (ARRAY['none'::text, 'krizaka'::text, 's3'::text, 'cloud'::text])))
+);
+
+CREATE TABLE public.tags (
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    owner_id uuid NOT NULL,
+    name text NOT NULL,
+    color text NOT NULL,
+    CONSTRAINT tags_color_check CHECK ((color = ANY (ARRAY['blue'::text, 'green'::text, 'amber'::text, 'red'::text, 'violet'::text, 'gray'::text])))
+);
+
+CREATE TABLE public.tenant_check_setting (
+    owner_id uuid NOT NULL,
+    check_type text NOT NULL,
+    allowed boolean NOT NULL
+);
+
+CREATE TABLE public.webhook_deliveries (
+    id uuid NOT NULL,
+    endpoint_id uuid NOT NULL,
+    event_id text NOT NULL,
+    event_type text NOT NULL,
+    payload jsonb NOT NULL,
+    status text DEFAULT 'pending'::text NOT NULL,
+    attempts integer DEFAULT 0 NOT NULL,
+    next_attempt_at timestamp with time zone NOT NULL,
+    last_status integer,
+    last_error text,
+    created_at timestamp with time zone NOT NULL,
+    delivered_at timestamp with time zone,
+    CONSTRAINT webhook_deliveries_status_check CHECK ((status = ANY (ARRAY['pending'::text, 'delivered'::text, 'failed'::text])))
+);
+
+CREATE TABLE public.webhook_endpoints (
+    id uuid NOT NULL,
+    owner_id uuid NOT NULL,
+    url text NOT NULL,
+    secret_sealed text NOT NULL,
+    events text[] NOT NULL,
+    active boolean DEFAULT true NOT NULL,
+    disabled_why text,
+    created_at timestamp with time zone NOT NULL,
+    CONSTRAINT webhook_endpoints_events_check CHECK ((cardinality(events) > 0)),
+    CONSTRAINT webhook_endpoints_url_check CHECK ((char_length(url) <= 500))
+);
+
+CREATE TABLE public.webhook_received (
+    source text NOT NULL,
+    event_id text NOT NULL,
+    received_at timestamp with time zone NOT NULL
+);
+
 CREATE TABLE storage.default_provider (
-  scope       text NOT NULL,
-  data_kind   text NOT NULL CHECK (data_kind ~ '^[a-z][a-z0-9_-]*$'),
-  provider_id uuid NOT NULL REFERENCES storage.provider(id),
-  PRIMARY KEY (scope, data_kind)
+    scope text NOT NULL,
+    data_kind text NOT NULL,
+    provider_id uuid NOT NULL,
+    CONSTRAINT default_provider_data_kind_check CHECK ((data_kind ~ '^[a-z][a-z0-9_-]*$'::text))
 );
-INSERT INTO public.krizaka_module_versions (module, version, checksum) VALUES
-  ('storage', 1, 'ea5bff037ff78f0cffd7475b7fc034dc2f1612391e9ab4effd5cc3c74d56b126')
-ON CONFLICT (module, version) DO NOTHING;
-`,
-  },
-  {
-    version: "0059_document_provider_id",
-    // yomizaka#523: which provider holds a document's bytes (`storage.provider.id`, a text copy so a disabled provider never blocks a row). Null = the object is in the provider the bootstrap imported, or has no bytes in a store.
-    sql: `
-ALTER TABLE documents ADD COLUMN provider_id uuid;
-CREATE INDEX documents_provider_id ON documents(provider_id) WHERE provider_id IS NOT NULL;
-`,
-  },
-  {
-    version: "0060_storage_settings_provider",
-    // yomizaka#527 / ADR-005: a person's own S3 is a provider at user scope of the registry. This column names it; the data move (re-sealing the old secret under the vault) is code, run at start (`migrateOwnS3`), because it needs the keys.
-    sql: `
-ALTER TABLE storage_settings ADD COLUMN provider_id uuid;
-`,
-  },
-  {
-    version: "0061_storage_moves",
-    // ADR-005 §3 (yomizaka#522): the verified move of the documents from a retiring provider to the new default. One row per move; the objects themselves are the catalog (documents.provider_id), so a move resumes from the database and never repeats. At most one move is open at a time.
-    sql: `
-CREATE TABLE storage_moves (
-  id           uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-  from_id      uuid NOT NULL,
-  to_id        uuid NOT NULL,
-  status       text NOT NULL CHECK (status IN ('running', 'paused', 'attention', 'done')),
-  total        integer NOT NULL CHECK (total >= 0),
-  moved        integer NOT NULL DEFAULT 0 CHECK (moved >= 0),
-  failures     jsonb NOT NULL DEFAULT '[]'::jsonb,
-  leased_until timestamptz,
-  started_by   text,
-  started_at   timestamptz NOT NULL,
-  updated_at   timestamptz NOT NULL,
-  finished_at  timestamptz,
-  CHECK (from_id <> to_id)
+
+CREATE TABLE storage.provider (
+    id uuid NOT NULL,
+    scope text NOT NULL,
+    kind text NOT NULL,
+    preset text,
+    label text NOT NULL,
+    coordinates jsonb DEFAULT '{}'::jsonb NOT NULL,
+    sealed_credentials text NOT NULL,
+    key_id text NOT NULL,
+    status text NOT NULL,
+    source text DEFAULT 'admin'::text NOT NULL,
+    last_test jsonb,
+    created_by text,
+    created_at timestamp with time zone NOT NULL,
+    updated_at timestamp with time zone NOT NULL,
+    CONSTRAINT provider_kind_check CHECK ((kind ~ '^[a-z][a-z0-9-]*$'::text)),
+    CONSTRAINT provider_label_check CHECK (((char_length(label) >= 1) AND (char_length(label) <= 80))),
+    CONSTRAINT provider_scope_check CHECK (((scope = 'org'::text) OR (scope ~ '^user:[A-Za-z0-9_-]{1,64}$'::text))),
+    CONSTRAINT provider_source_check CHECK ((source = ANY (ARRAY['admin'::text, 'env'::text]))),
+    CONSTRAINT provider_status_check CHECK ((status = ANY (ARRAY['draft'::text, 'verified'::text, 'active'::text, 'retiring'::text, 'disabled'::text])))
 );
-CREATE UNIQUE INDEX storage_moves_one_open ON storage_moves ((true)) WHERE status <> 'done';
-`,
-  },
-  {
-    version: "0062_cancel_at_period_end",
-    sql: `
--- A subscription cancelled in the portal stays active until the end of the period, then ends (@krizaka/payments 0.5: cancelAtPeriodEnd).
--- The account then says « ends on » instead of « renewal ». Every existing account renews.
-ALTER TABLE accounts ADD COLUMN cancel_at_period_end boolean NOT NULL DEFAULT false;
-`,
-  },
-  {
-    version: "0063_signal_answers",
-    sql: `
--- The applicant's answer to a trace found in their document (ADR-0014, yomizaka#626): one short explanation per document and signal id.
--- It follows the document: deleted with it (cascade), so an erased application erases its explanations. Never written to a log.
-CREATE TABLE signal_answers (
-  document_id uuid NOT NULL REFERENCES documents(id) ON DELETE CASCADE,
-  signal_id   text NOT NULL CHECK (char_length(signal_id) BETWEEN 1 AND 64),
-  explanation text NOT NULL CHECK (char_length(explanation) BETWEEN 1 AND 600),
-  answered_at timestamptz NOT NULL,
-  PRIMARY KEY (document_id, signal_id)
-);
-`,
-  },
-  {
-    version: "0064_storage_cloud",
-    // yomizaka#530: a person may connect a cloud (Dropbox, Google Drive, OneDrive) as the home of their kept documents. The connection is a user-scope provider of the registry; the settings row names the connector.
-    sql: `
-ALTER TABLE storage_settings DROP CONSTRAINT storage_settings_mode_check;
-ALTER TABLE storage_settings ADD CONSTRAINT storage_settings_mode_check CHECK (mode IN ('none', 'krizaka', 's3', 'cloud'));
-ALTER TABLE storage_settings ADD COLUMN cloud_connector text;
-ALTER TABLE documents DROP CONSTRAINT documents_storage_check;
-ALTER TABLE documents ADD CONSTRAINT documents_storage_check CHECK (storage IN ('none', 'database', 'bunny', 's3', 'cloud', 'device'));
-`,
-  },
-  {
-    version: "0065_overage_charges",
-    // krizaka-internal#45 slice D, ADR-0015: a dossier beyond the included volume is charged once per month; this is the record, so a retry bills nothing twice and a failed check is refunded once.
-    sql: `
-CREATE TABLE overage_charges (
-  dossier_id   uuid        NOT NULL,
-  period       text        NOT NULL CHECK (period ~ '^[0-9]{4}-[0-9]{2}$'),
-  account_id   uuid        NOT NULL REFERENCES accounts(id) ON DELETE CASCADE,
-  charge_ref   text        NOT NULL,
-  amount_cents integer     NOT NULL CHECK (amount_cents > 0),
-  charged_at   timestamptz NOT NULL,
-  refunded_at  timestamptz,
-  PRIMARY KEY (dossier_id, period)
-);
-CREATE INDEX overage_charges_account ON overage_charges (account_id, period);
+
+ALTER TABLE ONLY audit.entry ALTER COLUMN id SET DEFAULT nextval('audit.entry_id_seq'::regclass);
+
+ALTER TABLE ONLY privacy.consent ALTER COLUMN seq SET DEFAULT nextval('privacy.consent_seq_seq'::regclass);
+
+ALTER TABLE ONLY public.audit_log ALTER COLUMN at SET DEFAULT now();
+
+ALTER TABLE ONLY public.price_versions ALTER COLUMN id SET DEFAULT nextval('public.price_versions_id_seq'::regclass);
+
+ALTER TABLE ONLY public.settings_audit ALTER COLUMN id SET DEFAULT nextval('public.settings_audit_id_seq'::regclass);
+
+ALTER TABLE ONLY audit.entry
+    ADD CONSTRAINT entry_pkey PRIMARY KEY (id);
+
+ALTER TABLE ONLY coupons.coupon
+    ADD CONSTRAINT coupon_code_key_key UNIQUE (code_key);
+
+ALTER TABLE ONLY coupons.coupon
+    ADD CONSTRAINT coupon_pkey PRIMARY KEY (id);
+
+ALTER TABLE ONLY coupons.partner
+    ADD CONSTRAINT partner_pkey PRIMARY KEY (id);
+
+ALTER TABLE ONLY coupons.redemption
+    ADD CONSTRAINT redemption_checkout_ref_key UNIQUE (checkout_ref);
+
+ALTER TABLE ONLY coupons.redemption
+    ADD CONSTRAINT redemption_idempotency_key_key UNIQUE (idempotency_key);
+
+ALTER TABLE ONLY coupons.redemption
+    ADD CONSTRAINT redemption_payment_ref_key UNIQUE (payment_ref);
+
+ALTER TABLE ONLY coupons.redemption
+    ADD CONSTRAINT redemption_pkey PRIMARY KEY (id);
+
+ALTER TABLE ONLY credits.entry
+    ADD CONSTRAINT entry_idempotency_key_key UNIQUE (idempotency_key);
+
+ALTER TABLE ONLY credits.entry
+    ADD CONSTRAINT entry_pkey PRIMARY KEY (id);
+
+ALTER TABLE ONLY credits."grant"
+    ADD CONSTRAINT grant_pkey PRIMARY KEY (id);
+
+ALTER TABLE ONLY credits.hold
+    ADD CONSTRAINT hold_operation_key UNIQUE (operation);
+
+ALTER TABLE ONLY credits.hold
+    ADD CONSTRAINT hold_pkey PRIMARY KEY (id);
+
+ALTER TABLE ONLY organize.applicant_file_status
+    ADD CONSTRAINT applicant_file_status_pkey PRIMARY KEY (entity_id);
+
+ALTER TABLE ONLY organize.applicant_file_tag
+    ADD CONSTRAINT applicant_file_tag_pkey PRIMARY KEY (entity_id, tag_id);
+
+ALTER TABLE ONLY organize.document_status
+    ADD CONSTRAINT document_status_pkey PRIMARY KEY (entity_id);
+
+ALTER TABLE ONLY organize.document_tag
+    ADD CONSTRAINT document_tag_pkey PRIMARY KEY (entity_id, tag_id);
+
+ALTER TABLE ONLY organize.kind_config
+    ADD CONSTRAINT kind_config_pkey PRIMARY KEY (kind);
+
+ALTER TABLE ONLY organize.tag
+    ADD CONSTRAINT tag_id_kind_key UNIQUE (id, kind);
+
+ALTER TABLE ONLY organize.tag
+    ADD CONSTRAINT tag_pkey PRIMARY KEY (id);
+
+ALTER TABLE ONLY organize.view
+    ADD CONSTRAINT view_pkey PRIMARY KEY (id);
+
+ALTER TABLE ONLY payments.discount
+    ADD CONSTRAINT discount_pkey PRIMARY KEY (coupon_id, terms_version, provider);
+
+ALTER TABLE ONLY payments.event
+    ADD CONSTRAINT payment_events_pkey PRIMARY KEY (id);
+
+ALTER TABLE ONLY privacy.consent
+    ADD CONSTRAINT consent_pkey PRIMARY KEY (id);
+
+ALTER TABLE ONLY privacy.consent
+    ADD CONSTRAINT consent_seq_key UNIQUE (seq);
+
+ALTER TABLE ONLY privacy.incident
+    ADD CONSTRAINT incident_pkey PRIMARY KEY (id);
+
+ALTER TABLE ONLY privacy.request
+    ADD CONSTRAINT request_pkey PRIMARY KEY (id);
+
+ALTER TABLE ONLY public.accounts
+    ADD CONSTRAINT accounts_email_key UNIQUE (email);
+
+ALTER TABLE ONLY public.accounts
+    ADD CONSTRAINT accounts_payment_customer_id_key UNIQUE (payment_customer_id);
+
+ALTER TABLE ONLY public.accounts
+    ADD CONSTRAINT accounts_pkey PRIMARY KEY (id);
+
+ALTER TABLE ONLY public.analyses
+    ADD CONSTRAINT analyses_pkey PRIMARY KEY (id);
+
+ALTER TABLE ONLY public.api_keys
+    ADD CONSTRAINT api_keys_pkey PRIMARY KEY (id);
+
+ALTER TABLE ONLY public.api_keys
+    ADD CONSTRAINT api_keys_public_id_key UNIQUE (public_id);
+
+ALTER TABLE ONLY public.app_settings
+    ADD CONSTRAINT app_settings_pkey PRIMARY KEY (scope, scope_id, key);
+
+ALTER TABLE ONLY public.application_consents
+    ADD CONSTRAINT application_consents_pkey PRIMARY KEY (id);
+
+ALTER TABLE ONLY public.batch_items
+    ADD CONSTRAINT batch_items_batch_id_line_key UNIQUE (batch_id, line);
+
+ALTER TABLE ONLY public.batch_items
+    ADD CONSTRAINT batch_items_pkey PRIMARY KEY (id);
+
+ALTER TABLE ONLY public.batches
+    ADD CONSTRAINT batches_pkey PRIMARY KEY (id);
+
+ALTER TABLE ONLY public.check_type
+    ADD CONSTRAINT check_type_pkey PRIMARY KEY (key);
+
+ALTER TABLE ONLY public.collections_tags
+    ADD CONSTRAINT collection_tags_pkey PRIMARY KEY (collection_id, tag_id);
+
+ALTER TABLE ONLY public.collections
+    ADD CONSTRAINT collections_library_id_name_key UNIQUE (library_id, name);
+
+ALTER TABLE ONLY public.collections
+    ADD CONSTRAINT collections_one_default EXCLUDE USING btree (owner_id WITH =) WHERE (is_default) DEFERRABLE;
+
+ALTER TABLE ONLY public.collections
+    ADD CONSTRAINT collections_pkey PRIMARY KEY (id);
+
+ALTER TABLE ONLY public.compliance_gate
+    ADD CONSTRAINT compliance_gate_pkey PRIMARY KEY (blocker);
+
+ALTER TABLE ONLY public.consents
+    ADD CONSTRAINT consents_pkey PRIMARY KEY (id);
+
+ALTER TABLE ONLY public.document_types
+    ADD CONSTRAINT document_types_pkey PRIMARY KEY (id);
+
+ALTER TABLE ONLY public.documents
+    ADD CONSTRAINT documents_owner_id_sha256_key UNIQUE (owner_id, sha256);
+
+ALTER TABLE ONLY public.documents
+    ADD CONSTRAINT documents_pkey PRIMARY KEY (id);
+
+ALTER TABLE ONLY public.email_changes
+    ADD CONSTRAINT email_changes_pkey PRIMARY KEY (id);
+
+ALTER TABLE ONLY public.email_changes
+    ADD CONSTRAINT email_changes_token_hash_key UNIQUE (token_hash);
+
+ALTER TABLE ONLY public.email_verifications
+    ADD CONSTRAINT email_verifications_pkey PRIMARY KEY (id);
+
+ALTER TABLE ONLY public.email_verifications
+    ADD CONSTRAINT email_verifications_token_hash_key UNIQUE (token_hash);
+
+ALTER TABLE ONLY public.file_report_shares
+    ADD CONSTRAINT file_report_shares_pkey PRIMARY KEY (id);
+
+ALTER TABLE ONLY public.file_report_shares
+    ADD CONSTRAINT file_report_shares_token_hash_key UNIQUE (token_hash);
+
+ALTER TABLE ONLY public.file_report_views
+    ADD CONSTRAINT file_report_views_pkey PRIMARY KEY (id);
+
+ALTER TABLE ONLY public.flow_environments
+    ADD CONSTRAINT flow_environments_pkey PRIMARY KEY (flow_id, environment);
+
+ALTER TABLE ONLY public.flow_versions
+    ADD CONSTRAINT flow_versions_flow_id_version_key UNIQUE (flow_id, version);
+
+ALTER TABLE ONLY public.flow_versions
+    ADD CONSTRAINT flow_versions_pkey PRIMARY KEY (id);
+
+ALTER TABLE ONLY public.flows
+    ADD CONSTRAINT flows_key_key UNIQUE (key);
+
+ALTER TABLE ONLY public.flows
+    ADD CONSTRAINT flows_pkey PRIMARY KEY (id);
+
+ALTER TABLE ONLY public.folder_tags
+    ADD CONSTRAINT folder_tags_pkey PRIMARY KEY (folder_id, tag_id);
+
+ALTER TABLE ONLY public.folders
+    ADD CONSTRAINT folders_collection_id_name_key UNIQUE (collection_id, name);
+
+ALTER TABLE ONLY public.folders
+    ADD CONSTRAINT folders_pkey PRIMARY KEY (id);
+
+ALTER TABLE ONLY public.krizaka_module_versions
+    ADD CONSTRAINT krizaka_module_versions_pkey PRIMARY KEY (module, version);
+
+ALTER TABLE ONLY public.libraries
+    ADD CONSTRAINT libraries_id_owner UNIQUE (id, owner_id);
+
+ALTER TABLE ONLY public.libraries
+    ADD CONSTRAINT libraries_owner_id_name_key UNIQUE (owner_id, name);
+
+ALTER TABLE ONLY public.libraries
+    ADD CONSTRAINT libraries_pkey PRIMARY KEY (id);
+
+ALTER TABLE ONLY public.mail_intentions
+    ADD CONSTRAINT mail_intentions_pkey PRIMARY KEY (key);
+
+ALTER TABLE ONLY public.mail_suppressions
+    ADD CONSTRAINT mail_suppressions_pkey PRIMARY KEY (email);
+
+ALTER TABLE ONLY public.overage_charges
+    ADD CONSTRAINT overage_charges_pkey PRIMARY KEY (dossier_id, period);
+
+ALTER TABLE ONLY public.password_resets
+    ADD CONSTRAINT password_resets_pkey PRIMARY KEY (id);
+
+ALTER TABLE ONLY public.password_resets
+    ADD CONSTRAINT password_resets_token_hash_key UNIQUE (token_hash);
+
+ALTER TABLE ONLY public.preflight_events
+    ADD CONSTRAINT preflight_events_pkey PRIMARY KEY (id);
+
+ALTER TABLE ONLY public.price_versions
+    ADD CONSTRAINT price_versions_pkey PRIMARY KEY (id);
+
+ALTER TABLE ONLY public.report_access_requests
+    ADD CONSTRAINT report_access_requests_pkey PRIMARY KEY (id);
+
+ALTER TABLE ONLY public.report_grants
+    ADD CONSTRAINT report_grants_pkey PRIMARY KEY (id);
+
+ALTER TABLE ONLY public.retention_policies
+    ADD CONSTRAINT retention_policies_pkey PRIMARY KEY (id);
+
+ALTER TABLE ONLY public.retention_rule
+    ADD CONSTRAINT retention_rule_pkey PRIMARY KEY (id);
+
+
+ALTER TABLE ONLY public.screening_charge
+    ADD CONSTRAINT screening_charge_pkey PRIMARY KEY (id);
+
+ALTER TABLE ONLY public.screening_charge
+    ADD CONSTRAINT screening_charge_screening_id_check_type_key UNIQUE (screening_id, check_type);
+
+ALTER TABLE ONLY public.screening_checks
+    ADD CONSTRAINT screening_checks_pkey PRIMARY KEY (id);
+
+ALTER TABLE ONLY public.screening_checks
+    ADD CONSTRAINT screening_checks_screening_id_check_type_key UNIQUE (screening_id, check_type);
+
+ALTER TABLE ONLY public.screening_provider
+    ADD CONSTRAINT screening_provider_pkey PRIMARY KEY (id);
+
+ALTER TABLE ONLY public.screenings
+    ADD CONSTRAINT screenings_pkey PRIMARY KEY (id);
+
+ALTER TABLE ONLY public.screenings
+    ADD CONSTRAINT screenings_token_hash_key UNIQUE (token_hash);
+
+ALTER TABLE ONLY public.sealed_contracts
+    ADD CONSTRAINT sealed_contracts_pkey PRIMARY KEY (id);
+
+ALTER TABLE ONLY public.sealed_contracts
+    ADD CONSTRAINT sealed_contracts_sha256_key UNIQUE (sha256);
+
+ALTER TABLE ONLY public.sessions
+    ADD CONSTRAINT sessions_pkey PRIMARY KEY (id);
+
+ALTER TABLE ONLY public.sessions
+    ADD CONSTRAINT sessions_token_hash_key UNIQUE (token_hash);
+
+ALTER TABLE ONLY public.settings_audit
+    ADD CONSTRAINT settings_audit_pkey PRIMARY KEY (id);
+
+ALTER TABLE ONLY public.signal_answers
+    ADD CONSTRAINT signal_answers_pkey PRIMARY KEY (document_id, signal_id);
+
+ALTER TABLE ONLY public.storage_moves
+    ADD CONSTRAINT storage_moves_pkey PRIMARY KEY (id);
+
+ALTER TABLE ONLY public.storage_settings
+    ADD CONSTRAINT storage_settings_pkey PRIMARY KEY (owner_id);
+
+ALTER TABLE ONLY public.tags
+    ADD CONSTRAINT tags_pkey PRIMARY KEY (id);
+
+ALTER TABLE ONLY public.tenant_check_setting
+    ADD CONSTRAINT tenant_check_setting_pkey PRIMARY KEY (owner_id, check_type);
+
+ALTER TABLE ONLY public.webhook_deliveries
+    ADD CONSTRAINT webhook_deliveries_endpoint_id_event_id_key UNIQUE (endpoint_id, event_id);
+
+ALTER TABLE ONLY public.webhook_deliveries
+    ADD CONSTRAINT webhook_deliveries_pkey PRIMARY KEY (id);
+
+ALTER TABLE ONLY public.webhook_endpoints
+    ADD CONSTRAINT webhook_endpoints_pkey PRIMARY KEY (id);
+
+ALTER TABLE ONLY public.webhook_received
+    ADD CONSTRAINT webhook_received_pkey PRIMARY KEY (source, event_id);
+
+ALTER TABLE ONLY storage.default_provider
+    ADD CONSTRAINT default_provider_pkey PRIMARY KEY (scope, data_kind);
+
+ALTER TABLE ONLY storage.provider
+    ADD CONSTRAINT provider_pkey PRIMARY KEY (id);
+
+CREATE INDEX entry_action ON audit.entry USING btree (action, at DESC);
+
+CREATE INDEX entry_actor ON audit.entry USING btree (actor_id) WHERE (actor_id IS NOT NULL);
+
+CREATE INDEX entry_at ON audit.entry USING btree (at DESC);
+
+CREATE INDEX entry_target ON audit.entry USING btree (target_type, target_id, at DESC);
+
+CREATE INDEX coupon_partner ON coupons.coupon USING btree (partner_id) WHERE (partner_id IS NOT NULL);
+
+CREATE INDEX redemption_partner ON coupons.redemption USING btree (partner_id, confirmed_at) WHERE (partner_id IS NOT NULL);
+
+CREATE INDEX redemption_reserved ON coupons.redemption USING btree (reserved_until) WHERE (status = 'reserved'::text);
+
+CREATE INDEX redemption_uses ON coupons.redemption USING btree (coupon_id, account_id) WHERE ((status <> 'released'::text) AND (NOT use_restored));
+
+CREATE INDEX entry_account ON credits.entry USING btree (account_id, seq DESC);
+
+CREATE INDEX entry_grant ON credits.entry USING btree (grant_id);
+
+CREATE INDEX entry_operation ON credits.entry USING btree (operation);
+
+CREATE INDEX grant_account ON credits."grant" USING btree (account_id, created_at);
+
+CREATE INDEX grant_lapse ON credits."grant" USING btree (expires_at) WHERE (bucket = 'granted'::text);
+
+CREATE INDEX hold_active ON credits.hold USING btree (account_id) WHERE (status = 'active'::text);
+
+CREATE INDEX applicant_file_status_state ON organize.applicant_file_status USING btree (state);
+
+CREATE INDEX applicant_file_tag_tag ON organize.applicant_file_tag USING btree (tag_id);
+
+CREATE INDEX document_status_state ON organize.document_status USING btree (state);
+
+CREATE INDEX document_tag_tag ON organize.document_tag USING btree (tag_id);
+
+CREATE UNIQUE INDEX tag_scope_kind_name ON organize.tag USING btree (scope_id, kind, lower(name));
+
+CREATE UNIQUE INDEX view_author_name ON organize.view USING btree (scope_id, kind, author_id, lower(name));
+
+CREATE INDEX view_shared ON organize.view USING btree (scope_id, kind) WHERE shared;
+
+CREATE INDEX consent_subject ON privacy.consent USING btree (subject_kind, subject_id, purpose, seq DESC);
+
+CREATE INDEX incident_scope ON privacy.incident USING btree (scope, aware_at, id);
+
+CREATE INDEX request_subject ON privacy.request USING btree (subject_kind, subject_id, requested_at DESC);
+
+CREATE INDEX analyses_document ON public.analyses USING btree (document_id, created_at DESC);
+
+CREATE INDEX analyses_search ON public.analyses USING gin (to_tsvector('simple'::regconfig, search_text));
+
+CREATE INDEX analyses_showcase ON public.analyses USING btree (finished_at DESC) WHERE showcase;
+
+CREATE INDEX api_keys_owner ON public.api_keys USING btree (owner_id, created_at);
+
+CREATE UNIQUE INDEX application_consents_active ON public.application_consents USING btree (screening_id, purpose) WHERE (withdrawn_at IS NULL);
+
+CREATE INDEX batch_items_state ON public.batch_items USING btree (batch_id, state);
+
+CREATE INDEX batches_open ON public.batches USING btree (created_at) WHERE (finished_at IS NULL);
+
+CREATE INDEX batches_owner ON public.batches USING btree (owner_id, created_at DESC);
+
+CREATE UNIQUE INDEX consents_live ON public.consents USING btree (account_id, key) WHERE (revoked_at IS NULL);
+
+CREATE INDEX documents_collection ON public.documents USING btree (collection_id, folder_id);
+
+CREATE INDEX documents_lease ON public.documents USING btree (lease_id) WHERE (lease_id IS NOT NULL);
+
+CREATE INDEX documents_object_key ON public.documents USING btree (object_key) WHERE (object_key IS NOT NULL);
+
+CREATE INDEX documents_owner ON public.documents USING btree (owner_id, created_at DESC);
+
+CREATE INDEX documents_provider_id ON public.documents USING btree (provider_id) WHERE (provider_id IS NOT NULL);
+
+CREATE INDEX documents_screening ON public.documents USING btree (screening_id) WHERE (screening_id IS NOT NULL);
+
+CREATE INDEX documents_search ON public.documents USING gin (search);
+
+CREATE INDEX documents_source_sha256 ON public.documents USING btree (owner_id, source_sha256) WHERE (source_sha256 IS NOT NULL);
+
+CREATE INDEX email_verifications_account ON public.email_verifications USING btree (account_id);
+
+CREATE INDEX file_report_shares_file ON public.file_report_shares USING btree (screening_id, created_at DESC);
+
+CREATE INDEX file_report_views_share ON public.file_report_views USING btree (share_id, viewed_at DESC);
+
+CREATE INDEX overage_charges_account ON public.overage_charges USING btree (account_id, period);
+
+CREATE INDEX preflight_events_account ON public.preflight_events USING btree (account_id, created_at DESC);
+
+CREATE INDEX price_versions_key ON public.price_versions USING btree (key, id);
+
+CREATE UNIQUE INDEX report_access_requests_open ON public.report_access_requests USING btree (analysis_id, requester_id) WHERE (handled_at IS NULL);
+
+CREATE INDEX report_grants_email ON public.report_grants USING btree (grantee_email);
+
+CREATE UNIQUE INDEX report_grants_live ON public.report_grants USING btree (analysis_id, grantee_email) WHERE (revoked_at IS NULL);
+
+CREATE UNIQUE INDEX retention_rule_global ON public.retention_rule USING btree (subject) WHERE (owner_id IS NULL);
+
+CREATE UNIQUE INDEX retention_rule_owner ON public.retention_rule USING btree (owner_id, subject) WHERE (owner_id IS NOT NULL);
+
+CREATE INDEX screening_checks_due ON public.screening_checks USING btree (next_poll_at) WHERE (state = 'pending'::text);
+
+CREATE INDEX screenings_landlord ON public.screenings USING btree (landlord_id, created_at DESC);
+
+CREATE INDEX sealed_contracts_owner ON public.sealed_contracts USING btree (owner_id, sealed_at DESC);
+
+CREATE INDEX sessions_account ON public.sessions USING btree (account_id);
+
+CREATE INDEX settings_audit_key ON public.settings_audit USING btree (key, id DESC);
+
+CREATE UNIQUE INDEX storage_moves_one_open ON public.storage_moves USING btree ((true)) WHERE (status <> 'done'::text);
+
+CREATE UNIQUE INDEX tags_owner_name ON public.tags USING btree (owner_id, lower(name));
+
+CREATE INDEX webhook_deliveries_due ON public.webhook_deliveries USING btree (next_attempt_at) WHERE (status = 'pending'::text);
+
+CREATE INDEX webhook_endpoints_owner ON public.webhook_endpoints USING btree (owner_id);
+
+CREATE INDEX provider_scope ON storage.provider USING btree (scope, status);
+
+CREATE TRIGGER entry_append_only BEFORE DELETE OR UPDATE ON credits.entry FOR EACH ROW EXECUTE FUNCTION credits.entry_is_append_only();
+
+CREATE TRIGGER consent_written_once BEFORE UPDATE ON privacy.consent FOR EACH ROW EXECUTE FUNCTION privacy.consent_written_once();
+
+CREATE TRIGGER incident_guard BEFORE DELETE OR UPDATE ON privacy.incident FOR EACH ROW EXECUTE FUNCTION privacy.incident_guard();
+
+CREATE TRIGGER accounts_default_collection AFTER INSERT ON public.accounts FOR EACH ROW EXECUTE FUNCTION public.accounts_default_collection();
+
+CREATE CONSTRAINT TRIGGER collections_exactly_one_default AFTER INSERT OR DELETE OR UPDATE ON public.collections DEFERRABLE INITIALLY DEFERRED FOR EACH ROW EXECUTE FUNCTION public.collections_exactly_one_default();
+
+CREATE TRIGGER collections_fill_owner BEFORE INSERT ON public.collections FOR EACH ROW WHEN ((new.owner_id IS NULL)) EXECUTE FUNCTION public.collections_fill_owner();
+
+CREATE TRIGGER collections_guard_default BEFORE DELETE ON public.collections FOR EACH ROW EXECUTE FUNCTION public.collections_guard_default();
+
+CREATE TRIGGER documents_default_collection BEFORE INSERT OR UPDATE OF collection_id ON public.documents FOR EACH ROW WHEN ((new.collection_id IS NULL)) EXECUTE FUNCTION public.documents_default_collection();
+
+ALTER TABLE ONLY audit.entry
+    ADD CONSTRAINT entry_actor_id_fkey FOREIGN KEY (actor_id) REFERENCES public.accounts(id) ON DELETE SET NULL;
+
+ALTER TABLE ONLY coupons.coupon
+    ADD CONSTRAINT coupon_created_by_fkey FOREIGN KEY (created_by) REFERENCES public.accounts(id) ON DELETE SET NULL;
+
+ALTER TABLE ONLY coupons.coupon
+    ADD CONSTRAINT coupon_partner_id_fkey FOREIGN KEY (partner_id) REFERENCES coupons.partner(id) ON DELETE RESTRICT;
+
+ALTER TABLE ONLY coupons.partner
+    ADD CONSTRAINT partner_created_by_fkey FOREIGN KEY (created_by) REFERENCES public.accounts(id) ON DELETE SET NULL;
+
+ALTER TABLE ONLY coupons.redemption
+    ADD CONSTRAINT redemption_account_id_fkey FOREIGN KEY (account_id) REFERENCES public.accounts(id) ON DELETE SET NULL;
+
+ALTER TABLE ONLY coupons.redemption
+    ADD CONSTRAINT redemption_coupon_id_fkey FOREIGN KEY (coupon_id) REFERENCES coupons.coupon(id) ON DELETE RESTRICT;
+
+ALTER TABLE ONLY coupons.redemption
+    ADD CONSTRAINT redemption_partner_id_fkey FOREIGN KEY (partner_id) REFERENCES coupons.partner(id) ON DELETE SET NULL;
+
+ALTER TABLE ONLY credits.entry
+    ADD CONSTRAINT entry_grant_id_fkey FOREIGN KEY (grant_id) REFERENCES credits."grant"(id);
+
+ALTER TABLE ONLY organize.applicant_file_status
+    ADD CONSTRAINT applicant_file_status_changed_by_fkey FOREIGN KEY (changed_by) REFERENCES public.accounts(id) ON DELETE SET NULL;
+
+ALTER TABLE ONLY organize.applicant_file_status
+    ADD CONSTRAINT applicant_file_status_entity_id_fkey FOREIGN KEY (entity_id) REFERENCES public.screenings(id) ON DELETE CASCADE;
+
+ALTER TABLE ONLY organize.applicant_file_tag
+    ADD CONSTRAINT applicant_file_tag_entity_id_fkey FOREIGN KEY (entity_id) REFERENCES public.screenings(id) ON DELETE CASCADE;
+
+ALTER TABLE ONLY organize.applicant_file_tag
+    ADD CONSTRAINT applicant_file_tag_tag_id_kind_fkey FOREIGN KEY (tag_id, kind) REFERENCES organize.tag(id, kind) ON DELETE CASCADE;
+
+ALTER TABLE ONLY organize.document_status
+    ADD CONSTRAINT document_status_changed_by_fkey FOREIGN KEY (changed_by) REFERENCES public.accounts(id) ON DELETE SET NULL;
+
+ALTER TABLE ONLY organize.document_status
+    ADD CONSTRAINT document_status_entity_id_fkey FOREIGN KEY (entity_id) REFERENCES public.documents(id) ON DELETE CASCADE;
+
+ALTER TABLE ONLY organize.document_tag
+    ADD CONSTRAINT document_tag_entity_id_fkey FOREIGN KEY (entity_id) REFERENCES public.documents(id) ON DELETE CASCADE;
+
+ALTER TABLE ONLY organize.document_tag
+    ADD CONSTRAINT document_tag_tag_id_kind_fkey FOREIGN KEY (tag_id, kind) REFERENCES organize.tag(id, kind) ON DELETE CASCADE;
+
+ALTER TABLE ONLY organize.kind_config
+    ADD CONSTRAINT kind_config_updated_by_fkey FOREIGN KEY (updated_by) REFERENCES public.accounts(id) ON DELETE SET NULL;
+
+ALTER TABLE ONLY organize.tag
+    ADD CONSTRAINT tag_scope_id_fkey FOREIGN KEY (scope_id) REFERENCES public.accounts(id) ON DELETE CASCADE;
+
+ALTER TABLE ONLY organize.view
+    ADD CONSTRAINT view_author_id_fkey FOREIGN KEY (author_id) REFERENCES public.accounts(id) ON DELETE CASCADE;
+
+ALTER TABLE ONLY organize.view
+    ADD CONSTRAINT view_scope_id_fkey FOREIGN KEY (scope_id) REFERENCES public.accounts(id) ON DELETE CASCADE;
+
+ALTER TABLE ONLY public.analyses
+    ADD CONSTRAINT analyses_document_id_fkey FOREIGN KEY (document_id) REFERENCES public.documents(id) ON DELETE CASCADE;
+
+ALTER TABLE ONLY public.analyses
+    ADD CONSTRAINT analyses_flow_version_id_fkey FOREIGN KEY (flow_version_id) REFERENCES public.flow_versions(id) ON DELETE SET NULL;
+
+ALTER TABLE ONLY public.api_keys
+    ADD CONSTRAINT api_keys_owner_id_fkey FOREIGN KEY (owner_id) REFERENCES public.accounts(id) ON DELETE CASCADE;
+
+ALTER TABLE ONLY public.api_keys
+    ADD CONSTRAINT api_keys_rotated_from_id_fkey FOREIGN KEY (rotated_from_id) REFERENCES public.api_keys(id) ON DELETE SET NULL;
+
+ALTER TABLE ONLY public.application_consents
+    ADD CONSTRAINT application_consents_screening_id_fkey FOREIGN KEY (screening_id) REFERENCES public.screenings(id) ON DELETE CASCADE;
+
+ALTER TABLE ONLY public.batch_items
+    ADD CONSTRAINT batch_items_analysis_id_fkey FOREIGN KEY (analysis_id) REFERENCES public.analyses(id) ON DELETE SET NULL;
+
+ALTER TABLE ONLY public.batch_items
+    ADD CONSTRAINT batch_items_batch_id_fkey FOREIGN KEY (batch_id) REFERENCES public.batches(id) ON DELETE CASCADE;
+
+ALTER TABLE ONLY public.batch_items
+    ADD CONSTRAINT batch_items_document_id_fkey FOREIGN KEY (document_id) REFERENCES public.documents(id) ON DELETE SET NULL;
+
+ALTER TABLE ONLY public.batches
+    ADD CONSTRAINT batches_owner_id_fkey FOREIGN KEY (owner_id) REFERENCES public.accounts(id) ON DELETE CASCADE;
+
+ALTER TABLE ONLY public.check_type
+    ADD CONSTRAINT check_type_provider_id_fkey FOREIGN KEY (provider_id) REFERENCES public.screening_provider(id);
+
+ALTER TABLE ONLY public.collections_tags
+    ADD CONSTRAINT collection_tags_collection_id_fkey FOREIGN KEY (collection_id) REFERENCES public.collections(id) ON DELETE CASCADE;
+
+ALTER TABLE ONLY public.collections_tags
+    ADD CONSTRAINT collection_tags_tag_id_fkey FOREIGN KEY (tag_id) REFERENCES public.tags(id) ON DELETE CASCADE;
+
+ALTER TABLE ONLY public.collections
+    ADD CONSTRAINT collections_library_id_fkey FOREIGN KEY (library_id) REFERENCES public.libraries(id) ON DELETE CASCADE;
+
+ALTER TABLE ONLY public.collections
+    ADD CONSTRAINT collections_library_owner FOREIGN KEY (library_id, owner_id) REFERENCES public.libraries(id, owner_id) ON DELETE CASCADE;
+
+ALTER TABLE ONLY public.consents
+    ADD CONSTRAINT consents_account_id_fkey FOREIGN KEY (account_id) REFERENCES public.accounts(id) ON DELETE CASCADE;
+
+ALTER TABLE ONLY public.document_types
+    ADD CONSTRAINT document_types_retention_policy_fkey FOREIGN KEY (retention_policy) REFERENCES public.retention_policies(id);
+
+ALTER TABLE ONLY public.documents
+    ADD CONSTRAINT documents_collection_id_fkey FOREIGN KEY (collection_id) REFERENCES public.collections(id);
+
+ALTER TABLE ONLY public.documents
+    ADD CONSTRAINT documents_document_type_fkey FOREIGN KEY (document_type) REFERENCES public.document_types(id);
+
+ALTER TABLE ONLY public.documents
+    ADD CONSTRAINT documents_folder_id_fkey FOREIGN KEY (folder_id) REFERENCES public.folders(id);
+
+ALTER TABLE ONLY public.documents
+    ADD CONSTRAINT documents_lease_id_fkey FOREIGN KEY (lease_id) REFERENCES public.documents(id) ON DELETE CASCADE;
+
+ALTER TABLE ONLY public.documents
+    ADD CONSTRAINT documents_owner_id_fkey FOREIGN KEY (owner_id) REFERENCES public.accounts(id) ON DELETE CASCADE;
+
+ALTER TABLE ONLY public.documents
+    ADD CONSTRAINT documents_retention_policy_fkey FOREIGN KEY (retention_policy) REFERENCES public.retention_policies(id);
+
+ALTER TABLE ONLY public.documents
+    ADD CONSTRAINT documents_screening_id_fkey FOREIGN KEY (screening_id) REFERENCES public.screenings(id) ON DELETE SET NULL;
+
+ALTER TABLE ONLY public.email_changes
+    ADD CONSTRAINT email_changes_account_id_fkey FOREIGN KEY (account_id) REFERENCES public.accounts(id) ON DELETE CASCADE;
+
+ALTER TABLE ONLY public.email_verifications
+    ADD CONSTRAINT email_verifications_account_id_fkey FOREIGN KEY (account_id) REFERENCES public.accounts(id) ON DELETE CASCADE;
+
+ALTER TABLE ONLY public.file_report_shares
+    ADD CONSTRAINT file_report_shares_landlord_id_fkey FOREIGN KEY (landlord_id) REFERENCES public.accounts(id) ON DELETE CASCADE;
+
+ALTER TABLE ONLY public.file_report_shares
+    ADD CONSTRAINT file_report_shares_screening_id_fkey FOREIGN KEY (screening_id) REFERENCES public.screenings(id) ON DELETE CASCADE;
+
+ALTER TABLE ONLY public.file_report_views
+    ADD CONSTRAINT file_report_views_share_id_fkey FOREIGN KEY (share_id) REFERENCES public.file_report_shares(id) ON DELETE CASCADE;
+
+ALTER TABLE ONLY public.flow_environments
+    ADD CONSTRAINT flow_environments_flow_id_fkey FOREIGN KEY (flow_id) REFERENCES public.flows(id) ON DELETE CASCADE;
+
+ALTER TABLE ONLY public.flow_versions
+    ADD CONSTRAINT flow_versions_created_by_fkey FOREIGN KEY (created_by) REFERENCES public.accounts(id) ON DELETE SET NULL;
+
+ALTER TABLE ONLY public.flow_versions
+    ADD CONSTRAINT flow_versions_flow_id_fkey FOREIGN KEY (flow_id) REFERENCES public.flows(id) ON DELETE CASCADE;
+
+ALTER TABLE ONLY public.flows
+    ADD CONSTRAINT flows_current_version FOREIGN KEY (current_version_id) REFERENCES public.flow_versions(id) ON DELETE SET NULL;
+
+ALTER TABLE ONLY public.folder_tags
+    ADD CONSTRAINT folder_tags_folder_id_fkey FOREIGN KEY (folder_id) REFERENCES public.folders(id) ON DELETE CASCADE;
+
+ALTER TABLE ONLY public.folder_tags
+    ADD CONSTRAINT folder_tags_tag_id_fkey FOREIGN KEY (tag_id) REFERENCES public.tags(id) ON DELETE CASCADE;
+
+ALTER TABLE ONLY public.folders
+    ADD CONSTRAINT folders_collection_id_fkey FOREIGN KEY (collection_id) REFERENCES public.collections(id) ON DELETE CASCADE;
+
+ALTER TABLE ONLY public.libraries
+    ADD CONSTRAINT libraries_owner_id_fkey FOREIGN KEY (owner_id) REFERENCES public.accounts(id) ON DELETE CASCADE;
+
+ALTER TABLE ONLY public.overage_charges
+    ADD CONSTRAINT overage_charges_account_id_fkey FOREIGN KEY (account_id) REFERENCES public.accounts(id) ON DELETE CASCADE;
+
+ALTER TABLE ONLY public.password_resets
+    ADD CONSTRAINT password_resets_account_id_fkey FOREIGN KEY (account_id) REFERENCES public.accounts(id) ON DELETE CASCADE;
+
+ALTER TABLE ONLY public.preflight_events
+    ADD CONSTRAINT preflight_events_account_id_fkey FOREIGN KEY (account_id) REFERENCES public.accounts(id) ON DELETE SET NULL;
+
+ALTER TABLE ONLY public.report_access_requests
+    ADD CONSTRAINT report_access_requests_analysis_id_fkey FOREIGN KEY (analysis_id) REFERENCES public.analyses(id) ON DELETE CASCADE;
+
+ALTER TABLE ONLY public.report_access_requests
+    ADD CONSTRAINT report_access_requests_requester_id_fkey FOREIGN KEY (requester_id) REFERENCES public.accounts(id) ON DELETE CASCADE;
+
+ALTER TABLE ONLY public.report_grants
+    ADD CONSTRAINT report_grants_analysis_id_fkey FOREIGN KEY (analysis_id) REFERENCES public.analyses(id) ON DELETE CASCADE;
+
+ALTER TABLE ONLY public.report_grants
+    ADD CONSTRAINT report_grants_granted_by_fkey FOREIGN KEY (granted_by) REFERENCES public.accounts(id) ON DELETE CASCADE;
+
+ALTER TABLE ONLY public.retention_rule
+    ADD CONSTRAINT retention_rule_owner_id_fkey FOREIGN KEY (owner_id) REFERENCES public.accounts(id) ON DELETE CASCADE;
+
+ALTER TABLE ONLY public.retention_rule
+    ADD CONSTRAINT retention_rule_policy_id_fkey FOREIGN KEY (policy_id) REFERENCES public.retention_policies(id);
+
+ALTER TABLE ONLY public.screening_charge
+    ADD CONSTRAINT screening_charge_check_type_fkey FOREIGN KEY (check_type) REFERENCES public.check_type(key);
+
+ALTER TABLE ONLY public.screening_charge
+    ADD CONSTRAINT screening_charge_screening_id_fkey FOREIGN KEY (screening_id) REFERENCES public.screenings(id) ON DELETE CASCADE;
+
+ALTER TABLE ONLY public.screening_checks
+    ADD CONSTRAINT screening_checks_check_type_fkey FOREIGN KEY (check_type) REFERENCES public.check_type(key);
+
+ALTER TABLE ONLY public.screening_checks
+    ADD CONSTRAINT screening_checks_screening_id_fkey FOREIGN KEY (screening_id) REFERENCES public.screenings(id) ON DELETE CASCADE;
+
+ALTER TABLE ONLY public.screenings
+    ADD CONSTRAINT screenings_landlord_id_fkey FOREIGN KEY (landlord_id) REFERENCES public.accounts(id) ON DELETE CASCADE;
+
+ALTER TABLE ONLY public.sealed_contracts
+    ADD CONSTRAINT sealed_contracts_owner_id_fkey FOREIGN KEY (owner_id) REFERENCES public.accounts(id) ON DELETE CASCADE;
+
+ALTER TABLE ONLY public.sessions
+    ADD CONSTRAINT sessions_account_id_fkey FOREIGN KEY (account_id) REFERENCES public.accounts(id) ON DELETE CASCADE;
+
+ALTER TABLE ONLY public.signal_answers
+    ADD CONSTRAINT signal_answers_document_id_fkey FOREIGN KEY (document_id) REFERENCES public.documents(id) ON DELETE CASCADE;
+
+ALTER TABLE ONLY public.storage_settings
+    ADD CONSTRAINT storage_settings_owner_id_fkey FOREIGN KEY (owner_id) REFERENCES public.accounts(id) ON DELETE CASCADE;
+
+ALTER TABLE ONLY public.tags
+    ADD CONSTRAINT tags_owner_id_fkey FOREIGN KEY (owner_id) REFERENCES public.accounts(id) ON DELETE CASCADE;
+
+ALTER TABLE ONLY public.tenant_check_setting
+    ADD CONSTRAINT tenant_check_setting_check_type_fkey FOREIGN KEY (check_type) REFERENCES public.check_type(key);
+
+ALTER TABLE ONLY public.tenant_check_setting
+    ADD CONSTRAINT tenant_check_setting_owner_id_fkey FOREIGN KEY (owner_id) REFERENCES public.accounts(id) ON DELETE CASCADE;
+
+ALTER TABLE ONLY public.webhook_deliveries
+    ADD CONSTRAINT webhook_deliveries_endpoint_id_fkey FOREIGN KEY (endpoint_id) REFERENCES public.webhook_endpoints(id) ON DELETE CASCADE;
+
+ALTER TABLE ONLY public.webhook_endpoints
+    ADD CONSTRAINT webhook_endpoints_owner_id_fkey FOREIGN KEY (owner_id) REFERENCES public.accounts(id) ON DELETE CASCADE;
+
+ALTER TABLE ONLY storage.default_provider
+    ADD CONSTRAINT default_provider_provider_id_fkey FOREIGN KEY (provider_id) REFERENCES storage.provider(id);
+
+INSERT INTO public.krizaka_module_versions (module, version, checksum) VALUES ('settings', 1, '051524285802ef38f829227d81f34935afd8999c2f83be821d25b1f6078ac7a1');
+INSERT INTO public.krizaka_module_versions (module, version, checksum) VALUES ('settings_prices', 1, 'a2cad37a2efe0309a4114b7bfe67fa5fc9766d7a5d3aba4e1edbc4157125c11f');
+INSERT INTO public.krizaka_module_versions (module, version, checksum) VALUES ('auth', 1, 'a48bf5bf2db6f001d588c012447f75ea8fd3d57f049debd1ba1de801dc037628');
+INSERT INTO public.krizaka_module_versions (module, version, checksum) VALUES ('api_keys', 1, '65a8c2cee01432a016cb553fb8f9765e39a9fe51f1ad30bfab7693120a65ac20');
+INSERT INTO public.krizaka_module_versions (module, version, checksum) VALUES ('webhooks', 1, 'f7850a9284262b6daffebc41540647ccae5cc6ea7842fdd765fbf3b483d751e9');
+INSERT INTO public.krizaka_module_versions (module, version, checksum) VALUES ('organize_workspace', 1, '40aad1cd1db0f5cf96e43a4015934b9c633b8b993d58f3ff7273319fc0bf6a6b');
+INSERT INTO public.krizaka_module_versions (module, version, checksum) VALUES ('audit', 1, '0a4bb651cf3e6b34f99bc29b22944e7ef7da1a1ce28df02807b45ca51cbf722d');
+INSERT INTO public.krizaka_module_versions (module, version, checksum) VALUES ('auth_sessions', 1, '25ebd4e197a9af3c91386dd4142abcb58c58aac7142bfe4fb18efa2a282f8421');
+INSERT INTO public.krizaka_module_versions (module, version, checksum) VALUES ('credits', 1, 'b5fe874f1d0744f78a24771c90e9a208885629585a4b783ed767c7f8ce9d3629');
+INSERT INTO public.krizaka_module_versions (module, version, checksum) VALUES ('privacy', 1, '1c0fbc2cedba58b2034b666555621389230bfef102dd6b5f7fcf54302a6d3464');
+INSERT INTO public.krizaka_module_versions (module, version, checksum) VALUES ('payments', 1, 'f4177a35d05450c0f9696cedb9b2dc681ec3ab9cd3739013f8b7675b7e6fbb33');
+INSERT INTO public.krizaka_module_versions (module, version, checksum) VALUES ('coupons', 1, 'b89747432ea7c53478ed6cefc7d44e7463093d79324c70660909d8a66ff779f4');
+INSERT INTO public.krizaka_module_versions (module, version, checksum) VALUES ('privacy', 2, '17f9b2e4492024745aa5ac4c82141b8781439a26974c6dafa922da5ae1eaeee7');
+INSERT INTO public.krizaka_module_versions (module, version, checksum) VALUES ('storage', 1, 'ea5bff037ff78f0cffd7475b7fc034dc2f1612391e9ab4effd5cc3c74d56b126');
 `,
   },
 ];
