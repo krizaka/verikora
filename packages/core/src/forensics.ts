@@ -44,12 +44,40 @@ export class NotAPdfError extends Error {
 }
 
 /** Consumer editors: software a person uses on a file, not what a payroll processor prints. Lowercase fragments. */
-export const CONSUMER_EDITORS = ["canva", "photoshop", "ilovepdf", "sejda", "smallpdf", "pdfescape", "soda pdf", "sodapdf", "pdf24", "pdfcandy", "pdffiller", "pdf-xchange editor"] as const;
+export const CONSUMER_EDITORS = [
+  "canva",
+  "photoshop",
+  "ilovepdf",
+  "sejda",
+  "smallpdf",
+  "pdfescape",
+  "soda pdf",
+  "sodapdf",
+  "pdf24",
+  "pdfcandy",
+  "pdffiller",
+  "pdf-xchange editor",
+] as const;
 /** Payroll processors whose files are expected on a pay stub. Lowercase fragments. */
-export const PAYROLL_PROCESSORS = ["adp", "ceridian", "dayforce", "desjardins", "workday", "payworks", "nethris", "ukg", "paycor"] as const;
+export const PAYROLL_PROCESSORS = [
+  "adp",
+  "ceridian",
+  "dayforce",
+  "desjardins",
+  "workday",
+  "payworks",
+  "nethris",
+  "ukg",
+  "paycor",
+] as const;
 
 // @fixed: weights of the score, one per kind of signal; they sum above 100 on purpose (capped).
-const WEIGHTS = { "incremental-update": 35, "incremental-update-signed": 10, "producer-changed": 25, "producer-mismatch": 45 } as const;
+const WEIGHTS = {
+  "incremental-update": 35,
+  "incremental-update-signed": 10,
+  "producer-changed": 25,
+  "producer-mismatch": 45,
+} as const;
 
 const latin1 = (bytes: Uint8Array): string => new TextDecoder("latin1").decode(bytes);
 
@@ -63,10 +91,13 @@ function unescapeLiteral(raw: string): string {
 function decodeHex(hex: string): string {
   const clean = hex.replace(/\s+/g, "");
   const padded = clean.length % 2 ? `${clean}0` : clean;
-  const bytes = Array.from({ length: padded.length / 2 }, (_, i) => Number.parseInt(padded.slice(i * 2, i * 2 + 2), 16));
+  const bytes = Array.from({ length: padded.length / 2 }, (_, i) =>
+    Number.parseInt(padded.slice(i * 2, i * 2 + 2), 16),
+  );
   if (bytes[0] === 0xfe && bytes[1] === 0xff) {
     let out = "";
-    for (let i = 2; i + 1 < bytes.length; i += 2) out += String.fromCharCode(((bytes[i] ?? 0) << 8) | (bytes[i + 1] ?? 0));
+    for (let i = 2; i + 1 < bytes.length; i += 2)
+      out += String.fromCharCode(((bytes[i] ?? 0) << 8) | (bytes[i + 1] ?? 0));
     return out;
   }
   return String.fromCharCode(...bytes);
@@ -111,12 +142,26 @@ export function analysePdf(bytes: Uint8Array, options: ForensicsOptions = {}): F
   if (revisions > 1) {
     // A digital signature is saved as an incremental update by design: it is a weaker signal there.
     const signed = /\/ByteRange\s*\[/.test(text);
-    add("incremental-update", signed ? WEIGHTS["incremental-update-signed"] : WEIGHTS["incremental-update"], `The file was saved ${revisions} times: ${revisions - 1} change(s) were appended after the original.${signed ? " It carries a digital signature, which is saved that way too." : ""}`);
+    add(
+      "incremental-update",
+      signed ? WEIGHTS["incremental-update-signed"] : WEIGHTS["incremental-update"],
+      `The file was saved ${revisions} times: ${revisions - 1} change(s) were appended after the original.${signed ? " It carries a digital signature, which is saved that way too." : ""}`,
+    );
   }
-  if (first && producer && first !== producer) add("producer-changed", WEIGHTS["producer-changed"], `The producing software changed between saves: "${first}" then "${producer}".`);
+  if (first && producer && first !== producer)
+    add(
+      "producer-changed",
+      WEIGHTS["producer-changed"],
+      `The producing software changed between saves: "${first}" then "${producer}".`,
+    );
   if (options.documentKind === "payroll") {
     const editor = includesAny(producer, CONSUMER_EDITORS);
-    if (editor && !includesAny(producer, PAYROLL_PROCESSORS)) add("producer-mismatch", WEIGHTS["producer-mismatch"], `A pay stub is expected from a payroll system; this file was produced by "${producer}", a general PDF editor.`);
+    if (editor && !includesAny(producer, PAYROLL_PROCESSORS))
+      add(
+        "producer-mismatch",
+        WEIGHTS["producer-mismatch"],
+        `A pay stub is expected from a payroll system; this file was produced by "${producer}", a general PDF editor.`,
+      );
   }
   return { tamperScore: Math.min(100, score), anomalies, revisions, producer };
 }
