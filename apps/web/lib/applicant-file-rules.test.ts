@@ -117,7 +117,9 @@ describe("retention", () => {
 describe("the catalogue and its words", () => {
   it("seeds the four document types from code (lib/config-seed.ts), and nothing that is refused", () => {
     const seed = CONFIG_SEED.filter((block) => block.includes("public.document_types")).join("\n");
-    for (const id of SEED_DOCUMENT_TYPES) expect(seed).toContain(`'${id}'`);
+    for (const id of SEED_DOCUMENT_TYPES) {
+      expect(seed).toContain(`'${id}'`);
+    }
     expect(seed).not.toMatch(/'sin'|'health-card'|'passport'|'bank-details'/);
   });
 
