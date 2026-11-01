@@ -22,7 +22,7 @@ async function main(): Promise<void> {
     throw new RebuildRefusal("db:rebuild never runs against production");
   }
   if (!LOCAL.has(url.hostname) && !flag("yes")) {
-    throw new RebuildRefusal(`${url.hostname}/${url.pathname.slice(1)} is not local: pass --yes to rebuild it`);
+    throw new RebuildRefusal("DATABASE_URL is not a local database: pass --yes to rebuild it");
   }
   console.log(LOCAL.has(url.hostname) ? "db:rebuild: local database" : "db:rebuild: remote database (--yes)");
   const schemas = await query<{ nspname: string }>(
@@ -64,6 +64,6 @@ try {
   await main();
 } catch (error) {
   // Only our own refusals carry a message written here; any other error (driver, network) may hold a connection string.
-  console.error(error instanceof RebuildRefusal ? error.message.slice(0, 2000) : "db:rebuild failed (details withheld)");
+  console.error(error instanceof RebuildRefusal ? error.message : "db:rebuild failed (details withheld)");
   process.exit(1);
 }
