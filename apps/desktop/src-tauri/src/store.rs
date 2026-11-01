@@ -45,12 +45,22 @@ fn io(e: std::io::Error) -> StoreError {
 
 /// The port's key rule: `^[a-z0-9][a-z0-9/_.-]{0,254}$`, without `..`, `//`, a `.` segment or a trailing `/`.
 pub fn check_key(key: &str) -> Result<(), StoreError> {
-    let first_ok = key.chars().next().is_some_and(|c| c.is_ascii_lowercase() || c.is_ascii_digit());
-    let chars_ok = key
+    let first_ok = key
         .chars()
-        .all(|c| c.is_ascii_lowercase() || c.is_ascii_digit() || matches!(c, '/' | '_' | '.' | '-'));
+        .next()
+        .is_some_and(|c| c.is_ascii_lowercase() || c.is_ascii_digit());
+    let chars_ok = key.chars().all(|c| {
+        c.is_ascii_lowercase() || c.is_ascii_digit() || matches!(c, '/' | '_' | '.' | '-')
+    });
     let dot_segment = key.split('/').any(|segment| segment == ".");
-    if !first_ok || !chars_ok || key.len() > MAX_KEY || key.contains("..") || key.contains("//") || key.ends_with('/') || dot_segment {
+    if !first_ok
+        || !chars_ok
+        || key.len() > MAX_KEY
+        || key.contains("..")
+        || key.contains("//")
+        || key.ends_with('/')
+        || dot_segment
+    {
         return Err(StoreError::BadKey);
     }
     Ok(())
@@ -113,7 +123,11 @@ impl FolderStore {
     fn path_of(&self, base: &str, key: &str) -> Result<PathBuf, StoreError> {
         check_key(key)?;
         let root = self.canonical_root()?;
-        let folder = if base.is_empty() { root } else { Self::own_folder(&root, base)? };
+        let folder = if base.is_empty() {
+            root
+        } else {
+            Self::own_folder(&root, base)?
+        };
         let file = folder.join(file_name_of(key));
         if let Ok(found) = fs::symlink_metadata(&file) {
             if !found.file_type().is_file() {
@@ -137,8 +151,13 @@ impl FolderStore {
     /// left alone and the next one tried. Short, so the longest key still fits beside it.
     fn exclusive_temporary(&self, folder: &Path) -> Result<(PathBuf, fs::File), StoreError> {
         for _ in 0..TEMPORARY_TRIES {
-            let path = folder.join(self.temporary_name(self.temporary.fetch_add(1, Ordering::Relaxed)));
-            match fs::OpenOptions::new().write(true).create_new(true).open(&path) {
+            let path =
+                folder.join(self.temporary_name(self.temporary.fetch_add(1, Ordering::Relaxed)));
+            match fs::OpenOptions::new()
+                .write(true)
+                .create_new(true)
+                .open(&path)
+            {
                 Ok(file) => return Ok((path, file)),
                 Err(e) if e.kind() == std::io::ErrorKind::AlreadyExists => continue,
                 Err(e) => return Err(io(e)),
@@ -151,7 +170,10 @@ impl FolderStore {
     fn write_atomically(&self, file: &Path, bytes: &[u8]) -> Result<(), StoreError> {
         let folder = file.parent().ok_or(StoreError::BadKey)?;
         let (temporary, mut out) = self.exclusive_temporary(folder)?;
-        let written = out.write_all(bytes).and_then(|()| out.sync_all()).map_err(io);
+        let written = out
+            .write_all(bytes)
+            .and_then(|()| out.sync_all())
+            .map_err(io);
         drop(out);
         written
             .and_then(|()| fs::rename(&temporary, file).map_err(io))
@@ -218,7 +240,8 @@ mod tests {
     fn keeps_a_document_byte_for_byte_with_its_type_and_forgets_it_twice() {
         let (_d, s) = store();
         let bytes = [37u8, 80, 68, 70, 0, 255, 1, 2, 3];
-        s.put("library/2026/bail.pdf", &bytes, "application/pdf").unwrap();
+        s.put("library/2026/bail.pdf", &bytes, "application/pdf")
+            .unwrap();
         let got = s.get("library/2026/bail.pdf").unwrap().unwrap();
         assert_eq!(STANDARD.decode(got.data).unwrap(), bytes);
         assert_eq!(got.content_type, "application/pdf");
@@ -230,8 +253,22 @@ mod tests {
     #[test]
     fn refuses_a_key_that_could_leave_the_store() {
         let (_d, s) = store();
-        for bad in ["../x", "a/../b", "/abs", "a//b", "UPPER/case", "a/b/", "", ".hidden/x", "a\\b"] {
-            assert_eq!(s.put(bad, b"x", "text/plain"), Err(StoreError::BadKey), "{bad:?}");
+        for bad in [
+            "../x",
+            "a/../b",
+            "/abs",
+            "a//b",
+            "UPPER/case",
+            "a/b/",
+            "",
+            ".hidden/x",
+            "a\\b",
+        ] {
+            assert_eq!(
+                s.put(bad, b"x", "text/plain"),
+                Err(StoreError::BadKey),
+                "{bad:?}"
+            );
             assert_eq!(s.get(bad).err(), Some(StoreError::BadKey), "{bad:?}");
         }
         assert!(s.put(&"a".repeat(MAX_KEY + 1), b"x", "text/plain").is_err());
@@ -242,7 +279,11 @@ mod tests {
         // `a/./b.pdf` would be `a/b.pdf` on a disk and another object in a Map: the port refuses it everywhere.
         let (_d, s) = store();
         for bad in ["a/./b.pdf", "a/.", "library/./2026/bail.pdf"] {
-            assert_eq!(s.put(bad, b"x", "text/plain"), Err(StoreError::BadKey), "{bad:?}");
+            assert_eq!(
+                s.put(bad, b"x", "text/plain"),
+                Err(StoreError::BadKey),
+                "{bad:?}"
+            );
             assert_eq!(s.get(bad).err(), Some(StoreError::BadKey), "{bad:?}");
         }
     }
@@ -253,8 +294,16 @@ mod tests {
         let (_d, s) = store();
         s.put("a", b"one", "text/plain").unwrap();
         s.put("a/b.pdf", b"two", "application/pdf").unwrap();
-        assert_eq!(STANDARD.decode(s.get("a").unwrap().unwrap().data).unwrap(), b"one");
-        assert_eq!(STANDARD.decode(s.get("a/b.pdf").unwrap().unwrap().data).unwrap(), b"two");
+        assert_eq!(
+            STANDARD.decode(s.get("a").unwrap().unwrap().data).unwrap(),
+            b"one"
+        );
+        assert_eq!(
+            STANDARD
+                .decode(s.get("a/b.pdf").unwrap().unwrap().data)
+                .unwrap(),
+            b"two"
+        );
         s.delete("a").unwrap();
         assert!(s.get("a/b.pdf").unwrap().is_some());
         assert_eq!(s.get("a").unwrap(), None);
@@ -267,7 +316,10 @@ mod tests {
         s.put(&longest, b"x", "text/plain").unwrap();
         assert_eq!(s.get(&longest).unwrap().unwrap().content_type, "text/plain");
         s.delete(&longest).unwrap();
-        assert_eq!(s.put(&"a".repeat(MAX_KEY + 1), b"x", "text/plain"), Err(StoreError::BadKey));
+        assert_eq!(
+            s.put(&"a".repeat(MAX_KEY + 1), b"x", "text/plain"),
+            Err(StoreError::BadKey)
+        );
     }
 
     #[cfg(unix)]
@@ -280,18 +332,38 @@ mod tests {
         fs::create_dir_all(d.path().join("documents")).unwrap();
         // A folder link out of the store, and a file link to a file outside it.
         std::os::unix::fs::symlink(&outside, d.path().join("documents/escape")).unwrap();
-        std::os::unix::fs::symlink(outside.join("secret.pdf"), d.path().join("documents/innocent.pdf")).unwrap();
+        std::os::unix::fs::symlink(
+            outside.join("secret.pdf"),
+            d.path().join("documents/innocent.pdf"),
+        )
+        .unwrap();
         // The folder link is never looked at: the key is a name, and a nested key creates no folder, inside or out.
         assert_eq!(s.get("escape/secret.pdf").unwrap(), None);
         s.put("escape/new/sub/doc.pdf", b"x", "text/plain").unwrap();
-        assert_eq!(STANDARD.decode(s.get("escape/new/sub/doc.pdf").unwrap().unwrap().data).unwrap(), b"x");
+        assert_eq!(
+            STANDARD
+                .decode(s.get("escape/new/sub/doc.pdf").unwrap().unwrap().data)
+                .unwrap(),
+            b"x"
+        );
         assert!(!outside.join("new").exists());
         assert!(!outside.join("new.pdf").exists());
         // A link in the place of a document is refused, read or written, and its target is left alone.
         assert_eq!(s.get("innocent.pdf").err(), Some(StoreError::BadKey));
-        assert_eq!(s.put("innocent.pdf", b"x", "text/plain"), Err(StoreError::BadKey));
-        assert_eq!(fs::read_to_string(outside.join("secret.pdf")).unwrap(), "%PDF secret");
-        assert!(fs::symlink_metadata(d.path().join("documents/innocent.pdf")).unwrap().file_type().is_symlink());
+        assert_eq!(
+            s.put("innocent.pdf", b"x", "text/plain"),
+            Err(StoreError::BadKey)
+        );
+        assert_eq!(
+            fs::read_to_string(outside.join("secret.pdf")).unwrap(),
+            "%PDF secret"
+        );
+        assert!(
+            fs::symlink_metadata(d.path().join("documents/innocent.pdf"))
+                .unwrap()
+                .file_type()
+                .is_symlink()
+        );
     }
 
     #[cfg(unix)]
@@ -302,7 +374,10 @@ mod tests {
         fs::create_dir_all(&outside).unwrap();
         fs::create_dir_all(d.path().join("documents")).unwrap();
         std::os::unix::fs::symlink(&outside, d.path().join("documents/.meta")).unwrap();
-        assert_eq!(s.put("doc.pdf", b"x", "application/pdf"), Err(StoreError::BadKey));
+        assert_eq!(
+            s.put("doc.pdf", b"x", "application/pdf"),
+            Err(StoreError::BadKey)
+        );
         assert_eq!(fs::read_dir(&outside).unwrap().count(), 0);
         assert_eq!(s.get("doc.pdf").err(), Some(StoreError::BadKey));
     }
@@ -319,9 +394,20 @@ mod tests {
         let planted = d.path().join("documents").join(s.temporary_name_after(0));
         std::os::unix::fs::symlink(outside.join("target"), &planted).unwrap();
         s.put("doc.pdf", b"%PDF", "application/pdf").unwrap();
-        assert_eq!(STANDARD.decode(s.get("doc.pdf").unwrap().unwrap().data).unwrap(), b"%PDF");
-        assert_eq!(fs::read_to_string(outside.join("target")).unwrap(), "untouched");
-        assert!(fs::symlink_metadata(&planted).unwrap().file_type().is_symlink());
+        assert_eq!(
+            STANDARD
+                .decode(s.get("doc.pdf").unwrap().unwrap().data)
+                .unwrap(),
+            b"%PDF"
+        );
+        assert_eq!(
+            fs::read_to_string(outside.join("target")).unwrap(),
+            "untouched"
+        );
+        assert!(fs::symlink_metadata(&planted)
+            .unwrap()
+            .file_type()
+            .is_symlink());
     }
 
     #[test]

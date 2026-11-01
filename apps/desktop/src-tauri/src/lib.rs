@@ -20,7 +20,9 @@ const MAX_DOCUMENT_BYTES: u64 = files::MAX_SEND;
 fn list_documents(app: AppHandle, path: String) -> Result<Listing, String> {
     let dir = app.kit().resolve(Path::new(&path))?;
     let mut listing = files::list_dir(&dir)?;
-    listing.entries.retain(|e| e.is_dir || documents::is_checkable(&e.name));
+    listing
+        .entries
+        .retain(|e| e.is_dir || documents::is_checkable(&e.name));
     Ok(listing)
 }
 
@@ -33,7 +35,12 @@ fn read_document(app: AppHandle, path: String) -> Result<documents::DocumentByte
 
 /// Writes the signed report next to its document; the folder is the document's, resolved through the same gate.
 #[tauri::command]
-fn save_report(app: AppHandle, document: String, name: String, data: String) -> Result<String, String> {
+fn save_report(
+    app: AppHandle,
+    document: String,
+    name: String,
+    data: String,
+) -> Result<String, String> {
     let file = app.kit().resolve(Path::new(&document))?;
     documents::save_report(&file, &name, &data).map(|p| p.display().to_string())
 }
@@ -41,14 +48,26 @@ fn save_report(app: AppHandle, document: String, name: String, data: String) -> 
 /// The Mac's DocumentStore (ADR-0007): documents kept on this Mac, in the app's own folder. Errors start with the status
 /// the page's adapter maps (`400:` a key that is not the port's).
 #[tauri::command]
-fn store_put(store: State<'_, store::FolderStore>, key: String, data: String, content_type: String) -> Result<(), String> {
+fn store_put(
+    store: State<'_, store::FolderStore>,
+    key: String,
+    data: String,
+    content_type: String,
+) -> Result<(), String> {
     use base64::{engine::general_purpose::STANDARD, Engine};
-    let bytes = STANDARD.decode(data).map_err(|_| "400: not base64".to_string())?;
-    store.put(&key, &bytes, &content_type).map_err(|e| e.to_string())
+    let bytes = STANDARD
+        .decode(data)
+        .map_err(|_| "400: not base64".to_string())?;
+    store
+        .put(&key, &bytes, &content_type)
+        .map_err(|e| e.to_string())
 }
 
 #[tauri::command]
-fn store_get(store: State<'_, store::FolderStore>, key: String) -> Result<Option<store::StoredDocument>, String> {
+fn store_get(
+    store: State<'_, store::FolderStore>,
+    key: String,
+) -> Result<Option<store::StoredDocument>, String> {
     store.get(&key).map_err(|e| e.to_string())
 }
 
@@ -78,7 +97,14 @@ pub fn run() {
             app.manage(store::FolderStore::new(root));
             Ok(())
         })
-        .invoke_handler(tauri::generate_handler![list_documents, read_document, save_report, store_put, store_get, store_delete])
+        .invoke_handler(tauri::generate_handler![
+            list_documents,
+            read_document,
+            save_report,
+            store_put,
+            store_get,
+            store_delete
+        ])
         .run(tauri::generate_context!())
         .expect("error while running Yomizaka");
 }
