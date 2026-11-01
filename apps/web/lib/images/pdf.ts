@@ -13,8 +13,9 @@ import {
   TextRenderingMode,
 } from "pdf-lib";
 
-import type { CleanedPage } from "./port";
 import { PRODUCT_NAME } from "@/lib/brand";
+
+import type { CleanedPage } from "./port";
 
 const LETTER = { width: 612, height: 792 };
 const FIXED_DATE = new Date("2000-01-01T00:00:00Z");

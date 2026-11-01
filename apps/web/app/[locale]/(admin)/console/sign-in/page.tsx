@@ -7,8 +7,8 @@ import { notFound, redirect } from "next/navigation";
 
 import { SignInForm } from "@/components/console/SignInForm";
 import { ipAllowed, pageAdmin } from "@/lib/access";
-import { asLocale, getDictionary } from "@/lib/i18n";
 import { PRODUCT_NAME } from "@/lib/brand";
+import { asLocale, getDictionary } from "@/lib/i18n";
 
 /** The administration's own sign-in (its cookie belongs to admin.yomizaka.com), on @krizaka/ui's auth template. */
 export default async function AdminSignIn({ params }: Readonly<{ params: Promise<{ locale: string }> }>) {

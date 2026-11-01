@@ -1,5 +1,7 @@
 import { localDay } from "@krizaka/intl";
 
+import { PRODUCT_NAME } from "@/lib/brand";
+
 import { applicantFileOf } from "./applicant-file";
 import { audit } from "./audit";
 import { clientAddress } from "./client-address";
@@ -10,7 +12,6 @@ import type { Mailer } from "./mailer";
 import { type OwnerReport, ownerReportOf, shareDays, type ShareState, shareState } from "./owner-report";
 import { LAW_TIME_ZONE } from "./rulesets";
 import { addDays, hash, newToken } from "./screening";
-import { PRODUCT_NAME } from "@/lib/brand";
 
 /** The owner link of an applicant file's verification report (yomizaka#128): create, list, revoke by the file's manager; open by token. */
 

@@ -1,11 +1,11 @@
 import { createHash } from "node:crypto";
 
+import { PRODUCT_NAME } from "@/lib/brand";
 import { verifySeal } from "@/lib/contracts/seal";
 import { sealedBySha } from "@/lib/contracts/store";
 import { handle, refuse } from "@/lib/http";
 import { limit } from "@/lib/limits";
 import { signingKey } from "@/lib/report-signer";
-import { PRODUCT_NAME } from "@/lib/brand";
 
 export const dynamic = "force-dynamic";
 

@@ -2,10 +2,10 @@
    social cards and the JSON-LD of the site, every node leading back to the Krizaka Organization (the publisher). */
 import type { Metadata } from "next";
 
+import { ENGINE_NAME, PRODUCT_NAME } from "./brand";
 import { getDictionary, type Locale } from "./i18n";
 import { isListed } from "./listed";
 import { KRIZAKA_URL, type PageId, pagePath, REPO_URL, SITE_URL } from "./site";
-import { ENGINE_NAME, PRODUCT_NAME } from "./brand";
 
 export const ORG_ID = `${KRIZAKA_URL}/#organization`;
 const ORG = { "@type": "Organization", "@id": ORG_ID, name: "Krizaka", url: KRIZAKA_URL };

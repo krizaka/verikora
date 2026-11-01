@@ -17,3 +17,9 @@ export const PRODUCT_NAME = productName();
 
 /** The analysis engine's commercial name (code name `orazaka`). */
 export const ENGINE_NAME = brandOf("orazaka").commercialName;
+
+/** « by Krizaka » / « par Krizaka », for the lockup's second line. */
+export const productEndorsement = (locale: string): string => {
+  const endorsement: Record<string, string | undefined> = { ...brandOf(CODE_NAME).endorsement };
+  return endorsement[locale] ?? endorsement.en ?? "";
+};

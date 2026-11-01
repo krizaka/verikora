@@ -18,6 +18,7 @@ import {
 } from "@yomizaka/core";
 
 import { holderOf as documentHolder } from "@/app/active-store";
+import { PRODUCT_NAME } from "@/lib/brand";
 
 import { overageBiller } from "../app/overage-biller";
 import { systemClock } from "../app/system-clock";
@@ -33,7 +34,6 @@ import { withTenantShield } from "./rules/tenant-shield-report";
 import { LAW_TIME_ZONE } from "./rulesets";
 import { appSettings } from "./settings/instance";
 import type { DocumentStore } from "./storage/port";
-import { PRODUCT_NAME } from "@/lib/brand";
 
 /**
  * An analysis is an Orazaka run. Starting one sends the document to the Studio that does the job — the compliance

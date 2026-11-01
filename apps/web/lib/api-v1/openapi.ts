@@ -1,8 +1,9 @@
 import { BATCH_CHECKS, BATCH_COLUMNS, BATCH_ROW_ERROR } from "@yomizaka/core";
 
-import { YOMIZAKA_API_KEY_RULES } from "../api-keys";
 import { PRODUCT_NAME } from "@/lib/brand";
 import { ENGINE_NAME } from "@/lib/brand";
+
+import { YOMIZAKA_API_KEY_RULES } from "../api-keys";
 
 /**
  * The OpenAPI 3.1 document of `/api/v1` (yomizaka#202), served at `GET /api/v1/openapi.json`. Built from the code's own data (the
@@ -58,8 +59,7 @@ export function openApiDocument(serverUrl: string) {
     info: {
       title: `${PRODUCT_NAME} API`,
       version: "1.0.0",
-      description:
-        `Document checks for landlords and property managers. A check is a ${ENGINE_NAME} run; the report is shown as ${ENGINE_NAME} returned it (in French). A triage tool, not legal advice.`,
+      description: `Document checks for landlords and property managers. A check is a ${ENGINE_NAME} run; the report is shown as ${ENGINE_NAME} returned it (in French). A triage tool, not legal advice.`,
     },
     servers: [{ url: serverUrl }],
     security: [{ apiKey: [] }],
@@ -424,8 +424,7 @@ export function openApiDocument(serverUrl: string) {
             analysisId: { type: ["string", "null"], format: "uuid" },
             report: {
               type: ["object", "null"],
-              description:
-                `${ENGINE_NAME}'s report (compliance findings, or authenticity signals); only on GET, once done. A triage, not legal advice.`,
+              description: `${ENGINE_NAME}'s report (compliance findings, or authenticity signals); only on GET, once done. A triage, not legal advice.`,
             },
             createdAt: { type: "string", format: "date-time" },
             finishedAt: { type: ["string", "null"], format: "date-time" },

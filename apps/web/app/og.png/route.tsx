@@ -1,7 +1,7 @@
 import { ImageResponse } from "next/og";
 
-import { markDataUri } from "@/lib/og-mark";
 import { PRODUCT_NAME } from "@/lib/brand";
+import { markDataUri } from "@/lib/og-mark";
 
 export const dynamic = "force-static";
 

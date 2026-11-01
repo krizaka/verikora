@@ -4,6 +4,8 @@ import { localDay } from "@krizaka/intl/date";
 import { applyOnceInTransaction, type PaymentEvent, type Transaction } from "@krizaka/payments";
 import type { QueryResultRow } from "pg";
 
+import { PRODUCT_NAME } from "@/lib/brand";
+
 import {
   addPurchased,
   ensureFreeAudit,
@@ -17,7 +19,6 @@ import { transaction } from "./db";
 import { refuse } from "./http";
 import { chargeOverage, type OverageBiller, refundOverage } from "./overage";
 import type { AuditCaps } from "./settings/boundary";
-import { PRODUCT_NAME } from "@/lib/brand";
 
 /**
  * Entitlements — the domain, vendor-free (it speaks the payments port's events, never a processor's). A self-serve account

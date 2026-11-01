@@ -4,6 +4,7 @@ import { limit } from "@/lib/limits";
 import { issueOwnerReportPdf, ownerPayloadOf } from "@/lib/owner-report-pdf";
 import { openShare } from "@/lib/owner-report-shares";
 import { signingKey } from "@/lib/report-signer";
+import { currentProductName } from "@/lib/settings/display-name";
 
 export const dynamic = "force-dynamic";
 
@@ -18,7 +19,7 @@ export function GET(req: Request, ctx: { params: Promise<{ token: string }> }) {
     const report = await openShare(token, new Date(), req.headers);
     if (!report) throw refuse(404, "NOT_FOUND", "No such report");
     const lang = asLocale(new URL(req.url).searchParams.get("locale") ?? "en");
-    const { bytes } = await issueOwnerReportPdf(ownerPayloadOf(report, lang), signingKey());
+    const { bytes } = await issueOwnerReportPdf(ownerPayloadOf(report, lang), signingKey(), await currentProductName());
     return new Response(Buffer.from(bytes), {
       headers: {
         "Content-Type": "application/pdf",

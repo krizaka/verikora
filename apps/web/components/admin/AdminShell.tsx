@@ -13,8 +13,8 @@ import { usePathname, useRouter } from "next/navigation";
 import { Fragment } from "react";
 
 import { ADMIN_GROUPS, ADMIN_PAGES } from "@/lib/admin-nav";
-import { useSay } from "@/lib/i18n-client";
 import { PRODUCT_NAME } from "@/lib/brand";
+import { useSay } from "@/lib/i18n-client";
 
 const VERSION = process.env.NEXT_PUBLIC_APP_VERSION ?? "";
 

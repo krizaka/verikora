@@ -1,12 +1,12 @@
 import { postgresAccounts } from "@krizaka/auth";
 import { hashPassword, verifyPassword } from "@krizaka/auth";
 
+import { PRODUCT_NAME } from "@/lib/brand";
 import { query, transaction } from "@/lib/db";
 import { env } from "@/lib/env";
 import { fromAuthMail, mailerFor } from "@/lib/mailer";
 import { resetLinkMinutes } from "@/lib/password-reset";
 import { tokenHash } from "@/lib/session";
-import { PRODUCT_NAME } from "@/lib/brand";
 
 /** The account service of this deployment (the edge wires the adapter: its data store, the mailer, the password hashing). */
 export const accountService = (options: { passwordResetTtlMinutes?: number } = {}) => {

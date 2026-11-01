@@ -1,5 +1,7 @@
 import { STORAGE_KIND } from "@yomizaka/core";
 
+import { currentProductName } from "@/lib/settings/display-name";
+
 import { refuse } from "../http";
 import { publicKeyBase64, type SigningKey } from "../report-key";
 import { SITE_URL } from "../site";
@@ -56,7 +58,7 @@ export async function sealContract(args: {
   const { ownerId, request, zone, now, key } = args;
   const id = contractIdOf(ownerId, request);
   const sealedAt = now.toISOString().replace(/\.\d{3}Z$/, "Z");
-  const sealed = await sealPdf(request, { contractId: id, sealedAt, zone }, key);
+  const sealed = await sealPdf(request, { contractId: id, sealedAt, zone }, key, await currentProductName());
   const { row, created } = await keepSealed({
     id,
     ownerId,

@@ -1,7 +1,8 @@
 import { type Catalogue, ensureCatalogue, type SetupResult, type StripeCall } from "@krizaka/payments";
 
-import { SOLD, SOLD_KINDS, type SoldKind } from "../pricing";
 import { PRODUCT_NAME } from "@/lib/brand";
+
+import { SOLD, SOLD_KINDS, type SoldKind } from "../pricing";
 
 /**
  * Keeps the processor's prices equal to the catalogue the administrator edits (yomizaka#548). The catalogue (`@krizaka/settings`) is the
@@ -15,7 +16,10 @@ export const PROCESSOR_PLANS: Record<SoldKind, { name: string; taxCode: string }
   agency: { name: `${PRODUCT_NAME} Agency — monthly`, taxCode: "txcd_10103001" },
   firm: { name: `${PRODUCT_NAME} Building manager — monthly`, taxCode: "txcd_10103001" },
 };
-export const PORTAL = { headline: `Manage your ${PRODUCT_NAME} subscription and invoices`, cancel: "at_period_end" } as const;
+export const PORTAL = {
+  headline: `Manage your ${PRODUCT_NAME} subscription and invoices`,
+  cancel: "at_period_end",
+} as const;
 
 /** What of a catalogue entry the sync needs (`describePrices` entries satisfy it). */
 export interface SyncEntry {

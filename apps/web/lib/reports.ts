@@ -1,3 +1,5 @@
+import { currentProductName } from "@/lib/settings/display-name";
+
 import { getAnalysis } from "./analyses";
 import { getDocument } from "./documents";
 import { refuse } from "./http";
@@ -49,7 +51,7 @@ export async function reportPdfFor(
     if (error instanceof ReportError) throw refuse(409, "REPORT_NOT_READY", error.message);
     throw error;
   }
-  const issued = await issuePdf(payload, reportLabels(lang), signingKey());
+  const issued = await issuePdf(payload, reportLabels(lang), signingKey(), await currentProductName());
   const slug = slugOf(document.title);
   return { issued, filename: `yomizaka-audit-${slug}-${(analysis.runId ?? analysis.id).slice(0, 8)}.pdf` };
 }

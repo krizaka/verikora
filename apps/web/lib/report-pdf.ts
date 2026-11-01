@@ -20,6 +20,8 @@ import {
 } from "./pdf-layout";
 
 export { foldToWinAnsi };
+import { PRODUCT_NAME } from "@/lib/brand";
+
 import {
   type Attestation,
   fill,
@@ -34,7 +36,6 @@ import {
 } from "./report";
 import { type SigningKey } from "./report-key";
 import { SITE_URL } from "./site";
-import { PRODUCT_NAME } from "@/lib/brand";
 
 /*
  * The signed PDF report of a compliance check — for the owner and the members the owner gave access to (ADR-0002).
@@ -200,7 +201,12 @@ const faceOf = (b: Block): Face => {
 };
 
 /** Lays out, hashes the text, signs, embeds. Each page carries its folio and the first one its footnotes; the findings are numbered as on the screen. */
-export async function issuePdf(payload: ReportPayload, labels: ReportLabels, key: SigningKey): Promise<IssuedPdf> {
+export async function issuePdf(
+  payload: ReportPayload,
+  labels: ReportLabels,
+  key: SigningKey,
+  name = PRODUCT_NAME,
+): Promise<IssuedPdf> {
   const doc = await PDFDocument.create();
   const fonts: Fonts = await embedFonts(doc);
   const blocks = reportBlocks(payload, labels);
@@ -263,9 +269,9 @@ export async function issuePdf(payload: ReportPayload, labels: ReportLabels, key
 
   const finished = new Date(payload.check.finishedAt);
   doc.setTitle(payload.document.title);
-  doc.setSubject(`${PRODUCT_NAME} — ${payload.check.runId}`);
-  doc.setProducer(PRODUCT_NAME);
-  doc.setCreator(PRODUCT_NAME);
+  doc.setSubject(`${name} — ${payload.check.runId}`);
+  doc.setProducer(name);
+  doc.setCreator(name);
   doc.setCreationDate(finished);
   doc.setModificationDate(finished);
   const info = doc.context.lookup(doc.context.trailerInfo.Info, PDFDict);

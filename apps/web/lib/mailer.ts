@@ -3,8 +3,10 @@ import crypto from "node:crypto";
 import type { Mail as AccountsMail } from "@krizaka/auth";
 import { consoleLog, type IdempotencyStore, type MailEnv, sendEmail, type SuppressionList } from "@krizaka/email";
 
-import { pgIdempotency, pgSuppression } from "./mail/store";
 import { PRODUCT_NAME } from "@/lib/brand";
+import { currentProductName } from "@/lib/settings/display-name";
+
+import { pgIdempotency, pgSuppression } from "./mail/store";
 
 /**
  * Yomizaka's e-mail (yomizaka#48): every message is a template of `@krizaka/email` in Yomizaka's brand (never hand-written HTML), sent
@@ -51,12 +53,12 @@ export function fromAuthMail(mail: AccountsMail): AccountMail {
 }
 
 /** The `MAIL_*` settings as the package reads them; the sender defaults to `<name> <no-reply@<domain>>`. */
-export const mailEnvOf = (e: MailConfig): MailEnv => ({
+export const mailEnvOf = (e: MailConfig, name = PRODUCT_NAME): MailEnv => ({
   MAIL_PROVIDER: e.MAIL_PROVIDER,
   MAIL_API_KEY: e.MAIL_API_KEY,
   MAIL_DOMAIN: e.MAIL_DOMAIN,
   MAIL_API_URL: e.MAIL_API_URL,
-  MAIL_FROM: e.MAIL_FROM ?? (e.MAIL_DOMAIN ? `${PRODUCT_NAME} <no-reply@${e.MAIL_DOMAIN}>` : undefined),
+  MAIL_FROM: e.MAIL_FROM ?? (e.MAIL_DOMAIN ? `${name} <no-reply@${e.MAIL_DOMAIN}>` : undefined),
 });
 
 /** One key per intention: the same link is mailed once (a double click, a retry), a new link is a new intention. */
@@ -114,7 +116,7 @@ export const mailerFor =
     const options = {
       to: mail.to,
       locale: mail.locale,
-      env: mailEnvOf(e),
+      env: mailEnvOf(e, await currentProductName()),
       idempotencyKey: intentionOf(mail),
       log: deps.log ?? consoleLog(),
       suppression: deps.suppression ?? pgSuppression,

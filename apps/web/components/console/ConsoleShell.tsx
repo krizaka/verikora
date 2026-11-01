@@ -22,12 +22,12 @@ import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
 
 import { ButtonLink } from "@/components/ButtonLink";
+import { PRODUCT_NAME } from "@/lib/brand";
 import { activeNav, CONSOLE_ROUTES, withoutLocale } from "@/lib/console-nav";
 import { useSay } from "@/lib/i18n-client";
 import { pluralKey } from "@/lib/plural";
 
 import { ConsoleSearch } from "./ConsoleSearch";
-import { PRODUCT_NAME } from "@/lib/brand";
 
 const BUILD = process.env.NEXT_PUBLIC_APP_VERSION ?? "";
 const ADMIN_URL = "https://admin.yomizaka.com";

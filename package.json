@@ -11,7 +11,7 @@
     "lint": "pnpm run lint:workspace && turbo run lint && pnpm run check:i18n && pnpm run check:code-names && ast-grep test --skip-snapshot-tests && krizaka-sg-ratchet && pnpm run format:check",
     "check:i18n": "krizaka-i18n check apps/web/messages",
     "check:code-names": "krizaka-code-names apps/web/messages packages/client/src/messages apps/mobile/src/i18n apps/desktop/src/i18n apps/web/app/manifest.webmanifest",
-    "check:code-names:built": "krizaka-code-names apps/web/.next/server/app",
+    "check:code-names:built": "krizaka-code-names --allow .nft.json --allow /api/ apps/web/.next/server/app",
     "typecheck": "turbo run typecheck",
     "test": "turbo run test && vitest run",
     "test:coverage": "turbo run test --filter='!./apps/mobile' -- --coverage.enabled --coverage.provider=v8 --coverage.reporter=lcov && turbo run test --filter='./apps/mobile' && vitest run --coverage.enabled --coverage.provider=v8 --coverage.reporter=lcov",

@@ -7,10 +7,10 @@ import { redirect } from "next/navigation";
 
 import { SignUpForm } from "@/components/console/SignUpForm";
 import { pageSession } from "@/lib/access";
+import { PRODUCT_NAME } from "@/lib/brand";
 import { env } from "@/lib/env";
 import { asLocale, getDictionary } from "@/lib/i18n";
 import { signupOpenNow } from "@/lib/settings/signup";
-import { PRODUCT_NAME } from "@/lib/brand";
 
 export const dynamic = "force-dynamic";
 

@@ -27,7 +27,7 @@
     "share": "Partager le rapport signé (PDF)",
     "sharing": "Préparation du rapport…",
     "shareFailed": "Le rapport n'a pas pu être préparé.",
-    "signed": "Rapport signé, empreinte SHA-256 vérifiable sur yomizaka.com/app/verifications/report.",
+    "signed": "Rapport signé, empreinte SHA-256 vérifiable dans l’app, sous Vérifications.",
     "runningHint": "Sovkora lit le document. Cela prend généralement moins d'une minute.",
     "failedHint": "La vérification n'a pas abouti. Vous pouvez la relancer."
   },
