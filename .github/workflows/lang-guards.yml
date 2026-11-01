@@ -1,0 +1,25 @@
+# Rust guards of the org (krizaka-internal#2115): rustfmt, clippy pedantic counted in lang-ratchet.json (debt only goes down),
+# cargo-deny, tests under a timeout. Reusable workflow of krizaka/.github, pinned by sha.
+name: lang-guards
+
+on:
+  pull_request:
+  merge_group:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: lang-guards-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  rust:
+    permissions:
+      contents: read
+    uses: krizaka/.github/.github/workflows/rust-quality.yml@f398311a92f9080f3e65dc7a03f0379a4e063261 # main
+    with:
+      working-directory: apps/desktop/src-tauri
+      timeout-minutes: 30

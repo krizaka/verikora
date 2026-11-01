@@ -11,17 +11,26 @@ use std::path::{Path, PathBuf};
 const CHECKABLE: &[(&str, &str)] = &[
     ("pdf", "application/pdf"),
     ("txt", "text/plain"),
-    ("docx", "application/vnd.openxmlformats-officedocument.wordprocessingml.document"),
+    (
+        "docx",
+        "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+    ),
     ("odt", "application/vnd.oasis.opendocument.text"),
 ];
 
 fn extension(name: &str) -> String {
-    Path::new(name).extension().map(|e| e.to_string_lossy().to_lowercase()).unwrap_or_default()
+    Path::new(name)
+        .extension()
+        .map(|e| e.to_string_lossy().to_lowercase())
+        .unwrap_or_default()
 }
 
 pub fn mime_of(name: &str) -> Option<&'static str> {
     let ext = extension(name);
-    CHECKABLE.iter().find(|(e, _)| *e == ext).map(|(_, mime)| *mime)
+    CHECKABLE
+        .iter()
+        .find(|(e, _)| *e == ext)
+        .map(|(_, mime)| *mime)
 }
 
 pub fn is_checkable(name: &str) -> bool {
@@ -40,7 +49,10 @@ pub struct DocumentBytes {
 
 /// Reads a document already resolved through the scope. Refuses what a check cannot read and what is too large.
 pub fn read_checkable(path: &Path, max_bytes: u64) -> Result<DocumentBytes, String> {
-    let name = path.file_name().map(|n| n.to_string_lossy().to_string()).unwrap_or_default();
+    let name = path
+        .file_name()
+        .map(|n| n.to_string_lossy().to_string())
+        .unwrap_or_default();
     let mime = mime_of(&name).ok_or("unsupported")?;
     let meta = fs::metadata(path).map_err(|e| e.to_string())?;
     if !meta.is_file() {
@@ -50,12 +62,20 @@ pub fn read_checkable(path: &Path, max_bytes: u64) -> Result<DocumentBytes, Stri
         return Err("too large".into());
     }
     let bytes = fs::read(path).map_err(|e| e.to_string())?;
-    Ok(DocumentBytes { name, mime: mime.into(), size: meta.len(), data: STANDARD.encode(bytes) })
+    Ok(DocumentBytes {
+        name,
+        mime: mime.into(),
+        size: meta.len(),
+        data: STANDARD.encode(bytes),
+    })
 }
 
 /// A report file name the app may write: one name, no separators, `.pdf`.
 fn clean_report_name(name: &str) -> Result<String, String> {
-    let base = Path::new(name).file_name().map(|n| n.to_string_lossy().to_string()).unwrap_or_default();
+    let base = Path::new(name)
+        .file_name()
+        .map(|n| n.to_string_lossy().to_string())
+        .unwrap_or_default();
     if base.is_empty() || base.starts_with('.') || extension(&base) != "pdf" {
         return Err("a report is a .pdf with a plain name".into());
     }
@@ -66,7 +86,10 @@ fn clean_report_name(name: &str) -> Result<String, String> {
 pub fn report_destination(document: &Path, name: &str) -> Result<PathBuf, String> {
     let name = clean_report_name(name)?;
     let dir = document.parent().ok_or("the document has no folder")?;
-    let stem = Path::new(&name).file_stem().map(|s| s.to_string_lossy().to_string()).unwrap_or_default();
+    let stem = Path::new(&name)
+        .file_stem()
+        .map(|s| s.to_string_lossy().to_string())
+        .unwrap_or_default();
     let mut candidate = dir.join(&name);
     let mut n = 2;
     while candidate.exists() {
@@ -78,13 +101,19 @@ pub fn report_destination(document: &Path, name: &str) -> Result<PathBuf, String
 
 /// Writes the report. The document's folder was resolved through the scope by the caller.
 pub fn save_report(document: &Path, name: &str, base64_pdf: &str) -> Result<PathBuf, String> {
-    let bytes = STANDARD.decode(base64_pdf).map_err(|_| "the report is not valid base64".to_string())?;
+    let bytes = STANDARD
+        .decode(base64_pdf)
+        .map_err(|_| "the report is not valid base64".to_string())?;
     if !bytes.starts_with(b"%PDF") {
         return Err("the report is not a PDF".into());
     }
     let destination = report_destination(document, name)?;
     // `create_new`: a file that appeared since the name was chosen is never overwritten.
-    let mut out = fs::OpenOptions::new().write(true).create_new(true).open(&destination).map_err(|e| e.to_string())?;
+    let mut out = fs::OpenOptions::new()
+        .write(true)
+        .create_new(true)
+        .open(&destination)
+        .map_err(|e| e.to_string())?;
     out.write_all(&bytes).map_err(|e| e.to_string())?;
     Ok(destination)
 }
@@ -96,7 +125,16 @@ mod tests {
 
     #[test]
     fn lists_only_what_a_check_reads() {
-        for (name, ok) in [("bail.pdf", true), ("BAIL.PDF", true), ("notes.txt", true), ("bail.docx", true), ("bail.odt", true), ("photo.heic", false), ("sheet.xlsx", false), ("noext", false)] {
+        for (name, ok) in [
+            ("bail.pdf", true),
+            ("BAIL.PDF", true),
+            ("notes.txt", true),
+            ("bail.docx", true),
+            ("bail.odt", true),
+            ("photo.heic", false),
+            ("sheet.xlsx", false),
+            ("noext", false),
+        ] {
             assert_eq!(is_checkable(name), ok, "{name}");
         }
         assert_eq!(mime_of("a.PDF"), Some("application/pdf"));
@@ -107,7 +145,10 @@ mod tests {
         let d = tempdir().unwrap();
         fs::write(d.path().join("bail.pdf"), "%PDF-1.4").unwrap();
         let doc = read_checkable(&d.path().join("bail.pdf"), 1024).unwrap();
-        assert_eq!((doc.name.as_str(), doc.mime.as_str(), doc.size), ("bail.pdf", "application/pdf", 8));
+        assert_eq!(
+            (doc.name.as_str(), doc.mime.as_str(), doc.size),
+            ("bail.pdf", "application/pdf", 8)
+        );
         assert_eq!(STANDARD.decode(doc.data).unwrap(), b"%PDF-1.4");
     }
 
@@ -116,10 +157,19 @@ mod tests {
         let d = tempdir().unwrap();
         fs::write(d.path().join("photo.heic"), "x").unwrap();
         fs::write(d.path().join("big.pdf"), vec![0u8; 100]).unwrap();
-        assert_eq!(read_checkable(&d.path().join("photo.heic"), 1024), Err("unsupported".into()));
-        assert_eq!(read_checkable(&d.path().join("big.pdf"), 10), Err("too large".into()));
+        assert_eq!(
+            read_checkable(&d.path().join("photo.heic"), 1024),
+            Err("unsupported".into())
+        );
+        assert_eq!(
+            read_checkable(&d.path().join("big.pdf"), 10),
+            Err("too large".into())
+        );
         fs::create_dir(d.path().join("dir.pdf")).unwrap();
-        assert_eq!(read_checkable(&d.path().join("dir.pdf"), 10), Err("not a file".into()));
+        assert_eq!(
+            read_checkable(&d.path().join("dir.pdf"), 10),
+            Err("not a file".into())
+        );
     }
 
     #[test]
@@ -127,8 +177,18 @@ mod tests {
         let d = tempdir().unwrap();
         let doc = d.path().join("bail.pdf");
         fs::write(&doc, "%PDF").unwrap();
-        let first = save_report(&doc, "yomizaka-audit-1.pdf", &STANDARD.encode(b"%PDF-1.7 report")).unwrap();
-        let second = save_report(&doc, "yomizaka-audit-1.pdf", &STANDARD.encode(b"%PDF-1.7 report")).unwrap();
+        let first = save_report(
+            &doc,
+            "yomizaka-audit-1.pdf",
+            &STANDARD.encode(b"%PDF-1.7 report"),
+        )
+        .unwrap();
+        let second = save_report(
+            &doc,
+            "yomizaka-audit-1.pdf",
+            &STANDARD.encode(b"%PDF-1.7 report"),
+        )
+        .unwrap();
         assert_eq!(first, d.path().join("yomizaka-audit-1.pdf"));
         assert_eq!(second, d.path().join("yomizaka-audit-1 (2).pdf"));
     }
