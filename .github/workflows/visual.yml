@@ -5,13 +5,15 @@ name: Visual regression
 on:
   pull_request:
     branches: [main]
+  # A required check of the merge queue (main protection): it must report on the queue entry too.
+  merge_group:
 
 permissions:
   contents: read
 
 jobs:
   visual:
-    uses: krizaka/.github/.github/workflows/visual-regression.yml@99281c3f4b46dbe4c645dff053b4bfb387a1403d # main
+    uses: krizaka/.github/.github/workflows/visual-regression.yml@c520402307e0f271738c2b1459569e9030ff1522 # main
     permissions:
       contents: read
     with:

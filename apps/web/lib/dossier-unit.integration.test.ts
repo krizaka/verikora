@@ -1,5 +1,5 @@
 import { memoryStore, type OrazakaRun } from "@yomizaka/core";
-import { afterAll, beforeAll, describe, expect, it } from "vitest";
+import { afterAll, beforeAll, describe, expect, it, vi } from "vitest";
 
 import { CONSENT_MEANS, CONSENT_PURPOSE, grantConsent, NOTICE_VERSION } from "./applicant-consent";
 import { requestApplicantFile, uploadApplicantDocument, type UploadContext } from "./applicant-file";
@@ -17,6 +17,14 @@ const enabled = process.env.YOMIZAKA_DB_IT === "1" && !!process.env.DATABASE_URL
 const NOW = new Date("2026-10-24T12:00:00Z");
 
 describe.runIf(enabled)("the dossier is the unit of billing", () => {
+  // The credits ledger reads the wall clock for a grant that "lapses in the future"; the tests pass NOW (24 Oct). Pinned like billing.integration.test.ts,
+  // they no longer break once the real date passes the month's free pot (main red since 2026-11-01).
+  beforeAll(() => {
+    vi.useFakeTimers({ toFake: ["Date"], now: NOW });
+  });
+  afterAll(() => {
+    vi.useRealTimers();
+  });
   const store = memoryStore();
   const stamp = Date.now();
   let n = 0;

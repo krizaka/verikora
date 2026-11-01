@@ -1,4 +1,4 @@
-import { beforeAll, describe, expect, it } from "vitest";
+import { afterAll, beforeAll, describe, expect, it, vi } from "vitest";
 
 import {
   applyPaymentEvent,
@@ -50,6 +50,14 @@ const startPro = async (id: string, tag: string) => {
 };
 
 describe.runIf(enabled)("billing", () => {
+  // The credits ledger reads the wall clock (systemClock) for a grant that "lapses in the future"; the tests pass NOW (22 Oct). Pinned,
+  // they no longer break on the 1st of a month, when the real date overtakes the month's free pot (merge group of #695, 2026-11-01).
+  beforeAll(() => {
+    vi.useFakeTimers({ toFake: ["Date"], now: NOW });
+  });
+  afterAll(() => {
+    vi.useRealTimers();
+  });
   beforeAll(async () => {
     await migrate();
   });
