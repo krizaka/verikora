@@ -5,6 +5,8 @@ name: Visual regression
 on:
   pull_request:
     branches: [main]
+  # A required check of the merge queue (main protection): it must report on the queue entry too.
+  merge_group:
 
 permissions:
   contents: read
