@@ -16,7 +16,7 @@ permissions:
 
 jobs:
   update:
-    uses: krizaka/.github/.github/workflows/visual-regression.yml@c520402307e0f271738c2b1459569e9030ff1522 # main
+    uses: krizaka/.github/.github/workflows/visual-regression.yml@8b8ba2244f8348479fe6b85f245049da036195d2 # main
     permissions:
       contents: read
     secrets:
