@@ -60,7 +60,9 @@ export function targetCounts(targets) {
   const counts = {};
   for (const line of targets) {
     const route = line.split(" @")[0].replace(UUID, "<id>");
-    const list = /\((.*)\)/.exec(line)?.[1] ?? "";
+    const open = line.indexOf("(");
+    const close = line.lastIndexOf(")");
+    const list = open >= 0 && close > open ? line.slice(open + 1, close) : "";
     counts[route] = (counts[route] ?? 0) + Math.max(1, list.split(", ").length);
   }
   return counts;

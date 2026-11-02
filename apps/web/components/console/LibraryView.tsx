@@ -90,7 +90,7 @@ export function LibraryView({
           </h2>
           <Link
             href={checksTabHref(locale, "lots")}
-            className="inline-flex min-h-11 items-center text-sm font-semibold text-fg-accent hover:underline"
+            className="-my-3 inline-flex min-h-11 items-center text-sm font-semibold text-fg-accent hover:underline"
             data-testid="home-import"
           >
             {say("home.check.import")}
