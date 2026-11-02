@@ -36,7 +36,7 @@ jobs:
   mobile-e2e:
     permissions:
       contents: read
-    uses: krizaka/.github/.github/workflows/mobile-e2e.yml@8b8ba2244f8348479fe6b85f245049da036195d2 # main (merge queue, layout guard)
+    uses: krizaka/.github/.github/workflows/mobile-e2e.yml@2864f385faba4132e1818818cad3abd1b839b18c # main (merge queue, layout guard)
     with:
       app-id: com.krizaka.yomizaka
       app-directory: apps/mobile
