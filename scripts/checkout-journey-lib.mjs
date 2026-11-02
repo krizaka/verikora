@@ -30,6 +30,20 @@ export function isHostedCheckout(value) {
   }
 }
 
+/**
+ * Whether the browser is back on the product after paying: off the hosted checkout, on any address of the product. The
+ * checkout returns to APP_PUBLIC_URL (www.yomizaka.com), which is not the dev host the journey drives the API on
+ * (krizaka-internal#2273): the origin of `--base` is never the test. Pure.
+ */
+export function returnedFromCheckout(value, hostedUrl) {
+  try {
+    const url = new URL(value);
+    return url.protocol === "https:" && url.hostname !== new URL(hostedUrl).hostname;
+  } catch {
+    return false;
+  }
+}
+
 /** Whether the account's entitlement (GET /api/billing) is the subscription the persona bought. Pure. */
 export function isSubscribed(entitlement, plan = PLAN) {
   return (

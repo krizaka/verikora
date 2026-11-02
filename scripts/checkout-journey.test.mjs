@@ -12,6 +12,7 @@ import {
   ISSUE_TITLE,
   issueFor,
   paidReceipt,
+  returnedFromCheckout,
   shouldOpenIssue,
 } from "./checkout-journey-lib.mjs";
 
@@ -155,4 +156,13 @@ test("the workflow runs on main and by schedule only, never on a pull request, a
       workflow.indexOf("node scripts/checkout-journey-guard.mjs"),
   );
   assert.match(workflow, /if: failure\(\)/);
+});
+
+test("paying returns to the product's public address, not to the dev host the API is driven on (krizaka-internal#2273)", () => {
+  const hosted = "https://checkout.stripe.com/c/pay/cs_test_abc#frag";
+  assert.equal(returnedFromCheckout("https://www.yomizaka.com/fr/app?paid=pro", hosted), true);
+  assert.equal(returnedFromCheckout("https://dev.yomizaka.com/fr/app?paid=pro", hosted), true);
+  assert.equal(returnedFromCheckout("https://checkout.stripe.com/c/pay/cs_test_abc", hosted), false);
+  assert.equal(returnedFromCheckout("about:blank", hosted), false);
+  assert.equal(returnedFromCheckout("http://www.yomizaka.com/fr/app", hosted), false);
 });
