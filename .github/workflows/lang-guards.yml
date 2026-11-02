@@ -19,7 +19,7 @@ jobs:
   rust:
     permissions:
       contents: read
-    uses: krizaka/.github/.github/workflows/rust-quality.yml@8b8ba2244f8348479fe6b85f245049da036195d2 # main
+    uses: krizaka/.github/.github/workflows/rust-quality.yml@2864f385faba4132e1818818cad3abd1b839b18c # main
     with:
       working-directory: apps/desktop/src-tauri
       timeout-minutes: 30
