@@ -33,7 +33,10 @@ export function UsageLine({ figure }: Readonly<{ figure: CreditsFigure }>) {
       data-testid="credits"
     >
       <span>{text}</span>
-      <Link href={`/${locale}${CONSOLE_ROUTES.plans}`} className="font-semibold text-fg-accent hover:underline">
+      <Link
+        href={`/${locale}${CONSOLE_ROUTES.plans}`}
+        className="inline-flex min-h-11 items-center font-semibold text-fg-accent hover:underline"
+      >
         {say("home.credits.manage")} →
       </Link>
     </p>
