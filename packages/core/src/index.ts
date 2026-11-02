@@ -713,3 +713,4 @@ export {
   sectionsFor,
 } from "./sections";
 export * from "./forensics";
+export * from "./forensics-text";
