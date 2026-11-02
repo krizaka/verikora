@@ -1,6 +1,13 @@
-import { type Connection, migrate as runMigrations, type Query, transaction as dbTransaction } from "@krizaka/db";
+import {
+  type Connection,
+  migrate as runMigrations,
+  type Query,
+  queryOf,
+  transaction as dbTransaction,
+} from "@krizaka/db";
 import pg from "pg";
 
+import { adoptBaseline } from "./baseline-adoption";
 import { seedConfig } from "./config-seed";
 import { readEnv } from "./env";
 import { MIGRATIONS } from "./migrations";
@@ -102,6 +109,7 @@ export const MIGRATION_LOCK_KEY = 73191;
  * configuration rows from code (`lib/config-seed.ts`, idempotent): the database a caller gets is the schema AND what the code expects in it.
  */
 export async function migrate(client?: pg.Pool): Promise<string[]> {
+  await adoptExistingBaseline(client ?? lockPool());
   const applied = await runMigrations(() => connectionOf(client ?? lockPool()), MIGRATIONS, {
     lockKey: MIGRATION_LOCK_KEY,
   });
@@ -109,6 +117,18 @@ export async function migrate(client?: pg.Pool): Promise<string[]> {
     async (text, values) => (await (client ?? pool()).query(text, values as unknown[] | undefined)).rows as never,
   );
   return applied;
+}
+
+/** A database made before the single baseline is already at it: record it under the migration lock, so the runner never replays it. */
+async function adoptExistingBaseline(source: pg.Pool): Promise<void> {
+  const connection = await connectionOf(source);
+  try {
+    await connection.query("SELECT pg_advisory_lock($1)", [MIGRATION_LOCK_KEY]);
+    await adoptBaseline(queryOf(connection));
+  } finally {
+    await connection.query("SELECT pg_advisory_unlock($1)", [MIGRATION_LOCK_KEY]).catch(() => undefined);
+    connection.release();
+  }
 }
 
 /**
