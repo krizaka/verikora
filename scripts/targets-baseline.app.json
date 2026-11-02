@@ -1,0 +1,20 @@
+{
+  "/app": 60,
+  "/app/documents": 30,
+  "/app/dossiers": 46,
+  "/app/screening": 30,
+  "/app/check": 80,
+  "/app/verifications": 70,
+  "/app/verifications?tab=lots": 50,
+  "/app/verifications?q=bail&result=attention,checked&kind=lease&period=year": 80,
+  "/app/search": 40,
+  "/app/settings/profil": 80,
+  "/app/settings/apparence": 80,
+  "/app/settings/securite": 80,
+  "/app/settings/facturation": 80,
+  "/app/settings/stockage": 80,
+  "/app/settings/donnees": 80,
+  "/app/library/<id>/<id>": 60,
+  "/app/dossiers/<id>": 80,
+  "/rapport/<demo token>": 80
+}
