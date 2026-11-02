@@ -1,6 +1,6 @@
 {
   "app": {
-    "name": "Yomizaka",
+    "name": "Verikora",
     "tagline": "Your documents, read and checked"
   },
   "nav": {
@@ -96,11 +96,11 @@
     "unwatch": "Stop watching"
   },
   "menu": {
-    "about": "About Yomizaka",
-    "hide": "Hide Yomizaka",
+    "about": "About Verikora",
+    "hide": "Hide Verikora",
     "hideOthers": "Hide Others",
     "showAll": "Show All",
-    "quit": "Quit Yomizaka",
+    "quit": "Quit Verikora",
     "edit": "Edit",
     "undo": "Undo",
     "redo": "Redo",

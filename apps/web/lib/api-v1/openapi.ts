@@ -1,5 +1,8 @@
 import { BATCH_CHECKS, BATCH_COLUMNS, BATCH_ROW_ERROR } from "@yomizaka/core";
 
+import { PRODUCT_NAME } from "@/lib/brand";
+import { ENGINE_NAME } from "@/lib/brand";
+
 import { YOMIZAKA_API_KEY_RULES } from "../api-keys";
 
 /**
@@ -54,10 +57,9 @@ export function openApiDocument(serverUrl: string) {
   return {
     openapi: "3.1.0",
     info: {
-      title: "Yomizaka API",
+      title: `${PRODUCT_NAME} API`,
       version: "1.0.0",
-      description:
-        "Document checks for landlords and property managers. A check is an Orazaka run; the report is shown as Orazaka returned it (in French). A triage tool, not legal advice.",
+      description: `Document checks for landlords and property managers. A check is a ${ENGINE_NAME} run; the report is shown as ${ENGINE_NAME} returned it (in French). A triage tool, not legal advice.`,
     },
     servers: [{ url: serverUrl }],
     security: [{ apiKey: [] }],
@@ -422,8 +424,7 @@ export function openApiDocument(serverUrl: string) {
             analysisId: { type: ["string", "null"], format: "uuid" },
             report: {
               type: ["object", "null"],
-              description:
-                "Orazaka's report (compliance findings, or authenticity signals); only on `GET`, once done. A triage, not legal advice.",
+              description: `${ENGINE_NAME}'s report (compliance findings, or authenticity signals); only on GET, once done. A triage, not legal advice.`,
             },
             createdAt: { type: "string", format: "date-time" },
             finishedAt: { type: ["string", "null"], format: "date-time" },

@@ -1,5 +1,6 @@
 import { ImageResponse } from "next/og";
 
+import { PRODUCT_NAME } from "@/lib/brand";
 import { markDataUri } from "@/lib/og-mark";
 
 export const dynamic = "force-static";
@@ -24,11 +25,11 @@ export async function GET() {
       <div style={{ display: "flex", alignItems: "center", gap: 20 }}>
         {/* eslint-disable-next-line @next/next/no-img-element -- drawn by ImageResponse, not a page */}
         <img src={mark} width={96} height={96} alt="" />
-        <div style={{ fontSize: 64, fontWeight: 800 }}>Yomizaka</div>
+        <div style={{ fontSize: 64, fontWeight: 800 }}>{PRODUCT_NAME}</div>
       </div>
       <div style={{ fontSize: 48, fontWeight: 700, marginTop: 40 }}>Read before you sign.</div>
       <div style={{ fontSize: 28, marginTop: 20, color: "#a1a1aa" }}>
-        Leases, contracts and invoices — read and checked by Orazaka, every finding quoted.
+        Leases, contracts and invoices — read and checked, every finding quoted.
       </div>
     </div>,
     { width: 1200, height: 630 },

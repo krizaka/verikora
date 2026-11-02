@@ -3,7 +3,7 @@ import { readFileSync } from "node:fs";
 import { DOCX_MIME } from "@yomizaka/core";
 import { describe, expect, it } from "vitest";
 
-import { causeOf, FAILURE_CAUSES, FILE_FAMILIES, failureOf, familyOf, RECOVERY, retryRequest } from "./check-failure";
+import { causeOf, FAILURE_CAUSES, failureOf, familyOf, FILE_FAMILIES, RECOVERY, retryRequest } from "./check-failure";
 
 const messages = (name: string) =>
   JSON.parse(readFileSync(new URL(`../messages/${name}.json`, import.meta.url), "utf8")).console.checkFailure as Record<

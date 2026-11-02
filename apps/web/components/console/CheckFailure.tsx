@@ -8,8 +8,8 @@ import { type Analysis, type DocumentView, queryKeys } from "@yomizaka/core";
 import { useState } from "react";
 
 import { ButtonLink } from "@/components/ButtonLink";
-import { errorKey } from "@/lib/client";
 import { failureOf, retryRequest } from "@/lib/check-failure";
+import { errorKey } from "@/lib/client";
 import { CONSOLE_ROUTES } from "@/lib/console-nav";
 import { useSay } from "@/lib/i18n-client";
 import { LAW_TIME_ZONE } from "@/lib/rulesets";

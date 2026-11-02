@@ -66,7 +66,7 @@ describe("the signed-in shell, B2 (P14)", () => {
 
   it("the header names the product and carries the DEV chip", () => {
     const header = headerOf(render());
-    expect(header).toContain(">Yomizaka<");
+    expect(header).toContain(">Verikora<");
     expect(header).toMatch(/data-testid="app-version"[^>]*>DEV · v0\.1\.0\+abc1234</);
   });
 

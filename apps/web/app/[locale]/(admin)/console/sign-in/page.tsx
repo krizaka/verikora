@@ -7,6 +7,7 @@ import { notFound, redirect } from "next/navigation";
 
 import { SignInForm } from "@/components/console/SignInForm";
 import { ipAllowed, pageAdmin } from "@/lib/access";
+import { PRODUCT_NAME } from "@/lib/brand";
 import { asLocale, getDictionary } from "@/lib/i18n";
 
 /** The administration's own sign-in (its cookie belongs to admin.yomizaka.com), on @krizaka/ui's auth template. */
@@ -19,7 +20,7 @@ export default async function AdminSignIn({ params }: Readonly<{ params: Promise
     <AuthLayout
       brand={
         <span className="inline-flex items-center gap-2">
-          <YomizakaLogo size={28} /> Yomizaka <Badge tone="warning">{t.shell.dev}</Badge>
+          <YomizakaLogo size={28} /> {PRODUCT_NAME} <Badge tone="warning">{t.shell.dev}</Badge>
         </span>
       }
       promise={t.signIn.promise}

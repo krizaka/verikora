@@ -1,11 +1,15 @@
 <p align="center">
   <picture>
     <source media="(prefers-color-scheme: dark)" srcset="https://krizaka-assets.b-cdn.net/brand/yomizaka/logo-dark.svg">
-    <img src="https://krizaka-assets.b-cdn.net/brand/yomizaka/logo-light.svg" alt="Yomizaka" width="96">
+    <img src="https://krizaka-assets.b-cdn.net/brand/yomizaka/logo-light.svg" alt="Verikora" width="96">
   </picture>
 </p>
 
-# Yomizaka
+# Verikora
+
+> **Verikora by Krizaka** is the commercial name; `yomizaka` is the code name (repository, packages, hosts, API paths). Users read
+> Verikora everywhere: the displayed name is the admin setting `brand.displayName`, and `pnpm run check:code-names` fails on a
+> code name in a catalogue or a built page.
 
 **Read before you sign.** Drop a lease, a contract, an invoice: Orazaka reads it against the law, examines the PDF for
 signs of editing, and shows you every line it relies on. Keep your documents, find any clause again in a second — and

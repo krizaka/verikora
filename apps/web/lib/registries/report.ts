@@ -1,5 +1,5 @@
 import { ANSWER, type BusinessRegistry, NOT_LOOKED_UP, type NotLookedUpReason } from "./model";
-import { checkIssuer, type PrintedIssuer, type RegistrySignal, registrantOfNeq } from "./signals";
+import { checkIssuer, type PrintedIssuer, registrantOfNeq, type RegistrySignal } from "./signals";
 
 /*
  * What the document report says of the registers (yomizaka#627): the number printed on the document, read against the public registers,

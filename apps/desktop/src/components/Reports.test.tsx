@@ -11,7 +11,7 @@ vi.mock("@krizaka/query", async (importOriginal) => ({
 }));
 vi.mock("../lib/config", () => ({ queries: { documents: () => ({ queryKey: ["yomizaka", "documents"] }) } }));
 
-const OFFLINE = "Yomizaka ne répond pas. Vérifiez votre connexion.";
+const OFFLINE = "Verikora ne répond pas. Vérifiez votre connexion.";
 const EMPTY = /Aucun document vérifié pour l'instant/;
 
 /** The server state as the screen reads it (the query itself is @krizaka/query's, tested there). */

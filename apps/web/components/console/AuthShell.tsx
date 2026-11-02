@@ -4,6 +4,7 @@ import { Mascot } from "@krizaka/ui/mascots";
 import Link from "next/link";
 import type { ReactNode } from "react";
 
+import { PRODUCT_NAME } from "@/lib/brand";
 import { getDictionary, type Locale } from "@/lib/i18n";
 
 /** The frame of the sign-in family — sign-in, forgot password, new password: Yomizaka's mark, the owl large and the three proofs. */
@@ -29,7 +30,7 @@ export function AuthShell({
     <AuthLayout
       brand={
         <Link href={`/${locale}`} className="inline-flex items-center gap-2">
-          <YomizakaLogo size={28} /> Yomizaka
+          <YomizakaLogo size={28} /> {PRODUCT_NAME}
         </Link>
       }
       promise={promise}

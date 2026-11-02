@@ -1,5 +1,6 @@
 import { requireSession } from "@/lib/access";
 import { audit } from "@/lib/audit";
+import { PRODUCT_NAME } from "@/lib/brand";
 import { handle, refuse } from "@/lib/http";
 import { limit } from "@/lib/limits";
 import { verifyReport } from "@/lib/report";
@@ -15,7 +16,8 @@ export const dynamic = "force-dynamic";
 async function ownerKindOrRefuse(pdf: Uint8Array | null) {
   if (!pdf) return false;
   const kind = kindOfSchema(await pdfSchemaId(pdf));
-  if (kind === "unknown") throw refuse(422, "UNKNOWN_SCHEMA", "This report uses a format Yomizaka does not verify");
+  if (kind === "unknown")
+    throw refuse(422, "UNKNOWN_SCHEMA", `This report uses a format ${PRODUCT_NAME} does not verify`);
   return kind === "owner";
 }
 

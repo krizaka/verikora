@@ -1,6 +1,7 @@
 import { postgresAccounts } from "@krizaka/auth";
 import { hashPassword, verifyPassword } from "@krizaka/auth";
 
+import { PRODUCT_NAME } from "@/lib/brand";
 import { query, transaction } from "@/lib/db";
 import { env } from "@/lib/env";
 import { fromAuthMail, mailerFor } from "@/lib/mailer";
@@ -16,7 +17,7 @@ export const accountService = (options: { passwordResetTtlMinutes?: number } = {
     passwordResetTtlMinutes: options.passwordResetTtlMinutes,
     mail: (mail) => mailerFor(e)(fromAuthMail(mail)),
     baseUrl: e.APP_PUBLIC_URL,
-    product: "Yomizaka",
+    product: PRODUCT_NAME,
     tokenPrefix: "ye",
     tokenHash: (token) => tokenHash(token),
     passwords: { hash: hashPassword, verify: verifyPassword },

@@ -49,7 +49,7 @@ function sinLike(rng) {
 }
 const banner = (what) => [
   `DOCUMENT FICTIF — ${what}`,
-  "Jeu de données de démonstration Yomizaka : personnes, adresses et montants inventés.",
+  "Jeu de données de démonstration Verikora : personnes, adresses et montants inventés.",
   "",
 ];
 

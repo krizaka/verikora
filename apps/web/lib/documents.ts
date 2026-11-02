@@ -2,8 +2,6 @@ import { createHash, randomUUID } from "node:crypto";
 
 import {
   type AcceptedType,
-  landlordSignals,
-  type Signal,
   type Analysis,
   type AnalysisStatus,
   type AuthenticityReport,
@@ -16,7 +14,9 @@ import {
   type DocumentSummary,
   DOCX_MIME,
   type ExtractionStatus,
+  landlordSignals,
   ODT_MIME,
+  type Signal,
   type StorageKind,
   type Studio,
   type TextSource,

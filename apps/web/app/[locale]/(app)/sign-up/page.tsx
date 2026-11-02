@@ -7,6 +7,7 @@ import { redirect } from "next/navigation";
 
 import { SignUpForm } from "@/components/console/SignUpForm";
 import { pageSession } from "@/lib/access";
+import { PRODUCT_NAME } from "@/lib/brand";
 import { env } from "@/lib/env";
 import { asLocale, getDictionary } from "@/lib/i18n";
 import { signupOpenNow } from "@/lib/settings/signup";
@@ -28,7 +29,7 @@ export default async function SignUpPage({ params }: Readonly<{ params: Promise<
     <AuthLayout
       brand={
         <Link href={`/${locale}`} className="inline-flex items-center gap-2">
-          <YomizakaLogo size={28} /> Yomizaka
+          <YomizakaLogo size={28} /> {PRODUCT_NAME}
         </Link>
       }
       promise={t.promise}

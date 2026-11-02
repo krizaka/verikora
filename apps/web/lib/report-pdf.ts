@@ -20,6 +20,8 @@ import {
 } from "./pdf-layout";
 
 export { foldToWinAnsi };
+import { PRODUCT_NAME } from "@/lib/brand";
+
 import {
   type Attestation,
   fill,
@@ -199,7 +201,12 @@ const faceOf = (b: Block): Face => {
 };
 
 /** Lays out, hashes the text, signs, embeds. Each page carries its folio and the first one its footnotes; the findings are numbered as on the screen. */
-export async function issuePdf(payload: ReportPayload, labels: ReportLabels, key: SigningKey): Promise<IssuedPdf> {
+export async function issuePdf(
+  payload: ReportPayload,
+  labels: ReportLabels,
+  key: SigningKey,
+  name = PRODUCT_NAME,
+): Promise<IssuedPdf> {
   const doc = await PDFDocument.create();
   const fonts: Fonts = await embedFonts(doc);
   const blocks = reportBlocks(payload, labels);
@@ -262,9 +269,9 @@ export async function issuePdf(payload: ReportPayload, labels: ReportLabels, key
 
   const finished = new Date(payload.check.finishedAt);
   doc.setTitle(payload.document.title);
-  doc.setSubject(`Yomizaka — ${payload.check.runId}`);
-  doc.setProducer("Yomizaka");
-  doc.setCreator("Yomizaka");
+  doc.setSubject(`${name} — ${payload.check.runId}`);
+  doc.setProducer(name);
+  doc.setCreator(name);
   doc.setCreationDate(finished);
   doc.setModificationDate(finished);
   const info = doc.context.lookup(doc.context.trailerInfo.Info, PDFDict);

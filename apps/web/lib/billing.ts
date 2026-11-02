@@ -4,6 +4,8 @@ import { localDay } from "@krizaka/intl/date";
 import { applyOnceInTransaction, type PaymentEvent, type Transaction } from "@krizaka/payments";
 import type { QueryResultRow } from "pg";
 
+import { PRODUCT_NAME } from "@/lib/brand";
+
 import {
   addPurchased,
   ensureFreeAudit,
@@ -196,7 +198,7 @@ async function billOverage(
   biller: OverageBiller,
   sale: { accountId: string; customerId: string; documentId: string; cents: number; now: Date },
 ): Promise<AuditVia> {
-  await chargeOverage(query, biller, { ...sale, description: "Yomizaka — dossier beyond the included volume" });
+  await chargeOverage(query, biller, { ...sale, description: `${PRODUCT_NAME} — dossier beyond the included volume` });
   return "overage";
 }
 

@@ -1,5 +1,7 @@
 import { localDay } from "@krizaka/intl";
 
+import { PRODUCT_NAME } from "@/lib/brand";
+
 import { applicantFileOf } from "./applicant-file";
 import { audit } from "./audit";
 import { clientAddress } from "./client-address";
@@ -163,7 +165,7 @@ export async function emailShare(
     to,
     locale: input.locale,
     url: `${deps.origin}/${input.locale}/rapport/${input.token}`,
-    senderName: (owner.name?.trim() || "Yomizaka").slice(0, 80),
+    senderName: (owner.name?.trim() || PRODUCT_NAME).slice(0, 80),
     expiresOn: localDay(row.expires_at, LAW_TIME_ZONE),
     ...(message ? { message } : {}),
   });

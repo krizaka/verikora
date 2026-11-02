@@ -13,6 +13,8 @@ import {
   TextRenderingMode,
 } from "pdf-lib";
 
+import { PRODUCT_NAME } from "@/lib/brand";
+
 import type { CleanedPage } from "./port";
 
 const LETTER = { width: 612, height: 792 };
@@ -75,8 +77,8 @@ export async function pagesToPdf(
   words: ReadonlyArray<readonly PageWord[] | undefined> = [],
 ): Promise<Uint8Array> {
   const doc = await PDFDocument.create({ updateMetadata: false });
-  doc.setProducer("Yomizaka (photos assembled into one document)");
-  doc.setCreator("Yomizaka");
+  doc.setProducer(`${PRODUCT_NAME} (photos assembled into one document)`);
+  doc.setCreator(PRODUCT_NAME);
   doc.setTitle("");
   doc.setCreationDate(FIXED_DATE);
   doc.setModificationDate(FIXED_DATE);

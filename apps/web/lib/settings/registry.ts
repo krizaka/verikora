@@ -6,6 +6,8 @@ import {
   bilingual,
   choice,
   defineSettings,
+  DISPLAY_NAME_KEY,
+  displayNameSetting,
   flag,
   integer,
   type Registry,
@@ -17,6 +19,7 @@ import {
 import { storageSettings } from "@krizaka/storage/settings";
 import type { z } from "zod";
 
+import { PRODUCT_NAME } from "../brand";
 import { LIMIT_SETTINGS } from "./limits";
 
 /**
@@ -51,10 +54,12 @@ function inGroup<F extends Registry>(group: Group, fragment: F): F {
 
 export const SETTINGS = {
   // General: the switches that open and close the app for consumers.
+  // The name the app shows (krizaka-internal#2035): the commercial name of @krizaka/org by default, audited when changed.
+  ...inGroup(GROUP.general, { [DISPLAY_NAME_KEY]: displayNameSetting("yomizaka") }),
   "app.maintenance": flag(GROUP.general, false),
   "app.maintenanceMessage": bilingual(GROUP.general, {
-    fr: "Yomizaka est en maintenance. Revenez dans quelques minutes.",
-    en: "Yomizaka is down for maintenance. Please come back in a few minutes.",
+    fr: `${PRODUCT_NAME} est en maintenance. Revenez dans quelques minutes.`,
+    en: `${PRODUCT_NAME} is down for maintenance. Please come back in a few minutes.`,
   }),
   "signup.open": flag(GROUP.general, false),
   // How long a session lasts (`auth.sessionDays`) and how long a « Forgot your password? » link works (`auth.passwordResetMinutes`): @krizaka/auth's.

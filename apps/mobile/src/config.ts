@@ -43,7 +43,7 @@ export const api = createApiClient({
   session,
   fetch: (input, init) => fetch(input, init),
   language: currentLocale,
-  productName: "Yomizaka",
+  productName: "Verikora",
   timeoutMs: API_TIMEOUT_MS,
 });
 

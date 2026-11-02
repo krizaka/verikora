@@ -3,6 +3,8 @@ import crypto from "node:crypto";
 import { PDFDict, PDFDocument, PDFName, PDFString } from "pdf-lib";
 import { z } from "zod";
 
+import { PRODUCT_NAME } from "@/lib/brand";
+
 import { format, getDictionary, type Locale } from "../i18n";
 import { drawPages, embedFonts, type Face, paginate, printable, signedBodyOf } from "../pdf-layout";
 import { canonicalJson, sha256 } from "../report";
@@ -187,6 +189,7 @@ export async function sealPdf(
   request: SealRequest,
   input: { contractId: string; sealedAt: string; zone: string },
   key: SigningKey,
+  name = PRODUCT_NAME,
 ): Promise<SealedPdf> {
   const payload = payloadOf(request, input);
   const doc = await PDFDocument.create();
@@ -231,9 +234,9 @@ export async function sealPdf(
 
   const sealed = new Date(payload.sealedAt);
   doc.setTitle(payload.documentType);
-  doc.setSubject(`Yomizaka — ${payload.contractId}`);
-  doc.setProducer("Yomizaka");
-  doc.setCreator("Yomizaka");
+  doc.setSubject(`${name} — ${payload.contractId}`);
+  doc.setProducer(name);
+  doc.setCreator(name);
   doc.setCreationDate(sealed);
   doc.setModificationDate(sealed);
   const info = doc.context.lookup(doc.context.trailerInfo.Info, PDFDict);

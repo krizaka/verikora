@@ -120,6 +120,7 @@ describe("sign-up", () => {
     expect(new Set(db.tokens.map((t) => t.token_hash)).size).toBe(2);
   });
 
+  // TODO(krizaka-internal#2038): @krizaka/email still renders the code name; the package must read @krizaka/org.
   it("the mail promises nothing about the check, in its language: it confirms an address, in Yomizaka's brand and no other", async () => {
     for (const locale of ["fr", "en"] as const) {
       const mail = await renderEmail(

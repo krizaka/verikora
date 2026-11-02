@@ -1,6 +1,6 @@
 "use client";
 
-import { YomizakaLogo } from "@krizaka/ui";
+import { ProductLockup } from "@krizaka/ui";
 import { languagesFor } from "@krizaka/ui/language-switch";
 import { NavBar } from "@krizaka/ui/nav-bar";
 import { ThemeToggle } from "@krizaka/ui/theme";
@@ -8,6 +8,7 @@ import Link from "next/link";
 import { Fragment } from "react";
 
 import { BarActions, BarQueryRoot } from "@/components/BarSession";
+import { PRODUCT_NAME, productEndorsement } from "@/lib/brand";
 import { type Locale, translator } from "@/lib/i18n";
 import { menuHref, menuItems } from "@/lib/nav";
 import { type PageId, pagePath, REPO_URL } from "@/lib/site";
@@ -43,8 +44,7 @@ export function SiteHeader({
           <NavBar.Root label={t("chrome.navLabel")} className="pointer-events-auto mx-auto max-w-(--kz-page-max,72rem)">
             <NavBar.Brand asChild>
               <Link href={home} aria-label={t("chrome.brandHome")}>
-                <YomizakaLogo size={26} />
-                Yomizaka
+                <ProductLockup id="yomizaka" name={PRODUCT_NAME} endorsement={productEndorsement(locale)} size={26} />
               </Link>
             </NavBar.Brand>
             <NavBar.Items>

@@ -1,8 +1,8 @@
 import { JURISDICTIONS } from "@yomizaka/core";
 import { describe, expect, it } from "vitest";
 
-import { runInputs } from "./analyses";
 import { LEASE_REFS, leaseRefOn } from "../../../scripts/smoke-lease-check.mjs";
+import { runInputs } from "./analyses";
 import { rulesFor } from "./check-flow";
 import contract from "./orazaka-contract/compliance-check-inputs.json";
 import { CHECK_KINDS, rulesetFor } from "./rulesets";

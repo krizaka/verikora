@@ -4,6 +4,7 @@ import { PDFDict, PDFDocument, PDFName, PDFString } from "pdf-lib";
 import { z } from "zod";
 
 import { INTL } from "@/components/console/format";
+import { PRODUCT_NAME } from "@/lib/brand";
 
 import { format, getDictionary, type Locale } from "./i18n";
 import type { OwnerReport } from "./owner-report";
@@ -235,7 +236,11 @@ export interface IssuedOwnerPdf {
 }
 
 /** Lays out, hashes the text, signs, embeds. Deterministic: the same payload gives the same bytes. */
-export async function issueOwnerReportPdf(payload: OwnerReportPayload, key: SigningKey): Promise<IssuedOwnerPdf> {
+export async function issueOwnerReportPdf(
+  payload: OwnerReportPayload,
+  key: SigningKey,
+  name = PRODUCT_NAME,
+): Promise<IssuedOwnerPdf> {
   const doc = await PDFDocument.create();
   const fonts = await embedFonts(doc);
   const blocks = ownerReportBlocks(payload);
@@ -274,9 +279,9 @@ export async function issueOwnerReportPdf(payload: OwnerReportPayload, key: Sign
   drawPages(doc, fonts, [...body, signaturePage!]);
   const issued = new Date(payload.issuedAt);
   doc.setTitle(`${w.title} ${payload.reference}`);
-  doc.setSubject(`Yomizaka — ${payload.reference}`);
-  doc.setProducer("Yomizaka");
-  doc.setCreator("Yomizaka");
+  doc.setSubject(`${name} — ${payload.reference}`);
+  doc.setProducer(name);
+  doc.setCreator(name);
   doc.setCreationDate(issued);
   doc.setModificationDate(issued);
   const info = doc.context.lookup(doc.context.trailerInfo.Info, PDFDict);

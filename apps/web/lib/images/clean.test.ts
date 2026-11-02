@@ -84,7 +84,7 @@ describe("several photos make one document", () => {
     const { PDFDocument } = await import("pdf-lib");
     const doc = await PDFDocument.load(pdf, { updateMetadata: false });
     expect(doc.getPageCount()).toBe(2);
-    expect(doc.getProducer()).toContain("Yomizaka");
+    expect(doc.getProducer()).toContain("Verikora");
     expect(Buffer.from(await pagesToPdf(pages)).equals(Buffer.from(pdf))).toBe(true);
   });
 });

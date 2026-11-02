@@ -3,14 +3,14 @@
   "plans": [
     {
       "lookupKey": "yomizaka_dossier_grid_cad",
-      "name": "Yomizaka — one dossier verified",
+      "name": "Verikora — one dossier verified",
       "amount": 999,
       "currency": "cad",
       "taxCode": "txcd_10103001"
     },
     {
       "lookupKey": "yomizaka_agency_monthly_pilot_cad",
-      "name": "Yomizaka Agency — monthly",
+      "name": "Verikora Agency — monthly",
       "amount": 4900,
       "currency": "cad",
       "interval": "month",
@@ -18,12 +18,12 @@
     },
     {
       "lookupKey": "yomizaka_firm_monthly_pilot_cad",
-      "name": "Yomizaka Building manager — monthly",
+      "name": "Verikora Building manager — monthly",
       "amount": 14900,
       "currency": "cad",
       "interval": "month",
       "taxCode": "txcd_10103001"
     }
   ],
-  "portal": { "headline": "Manage your Yomizaka subscription and invoices", "cancel": "at_period_end" }
+  "portal": { "headline": "Manage your Verikora subscription and invoices", "cancel": "at_period_end" }
 }

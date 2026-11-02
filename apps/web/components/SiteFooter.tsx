@@ -3,6 +3,7 @@ import { SiteFooter as FamilyFooter, SiteFooterColumn, SiteFooterLink } from "@k
 import { orgFamilyLabels } from "@krizaka/ui/sites";
 import Link from "next/link";
 
+import { PRODUCT_NAME } from "@/lib/brand";
 import { type Locale, translator } from "@/lib/i18n";
 import { indexable } from "@/lib/indexing";
 import { isListed } from "@/lib/listed";
@@ -26,7 +27,7 @@ export function SiteFooter({ locale }: Readonly<{ locale: Locale }>) {
       env={indexable() ? undefined : "DEV"}
       data-testid="app-version"
     >
-      <SiteFooterColumn title="Yomizaka">
+      <SiteFooterColumn title={PRODUCT_NAME}>
         {isListed("download") ? (
           <SiteFooterLink asChild>
             <Link href={pagePath(locale, "download")}>{t("chrome.download")}</Link>

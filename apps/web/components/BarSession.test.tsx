@@ -60,11 +60,11 @@ describe("the public bar knows who is signed in (yomizaka#243) — a quiet accou
     expect(html).not.toContain("eric@example.test");
   });
 
-  it("signed out: « Sign in » while sign-up is closed; « Try Yomizaka » first, then « Sign in », once it is open", () => {
+  it("signed out: « Sign in » while sign-up is closed; « Try Verikora » first, then « Sign in », once it is open", () => {
     expect(text(view())).toContain("Sign in");
-    expect(text(view())).not.toContain("Try Yomizaka");
+    expect(text(view())).not.toContain("Try Verikora");
     const open = view({ signupOpen: true });
-    expect(text(open)).toContain("Try Yomizaka");
+    expect(text(open)).toContain("Try Verikora");
     expect(text(open)).toContain("Sign in");
     expect(open).toContain('href="/en/sign-up"');
     expect(text(view({ locale: "fr" }))).toContain("Se connecter");

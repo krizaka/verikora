@@ -1,5 +1,6 @@
 import { createHash } from "node:crypto";
 
+import { PRODUCT_NAME } from "@/lib/brand";
 import { verifySeal } from "@/lib/contracts/seal";
 import { sealedBySha } from "@/lib/contracts/store";
 import { handle, refuse } from "@/lib/http";
@@ -20,7 +21,7 @@ export function GET(req: Request, { params }: { params: Promise<{ sha256: string
     await limit("verifyContract", req, null);
     const { sha256 } = await params;
     const row = /^[0-9a-f]{64}$/.test(sha256) ? await sealedBySha(sha256) : null;
-    if (!row) throw refuse(404, "UNKNOWN_SEAL", "Yomizaka has no seal with this SHA-256");
+    if (!row) throw refuse(404, "UNKNOWN_SEAL", `${PRODUCT_NAME} has no seal with this SHA-256`);
     // The file is read again and checked now: a stored copy that was altered is not vouched for — its bytes are no longer the ones that were sealed.
     if (sha256Of(row.content) !== row.sha256)
       return Response.json({ valid: false, reason: "ALTERED", sha256 }, { status: 409 });

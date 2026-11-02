@@ -52,12 +52,12 @@ export function readRecording(
     throw fail("the file is not a recording");
   const parsed = orazakaRun.safeParse(file.run);
   if (!parsed.success || parsed.data.status !== RUN_SUCCEEDED || !parsed.data.finishedAt)
-    throw fail("Orazaka did not return a finished run");
+    throw fail("The engine did not return a finished run");
   const run = parsed.data;
   const finishedAt = run.finishedAt!; // checked just above
   const report = reportOf("compliance-check", run.outputs) as ComplianceReport | null;
   if (!report || !("findings" in report) || report.findings.length === 0)
-    throw fail("Orazaka's answer holds no compliance report");
+    throw fail("The engine's answer holds no compliance report");
   const bytes = new TextEncoder().encode(file.document.text);
   const document = {
     sha256: sha256(bytes),
