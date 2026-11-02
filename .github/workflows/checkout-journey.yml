@@ -1,7 +1,7 @@
 # The checkout journey on the deployed dev (yomizaka P0, 2026-10-30): a persona buys a plan with Stripe's TEST card, the subscription turns
 # active, the receipt opens and the signed PDF is reachable. Every day and on demand, on main only (the persona and the TEST key are the
-# `dev` environment's, which pull request refs may not use). Never required, so it cannot block a merge. A red run on main opens an issue
-# (scripts/checkout-journey-guard.mjs, tested by scripts/checkout-journey.test.mjs). Dev deploys on every push to main (6-10 min): run it by
+# `dev` environment's, which pull request refs may not use). Never required, so it cannot block a merge. A red run on main files an issue
+# (scripts/checkout-journey-report.mjs + the shared alert-issue action, in krizaka-internal; tested by scripts/checkout-journey.test.mjs). Dev deploys on every push to main (6-10 min): run it by
 # hand after a deploy that touches billing.
 # Environment `dev`: SMOKE_EMAIL / SMOKE_PASSWORD (the persona) and PAYMENTS_STRIPE_TEST_SECRET_KEY (an sk_test_ key, refused otherwise).
 name: Checkout journey
@@ -23,7 +23,6 @@ jobs:
     environment: dev
     permissions:
       contents: read
-      issues: write
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -43,13 +42,21 @@ jobs:
           PAYMENTS_STRIPE_TEST_SECRET_KEY: ${{ secrets.PAYMENTS_STRIPE_TEST_SECRET_KEY }}
         run: node scripts/checkout-journey.mjs --base https://dev.yomizaka.com 2>&1 | tee checkout-journey.log; test "${PIPESTATUS[0]}" -eq 0
         shell: bash
-      # Fail-on-main: one issue (or a comment on the open one) says the checkout is red.
-      - name: Open the issue
+      # Fail-on-main: one issue (or a comment on the open one) says the checkout is red. It is filed in the private krizaka-internal with
+      # the org app token, never in this public repository (krizaka-internal#2267).
+      - name: Write the report
         if: failure()
-        env:
-          GH_RUN_AUTH: ${{ github.token }}
         run: |
           JOURNEY_FAILURE="$(grep -m1 'FAILED' checkout-journey.log || echo 'the journey stopped before it could say why')"
           export JOURNEY_FAILURE
-          node scripts/checkout-journey-guard.mjs
+          node scripts/checkout-journey-report.mjs "$RUNNER_TEMP/journey.md"
         shell: bash
+      - name: Open the issue
+        if: failure()
+        uses: krizaka/.github/actions/alert-issue@ad452c800f763d4f49a2cf36ffe32882ce1230bd # main
+        with:
+          app-id: ${{ vars.RELEASE_APP_ID }}
+          private-key: ${{ secrets.RELEASE_APP_PRIVATE_KEY }}
+          title: "yomizaka · fix(checkout): a persona cannot buy a plan on dev (the checkout journey is red on main)"
+          body-file: ${{ runner.temp }}/journey.md
+          labels: repo:yomizaka,type:fix
