@@ -14,7 +14,7 @@
   "/app/settings/facturation": 80,
   "/app/settings/stockage": 80,
   "/app/settings/donnees": 80,
-  "/app/library/552dcfb9-7083-46aa-ad83-2530d3270f21/78d08254-2597-4319-a398-c82b58d1b2ef": 60,
-  "/app/dossiers/e43c99f7-b137-452b-a492-0efe365edf3a": 80,
+  "/app/library/<id>/<id>": 60,
+  "/app/dossiers/<id>": 80,
   "/rapport/<demo token>": 80
 }

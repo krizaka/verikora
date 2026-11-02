@@ -89,6 +89,12 @@ describe("the touch-target ratchet (krizaka-internal#1903)", () => {
       { "/app": 2, "/app/check": 2 },
     );
   });
+  it("keys a record's route by its shape: an id changes at every seed", () => {
+    const id = (n) => `0000000${n}-aaaa-bbbb-cccc-dddddddddddd`;
+    const counts = targetCounts([t(`/app/dossiers/${id(1)}`, 360), t(`/app/dossiers/${id(2)}`, 360)]);
+    assert.deepEqual(counts, { "/app/dossiers/<id>": 2 });
+    assert.equal(targetRatchet([t(`/app/dossiers/${id(3)}`, 360)], { "/app/dossiers/<id>": 1 }).problems.length, 0);
+  });
   it("fails on a route above its baseline or absent from it, and reports gains", () => {
     const targets = [t("/app", 360), t("/app", 390), t("/app/check", 360)];
     assert.equal(targetRatchet(targets, { "/app": 2, "/app/check": 1 }).problems.length, 0);

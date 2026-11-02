@@ -43,6 +43,8 @@ export const PAGES = [
 
 /** The ratchet of the touch targets under 44 px (krizaka-internal#1903): a count per route, it only goes down. */
 export const TARGETS_BASELINE = fileURLToPath(new URL("./targets-baseline.app.json", import.meta.url));
+/** A record's id changes at every seed: the ratchet keys the route by its shape. */
+const UUID = /[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/g;
 const TARGET_PROBLEM = /touch target under 44 px/;
 
 /** The audit's problems, split into the touch-target ones (ratcheted by route) and the rest (always fatal). Pure, tested. */
@@ -57,7 +59,7 @@ export function splitTargetProblems(problems) {
 export function targetCounts(targets) {
   const counts = {};
   for (const line of targets) {
-    const route = line.split(" @")[0];
+    const route = line.split(" @")[0].replace(UUID, "<id>");
     const list = /\((.*)\)/.exec(line)?.[1] ?? "";
     counts[route] = (counts[route] ?? 0) + Math.max(1, list.split(", ").length);
   }
