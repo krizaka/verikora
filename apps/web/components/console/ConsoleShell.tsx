@@ -179,6 +179,7 @@ export function ConsoleShell({
               variant="gradient"
               size="sm"
               shape="cut"
+              className="min-h-11 min-w-11"
               aria-label={say("shell.checkAction")}
               title={say("shell.checkAction")}
               data-testid="header-check"

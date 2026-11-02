@@ -1,7 +1,14 @@
 import assert from "node:assert/strict";
 import { describe, it } from "vitest";
 
-import { homePrimaryProblems, PAGES, railRoutes } from "./check-app-pages.mjs";
+import {
+  homePrimaryProblems,
+  PAGES,
+  railRoutes,
+  splitTargetProblems,
+  targetCounts,
+  targetRatchet,
+} from "./check-app-pages.mjs";
 import { problemsOf } from "@krizaka/page-audit";
 
 describe("the signed-in pages crawl (yomizaka#457: « Dossiers » crashed unseen, it was in no list)", () => {
@@ -62,5 +69,31 @@ describe("the home's first screen offers the primary action as a button (krizaka
     assert.equal(homePrimaryProblems("/app @390 dark", { ...ok, inFirstScreen: false }, "Check a document").length, 1);
     assert.equal(homePrimaryProblems("/app @390 dark", { ...ok, name: "Go" }, "Check a document").length, 1);
     assert.equal(homePrimaryProblems("/app @390 dark", { ...ok, role: "div" }, "Check a document").length, 1);
+  });
+});
+
+describe("the touch-target ratchet (krizaka-internal#1903)", () => {
+  const t = (route, w) => `${route} @${w} dark: touch target under 44 px (a.x 20x20)`;
+  it("splits the target findings from the other problems", () => {
+    const { targets, others } = splitTargetProblems([t("/app", 360), "/app @360 dark: no h1"]);
+    assert.equal(targets.length, 1);
+    assert.deepEqual(others, ["/app @360 dark: no h1"]);
+  });
+  it("counts per route", () => {
+    assert.deepEqual(
+      targetCounts([
+        t("/app", 360),
+        t("/app", 390),
+        `/app/check @360 dark: touch target under 44 px (a.x 20x20, b.y 30x30)`,
+      ]),
+      { "/app": 2, "/app/check": 2 },
+    );
+  });
+  it("fails on a route above its baseline or absent from it, and reports gains", () => {
+    const targets = [t("/app", 360), t("/app", 390), t("/app/check", 360)];
+    assert.equal(targetRatchet(targets, { "/app": 2, "/app/check": 1 }).problems.length, 0);
+    assert.equal(targetRatchet(targets, { "/app": 1, "/app/check": 1 }).problems.length, 1);
+    assert.equal(targetRatchet(targets, { "/app": 2 }).problems.length, 1);
+    assert.deepEqual(targetRatchet([t("/app", 360)], { "/app": 2 }).gains, ["/app"]);
   });
 });

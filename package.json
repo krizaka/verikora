@@ -43,7 +43,7 @@
     "@krizaka/i18n": "^0.2.1",
     "@krizaka/intl": "^0.3.0",
     "@krizaka/org": "^0.7.0",
-    "@krizaka/page-audit": "^0.6.0",
+    "@krizaka/page-audit": "^0.8.0",
     "@playwright/test": "1.64.0",
     "@vitest/coverage-v8": "4.1.12",
     "dependency-cruiser": "^18.7.0",

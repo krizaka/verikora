@@ -182,7 +182,7 @@ export function CreateButton({
         });
   return (
     <>
-      <Button variant={variant} size="md" onClick={() => setOpen(true)}>
+      <Button variant={variant} size="lg" onClick={() => setOpen(true)}>
         {label}
       </Button>
       {open ? (

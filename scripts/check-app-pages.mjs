@@ -7,7 +7,7 @@
 //
 // The fixed pages are below; a collection and a document (its checks and its information) are found from the library.
 // Exits 1 listing every page × width × theme with a problem. With --shots it also writes a screenshot of each.
-import { mkdirSync } from "node:fs";
+import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -40,6 +40,44 @@ export const PAGES = [
   "/app/settings/stockage",
   "/app/settings/donnees",
 ];
+
+/** The ratchet of the touch targets under 44 px (krizaka-internal#1903): a count per route, it only goes down. */
+export const TARGETS_BASELINE = fileURLToPath(new URL("./targets-baseline.app.json", import.meta.url));
+const TARGET_PROBLEM = /touch target under 44 px/;
+
+/** The audit's problems, split into the touch-target ones (ratcheted by route) and the rest (always fatal). Pure, tested. */
+export function splitTargetProblems(problems) {
+  return {
+    targets: problems.filter((p) => TARGET_PROBLEM.test(p)),
+    others: problems.filter((p) => !TARGET_PROBLEM.test(p)),
+  };
+}
+
+/** The count of offending controls per route, summed over widths and themes (the audit lists at most eight a page: a page past that is capped). */
+export function targetCounts(targets) {
+  const counts = {};
+  for (const line of targets) {
+    const route = line.split(" @")[0];
+    const list = /\((.*)\)/.exec(line)?.[1] ?? "";
+    counts[route] = (counts[route] ?? 0) + Math.max(1, list.split(", ").length);
+  }
+  return counts;
+}
+
+/** What a route's count breaks: more than its baseline (a route absent from it is at 0). Fewer is a gain to lock with --targets-update. */
+export function targetRatchet(targets, baseline) {
+  const counts = targetCounts(targets);
+  const problems = [];
+  for (const [route, n] of Object.entries(counts))
+    if (n > (baseline[route] ?? 0))
+      problems.push(
+        `${route}: ${n} touch targets under 44 px, the baseline holds ${baseline[route] ?? 0} (krizaka-internal#1903)`,
+      );
+  const gains = Object.entries(baseline)
+    .filter(([route, n]) => (counts[route] ?? 0) < n)
+    .map(([route]) => route);
+  return { problems, counts, gains };
+}
 
 const arg = (name, fallback) => {
   const i = process.argv.indexOf(`--${name}`);
@@ -132,7 +170,12 @@ async function auditAt({ page, path, width, theme, base, locale, shots, a11y, er
   const result = await page.evaluate(auditPage);
   const where = `${publicPage ? "/rapport/<demo token>" : path} @${width} ${theme}`;
   // The home (/app) has no header "+": its one primary action is the drop zone itself (journey home-check-and-dossiers).
-  const found = problemsOf(where, result, { errors, h1: true, headerAction: !publicPage && path !== "/app" });
+  const found = problemsOf(where, result, {
+    errors,
+    h1: true,
+    headerAction: !publicPage && path !== "/app",
+    smallTargets: true,
+  });
   if (path === "/app")
     found.push(...homePrimaryProblems(where, await page.evaluate(homePrimaryInfo), HOME_LABEL[locale]));
   if (A11Y_WIDTHS.includes(width))
@@ -198,6 +241,22 @@ export async function check({ base, locale = "fr", email, password, shots }) {
     await context.close();
     for (const theme of THEMES)
       problems.push(...(await auditTheme({ browser, theme, cookies, pages, base, locale, shots, a11y })));
+    const { targets, others } = splitTargetProblems(problems);
+    problems.length = 0;
+    problems.push(...others);
+    let baseline = {};
+    try {
+      baseline = JSON.parse(readFileSync(TARGETS_BASELINE, "utf8"));
+    } catch {}
+    const ratchet = targetRatchet(targets, baseline);
+    if (process.argv.includes("--targets-update")) {
+      writeFileSync(TARGETS_BASELINE, `${JSON.stringify(ratchet.counts, null, 2)}\n`);
+      console.log(`touch targets: baseline written (${Object.keys(ratchet.counts).length} routes)`);
+    } else {
+      problems.push(...ratchet.problems);
+      if (ratchet.gains.length)
+        console.log(`touch targets: fewer findings on ${ratchet.gains.join(", ")}: lock with --targets-update`);
+    }
     const guard = finish(a11y, { baseline: A11Y_BASELINE });
     for (const note of guard.notes) console.log(note);
     problems.push(...guard.problems);

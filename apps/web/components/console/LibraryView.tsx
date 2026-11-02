@@ -90,7 +90,7 @@ export function LibraryView({
           </h2>
           <Link
             href={checksTabHref(locale, "lots")}
-            className="text-sm font-semibold text-fg-accent hover:underline"
+            className="inline-flex min-h-11 items-center text-sm font-semibold text-fg-accent hover:underline"
             data-testid="home-import"
           >
             {say("home.check.import")}
@@ -145,7 +145,7 @@ function DossiersList({
         <span className="order-3 flex flex-wrap items-center gap-3 sm:order-none">
           {firstId ? <CreateButton kind="collection" parentId={firstId} /> : null}
           {screening ? (
-            <Button asChild variant="secondary" size="md">
+            <Button asChild variant="secondary" size="lg">
               <Link href={`/${locale}${screening}`}>{say("library.screeningCta")}</Link>
             </Button>
           ) : null}
@@ -242,7 +242,7 @@ function LibraryEmpty({
       <p className="m-0 text-center text-sm">
         <Link
           href={`/${locale}#proof`}
-          className="font-semibold text-fg-accent hover:underline"
+          className="inline-flex min-h-11 items-center font-semibold text-fg-accent hover:underline"
           data-testid="library-sample-report"
         >
           {say("library.sampleReport")}
