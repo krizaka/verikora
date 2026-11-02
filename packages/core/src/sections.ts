@@ -30,6 +30,8 @@ export interface Section {
 
 const NO_APPLICANT_SCREEN =
   "the applicant files' list and detail are on the web first (P6); @yomizaka/client has no applications call yet";
+const FROM_THE_HOME =
+  "two items are enough (krizaka-internal#2001): the web rail holds Home and Checks, and the home lists the dossiers and reaches the documents";
 const NO_DOCUMENTS_LIST =
   "the list of all the documents is on the web first (P14, the B2 shell); the phone and the Mac reach them through the library";
 
@@ -39,9 +41,13 @@ export const SECTIONS: readonly Section[] = [
     id: "files",
     path: "/app/dossiers",
     gated: "applicantFiles",
-    pending: { phone: NO_APPLICANT_SCREEN, mac: NO_APPLICANT_SCREEN },
+    pending: { web: FROM_THE_HOME, phone: NO_APPLICANT_SCREEN, mac: NO_APPLICANT_SCREEN },
   },
-  { id: "documents", path: "/app/documents", pending: { phone: NO_DOCUMENTS_LIST, mac: NO_DOCUMENTS_LIST } },
+  {
+    id: "documents",
+    path: "/app/documents",
+    pending: { web: FROM_THE_HOME, phone: NO_DOCUMENTS_LIST, mac: NO_DOCUMENTS_LIST },
+  },
   { id: "checks", path: "/app/verifications", tabs: CHECKS_TABS, pending: {} },
 ];
 

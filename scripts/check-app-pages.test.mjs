@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { describe, it } from "vitest";
 
-import { PAGES, railRoutes } from "./check-app-pages.mjs";
+import { homePrimaryProblems, PAGES, railRoutes } from "./check-app-pages.mjs";
 import { problemsOf } from "@krizaka/page-audit";
 
 describe("the signed-in pages crawl (yomizaka#457: « Dossiers » crashed unseen, it was in no list)", () => {
@@ -49,5 +49,18 @@ describe("the signed-in pages crawl (yomizaka#457: « Dossiers » crashed unseen
       problemsOf("/app/check @1440 dark", { ...ok, unlabelledFiles: 1 }, { h1: true, fileLabels: true })[0],
       /file input/,
     );
+  });
+});
+
+describe("the home's first screen offers the primary action as a button (krizaka-internal#2001)", () => {
+  const ok = { role: "link", name: "Check a document", visible: true, inFirstScreen: true };
+  it("passes with the named button on the first screen", () => {
+    assert.deepEqual(homePrimaryProblems("/app @390 dark", ok, "Check a document"), []);
+  });
+  it("fails when the button is missing, below the fold or misnamed", () => {
+    assert.equal(homePrimaryProblems("/app @390 dark", null, "Check a document").length, 1);
+    assert.equal(homePrimaryProblems("/app @390 dark", { ...ok, inFirstScreen: false }, "Check a document").length, 1);
+    assert.equal(homePrimaryProblems("/app @390 dark", { ...ok, name: "Go" }, "Check a document").length, 1);
+    assert.equal(homePrimaryProblems("/app @390 dark", { ...ok, role: "div" }, "Check a document").length, 1);
   });
 });

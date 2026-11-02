@@ -27,20 +27,20 @@ const read = (p: string) => readFileSync(join(ROOT, p), "utf8");
 describe("the rail's active entry comes from the route", () => {
   it.each([
     ["/fr/app", "library"],
-    ["/fr/app/documents", "documents"],
-    ["/en/app/documents/abc/verifications", "documents"],
+    ["/fr/app/documents", "library"],
+    ["/en/app/documents/abc/verifications", "library"],
     ["/fr/app/library/lib/coll", "library"],
     ["/fr/app/library/lib/coll/folder", "library"],
-    ["/fr/app/screening", "files"],
-    ["/fr/app/dossiers", "files"],
-    ["/fr/app/dossiers/f1", "files"],
+    ["/fr/app/screening", "library"],
+    ["/fr/app/dossiers", "library"],
+    ["/fr/app/dossiers/f1", "library"],
     ["/fr/app/verifications", "checks"],
     ["/fr/app/verifications/", "checks"],
     ["/fr/app/check", "checks"],
     ["/fr/app/check/batches/abc", "checks"],
     // Search is the top bar's ⌘K (B2, P14): its full page belongs to the documents it searches, and has no rail entry of its own.
-    ["/fr/app/search", "documents"],
-    ["/fr/app/search", "documents"],
+    ["/fr/app/search", "library"],
+    ["/fr/app/search", "library"],
     ["/fr/app/settings", "account"],
     ["/fr/app/settings/profil", "account"],
   ])("%s → %s", (path, nav) => expect(activeNav(path)).toBe(nav));

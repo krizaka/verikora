@@ -27,9 +27,9 @@ describe("the section map", () => {
     }
   });
 
-  it("shows « Dossiers » only to the people offered the applicant-file flow", () => {
-    expect(ids(sectionsFor("web"))).toEqual(["library", "documents", "checks"]);
-    expect(ids(sectionsFor("web", { applicantFiles: true }))).toEqual(["library", "files", "documents", "checks"]);
+  it("draws two items on the web, Home and Checks (krizaka-internal#2001): the dossiers and the documents are reached from the home", () => {
+    expect(ids(sectionsFor("web"))).toEqual(["library", "checks"]);
+    expect(ids(sectionsFor("web", { applicantFiles: true }))).toEqual(["library", "checks"]);
   });
 
   it("says why a platform lacks a section, instead of a different map (the parity field)", () => {
@@ -40,6 +40,7 @@ describe("the section map", () => {
     expect(SECTIONS.find((s) => s.id === "library")?.pending).toEqual({});
     expect(SECTIONS.find((s) => s.id === "checks")?.pending).toEqual({});
     expect(SECTIONS.find((s) => s.id === "documents")?.pending).toEqual({
+      web: expect.any(String),
       phone: expect.any(String),
       mac: expect.any(String),
     });
