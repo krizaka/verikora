@@ -18,6 +18,7 @@ import {
   isSubscribed,
   paidReceipt,
   PLAN,
+  returnedFromCheckout,
   plain,
   TEST_CARD,
 } from "./checkout-journey-lib.mjs";
@@ -127,7 +128,7 @@ export async function checkoutJourney({ base, email, password, stripeKey, log = 
       const context = await auditContext(browser);
       const page = await context.newPage();
       await pay(page, started.body.url);
-      await page.waitForURL((url) => url.origin === new URL(base).origin, { timeout: 90_000 });
+      await page.waitForURL((url) => returnedFromCheckout(url.href, started.body.url), { timeout: 90_000 });
       log("paid, back on the site");
     } finally {
       await close();
