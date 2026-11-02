@@ -26,8 +26,12 @@ describe("adoptBaseline", () => {
   function fake(table: string | null, versions: string[]) {
     const writes: Array<{ text: string; values?: unknown[] }> = [];
     const run = (async (text: string, values?: unknown[]) => {
-      if (text.includes("to_regclass")) return [{ present: table }];
-      if (text.startsWith("SELECT version")) return versions.map((version) => ({ version }));
+      if (text.includes("to_regclass")) {
+        return [{ present: table }];
+      }
+      if (text.startsWith("SELECT version")) {
+        return versions.map((version) => ({ version }));
+      }
       writes.push({ text, values });
       return [];
     }) as never;
