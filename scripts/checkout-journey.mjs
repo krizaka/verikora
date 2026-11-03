@@ -81,6 +81,7 @@ async function pay(page, hostedUrl) {
     if (!(await field.isVisible().catch(() => false))) continue;
     if (step.action === "select") await field.selectOption(step.value);
     else await field.fill(step.value);
+    if (step.press) await field.press(step.press);
   }
   await page.locator("[data-testid=hosted-payment-submit-button], button.SubmitButton").first().click();
 }
