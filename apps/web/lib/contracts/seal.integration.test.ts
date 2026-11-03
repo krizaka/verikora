@@ -19,10 +19,34 @@ const contract = {
   contractPayload: { terms: { split: { creator: 90, platform: 10 } }, note: `contract ${stamp}` },
   parties: [
     { role: "PLATFORM", name: "Plateforme Exemple Inc.", signedAt: "2026-10-17T12:00:00Z" },
-    { role: "CREATOR", userId: "c79f-demo", attestationId: "att_demo_1", signedAt: "2026-10-17T12:05:00Z" },
+    { role: "CREATOR", userId: "creator-zz-demo", attestationId: "att_demo_1", signedAt: "2026-10-17T12:05:00Z" },
   ],
   complianceRuleset: "PARTNER-FRAMEWORK-1",
 };
+
+/**
+ * What must never reach an audit line or the public check. Every marker carries a character outside [0-9a-f] on purpose:
+ * a SHA-256 is random hex, and a marker made of hex digits only ("c79f") appears in some digest by chance and fails the
+ * leak guard on a run that leaked nothing (main red, 2026-11-03).
+ */
+const LEAK_MARKERS = ["Plateforme", "creator-zz", "att_demo", "PARTNER-FRAMEWORK", "terms"] as const;
+const leaks = (value: unknown) => new RegExp(LEAK_MARKERS.join("|")).test(JSON.stringify(value));
+
+describe("the leak guard of the seal tests", () => {
+  it("no marker can occur in a hex digest, so a random SHA-256 never trips it", () => {
+    for (const marker of LEAK_MARKERS) expect(marker).toMatch(/[^0-9a-f]/);
+  });
+
+  it("still catches a name, an account id, an attestation id or a content that leaks", () => {
+    const digest = "9ca9ca12de0b7c79f306d864db3e6e8451442d6d8366abcdef0123456789abcd";
+    expect(leaks({ valid: true, sha256: digest })).toBe(false);
+    expect(leaks({ valid: true, sha256: digest, party: "Plateforme Exemple Inc." })).toBe(true);
+    expect(leaks({ valid: true, userId: "creator-zz-demo" })).toBe(true);
+    expect(leaks({ valid: true, attestationId: "att_demo_1" })).toBe(true);
+    expect(leaks({ valid: true, ruleset: "PARTNER-FRAMEWORK-1" })).toBe(true);
+    expect(leaks({ valid: true, contractPayload: { terms: {} } })).toBe(true);
+  });
+});
 
 describe.runIf(enabled)("sealing a contract for a partner (yomizaka#71)", () => {
   let bearer = "";
@@ -80,7 +104,7 @@ describe.runIf(enabled)("sealing a contract for a partner (yomizaka#71)", () => 
       [ownerId],
     );
     expect(line!.actor_label).toMatch(/^api-key:/);
-    expect(JSON.stringify(line!.detail)).not.toMatch(/Plateforme|c79f|att_demo/);
+    expect(leaks(line!.detail)).toBe(false);
   });
 
   it("the same request is the same contract: 200 with the first seal, nothing sealed twice", async () => {
@@ -163,7 +187,7 @@ describe.runIf(enabled)("sealing a contract for a partner (yomizaka#71)", () => 
       partnerId: "partner-one",
       documentType: "CREATOR_PARTNERSHIP_CONTRACT_90_10",
     });
-    expect(JSON.stringify(answer)).not.toMatch(/Plateforme|c79f|att_demo|PARTNER-FRAMEWORK|terms/);
+    expect(leaks(answer)).toBe(false);
     expect(
       (await verifyRoute(get("/api/verify/contract/" + "0".repeat(64)), params({ sha256: "0".repeat(64) }))).status,
     ).toBe(404);
