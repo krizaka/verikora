@@ -44,6 +44,21 @@ export function returnedFromCheckout(value, hostedUrl) {
   }
 }
 
+/**
+ * What the journey records when the page does not go where it should: the address without its query, its fragment (Stripe keeps
+ * the session there) or the session id in the path, and the title without anything that looks like a card number. Pure.
+ */
+export function describeStuckPage({ url, title }) {
+  let address = "[unreadable address]";
+  try {
+    const u = new URL(url);
+    address = `${u.origin}${u.pathname.replace(/\/cs_(test|live)_[A-Za-z0-9]+/g, "/cs_$1_[id]")}`;
+  } catch {
+    // keep the placeholder: a broken address is itself the finding
+  }
+  return { url: address, title: plain(String(title ?? "").replace(/\b(?:\d[ -]?){13,19}\b/g, "[card]")) };
+}
+
 /** Whether the account's entitlement (GET /api/billing) is the subscription the persona bought. Pure. */
 export function isSubscribed(entitlement, plan = PLAN) {
   return (

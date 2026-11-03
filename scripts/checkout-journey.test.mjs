@@ -8,6 +8,7 @@ import {
   isHostedCheckout,
   isSignedPdf,
   isSubscribed,
+  describeStuckPage,
   ISSUE_TITLE,
   issueFor,
   paidReceipt,
@@ -135,4 +136,26 @@ test("the report is written only inside the runner's temporary folder (no path t
   assert.throws(() => reportPath("../etc/passwd", "/runner/tmp"), /outside/);
   assert.throws(() => reportPath("/etc/passwd", "/runner/tmp"), /outside/);
   assert.throws(() => reportPath("/runner/tmpx/journey.md", "/runner/tmp"), /outside/);
+});
+
+test("the stuck page is described by its address without secrets, its title and the card digits masked (krizaka-internal#2273)", () => {
+  const d = describeStuckPage({
+    url: "https://checkout.stripe.com/c/pay/cs_test_a1B2c3?token=abc123&x=1#fidkdWxOYHwnPyd1blpxYHZxWjA0",
+    title: "Pay Yomizaka 4242 4242 4242 4242",
+  });
+  assert.equal(d.url, "https://checkout.stripe.com/c/pay/cs_test_[id]");
+  assert.equal(d.title, "Pay Yomizaka [card]");
+  assert.doesNotMatch(JSON.stringify(d), /abc123|fidkdWx|a1B2c3|4242/);
+  assert.equal(describeStuckPage({ url: "not a url", title: undefined }).url, "[unreadable address]");
+  assert.equal(
+    describeStuckPage({ url: "https://www.yomizaka.com/fr/app?paid=pro", title: "" }).url,
+    "https://www.yomizaka.com/fr/app",
+  );
+});
+
+test("the workflow keeps the diagnosis of a red run as a short-lived artifact", () => {
+  assert.match(workflow, /uses: actions\/upload-artifact@[0-9a-f]{40}/);
+  assert.match(workflow, /path: journey-diagnosis/);
+  assert.match(workflow, /retention-days: [1-7]\b/);
+  assert.match(workflow, /if-no-files-found: ignore/);
 });

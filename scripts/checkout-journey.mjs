@@ -6,6 +6,7 @@
 // it ends by cancelling what it bought, so the next run starts clean. A red run on main files an issue in krizaka-internal (checkout-journey-report.mjs).
 //
 //   SMOKE_EMAIL=... SMOKE_PASSWORD=... PAYMENTS_STRIPE_TEST_SECRET_KEY=sk_test_... node scripts/checkout-journey.mjs --base https://dev.yomizaka.com
+import { mkdirSync, writeFileSync } from "node:fs";
 import { createRequire } from "node:module";
 import { fileURLToPath } from "node:url";
 
@@ -13,6 +14,7 @@ import { auditContext, loadSettled } from "@krizaka/page-audit";
 
 import {
   assertTestKey,
+  describeStuckPage,
   isHostedCheckout,
   isSignedPdf,
   isSubscribed,
@@ -79,7 +81,28 @@ async function pay(page, hostedUrl) {
   await page.locator("[data-testid=hosted-payment-submit-button], button.SubmitButton").first().click();
 }
 
-export async function checkoutJourney({ base, email, password, stripeKey, log = () => {}, openBrowser }) {
+/** Where the page is stuck: its address (no secret), title and a full-page screenshot, kept as a workflow artifact. Never throws. */
+async function recordStuckPage(page, dir, log) {
+  try {
+    mkdirSync(dir, { recursive: true });
+    const seen = describeStuckPage({ url: page.url(), title: await page.title().catch(() => "") });
+    writeFileSync(`${dir}/stuck-page.json`, `${JSON.stringify(seen, null, 2)}\n`);
+    await page.screenshot({ path: `${dir}/stuck-page.png`, fullPage: true });
+    log(`stuck on ${seen.url} (${seen.title})`);
+  } catch (error) {
+    log(`could not record the stuck page: ${error.message}`);
+  }
+}
+
+export async function checkoutJourney({
+  base,
+  email,
+  password,
+  stripeKey,
+  log = () => {},
+  openBrowser,
+  diagnosisDir = "journey-diagnosis",
+}) {
   if (!email || !password) throw new Error("SMOKE_EMAIL and SMOKE_PASSWORD are required (the persona)");
   const stripe = processor(stripeKey);
   const call = async (path, init = {}, token) => {
@@ -127,8 +150,13 @@ export async function checkoutJourney({ base, email, password, stripeKey, log = 
     try {
       const context = await auditContext(browser);
       const page = await context.newPage();
-      await pay(page, started.body.url);
-      await page.waitForURL((url) => returnedFromCheckout(url.href, started.body.url), { timeout: 90_000 });
+      try {
+        await pay(page, started.body.url);
+        await page.waitForURL((url) => returnedFromCheckout(url.href, started.body.url), { timeout: 90_000 });
+      } catch (error) {
+        await recordStuckPage(page, diagnosisDir, log);
+        throw error;
+      }
       log("paid, back on the site");
     } finally {
       await close();
