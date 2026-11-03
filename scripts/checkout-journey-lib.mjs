@@ -90,7 +90,7 @@ export function describeStuckPage({ url, title }) {
  * `fields` is [{ id, value }] and `errors` is [text], as the page gives them. Pure.
  */
 export function describeStuckForm({ fields, errors }) {
-  const card = /^(card|cvc|expiry)|cardnumber/i;
+  const card = /(?:^(?:card|cvc|expiry))|(?:cardnumber)/i;
   const mask = (text) => plain(String(text ?? "").replace(/\b(?:\d[ -]?){13,19}\b/g, "[card]")).slice(0, 80);
   return {
     fields: (Array.isArray(fields) ? fields : [])
