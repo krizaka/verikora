@@ -183,6 +183,7 @@ test("the hosted page's billing country is chosen first, before the fields it re
       "#billingLocality",
       "#billingAdministrativeArea",
       "#billingPostalCode",
+      "#enableStripePass",
     ],
   );
   assert.equal(steps.find((s) => s.selector === "#billingAdministrativeArea").action, "select");
@@ -199,6 +200,25 @@ test("the address line closes Google's suggestion list before the next field, so
 test("the address line is followed by a click on the blank side of the page, the only way that closes the suggestions", () => {
   const line = billingSteps().find((s) => s.selector === "#billingAddressLine1");
   assert.equal(line.blur, true);
+});
+
+test("the persona pays without Link: Stripe's own « save with Link » box is unticked, after the address (krizaka-internal#2316)", () => {
+  const steps = billingSteps();
+  assert.deepEqual(steps.at(-1), { selector: "#enableStripePass", action: "uncheck" });
+});
+
+test("a field the page marks invalid is recorded as such, even when no error text shows", () => {
+  const d = describeStuckForm({
+    fields: [
+      { id: "phoneNumber", value: "", invalid: true },
+      { id: "billingLocality", value: "Montréal", invalid: false },
+    ],
+    errors: [],
+  });
+  assert.deepEqual(d.fields, [
+    { id: "phoneNumber", value: "", invalid: true },
+    { id: "billingLocality", value: "Montréal" },
+  ]);
 });
 
 test("a stuck form is recorded with its billing values and its error texts, never a card (krizaka-internal#2316)", () => {

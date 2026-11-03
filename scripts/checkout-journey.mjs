@@ -71,6 +71,27 @@ function processor(key) {
   };
 }
 
+/** One billing step on the hosted page, when its field is there. */
+async function fillStep(page, step) {
+  const field = page.locator(step.selector);
+  // Stripe draws its own box over the checkbox: the input itself is hidden, so it is unticked when it exists at all.
+  if (step.action === "uncheck") {
+    if ((await field.count()) > 0) await field.setChecked(false, { force: true });
+    return;
+  }
+  if (!(await field.isVisible().catch(() => false))) return;
+  if (step.action === "select") await field.selectOption(step.value);
+  else await field.fill(step.value);
+  if (step.press) await field.press(step.press);
+  // Google's address suggestions stay open over the next fields (Escape does not close them): a click on the blank side of the page does.
+  if (step.blur) await page.mouse.click(20, 700);
+}
+
+/** As the persona does, from Canada: the country first (it reshapes the address fields), then each field that is there. */
+async function fillBilling(page) {
+  for (const step of billingSteps()) await fillStep(page, step);
+}
+
 /** Fills the hosted page with the TEST card and pays. The page's fields change now and then: each is filled when it is there. */
 async function pay(page, hostedUrl, log = () => {}) {
   await loadSettled(page, hostedUrl, { waitUntil: "domcontentloaded" });
@@ -88,16 +109,7 @@ async function pay(page, hostedUrl, log = () => {}) {
   await page.locator("#cardNumber").fill(TEST_CARD.number);
   await page.locator("#cardExpiry").fill(TEST_CARD.expiry);
   await page.locator("#cardCvc").fill(TEST_CARD.cvc);
-  // As the persona does, from Canada: the country first (it reshapes the address fields), then each field that is there.
-  for (const step of billingSteps()) {
-    const field = page.locator(step.selector);
-    if (!(await field.isVisible().catch(() => false))) continue;
-    if (step.action === "select") await field.selectOption(step.value);
-    else await field.fill(step.value);
-    if (step.press) await field.press(step.press);
-    // Google's address suggestions stay open over the next fields (Escape does not close them): a click on the blank side of the page does.
-    if (step.blur) await page.mouse.click(20, 700);
-  }
+  await fillBilling(page);
   // The address recomputes the tax; a click while the page is still updating is swallowed (no error, no processing: the button just
   // stays, krizaka-internal#2316). Wait for the page to settle, then press until it leaves, a few times at most.
   await page.waitForLoadState("networkidle", { timeout: 15_000 }).catch(() => {});
@@ -126,7 +138,11 @@ async function recordStuckPage(page, dir, log) {
       .evaluate(() => ({
         fields: [...document.querySelectorAll("input, select")]
           .filter((e) => e.offsetParent !== null)
-          .map((e) => ({ id: e.id || e.name, value: e.type === "checkbox" ? String(e.checked) : e.value })),
+          .map((e) => ({
+            id: e.id || e.name,
+            value: e.type === "checkbox" ? String(e.checked) : e.value,
+            invalid: e.getAttribute("aria-invalid") === "true",
+          })),
         errors: [...document.querySelectorAll("[role=alert], [class*=Error], [id*=rror]")].map((e) => e.innerText),
       }))
       .catch(() => ({ fields: [], errors: [] }));
