@@ -13,6 +13,8 @@ import {
   issueFor,
   paidReceipt,
   returnedFromCheckout,
+  billingSteps,
+  TEST_BILLING,
 } from "./checkout-journey-lib.mjs";
 
 const workflow = readFileSync(new URL("../.github/workflows/checkout-journey.yml", import.meta.url), "utf8");
@@ -158,4 +160,30 @@ test("the workflow keeps the diagnosis of a red run as a short-lived artifact", 
   assert.match(workflow, /path: journey-diagnosis/);
   assert.match(workflow, /retention-days: [1-7]\b/);
   assert.match(workflow, /if-no-files-found: ignore/);
+});
+
+test("the persona pays from Canada: a complete, fictitious Montreal address, in Canada's postal format (krizaka-internal#2316)", () => {
+  assert.equal(TEST_BILLING.country, "CA");
+  assert.equal(TEST_BILLING.region, "QC");
+  assert.equal(TEST_BILLING.city, "Montréal");
+  assert.match(TEST_BILLING.postal, /^[A-Z]\d[A-Z] \d[A-Z]\d$/);
+  for (const field of ["line1", "city", "region", "postal"]) assert.ok(TEST_BILLING[field], `${field} is filled`);
+});
+
+test("the hosted page's billing country is chosen first, before the fields it reshapes", () => {
+  const steps = billingSteps();
+  assert.deepEqual(steps[0], { selector: "#billingCountry", action: "select", value: "CA" });
+  assert.deepEqual(
+    steps.map((s) => s.selector),
+    [
+      "#billingCountry",
+      "#billingName",
+      "#billingAddressLine1",
+      "#billingLocality",
+      "#billingAdministrativeArea",
+      "#billingPostalCode",
+    ],
+  );
+  assert.equal(steps.find((s) => s.selector === "#billingAdministrativeArea").action, "select");
+  assert.equal(steps.find((s) => s.selector === "#billingPostalCode").value, TEST_BILLING.postal);
 });

@@ -14,6 +14,7 @@ import { auditContext, loadSettled } from "@krizaka/page-audit";
 
 import {
   assertTestKey,
+  billingSteps,
   describeStuckPage,
   isHostedCheckout,
   isSignedPdf,
@@ -74,10 +75,13 @@ async function pay(page, hostedUrl) {
   await page.locator("#cardNumber").fill(TEST_CARD.number);
   await page.locator("#cardExpiry").fill(TEST_CARD.expiry);
   await page.locator("#cardCvc").fill(TEST_CARD.cvc);
-  const name = page.locator("#billingName");
-  if (await name.isVisible().catch(() => false)) await name.fill(TEST_CARD.name);
-  const postal = page.locator("#billingPostalCode");
-  if (await postal.isVisible().catch(() => false)) await postal.fill(TEST_CARD.postal);
+  // As the persona does, from Canada: the country first (it reshapes the address fields), then each field that is there.
+  for (const step of billingSteps()) {
+    const field = page.locator(step.selector);
+    if (!(await field.isVisible().catch(() => false))) continue;
+    if (step.action === "select") await field.selectOption(step.value);
+    else await field.fill(step.value);
+  }
   await page.locator("[data-testid=hosted-payment-submit-button], button.SubmitButton").first().click();
 }
 

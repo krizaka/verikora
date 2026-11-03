@@ -7,8 +7,32 @@ export const TEST_CARD = {
   expiry: "12 / 34",
   cvc: "123",
   name: "Persona Yomizaka",
+};
+
+/**
+ * The persona's billing address (Eric, Montréal; fictitious, docs/demo-data.md). The hosted page defaults the country to where the
+ * runner geolocates (the United States on GitHub), and then asks a full address and a ZIP that turns "H2X 1Y4" into "214"
+ * (krizaka-internal#2316): the journey says it is in Canada, as the persona is.
+ */
+export const TEST_BILLING = {
+  country: "CA",
+  line1: "123 rue Exemple",
+  city: "Montréal",
+  region: "QC",
   postal: "H2X 1Y4",
 };
+
+/** The hosted page's billing fields in the order they are filled: the country first (it reshapes the others). Pure. */
+export function billingSteps(billing = TEST_BILLING, name = TEST_CARD.name) {
+  return [
+    { selector: "#billingCountry", action: "select", value: billing.country },
+    { selector: "#billingName", action: "fill", value: name },
+    { selector: "#billingAddressLine1", action: "fill", value: billing.line1 },
+    { selector: "#billingLocality", action: "fill", value: billing.city },
+    { selector: "#billingAdministrativeArea", action: "select", value: billing.region },
+    { selector: "#billingPostalCode", action: "fill", value: billing.postal },
+  ];
+}
 
 /** The plan the persona buys: the cheapest subscription of the catalogue (apps/web/lib/pricing.ts, SOLD). */
 export const PLAN = { kind: "agency", priceKey: "yomizaka.agency" };
