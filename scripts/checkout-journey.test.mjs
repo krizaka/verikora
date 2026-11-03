@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { test } from "vitest";
 
-import { reportFor } from "./checkout-journey-report.mjs";
+import { reportFor, reportPath } from "./checkout-journey-report.mjs";
 import {
   assertTestKey,
   isHostedCheckout,
@@ -127,4 +127,12 @@ test("paying returns to the product's public address, not to the dev host the AP
   assert.equal(returnedFromCheckout("https://checkout.stripe.com/c/pay/cs_test_abc", hosted), false);
   assert.equal(returnedFromCheckout("about:blank", hosted), false);
   assert.equal(returnedFromCheckout("http://www.yomizaka.com/fr/app", hosted), false);
+});
+
+test("the report is written only inside the runner's temporary folder (no path traversal)", () => {
+  assert.equal(reportPath("journey.md", "/runner/tmp"), "/runner/tmp/journey.md");
+  assert.equal(reportPath("/runner/tmp/journey.md", "/runner/tmp"), "/runner/tmp/journey.md");
+  assert.throws(() => reportPath("../etc/passwd", "/runner/tmp"), /outside/);
+  assert.throws(() => reportPath("/etc/passwd", "/runner/tmp"), /outside/);
+  assert.throws(() => reportPath("/runner/tmpx/journey.md", "/runner/tmp"), /outside/);
 });
