@@ -8,6 +8,7 @@ import {
   isHostedCheckout,
   isSignedPdf,
   isSubscribed,
+  describeStuckForm,
   describeStuckPage,
   ISSUE_TITLE,
   issueFor,
@@ -193,4 +194,39 @@ test("the address line closes Google's suggestion list before the next field, so
   const line = steps.find((s) => s.selector === "#billingAddressLine1");
   assert.equal(line.press, "Escape");
   for (const s of steps.filter((s) => s !== line)) assert.equal(s.press, undefined, s.selector);
+});
+
+test("the address line is followed by a click on the blank side of the page, the only way that closes the suggestions", () => {
+  const line = billingSteps().find((s) => s.selector === "#billingAddressLine1");
+  assert.equal(line.blur, true);
+});
+
+test("a stuck form is recorded with its billing values and its error texts, never a card (krizaka-internal#2316)", () => {
+  const d = describeStuckForm({
+    fields: [
+      { id: "cardNumber", value: "4242 4242 4242 4242" },
+      { id: "cardCvc", value: "123" },
+      { id: "billingLocality", value: "Montréal" },
+      { id: "billingPostalCode", value: "H2X 1Y4" },
+      { id: "billingName", value: "Persona 4242 4242 4242 4242" },
+      { id: "", value: "no id" },
+    ],
+    errors: ["Your card was declined.", "Your card was declined.", "  ", "Invalid\nZIP"],
+  });
+  assert.deepEqual(
+    d.fields.map((f) => f.id),
+    ["billingLocality", "billingPostalCode", "billingName"],
+  );
+  assert.equal(d.fields[1].value, "H2X 1Y4");
+  assert.equal(d.fields[2].value, "Persona [card]");
+  assert.deepEqual(d.errors, ["Your card was declined.", "Invalid ZIP"]);
+  assert.doesNotMatch(JSON.stringify(d), /4242|123"/);
+  assert.deepEqual(describeStuckForm({ fields: null, errors: undefined }), { fields: [], errors: [] });
+});
+
+test("the journey settles the hosted page and presses submit again when a click is swallowed (krizaka-internal#2316)", () => {
+  const source = readFileSync(new URL("./checkout-journey.mjs", import.meta.url), "utf8");
+  assert.match(source, /waitForLoadState\("networkidle"/);
+  assert.match(source, /SUBMIT_ATTEMPTS = [2-9]/);
+  assert.match(source, /payment-method-label-card/);
 });

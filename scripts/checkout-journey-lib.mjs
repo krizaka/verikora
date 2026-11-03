@@ -28,7 +28,7 @@ export function billingSteps(billing = TEST_BILLING, name = TEST_CARD.name) {
     { selector: "#billingCountry", action: "select", value: billing.country },
     { selector: "#billingName", action: "fill", value: name },
     // Typing the line opens a Google suggestion list over the next fields and the submit button: Escape closes it.
-    { selector: "#billingAddressLine1", action: "fill", value: billing.line1, press: "Escape" },
+    { selector: "#billingAddressLine1", action: "fill", value: billing.line1, press: "Escape", blur: true },
     { selector: "#billingLocality", action: "fill", value: billing.city },
     { selector: "#billingAdministrativeArea", action: "select", value: billing.region },
     { selector: "#billingPostalCode", action: "fill", value: billing.postal },
@@ -82,6 +82,23 @@ export function describeStuckPage({ url, title }) {
     // keep the placeholder: a broken address is itself the finding
   }
   return { url: address, title: plain(String(title ?? "").replace(/\b(?:\d[ -]?){13,19}\b/g, "[card]")) };
+}
+
+/**
+ * What the journey records about the hosted form when the submit led nowhere (krizaka-internal#2316): each visible field's id and its
+ * value (the card fields are never read; anything that looks like a card number is masked) and every visible error text, deduplicated.
+ * `fields` is [{ id, value }] and `errors` is [text], as the page gives them. Pure.
+ */
+export function describeStuckForm({ fields, errors }) {
+  const card = /(?:^(?:card|cvc|expiry))|(?:cardnumber)/i;
+  const mask = (text) => plain(String(text ?? "").replace(/\b(?:\d[ -]?){13,19}\b/g, "[card]")).slice(0, 80);
+  return {
+    fields: (Array.isArray(fields) ? fields : [])
+      .filter((f) => f && typeof f.id === "string" && f.id !== "" && !card.test(f.id))
+      .slice(0, 30)
+      .map((f) => ({ id: plain(f.id).slice(0, 60), value: mask(f.value) })),
+    errors: [...new Set((Array.isArray(errors) ? errors : []).map((e) => mask(e).trim()).filter(Boolean))].slice(0, 10),
+  };
 }
 
 /** Whether the account's entitlement (GET /api/billing) is the subscription the persona bought. Pure. */

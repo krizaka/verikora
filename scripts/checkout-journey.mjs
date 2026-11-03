@@ -15,6 +15,7 @@ import { auditContext, loadSettled } from "@krizaka/page-audit";
 import {
   assertTestKey,
   billingSteps,
+  describeStuckForm,
   describeStuckPage,
   isHostedCheckout,
   isSignedPdf,
@@ -26,6 +27,9 @@ import {
   TEST_CARD,
 } from "./checkout-journey-lib.mjs";
 import { smokeLeaseCheck } from "./smoke-lease-check.mjs";
+
+const SUBMIT_ATTEMPTS = 3;
+const SUBMIT_WAIT_MS = 30_000;
 
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -68,10 +72,19 @@ function processor(key) {
 }
 
 /** Fills the hosted page with the TEST card and pays. The page's fields change now and then: each is filled when it is there. */
-async function pay(page, hostedUrl) {
+async function pay(page, hostedUrl, log = () => {}) {
   await loadSettled(page, hostedUrl, { waitUntil: "domcontentloaded" });
+  await page.locator("#cardNumber, #payment-method-label-card").first().waitFor({ state: "attached", timeout: 60_000 });
+  // Card is the default method on the hosted page (from the US); from elsewhere it is a list with no method open: pick the card. The
+  // label sits under a cover button that takes the pointer, so the click is forced onto the label's place.
+  if (
+    !(await page
+      .locator("#cardNumber")
+      .isVisible()
+      .catch(() => false))
+  )
+    await page.locator("#payment-method-label-card").click({ force: true });
   await page.locator("#cardNumber").waitFor({ timeout: 60_000 });
-  // Card is the default method on the hosted page; when it shows a method list, pick the card.
   await page.locator("#cardNumber").fill(TEST_CARD.number);
   await page.locator("#cardExpiry").fill(TEST_CARD.expiry);
   await page.locator("#cardCvc").fill(TEST_CARD.cvc);
@@ -82,8 +95,24 @@ async function pay(page, hostedUrl) {
     if (step.action === "select") await field.selectOption(step.value);
     else await field.fill(step.value);
     if (step.press) await field.press(step.press);
+    // Google's address suggestions stay open over the next fields (Escape does not close them): a click on the blank side of the page does.
+    if (step.blur) await page.mouse.click(20, 700);
   }
-  await page.locator("[data-testid=hosted-payment-submit-button], button.SubmitButton").first().click();
+  // The address recomputes the tax; a click while the page is still updating is swallowed (no error, no processing: the button just
+  // stays, krizaka-internal#2316). Wait for the page to settle, then press until it leaves, a few times at most.
+  await page.waitForLoadState("networkidle", { timeout: 15_000 }).catch(() => {});
+  const submit = page.locator("[data-testid=hosted-payment-submit-button], button.SubmitButton").first();
+  for (let attempt = 1; attempt <= SUBMIT_ATTEMPTS; attempt += 1) {
+    await submit.click();
+    const left = await page
+      .waitForURL((url) => returnedFromCheckout(url.href, hostedUrl), { timeout: SUBMIT_WAIT_MS })
+      .then(
+        () => true,
+        () => false,
+      );
+    if (left) return;
+    log(`submit pressed ${attempt} time(s), the page did not leave the hosted checkout`);
+  }
 }
 
 /** Where the page is stuck: its address (no secret), title and a full-page screenshot, kept as a workflow artifact. Never throws. */
@@ -93,6 +122,15 @@ async function recordStuckPage(page, dir, log) {
     const seen = describeStuckPage({ url: page.url(), title: await page.title().catch(() => "") });
     writeFileSync(`${dir}/stuck-page.json`, `${JSON.stringify(seen, null, 2)}\n`);
     await page.screenshot({ path: `${dir}/stuck-page.png`, fullPage: true });
+    const form = await page
+      .evaluate(() => ({
+        fields: [...document.querySelectorAll("input, select")]
+          .filter((e) => e.offsetParent !== null)
+          .map((e) => ({ id: e.id || e.name, value: e.type === "checkbox" ? String(e.checked) : e.value })),
+        errors: [...document.querySelectorAll("[role=alert], [class*=Error], [id*=rror]")].map((e) => e.innerText),
+      }))
+      .catch(() => ({ fields: [], errors: [] }));
+    writeFileSync(`${dir}/stuck-form.json`, `${JSON.stringify(describeStuckForm(form), null, 2)}\n`);
     log(`stuck on ${seen.url} (${seen.title})`);
   } catch (error) {
     log(`could not record the stuck page: ${error.message}`);
@@ -156,7 +194,7 @@ export async function checkoutJourney({
       const context = await auditContext(browser);
       const page = await context.newPage();
       try {
-        await pay(page, started.body.url);
+        await pay(page, started.body.url, log);
         await page.waitForURL((url) => returnedFromCheckout(url.href, started.body.url), { timeout: 90_000 });
       } catch (error) {
         await recordStuckPage(page, diagnosisDir, log);
