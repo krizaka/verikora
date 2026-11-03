@@ -3164,6 +3164,11 @@
         "title": "Aucun dossier pour l'instant",
         "text": "Demandez ses documents à un candidat : Verikora vérifie chacun, et vous décidez."
       },
+      "notOffered": {
+        "title": "Les dossiers de candidats sont pour les gestionnaires",
+        "text": "Choisissez ce rôle dans votre profil pour demander et vérifier les documents d'un candidat.",
+        "action": "Changer de rôle"
+      },
       "form": {
         "title": "Demander des documents",
         "lead": "Le candidat reçoit un lien pour envoyer les documents choisis, et seulement ceux-là. Un NAS, une carte d'assurance maladie, un passeport, un permis ou des coordonnées bancaires ne sont jamais demandés.",

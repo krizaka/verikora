@@ -3164,6 +3164,11 @@
         "title": "No applicant file yet",
         "text": "Ask an applicant for their documents: Verikora checks each one, and you decide."
       },
+      "notOffered": {
+        "title": "Applicant files are for property managers",
+        "text": "Choose that role in your profile to ask for and check an applicant's documents.",
+        "action": "Change role"
+      },
       "form": {
         "title": "Ask for documents",
         "lead": "The applicant gets a link to send the documents you choose, and only those. A social insurance number, a health card, a passport, a licence or bank details are never asked for.",

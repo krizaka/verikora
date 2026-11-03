@@ -56,12 +56,17 @@ describe("the signed-in shell, B2 (P14)", () => {
     expect(html).not.toMatch(/<a [^>]*data-rail-item[^>]*href="\/fr\/app\/(settings|check|search)"/);
   });
 
-  it("is the section map of core, in its order, and the same two items for the people offered the applicant files", () => {
+  it("is the section map of core, in its order, with « Dossiers » for the people offered the applicant files (krizaka-internal#2289)", () => {
     const links = railLinks(render({ applicantFiles: true }));
     expect(links.map((l) => l.match(/href="([^"]+)"/)![1])).toEqual(
       sectionsFor("web", { applicantFiles: true }).map((s) => `/fr${s.path}`),
     );
-    expect(links).toHaveLength(2);
+    expect(links.map((l) => l.match(/href="([^"]+)"/)![1])).toEqual([
+      "/fr/app",
+      "/fr/app/dossiers",
+      "/fr/app/verifications",
+    ]);
+    expect(links[1]).toContain("Dossiers");
   });
 
   it("the header names the product and carries the DEV chip", () => {

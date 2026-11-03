@@ -27,9 +27,10 @@ describe("the section map", () => {
     }
   });
 
-  it("draws two items on the web, Home and Checks (krizaka-internal#2001): the dossiers and the documents are reached from the home", () => {
+  it("draws Home and Checks on the web, and « Dossiers » between them for a person offered the applicant files (krizaka-internal#2289); the documents are reached from the home", () => {
     expect(ids(sectionsFor("web"))).toEqual(["library", "checks"]);
-    expect(ids(sectionsFor("web", { applicantFiles: true }))).toEqual(["library", "checks"]);
+    expect(ids(sectionsFor("web", { applicantFiles: false }))).toEqual(["library", "checks"]);
+    expect(ids(sectionsFor("web", { applicantFiles: true }))).toEqual(["library", "files", "checks"]);
   });
 
   it("says why a platform lacks a section, instead of a different map (the parity field)", () => {
@@ -39,6 +40,7 @@ describe("the section map", () => {
       for (const reason of Object.values(section.pending)) expect(reason.length, section.id).toBeGreaterThan(20);
     expect(SECTIONS.find((s) => s.id === "library")?.pending).toEqual({});
     expect(SECTIONS.find((s) => s.id === "checks")?.pending).toEqual({});
+    expect(Object.keys(SECTIONS.find((s) => s.id === "files")?.pending ?? {})).toEqual(["phone", "mac"]);
     expect(SECTIONS.find((s) => s.id === "documents")?.pending).toEqual({
       web: expect.any(String),
       phone: expect.any(String),

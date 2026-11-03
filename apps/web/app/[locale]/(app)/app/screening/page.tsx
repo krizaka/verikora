@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
+import { ApplicantFilesNotOffered } from "@/components/console/ApplicantFilesNotOffered";
 import { LandlordScreening, type LandlordWords } from "@/components/screening/LandlordScreening";
 import { pageSession } from "@/lib/access";
 import { appEnvironment } from "@/lib/env";
@@ -15,7 +16,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   return { title: getDictionary(asLocale((await params).locale)).screening.landlord.title };
 }
 
-/** The landlord's screening page — only where the flow is enabled and offered to a landlord (ADR-0003); otherwise a 404. */
+/** The landlord's screening page — where the flow is enabled and offered to a landlord (ADR-0003); otherwise the page that says who it is for (krizaka-internal#2289). */
 export default async function ScreeningPage({ params }: Readonly<{ params: Promise<{ locale: string }> }>) {
   const locale = asLocale((await params).locale);
   const session = await pageSession();
@@ -23,7 +24,7 @@ export default async function ScreeningPage({ params }: Readonly<{ params: Promi
   const flows = await availableFlows(appEnvironment(), { fallback: false }).catch(() => []);
   const granted = await grantedConsents(session.account.id);
   const decision = decideFlow(flows, session.account.perspective, "tenant-screening", granted);
-  if (!decision.ok && decision.code === "FLOW_NOT_OFFERED") notFound();
+  if (!decision.ok && decision.code === "FLOW_NOT_OFFERED") return <ApplicantFilesNotOffered locale={locale} />;
   const labels = await labelsIn(locale);
   const t = getDictionary(locale).screening.landlord;
   const words: LandlordWords = {

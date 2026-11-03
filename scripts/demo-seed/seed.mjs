@@ -18,8 +18,13 @@ async function putBytes(key, bytes) {
   await writeFile(path, bytes);
 }
 
+/** The side Éric works on: a property manager (`accounts.perspective`). The cast defines it, so a re-run brings it back (krizaka-internal#2289). */
+const SIDE_LANDLORD = "landlord";
+
 /** The persona's name comes from the cast; this file adds what the cast does not hold: the collections and documents. */
-export const PERSONAS = { [CAST_MEMBER.id]: { ...PERSONA_ERIC, key: CAST_MEMBER.id, name: CAST_MEMBER.displayName } };
+export const PERSONAS = {
+  [CAST_MEMBER.id]: { ...PERSONA_ERIC, key: CAST_MEMBER.id, name: CAST_MEMBER.displayName, perspective: SIDE_LANDLORD },
+};
 export const DEFAULT_EMAILS = { [CAST_MEMBER.id]: `${CAST_MEMBER.id}@demo.yomizaka.test` };
 /**
  * What the tenant-shield rules (Section G, payment clauses, yomizaka#104) give on the demo leases' figures, one list per document: the findings
@@ -36,15 +41,25 @@ export const demoOwnerTokens = (persona) => ({
   live: `demo-owner-live-${persona}-0123456789abcdef`,
   revoked: `demo-owner-revoked-${persona}-0123456789abcdef`,
 });
+/** The document of the seeded applicant file: a pay stub whose total is wrong (one of the checked documents of the persona). */
+const APPLICANT_FILE_DOCUMENT = { id: "paie-villeray-2-totaux-faux", type: "pay-stub" };
 const sha256 = (value) => createHash("sha256").update(value).digest("hex");
 
 /** A fictitious applicant file with its two owner links, so the public report page can be audited (idempotent: the links are renewed). The tokens are fixed, so the seed that ran last owns them: two seeds in one database (tests, the cast) never leave the file with the wrong landlord. */
-async function seedOwnerFile(q, owner, persona) {
+async function seedOwnerFile(q, owner, persona, seed) {
   const [file] = await q(
     `INSERT INTO screenings (landlord_id, tenant_name, tenant_email, scope, provider, token_hash, expires_at, flow, requested_types)
-     VALUES ($1, 'Camille Fictif', 'camille@demo.yomizaka.test', '{}', 'applicant-file', $2, now() + interval '30 days', 'file', '{}')
-     ON CONFLICT (token_hash) DO UPDATE SET landlord_id = EXCLUDED.landlord_id, expires_at = EXCLUDED.expires_at RETURNING id`,
-    [owner, sha256(`demo-file-${persona}`)],
+     VALUES ($1, 'Camille Fictif', 'camille@demo.yomizaka.test', '{}', 'applicant-file', $2, now() + interval '30 days', 'file', $3)
+     ON CONFLICT (token_hash) DO UPDATE SET landlord_id = EXCLUDED.landlord_id, expires_at = EXCLUDED.expires_at, requested_types = EXCLUDED.requested_types RETURNING id`,
+    [owner, sha256(`demo-file-${persona}`), [APPLICANT_FILE_DOCUMENT.type]],
+  );
+  // The applicant's pay stub, whose total does not add up, is the file's one document and carries its seeded check: « Dossiers »
+  // opens a file, the file leads to a report (krizaka-internal#2289, the journey `applicant-file-open`). It stays in the collection
+  // « Candidats » too: the same document, seen from the file.
+  const stub = await generateDocument(APPLICANT_FILE_DOCUMENT.id, seed);
+  await q(
+    `UPDATE documents SET screening_id = $3, document_type = $4, retention_policy = 'after-decision' WHERE owner_id = $1 AND sha256 = $2`,
+    [owner, stub.sha256, file.id, APPLICANT_FILE_DOCUMENT.type],
   );
   const tokens = demoOwnerTokens(persona);
   for (const [name, revoked] of [
@@ -219,14 +234,16 @@ async function seedInTransaction(
   def,
   { persona, address, locale, messagesByLocale, reset, passwordHash, seed, now },
 ) {
-  // An existing account keeps what the person chose (language, password, perspective, name); the seed only fills what is missing.
+  // An existing account keeps what the person chose (language, name); the seed only fills what is missing. The persona's side is the cast's:
+  // Éric is a property manager, and on the shared dev database he had been left on « tenant » (the applicant files answered 404 on www),
+  // so a re-run puts the side back (krizaka-internal#2289).
   // A reset starts the demo over: it takes the language asked for, or the English films were made on French fixtures (yomizaka#1968).
   const [account] = await q(
-    `INSERT INTO accounts (email, locale, email_verified_at, password_hash, perspective, name) VALUES ($1, $2, now(), $3, 'landlord', $4)
+    `INSERT INTO accounts (email, locale, email_verified_at, password_hash, perspective, name) VALUES ($1, $2, now(), $3, $6, $4)
      ON CONFLICT (email) DO UPDATE SET locale = CASE WHEN $5::boolean THEN EXCLUDED.locale ELSE accounts.locale END, password_hash = coalesce(EXCLUDED.password_hash, accounts.password_hash),
-       perspective = coalesce(accounts.perspective, EXCLUDED.perspective), name = coalesce(accounts.name, EXCLUDED.name)
+       perspective = EXCLUDED.perspective, name = coalesce(accounts.name, EXCLUDED.name)
      RETURNING id, locale, name`,
-    [address, locale, passwordHash, def.name, reset],
+    [address, locale, passwordHash, def.name, reset, def.perspective],
   );
   const owner = account.id;
   const words = (key) => collectionWords(messagesByLocale[account.locale] ?? messagesByLocale.fr, persona, key);
@@ -296,7 +313,7 @@ async function seedInTransaction(
     const [count] = await q("SELECT count(*)::int AS n FROM documents WHERE collection_id = $1", [row.id]);
     counts[name] = count.n;
   }
-  await seedOwnerFile(q, owner, persona);
+  await seedOwnerFile(q, owner, persona, seed);
   return { owner, email: address, name: account.name, collections: counts };
 }
 

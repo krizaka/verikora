@@ -43,14 +43,14 @@ export const withoutLocale = (path: string) => path.replace(/^\/(en|fr)(?=\/|$)/
 
 const under = (path: string, base: string) => path === base || path.startsWith(`${base}/`);
 
-/** Which rail entry a path belongs to. The rail has two items (krizaka-internal#2001): the documents, the search page, the collections and the applicant files belong to the home, the task page to the checks; an unknown path to none. */
+/** Which rail entry a path belongs to. The rail holds Home and Checks, and « Dossiers » between them for a person offered the applicant files (krizaka-internal#2289): the applicant files and their screening light it; the documents, the search page and the collections belong to the home, the task page to the checks; an unknown path to none. */
 export function activeNav(path: string): NavId | null {
   const p = withoutLocale(path).replace(/\/$/, "") || "/";
   if (under(p, CONSOLE_ROUTES.checks) || under(p, CONSOLE_ROUTES.check)) return "checks";
   // Search is the top bar's ⌘K; its full page belongs to the documents it searches.
   if (under(p, CONSOLE_ROUTES.search)) return "library";
   if (under(p, CONSOLE_ROUTES.account)) return "account";
-  if (under(p, CONSOLE_ROUTES.files) || under(p, "/app/screening")) return "library";
+  if (under(p, CONSOLE_ROUTES.files) || under(p, "/app/screening")) return "files";
   if (under(p, CONSOLE_ROUTES.documents)) return "library";
   if (p === CONSOLE_ROUTES.library || under(p, "/app/library")) return "library";
   return null;

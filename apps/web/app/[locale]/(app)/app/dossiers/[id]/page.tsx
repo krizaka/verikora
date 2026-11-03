@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
 import { systemClock } from "@/app/system-clock";
+import { ApplicantFilesNotOffered } from "@/components/console/ApplicantFilesNotOffered";
 import { FileView } from "@/components/console/FileView";
 import { pageSession } from "@/lib/access";
 import { applicantFileOf, documentTypes } from "@/lib/applicant-file";
@@ -20,13 +21,14 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   return { title: getDictionary(asLocale((await params).locale)).console.dossiers.title };
 }
 
-/** One applicant file — another account's file is a 404, never a 403. */
+/** One applicant file — another account's file is a 404, never a 403; a person not offered the flow reads who it is for. */
 export default async function FilePage({ params }: Readonly<{ params: Promise<{ locale: string; id: string }> }>) {
   const { locale: raw, id } = await params;
   const locale = asLocale(raw);
   const session = await pageSession();
   if (!session) notFound();
-  if (!applicantFilesOffered(await availableFlows(appEnvironment()), session.account.perspective ?? null)) notFound();
+  if (!applicantFilesOffered(await availableFlows(appEnvironment()), session.account.perspective ?? null))
+    return <ApplicantFilesNotOffered locale={locale} />;
   const file = await applicantFileOf(session.account.id, id, new Date()).catch((error: unknown) => {
     if (error instanceof HttpError && error.status === 404) return null;
     throw error;

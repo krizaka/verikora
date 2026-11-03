@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
 import { systemClock } from "@/app/system-clock";
+import { ApplicantFilesNotOffered } from "@/components/console/ApplicantFilesNotOffered";
 import { FilesView } from "@/components/console/FilesView";
 import { pageSession } from "@/lib/access";
 import { countApplicantFiles, documentTypes, listApplicantFiles } from "@/lib/applicant-file";
@@ -25,7 +26,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   return { title: getDictionary(asLocale((await params).locale)).console.dossiers.title };
 }
 
-/** « Dossiers »: the applicant files of the account (filtered by the link's state with `?state=`) — only for the people offered the flow (the section map); otherwise a 404. */
+/** « Dossiers »: the applicant files of the account (filtered by the link's state with `?state=`) — for the people offered the flow (the section map); the others read who it is for (krizaka-internal#2289). */
 export default async function FilesPage({
   params,
   searchParams,
@@ -36,7 +37,8 @@ export default async function FilesPage({
   const locale = asLocale((await params).locale);
   const session = await pageSession();
   if (!session) notFound();
-  if (!applicantFilesOffered(await availableFlows(appEnvironment()), session.account.perspective ?? null)) notFound();
+  if (!applicantFilesOffered(await availableFlows(appEnvironment()), session.account.perspective ?? null))
+    return <ApplicantFilesNotOffered locale={locale} />;
   // The organised workspace (yomizaka#324): the decision set and the views are data; the address holds the filters (`?view=&tags=&status=`).
   const workspace = workspaceFor({ clock: systemClock });
   const owner = session.account.id;
