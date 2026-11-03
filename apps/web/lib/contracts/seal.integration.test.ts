@@ -34,7 +34,9 @@ const leaks = (value: unknown) => new RegExp(LEAK_MARKERS.join("|")).test(JSON.s
 
 describe("the leak guard of the seal tests", () => {
   it("no marker can occur in a hex digest, so a random SHA-256 never trips it", () => {
-    for (const marker of LEAK_MARKERS) expect(marker).toMatch(/[^0-9a-f]/);
+    for (const marker of LEAK_MARKERS) {
+      expect(marker).toMatch(/[^0-9a-f]/);
+    }
   });
 
   it("still catches a name, an account id, an attestation id or a content that leaks", () => {
