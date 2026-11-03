@@ -91,6 +91,11 @@ async function pay(page, hostedUrl, log = () => {}) {
   // As the persona does, from Canada: the country first (it reshapes the address fields), then each field that is there.
   for (const step of billingSteps()) {
     const field = page.locator(step.selector);
+    // Stripe draws its own box over the checkbox: the input itself is hidden, so it is unticked when it exists at all.
+    if (step.action === "uncheck") {
+      if ((await field.count()) > 0) await field.setChecked(false, { force: true });
+      continue;
+    }
     if (!(await field.isVisible().catch(() => false))) continue;
     if (step.action === "select") await field.selectOption(step.value);
     else await field.fill(step.value);
@@ -126,7 +131,11 @@ async function recordStuckPage(page, dir, log) {
       .evaluate(() => ({
         fields: [...document.querySelectorAll("input, select")]
           .filter((e) => e.offsetParent !== null)
-          .map((e) => ({ id: e.id || e.name, value: e.type === "checkbox" ? String(e.checked) : e.value })),
+          .map((e) => ({
+            id: e.id || e.name,
+            value: e.type === "checkbox" ? String(e.checked) : e.value,
+            invalid: e.getAttribute("aria-invalid") === "true",
+          })),
         errors: [...document.querySelectorAll("[role=alert], [class*=Error], [id*=rror]")].map((e) => e.innerText),
       }))
       .catch(() => ({ fields: [], errors: [] }));

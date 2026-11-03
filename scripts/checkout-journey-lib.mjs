@@ -32,6 +32,9 @@ export function billingSteps(billing = TEST_BILLING, name = TEST_CARD.name) {
     { selector: "#billingLocality", action: "fill", value: billing.city },
     { selector: "#billingAdministrativeArea", action: "select", value: billing.region },
     { selector: "#billingPostalCode", action: "fill", value: billing.postal },
+    // From Canada, Stripe ticks « save my information with Link » by itself, which makes a phone number required: the submit then
+    // does nothing (only an icon on the empty field, krizaka-internal#2316). The persona pays without Link.
+    { selector: "#enableStripePass", action: "uncheck" },
   ];
 }
 
@@ -87,7 +90,8 @@ export function describeStuckPage({ url, title }) {
 /**
  * What the journey records about the hosted form when the submit led nowhere (krizaka-internal#2316): each visible field's id and its
  * value (the card fields are never read; anything that looks like a card number is masked) and every visible error text, deduplicated.
- * `fields` is [{ id, value }] and `errors` is [text], as the page gives them. Pure.
+ * A field the page marks invalid (aria-invalid) says so even when no error text shows (Link's phone only drew an icon).
+ * `fields` is [{ id, value, invalid }] and `errors` is [text], as the page gives them. Pure.
  */
 export function describeStuckForm({ fields, errors }) {
   const card = /(?:^(?:card|cvc|expiry))|(?:cardnumber)/i;
@@ -96,7 +100,11 @@ export function describeStuckForm({ fields, errors }) {
     fields: (Array.isArray(fields) ? fields : [])
       .filter((f) => f && typeof f.id === "string" && f.id !== "" && !card.test(f.id))
       .slice(0, 30)
-      .map((f) => ({ id: plain(f.id).slice(0, 60), value: mask(f.value) })),
+      .map((f) => ({
+        id: plain(f.id).slice(0, 60),
+        value: mask(f.value),
+        ...(f.invalid === true ? { invalid: true } : {}),
+      })),
     errors: [...new Set((Array.isArray(errors) ? errors : []).map((e) => mask(e).trim()).filter(Boolean))].slice(0, 10),
   };
 }
