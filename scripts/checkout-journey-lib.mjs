@@ -1,5 +1,5 @@
 // The pure parts of the checkout journey (scripts/checkout-journey.mjs) and of its fail-on-main guard
-// (scripts/checkout-journey-guard.mjs): what a Stripe TEST key is, what « bought » looks like, when a red run opens an issue.
+// (scripts/checkout-journey-report.mjs): what a Stripe TEST key is, what « bought » looks like, when a red run opens an issue.
 
 /** The Stripe TEST card the hosted page accepts (Stripe's documented success card). Never a real card. */
 export const TEST_CARD = {
@@ -72,12 +72,8 @@ export const plain = (text) =>
     .replace(/[^\x20-\x7EÀ-ſ]/g, " ")
     .slice(0, 300);
 
-/** Where a red run is a finding: the default branch only (a dispatch or a schedule runs there), never a pull request. Pure. */
-export function shouldOpenIssue({ eventName, ref }) {
-  return ref === "refs/heads/main" && (eventName === "schedule" || eventName === "workflow_dispatch");
-}
-
-export const ISSUE_TITLE = "Checkout journey red on main: a persona cannot buy a plan on dev";
+export const ISSUE_TITLE =
+  "yomizaka · fix(checkout): a persona cannot buy a plan on dev (the checkout journey is red on main)";
 
 /** The issue a red run files (or, when one is open, the comment it adds). The failure text is the journey's own. Pure. */
 export function issueFor({ runUrl, sha, failure }) {
@@ -91,11 +87,4 @@ export function issueFor({ runUrl, sha, failure }) {
     "A red here means a customer could not pay. Fix the cause, then re-dispatch the workflow on `main`; it closes nothing by itself.",
   ].join("\n");
   return { title: ISSUE_TITLE, body };
-}
-
-/** One decision: nothing, a new issue, or a comment on the open one. Pure. */
-export function decideIssue({ eventName, ref, openIssues }) {
-  if (!shouldOpenIssue({ eventName, ref })) return { action: "none" };
-  const open = (openIssues ?? []).find((i) => i.title === ISSUE_TITLE && !i.pull_request);
-  return open ? { action: "comment", number: open.number } : { action: "create" };
 }

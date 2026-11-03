@@ -3,7 +3,7 @@
 //   sign in (bearer) -> the plan is for sale (paymentsOn) -> start the checkout -> pay on Stripe's hosted page with the 4242 card ->
 //   the subscription turns active (the webhook) -> the payment history carries a receipt that opens -> one lease check ends in the signed PDF.
 // It runs on main and by hand against the dev environment (never on a pull request: the persona and the TEST key are that environment's), and
-// it ends by cancelling what it bought, so the next run starts clean. A red run on main opens an issue (checkout-journey-guard.mjs).
+// it ends by cancelling what it bought, so the next run starts clean. A red run on main files an issue in krizaka-internal (checkout-journey-report.mjs).
 //
 //   SMOKE_EMAIL=... SMOKE_PASSWORD=... PAYMENTS_STRIPE_TEST_SECRET_KEY=sk_test_... node scripts/checkout-journey.mjs --base https://dev.yomizaka.com
 import { createRequire } from "node:module";

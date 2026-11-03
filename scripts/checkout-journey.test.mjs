@@ -2,10 +2,9 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { test } from "vitest";
 
-import { guard } from "./checkout-journey-guard.mjs";
+import { reportFor, reportPath } from "./checkout-journey-report.mjs";
 import {
   assertTestKey,
-  decideIssue,
   isHostedCheckout,
   isSignedPdf,
   isSubscribed,
@@ -13,7 +12,6 @@ import {
   issueFor,
   paidReceipt,
   returnedFromCheckout,
-  shouldOpenIssue,
 } from "./checkout-journey-lib.mjs";
 
 const workflow = readFileSync(new URL("../.github/workflows/checkout-journey.yml", import.meta.url), "utf8");
@@ -80,31 +78,6 @@ test("a signed report is a PDF with its fingerprint", () => {
   assert.equal(isSignedPdf({ contentType: "application/pdf", bytes, sha256: null }), false);
 });
 
-test("the guard: a red run on main files an issue, on a pull request or another branch it does not", () => {
-  assert.equal(shouldOpenIssue({ eventName: "schedule", ref: "refs/heads/main" }), true);
-  assert.equal(shouldOpenIssue({ eventName: "workflow_dispatch", ref: "refs/heads/main" }), true);
-  assert.equal(shouldOpenIssue({ eventName: "pull_request", ref: "refs/pull/1/merge" }), false);
-  assert.equal(shouldOpenIssue({ eventName: "workflow_dispatch", ref: "refs/heads/feat/x" }), false);
-  assert.deepEqual(decideIssue({ eventName: "schedule", ref: "refs/heads/main", openIssues: [] }), {
-    action: "create",
-  });
-  assert.deepEqual(
-    decideIssue({ eventName: "schedule", ref: "refs/heads/main", openIssues: [{ number: 7, title: ISSUE_TITLE }] }),
-    { action: "comment", number: 7 },
-  );
-  assert.deepEqual(
-    decideIssue({
-      eventName: "schedule",
-      ref: "refs/heads/main",
-      openIssues: [{ number: 8, title: ISSUE_TITLE, pull_request: {} }],
-    }),
-    { action: "create" },
-  );
-  assert.deepEqual(decideIssue({ eventName: "pull_request", ref: "refs/pull/1/merge", openIssues: [] }), {
-    action: "none",
-  });
-});
-
 test("the issue names the run and a failure with no line break", () => {
   const { body } = issueFor({
     runUrl: "https://github.com/krizaka/yomizaka/actions/runs/1",
@@ -115,45 +88,34 @@ test("the issue names the run and a failure with no line break", () => {
   assert.doesNotMatch(body, /\n- forged line/);
 });
 
-test("the guard files the issue through the API on main, and says nothing elsewhere", async () => {
-  const calls = [];
-  const fetchImpl = async (url, init = {}) => {
-    calls.push(`${init.method ?? "GET"} ${new URL(url).pathname}`);
-    return { ok: true, json: async () => (init.method === "POST" ? { number: 42 } : []) };
-  };
-  const env = {
-    GITHUB_REPOSITORY: "krizaka/yomizaka",
-    GH_RUN_AUTH: "x",
-    GITHUB_EVENT_NAME: "schedule",
-    GITHUB_REF: "refs/heads/main",
-    GITHUB_SHA: "abc",
+test("the report is the issue of the standard title, written for the shared alert action", () => {
+  assert.match(ISSUE_TITLE, /^yomizaka · fix\(checkout\): /);
+  const { title, body } = reportFor({
     GITHUB_SERVER_URL: "https://github.com",
+    GITHUB_REPOSITORY: "krizaka/yomizaka",
     GITHUB_RUN_ID: "9",
+    GITHUB_SHA: "abc",
     JOURNEY_FAILURE: "boom",
-  };
-  await guard({ env, fetchImpl, log: () => {} });
-  assert.deepEqual(calls, ["GET /repos/krizaka/yomizaka/issues", "POST /repos/krizaka/yomizaka/issues"]);
-  calls.length = 0;
-  await guard({
-    env: { ...env, GITHUB_REF: "refs/pull/3/merge", GITHUB_EVENT_NAME: "pull_request" },
-    fetchImpl,
-    log: () => {},
   });
-  assert.deepEqual(calls, []);
+  assert.equal(title, ISSUE_TITLE);
+  assert.match(body, /actions\/runs\/9/);
+  assert.match(body, /boom/);
 });
 
 test("the workflow runs on main and by schedule only, never on a pull request, and files the issue when red", () => {
   assert.doesNotMatch(workflow, /^\s*pull_request/m);
   assert.match(workflow, /if: github\.ref == 'refs\/heads\/main'/);
   assert.match(workflow, /environment: dev/);
-  assert.match(workflow, /issues: write/);
+  // Our alerts live in the private krizaka-internal (krizaka-internal#2267): the app token through the shared action, never the job token.
+  assert.doesNotMatch(workflow, /issues: write|github\.token/);
+  assert.match(workflow, /uses: krizaka\/\.github\/actions\/alert-issue@[0-9a-f]{40}/);
   assert.ok(
     workflow.indexOf("pnpm install --frozen-lockfile") < workflow.indexOf("run: node scripts/checkout-journey.mjs"),
     "install before the journey",
   );
   assert.ok(
     workflow.indexOf("run: node scripts/checkout-journey.mjs") <
-      workflow.indexOf("node scripts/checkout-journey-guard.mjs"),
+      workflow.indexOf("node scripts/checkout-journey-report.mjs"),
   );
   assert.match(workflow, /if: failure\(\)/);
 });
@@ -165,4 +127,12 @@ test("paying returns to the product's public address, not to the dev host the AP
   assert.equal(returnedFromCheckout("https://checkout.stripe.com/c/pay/cs_test_abc", hosted), false);
   assert.equal(returnedFromCheckout("about:blank", hosted), false);
   assert.equal(returnedFromCheckout("http://www.yomizaka.com/fr/app", hosted), false);
+});
+
+test("the report is written only inside the runner's temporary folder (no path traversal)", () => {
+  assert.equal(reportPath("journey.md", "/runner/tmp"), "/runner/tmp/journey.md");
+  assert.equal(reportPath("/runner/tmp/journey.md", "/runner/tmp"), "/runner/tmp/journey.md");
+  assert.throws(() => reportPath("../etc/passwd", "/runner/tmp"), /outside/);
+  assert.throws(() => reportPath("/etc/passwd", "/runner/tmp"), /outside/);
+  assert.throws(() => reportPath("/runner/tmpx/journey.md", "/runner/tmp"), /outside/);
 });
