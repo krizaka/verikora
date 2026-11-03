@@ -27,7 +27,8 @@ export function billingSteps(billing = TEST_BILLING, name = TEST_CARD.name) {
   return [
     { selector: "#billingCountry", action: "select", value: billing.country },
     { selector: "#billingName", action: "fill", value: name },
-    { selector: "#billingAddressLine1", action: "fill", value: billing.line1 },
+    // Typing the line opens a Google suggestion list over the next fields and the submit button: Escape closes it.
+    { selector: "#billingAddressLine1", action: "fill", value: billing.line1, then: "Escape" },
     { selector: "#billingLocality", action: "fill", value: billing.city },
     { selector: "#billingAdministrativeArea", action: "select", value: billing.region },
     { selector: "#billingPostalCode", action: "fill", value: billing.postal },

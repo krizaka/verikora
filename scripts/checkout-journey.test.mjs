@@ -187,3 +187,10 @@ test("the hosted page's billing country is chosen first, before the fields it re
   assert.equal(steps.find((s) => s.selector === "#billingAdministrativeArea").action, "select");
   assert.equal(steps.find((s) => s.selector === "#billingPostalCode").value, TEST_BILLING.postal);
 });
+
+test("the address line closes Google's suggestion list before the next field, so nothing covers the city or the submit button", () => {
+  const steps = billingSteps();
+  const line = steps.find((s) => s.selector === "#billingAddressLine1");
+  assert.equal(line.then, "Escape");
+  for (const s of steps.filter((s) => s !== line)) assert.equal(s.then, undefined, s.selector);
+});
