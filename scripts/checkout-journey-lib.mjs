@@ -72,7 +72,8 @@ export const plain = (text) =>
     .replace(/[^\x20-\x7EÀ-ſ]/g, " ")
     .slice(0, 300);
 
-export const ISSUE_TITLE = "yomizaka · fix(checkout): a persona cannot buy a plan on dev (the checkout journey is red on main)";
+export const ISSUE_TITLE =
+  "yomizaka · fix(checkout): a persona cannot buy a plan on dev (the checkout journey is red on main)";
 
 /** The issue a red run files (or, when one is open, the comment it adds). The failure text is the journey's own. Pure. */
 export function issueFor({ runUrl, sha, failure }) {
