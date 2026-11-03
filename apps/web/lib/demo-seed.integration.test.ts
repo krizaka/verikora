@@ -104,10 +104,11 @@ describe.runIf(enabled)("the demo seed (Éric)", () => {
     );
   });
 
-  it("changes nothing on a re-run, and starts over with reset", async () => {
+  it("changes nothing on a re-run but puts the persona back on the side the cast defines, and starts over with reset", async () => {
     const email = fresh();
     const first = await run(email);
     const before = await snapshot(first.owner);
+    // krizaka-internal#2289: Éric had been left on « tenant » on the shared dev database, where « Dossiers » is not offered (404 on www).
     await query("UPDATE accounts SET perspective = 'tenant' WHERE id = $1", [first.owner]);
     const again = await run(email);
     expect(again.owner).toBe(first.owner);
@@ -117,7 +118,7 @@ describe.runIf(enabled)("the demo seed (Éric)", () => {
     expect(
       (await query<{ perspective: string | null }>("SELECT perspective FROM accounts WHERE id = $1", [first.owner]))[0]
         ?.perspective,
-    ).toBe("tenant");
+    ).toBe("landlord");
     const reset = await run(email, { reset: true });
     expect(reset.collections).toEqual(expected);
     expect(await snapshot(first.owner)).toEqual(before);

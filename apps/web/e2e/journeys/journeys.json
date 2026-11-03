@@ -31,6 +31,22 @@
     "tags": ["critical"]
   },
   {
+    "id": "applicant-file-open",
+    "promise": "A property manager signed in as Eric opens « Dossiers » from the rail, opens an applicant's file and reaches the report of a document, with no 404 on the way",
+    "persona": "eric",
+    "platforms": ["web"],
+    "steps": [
+      "sign in as Eric",
+      "land on the home",
+      "open « Dossiers » from the rail",
+      "open the file of Camille Fictif",
+      "open the report of the applicant's pay stub"
+    ],
+    "video": true,
+    "budgetSeconds": 60,
+    "tags": ["critical"]
+  },
+  {
     "id": "start-a-check",
     "promise": "A tenant drops a lease on the check page, answers « Which document? » in view, and lands on the report",
     "persona": "eric",
