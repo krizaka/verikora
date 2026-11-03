@@ -42,6 +42,15 @@ jobs:
           PAYMENTS_STRIPE_TEST_SECRET_KEY: ${{ secrets.PAYMENTS_STRIPE_TEST_SECRET_KEY }}
         run: node scripts/checkout-journey.mjs --base https://dev.yomizaka.com 2>&1 | tee checkout-journey.log; test "${PIPESTATUS[0]}" -eq 0
         shell: bash
+      # Where the page was stuck (address without secrets, title, screenshot): kept a few days, for whoever reads the red run.
+      - name: Keep the diagnosis
+        if: failure()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: checkout-journey-diagnosis
+          path: journey-diagnosis
+          retention-days: 3
+          if-no-files-found: ignore
       # Fail-on-main: one issue (or a comment on the open one) says the checkout is red. It is filed in the private krizaka-internal with
       # the org app token, never in this public repository (krizaka-internal#2267).
       - name: Write the report
