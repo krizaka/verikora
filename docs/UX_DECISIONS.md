@@ -99,6 +99,11 @@ signal that would tell us we are wrong. Feedback: the pinned Discussion of the r
 
 ## 8. Both sides of the lease: a landing per side, a role in the app
 
+> **Amended (krizaka-internal#2291, 2026-11-04): the first run starts a property manager in one click.** `/app/welcome` is « Vous gérez
+> des logements ? Commencez ici. »: one card, « Propriétaire ou gestionnaire », preselected, the three next steps (ask an applicant
+> for documents, check your lease template, share the report) and one primary « Commencer »; « Autre usage » (a disclosure with
+> `aria-expanded`) unfolds the other sides. The decision below is kept: the app asks and never blocks, and the side changes in settings.
+
 - **Decision**: the service is offered to the tenant (« locataire ») and the landlord (« locateur » in the legal sense,
   « propriétaire » in everyday copy). The home carries « Je suis locataire / Je suis propriétaire »: two links to two
   static, indexable addresses (`/fr/locataire`, `/fr/proprietaire`, `/en/tenant`, `/en/landlord`) whose hero, steps and

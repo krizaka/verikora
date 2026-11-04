@@ -26,6 +26,7 @@ import { useCodeName } from "@/components/CodeName";
 import { PRODUCT_NAME } from "@/lib/brand";
 import { activeNav, CONSOLE_ROUTES, withoutLocale } from "@/lib/console-nav";
 import { useSay } from "@/lib/i18n-client";
+import { WELCOME_ROUTE } from "@/lib/library-screen";
 import { pluralKey } from "@/lib/plural";
 
 import { ConsoleSearch } from "./ConsoleSearch";
@@ -177,20 +178,22 @@ export function ConsoleShell({
           onOpen: () => setSearching(true),
         }}
         primary={
-          // The one primary action of every signed-in screen, the home included (krizaka-internal#2290): its word from `sm`, its icon and accessible name below.
-          <ButtonLink
-            href={href(CONSOLE_ROUTES.check)}
-            variant="gradient"
-            size="sm"
-            shape="cut"
-            className="min-h-11 min-w-11"
-            aria-label={say("shell.checkAction")}
-            title={say("shell.checkAction")}
-            data-testid="header-check"
-          >
-            <PlusIcon size={16} aria-hidden />
-            <span className="hidden sm:inline">{say("shell.checkAction")}</span>
-          </ButtonLink>
+          // The one primary action of every signed-in screen, the home included (krizaka-internal#2290) — except the first run, whose « Commencer » is the one (#2291): its word from `sm`, its icon and accessible name below.
+          withoutLocale(path).replace(/\/$/, "") === WELCOME_ROUTE ? undefined : (
+            <ButtonLink
+              href={href(CONSOLE_ROUTES.check)}
+              variant="gradient"
+              size="sm"
+              shape="cut"
+              className="min-h-11 min-w-11"
+              aria-label={say("shell.checkAction")}
+              title={say("shell.checkAction")}
+              data-testid="header-check"
+            >
+              <PlusIcon size={16} aria-hidden />
+              <span className="hidden sm:inline">{say("shell.checkAction")}</span>
+            </ButtonLink>
+          )
         }
       >
         <main id="content" tabIndex={-1} className="min-w-0 px-4 py-6 outline-none sm:px-6">

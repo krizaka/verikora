@@ -3461,6 +3461,20 @@
         "text": "The check stopped before the end, through no fault of your file. Try again.",
         "other": "The check stopped before the end, through no fault of your file. Try again."
       }
+    },
+    "welcome": {
+      "title": "You manage rentals? Start here.",
+      "owner": "Owner or property manager",
+      "ownerHint": "I check an applicant's file and my lease template",
+      "legend": "Your role",
+      "stepsLabel": "What you will do next",
+      "steps": {
+        "request": "Ask an applicant for documents",
+        "lease": "Check your lease template",
+        "share": "Share the report"
+      },
+      "start": "Start",
+      "other": "Another use"
     }
   },
   "report": {

@@ -113,6 +113,12 @@ describe("the signed-in shell, B2 (P14)", () => {
     expect(headerOf(render({}, "en"))).toContain('aria-label="Check a document"');
   });
 
+  it("shows the check action on the home too, and not on the first run, whose « Commencer » is the one primary (krizaka-internal#2290, #2291)", () => {
+    const source = readFileSync(new URL("./ConsoleShell.tsx", import.meta.url), "utf8");
+    expect(source).toContain("=== WELCOME_ROUTE");
+    expect(source).not.toContain('active === "library"');
+  });
+
   it("orders the bar's slots: search, the action, the account", () => {
     const header = headerOf(render({ name: "Éric Tremblay" }));
     const at = (needle: string) => header.indexOf(needle);
