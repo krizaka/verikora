@@ -1,0 +1,75 @@
+name: Journey video
+
+# The desktop video of a customer journey (krizaka-internal#2229): the hero of krizaka.com plays Verikora's `applicant-file-open`
+# recorded by its own e2e, never generated. The org's Journeys workflow keeps no video on a green run, so this one runs the same
+# journey, on the same app, seed and Playwright image, and keeps the film as an artifact for 14 days. On demand (a journey id), and
+# on a pull request that changes this file or the journey, so a change to either is proven by a recording. Never required.
+on:
+  workflow_dispatch:
+    inputs:
+      journey:
+        description: "The journey file to film (apps/web/e2e/journeys/<journey>.journey.mjs)"
+        type: string
+        default: applicant-file-open
+  pull_request:
+    branches: [main]
+    paths:
+      - .github/workflows/journey-video.yml
+      - apps/web/e2e/journeys/applicant-file-open.journey.mjs
+
+permissions:
+  contents: read
+
+jobs:
+  film:
+    name: Film the journey
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    defaults:
+      run:
+        shell: bash
+    # The image of visual-regression.yml (Playwright v1.64.0), so the browser is the one the journeys run on.
+    container: mcr.microsoft.com/playwright:v1.64.0-noble@sha256:06a9939e57531807f8d5fd76ce44b53165ffb7d7501d87ab10e285c20b1e971f
+    env:
+      XDG_CACHE_HOME: /root/.cache
+      CI: "true"
+      VISUAL_BASE_URL: http://localhost:3000
+      E2E_EMAIL: eric@demo.yomizaka.test
+      E2E_PASSWORD: ci-only-demo-password-0123
+    services:
+      postgres:
+        image: postgres:16@sha256:1beaa3084eee2676f20a9cd9928f0bf2c5bf674f8e49f81017912183d377c61c
+        env:
+          POSTGRES_USER: ci
+          POSTGRES_DB: ci
+          POSTGRES_PASSWORD: ci-only-password
+        options: >-
+          --health-cmd "pg_isready -U ci"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: pnpm/action-setup@ea17c68df8912ef543352723c149a84f56e3d413 # v6.1.0
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile --ignore-scripts && pnpm rebuild
+      - name: Build, seed the cast, start the app
+        run: bash scripts/ci-visual-start.sh
+      - name: Film the journey (desktop)
+        env:
+          JOURNEY: ${{ inputs.journey || 'applicant-file-open' }}
+        run: |
+          case "$JOURNEY" in *[!a-z0-9-]*|"") echo "::error::a journey id is lowercase letters, digits and dashes"; exit 1;; *) ;; esac
+          pnpm exec playwright test -c apps/web/e2e/journeys/playwright.config.mjs "$JOURNEY" --grep "desktop"
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        if: ${{ !cancelled() }}
+        with:
+          name: journey-video
+          path: test-results/journeys/**/*.webm
+          if-no-files-found: error
+          retention-days: 14
