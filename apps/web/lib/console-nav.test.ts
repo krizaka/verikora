@@ -217,7 +217,7 @@ describe("the shell follows Orazaka's pattern (krizaka/yomizaka#278, the UX revi
       "components/console/PlaceView.tsx",
       "components/console/BatchProgress.tsx",
       "app/[locale]/(app)/app/settings/[section]/page.tsx",
-      "app/[locale]/(app)/app/welcome/page.tsx",
+      "components/console/WelcomeStart.tsx",
     ]) {
       expect(read(file), file).toContain('from "@krizaka/ui/page-header"');
       expect(read(file), file).toMatch(/<PageHeader\b/);
