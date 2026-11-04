@@ -8,6 +8,7 @@ import Link from "next/link";
 import { Fragment } from "react";
 
 import { BarActions, BarQueryRoot } from "@/components/BarSession";
+import { useCodeName } from "@/components/CodeName";
 import { PRODUCT_NAME, productEndorsement } from "@/lib/brand";
 import { type Locale, translator } from "@/lib/i18n";
 import { menuHref, menuItems } from "@/lib/nav";
@@ -27,6 +28,7 @@ export function SiteHeader({
   provider = true,
 }: Readonly<{ locale: Locale; current: PageId; provider?: boolean }>) {
   const t = translator(locale);
+  const codeName = useCodeName();
   const Root = provider ? BarQueryRoot : Fragment;
   const languages = languagesFor(pagePath(locale, current));
   const home = pagePath(locale, "home");
@@ -44,7 +46,7 @@ export function SiteHeader({
           <NavBar.Root label={t("chrome.navLabel")} className="pointer-events-auto mx-auto max-w-(--kz-page-max,72rem)">
             <NavBar.Brand asChild>
               <Link href={home} aria-label={t("chrome.brandHome")}>
-                <ProductLockup id="yomizaka" name={PRODUCT_NAME} endorsement={productEndorsement(locale)} size={26} />
+                <ProductLockup id="yomizaka" name={PRODUCT_NAME} endorsement={productEndorsement(locale)} {...(codeName ? { codeName } : {})} size={26} />
               </Link>
             </NavBar.Brand>
             <NavBar.Items>

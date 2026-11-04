@@ -6,7 +6,9 @@ import { ThemeProvider, ThemeScript } from "@krizaka/ui/theme";
 import type { Metadata, Viewport } from "next";
 import { notFound } from "next/navigation";
 
+import { CodeNameProvider } from "@/components/CodeName";
 import { StageNotice } from "@/components/StageNotice";
+import { codeNameLine } from "@/lib/code-name";
 import { getDictionary, type Locale, LOCALES } from "@/lib/i18n";
 import { SITE_URL } from "@/lib/site";
 
@@ -46,7 +48,9 @@ export default async function LocaleLayout({
       <body className="min-h-screen bg-surface-0 text-fg antialiased selection:bg-accent selection:text-on-accent">
         <ThemeProvider defaultMode="dark">
           <StageNotice locale={locale as Locale} />
-          <PageTransition>{children}</PageTransition>
+          <CodeNameProvider line={codeNameLine(locale as Locale)}>
+            <PageTransition>{children}</PageTransition>
+          </CodeNameProvider>
           <MotionObserver />
         </ThemeProvider>
       </body>
