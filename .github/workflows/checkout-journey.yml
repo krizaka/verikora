@@ -62,7 +62,7 @@ jobs:
         shell: bash
       - name: Open the issue
         if: failure()
-        uses: krizaka/.github/actions/alert-issue@1d5a52cee6dc4e7ba3cc3d35e3e1ba5e45d4c938 # main
+        uses: krizaka/.github/actions/alert-issue@ee508b528e6edfdad989947b48b49d25e81b1964 # main
         with:
           app-id: ${{ vars.RELEASE_APP_ID }}
           private-key: ${{ secrets.RELEASE_APP_PRIVATE_KEY }}
