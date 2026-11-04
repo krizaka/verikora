@@ -1,3 +1,4 @@
+import { ThemeProvider } from "@krizaka/ui/theme";
 import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it } from "vitest";
 
@@ -7,9 +8,11 @@ import { codeNameLine } from "@/lib/code-name";
 
 const bar = (line: string | null) =>
   renderToStaticMarkup(
-    <CodeNameProvider line={line}>
-      <SiteHeader locale="fr" current="home" />
-    </CodeNameProvider>,
+    <ThemeProvider>
+      <CodeNameProvider line={line}>
+        <SiteHeader locale="fr" current="home" />
+      </CodeNameProvider>
+    </ThemeProvider>,
   );
 
 describe("the code name under the commercial name (dev only)", () => {
