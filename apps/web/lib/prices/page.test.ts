@@ -95,10 +95,11 @@ describe("the pricing page reads the catalogue (#388)", () => {
     }
   });
 
-  it("the call to action is sign-in, never « Start now »: sign-up is closed while the product is in development", async () => {
+  it("the call to action is « request access » (the contact page), never « Start now » nor « Sign in »: sign-up is closed while the product is in development", async () => {
     for (const locale of ["en", "fr"] as const) {
       const html = await render(fresh(), locale);
-      expect(html).toContain(`href="/${locale}/sign-in"`);
+      expect(html).toContain(`href="/${locale}/contact"`);
+      expect(html).not.toContain(`href="/${locale}/sign-in"`);
       expect(html).not.toMatch(/Start now|Commencer maintenant|Essai gratuit|Free trial/i);
       expect(html).toContain("In development");
     }

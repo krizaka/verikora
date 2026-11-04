@@ -7,7 +7,7 @@ import { SiteHeader } from "@/components/SiteChrome";
 import { SiteFooter } from "@/components/SiteFooter";
 import { asLocale, format, getDictionary } from "@/lib/i18n";
 import { pageMetadata, siteJsonLd } from "@/lib/seo";
-import { pagePath, PRIVACY_UPDATED } from "@/lib/site";
+import { pagePath, PRIVACY_OFFICER_EMAIL, PRIVACY_UPDATED } from "@/lib/site";
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
   return pageMetadata(asLocale((await params).locale), "privacy");
@@ -31,6 +31,10 @@ export default async function Privacy({ params }: Readonly<{ params: Promise<{ l
         />
         <Page>
           <p className="max-w-3xl text-lg leading-relaxed text-fg">{t.privacy.body}</p>
+          <p className="mt-6 max-w-3xl text-base leading-relaxed text-fg" data-privacy-officer>
+            <strong>{t.privacy.officer.label}</strong>{t.privacy.officer.sep}{t.privacy.officer.title} ·{" "}
+            <a href={`mailto:${PRIVACY_OFFICER_EMAIL}`}>{PRIVACY_OFFICER_EMAIL}</a>
+          </p>
           {t.privacy.sections.map((s) => (
             <section key={s.h} className="mt-8 max-w-3xl">
               <h2 className="text-xl font-semibold">{s.h}</h2>

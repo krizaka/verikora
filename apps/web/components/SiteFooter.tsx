@@ -7,7 +7,7 @@ import { PRODUCT_NAME } from "@/lib/brand";
 import { type Locale, translator } from "@/lib/i18n";
 import { indexable } from "@/lib/indexing";
 import { isListed } from "@/lib/listed";
-import { APP_VERSION, contactHref, pagePath, REPO_URL } from "@/lib/site";
+import { APP_VERSION, pagePath, REPO_URL, SUPPORT_EMAIL } from "@/lib/site";
 
 /**
  * The footer is @krizaka/ui's SiteFooter in product mode (`family={false}`): the product's pages, its source and contact,
@@ -48,7 +48,10 @@ export function SiteFooter({ locale }: Readonly<{ locale: Locale }>) {
           <Link href={pagePath(locale, "terms")}>{t("chrome.terms")}</Link>
         </SiteFooterLink>
         <SiteFooterLink href={REPO_URL}>{t("chrome.sourceCode")}</SiteFooterLink>
-        <SiteFooterLink href={contactHref("dev-yomizaka-footer", locale)}>{t("chrome.contact")}</SiteFooterLink>
+        <SiteFooterLink asChild>
+          <Link href={pagePath(locale, "contact")}>{t("chrome.contact")}</Link>
+        </SiteFooterLink>
+        <SiteFooterLink href={`mailto:${SUPPORT_EMAIL}`}>{SUPPORT_EMAIL}</SiteFooterLink>
       </SiteFooterColumn>
     </FamilyFooter>
   );
