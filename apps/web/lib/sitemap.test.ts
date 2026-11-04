@@ -16,12 +16,13 @@ describe("sitemap.xml", () => {
     urls = entries.map((e) => e.url);
   });
 
-  it("lists the home, docs, privacy and terms, in en and fr, /pricing while published and /download only while it has an app or a video, nothing else", () => {
+  it("lists the home, docs, privacy, terms and contact, in en and fr, /pricing while published and /download only while it has an app or a video, nothing else", () => {
     const paths = [
       "",
       "/docs",
       "/privacy",
       "/terms",
+      "/contact",
       ...(PRICING_PUBLISHED ? ["/pricing"] : []),
       ...(downloadPageOpen() ? ["/download"] : []),
     ];

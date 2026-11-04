@@ -3,14 +3,13 @@ import type { ReactNode } from "react";
 
 import { ButtonLink } from "@/components/ButtonLink";
 import { format, getDictionary, type Locale } from "@/lib/i18n";
-import { signInPath } from "@/lib/nav";
 import type { PricingPlan, PricingSoon } from "@/lib/prices/page";
-import { contactHref } from "@/lib/site";
+import { contactHref, pagePath } from "@/lib/site";
 
 /**
  * The pricing page on the pricing template of @krizaka/ui (yomizaka#388). Prices and included volumes come from the catalogue
  * (props); every word is a message. What is not built is « soon » and carries no figure. Sign-up is closed while the product is in
- * development, so the call to action is sign-in and the status line says the same as the home. Above the largest included volume
+ * development, so the call to action is « request access » (the contact page) and the status line says the same as the home. Above the largest included volume
  * there is no figure (the code bills no usage, #373): a quiet line leads to the contact form (#360).
  */
 export function PricingContent({
@@ -28,7 +27,7 @@ export function PricingContent({
   freeFirst: boolean;
   launch?: { headline: string; ends: string; lines: { plan: string; text: string }[] };
   status: string;
-  /** The call to action of a plan; without it, the public page's « Sign in ». The in-app plans page passes its own (subscribe / current plan). */
+  /** The call to action of a plan; without it, the public page's « Request access » (sign-up is closed, so nothing can be bought). The in-app plans page passes its own (subscribe / current plan). */
   action?: (plan: string) => ReactNode;
 }>) {
   const p = getDictionary(locale).pricing;
@@ -42,6 +41,7 @@ export function PricingContent({
       toolbar={
         <>
           <p>{status}</p>
+          <p>{p.plannedNote}</p>
           {largest > 0 ? (
             <p data-volume>
               <a href={contactHref("dev-yomizaka-pricing-volume", locale)}>{format(p.volume, { included: largest })}</a>
@@ -71,8 +71,8 @@ export function PricingContent({
             s.per === "month" ? p.cancel : p.noSubscription,
           ],
           action: action?.(s.plan) ?? (
-            <ButtonLink href={signInPath(locale)} variant="secondary" size="md">
-              {getDictionary(locale).chrome.signIn}
+            <ButtonLink href={pagePath(locale, "contact")} variant="secondary" size="md">
+              {p.requestAccess}
             </ButtonLink>
           ),
         }))}
