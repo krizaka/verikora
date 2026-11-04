@@ -6,6 +6,7 @@ import { sectionsFor } from "@yomizaka/core";
 import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it, vi } from "vitest";
 
+import { CodeNameProvider } from "@/components/CodeName";
 import { I18nProvider } from "@/lib/i18n-client";
 import en from "@/messages/en.json";
 import fr from "@/messages/fr.json";
@@ -73,6 +74,24 @@ describe("the signed-in shell, B2 (P14)", () => {
     const header = headerOf(render());
     expect(header).toContain(">Verikora<");
     expect(header).toMatch(/data-testid="app-version"[^>]*>DEV · v0\.1\.0\+abc1234</);
+  });
+
+  it("says the code name beside the name on dev (the provider's line), and nothing without it", () => {
+    const withLine = renderToStaticMarkup(
+      <CodeNameProvider line="nom de code : yomizaka">
+        <ThemeProvider>
+          <I18nProvider locale="fr" messages={MESSAGES.fr as never}>
+            <KrizakaQueryProvider>
+              <ConsoleShell locale="fr" email={EMAIL} role="USER">
+                <p>content</p>
+              </ConsoleShell>
+            </KrizakaQueryProvider>
+          </I18nProvider>
+        </ThemeProvider>
+      </CodeNameProvider>,
+    );
+    expect(headerOf(withLine)).toContain('data-code-name="">nom de code : yomizaka</span>');
+    expect(headerOf(render())).not.toContain("data-code-name");
   });
 
   it("keeps the product's name whole on a phone: the DEV chip waits for `sm`, where there is room (the bar at 360 px is not clipped)", () => {
