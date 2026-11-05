@@ -25,6 +25,6 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-      - uses: krizaka/.github/actions/expo-sdk@78dc5cbc0f0e0cf684a7e89d0d736893134e80a2 # main
+      - uses: krizaka/.github/actions/expo-sdk@79f6ff6292edefebc59fc968dbc2c203da81c3ea # main
         with:
           working-directory: apps/mobile
