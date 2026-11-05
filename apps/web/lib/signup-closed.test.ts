@@ -41,7 +41,9 @@ describe("sign-up is closed by default (krizaka-internal#2405)", () => {
     state.setting = false;
     state.signUps = 0;
     vi.unstubAllEnvs();
-    for (const [k, v] of Object.entries(MAIL)) vi.stubEnv(k, v);
+    for (const [k, v] of Object.entries(MAIL)) {
+      vi.stubEnv(k, v);
+    }
   });
 
   it("the setting's default is closed", () => {
