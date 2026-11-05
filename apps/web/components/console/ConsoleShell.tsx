@@ -12,7 +12,7 @@ import {
   WalletIcon,
 } from "@krizaka/icons";
 import { krizakaFetch, useMutation } from "@krizaka/query";
-import { YomizakaLogo } from "@krizaka/ui";
+import { CodeNameLine, YomizakaLogo } from "@krizaka/ui";
 import { AppFrame } from "@krizaka/ui/app-frame";
 import { Badge } from "@krizaka/ui/badge";
 import { languagesFor } from "@krizaka/ui/language-switch";
@@ -22,6 +22,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
 
 import { ButtonLink } from "@/components/ButtonLink";
+import { useCodeName } from "@/components/CodeName";
 import { PRODUCT_NAME } from "@/lib/brand";
 import { activeNav, CONSOLE_ROUTES, withoutLocale } from "@/lib/console-nav";
 import { useSay } from "@/lib/i18n-client";
@@ -67,6 +68,7 @@ export function ConsoleShell({
   children: React.ReactNode;
 }>) {
   const { say } = useSay();
+  const codeName = useCodeName();
   const router = useRouter();
   const path = usePathname() ?? "";
   const [searching, setSearching] = useState(false);
@@ -117,11 +119,14 @@ export function ConsoleShell({
         sections={sections}
         currentId={active ?? undefined}
         chips={
-          BUILD ? (
-            <Badge tone="neutral" size="sm" className="hidden sm:inline-flex" data-testid="app-version">
-              {say("shell.devBuild", { version: BUILD })}
-            </Badge>
-          ) : undefined
+          <>
+            {codeName ? <CodeNameLine className="hidden sm:inline">{codeName}</CodeNameLine> : null}
+            {BUILD ? (
+              <Badge tone="neutral" size="sm" className="hidden sm:inline-flex" data-testid="app-version">
+                {say("shell.devBuild", { version: BUILD })}
+              </Badge>
+            ) : null}
+          </>
         }
         // The signed-in person is always visible (yomizaka#243): the name only when there is one, never the raw e-mail address
         // (the review's A4); the menu's identity header carries both. No messages (the product has no messaging) and no notifications

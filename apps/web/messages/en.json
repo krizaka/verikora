@@ -4111,7 +4111,8 @@
   },
   "stage": {
     "title": "Development version",
-    "message": "Data can be reset at any time. This is not a commercial offer yet."
+    "message": "Data can be reset at any time. This is not a commercial offer yet.",
+    "codeName": "code name: {code}"
   },
   "contractSeal": {
     "eyebrow": "Verikora — seal of a contract",
