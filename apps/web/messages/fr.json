@@ -132,10 +132,15 @@
     "title": "Confidentialité",
     "updated": "Mis à jour le {date}",
     "body": "Vos documents vous appartiennent : gardés seulement si vous le choisissez, vérifiés par Sovkora, jamais vendus, jamais utilisés pour entraîner un modèle. Le détail, en courtes sections.",
+    "officer": {
+      "label": "Responsable de la protection des renseignements personnels",
+      "sep": " : ",
+      "title": "Président, Technologies Krizaka Inc."
+    },
     "sections": [
       {
         "h": "Qui est responsable",
-        "p": "Krizaka, une entreprise établie à Montréal, publie Verikora. La personne responsable de la protection des renseignements personnels (Loi 25) peut être jointe par le formulaire de contact de krizaka.com. [À COMPLÉTER : titre et adresse directe du responsable.]"
+        "p": "Krizaka, une entreprise établie à Montréal, publie Verikora. La personne responsable de la protection des renseignements personnels (Loi 25) est nommée en haut de cette page, avec son adresse directe."
       },
       {
         "h": "Ce que nous recueillons et pourquoi",
@@ -3827,6 +3832,13 @@
       "line": "Vérification : {check} — service Krizaka"
     }
   },
+  "contact": {
+    "title": "Contact",
+    "lead": "Une question sur Verikora, ou une demande d’accès ? Écrivez-nous.",
+    "supportLabel": "Soutien",
+    "supportText": "Pour toute question, ou pour demander un accès pendant que les inscriptions sont fermées :",
+    "privacyText": "Pour vos renseignements personnels, voyez la page Confidentialité."
+  },
   "terms": {
     "title": "Conditions d’utilisation",
     "status": "Version rédigée de bonne foi à partir de la loi, en attente de relecture par l’avocat avant l’ouverture publique de Verikora ; la politique de remboursement d’un audit à l’unité n’est pas définitive. En cas de doute, le français fait foi.",
@@ -4018,6 +4030,8 @@
       "ends": "Offre valable jusqu’au {date}. Le prix régulier s’applique après l’offre.",
       "always": "Le prix régulier s’applique après l’offre."
     },
+    "requestAccess": "Demander un accès",
+    "plannedNote": "Prix prévus à l’ouverture, en CAD, taxes en sus. Les inscriptions sont fermées.",
     "plansLabel": "Forfaits",
     "subscribe": "S’abonner — {plan}",
     "current": "Forfait actuel",

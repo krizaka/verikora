@@ -12,7 +12,7 @@ permissions:
 
 jobs:
   journeys:
-    uses: krizaka/.github/.github/workflows/visual-regression.yml@ee508b528e6edfdad989947b48b49d25e81b1964 # main (group-suffix, .github#434)
+    uses: krizaka/.github/.github/workflows/visual-regression.yml@78dc5cbc0f0e0cf684a7e89d0d736893134e80a2 # main (group-suffix, .github#434)
     permissions:
       contents: read
     with:

@@ -132,10 +132,15 @@
     "title": "Privacy",
     "updated": "Updated {date}",
     "body": "Your documents are yours: kept only if you choose, checked by Sovkora, never sold, never used to train a model. The details, in short sections.",
+    "officer": {
+      "label": "Privacy officer",
+      "sep": ": ",
+      "title": "President, Technologies Krizaka Inc."
+    },
     "sections": [
       {
         "h": "Who is responsible",
-        "p": "Krizaka, a company based in Montréal, publishes Verikora. The person in charge of the protection of personal information (Loi 25) can be reached through the contact form of krizaka.com. [TO BE COMPLETED: title and direct address of the privacy officer.]"
+        "p": "Krizaka, a company based in Montréal, publishes Verikora. The person in charge of the protection of personal information (Loi 25) is named at the top of this page, with a direct address."
       },
       {
         "h": "What we collect and why",
@@ -3827,6 +3832,13 @@
       "line": "Check: {check} — a Krizaka service"
     }
   },
+  "contact": {
+    "title": "Contact",
+    "lead": "A question about Verikora, or an access request? Write to us.",
+    "supportLabel": "Support",
+    "supportText": "For any question, or to ask for access while sign-up is closed:",
+    "privacyText": "For your personal information, see the Privacy page."
+  },
   "terms": {
     "title": "Terms of use",
     "status": "Written in good faith from the law, awaiting review by the lawyer before Verikora opens to the public; the refund policy for a single audit is not final. If in doubt, French prevails.",
@@ -4018,6 +4030,8 @@
       "ends": "Offer valid until {date}. The regular price applies after the offer.",
       "always": "The regular price applies after the offer."
     },
+    "requestAccess": "Request access",
+    "plannedNote": "Prices planned for the opening, in CAD, before taxes. Sign-up is closed.",
     "plansLabel": "Plans",
     "subscribe": "Subscribe — {plan}",
     "current": "Current plan",

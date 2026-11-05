@@ -39,7 +39,7 @@ describe("every menu item resolves", () => {
 
   it("every public page is reachable from the bar (the terms and the downloads from the footer): the home by the mark, the others by the menu or the action", () => {
     const reachable = new Set<string>(["home", ...MENU.map((m) => m.page)]);
-    for (const page of PAGES.filter((p) => p !== "terms" && p !== "download"))
+    for (const page of PAGES.filter((p) => p !== "terms" && p !== "download" && p !== "contact"))
       expect(reachable.has(page), page).toBe(true);
     expect(pagePath("en", "home")).toBe("/en");
   });
