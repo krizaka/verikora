@@ -16,15 +16,14 @@
   },
   {
     "id": "home-check-and-dossiers",
-    "promise": "After signing in, Eric's home offers « Check a document » as the one primary action and his dossiers, and a dossier opens",
+    "promise": "After signing in, Eric's home leads with his applicant files, with « Check a document » as the one primary action (the header's), and an applicant file opens",
     "persona": "eric",
     "platforms": ["web"],
     "steps": [
       "sign in as Eric",
       "land on the home",
-      "see « Check a document » on the first screen",
-      "open his dossiers and find « Immeuble Laurier (démo) »",
-      "open it"
+      "see his applicant files on the first screen, no second drop zone",
+      "open the first applicant file"
     ],
     "video": true,
     "budgetSeconds": 60,

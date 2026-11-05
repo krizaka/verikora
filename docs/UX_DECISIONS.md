@@ -593,6 +593,14 @@ Krizaka-ts ADR-003, `@krizaka/organize` 0.4. Yomizaka is the pilot, on « Dossie
 
 ## B2 home: the binder on top, two columns, the activity strip, the credits (P15, #332)
 
+> **Amended (krizaka-internal#2290, 2026-11-04): for a property manager the applicant files come first.** The home's first block is
+> « Dossiers de candidats » (five rows at most, applicant as title, documents received of asked, the state as a badge in words, each
+> row opens `/app/dossiers/[id]`; « Demander des documents » is the section's secondary action), then « Mes documents » (the
+> collections, compact), then the credits as one muted line. The binder-on-top order below no longer holds. One primary action: the
+> header's « Vérifier un document »; the dashed drop zone, its second primary and the « Ou essayez » chips are gone (the first-run
+> empty state keeps them). Dropping a file anywhere on the page still checks it. Not built yet: the « À traiter » column and
+> « Dernières vérifications ».
+
 - The home is `DashboardLayout` (« Operate »): the `h1` « Bibliothèque » on the left and **today's date on the right** (a `time`, under the
   title on a phone), **one sentence** under it whose figures are links — « Vous avez 6 vérifications à regarder, 2 dossiers à décider
   et 1 lien de dépôt ouvert. » (`leadParts`: the plurals are messages, the list is the locale's `Intl.ListFormat`, a figure at zero is

@@ -387,7 +387,7 @@
       },
       "check": {
         "title": "Vérifier un document",
-        "lead": "Déposez un bail, un contrat ou une facture : Verikora le lit et vous dit quoi regarder.",
+        "lead": "Déposez un bail ou une pièce de dossier : Verikora la lit et vous dit quoi regarder.",
         "import": "Importer un lot"
       },
       "dossiers": {
@@ -401,6 +401,16 @@
       },
       "usage": {
         "label": "Forfait et usage"
+      },
+      "files": {
+        "title": "Dossiers de candidats",
+        "label": "Vos dossiers de candidats",
+        "empty": "Aucun dossier de candidat pour l'instant. Demandez des documents pour en ouvrir un.",
+        "all": "Voir tous les dossiers"
+      },
+      "documents": {
+        "title": "Mes documents",
+        "label": "Vos collections de documents"
       }
     },
     "sections": {

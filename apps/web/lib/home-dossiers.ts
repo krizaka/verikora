@@ -14,6 +14,8 @@ export type DossierRow =
       id: string;
       name: string;
       count: number;
+      /** How many documents were asked for (applicant files only). */
+      requested: number;
       status: "stored" | "analysing" | "checked" | "attention" | "failed" | null;
       at: string | null;
       href: string;
@@ -23,6 +25,7 @@ export type DossierRow =
       id: string;
       name: string;
       count: number;
+      requested: number;
       status: FileSummary["status"];
       at: string;
       href: string;
@@ -41,6 +44,7 @@ export function dossiersOf(
       id: c.id,
       name: collectionLabel(c.name, c.isDefault, mine),
       count: c.files,
+      requested: 0,
       status: c.lastCheck?.status ?? null,
       at: c.lastCheck?.at ?? null,
       href: libraryPath(locale, l.id, c.id),
@@ -51,6 +55,7 @@ export function dossiersOf(
     id: f.id,
     name: f.candidateName,
     count: f.documents,
+    requested: f.requested,
     status: f.status,
     at: f.submittedAt ?? f.createdAt,
     href: `/${locale}/app/dossiers/${f.id}`,

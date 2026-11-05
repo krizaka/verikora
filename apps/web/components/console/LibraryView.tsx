@@ -7,7 +7,6 @@ import { EmptyState } from "@krizaka/ui/empty-state";
 import { List } from "@krizaka/ui/list";
 import { Mascot } from "@krizaka/ui/mascots";
 import { PageHeader } from "@krizaka/ui/page-header";
-import { StickyAction } from "@krizaka/ui/sticky-action";
 import { type Audience, type Jurisdiction } from "@yomizaka/core";
 import Link from "next/link";
 
@@ -65,7 +64,7 @@ export function LibraryView({
   const order = (perspective === "landlord" ? ["landlord", "tenant"] : ["tenant", "landlord"]) as (
     "tenant" | "landlord"
   )[];
-  const header = <PageHeader title={say("shell.titles.library")} />;
+  const header = <PageHeader title={say("shell.titles.library")} description={say("home.check.lead")} />;
   if (nothingYet) {
     return (
       <div className="flex flex-col gap-8">
@@ -74,39 +73,16 @@ export function LibraryView({
       </div>
     );
   }
-  const rows = dossiersOf(libraries, files, locale, say("organisation.defaultName"));
+  const applicants = dossiersOf([], files, locale, "").slice(0, FILES_SHOWN);
+  const documentRows = dossiersOf(libraries, [], locale, say("organisation.defaultName"));
   return (
     <div className="flex flex-col gap-8">
       {header}
-      <section
-        className="flex flex-col gap-3"
-        aria-labelledby="home-check-title"
-        id="home-check"
-        data-testid="home-check"
-      >
-        <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
-          <h2 id="home-check-title" className="m-0 font-display text-lg font-bold text-fg">
-            {say("home.check.title")}
-          </h2>
-          <Link
-            href={checksTabHref(locale, "lots")}
-            className="-my-3 inline-flex min-h-11 items-center text-sm font-semibold text-fg-accent hover:underline"
-            data-testid="home-import"
-          >
-            {say("home.check.import")}
-          </Link>
-        </div>
-        <p className="m-0 text-sm text-fg-secondary">{say("home.check.lead")}</p>
-        <CheckButton />
-        <LibraryDrop zone jurisdictions={jurisdictions} examples={examplesSlot(examples, order, say)} />
-      </section>
-      <DossiersList rows={rows} screening={screen.secondary} firstId={libraries[0]?.id} />
+      {screen.secondary ? <ApplicantFiles rows={applicants} total={files.length} /> : null}
+      <DocumentsList rows={documentRows} firstId={libraries[0]?.id} />
       {credits ? <UsageLine figure={credits} /> : null}
-      <StickyAction hideWhileVisible="[data-testid='home-check-button']">
-        <ButtonLink href={`/${locale}${CONSOLE_ROUTES.check}`} variant="primary" shape="cut" size="lg">
-          {say("shell.checkAction")}
-        </ButtonLink>
-      </StickyAction>
+      {/* Drop anywhere stays (the overlay); the page has no drop zone and no second primary: « Vérifier un document » is the header's. */}
+      <LibraryDrop jurisdictions={jurisdictions} />
     </div>
   );
 }
@@ -128,47 +104,85 @@ function CheckButton() {
   );
 }
 
-/** « Mes dossiers »: collections and applicant files in one list; the name, what it holds and its kind, the status of the last result, the whole row opens it. */
-function DossiersList({
-  rows,
-  screening,
-  firstId,
-}: Readonly<{ rows: readonly DossierRow[]; screening: string | null; firstId?: string }>) {
+/** « Dossiers de candidats » (krizaka-internal#2290): the files waiting for a decision first, five at most, each row one tap from its file; asking for documents is the section's secondary action. */
+function ApplicantFiles({ rows, total }: Readonly<{ rows: readonly DossierRow[]; total: number }>) {
+  const { say, locale } = useSay();
+  const base = `/${locale}${CONSOLE_ROUTES.files}`;
+  return (
+    <section className="flex flex-col gap-3" aria-labelledby="home-files-title" data-testid="home-files">
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <h2 id="home-files-title" className="m-0 font-display text-lg font-bold text-fg">
+          {say("home.files.title")}
+        </h2>
+        <Button asChild variant="secondary" size="md">
+          <Link href={base}>{say("dossiers.request")}</Link>
+        </Button>
+      </div>
+      <List
+        items={rows}
+        getId={(r) => r.id}
+        aria-label={say("home.files.label")}
+        chevrons
+        empty={<p className="m-0 text-sm text-fg-secondary">{say("home.files.empty")}</p>}
+        row={(r) => ({
+          title: r.name,
+          href: r.href,
+          description: received(r, say),
+          meta: (
+            <Badge tone={rowTone(r)} dot size="sm">
+              {say(`dossiers.filter.states.${r.status}`)}
+            </Badge>
+          ),
+        })}
+      />
+      {total > rows.length ? (
+        <Link
+          href={base}
+          className="-my-3 inline-flex min-h-11 items-center self-start text-sm font-semibold text-fg-accent hover:underline"
+        >
+          {say("home.files.all")} →
+        </Link>
+      ) : null}
+    </section>
+  );
+}
+
+/** « Mes documents »: the binder's collections, compact (name, what it holds, the status of the last result); the batch import is a quiet link here. */
+function DocumentsList({ rows, firstId }: Readonly<{ rows: readonly DossierRow[]; firstId?: string }>) {
   const { say, locale } = useSay();
   return (
-    <section className="flex flex-col gap-3" aria-labelledby="home-dossiers-title" data-testid="home-dossiers">
-      {/* On a phone the list comes right under the title (first screen) and the actions follow it; from sm up they sit on the title's row. */}
-      <div className="contents sm:flex sm:flex-wrap sm:items-center sm:justify-between sm:gap-3">
-        <h2 id="home-dossiers-title" className="order-1 m-0 font-display text-lg font-bold text-fg sm:order-none">
-          {say("home.dossiers.title")}
+    <section className="flex flex-col gap-3" aria-labelledby="home-documents-title" data-testid="home-dossiers">
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <h2 id="home-documents-title" className="m-0 font-display text-lg font-bold text-fg">
+          {say("home.documents.title")}
         </h2>
-        <span className="order-3 flex flex-wrap items-center gap-3 sm:order-none">
+        <span className="flex flex-wrap items-center gap-3">
+          <Link
+            href={checksTabHref(locale, "lots")}
+            className="-my-3 inline-flex min-h-11 items-center text-sm font-semibold text-fg-accent hover:underline"
+            data-testid="home-import"
+          >
+            {say("home.check.import")}
+          </Link>
           {firstId ? <CreateButton kind="collection" parentId={firstId} /> : null}
-          {screening ? (
-            <Button asChild variant="secondary" size="lg">
-              <Link href={`/${locale}${screening}`}>{say("library.screeningCta")}</Link>
-            </Button>
-          ) : null}
         </span>
       </div>
       <List
-        className="order-2 sm:order-none"
         items={rows}
-        getId={(r) => `${r.kind}:${r.id}`}
-        aria-label={say("home.dossiers.label")}
+        getId={(r) => r.id}
+        aria-label={say("home.documents.label")}
         chevrons
         empty={<p className="m-0 text-sm text-fg-secondary">{say("home.dossiers.empty")}</p>}
         row={(r) => ({
           title: r.name,
           href: r.href,
           description: [
-            say(r.kind === "collection" ? "home.dossiers.kindCollection" : "home.dossiers.kindFile"),
             say(pluralKey("organisation.files", r.count), { count: r.count }),
             r.at ? say("home.dossiers.moved", { date: formatDate(r.at, locale) }) : say("home.dossiers.never"),
           ].join(" · "),
           meta: r.status ? (
             <Badge tone={rowTone(r)} dot size="sm">
-              {say(r.kind === "collection" ? `statuses.${r.status}` : `dossiers.filter.states.${r.status}`)}
+              {say(`statuses.${r.status}`)}
             </Badge>
           ) : undefined,
         })}
@@ -176,6 +190,16 @@ function DossiersList({
     </section>
   );
 }
+
+/** « 2 sur 3 reçus »; nothing when no document was asked for. */
+function received(r: DossierRow, say: ReturnType<typeof useSay>["say"]): string | undefined {
+  if (!r.requested) return undefined;
+  const key = r.count ? "dossiers.documents.some" : "dossiers.documents.none";
+  return say(key, { count: r.count, asked: r.requested });
+}
+
+/** The most applicant files the home lists; the rest is « Voir tous les dossiers ». */
+const FILES_SHOWN = 5;
 
 const FILE_TONE = { open: "accent", used: "warning", closed: "success" } as const;
 const rowTone = (r: DossierRow) =>
