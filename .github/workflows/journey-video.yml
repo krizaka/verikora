@@ -70,6 +70,6 @@ jobs:
         if: ${{ !cancelled() }}
         with:
           name: journey-video
-          path: test-results/journeys/**/*.webm
+          path: apps/web/test-results/journeys/**/*.webm
           if-no-files-found: error
           retention-days: 14
