@@ -44,14 +44,44 @@ export const SCREENS = [
   { name: "phone", viewport: { width: 390, height: 844 } },
 ];
 
+/**
+ * Showcase mode (SHOWCASE=1, the film of krizaka-internal#2229; same idea as scripts/showcase-web.mjs): a 16:9 frame, the development
+ * notice and its version chip hidden, nothing that names an e-mail address or the code name on screen, a pause after each step.
+ */
+export const SHOWCASE = process.env.SHOWCASE === "1";
+const SHOWCASE_VIEWPORT = { width: 1280, height: 720 };
+const hideForFilm = () => {
+  const style = document.createElement("style");
+  style.textContent = "[data-top-chrome],[data-stage]{display:none !important}";
+  const hide = () => {
+    for (const el of document.querySelectorAll("body *")) {
+      if (el.childElementCount !== 0) continue;
+      const text = el.textContent ?? "";
+      if (/@[a-z0-9.-]+\.[a-z]{2,}|yomizaka|^\s*dev\b|^\s*dev[\s-]?v?\d/i.test(text)) el.style.visibility = "hidden";
+    }
+  };
+  document.addEventListener("DOMContentLoaded", () => {
+    document.head.append(style);
+    hide();
+    new MutationObserver(hide).observe(document.body, { childList: true, subtree: true, characterData: true });
+  });
+};
+
+/** A pause so a film reads (showcase mode only; a test run never waits). */
+export const beat = (page, ms = 1500) => (SHOWCASE ? page.waitForTimeout(ms) : Promise.resolve());
+
 /** A page of `persona` on `screen`, signed in, at `path`; the desktop one is filmed when the journey says so. */
 export async function openAs({ browser, info, persona, screen, journey, videoContextOptions, path }) {
   const state = await sessionsFor(browser, info.workerIndex).stateFor(persona);
+  const filmed = screen.name === "desktop" ? videoContextOptions(journey, { dir: info.outputDir }) : {};
+  const film = SHOWCASE && filmed.recordVideo;
   const context = await browser.newContext({
     storageState: state,
-    viewport: screen.viewport,
-    ...(screen.name === "desktop" ? videoContextOptions(journey, { dir: info.outputDir }) : {}),
+    viewport: film ? SHOWCASE_VIEWPORT : screen.viewport,
+    ...filmed,
+    ...(film ? { recordVideo: { ...filmed.recordVideo, size: SHOWCASE_VIEWPORT } } : {}),
   });
+  if (SHOWCASE) await context.addInitScript(hideForFilm);
   const page = await context.newPage();
   await page.goto(new URL(path, BASE).toString());
   return page;

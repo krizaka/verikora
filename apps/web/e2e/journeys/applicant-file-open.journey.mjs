@@ -7,7 +7,7 @@ import { readFileSync } from "node:fs";
 import { videoContextOptions } from "@krizaka/page-audit/journey";
 import { expect, test } from "@playwright/test";
 
-import { openAs, SCREENS } from "./session.mjs";
+import { beat, openAs, SCREENS } from "./session.mjs";
 
 const JOURNEY = JSON.parse(readFileSync(new URL("./journeys.json", import.meta.url), "utf8")).find(
   (j) => j.id === "applicant-file-open",
@@ -27,6 +27,7 @@ for (const screen of SCREENS) {
       path: "/fr/app",
     });
 
+    await beat(page, 1500);
     // The rail holds « Dossiers » for a person offered the applicant files; on a phone it sits behind the menu button.
     const entry = page
       .locator("a[data-rail-item]")
@@ -44,6 +45,7 @@ for (const screen of SCREENS) {
     await expect(page.getByRole("heading", { level: 1 })).toHaveText("Dossiers de candidats");
     await expect(page.getByTestId("files-not-offered"), "Eric is offered the applicant files").toHaveCount(0);
 
+    await beat(page, 1800);
     await page
       .getByRole("link", { name: /Camille Fictif/ })
       .first()
@@ -51,12 +53,14 @@ for (const screen of SCREENS) {
     await expect(page, "the file opens").toHaveURL(/\/fr\/app\/dossiers\/[^/?#]+$/);
     await expect(page.getByRole("heading", { level: 1 })).toContainText("Camille Fictif");
 
+    await beat(page, 2000);
     const asked = page.getByTestId("file-asked");
     await asked.getByRole("link").first().click();
     await expect(page, "the report of the applicant's document opens").toHaveURL(
       /\/fr\/app\/documents\/[^/]+\/rapport/,
     );
     await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
+    await beat(page, 3500);
     await page.context().close();
   });
 }
