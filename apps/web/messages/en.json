@@ -133,9 +133,9 @@
     "updated": "Updated {date}",
     "body": "Your documents are yours: kept only if you choose, checked by Sovkora, never sold, never used to train a model. The details, in short sections.",
     "officer": {
-      "label": "Privacy officer",
+      "label": "Person in charge of the protection of personal information",
       "sep": ": ",
-      "title": "President, Technologies Krizaka Inc."
+      "title": "the president of Technologies Krizaka Inc."
     },
     "sections": [
       {

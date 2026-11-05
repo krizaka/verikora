@@ -3,7 +3,7 @@ export const SITE_URL = "https://www.yomizaka.com";
 export const REPO_URL = "https://github.com/krizaka/yomizaka";
 /** Krizaka, the publisher: named only in the footer and the legal mentions (the products are independent). */
 export const KRIZAKA_URL = "https://www.krizaka.com";
-export const PRIVACY_UPDATED = "2026-11-04";
+export const PRIVACY_UPDATED = "2026-11-05";
 /** The company's role mailboxes (krizaka-internal#2350, #2365): forwards to the company mailbox, never a personal address. */
 export const SUPPORT_EMAIL = "support@verikora.com";
 export const PRIVACY_OFFICER_EMAIL = "confidentialite@krizaka.com";
