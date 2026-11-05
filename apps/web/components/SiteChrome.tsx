@@ -46,7 +46,14 @@ export function SiteHeader({
           <NavBar.Root label={t("chrome.navLabel")} className="pointer-events-auto mx-auto max-w-(--kz-page-max,72rem)">
             <NavBar.Brand asChild>
               <Link href={home} aria-label={t("chrome.brandHome")}>
-                <ProductLockup id="yomizaka" name={PRODUCT_NAME} endorsement={productEndorsement(locale)} {...(codeName ? { codeName } : {})} size={26} className="[&_[data-code-name]]:hidden lg:[&_[data-code-name]]:inline" />
+                <ProductLockup
+                  id="yomizaka"
+                  name={PRODUCT_NAME}
+                  endorsement={productEndorsement(locale)}
+                  {...(codeName ? { codeName } : {})}
+                  size={26}
+                  className="[&_[data-code-name]]:hidden lg:[&_[data-code-name]]:inline"
+                />
               </Link>
             </NavBar.Brand>
             <NavBar.Items>

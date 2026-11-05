@@ -32,6 +32,8 @@ describe("the code name under the commercial name (dev only)", () => {
   });
 
   it("waits for a wide bar (lg): at 768 px the line would push the bar past the screen (check:overflow)", () => {
-    expect(bar("nom de code : yomizaka")).toContain("[&amp;_[data-code-name]]:hidden lg:[&amp;_[data-code-name]]:inline");
+    expect(bar("nom de code : yomizaka")).toContain(
+      "[&amp;_[data-code-name]]:hidden lg:[&amp;_[data-code-name]]:inline",
+    );
   });
 });
