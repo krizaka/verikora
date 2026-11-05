@@ -5,7 +5,14 @@ import { z } from "zod";
  * no model. Everything here is a signal read from the file, never a verdict and never a score (ADR-0014): a report says « inconsistency found », it does not
  * say the document is false. Font, typography and payroll maths are the next slices; nothing of them is claimed here.
  */
-export const ANOMALY_KINDS = ["incremental-update", "producer-changed", "producer-mismatch", "font-mismatch"] as const;
+export const ANOMALY_KINDS = [
+  "incremental-update",
+  "producer-changed",
+  "producer-mismatch",
+  "font-mismatch",
+  "payroll-sum",
+  "payroll-ytd",
+] as const;
 export const anomalyKind = z.enum(ANOMALY_KINDS);
 export type AnomalyKind = z.infer<typeof anomalyKind>;
 

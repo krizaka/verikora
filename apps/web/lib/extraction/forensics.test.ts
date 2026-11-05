@@ -28,4 +28,18 @@ describe("examinePdf (the isolated worker feeds the forensics)", () => {
   it("finds nothing on a stub whose amounts share one face", async () => {
     expect((await examinePdf(stub("F2"), "payroll")).anomalies).toEqual([]);
   });
+
+  it("adds the arithmetic of a pay stub's figures, only for a payroll document", async () => {
+    const lines = [
+      ["F1", 72, 700, 10, "Salaire brut"],
+      ["F2", 300, 700, 10, "3400.00"],
+      ["F1", 72, 680, 10, "Total des retenues"],
+      ["F2", 300, 680, 10, "512.40"],
+      ["F1", 72, 660, 10, "Salaire net"],
+      ["F2", 300, 660, 10, "1887.60"],
+    ] as const;
+    const payroll = await examinePdf(fixture(lines), "payroll");
+    expect(payroll.anomalies.map((a) => [a.kind, a.level])).toEqual([["payroll-sum", "inconsistent"]]);
+    expect((await examinePdf(fixture(lines))).anomalies).toEqual([]);
+  });
 });
