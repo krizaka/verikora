@@ -1,4 +1,4 @@
-import { analysePdf, type ForensicsDocumentKind, type FraudReport, withTextRuns } from "@yomizaka/core";
+import { analysePayStub, analysePdf, type ForensicsDocumentKind, type FraudReport, withTextRuns } from "@yomizaka/core";
 
 import { readTextRuns } from "../forensics-runs";
 
@@ -10,7 +10,10 @@ import { readTextRuns } from "../forensics-runs";
 export async function examinePdf(bytes: Uint8Array, documentKind?: ForensicsDocumentKind): Promise<FraudReport> {
   const report = analysePdf(bytes, documentKind ? { documentKind } : {});
   try {
-    return withTextRuns(report, await readTextRuns(bytes));
+    const runs = await readTextRuns(bytes);
+    const typed = withTextRuns(report, runs);
+    // The arithmetic of a pay stub's own figures: only for a document that claims to be one.
+    return documentKind === "payroll" ? { ...typed, anomalies: [...typed.anomalies, ...analysePayStub(runs)] } : typed;
   } catch {
     return report;
   }
