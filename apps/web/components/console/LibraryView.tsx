@@ -10,7 +10,6 @@ import { PageHeader } from "@krizaka/ui/page-header";
 import { type Audience, type Jurisdiction } from "@yomizaka/core";
 import Link from "next/link";
 
-import { ButtonLink } from "@/components/ButtonLink";
 import type { FileSummary } from "@/lib/applicant-file";
 import { checksTabHref, CONSOLE_ROUTES } from "@/lib/console-nav";
 import { type CreditsFigure } from "@/lib/home-b2";
@@ -84,23 +83,6 @@ export function LibraryView({
       {/* Drop anywhere stays (the overlay); the page has no drop zone and no second primary: « Vérifier un document » is the header's. */}
       <LibraryDrop jurisdictions={jurisdictions} />
     </div>
-  );
-}
-
-/** The home's one primary action (krizaka-internal#2001): a button on the first screen, desktop and phone; the drop zone below it is the same first step by another way. */
-function CheckButton() {
-  const { say, locale } = useSay();
-  return (
-    <ButtonLink
-      href={`/${locale}${CONSOLE_ROUTES.check}`}
-      variant="primary"
-      shape="cut"
-      size="lg"
-      className="self-start"
-      data-testid="home-check-button"
-    >
-      {say("shell.checkAction")}
-    </ButtonLink>
   );
 }
 
@@ -256,9 +238,6 @@ function LibraryEmpty({
         title={say("library.emptyTitle")}
         description={say("library.emptyPitch")}
       />
-      <div className="flex justify-center">
-        <CheckButton />
-      </div>
       <LibraryDrop zone jurisdictions={jurisdictions} examples={examplesSlot(examples, order, say)} />
       <p className="m-0 text-center text-sm text-fg-secondary" data-testid="library-empty-dossiers">
         {say("library.emptyDossiers")}

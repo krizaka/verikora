@@ -27,7 +27,9 @@ for (const screen of SCREENS) {
 
     await expect(page.getByRole("heading", { level: 1 }), "the home is titled Accueil").toHaveText("Accueil");
     await expect(page.getByTestId("library-dropzone"), "the home has no second drop zone").toHaveCount(0);
-    await expect(page.getByTestId("home-check-button"), "the header's action is the only primary").toHaveCount(0);
+    const action = page.getByTestId("header-check");
+    await expect(action, "the header's « Vérifier un document » is the one primary action").toBeVisible();
+    await expect(page.getByTestId("home-check-button"), "no second primary on the page").toHaveCount(0);
     const list = page.getByRole("list", { name: "Vos dossiers de candidats" });
     const first = list.getByRole("link").first();
     await expect(first, "an applicant file leads the home").toBeVisible();
