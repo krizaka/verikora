@@ -28,6 +28,10 @@ describe("the code name under the commercial name (dev only)", () => {
 
   it("the bar's lockup carries it under the name on dev and not otherwise", () => {
     expect(bar("nom de code : yomizaka")).toContain('data-code-name="">nom de code : yomizaka</span>');
-    expect(bar(null)).not.toContain("data-code-name");
+    expect(bar(null)).not.toContain('data-code-name=""');
+  });
+
+  it("waits for a wide bar (lg): at 768 px the line would push the bar past the screen (check:overflow)", () => {
+    expect(bar("nom de code : yomizaka")).toContain("[&amp;_[data-code-name]]:hidden lg:[&amp;_[data-code-name]]:inline");
   });
 });
