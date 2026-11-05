@@ -175,7 +175,9 @@ function DocumentsList({ rows, firstId }: Readonly<{ rows: readonly DossierRow[]
 
 /** « 2 sur 3 reçus »; nothing when no document was asked for. */
 function received(r: DossierRow, say: ReturnType<typeof useSay>["say"]): string | undefined {
-  if (!r.requested) return undefined;
+  if (!r.requested) {
+    return undefined;
+  }
   const key = r.count ? "dossiers.documents.some" : "dossiers.documents.none";
   return say(key, { count: r.count, asked: r.requested });
 }
