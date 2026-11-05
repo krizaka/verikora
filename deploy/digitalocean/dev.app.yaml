@@ -53,6 +53,8 @@ services:
       - { key: APP_SEARCH_INDEXING, scope: RUN_AND_BUILD_TIME, value: "on" }
       - { key: APP_COMMIT_SHA, scope: BUILD_TIME, value: "${_self.COMMIT_HASH}" }
       - { key: DATABASE_URL, scope: RUN_TIME, type: SECRET, value: "__DATABASE_URL__" }
+      # The database reached directly (not through the pooler): migrations and session advisory locks need one backend (lib/db.ts). Read at build too, as live.
+      - { key: DATABASE_DIRECT_URL, scope: RUN_AND_BUILD_TIME, type: SECRET, value: "__DATABASE_DIRECT_URL__" }
       - { key: DATABASE_CA_CERT, scope: RUN_TIME, type: SECRET, value: "__DATABASE_CA_CERT__" }
       - { key: AUTH_SESSION_SECRET, scope: RUN_TIME, type: SECRET, value: "__AUTH_SESSION_SECRET__" }
       - { key: AUTH_SIGNUP_ENABLED, scope: RUN_TIME, value: "false" }
