@@ -19,7 +19,9 @@ const WORD_BREAK = /([\s,;<>()"'[\]]+)/;
 /** An e-mail address: personal information, never in a log (Law 25). One `@`, something before it, a dotted domain after it. */
 function isEmailAddress(word: string): boolean {
   const at = word.indexOf("@");
-  if (at < 1 || at !== word.lastIndexOf("@")) return false;
+  if (at < 1 || at !== word.lastIndexOf("@")) {
+    return false;
+  }
   const domain = word.slice(at + 1);
   return domain.includes(".") && !domain.startsWith(".") && !domain.endsWith(".");
 }
