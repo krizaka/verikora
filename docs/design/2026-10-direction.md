@@ -92,11 +92,11 @@ scans.
 
 ### 3.1 The brand
 
-- **Colour**: Verikora's indigo (`brands/yomizaka.css`, hue 240; the accent text is 4.5:1 in both themes) is the
+- **Colour**: Verikora's indigo (`brands/verikora.css`, hue 240; the accent text is 4.5:1 in both themes) is the
   colour of **the one action and the current place**: the header's « Vérifier un document », the active rail item, the
   selected row, links and focus rings. It is never a surface wash, a gradient section or a status. Verdicts keep the
   semantic tones (§ 3.4).
-- **The mark**: `YomizakaLogo` once per width, still (`animated={false}`): on the rail on a desktop and in the header on a
+- **The mark**: `VerikoraLogo` once per width, still (`animated={false}`): on the rail on a desktop and in the header on a
   phone.
 - **The bird**: the owl « reads and knows every face ». In the app it appears **only where the person has nothing to
   read**: an empty list (`empty`), a search without results (`thinking`), a failed run or the 404 (`error` / `lost`,

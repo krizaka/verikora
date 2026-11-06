@@ -1,4 +1,4 @@
-import { YomizakaLogo } from "@krizaka/ui";
+import { VerikoraLogo } from "@krizaka/ui";
 import { AuthLayout } from "@krizaka/ui/auth-layout";
 import { Mascot } from "@krizaka/ui/mascots";
 import type { Metadata } from "next";
@@ -29,7 +29,7 @@ export default async function SignUpPage({ params }: Readonly<{ params: Promise<
     <AuthLayout
       brand={
         <Link href={`/${locale}`} className="inline-flex items-center gap-2">
-          <YomizakaLogo size={28} /> {PRODUCT_NAME}
+          <VerikoraLogo size={28} /> {PRODUCT_NAME}
         </Link>
       }
       promise={t.promise}

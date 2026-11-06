@@ -446,7 +446,7 @@ phone 390 × 844 (first screen)
 
 ### 4.3 Visual direction
 
-- **Hue**: Verikora's indigo (`@krizaka/tokens brands/yomizaka.css`, `.brand-verikora`), the owl's. Every surface,
+- **Hue**: Verikora's indigo (`@krizaka/tokens brands/verikora.css`, `.brand-verikora`), the owl's. Every surface,
   text and border is a `--kz-*` role; no page-local colour. Verdicts use the semantic tones only: `success`
   (conforme), `warning` (à regarder), `danger` (bloquant), `neutral` (gardé, en lecture).
 - **Density**: comfortable. Table rows 48 px on a desktop, 56 px touch targets on a phone, 16 px gutters, sections
@@ -454,7 +454,7 @@ phone 390 × 844 (first screen)
 - **Typography roles** (from `@krizaka/fonts` through the tokens): display for the one `h1` of a page (2xl, 700);
   section `h2` lg 700; card titles base 600; body md; meta sm `text-fg-secondary`; mono **only** for codes inside the
   folded technical details, never in a title or a chip.
-- **Marks and icons**: `YomizakaLogo` once per width (rail on a desktop, header on a phone); `@krizaka/icons` for
+- **Marks and icons**: `VerikoraLogo` once per width (rail on a desktop, header on a phone); `@krizaka/icons` for
   destinations (library, check, search), places (folder, building, people, receipt) and verdicts (check, alert,
   cross). No emoji, no third-party icon.
 - **Illustration**: the owl only (`Mascot bird="owl"`), one per screen at most, in its moods — `welcome` (sign-in,

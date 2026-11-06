@@ -6,7 +6,7 @@
 @import "@krizaka/tailwind";
 @import "@krizaka/fonts/css"; /* the family faces, as @krizaka/fonts ships them */
 @import "@krizaka/ui/tailwind.css";
-@import "@krizaka/tokens/brands/yomizaka.css";
+@import "@krizaka/tokens/brands/verikora.css";
 
 html {
   overflow-x: hidden;

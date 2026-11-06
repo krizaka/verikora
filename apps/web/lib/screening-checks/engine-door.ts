@@ -1,10 +1,10 @@
 import {
   type CheckPurposeKey,
   type CheckResult as DoorResult,
-  ORAZAKA_CODE,
-  type OrazakaClient,
-  OrazakaError,
-} from "@krizaka/orazaka-client";
+  SOVKORA_CODE,
+  type SovkoraClient,
+  SovkoraError,
+} from "@krizaka/sovkora-client";
 
 import { activeConsents } from "../applicant-consent";
 import { logError } from "../log";
@@ -20,10 +20,10 @@ import {
 
 /*
  * The engine's door, opened (sovkora-engine#105): `POST /api/v1/checks/{purpose}` and `GET /api/v1/checks/{providerRef}`,
- * through the shared client `@krizaka/orazaka-client`. The answer is Sovkora's closed `CheckResult`, read 1:1 into this module's
+ * through the shared client `@krizaka/sovkora-client`. The answer is Sovkora's closed `CheckResult`, read 1:1 into this module's
  * vocabulary (`model.ts` is the same set). The compliance gate still wraps the door (`engineProvider`).
  */
-type Door = Pick<OrazakaClient, "startCheck" | "collectCheck">;
+type Door = Pick<SovkoraClient, "startCheck" | "collectCheck">;
 
 /** Our purposes are the engine's, in the path's spelling. Identity is not one of them. */
 const PATH: Record<CheckPurpose, CheckPurposeKey> = {
@@ -65,7 +65,7 @@ export function engineDoor(
         );
       } catch (error) {
         // No key here is « not configured », like an engine with no provider; anything else is a provider error, never an invented result.
-        if (error instanceof OrazakaError && error.code === ORAZAKA_CODE.notConfigured) return NOT_CONFIGURED;
+        if (error instanceof SovkoraError && error.code === SOVKORA_CODE.notConfigured) return NOT_CONFIGURED;
         logError("screening: the engine's door failed on submit", error);
         return failed;
       }
@@ -80,7 +80,7 @@ export function engineDoor(
         );
       } catch (error) {
         // A failed poll is not an answer: the check stays pending and is asked again.
-        if (error instanceof OrazakaError && error.code === ORAZAKA_CODE.notConfigured) return NOT_CONFIGURED;
+        if (error instanceof SovkoraError && error.code === SOVKORA_CODE.notConfigured) return NOT_CONFIGURED;
         logError("screening: the engine's door failed on collect", error);
         return { outcome: CHECK_OUTCOME.PENDING, refusal: null, category: "NONE", providerRef };
       }

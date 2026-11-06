@@ -61,7 +61,7 @@ function harness(fetchStatus = 0) {
 const bunny = createProviderInput.parse({
   kind: "bunny",
   label: "Dev zone",
-  coordinates: { endpoint: "storage.bunnycdn.com", zone: "yomizaka-docs-dev" },
+  coordinates: { endpoint: "storage.bunnycdn.com", zone: "verikora-docs-dev" },
   credentials: { accessKey: SECRET },
 });
 

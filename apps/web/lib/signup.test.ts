@@ -130,8 +130,7 @@ describe("sign-up", () => {
         { brand: BRAND_ID, confirmUrl: "https://www.verikora.com/fr/verify-email?token=x", hours: VERIFY_TTL_HOURS },
         { locale },
       );
-      // `@krizaka/email` 0.x still writes the former name until its major release (krizaka-internal#2659).
-      expect(mail.text).toContain("Yomizaka");
+      expect(mail.text).toContain("Verikora");
       expect(mail.text).not.toMatch(/conforme|compliant|garanti|guarantee|approuv|approved/i);
       expect(mail.html + mail.text).not.toMatch(/Sovkora|Folioviv/);
     }

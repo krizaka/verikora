@@ -2,7 +2,7 @@
 
 import { ClockIcon, HomeIcon, KeepIcon, LogoutIcon, ServerIcon, ShieldIcon, UsersIcon } from "@krizaka/icons";
 import { krizakaFetch, useMutation } from "@krizaka/query";
-import { YomizakaLogo } from "@krizaka/ui";
+import { VerikoraLogo } from "@krizaka/ui";
 import { AppShell } from "@krizaka/ui/app-shell";
 import { Badge } from "@krizaka/ui/badge";
 import { Button } from "@krizaka/ui/button";
@@ -58,7 +58,7 @@ export function AdminShell({
         label={say("adminConsole.shell.title")}
         brand={
           <Link href={home} className="inline-flex items-center gap-2">
-            <YomizakaLogo size={24} animated={false} /> {PRODUCT_NAME}{" "}
+            <VerikoraLogo size={24} animated={false} /> {PRODUCT_NAME}{" "}
             <Badge tone="warning">{say("adminConsole.shell.dev")}</Badge>
           </Link>
         }

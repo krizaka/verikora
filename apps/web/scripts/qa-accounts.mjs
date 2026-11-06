@@ -12,7 +12,7 @@ import { personaByRole } from "@krizaka/org";
 export { hashPassword };
 
 // The visible name of each account is its persona's, from the cast (`@krizaka/org`): demos and recordings never show « qa » or « admin ».
-export const QA_PERSONAS = { USER: personaByRole("yomizaka", "member"), ADMIN: personaByRole("yomizaka", "admin") };
+export const QA_PERSONAS = { USER: personaByRole("verikora", "member"), ADMIN: personaByRole("verikora", "admin") };
 
 export function accountsFromEnv(env) {
   const accounts = [

@@ -1,6 +1,6 @@
 import { CheckIcon, HomeIcon, KnowledgeIcon, LogoutIcon, SettingsIcon, UsersIcon } from "@krizaka/icons";
 import { useQuery } from "@krizaka/query";
-import { YomizakaLogo } from "@krizaka/ui";
+import { VerikoraLogo } from "@krizaka/ui";
 import { AccountMenu } from "@krizaka/ui/account-menu";
 import { AppShell } from "@krizaka/ui/app-shell";
 import { Tabs } from "@krizaka/ui/tabs";
@@ -95,7 +95,7 @@ function Gate({ onLocale }: Readonly<{ onLocale: (locale: Locale) => void }>) {
         label={t("nav.label")}
         brand={
           <>
-            <YomizakaLogo size={22} animated={false} /> {t("app.name")}
+            <VerikoraLogo size={22} animated={false} /> {t("app.name")}
           </>
         }
         collapseLabels={[t("shell.collapse"), t("shell.expand")]}

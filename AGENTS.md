@@ -14,7 +14,7 @@
   query keys, the pure helpers). One product = one repository (`krizaka/<product>`).
 - **Built only from Krizaka bricks**: `@krizaka/ui` (auth-layout, app-shell, product-page, data-table, form, file-upload
   with its pacer queue, search-field, tabs…), `@krizaka/query`, `@krizaka/i18n`, `@krizaka/icons`, `@krizaka/tokens`
-  (`brands/yomizaka.css`). A missing generic component is added to krizaka-ui, released, then used — never copied here.
+  (`brands/verikora.css`). A missing generic component is added to krizaka-ui, released, then used — never copied here.
   No `@tanstack/*` import (only through `@krizaka/*`), no `fetch` in a client `useEffect` (Server Components and
   `@krizaka/query`), no hand-written `<table>` or multi-field `<form>`.
 
@@ -58,7 +58,7 @@
 - No link to another Krizaka product, no family switcher, no family columns in the footer. Krizaka is the publisher,
   named **only in the footer** ("A Krizaka product" → www.krizaka.com) and the legal mentions. Sovkora is named as the
   engine in words (it is the point), never as a link.
-- The colour is the Verikora brand of `@krizaka/tokens` (ink indigo), the mark `YomizakaLogo`, the bird the owl ("reads
+- The colour is the Verikora brand of `@krizaka/tokens` (ink indigo), the mark `VerikoraLogo`, the bird the owl ("reads
   and knows every face"). Components use `--kz-*` roles only; dark and light are first-class (dark by default).
 
 - **The mobile app lives in `apps/mobile`** (2026-10-22: the three products go on iOS, Android and the Mac). The Dev preview of Verikora stays **web only**, phone-first (decision 2026-10-17: mobile later, and then with the

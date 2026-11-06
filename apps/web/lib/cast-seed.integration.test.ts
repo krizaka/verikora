@@ -31,9 +31,9 @@ describe.runIf(enabled)("the cast seed", () => {
     const first = await run();
     const second = await run();
     expect(second.fingerprint).toBe(first.fingerprint);
-    expect(first.member.name).toBe(personaByRole("yomizaka", "member").displayName);
+    expect(first.member.name).toBe(personaByRole("verikora", "member").displayName);
     const [admin] = await q("SELECT name, role FROM accounts WHERE email = $1", ["mira@demo.verikora.test"]);
-    expect(admin).toEqual({ name: personaByRole("yomizaka", "admin").displayName, role: "ADMIN" });
+    expect(admin).toEqual({ name: personaByRole("verikora", "admin").displayName, role: "ADMIN" });
     const recorded = JSON.parse(
       readFileSync(new URL("../../../scripts/demo-seed/fingerprint.json", import.meta.url), "utf8"),
     ) as { fingerprint: string };

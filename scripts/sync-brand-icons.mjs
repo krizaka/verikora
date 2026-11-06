@@ -12,8 +12,8 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 export const CDN = "https://krizaka-assets.b-cdn.net";
-// The id the brand export of krizaka-ui still files this product under, until the major release of `@krizaka/org` (krizaka-internal#2659).
-export const BRAND = "yomizaka";
+// The id the brand export of krizaka-ui files this product under.
+export const BRAND = "verikora";
 /** CDN file (under brand/<brand>/) -> committed path, relative to the repository root. */
 export const ICONS = {
   "favicon.svg": "apps/web/app/icon.svg",

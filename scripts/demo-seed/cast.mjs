@@ -3,8 +3,8 @@
 // documented defaults that exist only for a local database.
 import { castOf, persona, personaByRole, seedFingerprint } from "@krizaka/org";
 
-/** The id `@krizaka/org` still knows this product by, until its major release with the commercial ids (krizaka-internal#2659). */
-export const BRAND_ID = "yomizaka";
+/** The product's id in `@krizaka/org`. */
+export const BRAND_ID = "verikora";
 export const CAST = castOf(BRAND_ID);
 export const CAST_MEMBER = personaByRole(BRAND_ID, "member");
 export const CAST_ADMIN = personaByRole(BRAND_ID, "admin");

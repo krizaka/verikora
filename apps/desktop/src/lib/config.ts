@@ -13,8 +13,8 @@ import { keychain } from "./desktop";
 
 /** The Mac app's wiring, once. The backend comes from the signed manifest on krizaka.com (ADR-003), like the phone's. */
 export const PRODUCT = "verikora";
-/** The id `@krizaka/ui` and `@krizaka/org` still know this product by, until their major release with the commercial ids (krizaka-internal#2659). */
-export const BRAND_ID = "yomizaka";
+/** The product's id in `@krizaka/ui` and `@krizaka/org`. */
+export const BRAND_ID = "verikora";
 export const APP_VERSION = import.meta.env.VITE_APP_VERSION ?? "0.1.0";
 // @fixed: a call that waits longer is a Mac that has lost its network
 const API_TIMEOUT_MS = 30_000;

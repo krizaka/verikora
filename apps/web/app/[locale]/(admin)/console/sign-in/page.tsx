@@ -1,4 +1,4 @@
-import { YomizakaLogo } from "@krizaka/ui";
+import { VerikoraLogo } from "@krizaka/ui";
 import { AuthLayout } from "@krizaka/ui/auth-layout";
 import { Badge } from "@krizaka/ui/badge";
 import { Mascot } from "@krizaka/ui/mascots";
@@ -20,7 +20,7 @@ export default async function AdminSignIn({ params }: Readonly<{ params: Promise
     <AuthLayout
       brand={
         <span className="inline-flex items-center gap-2">
-          <YomizakaLogo size={28} /> {PRODUCT_NAME} <Badge tone="warning">{t.shell.dev}</Badge>
+          <VerikoraLogo size={28} /> {PRODUCT_NAME} <Badge tone="warning">{t.shell.dev}</Badge>
         </span>
       }
       promise={t.signIn.promise}

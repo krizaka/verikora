@@ -12,7 +12,7 @@ import {
   WalletIcon,
 } from "@krizaka/icons";
 import { krizakaFetch, useMutation } from "@krizaka/query";
-import { YomizakaLogo } from "@krizaka/ui";
+import { VerikoraLogo } from "@krizaka/ui";
 import { AppFrame } from "@krizaka/ui/app-frame";
 import { Badge } from "@krizaka/ui/badge";
 import { languagesFor } from "@krizaka/ui/language-switch";
@@ -107,8 +107,8 @@ export function ConsoleShell({
       </a>
       <AppFrame
         name={PRODUCT_NAME}
-        mark={<YomizakaLogo size={28} animated={false} />}
-        headerMark={<YomizakaLogo size={26} animated={false} />}
+        mark={<VerikoraLogo size={28} animated={false} />}
+        headerMark={<VerikoraLogo size={26} animated={false} />}
         homeHref={href(CONSOLE_ROUTES.library)}
         accent={BRAND_ID}
         label={say("shell.sidebarLabel")}
