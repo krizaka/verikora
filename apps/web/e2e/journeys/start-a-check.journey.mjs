@@ -25,9 +25,13 @@ for (const screen of SCREENS) {
       path: "/fr/app/check",
     });
 
-    page.on("response", (r) => { if (r.url().includes("/api/")) console.log("DBG", r.status(), r.request().method(), r.url().slice(0, 120)); });
+    page.on("response", (r) => {
+      if (r.url().includes("/api/")) console.log("DBG", r.status(), r.request().method(), r.url().slice(0, 120));
+    });
     page.on("requestfailed", (r) => console.log("DBG failed", r.url().slice(0, 120), r.failure()?.errorText));
-    page.on("console", (m) => { if (m.type() === "error") console.log("DBG console", m.text().slice(0, 200)); });
+    page.on("console", (m) => {
+      if (m.type() === "error") console.log("DBG console", m.text().slice(0, 200));
+    });
     const flow = page.getByTestId("check-flow");
     await expect(flow, "the four steps are shown before the drop").toBeVisible();
     // A text the engine cannot place: it asks which document it is.
