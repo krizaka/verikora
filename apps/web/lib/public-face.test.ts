@@ -21,8 +21,9 @@ const ask = async (path: string, host = "www.yomizaka.com") => {
 /** Wave 1 (meeting 2026-11-05): www.yomizaka.com is the code-name address; the public one is www.verikora.com. */
 describe("the code-name host is noindex, whatever the flag", () => {
   it("knows a code-name host", () => {
-    for (const host of ["www.yomizaka.com", "yomizaka.com", "dev.yomizaka.com", "WWW.yomizaka.com:443"])
+    for (const host of ["www.yomizaka.com", "yomizaka.com", "dev.yomizaka.com", "WWW.yomizaka.com:443"]) {
       expect(isCodeNameHost(host), host).toBe(true);
+    }
     expect(isCodeNameHost("www.verikora.com")).toBe(false);
     expect(isCodeNameHost("notyomizaka.com")).toBe(false);
   });
@@ -39,8 +40,9 @@ describe("the code-name host is noindex, whatever the flag", () => {
 
   it("every response says X-Robots-Tag noindex; robots.txt is Disallow: / with no sitemap; sitemap.xml is 404", async () => {
     vi.stubEnv("APP_SEARCH_INDEXING", "on");
-    for (const path of ["/fr", "/en", "/fr/pricing", "/fr/contact", "/fr/sign-in"])
+    for (const path of ["/fr", "/en", "/fr/pricing", "/fr/contact", "/fr/sign-in"]) {
       expect((await ask(path)).headers.get("x-robots-tag"), path).toBe(NOINDEX_HEADER);
+    }
     const txt = await ask("/robots.txt");
     expect(await txt.text()).toBe(CLOSED_ROBOTS);
     expect(txt.headers.get("x-robots-tag")).toBe(NOINDEX_HEADER);
@@ -62,9 +64,15 @@ describe("the code-name host is noindex, whatever the flag", () => {
 /** The public pages' words: no price, no promise of what is not built, no code name. */
 const PUBLIC = ["meta", "landing", "privacy", "terms", "download", "docs", "contact", "stage"] as const;
 const strings = (value: unknown, path: string[] = []): [string, string][] => {
-  if (typeof value === "string") return [[path.join("."), value]];
-  if (Array.isArray(value)) return value.flatMap((v, i) => strings(v, [...path, String(i)]));
-  if (value && typeof value === "object") return Object.entries(value).flatMap(([k, v]) => strings(v, [...path, k]));
+  if (typeof value === "string") {
+    return [[path.join("."), value]];
+  }
+  if (Array.isArray(value)) {
+    return value.flatMap((v, i) => strings(v, [...path, String(i)]));
+  }
+  if (value && typeof value === "object") {
+    return Object.entries(value).flatMap(([k, v]) => strings(v, [...path, k]));
+  }
   return [];
 };
 const publicWords = (dict: Record<string, unknown>) => PUBLIC.flatMap((section) => strings(dict[section], [section]));

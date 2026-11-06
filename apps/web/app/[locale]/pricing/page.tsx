@@ -28,7 +28,9 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
  */
 export default async function Pricing({ params }: Readonly<{ params: Promise<{ locale: string }> }>) {
   const locale = asLocale((await params).locale);
-  if (!PRICING_PUBLIC) permanentRedirect(pagePath(locale, "contact"));
+  if (!PRICING_PUBLIC) {
+    permanentRedirect(pagePath(locale, "contact"));
+  }
   const view = await pricingView(locale, new Date());
   const session = await pageSession();
   if (session) {

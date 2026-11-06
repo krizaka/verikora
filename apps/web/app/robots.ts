@@ -21,7 +21,9 @@ export default function robots(): MetadataRoute.Robots {
     "/fr/reset-password",
   ];
   // The code-name address is closed, with no sitemap (the public address is www.verikora.com): the proxy answers the same.
-  if (!indexableOn(new URL(SITE_URL).host)) return { rules: [{ userAgent: "*", disallow: "/" }] };
+  if (!indexableOn(new URL(SITE_URL).host)) {
+    return { rules: [{ userAgent: "*", disallow: "/" }] };
+  }
   return {
     rules: [
       { userAgent: "*", allow: "/", disallow },

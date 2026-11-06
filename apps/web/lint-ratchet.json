@@ -1,5 +1,9 @@
 {
-  "globs": ["app/**/*.tsx", "components/**/*.tsx", "src/**/*.tsx"],
+  "globs": [
+    "app/**/*.tsx",
+    "components/**/*.tsx",
+    "src/**/*.tsx"
+  ],
   "stackGlobs": [
     "app/**/*.{js,jsx,mjs,ts,tsx,mts}",
     "components/**/*.{js,jsx,mjs,ts,tsx,mts}",
@@ -22,8 +26,8 @@
     "routeStateSelection": 0,
     "cognitiveComplexity": 0,
     "sonar": 10,
-    "codeRules": 1098,
-    "code/curly": 1064,
+    "codeRules": 1097,
+    "code/curly": 1063,
     "code/max-depth": 27,
     "sonarjs/no-nested-conditional": 4,
     "code/no-console": 5,

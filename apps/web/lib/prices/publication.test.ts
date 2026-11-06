@@ -37,6 +37,6 @@ describe("the pricing page is published once the grid is decided (#388, ADR-0013
   it("the public page answers a permanent redirect to the contact page while no price is public", () => {
     const page = readFileSync(join(ROOT, "app/[locale]/pricing/page.tsx"), "utf8");
     expect(existsSync(join(ROOT, "app/[locale]/pricing/page.tsx"))).toBe(true);
-    expect(page).toContain('if (!PRICING_PUBLIC) permanentRedirect(pagePath(locale, "contact"));');
+    expect(page).toContain('if (!PRICING_PUBLIC) {\n    permanentRedirect(pagePath(locale, "contact"));');
   });
 });
