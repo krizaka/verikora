@@ -106,3 +106,19 @@ describe("a failing database connection logs no password (yomizaka#386)", () => 
     expect(spy.mock.calls.flat().map(String).join("\n")).not.toContain(PASSWORD);
   });
 });
+
+describe("a log line carries no e-mail address, bearer token or session token (krizaka-internal#2385)", () => {
+  it("hides an e-mail address", () => {
+    expect(redactSecrets("sign-up failed for eric@example.com twice")).toBe(`sign-up failed for ${REDACTED} twice`);
+  });
+
+  it("hides a bearer token and a session token", () => {
+    expect(redactSecrets("Authorization: Bearer abc.def-123_xyz")).toBe(`Authorization: Bearer ${REDACTED}`);
+    expect(redactSecrets("cookie ys1.AbCdEf0123456789_-xyz rejected")).toBe(`cookie ${REDACTED} rejected`);
+  });
+
+  it("hides a token in a query string and a signature header value", () => {
+    expect(redactSecrets("GET /api/x?access_token=abc123&a=1")).toBe(`GET /api/x?access_token=${REDACTED}&a=1`);
+    expect(redactSecrets("stripe-signature=t=1,v1=deadbeef")).toBe(`stripe-signature=${REDACTED}`);
+  });
+});
