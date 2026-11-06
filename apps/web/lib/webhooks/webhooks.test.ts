@@ -6,7 +6,7 @@ import { eventsOfFinishedBatch, WEBHOOK_EVENT } from "./events";
 import { sealer } from "./seal";
 import { safeSend } from "./send";
 
-describe("an endpoint's secret at rest (yomizaka#241)", () => {
+describe("an endpoint's secret at rest (verikora#241)", () => {
   const { seal, open } = sealer("a-server-secret-of-at-least-thirty-two-characters");
 
   it("is sealed and opened again; the sealed text shows nothing of it and differs each time", () => {
@@ -67,7 +67,7 @@ describe("addresses a webhook must never reach", () => {
 
 describe("the call itself", () => {
   const request = {
-    url: "https://hooks.example.test/yomizaka",
+    url: "https://hooks.example.test/verikora",
     body: "{}",
     headers: { "x-krizaka-event": "batch.finished" },
   };

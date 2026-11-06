@@ -7,7 +7,7 @@ import fr from "@/messages/fr.json";
 
 import { centsOf, RentShare, rentShareSentences } from "./RentShare";
 
-// Guardrail (yomizaka#557/#559): the share is information, never a verdict, a score, a threshold or a reason to refuse.
+// Guardrail (verikora#557/#559): the share is information, never a verdict, a score, a threshold or a reason to refuse.
 const VERDICT_WORDS =
   /\b(approv|accept|refus|reject|declin|reçu|rejet|accepté|approuv|qualif|éligib|eligib|afford|abordable|risk|risqu|score|too high|trop élev|pass|fail|échec|good|bad|bon\b|mauvais)/i;
 

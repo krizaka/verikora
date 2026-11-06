@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { YOMIZAKA_RULES } from "../preflight/rules";
+import { VERIKORA_RULES } from "../preflight/rules";
 import { auditCapsOf, clientConfigOf, maintenanceOf, preflightRulesFrom, type Snapshot } from "./boundary";
 import { defOf, SETTING_KEYS, type SettingKey } from "./registry";
 
@@ -16,22 +16,22 @@ const snapshot = (changes: Partial<Record<SettingKey, unknown>> = {}): Snapshot 
 describe("the pre-flight rules follow the configuration", () => {
   it("keeps the product's rules and applies the limits an administrator set", () => {
     const rules = preflightRulesFrom(
-      YOMIZAKA_RULES,
+      VERIKORA_RULES,
       snapshot({ "limits.maxFileMb": 2, "limits.maxPages": 30, "limits.allowedTypes": ["pdf"] }),
     );
     expect(rules).toMatchObject({ maxBytes: 2 * 1024 * 1024, maxPages: 30, allowedKinds: ["pdf"] });
-    expect(rules.pdfActiveNames).toEqual(YOMIZAKA_RULES.pdfActiveNames);
+    expect(rules.pdfActiveNames).toEqual(VERIKORA_RULES.pdfActiveNames);
   });
   it("the defaults are the product's own rules", () => {
-    expect(preflightRulesFrom(YOMIZAKA_RULES, snapshot())).toEqual(YOMIZAKA_RULES);
+    expect(preflightRulesFrom(VERIKORA_RULES, snapshot())).toEqual(VERIKORA_RULES);
   });
   it("allows both Word formats through the existing database-backed word setting", () => {
-    expect(preflightRulesFrom(YOMIZAKA_RULES, snapshot({ "limits.allowedTypes": ["word"] })).allowedKinds).toEqual([
+    expect(preflightRulesFrom(VERIKORA_RULES, snapshot({ "limits.allowedTypes": ["word"] })).allowedKinds).toEqual([
       "docx",
       "odt",
     ]);
     expect(
-      preflightRulesFrom(YOMIZAKA_RULES, snapshot({ "limits.allowedTypes": ["pdf", "text", "image"] })).allowedKinds,
+      preflightRulesFrom(VERIKORA_RULES, snapshot({ "limits.allowedTypes": ["pdf", "text", "image"] })).allowedKinds,
     ).not.toContain("odt");
   });
 });

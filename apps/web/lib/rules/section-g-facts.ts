@@ -1,9 +1,9 @@
-import type { ReportFact } from "@yomizaka/core";
+import type { ReportFact } from "@verikora/core";
 
 import type { SectionGInput } from "./section-g";
 
 /**
- * Section G's input from the figures the lease ruleset exposes (`facts` of the report, orazaka-packs `qc-residential-lease`).
+ * Section G's input from the figures the lease ruleset exposes (`facts` of the report, sovkora-packs `qc-residential-lease`).
  * Nothing is guessed: no readable rent gives no claim; a lowest rent that is blank, or not there at all, is a blank Section G.
  * The year is the report's own date (`asOf`), the day the lease was read, which is when the TAL's rate in force applies.
  */

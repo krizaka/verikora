@@ -4,7 +4,7 @@ import { localDay } from "@krizaka/intl";
 import { krizakaFetch, useMutation, useQueryClient } from "@krizaka/query";
 import { Alert } from "@krizaka/ui/alert";
 import { Button } from "@krizaka/ui/button";
-import { type Analysis, type DocumentView, queryKeys } from "@yomizaka/core";
+import { type Analysis, type DocumentView, queryKeys } from "@verikora/core";
 import { useState } from "react";
 
 import { ButtonLink } from "@/components/ButtonLink";

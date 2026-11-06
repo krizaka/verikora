@@ -9,8 +9,8 @@ import { migrate, query } from "../db";
 import { resetRateLimits } from "../limits";
 import { createSession, SESSION_COOKIE } from "../session";
 
-/** The seal of a contract through its routes: a key with the scope, the same request twice, the file, the public check. Against PostgreSQL (CI's service; locally YOMIZAKA_DB_IT=1 DATABASE_URL=…). */
-const enabled = process.env.YOMIZAKA_DB_IT === "1" && !!process.env.DATABASE_URL;
+/** The seal of a contract through its routes: a key with the scope, the same request twice, the file, the public check. Against PostgreSQL (CI's service; locally DATABASE_IT=1 DATABASE_URL=…). */
+const enabled = process.env.DATABASE_IT === "1" && !!process.env.DATABASE_URL;
 const stamp = `${Date.now()}-${Math.random().toString(16).slice(2, 8)}`;
 
 const contract = {
@@ -50,7 +50,7 @@ describe("the leak guard of the seal tests", () => {
   });
 });
 
-describe.runIf(enabled)("sealing a contract for a partner (yomizaka#71)", () => {
+describe.runIf(enabled)("sealing a contract for a partner (verikora#71)", () => {
   let bearer = "";
   let narrow = "";
   let ownerId = "";
@@ -70,7 +70,7 @@ describe.runIf(enabled)("sealing a contract for a partner (yomizaka#71)", () => 
     await migrate();
     const [owner] = await query<{ id: string }>(
       "INSERT INTO accounts (email, plan, subscription_status, current_period_end) VALUES ($1, 'PRO', 'active', now() + interval '30 days') RETURNING id",
-      [`seal-${stamp}@yomizaka.test`],
+      [`seal-${stamp}@verikora.test`],
     );
     ownerId = owner!.id;
     const { token } = await createSession(ownerId, { ip: "203.0.113.31", userAgent: "vitest" });
@@ -156,7 +156,7 @@ describe.runIf(enabled)("sealing a contract for a partner (yomizaka#71)", () => 
     ).toBe("%PDF-");
     const [other] = await query<{ id: string }>(
       "INSERT INTO accounts (email, plan, subscription_status, current_period_end) VALUES ($1, 'PRO', 'active', now() + interval '30 days') RETURNING id",
-      [`seal-other-${stamp}@yomizaka.test`],
+      [`seal-other-${stamp}@verikora.test`],
     );
     const { token } = await createSession(other!.id, { ip: "203.0.113.32", userAgent: "vitest" });
     const created = await createKeyRoute(

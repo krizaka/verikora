@@ -3,7 +3,7 @@ import { describe, expect, it } from "vitest";
 import { activityStrip } from "./home";
 import { PERIOD_DAYS } from "./home-figures";
 
-/** The strip's figures are queries over the chosen period (yomizaka#332): the period decides the lower bound, the owner scopes every one. */
+/** The strip's figures are queries over the chosen period (verikora#332): the period decides the lower bound, the owner scopes every one. */
 const NOW = new Date("2026-10-25T16:00:00Z");
 
 function recorder(rows: Record<string, Date[]>) {

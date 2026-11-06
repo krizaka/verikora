@@ -1,4 +1,4 @@
-import { STORAGE_MODE, STORAGE_MODES, type StorageMode } from "@yomizaka/core";
+import { STORAGE_MODE, STORAGE_MODES, type StorageMode } from "@verikora/core";
 
 /**
  * The modes Settings > Storage offers as cards. A connected cloud is not one: it is connected from its own panel (an OAuth round trip),

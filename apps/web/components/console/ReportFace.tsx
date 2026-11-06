@@ -6,7 +6,7 @@ import { Button } from "@krizaka/ui/button";
 import { DescriptionList } from "@krizaka/ui/description-list";
 import { FootnoteRef } from "@krizaka/ui/footnote";
 import { Stat } from "@krizaka/ui/stat";
-import { type Analysis, type ComplianceReport, isSeededCheck, queryKeys } from "@yomizaka/core";
+import { type Analysis, type ComplianceReport, isSeededCheck, queryKeys } from "@verikora/core";
 import { z } from "zod";
 
 import {
@@ -40,7 +40,7 @@ export const REVIEW_NOTE = 1;
 
 /**
  * The verdict first (the review's D1, design § 5.3): how many rules of how many need a look and how many of them block, in the
- * report's tone, with the law's context in words — the ruleset's id stays in the technical details; never Yomizaka's own verdict.
+ * report's tone, with the law's context in words — the ruleset's id stays in the technical details; never Verikora's own verdict.
  * The review note is a footnote at the foot of the report, pointed to from here.
  */
 export function VerdictBand({ report }: Readonly<{ report: ComplianceReport }>) {
@@ -221,7 +221,7 @@ export function TechnicalDetails({ documentId, analysis }: Readonly<{ documentId
             {
               term: say("analysis.runId"),
               details: (
-                <code className="break-all font-mono text-xs" data-testid="orazaka-run-id">
+                <code className="break-all font-mono text-xs" data-testid="sovkora-run-id">
                   {analysis.runId ?? "—"}
                 </code>
               ),

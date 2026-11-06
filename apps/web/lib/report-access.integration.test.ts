@@ -3,8 +3,8 @@ import { beforeAll, describe, expect, it } from "vitest";
 import { migrate, query } from "./db";
 import { accessTo, createGrant, listSharing, loadTarget, requestAccess, revokeGrant } from "./report-access";
 
-/** The grants' SQL against a real PostgreSQL (CI's service; locally `YOMIZAKA_DB_IT=1 DATABASE_URL=… pnpm test`). */
-const enabled = process.env.YOMIZAKA_DB_IT === "1" && !!process.env.DATABASE_URL;
+/** The grants' SQL against a real PostgreSQL (CI's service; locally `DATABASE_IT=1 DATABASE_URL=… pnpm test`). */
+const enabled = process.env.DATABASE_IT === "1" && !!process.env.DATABASE_URL;
 
 describe.runIf(enabled)("report grants (database)", () => {
   const stamp = Date.now();
@@ -19,11 +19,11 @@ describe.runIf(enabled)("report grants (database)", () => {
     await migrate();
     [owner] = (await query<{ id: string; email: string }>(
       "INSERT INTO accounts (email) VALUES ($1) RETURNING id, email",
-      [`own-${stamp}@yomizaka.test`],
+      [`own-${stamp}@verikora.test`],
     )) as [typeof owner];
     [guest] = (await query<{ id: string; email: string }>(
       "INSERT INTO accounts (email) VALUES ($1) RETURNING id, email",
-      [`guest-${stamp}@yomizaka.test`],
+      [`guest-${stamp}@verikora.test`],
     )) as [typeof guest];
     const [doc] = await query<{ id: string }>(
       "INSERT INTO documents (owner_id, title, filename, mime_type, size_bytes, sha256, content) VALUES ($1, 'Bail', 'bail.txt', 'text/plain', 4, $2, 'bail') RETURNING id",
@@ -77,7 +77,7 @@ describe.runIf(enabled)("report grants (database)", () => {
   });
 
   it("an invitation for an address with no account waits, then is honoured when the account exists", async () => {
-    const email = `later-${stamp}@yomizaka.test`;
+    const email = `later-${stamp}@verikora.test`;
     expect((await createGrant(owner, documentId, analysisId, { email, expiresAt: null }, new Date())).member).toBe(
       false,
     );
@@ -102,7 +102,7 @@ describe.runIf(enabled)("report grants (database)", () => {
   });
 
   it("records one access request, shown to the owner, and closes it when access is given", async () => {
-    const stranger = { id: guest.id, email: `nope-${stamp}@yomizaka.test` };
+    const stranger = { id: guest.id, email: `nope-${stamp}@verikora.test` };
     const [s] = await query<{ id: string }>("INSERT INTO accounts (email) VALUES ($1) RETURNING id", [stranger.email]);
     const who = { id: s!.id, email: stranger.email };
     const target = (await loadTarget(runId, sha))!;

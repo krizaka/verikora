@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { test } from "vitest";
 
-import { compareVersions, plan, syncInstallations } from "./sync-orazaka-installations.mjs";
+import { compareVersions, plan, syncInstallations } from "./sync-sovkora-installations.mjs";
 
 const json = (status, body) =>
   new Response(JSON.stringify(body), { status, headers: { "content-type": "application/json" } });
@@ -26,7 +26,7 @@ test("plans an upgrade, a keep and an install", () => {
 
 test("the list wants compliance-check 2.0.0 (the declared kind of a visit notice and an état des lieux)", () => {
   assert.equal(
-    JSON.parse(readFileSync(new URL("./orazaka-installations.json", import.meta.url), "utf8")).studios[
+    JSON.parse(readFileSync(new URL("./sovkora-installations.json", import.meta.url), "utf8")).studios[
       "compliance-check"
     ],
     "2.0.0",
@@ -55,7 +55,7 @@ test("upgrades through the documented endpoint, and does nothing on --check", as
   assert.ok(calls.includes("POST /api/v1/studios/installations/i1/upgrade"));
 });
 
-test("fails when Orazaka refuses, with the status only", async () => {
+test("fails when Sovkora refuses, with the status only", async () => {
   await assert.rejects(
     syncInstallations({
       base: "https://x",

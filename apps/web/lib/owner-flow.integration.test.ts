@@ -1,29 +1,29 @@
-import { memoryStore, type OrazakaRun } from "@yomizaka/core";
+import { memoryStore, type SovkoraRun } from "@verikora/core";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 
 import { CONSENT_MEANS, CONSENT_PURPOSE, grantConsent, NOTICE_VERSION } from "./applicant-consent";
 import { applicantFileOf, requestApplicantFile, submitApplicantFile, uploadApplicantDocument } from "./applicant-file";
 import { migrate, query } from "./db";
 import type { AccountMail } from "./mailer";
-import { useOrazakaClient } from "./orazaka";
 import { SHARE_DEFAULT_DAYS } from "./owner-report";
 import { createShare, emailShare, listShares, openShare, revokeShare } from "./owner-report-shares";
 import { cleanPdf } from "./preflight/fixtures";
+import { useSovkoraClient } from "./sovkora";
 
 /**
- * yomizaka#130, the whole flow in one test against the real database (CI's service; locally YOMIZAKA_DB_IT=1 DATABASE_URL=…):
+ * verikora#130, the whole flow in one test against the real database (CI's service; locally DATABASE_IT=1 DATABASE_URL=…):
  * the agent asks, the applicant consents and uploads, the checks end, the originals are purged, the owner gets a link by e-mail and
- * opens only the report. Orazaka is a fake that records the runs.
+ * opens only the report. Sovkora is a fake that records the runs.
  */
-const enabled = process.env.YOMIZAKA_DB_IT === "1" && !!process.env.DATABASE_URL;
+const enabled = process.env.DATABASE_IT === "1" && !!process.env.DATABASE_URL;
 const NOW = new Date("2026-10-28T12:00:00Z");
 const DAY_MS = 86_400_000;
 const BANNED = /certificat|authentique|conforme|approuv|refus|certificate|authentic|compliant|approved|rejected/i;
 
-describe.runIf(enabled)("from the applicant's upload to the owner's report (yomizaka#130)", () => {
+describe.runIf(enabled)("from the applicant's upload to the owner's report (verikora#130)", () => {
   const runs = new Map<string, string>();
   let n = 0;
-  const run = (id: string, status: string): OrazakaRun => ({
+  const run = (id: string, status: string): SovkoraRun => ({
     id,
     studioKey: "x",
     blueprintVersion: "1.0.0",
@@ -36,7 +36,7 @@ describe.runIf(enabled)("from the applicant's upload to the owner's report (yomi
 
   beforeAll(async () => {
     await migrate();
-    useOrazakaClient({
+    useSovkoraClient({
       startRun: async () => {
         const id = `run-flow-${++n}`;
         runs.set(id, "RUNNING");
@@ -44,7 +44,7 @@ describe.runIf(enabled)("from the applicant's upload to the owner's report (yomi
       },
       getRun: async (id: string) => run(id, runs.get(id) ?? "RUNNING"),
     } as never);
-    const email = `flow-${stamp}@yomizaka.test`;
+    const email = `flow-${stamp}@verikora.test`;
     const [row] = await query<{ id: string }>(
       "INSERT INTO accounts (email, audit_credits) VALUES ($1, 50) RETURNING id",
       [email],
@@ -52,7 +52,7 @@ describe.runIf(enabled)("from the applicant's upload to the owner's report (yomi
     agent = { id: row!.id, email };
   });
   afterAll(async () => {
-    useOrazakaClient(null);
+    useSovkoraClient(null);
     await query("DELETE FROM accounts WHERE id = $1", [agent.id]);
   });
 
@@ -121,7 +121,7 @@ describe.runIf(enabled)("from the applicant's upload to the owner's report (yomi
       { ...agent, name: null },
       made.id,
       { token: share.token, email: "owner@exemple.test", locale: "fr" },
-      { mail: async (m) => void sent.push(m), origin: "https://www.yomizaka.com" },
+      { mail: async (m) => void sent.push(m), origin: "https://www.verikora.com" },
       NOW,
     );
     expect(sent).toHaveLength(1);

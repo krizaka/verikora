@@ -1,47 +1,47 @@
-# ADR-0001 — Product Boundaries, Multi-Region Residency (Quebec Law 25), and Trust Integration: Yomizaka vs. Orasaka vs. a client platform
+# ADR-0001 — Product Boundaries, Multi-Region Residency (Quebec Law 25), and Trust Integration: Verikora vs. Orasaka vs. a client platform
 
-- **Status:** accepted — 2026-10-16 (ratified in krizaka/yomizaka#29 and discussion #30)
-- **Scope:** Yomizaka (`krizaka/yomizaka`), Orasaka (`krizaka/orazaka`, `orazaka-tools`), a client platform (any B2B consumer), Krizaka Platform Kit
-- **Enforced by:** `@yomizaka/core`, `@yomizaka/providers`, HTTP edge `X-Data-Residency-Zone`, 60-second zeroize RAM purge, Ed25519 attestation chain
+- **Status:** accepted — 2026-10-16 (ratified in krizaka/verikora#29 and discussion #30)
+- **Scope:** Verikora (`krizaka/verikora`), Orasaka (`krizaka/sovkora`, `sovkora-tools`), a client platform (any B2B consumer), Krizaka Platform Kit
+- **Enforced by:** `@verikora/core`, `@verikora/providers`, HTTP edge `X-Data-Residency-Zone`, 60-second zeroize RAM purge, Ed25519 attestation chain
 
 ## Context
 
 Technologies Krizaka Inc. operates a House of Brands architecture with distinct product missions:
-1. **Orasaka (`orazaka-ai-engine`, `orazaka-tools`):** Sovereign enterprise AI platform running locally or on dedicated GPU hardware. `orazaka-tools` acts as an MCP gateway for generic, non-PII agent operations.
-2. **Yomizaka (`krizaka/yomizaka`):** Elevated from an internal document analysis module to Krizaka’s 2nd flagship B2B commercial product. Yomizaka serves the Montreal/Quebec ecosystem (PropTech, FinTech, LegalTech, regulated platforms subject to **Quebec Law 25**) and global markets (PIPEDA, GDPR, CCPA).
+1. **Orasaka (`sovkora-engine`, `sovkora-tools`):** Sovereign enterprise AI platform running locally or on dedicated GPU hardware. `sovkora-tools` acts as an MCP gateway for generic, non-PII agent operations.
+2. **Verikora (`krizaka/verikora`):** Elevated from an internal document analysis module to Krizaka’s 2nd flagship B2B commercial product. Verikora serves the Montreal/Quebec ecosystem (PropTech, FinTech, LegalTech, regulated platforms subject to **Quebec Law 25**) and global markets (PIPEDA, GDPR, CCPA).
 3. **A client platform (any B2B consumer):** a platform that needs strict age gating, identity verification and contract vaulting, and must not hold identity documents itself.
 
 ### The Architectural Dilemma
 
 - **Where do external KYC, Age Verification, and Credit connectors live?**
-  - Should they live in `orasaka-tools` as generic MCP tools, or in Yomizaka?
+  - Should they live in `orasaka-tools` as generic MCP tools, or in Verikora?
 - **How does a client platform consume these verification services?**
-  - Should a client platform bypass Yomizaka and call Orasaka or third-party providers directly, or consume Yomizaka as "Customer Zero"?
+  - Should a client platform bypass Verikora and call Orasaka or third-party providers directly, or consume Verikora as "Customer Zero"?
 - **How is legal sovereignty and data residency guaranteed across the call chain?**
   - How do we prevent sensitive PII, national ID scans, and biometric liveness photos from leaking into AI model inference layers, LLM logs, or uncertified cloud caches?
 
 ## Decision
 
-### 1. Dedicated Trust SPI in Yomizaka (`@yomizaka/providers`)
-- **Third-party connectors live exclusively within Yomizaka.** `orasaka-tools` remains strictly reserved for generic, stateless, non-PII agent tooling (e.g., search, arithmetic, format conversions).
-- Yomizaka defines pluggable Service Provider Interfaces:
+### 1. Dedicated Trust SPI in Verikora (`@verikora/providers`)
+- **Third-party connectors live exclusively within Verikora.** `orasaka-tools` remains strictly reserved for generic, stateless, non-PII agent tooling (e.g., search, arithmetic, format conversions).
+- Verikora defines pluggable Service Provider Interfaces:
   - `IdvProvider` (Didit, Persona, Stripe Identity, Trulioo)
   - `AgeGateProvider` (Didit 18+ fast age verification)
   - `CreditBureauProvider` (Flinks Open Banking, CRS Credit API soft pulls)
 - **Hard Invariant:** **NO raw PII, national ID images, or biometrics ever enter Orasaka or `orasaka-tools`.**
 
-### 2. A client platform is "Customer Zero" of Yomizaka
-- The client platform talks **only** to Yomizaka’s B2B API (`/api/v1/verifications/age`, `/api/v1/verifications/id`, `/api/v1/contracts`).
+### 2. A client platform is "Customer Zero" of Verikora
+- The client platform talks **only** to Verikora’s B2B API (`/api/v1/verifications/age`, `/api/v1/verifications/id`, `/api/v1/contracts`).
 - The client platform stores **zero** identity documents, selfies, or biometric templates in its database.
 - The client platform receives and stores only tamper-proof, Ed25519-signed cryptographic tokens (`VerificationAttestation`).
-- Human escalation for unclear cases is surfaced directly via the client platform's own operator console, backed by Yomizaka audit receipts.
+- Human escalation for unclear cases is surfaced directly via the client platform's own operator console, backed by Verikora audit receipts.
 
 ### 3. Multi-Region Data Residency & Quebec Law 25 Sovereignty
 - Every request carries the mandatory context header `X-Data-Residency-Zone`:
   - `CA-QC`: Quebec / Canada (Physical residency at OVHcloud Beauharnois BHS or AWS Montreal `ca-central-1`).
   - `EU-CENTRAL`: European Union (Frankfurt / Paris - GDPR).
   - `US-EAST`: United States (Northern Virginia - CCPA / SOC2).
-- **Stateless AI In-Memory Processing:** When Yomizaka invokes Orasaka Studios (`document-authenticity`, `compliance-check`), requests carry `Cache-Control: no-store` and operate solely in volatile memory (`tmpfs`). No disk persistence occurs on Orasaka.
+- **Stateless AI In-Memory Processing:** When Verikora invokes Orasaka Studios (`document-authenticity`, `compliance-check`), requests carry `Cache-Control: no-store` and operate solely in volatile memory (`tmpfs`). No disk persistence occurs on Orasaka.
 - **Zero-Biometric-Retention by Default:** Raw document scans and liveness frames are purged and cryptographically wiped (DoD zeroize) within 60 seconds of verdict issuance.
 
 ## Provider Matrix & Unit Economics
@@ -65,7 +65,7 @@ Technologies Krizaka Inc. operates a House of Brands architecture with distinct 
                             │ B2B API (mTLS / Service Token)
                             ▼
 ┌─────────────────────────────────────────────────────────┐
-│     YOMIZAKA (Sovereign Trust & Compliance Engine)      │
+│     VERIKORA (Sovereign Trust & Compliance Engine)      │
 │  - /api/v1/verifications/{age,id}, /api/v1/contracts    │
 │  - Multi-Region Router (X-Data-Residency-Zone: CA-QC)   │
 │  - SPI: Didit, Persona, Flinks, CRS Credit             │
@@ -87,10 +87,10 @@ Technologies Krizaka Inc. operates a House of Brands architecture with distinct 
 
 - **Positive:** Complete isolation of PII guarantees compliance with Quebec Law 25 and GDPR.
 - **Positive:** the client platform sheds direct liability by relying on signed cryptographic audit attestations.
-- **Positive:** Yomizaka establishes commercial viability as a sovereign B2B trust product for Quebec PropTech and FinTech.
+- **Positive:** Verikora establishes commercial viability as a sovereign B2B trust product for Quebec PropTech and FinTech.
 - **Negative / Operational Cost:** Multi-region S3 routing and per-zone KMS key rotation must be configured and monitored.
 
-## Amendment (2026-10-28, yomizaka#130): what runs, and what does not
+## Amendment (2026-10-28, verikora#130): what runs, and what does not
 
 The text above is the target. This is what the code does today; the product claims only this.
 

@@ -23,7 +23,7 @@
     "password": "Mot de passe",
     "submit": "Se connecter",
     "wrong": "Adresse ou mot de passe incorrect.",
-    "createAccount": "Créer un compte sur yomizaka.com"
+    "createAccount": "Créer un compte sur verikora.com"
   },
   "verify": {
     "title": "Vérifier un document",
@@ -73,7 +73,7 @@
       "en": "English"
     },
     "storage": "Stockage",
-    "storageBody": "Vos documents sont stockés sur cet appareil. Pour une copie dans le nuage, choisissez-la sur yomizaka.com.",
+    "storageBody": "Vos documents sont stockés sur cet appareil. Pour une copie dans le nuage, choisissez-la sur verikora.com.",
     "account": "Compte",
     "signOut": "Se déconnecter",
     "version": "Version {version}",

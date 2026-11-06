@@ -1,6 +1,6 @@
 # Shared step (in shared/, so `maestro test .maestro` does not run it as a flow): signs in when the sign-in screen is there. The Keychain survives a
 # reinstall, so a session may already exist.
-appId: com.krizaka.yomizaka
+appId: com.krizaka.verikora
 ---
 # A blank first frame must not read as "signed in": wait for the sign-in or the signed-in screen before reading which.
 - extendedWaitUntil:

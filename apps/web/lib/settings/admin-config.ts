@@ -6,7 +6,7 @@ export const CONFIG_PAGE = {
   prices: "prices",
   coupons: "coupons",
   packs: "packs",
-  orazaka: "orazaka",
+  sovkora: "sovkora",
   organisation: "organisation",
 } as const;
 export type ConfigPage = (typeof CONFIG_PAGE)[keyof typeof CONFIG_PAGE];

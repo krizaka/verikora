@@ -20,7 +20,7 @@ export type Bookmark = { id: string; name: string; color: TagColor };
 export type BookmarkGroup = { kind: Kind; bookmarks: readonly Bookmark[] };
 
 /**
- * « Signets » (yomizaka#339): the person's own coloured categories, one list per kind (files, documents). Create, rename, recolour and
+ * « Signets » (verikora#339): the person's own coloured categories, one list per kind (files, documents). Create, rename, recolour and
  * delete are the workspace's tag routes (`/api/organize/<kind>/tags`); deleting a bookmark takes it off its files and never touches them.
  */
 export function BookmarksSection({ groups }: Readonly<{ groups: readonly BookmarkGroup[] }>) {

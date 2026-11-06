@@ -9,7 +9,7 @@ const source = readFileSync(new URL("./PriceCatalogueView.tsx", import.meta.url)
 const at = (tree: unknown, path: string) =>
   path.split(".").reduce<unknown>((o, k) => (o as Record<string, unknown> | undefined)?.[k], tree);
 
-describe("the price editor's words (yomizaka#548)", () => {
+describe("the price editor's words (verikora#548)", () => {
   // Every literal key the screen asks for exists in both languages (the dynamic ones, `units.<id>`, are checked below).
   const keys = [...source.matchAll(/say\(\s*"((?:adminConfig|errors)\.[A-Za-z.]+)"/g)].map((m) => m[1] as string);
   it.each(["en", "fr"] as const)("has every key it uses (%s)", (lang) => {

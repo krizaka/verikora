@@ -10,7 +10,7 @@ import { diffSnapshot, readSnapshot, type SchemaSnapshot } from "./schema-check"
 import expected from "./schema-expected.json";
 
 const url = process.env.DATABASE_URL;
-const enabled = process.env.YOMIZAKA_DB_IT === "1" && !!url;
+const enabled = process.env.DATABASE_IT === "1" && !!url;
 
 // The history the previous release left in `schema_migrations` (the 65 migrations the baseline replaced).
 const PREVIOUS_RELEASE_HISTORY = ["0001_initial", "0002_showcase", "0064_storage_cloud", LAST_REPLACED_VERSION];

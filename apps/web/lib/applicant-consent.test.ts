@@ -22,11 +22,11 @@ import {
 import { migrate, query } from "./db";
 import { byToken, requestScreening } from "./screening";
 
-/** yomizaka#131: the applicant's notice, the consent per purpose and the gates. The database cases run with YOMIZAKA_DB_IT=1. */
+/** verikora#131: the applicant's notice, the consent per purpose and the gates. The database cases run with DATABASE_IT=1. */
 const NOTICE_KEYS = ["collected", "why", "who", "howLong", "ask"] as const;
 const BANNED = /certificat de conformit|\bconforme\b|authentiqu|\bfaux\b|certified|guarantee|\bgenuine\b/i;
 
-describe("the purposes are the engine's names (orazaka-ai-engine CheckPurpose) plus the document check", () => {
+describe("the purposes are the engine's names (sovkora-engine CheckPurpose) plus the document check", () => {
   it("names them as the engine does, so ExternalCheckService reads the same record", () => {
     expect([...CONSENT_PURPOSES].sort()).toEqual(["COURT_RECORDS", "CREDIT", "DOCUMENT_CHECK", "DOCUMENT_KEEP"]);
     expect(CONSENT_PURPOSE.COURT_RECORDS).toBe("COURT_RECORDS");
@@ -85,7 +85,7 @@ describe("no SIN is ever asked by the code either", () => {
   });
 });
 
-describe.runIf(process.env.YOMIZAKA_DB_IT === "1" && !!process.env.DATABASE_URL)("consent gates (database)", () => {
+describe.runIf(process.env.DATABASE_IT === "1" && !!process.env.DATABASE_URL)("consent gates (database)", () => {
   const NOW = new Date("2026-10-24T12:00:00Z");
   const stamp = Date.now();
   let landlord: { id: string; email: string };
@@ -96,7 +96,7 @@ describe.runIf(process.env.YOMIZAKA_DB_IT === "1" && !!process.env.DATABASE_URL)
     await migrate();
     [landlord] = (await query<{ id: string; email: string }>(
       "INSERT INTO accounts (email) VALUES ($1) RETURNING id, email",
-      [`consent-landlord-${stamp}@yomizaka.test`],
+      [`consent-landlord-${stamp}@verikora.test`],
     )) as [typeof landlord];
     const made = await requestScreening(
       landlord,

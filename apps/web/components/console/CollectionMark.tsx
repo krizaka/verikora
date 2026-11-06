@@ -1,5 +1,5 @@
 import { BookmarkIcon } from "@krizaka/icons";
-import type { CollectionAvatar as Avatar_ } from "@yomizaka/core";
+import type { CollectionAvatar as Avatar_ } from "@verikora/core";
 
 import { CollectionAvatar } from "./CollectionAvatar";
 

@@ -1,11 +1,11 @@
 #!/usr/bin/env node
 // « Du fichier au constat » — the landing's recorded journey as ONE smooth take, phone first (390×844 at 2×): drop the
-// lease → the check runs → the finding with its line lit → search. Recorded for real on dev.yomizaka.com as the QA member
+// lease → the check runs → the finding with its line lit → search. Recorded for real on dev.verikora.com as the QA member
 // (never the administrator, the e-mail hidden), in the language asked; the clip goes to Bunny, never into the repository.
 //
-//   YOMIZAKA_USER_EMAIL=… YOMIZAKA_USER_PASSWORD=… node scripts/landing-take.mjs <out-dir> --locale fr|en
+//   VERIKORA_USER_EMAIL=… VERIKORA_USER_PASSWORD=… node scripts/landing-take.mjs <out-dir> --locale fr|en
 //
-// Writes <out-dir>/<locale>/take.{webm,mp4,jpg} and evidence.json (the Orazaka run id, the chapter times). The waiting is
+// Writes <out-dir>/<locale>/take.{webm,mp4,jpg} and evidence.json (the Sovkora run id, the chapter times). The waiting is
 // sped up uniformly (never edited otherwise) to keep the take under 25 s. Needs a Chromium for playwright-core and ffmpeg.
 import { execFileSync } from "node:child_process";
 import { mkdirSync, mkdtempSync, writeFileSync } from "node:fs";
@@ -26,10 +26,10 @@ const flag = (name, fallback) => {
 const outRoot = path.resolve(args[0] ?? "take");
 const locale = flag("locale", "fr");
 const [theme] = themesOf(flag("theme", "dark")); // a video is one theme; run it twice for both
-const BASE = process.env.APP_BASE_URL ?? "https://dev.yomizaka.com";
-const email = process.env.YOMIZAKA_USER_EMAIL;
-const password = process.env.YOMIZAKA_USER_PASSWORD;
-if (!email || !password) throw new Error("YOMIZAKA_USER_EMAIL and YOMIZAKA_USER_PASSWORD are required");
+const BASE = process.env.APP_BASE_URL ?? "https://dev.verikora.com";
+const email = process.env.VERIKORA_USER_EMAIL;
+const password = process.env.VERIKORA_USER_PASSWORD;
+if (!email || !password) throw new Error("VERIKORA_USER_EMAIL and VERIKORA_USER_PASSWORD are required");
 
 const VIEWPORT = { width: 390, height: 844 };
 const SCALE = 2;
@@ -148,7 +148,7 @@ await keepBox.waitFor({ timeout: 10_000 });
 if ((await keepBox.getAttribute("aria-checked")) !== "true" && !(await keepBox.isChecked().catch(() => false)))
   await keepBox.click();
 await page.setInputFiles('input[type="file"]', file);
-// 2 · the file lands; if Yomizaka is unsure it asks « Which document? » (CheckView's `kind-choice` radiogroup, as CheckView.test
+// 2 · the file lands; if Verikora is unsure it asks « Which document? » (CheckView's `kind-choice` radiogroup, as CheckView.test
 // reads it): the lease is named and the check starts on its report. A file recognised for sure opens its report by itself.
 const reportUrl = /\/app\/documents\/[^/]+\/rapport/;
 const asked = page.locator(byTestId("kind"));
@@ -167,7 +167,7 @@ await page.waitForLoadState("networkidle");
 mark("check");
 // The report waits for « Run the check » (the jurisdiction and the date are the page's defaults).
 await page.getByRole("button", { name: RUN_LABEL[locale] }).first().click();
-waiting("the Orazaka run id (150 s max)");
+waiting("the Sovkora run id (150 s max)");
 await page.waitForSelector(byTestId("runId"), { state: "attached", timeout: 150_000 }).catch(async (e) => {
   await page.screenshot({ path: `${outRoot}/debug-${locale}.png` }).catch(() => undefined);
   writeFileSync(`${outRoot}/debug-${locale}.txt`, await page.locator("main").innerText());
@@ -280,7 +280,7 @@ const shift = frames[0].at - t0 / 1000;
 for (const k of Object.keys(marks)) marks[k] -= shift;
 const start = marks.ready;
 const real = marks.end - start;
-// The wait for the check (Orazaka reading) is sped up; the rest plays at its own pace. Never cut otherwise.
+// The wait for the check (Sovkora reading) is sped up; the rest plays at its own pace. Never cut otherwise.
 const waitFrom = marks.check + 1.6 - start;
 const waitTo = marks.finding - start;
 const WAIT_SPEED = Math.max(1, (waitTo - waitFrom) / 3);

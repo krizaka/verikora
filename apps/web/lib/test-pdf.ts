@@ -44,7 +44,7 @@ export function textPdf(lines: readonly string[], linesPerPage = 40): Uint8Array
   );
 }
 
-/** The text positions of a PDF as the viewer reads them in the browser: the same pdf.js Yomizaka reads text with on the server (unpdf). */
+/** The text positions of a PDF as the viewer reads them in the browser: the same pdf.js Verikora reads text with on the server (unpdf). */
 export async function textLayer(pdf: Uint8Array): Promise<PageText[]> {
   const { getDocumentProxy } = await import("unpdf");
   const doc = await getDocumentProxy(pdf.slice());

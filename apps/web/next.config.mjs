@@ -45,12 +45,12 @@ const securityHeaders = [
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   output: "standalone",
-  // The monorepo root: the standalone server then carries @yomizaka/core and the hoisted dependencies.
+  // The monorepo root: the standalone server then carries @verikora/core and the hoisted dependencies.
   outputFileTracingRoot: fileURLToPath(new URL("../..", import.meta.url)),
   reactStrictMode: true,
   poweredByHeader: false,
   env: { NEXT_PUBLIC_APP_VERSION: appVersion },
-  transpilePackages: ["@yomizaka/core"],
+  transpilePackages: ["@verikora/core"],
   // `@krizaka/storage/settings` (the admin's setting definitions, read by the config screen) shares a chunk with the package's folder store
   // (`fs/promises`): the browser gets an empty module for it, and never calls it.
   turbopack: { resolveAlias: { "fs/promises": { browser: "./lib/browser-empty.ts" } } },
@@ -66,7 +66,7 @@ const nextConfig = {
     "tesseract.js-core",
     "opendal",
   ],
-  // The pages removed by « Simplify Yomizaka » (lib/removed-urls.mjs): 308 to their new home, in both languages.
+  // The pages removed by « Simplify Verikora » (lib/removed-urls.mjs): 308 to their new home, in both languages.
   async redirects() {
     return [...redirectRules(), ...ALIAS_RULES];
   },

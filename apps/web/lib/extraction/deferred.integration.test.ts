@@ -5,8 +5,8 @@ import { migrate, query } from "../db";
 import { getDocument, listDocuments, storeDocument } from "../documents";
 import { textPdf } from "../test-pdf";
 
-/** The text is read after the upload answered (yomizaka#21). Against a real PostgreSQL (skipped without YOMIZAKA_DB_IT=1 and DATABASE_URL). */
-const enabled = process.env.YOMIZAKA_DB_IT === "1" && !!process.env.DATABASE_URL;
+/** The text is read after the upload answered (verikora#21). Against a real PostgreSQL (skipped without DATABASE_IT=1 and DATABASE_URL). */
+const enabled = process.env.DATABASE_IT === "1" && !!process.env.DATABASE_URL;
 const LEASE = [
   "BAIL DE LOGEMENT",
   "Loyer mensuel : 1 450 $, payable le premier jour du mois.",

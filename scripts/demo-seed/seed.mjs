@@ -1,4 +1,4 @@
-// The demo data set of a persona (krizaka/yomizaka#274): an account, its collections, its fictitious documents and a few finished checks.
+// The demo data set of a persona (krizaka/verikora#274): an account, its collections, its fictitious documents and a few finished checks.
 // Idempotent (a re-run changes nothing; `reset` starts over) and refused on production. The checks are SEEDED, not run: their run id
 // starts with `seeded-` and their inputs say so — no paid run, no call to the engine.
 import { createHash, randomUUID } from "node:crypto";
@@ -11,7 +11,7 @@ import { generateDocument, PERSONA_ERIC, AS_OF, DEFAULT_SEED } from "../demo-doc
 import { CAST_MEMBER, castAccounts, fingerprintOf } from "./cast.mjs";
 
 /** Where the app keeps the bytes of documents on a laptop, in CI and in tests when it has no store (apps/web/lib/storage/local.ts): the seed writes the same folder. */
-const workingFolder = () => join(tmpdir(), "yomizaka-documents");
+const workingFolder = () => join(tmpdir(), "verikora-documents");
 async function putBytes(key, bytes) {
   const path = join(workingFolder(), key);
   await mkdir(dirname(path), { recursive: true });
@@ -25,18 +25,18 @@ const SIDE_LANDLORD = "landlord";
 export const PERSONAS = {
   [CAST_MEMBER.id]: { ...PERSONA_ERIC, key: CAST_MEMBER.id, name: CAST_MEMBER.displayName, perspective: SIDE_LANDLORD },
 };
-export const DEFAULT_EMAILS = { [CAST_MEMBER.id]: `${CAST_MEMBER.id}@demo.yomizaka.test` };
+export const DEFAULT_EMAILS = { [CAST_MEMBER.id]: `${CAST_MEMBER.id}@demo.verikora.test` };
 /**
- * What the tenant-shield rules (Section G, payment clauses, yomizaka#104) give on the demo leases' figures, one list per document: the findings
+ * What the tenant-shield rules (Section G, payment clauses, verikora#104) give on the demo leases' figures, one list per document: the findings
  * as the app writes them, kept as data because the rules are TypeScript and the seed is not. Generated from the rules and guarded by
  * `apps/web/lib/rules/tenant-shield-fixture.test.ts` (it fails on a drift and says how to regenerate), never typed by hand.
  */
 const TENANT_SHIELD = JSON.parse(readFileSync(new URL("./tenant-shield.json", import.meta.url), "utf8"));
 export const SEEDED_RUN_PREFIX = "seeded-";
-/** What a seeded check carries in its inputs — the same marker `@yomizaka/core` reads (`isSeededCheck`). */
+/** What a seeded check carries in its inputs — the same marker `@verikora/core` reads (`isSeededCheck`). */
 export const SEEDED_INPUTS = { seeded: "true" };
 
-/** The demo tokens of the owner link of a persona's seeded file (yomizaka#128): one that opens, one that was revoked. Demo values, never a real link. */
+/** The demo tokens of the owner link of a persona's seeded file (verikora#128): one that opens, one that was revoked. Demo values, never a real link. */
 export const demoOwnerTokens = (persona) => ({
   live: `demo-owner-live-${persona}-0123456789abcdef`,
   revoked: `demo-owner-revoked-${persona}-0123456789abcdef`,
@@ -49,7 +49,7 @@ const sha256 = (value) => createHash("sha256").update(value).digest("hex");
 async function seedOwnerFile(q, owner, persona, seed) {
   const [file] = await q(
     `INSERT INTO screenings (landlord_id, tenant_name, tenant_email, scope, provider, token_hash, expires_at, flow, requested_types)
-     VALUES ($1, 'Camille Fictif', 'camille@demo.yomizaka.test', '{}', 'applicant-file', $2, now() + interval '30 days', 'file', $3)
+     VALUES ($1, 'Camille Fictif', 'camille@demo.verikora.test', '{}', 'applicant-file', $2, now() + interval '30 days', 'file', $3)
      ON CONFLICT (token_hash) DO UPDATE SET landlord_id = EXCLUDED.landlord_id, expires_at = EXCLUDED.expires_at, requested_types = EXCLUDED.requested_types RETURNING id`,
     [owner, sha256(`demo-file-${persona}`), [APPLICANT_FILE_DOCUMENT.type]],
   );
@@ -237,7 +237,7 @@ async function seedInTransaction(
   // An existing account keeps what the person chose (language, name); the seed only fills what is missing. The persona's side is the cast's:
   // Éric is a property manager, and on the shared dev database he had been left on « tenant » (the applicant files answered 404 on www),
   // so a re-run puts the side back (krizaka-internal#2289).
-  // A reset starts the demo over: it takes the language asked for, or the English films were made on French fixtures (yomizaka#1968).
+  // A reset starts the demo over: it takes the language asked for, or the English films were made on French fixtures (verikora#1968).
   const [account] = await q(
     `INSERT INTO accounts (email, locale, email_verified_at, password_hash, perspective, name) VALUES ($1, $2, now(), $3, $6, $4)
      ON CONFLICT (email) DO UPDATE SET locale = CASE WHEN $5::boolean THEN EXCLUDED.locale ELSE accounts.locale END, password_hash = coalesce(EXCLUDED.password_hash, accounts.password_hash),
@@ -253,7 +253,7 @@ async function seedInTransaction(
   const [library] = await q("SELECT id FROM libraries WHERE owner_id = $1 ORDER BY created_at, id LIMIT 1", [owner]);
   const counts = {};
   // Each document and its report are stamped one minute apart, counted back from the injected clock `now`: the dates the lists write
-  // are the same on every run and every day, and a list ordered by date never has a tie (yomizaka#641).
+  // are the same on every run and every day, and a list ordered by date never has a tie (verikora#641).
   const total = def.collections.reduce((n, c) => n + c.documents.length, 0);
   let minute = 0;
   let documentIndex = 0;
@@ -318,7 +318,7 @@ async function seedInTransaction(
 }
 
 /**
- * `seed --cast`: the whole Yomizaka cast, the same on a laptop, a CI runner and the dev deployment. The member gets the demo data
+ * `seed --cast`: the whole Verikora cast, the same on a laptop, a CI runner and the dev deployment. The member gets the demo data
  * set of `seedPersona`; the administrator gets an account named after its persona. Idempotent; the caller refuses production
  * (`assertNotProduction`) before it connects. Returns the fingerprint of what is there for the cast's accounts.
  */

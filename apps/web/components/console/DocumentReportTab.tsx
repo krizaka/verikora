@@ -1,7 +1,7 @@
 "use client";
 
 import { Footnotes } from "@krizaka/ui/footnote";
-import { type Audience, checkSteps, type DocumentView, isSeededCheck } from "@yomizaka/core";
+import { type Audience, checkSteps, type DocumentView, isSeededCheck } from "@verikora/core";
 import type { ReactNode } from "react";
 
 import { ClosingNoteView } from "@/components/ClosingNoteView";

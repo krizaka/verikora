@@ -3,7 +3,7 @@ import type { IdempotencyStore, SuppressionList, SuppressionReason } from "@kriz
 import { query } from "../db";
 
 /**
- * The mail memory in the app's own database (yomizaka#48): the addresses a provider told us never to mail again (a hard bounce, a
+ * The mail memory in the app's own database (verikora#48): the addresses a provider told us never to mail again (a hard bounce, a
  * complaint, an unsubscribe) and the intentions already mailed (one key per link). The package asks for two small ports; this is
  * where they live, so a restart or a second instance forgets neither.
  */

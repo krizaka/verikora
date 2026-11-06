@@ -31,13 +31,13 @@ const objects = (pass = e.STORAGE_IT_S3_PASS!) =>
     bucket: e.STORAGE_IT_S3_BUCKET!,
     accessKeyId: e.STORAGE_IT_S3_USER!,
     secretAccessKey: pass,
-    prefix: "yomizaka-it",
+    prefix: "verikora-it",
     fetch: fetch as unknown as FetchLike,
     clock: { now: () => new Date() },
   });
 const make = (pass?: string) => documentStoreOver(objects(pass), DESCRIPTOR, MAX_SIGNED_URL_SECONDS);
 
-/** In CI the job sets STORAGE_IT_S3_REQUIRED: a missing variable is a failure, not a silent skip (krizaka/yomizaka#198). */
+/** In CI the job sets STORAGE_IT_S3_REQUIRED: a missing variable is a failure, not a silent skip (krizaka/verikora#198). */
 describe.runIf(!!e.STORAGE_IT_S3_REQUIRED)("s3 adapter (S3 server) is required here", () => {
   it("has its S3 variables", () => expect(enabled).toBe(true));
 });

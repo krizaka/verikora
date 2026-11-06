@@ -13,7 +13,7 @@ const day = (iso: string, lang: Lang) => longDate(new Date(`${iso}T12:00:00Z`), 
 /**
  * The sentences that follow a Section G finding: when the request to the TAL can be made (the basis of the deadline) and the facts to take
  * to it (`sectionGRequestSummary`), in the reader's language. Only a finding with a recourse has any; the deadline's own wording says how
- * days and months are counted is for the TAL or a lawyer to confirm. Yomizaka files nothing: the summary is for the tenant to carry.
+ * days and months are counted is for the TAL or a lawyer to confirm. Verikora files nothing: the summary is for the tenant to carry.
  * These sentences carry no disclaimer of their own: the finding says it once, at its end (`sectionG.disclaimer`, `sectionGFinding`).
  */
 export function requestSentences(

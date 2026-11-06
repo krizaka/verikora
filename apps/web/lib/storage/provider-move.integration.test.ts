@@ -11,11 +11,11 @@ import { dualObjectStore } from "./dual-read";
 import { currentMove, MOVE_STATUS, type MoveDeps, setMovePaused, startMove, stepMove } from "./provider-move";
 import { DATA_KIND, ORG_SCOPE } from "./providers";
 
-/** ADR-005 §3 on PostgreSQL with two folder providers: the verified, resumable move and the dual read (skipped without YOMIZAKA_DB_IT=1 and DATABASE_URL). */
-const enabled = process.env.YOMIZAKA_DB_IT === "1" && !!process.env.DATABASE_URL;
+/** ADR-005 §3 on PostgreSQL with two folder providers: the verified, resumable move and the dual read (skipped without DATABASE_IT=1 and DATABASE_URL). */
+const enabled = process.env.DATABASE_IT === "1" && !!process.env.DATABASE_URL;
 const KEY = Buffer.alloc(32, 7);
 const NOW = new Date("2026-10-28T12:00:00Z");
-const ADMIN = { id: null, label: "admin@yomizaka.test" };
+const ADMIN = { id: null, label: "admin@verikora.test" };
 
 describe.runIf(enabled)("the move of documents between providers", () => {
   const providers = dbProviderStore(query);
@@ -56,7 +56,7 @@ describe.runIf(enabled)("the move of documents between providers", () => {
       kind: "folder",
       preset: null,
       label,
-      coordinates: { root: mkdtempSync(join(tmpdir(), "yomizaka-move-")) },
+      coordinates: { root: mkdtempSync(join(tmpdir(), "verikora-move-")) },
       sealedCredentials: sealEnvelope("{}", KEY, "media-1"),
       keyId: "media-1",
       status: "verified",
@@ -88,7 +88,7 @@ describe.runIf(enabled)("the move of documents between providers", () => {
     owner = (
       await query<{ id: string }>(
         "INSERT INTO accounts (email, password_hash, email_verified_at) VALUES ($1, 'x', now()) RETURNING id",
-        [`m-${Math.random().toString(36).slice(2)}@yomizaka.test`],
+        [`m-${Math.random().toString(36).slice(2)}@verikora.test`],
       )
     )[0]!.id;
     const old = await service.open(oldId);

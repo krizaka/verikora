@@ -42,7 +42,7 @@ function drawable(font: PDFFont, text: string): string {
 
 /**
  * Lays each word invisibly (text rendering mode 3) over the photo where it was recognised, stretched to the width of its box:
- * the PDF then answers to the same text positions as a text PDF, so a finding's passage is lit on the photo (yomizaka#8).
+ * the PDF then answers to the same text positions as a text PDF, so a finding's passage is lit on the photo (verikora#8).
  * Image pixels become PDF points by the page's own scale; the baseline sits a little above the box's bottom.
  */
 function addTextLayer(page: PDFPage, font: PDFFont, words: readonly PageWord[], scale: number): void {

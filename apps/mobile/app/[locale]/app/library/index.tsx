@@ -1,7 +1,7 @@
 import { useQuery } from "@krizaka/query";
 import { Card, EmptyState, Screen, Txt } from "@krizaka/ui/native";
 import { List } from "@krizaka/ui/native/list";
-import type { DocumentSummary } from "@yomizaka/core";
+import type { DocumentSummary } from "@verikora/core";
 import { useRouter } from "expo-router";
 import * as React from "react";
 import { View } from "react-native";

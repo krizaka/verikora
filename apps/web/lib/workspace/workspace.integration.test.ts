@@ -1,5 +1,5 @@
 import { BULK_MAX, filterSql } from "@krizaka/organize";
-import { memoryStore } from "@yomizaka/core";
+import { memoryStore } from "@verikora/core";
 import { beforeAll, describe, expect, it } from "vitest";
 
 import { countApplicantFiles, listApplicantFiles, requestApplicantFile } from "../applicant-file";
@@ -10,13 +10,13 @@ import { DECISION, KIND, WORKSPACE } from "./decl";
 import { DECISION_SET } from "./defaults";
 import { actorOf, seedWorkspace, workspaceFor } from "./service";
 
-/** The organised workspace against a real PostgreSQL (CI's service; locally YOMIZAKA_DB_IT=1 DATABASE_URL=…): yomizaka#324. Demo data only. */
-const enabled = process.env.YOMIZAKA_DB_IT === "1" && !!process.env.DATABASE_URL;
+/** The organised workspace against a real PostgreSQL (CI's service; locally DATABASE_IT=1 DATABASE_URL=…): verikora#324. Demo data only. */
+const enabled = process.env.DATABASE_IT === "1" && !!process.env.DATABASE_URL;
 const NOW = new Date("2026-10-25T12:00:00Z");
 const clock = { now: () => NOW };
 const byText = (a: string, b: string) => a.localeCompare(b);
 
-describe.runIf(enabled)("the organised workspace (yomizaka#324)", () => {
+describe.runIf(enabled)("the organised workspace (verikora#324)", () => {
   const stamp = Date.now();
   const store = memoryStore({ kind: "s3" });
   let eric: { id: string; email: string };
@@ -24,7 +24,7 @@ describe.runIf(enabled)("the organised workspace (yomizaka#324)", () => {
   let seq = 0;
 
   const account = async (who: string) => {
-    const email = `${who}-${stamp}@yomizaka.test`;
+    const email = `${who}-${stamp}@verikora.test`;
     const [row] = await query<{ id: string }>(
       "INSERT INTO accounts (email, audit_credits) VALUES ($1, 50) RETURNING id",
       [email],
@@ -265,7 +265,7 @@ describe.runIf(enabled)("the organised workspace (yomizaka#324)", () => {
     expect(listed).toMatchObject({ decision: DECISION.toDecide, tagIds: expect.arrayContaining([x.id, y.id]) });
   });
 
-  it("counts the binder's tabs and chips with the list's own filter: each count is the length of its view (yomizaka#334)", async () => {
+  it("counts the binder's tabs and chips with the list's own filter: each count is the length of its view (verikora#334)", async () => {
     const [a, b, c] = [await file(), await file(), await file()];
     const w = ws();
     const t = await w.tags.create(eric.id, actorOf(eric), KIND.applicantFile, {

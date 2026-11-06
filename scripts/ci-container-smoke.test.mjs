@@ -17,7 +17,7 @@ describe("the container smoke check", () => {
     for (const needle of [
       "tesseract\\.js-core",
       "@tesseract\\.js-data",
-      "COPY --from=build --chown=yomizaka:yomizaka /ocr/",
+      "COPY --from=build --chown=verikora:verikora /ocr/",
     ])
       expect(dockerfile).toContain(needle);
   });

@@ -14,8 +14,8 @@ import { createSession, SESSION_COOKIE } from "./session";
 import { appSettings, resetAppSettings } from "./settings/instance";
 import { GLOBAL } from "./settings/service";
 
-/** API keys through the real routes, the plan, the switch, the audit trail and PostgreSQL (CI's service; locally YOMIZAKA_DB_IT=1 DATABASE_URL=…). */
-const enabled = process.env.YOMIZAKA_DB_IT === "1" && !!process.env.DATABASE_URL;
+/** API keys through the real routes, the plan, the switch, the audit trail and PostgreSQL (CI's service; locally DATABASE_IT=1 DATABASE_URL=…). */
+const enabled = process.env.DATABASE_IT === "1" && !!process.env.DATABASE_URL;
 
 const as = (token: string, method: string, path: string, body?: unknown) =>
   new Request(`http://localhost${path}`, {
@@ -46,7 +46,7 @@ describe.runIf(enabled)("api keys", () => {
     await migrate();
     [{ id: owner }] = (await query<{ id: string }>(
       "INSERT INTO accounts (email, password_hash) VALUES ($1, 'x') RETURNING id",
-      [`keys-${stamp}@yomizaka.test`],
+      [`keys-${stamp}@verikora.test`],
     )) as [{ id: string }];
     token = (await createSession(owner, { ip: "203.0.113.9", userAgent: "vitest" })).token;
   });
@@ -121,7 +121,7 @@ describe.runIf(enabled)("api keys", () => {
     expect(await requireApiKey(withKey(narrow.key), "reports:read", systemClock)).toMatchObject({ ownerId: owner });
   });
 
-  it("a key issued before the package (a row of migration 0021, its secret hashed with SHA-256) still authenticates, and the package rotates and revokes it (yomizaka#202)", async () => {
+  it("a key issued before the package (a row of migration 0021, its secret hashed with SHA-256) still authenticates, and the package rotates and revokes it (verikora#202)", async () => {
     resetRateLimits();
     // what the product's own code wrote: `yzk_<12 hex>_<base64url secret>`, only the SHA-256 of the secret kept; written here by hand, not by the package
     const publicId = randomBytes(6).toString("hex");
@@ -191,7 +191,7 @@ describe.runIf(enabled)("api keys", () => {
     // a stranger cannot touch it
     const [{ id: stranger }] = (await query<{ id: string }>(
       "INSERT INTO accounts (email, password_hash) VALUES ($1, 'x') RETURNING id",
-      [`keys-stranger-${stamp}@yomizaka.test`],
+      [`keys-stranger-${stamp}@verikora.test`],
     )) as [{ id: string }];
     const strangerToken = (await createSession(stranger, { ip: "203.0.113.10", userAgent: "vitest" })).token;
     expect(

@@ -1,5 +1,5 @@
 import type { Actor } from "@krizaka/storage/provider-admin";
-import { STORAGE_MODE, type StorageMode } from "@yomizaka/core";
+import { STORAGE_MODE, type StorageMode } from "@verikora/core";
 import type { QueryResultRow } from "pg";
 
 import { refuse } from "../http";

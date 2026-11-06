@@ -1,9 +1,9 @@
-import type { DocumentKind } from "@yomizaka/core";
+import type { DocumentKind } from "@verikora/core";
 
 /*
- * The check flow's logic (yomizaka#326, P9 of the design direction § 5.4), pure: the defaults said before the drop
+ * The check flow's logic (verikora#326, P9 of the design direction § 5.4), pure: the defaults said before the drop
  * (Errata 6), and one row per file that landed, moving through words. The upload itself is the queue of
- * @krizaka/ui/file-upload; a row starts once the file landed. The run's own stages come with #208 (orazaka#189); until
+ * @krizaka/ui/file-upload; a row starts once the file landed. The run's own stages come with #208 (sovkora#189); until
  * then a row says the request's stages.
  */
 

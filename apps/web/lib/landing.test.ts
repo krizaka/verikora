@@ -33,7 +33,7 @@ describe("the home is one short page: who it is for, one real check, one way in"
     expect(home).toContain('data-testid="home-visual"');
     expect(home).not.toMatch(/DeviceFrame/);
     expect(home.match(/<BeforeAfter\b/g) ?? []).toHaveLength(1);
-    // One way in (the hero's island, which follows the session, F0): the closing repeats none (yomizaka#457).
+    // One way in (the hero's island, which follows the session, F0): the closing repeats none (verikora#457).
     expect(home).not.toContain("<ClosingActions");
     expect(home).toContain("<ClosingBody signedOut=");
     expect(home).not.toContain("/sign-in`");
@@ -79,7 +79,7 @@ describe("plain words, in both languages", () => {
         ),
       ).toEqual([]);
     });
-    it(`${name}: Yomizaka is the subject; Orazaka, the engine, is named once on the home, in the quiet line under the proof`, () => {
+    it(`${name}: Verikora is the subject; Sovkora, the engine, is named once on the home, in the quiet line under the proof`, () => {
       expect(words(d.landing).filter((w) => /sovkora/i.test(w))).toEqual([d.landing.proof.powered]);
       expect(d.landing.proof.powered).toMatch(/^(Powered by|Propulsé par) Sovkora\.$/);
     });

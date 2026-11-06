@@ -1,8 +1,8 @@
 {
-  "name": "@yomizaka/desktop",
+  "name": "@verikora/desktop",
   "private": true,
   "version": "0.1.0",
-  "description": "Yomizaka for the Mac (Tauri 2): a library in a folder of your Mac, documents checked and never kept elsewhere.",
+  "description": "Verikora for the Mac (Tauri 2): a library in a folder of your Mac, documents checked and never kept elsewhere.",
   "type": "module",
   "license": "FSL-1.1-ALv2",
   "scripts": {
@@ -27,8 +27,8 @@
     "@tailwindcss/vite": "^4.3.3",
     "@tauri-apps/api": "^2.12.3",
     "@tauri-apps/plugin-http": "^2.5.0",
-    "@yomizaka/client": "workspace:*",
-    "@yomizaka/core": "workspace:*",
+    "@verikora/client": "workspace:*",
+    "@verikora/core": "workspace:*",
     "react": "^19.3.0",
     "react-dom": "^19.3.0",
     "tailwindcss": "^4.3.3",

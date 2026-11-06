@@ -1,4 +1,4 @@
-import { DOCX_MIME } from "@yomizaka/core";
+import { DOCX_MIME } from "@verikora/core";
 import { describe, expect, it } from "vitest";
 
 import { keptInputs, runInputs, searchText } from "./analyses";
@@ -10,7 +10,7 @@ import { normaliseQuery, passageHtml } from "./search";
 const LEASE = "CONTRAT DE LOCATION\nDépôt de garantie : 2 550 €.";
 const pdf = (n: number) => Buffer.concat([Buffer.from("%PDF-1.7\n"), Buffer.alloc(n)]);
 
-describe("what Yomizaka sends to Orazaka", () => {
+describe("what Verikora sends to Sovkora", () => {
   it("sends the named ruleset only when one was asked for, and never for another jurisdiction", () => {
     const doc = { mimeType: "application/pdf", text: LEASE, content: pdf(10) };
     const day = new Date("2026-10-19T12:00:00Z");
@@ -82,7 +82,7 @@ describe("what Yomizaka sends to Orazaka", () => {
       ),
     ).toEqual({ documentBase64: content.toString("base64"), expectedIssuer: "Agence Dupont" });
   });
-  it("refuses what a Studio cannot read, before calling Orazaka", () => {
+  it("refuses what a Studio cannot read, before calling Sovkora", () => {
     expect(() =>
       runInputs(
         { studio: "compliance-check", jurisdiction: "FR" },
@@ -98,7 +98,7 @@ describe("what Yomizaka sends to Orazaka", () => {
     expect(() =>
       runInputs({ studio: "document-authenticity" }, { mimeType: "text/plain", text: "x", content: Buffer.from("x") }),
     ).toThrow(/PDF and Word files/);
-    // A Word file is examined as a file too (yomizaka#229, document-authenticity 1.3.0).
+    // A Word file is examined as a file too (verikora#229, document-authenticity 1.3.0).
     const word = Buffer.from("PK\u0003\u0004 word");
     expect(runInputs({ studio: "document-authenticity" }, { mimeType: DOCX_MIME, text: "", content: word })).toEqual({
       documentBase64: word.toString("base64"),

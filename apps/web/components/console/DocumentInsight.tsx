@@ -1,7 +1,7 @@
 "use client";
 
 import { Alert } from "@krizaka/ui/alert";
-import { type DocumentInsight as Insight, TEXT_SOURCE, type TextSource } from "@yomizaka/core";
+import { type DocumentInsight as Insight, TEXT_SOURCE, type TextSource } from "@verikora/core";
 
 import { amountsOnce } from "@/lib/document-face";
 import { useSay } from "@/lib/i18n-client";

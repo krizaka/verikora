@@ -26,7 +26,7 @@ const batch = (items: BatchItemView[]): BatchView => ({
 });
 const REPORT = { findings: [] } as never;
 const deps = (patch: Partial<ExportDeps> = {}): ExportDeps => ({
-  readme: "Yomizaka — informative checks, not legal advice.\n",
+  readme: "Verikora — informative checks, not legal advice.\n",
   maxBytes: 1 << 20,
   analysis: async (i) => ({
     studio: i.line === 4 ? "document-authenticity" : "compliance-check",
@@ -38,7 +38,7 @@ const deps = (patch: Partial<ExportDeps> = {}): ExportDeps => ({
   ...patch,
 });
 
-describe("the reports of a batch in one archive (yomizaka#242)", () => {
+describe("the reports of a batch in one archive (verikora#242)", () => {
   it("holds the CSV, the README, the signed PDF of each compliance row and the signals of each authenticity row", async () => {
     const out = await exportBatchZip(
       batch([item(2), item(3, { reference: "Étienne / bail #3" }), item(4, { file: "talon.pdf", reference: null })]),
@@ -54,7 +54,7 @@ describe("the reports of a batch in one archive (yomizaka#242)", () => {
     ]);
     expect(zipEntryBytes(out.bytes, "rapports/2-LAURIER-2-fr.pdf", 1 << 20)!.toString()).toBe("%PDF signed 2");
     const signals = JSON.parse(zipEntryBytes(out.bytes, "signaux/4-talon.json", 1 << 20)!.toString());
-    expect(signals).toMatchObject({ file: "talon.pdf", orazaka: { runId: "run-4", studioVersion: "1.0.0" } });
+    expect(signals).toMatchObject({ file: "talon.pdf", sovkora: { runId: "run-4", studioVersion: "1.0.0" } });
     expect(zipEntryBytes(out.bytes, "LISEZ-MOI.txt", 1 << 20)!.toString()).toContain("not legal advice");
     expect(zipEntries(out.bytes)).toHaveLength(5);
   });
@@ -67,7 +67,7 @@ describe("the reports of a batch in one archive (yomizaka#242)", () => {
         item(4, { state: "failed", error: "FAILED" }),
         item(5),
         item(6),
-        item(7, { state: "pending", error: "ORAZAKA_BUSY" }),
+        item(7, { state: "pending", error: "SOVKORA_BUSY" }),
       ]),
       "en",
       deps(),
@@ -84,7 +84,7 @@ describe("the reports of a batch in one archive (yomizaka#242)", () => {
       "4,bail-4.pdf,LAURIER-4,failed,FAILED,",
       "5,bail-5.pdf,LAURIER-5,done,TRANSLATION_PENDING,",
       "6,bail-6.pdf,LAURIER-6,done,REPORT_NOT_READY,",
-      "7,bail-7.pdf,LAURIER-7,pending,ORAZAKA_BUSY,",
+      "7,bail-7.pdf,LAURIER-7,pending,SOVKORA_BUSY,",
     ]);
     expect(out.rows.filter((r) => r.file).map((r) => r.line)).toEqual([2]);
   });

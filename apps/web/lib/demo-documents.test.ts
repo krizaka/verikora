@@ -145,7 +145,7 @@ describe("the demo documents generator", () => {
     }
   });
 
-  it("fills the persona's three collections with 4 to 8 documents each, of the right kinds; two folders stay empty (yomizaka#435)", () => {
+  it("fills the persona's three collections with 4 to 8 documents each, of the right kinds; two folders stay empty (verikora#435)", () => {
     expect(PERSONA_ERIC.collections.map((c: { key: string }) => c.key)).toEqual([
       "rosemont",
       "villeray",

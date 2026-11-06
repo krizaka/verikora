@@ -1,4 +1,4 @@
-import { flowEnvironment } from "@yomizaka/core";
+import { flowEnvironment } from "@verikora/core";
 import { z } from "zod";
 
 import { requireAdmin } from "@/lib/access";

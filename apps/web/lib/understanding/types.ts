@@ -1,7 +1,7 @@
 import type { DocumentTypeDef, IdentifierDef } from "./port";
 
 /**
- * The types of documents Yomizaka recognises, and the identifiers it reads — DATA. A new nature is a new entry (and, if a rules
+ * The types of documents Verikora recognises, and the identifiers it reads — DATA. A new nature is a new entry (and, if a rules
  * pack fits, its `check`), not a new code path. `check: null` means no legal check applies: the page says so plainly.
  */
 export const DOCUMENT_TYPES: readonly DocumentTypeDef[] = [

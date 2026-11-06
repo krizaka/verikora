@@ -26,7 +26,7 @@ describe("the download videos workflow", () => {
   it("never writes the demo password to GITHUB_ENV", () => {
     assert.doesNotMatch(code, /GITHUB_ENV/);
   });
-  // yomizaka#575: the poster is the frame at 2 s; a film that opens on the sign-in made a sign-in the poster of the binder.
+  // verikora#575: the poster is the frame at 2 s; a film that opens on the sign-in made a sign-in the poster of the binder.
   it("films the binder already signed in and opens the report film on the report (the poster is the frame at 2 s)", () => {
     assert.match(code, /showcase-web\.mjs[^\n]*--sign-in off/);
     const script = readFileSync(new URL("./showcase-web.mjs", import.meta.url), "utf8");
@@ -39,7 +39,7 @@ describe("the download videos workflow", () => {
     const read = script.indexOf("new URL(page.url())", click);
     assert.ok(click > 0 && wait > click && read > wait, "waitForURL must sit between the click and the URL read");
   });
-  it("opens the dossier with the demo leases, never the first row (the empty default collection) (yomizaka#1968)", () => {
+  it("opens the dossier with the demo leases, never the first row (the empty default collection) (verikora#1968)", () => {
     const script = readFileSync(new URL("./showcase-web.mjs", import.meta.url), "utf8");
     assert.match(script, /const DEMO_COLLECTION = \/Rosemont\//);
     // The home is the list of dossiers (#680): the film waits for the row of the demo leases and clicks that one.
@@ -50,7 +50,7 @@ describe("the download videos workflow", () => {
     assert.match(script, /dossierRow\(page\)\.waitFor\(\{ timeout: 30_000 \}\)/);
     assert.doesNotMatch(script, /a\[title\]|binder-name|binderUrl/);
   });
-  // yomizaka#1968: the films were French on /en, in a dev banner, with a runner path and an empty state.
+  // verikora#1968: the films were French on /en, in a dev banner, with a runner path and an empty state.
   it("films the web in both languages, on data seeded in each", () => {
     assert.match(code, /for locale in fr en/);
     assert.match(code, /ci-mobile-backend\.sh reseed en/);
@@ -67,8 +67,8 @@ describe("the download videos workflow", () => {
   });
   it("shows no runner path: the Mac folder has a friendly name", () => {
     const journey = readFileSync(new URL("./desktop-journey.mjs", import.meta.url), "utf8");
-    assert.doesNotMatch(journey, /Yomizaka journey/);
-    assert.match(journey, /join\(home, "Leases"\)/);
+    assert.doesNotMatch(journey, /Verikora journey/);
+    assert.match(journey, /join\(fixtureRoot\(\), "Leases"\)/);
   });
   it("trims the films with the markers guard (language, shape, empty/error/banner, ends on a result)", () => {
     assert.match(readFileSync(new URL("./film-trim.mjs", import.meta.url), "utf8"), /assertFilm\(/);

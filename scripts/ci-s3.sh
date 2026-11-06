@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 # Starts a throwaway S3-compatible server (SeaweedFS, which checks SigV4 signatures) on localhost:8333 with one bucket, for the S3
-# adapter's real tests (ADR-0007, krizaka/yomizaka#198). MinIO no longer publishes images, hence SeaweedFS, pinned by digest.
+# adapter's real tests (ADR-0007, krizaka/verikora#198). MinIO no longer publishes images, hence SeaweedFS, pinned by digest.
 # Test values only — no real secret. Used by the `storage-s3` job of .github/workflows/ci.yml; runnable locally with Docker.
 set -euo pipefail
 USER_NAME="${STORAGE_IT_S3_USER:-ci-s3-user}"
 PASS="${STORAGE_IT_S3_PASS:-ci-only-s3-password}"
-BUCKET="${STORAGE_IT_S3_BUCKET:-yomizaka-it}"
+BUCKET="${STORAGE_IT_S3_BUCKET:-verikora-it}"
 NAME="${S3_CONTAINER:-ci-s3}"
 DIR="$(mktemp -d)"
 printf '{"identities":[{"name":"ci","credentials":[{"accessKey":"%s","secretKey":"%s"}],"actions":["Admin","Read","Write","List","Tagging"]}]}' "$USER_NAME" "$PASS" > "$DIR/s3.json"

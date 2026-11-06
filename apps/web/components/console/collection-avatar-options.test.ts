@@ -3,7 +3,7 @@ import { describe, expect, it } from "vitest";
 
 import { folderAvatarOptions } from "./collection-avatar-options";
 
-describe("a folder's avatar tiles (yomizaka#433)", () => {
+describe("a folder's avatar tiles (verikora#433)", () => {
   const options = folderAvatarOptions(["a", "b", "c", "d"], (n) => `Avatar ${n}`);
 
   it("are all of the folder kind: a folder never lists a person avatar", () => {

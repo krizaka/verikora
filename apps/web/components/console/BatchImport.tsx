@@ -84,7 +84,7 @@ function previewColumns(say: Say): DataTableColumn<PreviewRow>[] {
 }
 
 /**
- * A batch of checks (yomizaka#232): drop the CSV and the documents it names together; the preview says row by row what will
+ * A batch of checks (verikora#232): drop the CSV and the documents it names together; the preview says row by row what will
  * be checked, reused (no audit) or refused and why, and the audits it costs; then one action starts it and its page follows it.
  */
 export function BatchImport() {

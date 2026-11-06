@@ -1,4 +1,4 @@
-import { type Audience } from "@yomizaka/core";
+import { type Audience } from "@verikora/core";
 
 import { CONSOLE_ROUTES } from "./console-nav";
 

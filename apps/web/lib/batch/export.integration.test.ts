@@ -1,6 +1,6 @@
 import { readFileSync } from "node:fs";
 
-import type { OrazakaRun } from "@yomizaka/core";
+import type { SovkoraRun } from "@verikora/core";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 
 import { GET as webExport } from "@/app/api/batches/[id]/export/route";
@@ -10,18 +10,18 @@ import { GET as apiExport } from "@/app/api/v1/batches/[id]/export/route";
 import { migrate, pool, query } from "../db";
 import { seedDatabase } from "../flows";
 import { resetRateLimits } from "../limits";
-import { useOrazakaClient } from "../orazaka";
 import { cleanPdf } from "../preflight/fixtures";
 import { zipEntries, zipEntryBytes } from "../preflight/inspector";
 import { verifyPdf } from "../report-pdf";
 import { signingKey } from "../report-signer";
 import { createSession, SESSION_COOKIE } from "../session";
 import { settingsFor } from "../settings/guards";
+import { useSovkoraClient } from "../sovkora";
 import { advanceBatch, createBatch } from "./run";
 
-/** A batch's reports in one archive, by the page's route and by the API with a key (yomizaka#242), against PostgreSQL and a fake Orazaka. CI's service; locally YOMIZAKA_DB_IT=1 DATABASE_URL=…. */
-const enabled = process.env.YOMIZAKA_DB_IT === "1" && !!process.env.DATABASE_URL;
-const REPORT = readFileSync(new URL("../fixtures/orazaka-compliance-qc-1.2.0.json", import.meta.url), "utf8");
+/** A batch's reports in one archive, by the page's route and by the API with a key (verikora#242), against PostgreSQL and a fake Sovkora. CI's service; locally DATABASE_IT=1 DATABASE_URL=…. */
+const enabled = process.env.DATABASE_IT === "1" && !!process.env.DATABASE_URL;
+const REPORT = readFileSync(new URL("../fixtures/sovkora-compliance-qc-1.2.0.json", import.meta.url), "utf8");
 const params = (id: string) => ({ params: Promise.resolve({ id }) });
 
 describe.runIf(enabled)("the ZIP of a batch's reports", () => {
@@ -34,7 +34,7 @@ describe.runIf(enabled)("the ZIP of a batch's reports", () => {
   let bearer = "";
   let batchId = "";
 
-  const run = (id: string): OrazakaRun => {
+  const run = (id: string): SovkoraRun => {
     const r = runs.get(id)!;
     const outputs =
       r.status !== "SUCCEEDED"
@@ -65,7 +65,7 @@ describe.runIf(enabled)("the ZIP of a batch's reports", () => {
   beforeAll(async () => {
     await migrate();
     await seedDatabase();
-    useOrazakaClient({
+    useSovkoraClient({
       startRun: async (studio: string) => {
         const id = `run-zip-${stamp}-${++n}`;
         runs.set(id, { studio, status: "RUNNING" });
@@ -78,7 +78,7 @@ describe.runIf(enabled)("the ZIP of a batch's reports", () => {
         pro
           ? "INSERT INTO accounts (email, plan, subscription_status, current_period_end) VALUES ($1, 'PRO', 'active', now() + interval '30 days') RETURNING id"
           : "INSERT INTO accounts (email) VALUES ($1) RETURNING id",
-        [`zip-${label}-${stamp}@yomizaka.test`],
+        [`zip-${label}-${stamp}@verikora.test`],
       );
       return { id: row!.id, token: (await createSession(row!.id, { ip: "203.0.113.30", userAgent: "vitest" })).token };
     };
@@ -113,8 +113,8 @@ describe.runIf(enabled)("the ZIP of a batch's reports", () => {
     batchId = (await advanceBatch(owner, created.id, await ctx())).id;
   });
   afterAll(async () => {
-    useOrazakaClient(null);
-    await query("DELETE FROM accounts WHERE email LIKE $1", [`zip-%-${stamp}@yomizaka.test`]);
+    useSovkoraClient(null);
+    await query("DELETE FROM accounts WHERE email LIKE $1", [`zip-%-${stamp}@verikora.test`]);
     await pool().end();
   });
 

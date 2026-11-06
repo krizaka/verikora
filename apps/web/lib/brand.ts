@@ -1,25 +1,28 @@
 import { brandOf, displayName, lockup } from "@krizaka/org";
 
-/** The internal name of this product: the repository, the packages, the CLI. Never rendered. */
-export const CODE_NAME = "yomizaka";
+/**
+ * The id the shared libraries (`@krizaka/org`, `@krizaka/ui`, `@krizaka/email`) still know this product by, until their major
+ * release with the commercial ids (krizaka-internal#2659): then it is `verikora` and this line goes. Never rendered.
+ */
+export const BRAND_ID = "yomizaka";
 
 /**
  * The name customers read (krizaka-internal#2038): the administrator's `brand.displayName` setting when one is set, else the
  * commercial name of `@krizaka/org`. Surfaces rendered at request time pass the setting; build-time ones use the default.
  */
-export const productName = (chosen?: string | null): string => displayName(CODE_NAME, chosen);
+export const productName = (chosen?: string | null): string => displayName(BRAND_ID, chosen);
 
 /** « Verikora by Krizaka » / « Verikora par Krizaka ». */
-export const productLockup = (locale: string, chosen?: string | null): string => lockup(CODE_NAME, locale, chosen);
+export const productLockup = (locale: string, chosen?: string | null): string => lockup(BRAND_ID, locale, chosen);
 
 /** The default display name, for build-time and static surfaces. */
 export const PRODUCT_NAME = productName();
 
-/** The analysis engine's commercial name (code name `orazaka`). */
+/** The analysis engine's commercial name (code name `sovkora`). */
 export const ENGINE_NAME = brandOf("orazaka").commercialName;
 
 /** « by Krizaka » / « par Krizaka », for the lockup's second line. */
 export const productEndorsement = (locale: string): string => {
-  const endorsement: Record<string, string | undefined> = { ...brandOf(CODE_NAME).endorsement };
+  const endorsement: Record<string, string | undefined> = { ...brandOf(BRAND_ID).endorsement };
   return endorsement[locale] ?? endorsement.en ?? "";
 };

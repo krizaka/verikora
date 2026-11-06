@@ -1,4 +1,4 @@
-import { type CloudOwner, STORAGE_OWNER } from "@yomizaka/core";
+import { type CloudOwner, STORAGE_OWNER } from "@verikora/core";
 
 import { defaultStore, providers } from "@/app/storage-providers";
 import { query } from "@/lib/db";

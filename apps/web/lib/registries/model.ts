@@ -1,5 +1,5 @@
 /*
- * The public registers about BUSINESSES, behind one port (ADR-0014, yomizaka#627). Only the number printed on a document is looked up,
+ * The public registers about BUSINESSES, behind one port (ADR-0014, verikora#627). Only the number printed on a document is looked up,
  * never a person's name. An answer is a fact about the register ("not found", "revoked on …"), never a verdict on a document; a register
  * that cannot answer says so ("not looked up") and raises nothing.
  */

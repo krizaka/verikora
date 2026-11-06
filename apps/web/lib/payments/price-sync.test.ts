@@ -13,13 +13,13 @@ const ENTRIES = [
   { key: PRICE.api, amountCents: null, currency: "CAD" },
 ];
 
-describe("the processor follows the catalogue (yomizaka#548)", () => {
+describe("the processor follows the catalogue (verikora#548)", () => {
   it("builds the sold plans from the entries in force: integer cents, monthly for subscriptions, nothing for an entry on quote", () => {
     const { plans } = processorCatalogue(ENTRIES);
     expect(plans.map((p) => [p.lookupKey, p.amount, p.currency, p.interval])).toEqual([
-      ["yomizaka_dossier_grid_cad", 999, "cad", undefined],
-      ["yomizaka_agency_monthly_pilot_cad", 4900, "cad", "month"],
-      ["yomizaka_firm_monthly_pilot_cad", 14900, "cad", "month"],
+      ["verikora_dossier_grid_cad", 999, "cad", undefined],
+      ["verikora_agency_monthly_pilot_cad", 4900, "cad", "month"],
+      ["verikora_firm_monthly_pilot_cad", 14900, "cad", "month"],
     ]);
     expect(
       processorCatalogue(ENTRIES.map((e) => (e.key === PRICE.firm ? { ...e, amountCents: null } : e))).plans,
@@ -51,9 +51,9 @@ describe("the processor follows the catalogue (yomizaka#548)", () => {
   it("in test mode a changed amount gives a new processor price and an equal one is left alone", async () => {
     const posts: string[] = [];
     const existing: Record<string, number> = {
-      yomizaka_dossier_grid_cad: 999,
-      yomizaka_agency_monthly_pilot_cad: 4900,
-      yomizaka_firm_monthly_pilot_cad: 14900,
+      verikora_dossier_grid_cad: 999,
+      verikora_agency_monthly_pilot_cad: 4900,
+      verikora_firm_monthly_pilot_cad: 14900,
     };
     const call: StripeCall = async (method, path, params) => {
       if (method === "POST") posts.push(path);
@@ -67,7 +67,7 @@ describe("the processor follows the catalogue (yomizaka#548)", () => {
         };
       }
       if (path === "/v1/billing_portal/configurations" && method === "GET")
-        return { data: [{ active: true, metadata: { product: "yomizaka" } }] };
+        return { data: [{ active: true, metadata: { product: "verikora" } }] };
       return { id: "x", data: [] };
     };
     const same = await syncProcessorPrices({ call, mode: "test" }, ENTRIES);
@@ -77,7 +77,7 @@ describe("the processor follows the catalogue (yomizaka#548)", () => {
       { call, mode: "test" },
       ENTRIES.map((e) => (e.key === PRICE.agency ? { ...e, amountCents: 5900 } : e)),
     );
-    expect(changed.prices.find((p) => p.lookupKey === "yomizaka_agency_monthly_pilot_cad")?.status).toBe("repriced");
+    expect(changed.prices.find((p) => p.lookupKey === "verikora_agency_monthly_pilot_cad")?.status).toBe("repriced");
     expect(posts).toEqual(["/v1/prices"]);
   });
 });

@@ -11,7 +11,7 @@ describe("the documents store in production", () => {
       MEDIA_STORAGE_API_KEY: "zone-key",
       MEDIA_STORAGE_ZONE: "krizaka-assets",
       MEDIA_STORAGE_ENDPOINT: "storage.bunnycdn.com",
-      MEDIA_DOCUMENTS_PREFIX: "yomizaka",
+      MEDIA_DOCUMENTS_PREFIX: "verikora",
       DATABASE_URL: undefined,
     };
     expect(productionProblems(readEnv(source))).toContain(

@@ -11,7 +11,7 @@ import { MAX_SIGNED_URL_SECONDS } from "./providers";
 import { asDescriptor } from "./where";
 
 /**
- * Yomizaka keeps its documents through `@krizaka/storage` (ADR-010, yomizaka#445; the store is chosen by the provider registry, ADR-005):
+ * Verikora keeps its documents through `@krizaka/storage` (ADR-010, verikora#445; the store is chosen by the provider registry, ADR-005):
  * same keys, same links as before the swap, and the personal-data rules (encrypted at rest, short-lived links, purge) still hold. A fake S3
  * and a fake Bunny zone record every request; the stores are the package's own, behind this product's `documentStoreOver`.
  */
@@ -36,10 +36,10 @@ const s3 = (fetch: FetchLike) =>
   bucketStore({
     endpoint: "https://tor1.digitaloceanspaces.com",
     region: "tor1",
-    bucket: "yomizaka-documents",
+    bucket: "verikora-documents",
     accessKeyId: "id",
     secretAccessKey: "fake-credential",
-    prefix: "yomizaka",
+    prefix: "verikora",
     fetch,
     clock,
   });
@@ -59,7 +59,7 @@ describe("documents kept before the swap stay readable", () => {
     const bucket = fakeBucket();
     const body = new TextEncoder().encode("%PDF-1.7 bail");
     // What the previous module wrote: path-style URL, the deployment's prefix, the app's key.
-    bucket.objects.set(`https://tor1.digitaloceanspaces.com/yomizaka-documents/yomizaka/${KEY}`, {
+    bucket.objects.set(`https://tor1.digitaloceanspaces.com/verikora-documents/verikora/${KEY}`, {
       bytes: body,
       contentType: "application/pdf",
     });
@@ -84,7 +84,7 @@ describe("documents kept before the swap stay readable", () => {
       endpoint: "storage.bunnycdn.com",
       zone: "krizaka-assets",
       accessKey: "fake-zone-credential",
-      prefix: "yomizaka",
+      prefix: "verikora",
       pullHostname: "cdn.test",
       tokenKey: "fake-token-key",
       fetch: zone,
@@ -92,18 +92,18 @@ describe("documents kept before the swap stay readable", () => {
     });
     const store = documentStoreOver(objects, DESCRIPTOR, MAX_SIGNED_URL_SECONDS);
     await store.get("o1/d1/original.pdf");
-    expect(seen).toEqual(["GET /krizaka-assets/yomizaka/o1/d1/original.pdf"]);
+    expect(seen).toEqual(["GET /krizaka-assets/verikora/o1/d1/original.pdf"]);
     const link = (await store.signedUrl("o1/d1/original.pdf", 60))!;
     const expires = Math.floor(NOW.getTime() / 1000) + 60;
     // the token of before the swap: sha256(tokenKey + path + expires), url-safe base64
     const token = crypto
       .createHash("sha256")
-      .update(`fake-token-key/yomizaka/o1/d1/original.pdf${expires}`)
+      .update(`fake-token-key/verikora/o1/d1/original.pdf${expires}`)
       .digest("base64")
       .replaceAll("+", "-")
       .replaceAll("/", "_")
       .replaceAll("=", "");
-    expect(link).toBe(`https://cdn.test/yomizaka/o1/d1/original.pdf?token=${token}&expires=${expires}`);
+    expect(link).toBe(`https://cdn.test/verikora/o1/d1/original.pdf?token=${token}&expires=${expires}`);
     expect(link).not.toContain("fake-token-key");
     expect(link).not.toContain("fake-zone-credential");
   });
@@ -159,7 +159,7 @@ describe("data paths are personal data", () => {
     expect(
       bucket.calls
         .filter((c) => c.method === "DELETE")
-        .every((c) => c.url.endsWith(`/yomizaka-documents/yomizaka/${KEY}`)),
+        .every((c) => c.url.endsWith(`/verikora-documents/verikora/${KEY}`)),
     ).toBe(true);
   });
 });

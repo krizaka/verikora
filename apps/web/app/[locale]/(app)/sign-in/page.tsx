@@ -19,7 +19,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   return { title: t.console.meta.signIn, robots: { index: false, follow: false } };
 }
 
-/** Sign-in on @krizaka/ui's auth template, Yomizaka's mark and its owl. Sign-up is closed — the page says so. */
+/** Sign-in on @krizaka/ui's auth template, Verikora's mark and its owl. Sign-up is closed — the page says so. */
 export default async function SignInPage({
   params,
   searchParams,

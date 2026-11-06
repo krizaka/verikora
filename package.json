@@ -1,11 +1,11 @@
 {
-  "name": "yomizaka-monorepo",
+  "name": "verikora-monorepo",
   "version": "0.1.0",
   "private": true,
-  "description": "Yomizaka — your documents, read and checked by Orazaka: upload, keep, search, and every analysis traced to an Orazaka run.",
+  "description": "Verikora — your documents, read and checked by Sovkora: upload, keep, search, and every analysis traced to an Sovkora run.",
   "packageManager": "pnpm@10.34.6",
   "scripts": {
-    "dev": "turbo run dev --filter=@yomizaka/web",
+    "dev": "turbo run dev --filter=@verikora/web",
     "build": "turbo run build",
     "lint:workspace": "npx --yes -p @krizaka/config@latest krizaka-workspace-guard",
     "lint": "pnpm run lint:workspace && turbo run lint && pnpm run check:i18n && pnpm run check:code-names && ast-grep test --skip-snapshot-tests && krizaka-sg-ratchet && pnpm run format:check",
@@ -17,7 +17,7 @@
     "test:coverage": "turbo run test --filter='!./apps/mobile' -- --coverage.enabled --coverage.provider=v8 --coverage.reporter=lcov && turbo run test --filter='./apps/mobile' && vitest run --coverage.enabled --coverage.provider=v8 --coverage.reporter=lcov",
     "check": "pnpm run lint && pnpm run typecheck && pnpm run test",
     "prepare": "git config core.hooksPath .githooks 2>/dev/null || true",
-    "seo:check": "krizaka-seo-family --base http://localhost:3000 --host https://www.yomizaka.com --types WebSite,SoftwareApplication",
+    "seo:check": "krizaka-seo-family --base http://localhost:3000 --host https://www.verikora.com --types WebSite,SoftwareApplication",
     "e2e:admin": "node scripts/e2e-admin.mjs",
     "lint:sg": "krizaka-sg-ratchet",
     "lint:sg:test": "ast-grep test --skip-snapshot-tests",
@@ -29,12 +29,12 @@
     "dev:launch-offer": "node scripts/launch-offer.mjs",
     "check:overflow": "node scripts/check-overflow.mjs",
     "check:admin-live": "node scripts/check-admin-live.mjs",
-    "payments:setup": "pnpm --filter @yomizaka/web exec krizaka-payments-setup --catalogue ../../deploy/payments-catalogue.json",
-    "check:app-links": "pnpm --filter @yomizaka/web exec vitest run lib/app-links.test.ts",
+    "payments:setup": "pnpm --filter @verikora/web exec krizaka-payments-setup --catalogue ../../deploy/payments-catalogue.json",
+    "check:app-links": "pnpm --filter @verikora/web exec vitest run lib/app-links.test.ts",
     "test:visual": "playwright test -c apps/web/e2e/visual/playwright.config.mjs",
     "format": "prettier --write \"**/*.{ts,tsx,js,jsx,mjs,cjs,json,css}\"",
     "format:check": "prettier --check \"**/*.{ts,tsx,js,jsx,mjs,cjs,json,css}\"",
-    "db:rebuild": "pnpm --filter @yomizaka/web db:rebuild"
+    "db:rebuild": "pnpm --filter @verikora/web db:rebuild"
   },
   "devDependencies": {
     "@ast-grep/cli": "0.51.0",

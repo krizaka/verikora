@@ -1,12 +1,12 @@
 import { readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 
-import { orazakaRun, reportOf } from "@yomizaka/core";
+import { reportOf, sovkoraRun } from "@verikora/core";
 import { describe, expect, it } from "vitest";
 
 /**
- * The three Québec rulesets, proven by real Orazaka runs on whole demo documents (scripts/record-packs.mjs). A recording is
- * never edited by hand: the run, the ruleset and the verdicts below are what Orazaka returned. The quoted passages are the
+ * The three Québec rulesets, proven by real Sovkora runs on whole demo documents (scripts/record-packs.mjs). A recording is
+ * never edited by hand: the run, the ruleset and the verdicts below are what Sovkora returned. The quoted passages are the
  * document's own words.
  */
 const DIR = join(__dirname, "../content/pack-proofs");
@@ -39,14 +39,14 @@ const EXPECT: Record<string, { ruleset: string; version: string; failed: string[
   },
 };
 
-describe("the Québec packs, proven by recorded Orazaka runs", () => {
+describe("the Québec packs, proven by recorded Sovkora runs", () => {
   it("holds one recording per expected document and nothing else", () => {
     expect(Object.keys(proofs).sort()).toEqual(Object.keys(EXPECT).sort());
   });
 
   it.each(Object.entries(EXPECT))("%s", (name, want) => {
     const rec = proofs[name];
-    const run = orazakaRun.parse(rec.run);
+    const run = sovkoraRun.parse(rec.run);
     expect(run.status).toBe("SUCCEEDED");
     expect(run.id).toMatch(/^[0-9a-f-]{36}$/);
     const report = reportOf("compliance-check", run.outputs);

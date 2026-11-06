@@ -45,7 +45,7 @@ const text = (html: string) =>
     .replace(/&#x27;|&#39;/g, "'")
     .replace(/\s+/g, " ");
 
-describe("the applicant's page, as drawn (yomizaka#341)", () => {
+describe("the applicant's page, as drawn (verikora#341)", () => {
   it("shows exactly the documents the request asked for, with what each is for", () => {
     const html = render();
     expect(html).toContain('data-testid="asked-pay-stub"');
@@ -107,7 +107,7 @@ describe("the applicant's page, as drawn (yomizaka#341)", () => {
     expect(html).not.toMatch(/text-(danger|red)/);
   });
 
-  describe("the traces found in the person's own documents (ADR-0014, yomizaka#626)", () => {
+  describe("the traces found in the person's own documents (ADR-0014, verikora#626)", () => {
     const TRACES = [
       {
         id: "PDF-REV-002",

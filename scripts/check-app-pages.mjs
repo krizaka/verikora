@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 // The signed-in pages, rendered in a real browser as the seeded persona (never a real account): every app page has exactly
-// one h1, no horizontal overflow at 360, 390, 1280, 1440 and 1600 px in both themes, no card out of its panel, no section covering another, no column cut off (yomizaka#435), no unnamed button, the header's one action on
+// one h1, no horizontal overflow at 360, 390, 1280, 1440 and 1600 px in both themes, no card out of its panel, no section covering another, no column cut off (verikora#435), no unnamed button, the header's one action on
 // screen and named, no console error (the UX review of October 2026, Y1).
 //
 //   E2E_EMAIL=… E2E_PASSWORD=… node scripts/check-app-pages.mjs --base http://localhost:3000 [--locale fr] [--shots <dir>]
@@ -99,7 +99,7 @@ export async function signIn(page, base, locale, email, password) {
 
 /**
  * The routes of the sidebar (the `nav` of the shell), without their query and language: a page the rail offers is a page that is
- * audited, so a new section is never forgotten (« Dossiers » was, and crashed unseen, yomizaka#457). Pure, tested.
+ * audited, so a new section is never forgotten (« Dossiers » was, and crashed unseen, verikora#457). Pure, tested.
  */
 export function railRoutes(hrefs, locale) {
   const escaped = locale.replace(/[.*+?^${}()|[\]\\]/g, String.raw`\$&`);
@@ -117,10 +117,10 @@ export async function discover(page, base, locale) {
   const found = railRoutes(rail, locale).filter((p) => !PAGES.includes(p));
   const collection = hrefs.find((h) => /\/app\/library\/[^/]+\/[^/]+$/.test(h ?? ""));
   if (collection) found.push(collection.replace(/^\/(en|fr)/, ""));
-  // Every tab of the binder, the empty folders included: the open folder's card is audited in each state (yomizaka#435).
+  // Every tab of the binder, the empty folders included: the open folder's card is audited in each state (verikora#435).
   for (const h of new Set(hrefs.filter((x) => /[?&]collection=/.test(x ?? ""))))
     found.push(h.replace(/^\/(en|fr)/, ""));
-  // The applicant file's page (it carries the owner-link block, yomizaka#128).
+  // The applicant file's page (it carries the owner-link block, verikora#128).
   await loadSettled(page, `${base}/${locale}/app/dossiers`);
   const dossier = (await page.$$eval("a[href]", (as) => as.map((a) => a.getAttribute("href")))).find((h) =>
     /\/app\/dossiers\/[0-9a-f-]{36}$/.test(h ?? ""),
@@ -134,7 +134,7 @@ export async function discover(page, base, locale) {
   return [...new Set([...PAGES, ...found])];
 }
 
-/** The public owner report (yomizaka#128) opens on the seeded demo token, and the revoked demo token answers 404 (never the report). */
+/** The public owner report (verikora#128) opens on the seeded demo token, and the revoked demo token answers 404 (never the report). */
 export const ownerReportPath = (persona = "eric") => `/rapport/${demoOwnerTokens(persona).live}`;
 export const revokedReportPath = (persona = "eric") => `/rapport/${demoOwnerTokens(persona).revoked}`;
 
@@ -224,7 +224,7 @@ export async function check({ base, locale = "fr", email, password, shots }) {
   if (!email || !password) throw new Error("E2E_EMAIL and E2E_PASSWORD are required (the seeded persona)");
   const browser = await chromium.launch();
   const problems = [];
-  const a11y = new A11yCollector("yomizaka-app");
+  const a11y = new A11yCollector("verikora-app");
   try {
     const context = await auditContext(browser, { viewport: { width: 1440, height: 900 } });
     const probe = await context.newPage();
@@ -233,7 +233,7 @@ export async function check({ base, locale = "fr", email, password, shots }) {
     const revoked = await probe.request.get(`${base}/${locale}${revokedReportPath()}`);
     if (revoked.status() !== 404)
       problems.push(`${revokedReportPath()}: a revoked link must answer 404, got ${revoked.status()}`);
-    // The signed PDF of the owner report (yomizaka#481): a PDF on the live link, nothing on the revoked one.
+    // The signed PDF of the owner report (verikora#481): a PDF on the live link, nothing on the revoked one.
     const pdf = await probe.request.get(`${base}/api/rapport/${demoOwnerTokens("eric").live}/pdf?locale=${locale}`);
     if (pdf.status() !== 200 || !String(pdf.headers()["content-type"]).startsWith("application/pdf"))
       problems.push(`/api/rapport/<demo token>/pdf: expected a PDF, got ${pdf.status()}`);

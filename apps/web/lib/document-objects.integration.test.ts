@@ -6,7 +6,7 @@ import { purgeDocument, purgeExpired } from "./retention";
 import { memoryStore } from "./storage/memory";
 
 /** ADR-0012: the bytes of a document live in the store, the row carries `object_key` (PostgreSQL; skipped without the database test switch). */
-const enabled = process.env.YOMIZAKA_DB_IT === "1" && !!process.env.DATABASE_URL;
+const enabled = process.env.DATABASE_IT === "1" && !!process.env.DATABASE_URL;
 const NOW = new Date("2026-10-28T12:00:00Z");
 const BYTES = new TextEncoder().encode("BAIL DE LOGEMENT\nLoyer mensuel : 1 450 $.\n");
 
@@ -20,7 +20,7 @@ describe.runIf(enabled)("document bytes in the store (ADR-0012)", () => {
     (
       await query<{ id: string }>(
         "INSERT INTO accounts (email, password_hash, email_verified_at) VALUES ($1, 'x', now()) RETURNING id",
-        [`o-${Math.random().toString(36).slice(2)}@yomizaka.test`],
+        [`o-${Math.random().toString(36).slice(2)}@verikora.test`],
       )
     )[0]!.id;
   /** A not-kept document whose bytes are in the store under its key (what the write path of ADR-0012 produces). */

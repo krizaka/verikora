@@ -2,9 +2,9 @@ import { describe, expect, it } from "vitest";
 
 import * as fx from "./fixtures";
 import { archiveProblem, createInspector, sniff } from "./inspector";
-import { YOMIZAKA_RULES } from "./rules";
+import { VERIKORA_RULES } from "./rules";
 
-const inspect = createInspector(YOMIZAKA_RULES).inspect;
+const inspect = createInspector(VERIKORA_RULES).inspect;
 const pdf = (name = "bail.pdf") => ({ name, type: "application/pdf" });
 const why = async (bytes: Uint8Array, declared = pdf()) => {
   const r = await inspect(bytes, declared);
@@ -29,7 +29,7 @@ describe("pre-flight: what the bytes are", () => {
   });
   it("refuses an empty file and a file over the size limit", async () => {
     expect(await why(new Uint8Array())).toBe("EMPTY");
-    expect(await why(new Uint8Array(YOMIZAKA_RULES.maxBytes + 1))).toBe("TOO_LARGE");
+    expect(await why(new Uint8Array(VERIKORA_RULES.maxBytes + 1))).toBe("TOO_LARGE");
   });
   it("refuses an executable renamed to .pdf, by its magic bytes", async () => {
     expect(sniff(fx.windowsExecutable())).toBe("executable");
@@ -51,11 +51,11 @@ describe("pre-flight: what the bytes are", () => {
     expect(await why(await fx.imageOf("jpeg"), { name: "scan.png", type: "image/png" })).toBe("TYPE_MISMATCH");
     expect(await why(fx.pngWithSize(9000, 9000), { name: "huge.png", type: "image/png" })).toBe("IMAGE_TOO_LARGE");
   });
-  it("recognises a Word file and accepts it (yomizaka#229); a workspace that allows no Word files still refuses it", async () => {
+  it("recognises a Word file and accepts it (verikora#229); a workspace that allows no Word files still refuses it", async () => {
     expect(sniff(fx.docx())).toBe("docx");
     expect(await why(fx.docx(), { name: "bail.docx", type: "" })).toBe("accepted");
     expect(
-      await createInspector({ ...YOMIZAKA_RULES, allowedKinds: ["pdf", "text"] }).inspect(fx.docx(), {
+      await createInspector({ ...VERIKORA_RULES, allowedKinds: ["pdf", "text"] }).inspect(fx.docx(), {
         name: "bail.docx",
         type: "",
       }),
@@ -95,20 +95,20 @@ describe("pre-flight: safety — nothing is executed, active content is refused"
     expect(await why(Buffer.from(js, "latin1"))).toBe("ACTIVE_CONTENT");
   });
   it("refuses a zip bomb from its directory alone, and macro-enabled Word files", async () => {
-    expect(archiveProblem(fx.zipBomb(), YOMIZAKA_RULES)).toBe("ARCHIVE_BOMB");
+    expect(archiveProblem(fx.zipBomb(), VERIKORA_RULES)).toBe("ARCHIVE_BOMB");
     expect(await why(fx.zipBomb(), { name: "bail.docx", type: "" })).toBe("ARCHIVE_BOMB");
-    expect(archiveProblem(fx.docx([{ name: "word/vbaProject.bin", data: Buffer.from("x") }]), YOMIZAKA_RULES)).toBe(
+    expect(archiveProblem(fx.docx([{ name: "word/vbaProject.bin", data: Buffer.from("x") }]), VERIKORA_RULES)).toBe(
       "ACTIVE_CONTENT",
     );
-    expect(archiveProblem(fx.docx(), YOMIZAKA_RULES)).toBeNull();
+    expect(archiveProblem(fx.docx(), VERIKORA_RULES)).toBeNull();
   });
 });
 
 describe("pre-flight: the rules are data", () => {
   it("a stricter rule set changes the outcome without a code change", async () => {
-    const strict = createInspector({ ...YOMIZAKA_RULES, maxBytes: 100 });
+    const strict = createInspector({ ...VERIKORA_RULES, maxBytes: 100 });
     expect((await strict.inspect(await fx.cleanPdf(), pdf())).kind).toBe("rejected");
-    const wide = createInspector({ ...YOMIZAKA_RULES, allowedKinds: ["pdf", "text", "png"] });
+    const wide = createInspector({ ...VERIKORA_RULES, allowedKinds: ["pdf", "text", "png"] });
     expect((await wide.inspect(fx.pngBytes(), { name: "s.png", type: "image/png" })).kind).toBe("accepted");
   });
 });

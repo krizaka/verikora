@@ -1,4 +1,4 @@
-import { DOCUMENT_KINDS } from "@yomizaka/core";
+import { DOCUMENT_KINDS } from "@verikora/core";
 
 import { CHECKS_TAB_KEY, CHECKS_TABS, type ChecksTab } from "./console-nav";
 
@@ -9,7 +9,7 @@ export interface RouteState<V extends string> {
   fallback: V;
 }
 
-/** The kinds a check can be asked for: the document kinds' own words, plus « let Yomizaka decide ». */
+/** The kinds a check can be asked for: the document kinds' own words, plus « let Verikora decide ». */
 export const CHECK_KINDS = ["auto", ...DOCUMENT_KINDS] as const;
 export type CheckKind = (typeof CHECK_KINDS)[number];
 

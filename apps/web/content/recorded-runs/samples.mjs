@@ -1,6 +1,6 @@
 /**
  * The two sample leases of the recorded runs: fictitious (non-personal), one per side of the lease. They are the INPUT of the
- * recording (scripts/record-runs.mjs); what Orazaka returned is the recorded file next to them.
+ * recording (scripts/record-runs.mjs); what Sovkora returned is the recorded file next to them.
  */
 export const SAMPLES = {
   tenant: {

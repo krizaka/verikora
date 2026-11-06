@@ -1,6 +1,6 @@
 import { readFileSync } from "node:fs";
 
-import { DOCX_MIME } from "@yomizaka/core";
+import { DOCX_MIME } from "@verikora/core";
 import { describe, expect, it } from "vitest";
 
 import { causeOf, FAILURE_CAUSES, failureOf, familyOf, FILE_FAMILIES, RECOVERY, retryRequest } from "./check-failure";
@@ -10,15 +10,15 @@ const messages = (name: string) =>
     string,
     Record<string, string> | string
   >;
-// The engine room's words: a person never reads them (products first: Orazaka appears only as « Powered by »).
-const ENGINE_WORDS = /orazaka|engine|moteur|run id|stack ?trace|exception/i;
+// The engine room's words: a person never reads them (products first: Sovkora appears only as « Powered by »).
+const ENGINE_WORDS = /sovkora|engine|moteur|run id|stack ?trace|exception/i;
 
 describe("a failed check: the cause, in the person's words (krizaka-internal#1900)", () => {
   it.each([
-    ["Orazaka finished without a report Yomizaka can read", "unreadable"],
+    ["Sovkora finished without a report Verikora can read", "unreadable"],
     ["The run ended failed", "interrupted"],
     ["The run ended cancelled", "interrupted"],
-    ["Orazaka refused the document as sent", "refused"],
+    ["Sovkora refused the document as sent", "refused"],
     [null, "interrupted"],
   ] as const)("%s is %s", (error, cause) => {
     expect(causeOf(error)).toBe(cause);

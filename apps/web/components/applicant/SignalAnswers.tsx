@@ -25,7 +25,7 @@ export interface SignalAnswerWords {
 type Doc = ApplicantFileState["documents"][number];
 
 /**
- * The applicant's answer to the traces found in their documents (ADR-0014 §4, yomizaka#626): the same facts the owner reads, the
+ * The applicant's answer to the traces found in their documents (ADR-0014 §4, verikora#626): the same facts the owner reads, the
  * ordinary explanations, and one short box per trace. Nothing is asked: an empty box is fine. No score, no verdict, no sort.
  */
 export function SignalAnswers({

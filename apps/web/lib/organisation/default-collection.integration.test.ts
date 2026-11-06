@@ -4,8 +4,8 @@ import { migrate, pool, query } from "../db";
 import { BACKFILL_DEFAULT_COLLECTIONS } from "./default-collection";
 import * as org from "./store";
 
-/** The default collection (krizaka/yomizaka#205) against a real PostgreSQL: the database itself keeps one per account, and no file is ever without a collection. */
-const enabled = process.env.YOMIZAKA_DB_IT === "1" && !!process.env.DATABASE_URL;
+/** The default collection (krizaka/verikora#205) against a real PostgreSQL: the database itself keeps one per account, and no file is ever without a collection. */
+const enabled = process.env.DATABASE_IT === "1" && !!process.env.DATABASE_URL;
 
 describe.runIf(enabled)("the default collection", () => {
   beforeAll(async () => {
@@ -15,7 +15,7 @@ describe.runIf(enabled)("the default collection", () => {
     (
       await query<{ id: string }>(
         "INSERT INTO accounts (email, password_hash, email_verified_at, locale) VALUES ($1, 'x', now(), $2) RETURNING id",
-        [`d-${Math.random().toString(36).slice(2)}@yomizaka.test`, locale],
+        [`d-${Math.random().toString(36).slice(2)}@verikora.test`, locale],
       )
     )[0]!.id;
   const doc = async (owner: string) =>

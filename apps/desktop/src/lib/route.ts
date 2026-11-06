@@ -1,4 +1,4 @@
-import type { SectionId } from "@yomizaka/core";
+import type { SectionId } from "@verikora/core";
 
 /**
  * The URL is the state, in the window too: the screen is the hash, so a refresh, the back button and a link kept in the
@@ -58,7 +58,7 @@ export function hashOf(route: Route): string {
 }
 
 /**
- * The screen a web link opens (`yomizaka://app/…` or `https://www.yomizaka.com/app/…`, already turned into a path by the
+ * The screen a web link opens (`verikora://app/…` or `https://www.verikora.com/app/…`, already turned into a path by the
  * native side): the same place as on the web. A path the Mac app has no screen for opens the library.
  */
 export function routeOfLink(link: string): Route {

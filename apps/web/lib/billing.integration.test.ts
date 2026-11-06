@@ -10,8 +10,8 @@ import {
 } from "./billing";
 import { migrate, query, transaction } from "./db";
 
-/** The entitlements against a real PostgreSQL (skipped without YOMIZAKA_DB_IT=1 and DATABASE_URL, like db.integration.test.ts). */
-const enabled = process.env.YOMIZAKA_DB_IT === "1" && !!process.env.DATABASE_URL;
+/** The entitlements against a real PostgreSQL (skipped without DATABASE_IT=1 and DATABASE_URL, like db.integration.test.ts). */
+const enabled = process.env.DATABASE_IT === "1" && !!process.env.DATABASE_URL;
 const NOW = new Date("2026-10-22T12:00:00Z");
 /** The facts every paid event carries; a test sets the ones it is about. */
 const FACTS = {
@@ -64,7 +64,7 @@ describe.runIf(enabled)("billing", () => {
   const account = async (selfServe = true) => {
     const [a] = await query<{ id: string }>(
       "INSERT INTO accounts (email, password_hash, email_verified_at, terms_accepted_at) VALUES ($1, 'x', now(), $2) RETURNING id",
-      [`b-${Math.random().toString(36).slice(2)}@yomizaka.test`, selfServe ? NOW : null],
+      [`b-${Math.random().toString(36).slice(2)}@verikora.test`, selfServe ? NOW : null],
     );
     return a!.id;
   };
@@ -106,7 +106,7 @@ describe.runIf(enabled)("billing", () => {
     expect(await applyPaymentEvent(transaction, event)).toBe("duplicate");
     expect((await entitlementOf(query, id, NOW)).credits).toBe(1);
   });
-  it("a handler that fails leaves no trace: the event id is not recorded, the credits are unchanged, and the retry applies it once (yomizaka#257)", async () => {
+  it("a handler that fails leaves no trace: the event id is not recorded, the credits are unchanged, and the retry applies it once (verikora#257)", async () => {
     const taken = await account();
     const id = await account();
     await query("UPDATE accounts SET payment_customer_id = $2 WHERE id = $1", [taken, `cus-shared-${taken}`]);
@@ -226,7 +226,7 @@ describe.runIf(enabled)("billing", () => {
     await releaseAudit(query, id, "overage", NOW, second, biller);
     expect(calls.filter((c) => c.startsWith("refund"))).toHaveLength(1);
   });
-  it("a subscription cancelled in the portal stays Pro until the period ends, and says so (yomizaka#139)", async () => {
+  it("a subscription cancelled in the portal stays Pro until the period ends, and says so (verikora#139)", async () => {
     const id = await account();
     const change = (n: number, cancelAtPeriodEnd: boolean) =>
       applyPaymentEvent(transaction, {
@@ -272,7 +272,7 @@ describe.runIf(enabled)("billing", () => {
     expect(await reserveAudit(query, id, NOW, caps())).toBe("free");
   });
 
-  it("a failed run gives back the pot it drew from: the free audit stays the free audit, the paid credit the paid credit (yomizaka#261)", async () => {
+  it("a failed run gives back the pot it drew from: the free audit stays the free audit, the paid credit the paid credit (verikora#261)", async () => {
     const id = await account();
     await applyPaymentEvent(transaction, {
       id: `evt-two-${id}`,
@@ -350,7 +350,7 @@ describe.runIf(enabled)("billing", () => {
   });
   it("a subscription keeps the catalogue version it was sold at (recorded at checkout, kept when it starts) — ADR-009", async () => {
     const id = await account();
-    await recordCheckout(query, id, { key: "yomizaka.firm", versionId: "seed:yomizaka.firm" });
+    await recordCheckout(query, id, { key: "verikora.firm", versionId: "seed:verikora.firm" });
     await applyPaymentEvent(transaction, {
       id: `evt-sub-${id}`,
       type: "subscription_started",
@@ -360,10 +360,10 @@ describe.runIf(enabled)("billing", () => {
       ...FACTS,
     });
     expect(await entitlementOf(query, id, NOW)).toMatchObject({
-      planKey: "yomizaka.firm",
-      priceVersionId: "seed:yomizaka.firm",
+      planKey: "verikora.firm",
+      priceVersionId: "seed:verikora.firm",
     });
-    await recordCheckout(query, id, { key: "yomizaka.agency", versionId: "7" });
+    await recordCheckout(query, id, { key: "verikora.agency", versionId: "7" });
     await applyPaymentEvent(transaction, {
       id: `evt-chg-${id}`,
       type: "subscription_changed",
@@ -376,8 +376,8 @@ describe.runIf(enabled)("billing", () => {
       periodEnd: null,
     });
     expect(await entitlementOf(query, id, NOW)).toMatchObject({
-      planKey: "yomizaka.firm",
-      priceVersionId: "seed:yomizaka.firm",
+      planKey: "verikora.firm",
+      priceVersionId: "seed:verikora.firm",
     });
   });
 });

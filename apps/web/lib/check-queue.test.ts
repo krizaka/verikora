@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 
 import { CHECK_STAGES, checkDefaults, checkRows, FLOW_STEPS, flowStep, opensAtOnce, reportHref } from "./check-queue";
 
-/** The check flow's logic (yomizaka#326, P9 of the design direction § 5.4). */
+/** The check flow's logic (verikora#326, P9 of the design direction § 5.4). */
 describe("the defaults, named before the drop (Errata 6)", () => {
   it("say where the file goes, whether it is kept, and which rules apply, in that order", () => {
     expect(checkDefaults({ keep: false, keepOff: false })).toEqual([

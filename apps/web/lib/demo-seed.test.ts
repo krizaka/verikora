@@ -1,4 +1,4 @@
-import { authenticityReport, complianceReport, isSeededCheck, SEEDED_INPUTS } from "@yomizaka/core";
+import { authenticityReport, complianceReport, isSeededCheck, SEEDED_INPUTS } from "@verikora/core";
 import { describe, expect, it } from "vitest";
 
 import { generateDocument, PERSONA_ERIC } from "../../../scripts/demo-documents/index.mjs";
@@ -56,7 +56,7 @@ describe("the demo seed", () => {
     expect(() => collectionWords(fr, "eric", "nope")).toThrow();
   });
 
-  it("seeds checks the app reads like Orazaka's, each flawed document with its blocking finding", async () => {
+  it("seeds checks the app reads like Sovkora's, each flawed document with its blocking finding", async () => {
     for (const id of PERSONA_ERIC.checked as string[]) {
       const doc = await generateDocument(id);
       const report = seededReport(doc);
@@ -98,7 +98,7 @@ describe("the demo seed", () => {
       }
       return [];
     };
-    await seedPersona(q, { persona: "eric", email: "eric@demo.yomizaka.test", messagesByLocale: { fr, en }, now });
+    await seedPersona(q, { persona: "eric", email: "eric@demo.verikora.test", messagesByLocale: { fr, en }, now });
     const docs = stamps.filter((s) => /INSERT INTO documents/.test(s.sql)).map((s) => s.values[11] as string);
     const checks = stamps.filter((s) => /INSERT INTO analyses/.test(s.sql));
     expect(docs.length).toBeGreaterThan(1);

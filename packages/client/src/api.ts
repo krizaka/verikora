@@ -10,7 +10,7 @@ import {
   waitForExtraction,
   type WaitOptions,
   writeBatchManifest,
-} from "@yomizaka/core";
+} from "@verikora/core";
 import { z } from "zod";
 
 import { limitsFromConfig, type PreflightLimits } from "./preflight";
@@ -105,10 +105,10 @@ const batchList = z.object({
 export type BatchCheck = keyof typeof BATCH_CHECKS;
 
 /**
- * Yomizaka's API as the apps use it. Every answer is parsed at the edge: a shape the server did not promise stops here,
+ * Verikora's API as the apps use it. Every answer is parsed at the edge: a shape the server did not promise stops here,
  * never inside a screen.
  */
-export function createYomizakaApi(port: ApiPort, session: SessionPort, wait: WaitOptions = {}) {
+export function createVerikoraApi(port: ApiPort, session: SessionPort, wait: WaitOptions = {}) {
   const get = <T extends z.ZodType>(schema: T, path: string): Promise<z.infer<T>> =>
     port.call<unknown>(path).then((value) => schema.parse(value));
   return {
@@ -124,7 +124,7 @@ export function createYomizakaApi(port: ApiPort, session: SessionPort, wait: Wai
       await port.call("/api/auth/sign-out", { method: "POST" }).catch(() => undefined);
       await session.clearToken();
     },
-    /** Who is signed in (`GET /api/me`, yomizaka#243): what the header's account menu shows. */
+    /** Who is signed in (`GET /api/me`, verikora#243): what the header's account menu shows. */
     fetchMe: () => get(me, "/api/me").then((r) => r.account),
     /** The limits the web applies, read from the server so the app's pre-flight is the web's. */
     async fetchLimits(): Promise<PreflightLimits> {
@@ -132,7 +132,7 @@ export function createYomizakaApi(port: ApiPort, session: SessionPort, wait: Wai
     },
     /**
      * One file as multipart (field `file`): never kept by the server, the document is purged after its check. The server answers
-     * 202 Accepted and reads the text after the answer (yomizaka#21): this resolves when the text is read, so a screen checks
+     * 202 Accepted and reads the text after the answer (verikora#21): this resolves when the text is read, so a screen checks
      * what it was handed. A reading that failed rejects with `ExtractionNotReady` (its `reason` is the code to show).
      */
     async uploadDocument(form: FormData) {
@@ -164,7 +164,7 @@ export function createYomizakaApi(port: ApiPort, session: SessionPort, wait: Wai
       await port.call(`/api/documents/${documentId}`, { method: "DELETE" });
     },
     /**
-     * A batch (yomizaka#232): the same check on several files at once — a folder of the Mac, or files dropped on it. The
+     * A batch (verikora#232): the same check on several files at once — a folder of the Mac, or files dropped on it. The
      * manifest is written here (one row per file); the server stores the files under the workspace's purge and runs the rows.
      */
     async createBatch(name: string, files: readonly { name: string; blob: Blob }[], check: BatchCheck) {
@@ -187,7 +187,7 @@ export function createYomizakaApi(port: ApiPort, session: SessionPort, wait: Wai
   };
 }
 
-export type YomizakaApi = ReturnType<typeof createYomizakaApi>;
-export type DocumentDetail = Awaited<ReturnType<YomizakaApi["fetchDocument"]>>;
-export type Batch = Awaited<ReturnType<YomizakaApi["fetchBatch"]>>;
-export type BatchSummary = Awaited<ReturnType<YomizakaApi["listBatches"]>>[number];
+export type VerikoraApi = ReturnType<typeof createVerikoraApi>;
+export type DocumentDetail = Awaited<ReturnType<VerikoraApi["fetchDocument"]>>;
+export type Batch = Awaited<ReturnType<VerikoraApi["fetchBatch"]>>;
+export type BatchSummary = Awaited<ReturnType<VerikoraApi["listBatches"]>>[number];

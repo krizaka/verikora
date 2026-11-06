@@ -17,7 +17,7 @@ import { CATALOGUE_FILTERS, ROUTE_STATES } from "@/lib/route-state";
 import { useRouteState } from "@/lib/use-route-state";
 
 /*
- * « Vérifier un document », B2 (yomizaka#333, design § 5.4): the plan strip, and the catalogue of the checks Yomizaka runs — a
+ * « Vérifier un document », B2 (verikora#333, design § 5.4): the plan strip, and the catalogue of the checks Verikora runs — a
  * search, chips with their counts, and a row each with « Disponible » and its one action, which names the kind and leads to the drop.
  * Waiting on krizaka-ui#711: `CataloguePage` has no « task column » beside the results (the drop, the run): the two columns are composed here
  * from `PlanStrip`, `Chip.Group`, `SearchField` and `List` until it has.
@@ -66,7 +66,7 @@ export function CheckPlanStrip({ credits }: Readonly<{ credits: CreditsFigure }>
   );
 }
 
-/** The checks Yomizaka runs for this person: the registry's, narrowed by a search and a chip (the chip lives in the address, the search is ephemeral). */
+/** The checks Verikora runs for this person: the registry's, narrowed by a search and a chip (the chip lives in the address, the search is ephemeral). */
 export function CheckCatalogue({ items }: Readonly<{ items: readonly CatalogueItem[] }>) {
   const { say, locale } = useSay();
   const [q, setQ] = useState("");

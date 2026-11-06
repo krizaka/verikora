@@ -1,6 +1,6 @@
-//! Yomizaka for the Mac. What every Krizaka Mac app does the same way — the folders the person grants (and watches), the
-//! files dropped on the window, the session in the Keychain, the native menu, `yomizaka://` links, the navigation guard —
-//! is `tauri-plugin-krizaka` (krizaka-tauri-kit). Here are only Yomizaka's own commands: list a folder's documents, read
+//! Verikora for the Mac. What every Krizaka Mac app does the same way — the folders the person grants (and watches), the
+//! files dropped on the window, the session in the Keychain, the native menu, `verikora://` links, the navigation guard —
+//! is `tauri-plugin-krizaka` (krizaka-tauri-kit). Here are only Verikora's own commands: list a folder's documents, read
 //! one for the check that needs it, write the signed report next to it — each path through the kit's one gate.
 
 mod documents;
@@ -78,17 +78,17 @@ fn store_delete(store: State<'_, store::FolderStore>, key: String) -> Result<(),
 
 pub fn run() {
     let builder = tauri::Builder::default();
-    // The Mac journey's embedded WebDriver (yomizaka#636, 127.0.0.1:4445): a debug build with `--features webdriver`, never a release.
+    // The Mac journey's embedded WebDriver (verikora#636, 127.0.0.1:4445): a debug build with `--features webdriver`, never a release.
     #[cfg(all(debug_assertions, feature = "webdriver"))]
     let builder = builder.plugin(tauri_plugin_webdriver::init());
     builder
-        // The API calls go through Rust's HTTP client (no CORS), to Yomizaka's own addresses (the capability).
+        // The API calls go through Rust's HTTP client (no CORS), to Verikora's own addresses (the capability).
         .plugin(tauri_plugin_http::init())
         // The folder picker the kit's commands open (re-exported by the kit).
         .plugin(tauri_plugin_krizaka::dialog::init())
         .plugin(
-            tauri_plugin_krizaka::Builder::new("yomizaka")
-                .link_hosts(["www.yomizaka.com", "dev.yomizaka.com"])
+            tauri_plugin_krizaka::Builder::new("verikora")
+                .link_hosts(["www.verikora.com", "dev.verikora.com"])
                 .link_prefixes(["/app"])
                 .build(),
         )
@@ -106,5 +106,5 @@ pub fn run() {
             store_delete
         ])
         .run(tauri::generate_context!())
-        .expect("error while running Yomizaka");
+        .expect("error while running Verikora");
 }

@@ -1,5 +1,5 @@
 /**
- * Two sites, one app: dev.yomizaka.com (the product) and admin.yomizaka.com (the administration console). The proxy
+ * Two sites, one app: dev.verikora.com (the product) and admin.verikora.com (the administration console). The proxy
  * decides by the host: on the admin host every page is the console (`/en/users` is served by `/en/console/users`) and
  * nothing else; on the product host the console does not exist (404). Pure, so it is tested without a server.
  */

@@ -32,7 +32,7 @@ export default async function DocumentsPage({
   if (!session) notFound();
   const owner = session.account.id;
   const locale = asLocale((await params).locale);
-  // The bookmarks are the workspace's tags of kind « document » (yomizaka#339); `?tags=` is the filter, every one asked for must be worn.
+  // The bookmarks are the workspace's tags of kind « document » (verikora#339); `?tags=` is the filter, every one asked for must be worn.
   const workspace = workspaceFor({ clock: systemClock });
   const bookmarks = (await workspace.tags.list(owner, KIND.document)).map(asTag);
   const selected = knownBookmarks(parseView(await searchParams).tags, bookmarks);

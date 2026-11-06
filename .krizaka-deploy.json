@@ -1,8 +1,8 @@
 {
-  "app": "yomizaka-dev",
-  "url": "https://www.yomizaka.com",
+  "app": "verikora-dev",
+  "url": "https://dev.verikora.com",
   "health": "/api/healthz",
   "indexing": "on",
   "spec": "deploy/digitalocean/dev.app.yaml",
-  "product": "yomizaka"
+  "product": "verikora"
 }

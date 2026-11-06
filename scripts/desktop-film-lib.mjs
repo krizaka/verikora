@@ -1,4 +1,4 @@
-// The Mac film (yomizaka#636): the journey films only the app's window, from the first screen of the library (after the sign-in,
+// The Mac film (verikora#636): the journey films only the app's window, from the first screen of the library (after the sign-in,
 // so no address is ever typed in front of the camera), skipping the engine's wait. The frames come from INSIDE the app: the same
 // WebDriver the journey drives takes a screenshot of the window at a steady rate. No screen recording, so no macOS permission
 // (TCC) is needed on the runner (`screencapture -v` filmed nothing there, runs 41071237202 and 41124359521).

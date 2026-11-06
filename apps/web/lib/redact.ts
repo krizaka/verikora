@@ -1,5 +1,5 @@
 /**
- * Nothing that carries a credential reaches a log (yomizaka#386). A start-up error once printed the whole connection
+ * Nothing that carries a credential reaches a log (verikora#386). A start-up error once printed the whole connection
  * string, password included, because Node's `ERR_INVALID_URL` keeps the rejected input on the error object.
  */
 

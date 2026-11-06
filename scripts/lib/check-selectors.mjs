@@ -4,7 +4,7 @@ export const CHECK_TEST_IDS = {
   defaults: { id: "check-defaults", source: "apps/web/components/console/DocumentUploader.tsx" },
   keep: { id: "keep-choice", source: "apps/web/components/console/DocumentUploader.tsx" },
   kind: { id: "kind-choice", source: "apps/web/components/console/CheckView.tsx" },
-  runId: { id: "orazaka-run-id", source: "apps/web/components/console/ReportFace.tsx" },
+  runId: { id: "sovkora-run-id", source: "apps/web/components/console/ReportFace.tsx" },
 };
 
 /** The CSS selector of a test id. */

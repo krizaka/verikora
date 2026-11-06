@@ -27,10 +27,10 @@ import { GET } from "../app/api/me/route";
 import { resetRateLimits } from "./limits";
 
 const call = () =>
-  GET(new Request("https://dev.yomizaka.com/api/me", { headers: { "x-forwarded-for": "203.0.113.7" } }));
+  GET(new Request("https://dev.verikora.com/api/me", { headers: { "x-forwarded-for": "203.0.113.7" } }));
 const ERIC = {
   id: "11111111-1111-4111-8111-111111111111",
-  email: "eric@yomizaka.test",
+  email: "eric@verikora.test",
   name: "Éric",
   avatarSeed: "plain-2",
   role: "USER",

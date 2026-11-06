@@ -1,6 +1,6 @@
 # The app opens, signs in as the demo persona Éric and lands on the check screen. Runs in CI (mobile-e2e.yml).
 # maestro test -e PERSONA_EMAIL=… -e PERSONA_PASSWORD=… .maestro/smoke.yaml   (the persona's, never a real or QA account)
-appId: com.krizaka.yomizaka
+appId: com.krizaka.verikora
 tags:
   - ci
 ---

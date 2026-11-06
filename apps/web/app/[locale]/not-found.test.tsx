@@ -7,7 +7,7 @@ import fr from "@/messages/fr.json";
 
 import NotFound from "./not-found";
 
-const nav = vi.hoisted(() => ({ locale: "fr", host: "www.yomizaka.com" }));
+const nav = vi.hoisted(() => ({ locale: "fr", host: "www.verikora.com" }));
 vi.mock("next/headers", () => ({ headers: async () => new Headers({ "x-locale": nav.locale, host: nav.host }) }));
 vi.mock("next/navigation", () => ({
   useRouter: () => ({ push() {}, replace() {}, refresh() {} }),
@@ -48,15 +48,15 @@ describe("the 404 (the UX review's Y10)", () => {
 
   it("on the admin host the way back is the console, never the product's library", async () => {
     nav.locale = "fr";
-    nav.host = "admin.yomizaka.com";
+    nav.host = "admin.verikora.com";
     const html = renderToStaticMarkup(await NotFound());
     expect(html).toContain('data-testid="not-found-console"');
     expect(readable(html)).toContain(fr.console.notFound.console);
     expect(html).not.toContain('href="/fr/app"');
-    nav.host = "www.yomizaka.com";
+    nav.host = "www.verikora.com";
   });
 
-  it("answers in English on an English address, and in French when the address says nothing (Loi 96, yomizaka#366)", async () => {
+  it("answers in English on an English address, and in French when the address says nothing (Loi 96, verikora#366)", async () => {
     nav.locale = "en";
     expect(readable(renderToStaticMarkup(await NotFound()))).toContain("Back to the library");
     nav.locale = "";

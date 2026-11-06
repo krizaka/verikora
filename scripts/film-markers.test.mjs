@@ -12,8 +12,8 @@ const film = (over = {}) => ({
 });
 const refuses = (over, message) => assert.throws(() => assertFilm(film(over)), message);
 
-// yomizaka#1968: bug -> missing guard. Each case is a defect the founder saw on the live download page.
-describe("the guard of a film before it is published (yomizaka#1968)", () => {
+// verikora#1968: bug -> missing guard. Each case is a defect the founder saw on the live download page.
+describe("the guard of a film before it is published (verikora#1968)", () => {
   it("accepts a film in its language, its frame's shape, clean, ending on its result", () => {
     assert.doesNotThrow(() => assertFilm(film()));
   });

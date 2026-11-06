@@ -18,7 +18,7 @@ import { useSay } from "@/lib/i18n-client";
 
 const VERSION = process.env.NEXT_PUBLIC_APP_VERSION ?? "";
 
-/** admin.yomizaka.com: @krizaka/ui's AppShell console — overview, people, documents, Orazaka runs, audit — and a DEV badge. */
+/** admin.verikora.com: @krizaka/ui's AppShell console — overview, people, documents, Sovkora runs, audit — and a DEV badge. */
 export function AdminShell({
   locale,
   email,

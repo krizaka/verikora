@@ -1,4 +1,4 @@
-import { isWithheldFromLandlord, landlordSignals, WITHHELD_FROM_LANDLORD } from "@yomizaka/core";
+import { isWithheldFromLandlord, landlordSignals, WITHHELD_FROM_LANDLORD } from "@verikora/core";
 import { describe, expect, it } from "vitest";
 
 import en from "../messages/en.json";
@@ -8,8 +8,8 @@ import { applicantSignalsOf } from "./signal-answers";
 
 const sig = (signalId: string, level: string) => ({ signalId, level, observation: "…" });
 
-describe("the signals over the 5 % false-positive bar are not shown to the landlord (yomizaka#651)", () => {
-  it("withholds the three measured over the bar (orazaka-packs#191), at the measured case only", () => {
+describe("the signals over the 5 % false-positive bar are not shown to the landlord (verikora#651)", () => {
+  it("withholds the three measured over the bar (sovkora-packs#191), at the measured case only", () => {
     expect(isWithheldFromLandlord(sig("PDF-ID-001", "inhabituel"))).toBe(true);
     expect(isWithheldFromLandlord(sig("PDF-META-001", "inhabituel"))).toBe(true);
     expect(isWithheldFromLandlord(sig("IMG-META-001", "inhabituel"))).toBe(true);
@@ -20,7 +20,7 @@ describe("the signals over the 5 % false-positive bar are not shown to the landl
   it("every withheld signal is over the bar and links its measurement", () => {
     for (const w of WITHHELD_FROM_LANDLORD) {
       expect(w.falsePositiveRate).toBeGreaterThan(0.05);
-      expect(w.measurement).toMatch(/^https:\/\/github\.com\/krizaka\/orazaka-packs\//);
+      expect(w.measurement).toMatch(/^https:\/\/github\.com\/krizaka\/sovkora-packs\//);
     }
   });
   it("keeps the others, in order", () => {

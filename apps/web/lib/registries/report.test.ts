@@ -19,7 +19,7 @@ const facts = (references: { kind: string; value: string }[], issuer: string | n
 });
 const QST = { kind: "qst", value: "0000000000TQ0001" };
 
-describe("the registry part of a document's report (yomizaka#627)", () => {
+describe("the registry part of a document's report (verikora#627)", () => {
   it("looks nothing up when the document carries no QST number", async () => {
     let calls = 0;
     const qst: BusinessRegistry = {

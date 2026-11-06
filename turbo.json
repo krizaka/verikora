@@ -15,7 +15,7 @@
     },
     "test": {
       "dependsOn": ["^build"],
-      "passThroughEnv": ["DATABASE_URL", "DATABASE_CA_CERT", "YOMIZAKA_DB_IT"]
+      "passThroughEnv": ["DATABASE_URL", "DATABASE_CA_CERT", "DATABASE_IT"]
     },
     "dev": {
       "cache": false,

@@ -1,11 +1,11 @@
 import crypto from "node:crypto";
 
 /**
- * Keeps an endpoint's signing secret at rest (yomizaka#241): AES-256-GCM under a key derived from a server secret, so a leaked
+ * Keeps an endpoint's signing secret at rest (verikora#241): AES-256-GCM under a key derived from a server secret, so a leaked
  * table opens no endpoint's secret. `v1.<iv>.<tag>.<ciphertext>`, base64url. The secret is given, never read here.
  */
 export function sealer(serverSecret: string): { seal: (plain: string) => string; open: (sealed: string) => string } {
-  const key = Buffer.from(crypto.hkdfSync("sha256", serverSecret, "yomizaka", "webhook-endpoint-secret", 32));
+  const key = Buffer.from(crypto.hkdfSync("sha256", serverSecret, "verikora", "webhook-endpoint-secret", 32));
   return {
     seal(plain) {
       const iv = crypto.randomBytes(12);

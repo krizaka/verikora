@@ -12,7 +12,7 @@ import { GLOBAL } from "../settings/service";
 import * as org from "./store";
 
 /** The avatar through the real routes: a seed from the set, the administrator's switches and limits, and what happens with no storage configured. */
-const enabled = process.env.YOMIZAKA_DB_IT === "1" && !!process.env.DATABASE_URL;
+const enabled = process.env.DATABASE_IT === "1" && !!process.env.DATABASE_URL;
 const ADMIN = { id: null, label: "test" };
 
 const as = (
@@ -41,7 +41,7 @@ describe.runIf(enabled)("collection avatars over HTTP", () => {
     await migrate();
     owner = (
       await query<{ id: string }>("INSERT INTO accounts (email, password_hash) VALUES ($1, 'x') RETURNING id", [
-        `av-${Date.now()}@yomizaka.test`,
+        `av-${Date.now()}@verikora.test`,
       ])
     )[0]!.id;
     token = (await createSession(owner, { ip: "203.0.113.20", userAgent: "vitest" })).token;

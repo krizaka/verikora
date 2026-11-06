@@ -1,7 +1,7 @@
 import { readFileSync } from "node:fs";
 
 import { KrizakaQueryProvider } from "@krizaka/query";
-import type { DocumentSummary } from "@yomizaka/core";
+import type { DocumentSummary } from "@verikora/core";
 import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it, vi } from "vitest";
 
@@ -110,7 +110,7 @@ describe("phone lists as list rows (P12, #329)", () => {
     expect(code).toMatch(/id: "result",\s*header: say\("checks.columns.result"\),\s*type: "status"/);
   });
 
-  it("Documents: the row bookmark is a quick action, it stays on the phone card (priority 2), never under the chevron (yomizaka#339)", () => {
+  it("Documents: the row bookmark is a quick action, it stays on the phone card (priority 2), never under the chevron (verikora#339)", () => {
     const code = readFileSync(new URL("./DocumentTable.tsx", import.meta.url), "utf8");
     expect(code).toMatch(/id: "bookmarks",[\s\S]*?priority: 2,/);
   });

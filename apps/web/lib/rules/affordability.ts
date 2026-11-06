@@ -1,5 +1,5 @@
 /**
- * The share of income that a rent takes (yomizaka#557, slice 2 of #104) — INFORMATION for the landlord, nothing else.
+ * The share of income that a rent takes (verikora#557, slice 2 of #104) — INFORMATION for the landlord, nothing else.
  * Pure and deterministic, in integer cents and basis points. It speaks only of two figures, never of the person.
  *
  * Guardrail (CTO, 2026-10-29, #557/#558): there is NO pass/fail, NO score, NO threshold and NO refusal reason here.

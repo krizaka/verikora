@@ -34,7 +34,7 @@ function trainedData(lang: string): string {
 }
 function languageData(languages: readonly string[]): string {
   if (dataDir && languages.every((l) => existsSync(path.join(dataDir!, `${l}.traineddata.gz`)))) return dataDir;
-  const dir = path.join(os.tmpdir(), "yomizaka-tessdata");
+  const dir = path.join(os.tmpdir(), "verikora-tessdata");
   mkdirSync(dir, { recursive: true });
   for (const lang of languages) {
     const target = path.join(dir, `${lang}.traineddata.gz`);

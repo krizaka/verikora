@@ -5,7 +5,7 @@ import { PRODUCT_NAME } from "@/lib/brand";
 import { SOLD, SOLD_KINDS, type SoldKind } from "../pricing";
 
 /**
- * Keeps the processor's prices equal to the catalogue the administrator edits (yomizaka#548). The catalogue (`@krizaka/settings`) is the
+ * Keeps the processor's prices equal to the catalogue the administrator edits (verikora#548). The catalogue (`@krizaka/settings`) is the
  * source of truth; the processor only holds what is sold. `ensureCatalogue` is idempotent by lookup key: an equal price is left alone, a
  * different amount creates a NEW processor price and moves the lookup key to it, so a subscription already sold keeps the price it was
  * sold at (the old price is never edited). Live mode is the owner's: this module never passes `owner`, so a live key is refused.
@@ -47,7 +47,7 @@ export function processorCatalogue(entries: readonly SyncEntry[]): Catalogue {
       },
     ];
   });
-  return { product: "yomizaka", plans, portal: PORTAL };
+  return { product: "verikora", plans, portal: PORTAL };
 }
 
 export type PriceSync = Pick<SetupResult, "prices"> & { mode: "test" | "live" };

@@ -9,7 +9,7 @@ import { currentProductName } from "@/lib/settings/display-name";
 export const dynamic = "force-dynamic";
 
 /**
- * The signed PDF of the owner report (yomizaka#481), by the owner link's token, while it is valid — nothing else delivers it.
+ * The signed PDF of the owner report (verikora#481), by the owner link's token, while it is valid — nothing else delivers it.
  * Unknown, expired or revoked link → one 404 (nothing leaks). Each download is recorded like a view. Language: `?locale=` (the page's).
  */
 export function GET(req: Request, ctx: { params: Promise<{ token: string }> }) {
@@ -23,7 +23,7 @@ export function GET(req: Request, ctx: { params: Promise<{ token: string }> }) {
     return new Response(Buffer.from(bytes), {
       headers: {
         "Content-Type": "application/pdf",
-        "Content-Disposition": `attachment; filename="yomizaka-${report.reference}.pdf"`,
+        "Content-Disposition": `attachment; filename="verikora-${report.reference}.pdf"`,
         "Cache-Control": "no-store",
         "X-Robots-Tag": "noindex",
       },

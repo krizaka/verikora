@@ -10,13 +10,13 @@ import {
 import { inspectUpload } from "../documents";
 import { refuse } from "../http";
 import { type PhotoKind, squareAvatar } from "../images";
-import { YOMIZAKA_RULES } from "../preflight/rules";
+import { VERIKORA_RULES } from "../preflight/rules";
 import type { Query } from "./store";
 
 /**
- * « organize » for Yomizaka (ADR-006, `@krizaka/organize`): the collections' default and avatar, and the tags, come from the package.
- * Libraries, folders, where a document sits and the counts stay Yomizaka's own levels on top. The documents' tags are the workspace's
- * (`lib/workspace`, yomizaka#324): markers, bulk tagging and the filter live there; this layer keeps the collections' and folders'.
+ * « organize » for Verikora (ADR-006, `@krizaka/organize`): the collections' default and avatar, and the tags, come from the package.
+ * Libraries, folders, where a document sits and the counts stay Verikora's own levels on top. The documents' tags are the workspace's
+ * (`lib/workspace`, verikora#324): markers, bulk tagging and the filter live there; this layer keeps the collections' and folders'.
  */
 export const ORGANIZE_SCHEMA: OrganizeSchema = {
   collectionTags: "collections_tags",
@@ -40,7 +40,7 @@ export function avatarProcessor(maxBytes: number, size: number): AvatarProcessor
       const { fileKind } = await inspectUpload(
         { name: file.name, type: file.type, size: file.bytes.length },
         file.bytes,
-        { ...YOMIZAKA_RULES, maxBytes, allowedKinds: IMAGE_KINDS },
+        { ...VERIKORA_RULES, maxBytes, allowedKinds: IMAGE_KINDS },
       ).catch((error: { status?: number; body?: { code?: string } }) => {
         throw new AvatarImageError(error.status ?? 422, error.body?.code ?? "UNREADABLE_IMAGE");
       });
@@ -56,7 +56,7 @@ export function avatarProcessor(maxBytes: number, size: number): AvatarProcessor
   };
 }
 
-/** Where Yomizaka kept an avatar image before the package: read as a fallback, never written. */
+/** Where Verikora kept an avatar image before the package: read as a fallback, never written. */
 export const legacyAvatarKey = (_kind: string, owner: string, id: string, version: number) =>
   `${owner}/${id}/${version}.jpg`;
 
@@ -70,7 +70,7 @@ export function organizeOver(q: Query, images?: { store: ObjectStore }, maxBytes
   });
 }
 
-/** The package's refusals become Yomizaka's HTTP answers (the same codes the pages translate). */
+/** The package's refusals become Verikora's HTTP answers (the same codes the pages translate). */
 export async function guard<T>(run: () => Promise<T>): Promise<T> {
   try {
     return await run();

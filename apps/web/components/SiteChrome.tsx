@@ -8,15 +8,14 @@ import Link from "next/link";
 import { Fragment } from "react";
 
 import { BarActions, BarQueryRoot } from "@/components/BarSession";
-import { useCodeName } from "@/components/CodeName";
-import { PRODUCT_NAME, productEndorsement } from "@/lib/brand";
+import { BRAND_ID, PRODUCT_NAME, productEndorsement } from "@/lib/brand";
 import { type Locale, translator } from "@/lib/i18n";
 import { menuHref, menuItems } from "@/lib/nav";
 import { type PageId, pagePath, REPO_URL } from "@/lib/site";
 
 /**
  * The bar of a Krizaka product (products independent): the animated mark, the three places of the site (lib/nav.ts),
- * then the repository, the theme, the language and the one action: using the app (« Sign in », « Try Yomizaka » once sign-up is
+ * then the repository, the theme, the language and the one action: using the app (« Sign in », « Try Verikora » once sign-up is
  * open, « Open the app » and the avatar when signed in — `BarSession`, a client island: the pages stay static). No « Talk to us »:
  * Contact lives in the footer. No dropdown: the menu is short enough to
  * show. No version chip (the version is in the footer), no family switcher, no link to another product.
@@ -28,7 +27,6 @@ export function SiteHeader({
   provider = true,
 }: Readonly<{ locale: Locale; current: PageId; provider?: boolean }>) {
   const t = translator(locale);
-  const codeName = useCodeName();
   const Root = provider ? BarQueryRoot : Fragment;
   const languages = languagesFor(pagePath(locale, current));
   const home = pagePath(locale, "home");
@@ -46,14 +44,7 @@ export function SiteHeader({
           <NavBar.Root label={t("chrome.navLabel")} className="pointer-events-auto mx-auto max-w-(--kz-page-max,72rem)">
             <NavBar.Brand asChild>
               <Link href={home} aria-label={t("chrome.brandHome")}>
-                <ProductLockup
-                  id="yomizaka"
-                  name={PRODUCT_NAME}
-                  endorsement={productEndorsement(locale)}
-                  {...(codeName ? { codeName } : {})}
-                  size={26}
-                  className="[&_[data-code-name]]:hidden lg:[&_[data-code-name]]:inline"
-                />
+                <ProductLockup id={BRAND_ID} name={PRODUCT_NAME} endorsement={productEndorsement(locale)} size={26} />
               </Link>
             </NavBar.Brand>
             <NavBar.Items>

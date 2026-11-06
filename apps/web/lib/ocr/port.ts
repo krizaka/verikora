@@ -1,7 +1,7 @@
 /**
  * The OCR ports (ADR-0010). Generic on purpose — no import from this app, so another Krizaka product can lift the folder.
  * `OcrEngine` reads text out of cleaned page images locally, for nothing (Tesseract, fra + eng). `VisionReader` is the
- * fallback a product may supply (Orazaka's vision model) for what the local engine cannot read; it is asked only when the
+ * fallback a product may supply (Sovkora's vision model) for what the local engine cannot read; it is asked only when the
  * local confidence is low, and what it returns is always marked as such. Neither ever decides what the text means.
  */
 /** One recognised word and where it sits on the page image, in the image's pixels (origin top left). */
@@ -68,7 +68,7 @@ export type TextSource =
     }
   | {
       kind: "vision";
-      by: "orazaka";
+      by: "sovkora";
       runId: string;
       model: string | null;
       localConfidence: number;

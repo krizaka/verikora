@@ -18,7 +18,7 @@ import {
 import { getDictionary, LOCALES } from "./i18n";
 
 const ROOT = join(__dirname, "..");
-const PATH = /^sites\/yomizaka\/download\/(web|android|ios|mac)-[a-z0-9-]+\.[0-9a-f]{10}\.(webm|mp4|jpg)$/;
+const PATH = /^sites\/verikora\/download\/(web|android|ios|mac)-[a-z0-9-]+\.[0-9a-f]{10}\.(webm|mp4|jpg)$/;
 
 describe("the download page's videos (krizaka/.github#315)", () => {
   it("are known to the manifest with a file of each kind, hashed, under the product's download folder", () => {
@@ -50,7 +50,7 @@ describe("the download page's videos (krizaka/.github#315)", () => {
     },
   );
 
-  // yomizaka#1968: the Mac clip was shown in a phone frame, and French recordings on /en.
+  // verikora#1968: the Mac clip was shown in a phone frame, and French recordings on /en.
   it("every clip says its language (its flow ends with -en or -fr) and has a frame: nothing falls back to another platform's shape", () => {
     for (const v of APP_VIDEOS) {
       expect(localeOf(v), `${videoId(v)} has no -en/-fr suffix`).toBeDefined();
@@ -91,7 +91,7 @@ describe("the download page's videos (krizaka/.github#315)", () => {
   it("the page reads the manifest only: no address of a video is typed in it", () => {
     const page = readFileSync(join(ROOT, "app/[locale]/download/page.tsx"), "utf8");
     expect(page).toContain("videosFor");
-    expect(page).not.toMatch(/b-cdn|(?:site|sites)\/|products\/yomizaka|\.(mp4|webm|jpg)["'`]/);
+    expect(page).not.toMatch(/b-cdn|(?:site|sites)\/|products\/verikora|\.(mp4|webm|jpg)["'`]/);
   });
 
   it(`none is older than ${MAX_AGE_DAYS} days: a stale recording means the e2e job stopped publishing`, () => {

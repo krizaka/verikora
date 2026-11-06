@@ -17,12 +17,12 @@ const read = (path: string) => JSON.parse(readFileSync(new URL(path, import.meta
 const processor = read("../../../deploy/payments-catalogue.json") as {
   plans: { lookupKey: string; amount: number; currency: string; interval?: string }[];
 };
-const ADMIN = { id: null, label: "admin@yomizaka.test" };
+const ADMIN = { id: null, label: "admin@verikora.test" };
 const NOW = new Date("2026-10-25T12:00:00Z");
 const LATER = new Date("2026-12-01T00:00:00Z");
 const catalogue = () => priceCatalogue(PRICES, memoryPriceStore());
 
-describe("the seed is the grid of ADR-0013 (yomizaka#367, #388)", () => {
+describe("the seed is the grid of ADR-0013 (verikora#367, #388)", () => {
   it("has every entry, at its default, with its availability", async () => {
     const byKey = Object.fromEntries((await catalogue().catalogue(NOW)).map((e) => [e.key, e]));
     expect(byKey[PRICE.document]).toMatchObject({

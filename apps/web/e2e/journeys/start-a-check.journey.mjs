@@ -34,7 +34,7 @@ for (const screen of SCREENS) {
       .setInputFiles({
         name: "papier.txt",
         mimeType: "text/plain",
-        buffer: Buffer.from("Un papier sans titre, que Yomizaka ne reconnaît pas."),
+        buffer: Buffer.from("Un papier sans titre, que Verikora ne reconnaît pas."),
       });
 
     const question = page.getByTestId("check-kind-question");

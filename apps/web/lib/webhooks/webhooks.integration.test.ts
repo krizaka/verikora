@@ -1,7 +1,7 @@
 import { readFileSync } from "node:fs";
 
 import { EVENT_ID_HEADER, EVENT_TYPE_HEADER, type Send, SIGNATURE_HEADER, verifySignature } from "@krizaka/webhooks";
-import type { OrazakaRun } from "@yomizaka/core";
+import type { SovkoraRun } from "@verikora/core";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 
 import { GET as deliveriesRoute } from "@/app/api/me/webhooks/[id]/deliveries/route";
@@ -14,17 +14,17 @@ import { advanceBatch, createBatch } from "../batch/run";
 import { migrate, pool, query } from "../db";
 import { sessionSecret } from "../env";
 import { seedDatabase } from "../flows";
-import { useOrazakaClient } from "../orazaka";
 import { cleanPdf } from "../preflight/fixtures";
 import { createSession, SESSION_COOKIE } from "../session";
 import { settingsFor } from "../settings/guards";
 import { appSettings, resetAppSettings } from "../settings/instance";
 import { GLOBAL } from "../settings/service";
+import { useSovkoraClient } from "../sovkora";
 import { deliverWebhooks, registerBatchWebhooks } from "./emit";
 
-/** Signed webhooks end to end (yomizaka#241) against PostgreSQL: the routes, a batch closing, the signed delivery, the retry. CI's service; locally YOMIZAKA_DB_IT=1 DATABASE_URL=…. */
-const enabled = process.env.YOMIZAKA_DB_IT === "1" && !!process.env.DATABASE_URL;
-const REPORT = readFileSync(new URL("../fixtures/orazaka-compliance-qc-1.2.0.json", import.meta.url), "utf8");
+/** Signed webhooks end to end (verikora#241) against PostgreSQL: the routes, a batch closing, the signed delivery, the retry. CI's service; locally DATABASE_IT=1 DATABASE_URL=…. */
+const enabled = process.env.DATABASE_IT === "1" && !!process.env.DATABASE_URL;
+const REPORT = readFileSync(new URL("../fixtures/sovkora-compliance-qc-1.2.0.json", import.meta.url), "utf8");
 // The routes seal with the server's session secret; the delivery loop must open with the same one.
 const SERVER_SECRET = sessionSecret();
 
@@ -35,7 +35,7 @@ describe.runIf(enabled)("webhooks", () => {
   const actor = { id: null, label: "test" };
   const runs = new Map<string, string>();
   let n = 0;
-  const run = (id: string): OrazakaRun => ({
+  const run = (id: string): SovkoraRun => ({
     id,
     studioKey: "compliance-check",
     blueprintVersion: "1.0.0",
@@ -57,7 +57,7 @@ describe.runIf(enabled)("webhooks", () => {
       isPro
         ? "INSERT INTO accounts (email, plan, subscription_status, current_period_end) VALUES ($1, 'PRO', 'active', now() + interval '30 days') RETURNING id"
         : "INSERT INTO accounts (email) VALUES ($1) RETURNING id",
-      [`hooks-${label}-${stamp}@yomizaka.test`],
+      [`hooks-${label}-${stamp}@verikora.test`],
     );
     return {
       id: row!.id,
@@ -81,7 +81,7 @@ describe.runIf(enabled)("webhooks", () => {
   beforeAll(async () => {
     await migrate();
     await seedDatabase();
-    useOrazakaClient({
+    useSovkoraClient({
       startRun: async () => {
         const id = `run-hook-${stamp}-${++n}`;
         runs.set(id, "RUNNING");
@@ -99,7 +99,7 @@ describe.runIf(enabled)("webhooks", () => {
   });
   afterAll(async () => {
     setBatchObserver(null);
-    useOrazakaClient(null);
+    useSovkoraClient(null);
     await appSettings().reset(actor, GLOBAL, "features.webhooks", new Date());
     resetAppSettings();
     await query("DELETE FROM accounts WHERE id = ANY($1)", [[pro.id, free.id]]);
@@ -128,7 +128,7 @@ describe.runIf(enabled)("webhooks", () => {
 
     const made = await createRoute(
       as(proToken, "POST", "/api/me/webhooks", {
-        url: "https://hooks.example.test/yomizaka",
+        url: "https://hooks.example.test/verikora",
         events: ["batch.finished", "check.finished"],
       }),
     );
@@ -168,7 +168,7 @@ describe.runIf(enabled)("webhooks", () => {
     );
     expect(mine.map((r) => r.headers[EVENT_TYPE_HEADER]).sort()).toEqual(["batch.finished", "check.finished"]);
     for (const request of mine) {
-      expect(request.url).toBe("https://hooks.example.test/yomizaka");
+      expect(request.url).toBe("https://hooks.example.test/verikora");
       expect(
         verifySignature(secret, request.body, request.headers[SIGNATURE_HEADER], Math.floor(Date.now() / 1000)),
       ).toEqual({ ok: true });

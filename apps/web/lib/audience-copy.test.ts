@@ -3,7 +3,7 @@ import { describe, expect, it } from "vitest";
 import en from "@/messages/en.json";
 import fr from "@/messages/fr.json";
 
-/** The public copy speaks first to property managers and landlords; tenants stay welcome; the registries are « in preparation » (yomizaka#359). */
+/** The public copy speaks first to property managers and landlords; tenants stay welcome; the registries are « in preparation » (verikora#359). */
 const COPIES = [
   {
     name: "fr",

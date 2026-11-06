@@ -1,7 +1,7 @@
-# Privacy impact assessment (EFVP) — Yomizaka
+# Privacy impact assessment (EFVP) — Verikora
 
 Act respecting the protection of personal information in the private sector, CQLR c. P-39.1, art. 3.3 (a new electronic
-service that involves personal information). Issue: krizaka/yomizaka#365.
+service that involves personal information). Issue: krizaka/verikora#365.
 
 **Status: draft written from the code and the deployment spec.** It states facts the repository shows. It makes no claim the
 code does not support; where the code is silent the cell says « not stated in the code ». The review by the person in

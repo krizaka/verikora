@@ -1,9 +1,9 @@
-import { isId, NAME_MAX } from "@yomizaka/core";
+import { isId, NAME_MAX } from "@verikora/core";
 import { z } from "zod";
 
 import { refuse } from "../http";
 
-/** The rules that need the HTTP layer; the pure ones (ids, tag colours, the filters) are `@yomizaka/core`'s, read by the apps too. */
+/** The rules that need the HTTP layer; the pure ones (ids, tag colours, the filters) are `@verikora/core`'s, read by the apps too. */
 export {
   applyFilters,
   isId,
@@ -15,7 +15,7 @@ export {
   toggleTag,
   viewHref,
   type ViewState,
-} from "@yomizaka/core";
+} from "@verikora/core";
 
 export function cleanName(raw: string): string {
   const name = raw.replace(/\s+/g, " ").trim();

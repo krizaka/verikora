@@ -2,7 +2,7 @@
 
 import { Alert } from "@krizaka/ui/alert";
 import { Badge } from "@krizaka/ui/badge";
-import type { AuthenticityReport, TextSource } from "@yomizaka/core";
+import type { AuthenticityReport, TextSource } from "@verikora/core";
 
 import { useSay } from "@/lib/i18n-client";
 import { photoOriginSignals } from "@/lib/photo-origin";
@@ -30,7 +30,7 @@ function NotACheck({ say, notExamined }: Readonly<{ say: TraceSay; notExamined: 
 const asList = (v: string | string[] | undefined): string[] => [v ?? []].flat();
 
 /**
- * The authenticity Studio's signals as traces of editing (yomizaka#625): grouped by family, each card says what we observed, where
+ * The authenticity Studio's signals as traces of editing (verikora#625): grouped by family, each card says what we observed, where
  * (page, later save, field), what it may indicate with its ordinary explanations, what to ask for, and the run. Levels are words;
  * « inconsistent » is a warning, never red; no total, no score, no sort of anything.
  */

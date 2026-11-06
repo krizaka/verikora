@@ -1,7 +1,7 @@
 // A recorded take: one page captured with the Chrome DevTools screencast (every frame the compositor paints, with its
 // timestamp), encoded at a constant 30 fps, with the beats of the walkthrough, EN and FR captions (WebVTT, kept apart from
 // the picture) and, on request, a voice-over (macOS `say`) mixed into a separate « narrated » file.
-// Waiting for a real run (Orazaka answering) can be sped up with `take.fast(start, end, speed)`; the speed-up is the only
+// Waiting for a real run (Sovkora answering) can be sped up with `take.fast(start, end, speed)`; the speed-up is the only
 // edit, and it is said in the metadata.
 import { execFileSync } from "node:child_process";
 import { mkdirSync, rmSync, writeFileSync } from "node:fs";

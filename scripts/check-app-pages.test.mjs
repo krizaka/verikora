@@ -11,7 +11,7 @@ import {
 } from "./check-app-pages.mjs";
 import { problemsOf } from "@krizaka/page-audit";
 
-describe("the signed-in pages crawl (yomizaka#457: « Dossiers » crashed unseen, it was in no list)", () => {
+describe("the signed-in pages crawl (verikora#457: « Dossiers » crashed unseen, it was in no list)", () => {
   it("audits « Dossiers » and every route the sidebar offers", () => {
     assert.ok(PAGES.includes("/app/dossiers"));
     const rail = [

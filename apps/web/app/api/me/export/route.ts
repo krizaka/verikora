@@ -6,7 +6,7 @@ import { accountSubject, privacyFor, purposesOf } from "@/lib/privacy";
 
 export const dynamic = "force-dynamic";
 
-/** « Export my data » (Loi 25, access): everything the person has with Yomizaka, as one JSON file to download. */
+/** « Export my data » (Loi 25, access): everything the person has with Verikora, as one JSON file to download. */
 export const GET = (req: Request) =>
   accountAct(req, "export", async (s) => {
     const data = await privacyFor({
@@ -23,7 +23,7 @@ export const GET = (req: Request) =>
     return new Response(JSON.stringify(data, null, 2), {
       headers: {
         "Content-Type": "application/json; charset=utf-8",
-        "Content-Disposition": `attachment; filename="yomizaka-mes-donnees.json"`,
+        "Content-Disposition": `attachment; filename="verikora-mes-donnees.json"`,
         "Cache-Control": "private, no-store",
       },
     });

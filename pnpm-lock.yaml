@@ -86,10 +86,10 @@ importers:
       '@tauri-apps/plugin-http':
         specifier: ^2.5.0
         version: 2.8.3
-      '@yomizaka/client':
+      '@verikora/client':
         specifier: workspace:*
         version: link:../../packages/client
-      '@yomizaka/core':
+      '@verikora/core':
         specifier: workspace:*
         version: link:../../packages/core
       react:
@@ -165,10 +165,10 @@ importers:
       '@shopify/flash-list':
         specifier: 2.3.2
         version: 2.3.2(@babel/runtime@7.29.10)(react-native@0.88.0(@babel/core@7.29.7)(@react-native/metro-config@0.88.0(@babel/core@7.29.7))(@types/react@19.3.0)(react@19.3.1))(react@19.3.1)
-      '@yomizaka/client':
+      '@verikora/client':
         specifier: workspace:*
         version: link:../../packages/client
-      '@yomizaka/core':
+      '@verikora/core':
         specifier: workspace:*
         version: link:../../packages/core
       expo:
@@ -343,7 +343,7 @@ importers:
       '@tesseract.js-data/fra':
         specifier: ^1.0.0
         version: 1.0.0
-      '@yomizaka/core':
+      '@verikora/core':
         specifier: workspace:*
         version: link:../../packages/core
       date-fns:
@@ -456,7 +456,7 @@ importers:
       '@krizaka/query':
         specifier: ^0.2.2
         version: 0.2.2(@types/react@19.3.0)(csstype@3.2.3)(pg@8.23.1)(react@19.3.1)
-      '@yomizaka/core':
+      '@verikora/core':
         specifier: workspace:*
         version: link:../core
       zod:

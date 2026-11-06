@@ -19,7 +19,7 @@ import { reportLabels } from "./report-labels";
 import { signingKey } from "./report-signer";
 
 // Two starts seeding at once (two instances, or the tests of several files) must not collide on the same key (the CI flake, #268).
-describe.runIf(process.env.YOMIZAKA_DB_IT === "1" && !!process.env.DATABASE_URL)("seeding the flows", () => {
+describe.runIf(process.env.DATABASE_IT === "1" && !!process.env.DATABASE_URL)("seeding the flows", () => {
   it("is safe to run many times at once", async () => {
     await migrate();
     const runs = await Promise.allSettled(Array.from({ length: 8 }, () => seedDatabase()));
@@ -27,8 +27,8 @@ describe.runIf(process.env.YOMIZAKA_DB_IT === "1" && !!process.env.DATABASE_URL)
   });
 });
 
-/** ADR-0003 against a real PostgreSQL (CI's service; locally `YOMIZAKA_DB_IT=1 DATABASE_URL=… pnpm test`). */
-const enabled = process.env.YOMIZAKA_DB_IT === "1" && !!process.env.DATABASE_URL;
+/** ADR-0003 against a real PostgreSQL (CI's service; locally `DATABASE_IT=1 DATABASE_URL=… pnpm test`). */
+const enabled = process.env.DATABASE_IT === "1" && !!process.env.DATABASE_URL;
 
 describe.runIf(enabled)("flows in the database", () => {
   const stamp = Date.now();
@@ -40,11 +40,11 @@ describe.runIf(enabled)("flows in the database", () => {
     await seedDatabase();
     [admin] = (await query<{ id: string; email: string }>(
       "INSERT INTO accounts (email, role) VALUES ($1, 'ADMIN') RETURNING id, email",
-      [`flows-admin-${stamp}@yomizaka.test`],
+      [`flows-admin-${stamp}@verikora.test`],
     )) as [typeof admin];
     [landlord] = (await query<{ id: string; email: string }>(
       "INSERT INTO accounts (email) VALUES ($1) RETURNING id, email",
-      [`flows-landlord-${stamp}@yomizaka.test`],
+      [`flows-landlord-${stamp}@verikora.test`],
     )) as [typeof landlord];
   });
 
@@ -77,7 +77,7 @@ describe.runIf(enabled)("flows in the database", () => {
 
     // An analysis (and its signed report) made under v1.
     const [owner] = await query<{ id: string }>("INSERT INTO accounts (email) VALUES ($1) RETURNING id", [
-      `flows-owner-${stamp}@yomizaka.test`,
+      `flows-owner-${stamp}@verikora.test`,
     ]);
     const sha = sha256(`lease ${stamp}`);
     const [d] = await query<{ id: string }>(

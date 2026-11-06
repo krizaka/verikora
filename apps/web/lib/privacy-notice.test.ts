@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 
 import { getDictionary } from "./i18n";
 
-/** The privacy notice (yomizaka#457): sections with a heading and a short paragraph, the processors, the retention, the rights and the contact — never one block. */
+/** The privacy notice (verikora#457): sections with a heading and a short paragraph, the processors, the retention, the rights and the contact — never one block. */
 describe("the privacy notice", () => {
   for (const locale of ["en", "fr"] as const) {
     const notice = getDictionary(locale).privacy;

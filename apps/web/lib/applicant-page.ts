@@ -3,7 +3,7 @@ import { HttpError } from "./http";
 import type { ApplicantSignal } from "./signal-answers";
 
 /*
- * What the applicant's page shows (yomizaka#341), pure: the types are the request's and no others, the drop opens only once
+ * What the applicant's page shows (verikora#341), pure: the types are the request's and no others, the drop opens only once
  * the applicant consented to the check, and a link that is not open says why (the codes of `applicantFile.error`). The
  * routes keep their own rules (`assertOpen`, `requireConsent`): the page never decides what the API refuses, it only avoids
  * offering what would be refused.
@@ -40,7 +40,7 @@ export interface ApplicantPage {
   canSubmit: boolean;
   /** A withdrawal and an erasure are always allowed, until the file is erased. */
   canWithdraw: boolean;
-  /** An explanation of a trace is taken while the link stands or was used, with the consent to the check (ADR-0014, yomizaka#626). */
+  /** An explanation of a trace is taken while the link stands or was used, with the consent to the check (ADR-0014, verikora#626). */
   canAnswer: boolean;
   consent: { check: boolean; keep: boolean };
 }

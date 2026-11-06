@@ -1,4 +1,4 @@
-import { AVATAR_KIND } from "@yomizaka/core";
+import { AVATAR_KIND } from "@verikora/core";
 
 import { avatarStore } from "@/app/active-store";
 import { requireSession } from "@/lib/access";

@@ -1,12 +1,12 @@
 #!/usr/bin/env node
-// The live walk of the administration console (admin.yomizaka.com), from an address of AUTH_ALLOWED_IPS: signs in as the QA
+// The live walk of the administration console (admin.verikora.com), from an address of AUTH_ALLOWED_IPS: signs in as the QA
 // administrator, opens every console page in both themes on a phone and a desktop, and fails on a page that is not 200, has
 // no <main>, overflows sideways, lacks the DEV badge (desktop), or logs a console error (a hydration mismatch is one).
 //
-//   ADMIN_EMAIL=… ADMIN_PASSWORD=… node scripts/check-admin-live.mjs [--base https://admin.yomizaka.com] [--shots <dir>]
+//   ADMIN_EMAIL=… ADMIN_PASSWORD=… node scripts/check-admin-live.mjs [--base https://admin.verikora.com] [--shots <dir>]
 //
 // The credentials are the administrator's of company/QA.md, read without printing them:
-//   ADMIN_EMAIL=$(~/.krizaka-worktrees/tools/secret.sh @qa YOMIZAKA_ADMIN_EMAIL) ADMIN_PASSWORD=$(… YOMIZAKA_ADMIN_PASSWORD) node …
+//   ADMIN_EMAIL=$(~/.krizaka-worktrees/tools/secret.sh @qa VERIKORA_ADMIN_EMAIL) ADMIN_PASSWORD=$(… VERIKORA_ADMIN_PASSWORD) node …
 // From any other address the host answers 404/403 and this script says so. Nothing but the checks is printed.
 import { mkdirSync } from "node:fs";
 import { join } from "node:path";
@@ -118,7 +118,7 @@ if (import.meta.url === `file://${process.argv[1]}`) {
     process.exit(2);
   }
   const problems = await walk({
-    base: arg("base", "https://admin.yomizaka.com"),
+    base: arg("base", "https://admin.verikora.com"),
     email,
     password,
     shots: arg("shots"),

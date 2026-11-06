@@ -1,4 +1,4 @@
-import { type DocumentKind, documentKind, STORAGE_MODE } from "@yomizaka/core";
+import { type DocumentKind, documentKind, STORAGE_MODE } from "@verikora/core";
 import { after } from "next/server";
 import { z } from "zod";
 
@@ -13,7 +13,7 @@ import { limit } from "@/lib/limits";
 import { isId } from "@/lib/organisation/rules";
 import { placeDocument } from "@/lib/organisation/store";
 import { isPhoto, storePhotos } from "@/lib/photos";
-import { YOMIZAKA_RULES } from "@/lib/preflight/rules";
+import { VERIKORA_RULES } from "@/lib/preflight/rules";
 import { recordPreflight } from "@/lib/preflight-events";
 import { preflightRulesFrom } from "@/lib/settings/boundary";
 import { assertFeature, settingsFor } from "@/lib/settings/guards";
@@ -66,7 +66,7 @@ async function storeUpload(
       working: await workingStore(),
       now: new Date(),
       purgeAfterHours: settings["limits.purgeAfterHours"].value as number,
-      rules: preflightRulesFrom(YOMIZAKA_RULES, settings),
+      rules: preflightRulesFrom(VERIKORA_RULES, settings),
     };
     return photos
       ? await storePhotos(
@@ -122,7 +122,7 @@ export function POST(req: Request) {
       .or(z.literal("auto"))
       .catch("auto")
       .parse(form?.get("kind") ?? "auto");
-    // A document for an application (« screeningId ») is accepted only with the applicant's consent to the document check (yomizaka#131), before any byte is stored.
+    // A document for an application (« screeningId ») is accepted only with the applicant's consent to the document check (verikora#131), before any byte is stored.
     const screeningId = stringField(form, "screeningId");
     if (screeningId !== null) await assertUploadForApplication(accountId, screeningId);
     const bytes = new Uint8Array(await file.arrayBuffer());
@@ -146,7 +146,7 @@ export function POST(req: Request) {
         headers: req.headers,
       });
     }
-    // 202 Accepted: the file is stored and checked by the pre-flight; its text is read by an isolated worker after this answer (yomizaka#21).
+    // 202 Accepted: the file is stored and checked by the pre-flight; its text is read by an isolated worker after this answer (verikora#21).
     if (finish) {
       after(finish);
       return Response.json({ document: summary, duplicate, status: "QUEUED" }, { status: 202 });

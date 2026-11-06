@@ -27,7 +27,7 @@ const referencesOf = async (providerId: string) =>
   );
 
 const holder = globalThis as unknown as {
-  __yomizakaProviders?: {
+  __verikoraProviders?: {
     service: ProviderService;
     store: ProviderStore;
     vault: NonNullable<ReturnType<typeof vaultFrom>>;
@@ -47,11 +47,11 @@ export const openContextOf = (): OpenContext => ({
 
 /** The provider service and its store, one per process (pages and routes are bundled apart); null when no vault key is deployed. */
 export function providers(): OwnProviders | null {
-  if (holder.__yomizakaProviders !== undefined) return holder.__yomizakaProviders;
+  if (holder.__verikoraProviders !== undefined) return holder.__verikoraProviders;
   const e = env();
   const vault = vaultFrom(e);
   if (!vault) {
-    holder.__yomizakaProviders = null;
+    holder.__verikoraProviders = null;
     return null;
   }
   const store = dbProviderStore(query);
@@ -74,13 +74,13 @@ export function providers(): OwnProviders | null {
         detail: note.detail,
       }),
   });
-  holder.__yomizakaProviders = { service, store, vault };
-  return holder.__yomizakaProviders;
+  holder.__verikoraProviders = { service, store, vault };
+  return holder.__verikoraProviders;
 }
 
 /** For tests: forget the cached service. */
 export const resetProviders = () => {
-  holder.__yomizakaProviders = undefined;
+  holder.__verikoraProviders = undefined;
 };
 
 /** The default store for a kind of data, or null (no vault key, no provider, or one that cannot be opened). */

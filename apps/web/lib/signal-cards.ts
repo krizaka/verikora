@@ -1,8 +1,8 @@
 import { format } from "@krizaka/i18n";
-import { type Signal, SIGNAL_FAMILIES, type SignalFamily, signalFamily } from "@yomizaka/core";
+import { type Signal, SIGNAL_FAMILIES, type SignalFamily, signalFamily } from "@verikora/core";
 
 /**
- * The cards of a document's traces of editing (ADR-0014, yomizaka#625), pure. A card says what was observed in the file, where, its
+ * The cards of a document's traces of editing (ADR-0014, verikora#625), pure. A card says what was observed in the file, where, its
  * ordinary explanations and what to ask for — never that a document is false and never a total: no score, no sort of any kind
  * across signals or people. The words are messages (`console.analysis.traces.*`); `say` reads them by their key under `traces`.
  */

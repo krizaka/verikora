@@ -6,8 +6,8 @@ import { describeFailure, leaseRefOn, montrealDay, smokeLeaseCheck } from "./smo
 const json = (status, body) =>
   new Response(JSON.stringify(body), { status, headers: { "content-type": "application/json" } });
 
-/** A Yomizaka that answers like the real one; `refuse` makes the check start answer a refusal. */
-function fakeYomizaka({
+/** A Verikora that answers like the real one; `refuse` makes the check start answer a refusal. */
+function fakeVerikora({
   refuse = false,
   report = { findings: [{ ruleId: "QC-001" }], facts: { rentCents: { status: "found", cents: 122500 } } },
 } = {}) {
@@ -22,7 +22,7 @@ function fakeYomizaka({
     if (pathname === "/api/documents/d1" && init.method === "POST") {
       seen.push(JSON.parse(init.body));
       return refuse
-        ? json(422, { code: "ORAZAKA_INPUT" })
+        ? json(422, { code: "SOVKORA_INPUT" })
         : json(202, { analysis: { id: "a1", status: "running", runId: "r1" } });
     }
     if (pathname === "/api/documents/d1") return json(200, { document: { extraction: "done" } });
@@ -48,13 +48,13 @@ test("the lease version is the one in force in Montréal", () => {
 });
 
 test("a refusal of the engine fails the smoke with the code, and the document is still deleted", async () => {
-  const { impl, seen } = fakeYomizaka({ refuse: true });
-  await assert.rejects(smokeLeaseCheck(options({ fetchImpl: impl })), /start the lease check: HTTP 422, ORAZAKA_INPUT/);
+  const { impl, seen } = fakeVerikora({ refuse: true });
+  await assert.rejects(smokeLeaseCheck(options({ fetchImpl: impl })), /start the lease check: HTTP 422, SOVKORA_INPUT/);
   assert.ok(seen.includes("DELETE /api/documents/d1"));
 });
 
 test("a lease that is checked passes, and the request is the UI's", async () => {
-  const { impl, seen } = fakeYomizaka();
+  const { impl, seen } = fakeVerikora();
   const result = await smokeLeaseCheck(options({ fetchImpl: impl }));
   assert.deepEqual(result, { analysisId: "a1", runId: "r1", findings: 1, facts: ["rentCents"] });
   assert.deepEqual(
@@ -64,7 +64,7 @@ test("a lease that is checked passes, and the request is the UI's", async () => 
 });
 
 test("a report with no findings fails", async () => {
-  const { impl } = fakeYomizaka({ report: {} });
+  const { impl } = fakeVerikora({ report: {} });
   await assert.rejects(smokeLeaseCheck(options({ fetchImpl: impl })), /without a report with findings/);
 });
 

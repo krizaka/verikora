@@ -1,6 +1,6 @@
 import { readFileSync } from "node:fs";
 
-import { reportOf } from "@yomizaka/core";
+import { reportOf } from "@verikora/core";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 const queries: { text: string; values: unknown[] }[] = [];
@@ -17,12 +17,12 @@ import { audit } from "./audit";
 import { SAMPLE_LEASE } from "./sample-lease";
 import { getShowcase, getShowcaseView, setSample, setShowcase, SHOWCASE_SQL, showcaseFile } from "./showcase";
 
-// A real Orazaka compliance report (blueprint 1.2.0, jurisdiction Québec, nine findings), as the showcase row holds it.
+// A real Sovkora compliance report (blueprint 1.2.0, jurisdiction Québec, nine findings), as the showcase row holds it.
 const REPORT = reportOf("compliance-check", [
   {
     key: "report",
     type: "JSON",
-    value: readFileSync(new URL("./fixtures/orazaka-compliance-qc-1.2.0.json", import.meta.url), "utf8"),
+    value: readFileSync(new URL("./fixtures/sovkora-compliance-qc-1.2.0.json", import.meta.url), "utf8"),
   },
 ])!;
 const ID = "7d3f6a52-2f3a-4d44-9a0e-1b7f6f6c2a10";
@@ -47,7 +47,7 @@ const row = (over: Record<string, unknown> = {}) => ({
   d_mime_type: "application/pdf",
   ...over,
 });
-const actor = { id: "11111111-1111-4111-8111-111111111111", email: "admin@yomizaka.test" };
+const actor = { id: "11111111-1111-4111-8111-111111111111", email: "admin@verikora.test" };
 
 beforeEach(() => {
   queries.length = 0;
@@ -68,7 +68,7 @@ describe("what the public can see", () => {
     expect(await getShowcaseView()).toBeNull();
   });
 
-  it("answers the promoted check: run id, Studio version, the report as Orazaka returned it", async () => {
+  it("answers the promoted check: run id, Studio version, the report as Sovkora returned it", async () => {
     answers = [[row()]];
     const showcase = await getShowcase();
     expect(showcase).toMatchObject({ runId: RUN, studioVersion: "1.2.0", document: { sha256: "a".repeat(64) } });

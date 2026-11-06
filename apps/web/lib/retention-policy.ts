@@ -1,7 +1,7 @@
 import { query } from "./db";
 
 /*
- * Retention as data (yomizaka#125). A policy is a row of `retention_policies` (after-check, after-decision, or a number of days);
+ * Retention as data (verikora#125). A policy is a row of `retention_policies` (after-check, after-decision, or a number of days);
  * a document type points at one; an owner may override a subject with a `retention_rule`; the screening result's window is the
  * global rule of the subject « screening-result ». No day count is typed in code: a row changes it, no deploy.
  */

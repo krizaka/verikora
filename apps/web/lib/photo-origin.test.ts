@@ -1,4 +1,4 @@
-import { SIGNAL_LEVELS } from "@yomizaka/core";
+import { SIGNAL_LEVELS } from "@verikora/core";
 import { describe, expect, it } from "vitest";
 
 import { photoOriginSignals } from "./photo-origin";
@@ -13,7 +13,7 @@ const phone = {
 const ids = (origin: Parameters<typeof photoOriginSignals>[0]) =>
   photoOriginSignals(origin).map((s) => `${s.signalId}:${s.level}`);
 
-describe("a photo document's origin as signals (yomizaka#229)", () => {
+describe("a photo document's origin as signals (verikora#229)", () => {
   it("a phone photo saved as it was taken reports its device and raises nothing", () => {
     expect(ids(phone)).toEqual(["IMG-META-001:observé"]);
     expect(photoOriginSignals(phone)[0]!.facts).toEqual({ device: "Apple iPhone 15", software: "17.5.1" });

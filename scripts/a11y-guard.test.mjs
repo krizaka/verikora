@@ -9,7 +9,7 @@ const SUITES = [
   [
     "check-overflow.mjs",
     "a11y-baseline.json",
-    [/from "@krizaka\/page-audit"/, /a11y: \{ app: "yomizaka", baseline: A11Y_BASELINE/],
+    [/from "@krizaka\/page-audit"/, /a11y: \{ app: "verikora", baseline: A11Y_BASELINE/],
   ],
   ["check-app-pages.mjs", "a11y-baseline.app.json", [/from "@krizaka\/a11y-audit"/, /auditA11y\(page\)/]],
 ];

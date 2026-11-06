@@ -23,7 +23,7 @@ const groups = [
   { kind: "document" as const, bookmarks: [] },
 ];
 
-describe("« Signets » (yomizaka#339)", () => {
+describe("« Signets » (verikora#339)", () => {
   it("lists each kind's bookmarks with their marker, and says when a kind has none, in both languages", () => {
     const fr1 = wrap(<BookmarksSection groups={groups} />, "fr");
     expect(fr1).toContain("Garant");

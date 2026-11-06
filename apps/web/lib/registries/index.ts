@@ -10,8 +10,8 @@ export { revenuQuebecQstAdapter } from "./revenu-quebec-qst";
 export { checkIssuer, registrantOfNeq, registrySignals } from "./signals";
 
 /**
- * The registers Yomizaka reads. Revenu Québec's QST validation is open (public API, terms read). The CRA's GST/HST registry is never used
- * (its terms forbid commercial reproduction); the Registraire (REQ) has no adapter and answers « not authorised » until its written authorisation (yomizaka#627).
+ * The registers Verikora reads. Revenu Québec's QST validation is open (public API, terms read). The CRA's GST/HST registry is never used
+ * (its terms forbid commercial reproduction); the Registraire (REQ) has no adapter and answers « not authorised » until its written authorisation (verikora#627).
  */
 export const registries = (
   clock: Clock,

@@ -5,7 +5,7 @@ import { startScheduler } from "./scheduler";
 beforeEach(() => void vi.useFakeTimers());
 afterEach(() => void vi.useRealTimers());
 
-describe("the batch tick's loop (yomizaka#240)", () => {
+describe("the batch tick's loop (verikora#240)", () => {
   it("runs after the interval the setting gives, and reads it again each time — a change is obeyed at the next look", async () => {
     let seconds = 20;
     const run = vi.fn(async () => undefined);

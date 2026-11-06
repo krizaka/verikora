@@ -1,7 +1,7 @@
 import { refuse } from "./http";
 
 /*
- * The applicant file's rules (yomizaka#127), pure: the link's states, what a request may ask, the document-type catalogue's
+ * The applicant file's rules (verikora#127), pure: the link's states, what a request may ask, the document-type catalogue's
  * seed and the retention a document gets. The database rows (lib/config-seed.ts) are the source of truth; this module
  * decides on them without touching the database.
  */

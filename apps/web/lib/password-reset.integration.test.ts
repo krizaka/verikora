@@ -10,15 +10,15 @@ import { applyReset, requestReset } from "./password-reset";
 import { createSession, resolveSession, tokenHash } from "./session";
 
 /**
- * The forgot-password flow against a real PostgreSQL 16 (CI's service; locally `YOMIZAKA_DB_IT=1 DATABASE_URL=… pnpm test`):
+ * The forgot-password flow against a real PostgreSQL 16 (CI's service; locally `DATABASE_IT=1 DATABASE_URL=… pnpm test`):
  * the same answer for a known and an unknown address, an expired and a reused link refused, the other sessions ended, and
  * an audit trail that holds neither a link nor a new secret. Skipped without a database.
  */
-const enabled = process.env.YOMIZAKA_DB_IT === "1" && !!process.env.DATABASE_URL;
+const enabled = process.env.DATABASE_IT === "1" && !!process.env.DATABASE_URL;
 
 describe.runIf(enabled)("the forgot-password flow", () => {
   const stamp = Date.now();
-  const email = `reset-${stamp}@yomizaka.test`;
+  const email = `reset-${stamp}@verikora.test`;
   const OLD = "the old secret 123";
   const NEW = "the brand new secret 456";
   const headers = new Headers({ "x-forwarded-for": "203.0.113.20" });
@@ -31,7 +31,7 @@ describe.runIf(enabled)("the forgot-password flow", () => {
       transaction: (work) => transaction((run) => work(run as never)),
       mail: async (m) => void mails.push({ to: m.to, text: m.text }),
       baseUrl: "https://app.example.test",
-      product: "Yomizaka",
+      product: "Verikora",
       tokenPrefix: "ye",
       tokenHash: (token) => tokenHash(token),
       passwords: { hash: hashPassword, verify: verifyPassword },
@@ -64,7 +64,7 @@ describe.runIf(enabled)("the forgot-password flow", () => {
   it("answers the same for a known and an unknown address, and mails only the known one", async () => {
     mails.length = 0;
     const known = await requestReset(deps(), { email }, { headers }, new Date());
-    const unknown = await requestReset(deps(), { email: `nobody-${stamp}@yomizaka.test` }, { headers }, new Date());
+    const unknown = await requestReset(deps(), { email: `nobody-${stamp}@verikora.test` }, { headers }, new Date());
     expect(known).toEqual(unknown);
     expect(mails).toHaveLength(1);
     expect(mails[0]!.to).toBe(email);

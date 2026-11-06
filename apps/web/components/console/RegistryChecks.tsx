@@ -10,7 +10,7 @@ import { levelTone } from "@/lib/signal-cards";
 import { formatDate } from "./format";
 
 /**
- * The business registers' part of the report (yomizaka#627): the QST number printed on the document, read against Revenu Québec's
+ * The business registers' part of the report (verikora#627): the QST number printed on the document, read against Revenu Québec's
  * public register. REG-001/002/003 are questions for the issuer, never a verdict; a register that was not consulted (the GST/HST
  * registry, the NEQ) says « not looked up », with its reason, so the silence is never read as a clean answer.
  */

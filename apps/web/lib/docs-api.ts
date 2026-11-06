@@ -2,7 +2,7 @@ import { openApiDocument } from "./api-v1/openapi";
 
 /**
  * The API reference of /docs, read from the OpenAPI document the app serves (`/api/v1/openapi.json`) at build: nothing about a
- * route is typed by hand here (yomizaka#387). `openapi.test.ts` already refuses a route missing from the document, so a route
+ * route is typed by hand here (verikora#387). `openapi.test.ts` already refuses a route missing from the document, so a route
  * missing from the docs is impossible.
  */
 export const OPENAPI_PATH = "/api/v1/openapi.json";
@@ -41,7 +41,7 @@ interface RawOperation {
 }
 
 // The document is built from a constant origin: the reference does not depend on where it is read.
-const spec = (): ReturnType<typeof openApiDocument> => openApiDocument("https://www.yomizaka.com");
+const spec = (): ReturnType<typeof openApiDocument> => openApiDocument("https://www.verikora.com");
 
 export function apiOperations(): ApiOperation[] {
   return Object.entries(spec().paths).flatMap(([path, methods]) =>

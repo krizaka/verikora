@@ -22,7 +22,7 @@ beforeEach(() => {
   open.report = null;
 });
 
-describe("/rapport/<token> (yomizaka#128)", () => {
+describe("/rapport/<token> (verikora#128)", () => {
   it("a revoked, expired or unknown link is a 404, never the report", async () => {
     await expect(OwnerReportPage(params("revoked-token"))).rejects.toThrow("NEXT_NOT_FOUND");
   });

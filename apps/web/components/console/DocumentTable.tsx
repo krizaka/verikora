@@ -9,7 +9,7 @@ import {
   type DataTableSort,
 } from "@krizaka/ui/data-table";
 import { useRouteState as useUrlState } from "@krizaka/ui/router";
-import { DOCUMENT_KINDS, DOCUMENT_STATUSES, type DocumentSummary } from "@yomizaka/core";
+import { DOCUMENT_KINDS, DOCUMENT_STATUSES, type DocumentSummary } from "@verikora/core";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
@@ -233,7 +233,7 @@ export function DocumentTable({
     setStatus(Array.isArray(next.status) ? next.status.join(",") : "");
     setPage(TABLE_DEFAULTS.page);
   };
-  // Bookmarks in bulk (yomizaka#339): select documents, apply or lift a bookmark on all of them in one call (the table's bar, count and ceiling are Krizaka UI's).
+  // Bookmarks in bulk (verikora#339): select documents, apply or lift a bookmark on all of them in one call (the table's bar, count and ceiling are Krizaka UI's).
   const [selected, setSelected] = useState<string[]>([]);
   const [bulkResult, setBulkResult] = useState("");
   const labels = useMemo(

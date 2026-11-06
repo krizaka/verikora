@@ -1,11 +1,11 @@
-import type { ComplianceReport } from "@yomizaka/core";
+import type { ComplianceReport } from "@verikora/core";
 
 import { query } from "./db";
 import { isUuid } from "./documents";
 import { refuse } from "./http";
 
 /**
- * A lease and its annexes as one submission (yomizaka#129). The check runs on each document with the ruleset chosen by data
+ * A lease and its annexes as one submission (verikora#129). The check runs on each document with the ruleset chosen by data
  * (jurisdiction + version, from the flow); this reads the reports back as one list, line by line, with the article each finding cites and
  * the ruleset's review status. It states what a ruleset reports: no advice, no verdict about the lease (« conforme », « approuvé »...).
  */

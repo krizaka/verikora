@@ -3,8 +3,8 @@ import type { AnalysisStatus, Studio } from "./index";
 /**
  * The steps of a check, one contract for every platform (the web, the Mac, iOS and Android apps): Lecture, Contrôle préalable,
  * Vérification, Rapport. Each app draws them with its own components and translates the ids; none invents a step. The state of
- * each is DERIVED from what the product really knows (the document read, accepted, the run's status) — Orazaka's per-step live
- * events (orazaka#189) will refine the rules step through the same shape when they exist; nothing is faked until then.
+ * each is DERIVED from what the product really knows (the document read, accepted, the run's status) — Sovkora's per-step live
+ * events (sovkora#189) will refine the rules step through the same shape when they exist; nothing is faked until then.
  */
 export const CHECK_STEP = { read: "read", preflight: "preflight", rules: "rules", report: "report" } as const;
 export type CheckStepId = (typeof CHECK_STEP)[keyof typeof CHECK_STEP];

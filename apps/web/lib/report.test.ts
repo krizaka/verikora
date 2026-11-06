@@ -1,13 +1,13 @@
 import crypto from "node:crypto";
 
-import type { Analysis, DocumentDetail } from "@yomizaka/core";
+import type { Analysis, DocumentDetail } from "@verikora/core";
 import { describe, expect, it } from "vitest";
 
 import { buildPayload, canonicalJson, issueReport, renderBody, ReportError, sha256, verifyReport } from "./report";
 import { generateSigningKeyBase64, parseSigningKey } from "./report-key";
 import { reportLabels } from "./report-labels";
 
-// A test fixture in the shape of a compliance report (packages/core `complianceReport`); not a recorded Orazaka run.
+// A test fixture in the shape of a compliance report (packages/core `complianceReport`); not a recorded Sovkora run.
 const DOC: Pick<DocumentDetail, "sha256" | "filename" | "title" | "sizeBytes" | "pages"> = {
   sha256: sha256("the lease"),
   filename: "bail-saint-denis.pdf",
@@ -171,7 +171,7 @@ describe("verification", () => {
       const copy = structuredClone(attestation);
       mutate(copy);
       return html.replace(
-        /(<script type="application\/json" id="yomizaka-attestation">)[^<]*(<\/script>)/,
+        /(<script type="application\/json" id="verikora-attestation">)[^<]*(<\/script>)/,
         `$1${JSON.stringify(copy).replace(/</g, "\\u003c")}$2`,
       );
     };
@@ -211,7 +211,7 @@ describe("verification", () => {
       verifyReport(
         html.replace(
           "</body>",
-          `${html.match(/<script type="application\/json" id="yomizaka-attestation">[^<]*<\/script>/)![0]}</body>`,
+          `${html.match(/<script type="application\/json" id="verikora-attestation">[^<]*<\/script>/)![0]}</body>`,
         ),
         key,
       ),
@@ -219,13 +219,13 @@ describe("verification", () => {
     // A forger edits the text AND recomputes bodySha256, but cannot recompute the signature.
     const edited = html.replace("Point non respecté", "Point respecté");
     const rehashed = edited.replace(
-      /(<script type="application\/json" id="yomizaka-attestation">)([^<]*)(<\/script>)/,
+      /(<script type="application\/json" id="verikora-attestation">)([^<]*)(<\/script>)/,
       (_m, a: string, json: string, c: string) => {
         const att = JSON.parse(json);
         att.bodySha256 = sha256(
           edited.replace(
-            /<script type="application\/json" id="yomizaka-attestation">[^<]*<\/script>/,
-            "<!--yomizaka-attestation-->",
+            /<script type="application\/json" id="verikora-attestation">[^<]*<\/script>/,
+            "<!--verikora-attestation-->",
           ),
         );
         return a + JSON.stringify(att).replace(/</g, "\\u003c") + c;
@@ -237,11 +237,11 @@ describe("verification", () => {
   it("answers, never throws, on what is not a report", () => {
     expect(verifyReport("", key)).toMatchObject({ ok: false, reason: "NOT_A_REPORT" });
     expect(verifyReport("<html>hello</html>", key)).toMatchObject({ ok: false, reason: "NOT_A_REPORT" });
-    expect(verifyReport('<script type="application/json" id="yomizaka-attestation">{nope</script>', key)).toMatchObject(
+    expect(verifyReport('<script type="application/json" id="verikora-attestation">{nope</script>', key)).toMatchObject(
       { ok: false, reason: "UNREADABLE" },
     );
     expect(
-      verifyReport('<script type="application/json" id="yomizaka-attestation">{"schema":"x"}</script>', key),
+      verifyReport('<script type="application/json" id="verikora-attestation">{"schema":"x"}</script>', key),
     ).toMatchObject({ ok: false, reason: "UNREADABLE" });
   });
 

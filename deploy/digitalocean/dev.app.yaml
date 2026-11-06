@@ -1,29 +1,18 @@
-# Yomizaka dev — DigitalOcean App Platform, project `yomizaka`, region tor (next to the cluster krizaka-dev-pg).
+# Verikora dev — DigitalOcean App Platform, project `verikora`, region tor (next to the cluster krizaka-dev-pg).
 # The smallest service ($5/month). Secrets are filled at apply time (`__NAME__`, never committed) and stored as SECRET.
-name: yomizaka-dev
+name: verikora-dev
 region: tor
 alerts:
   - rule: DEPLOYMENT_FAILED
 domains:
-  # The public address (epic krizaka/.github#119): www is primary and indexed, the apex answers 308 with www (ingress below).
-  - domain: www.yomizaka.com
+  # The development address (krizaka-internal#2659): dev.verikora.com is the app; admin.verikora.com its console (same app, by host).
+  # www.verikora.com and the apex are the public face, served by the production team (coming soon), never by this app.
+  - domain: dev.verikora.com
     type: PRIMARY
-  - domain: yomizaka.com
+  - domain: admin.verikora.com
     type: ALIAS
-  # The development address: every page goes to www (308); the API, .well-known and healthz keep serving, noindex (APP_DEV_HOST).
-  - domain: dev.yomizaka.com
-    type: ALIAS
-  - domain: admin.yomizaka.com
-    type: ALIAS
-# The apex leads to www (308); the other hosts are the app's (dev's page redirect and noindex are the app's own: lib/indexing.ts).
 ingress:
   rules:
-    - match:
-        authority:
-          exact: yomizaka.com
-      redirect:
-        authority: www.yomizaka.com
-        redirect_code: 308
     - match:
         path:
           prefix: /
@@ -34,7 +23,7 @@ services:
     dockerfile_path: deploy/docker/Dockerfile
     source_dir: /
     github:
-      repo: krizaka/yomizaka
+      repo: krizaka/verikora
       branch: main
       deploy_on_push: true
     http_port: 8080
@@ -45,10 +34,9 @@ services:
       initial_delay_seconds: 20
       period_seconds: 15
     envs:
-      - { key: APP_PUBLIC_URL, scope: RUN_AND_BUILD_TIME, value: "https://www.yomizaka.com" }
-      # The stage (yomizaka#364): `dev` shows the « development version » notice on every screen; `prod` hides it. Read at build too (the pages are static).
+      - { key: APP_PUBLIC_URL, scope: RUN_AND_BUILD_TIME, value: "https://dev.verikora.com" }
+      # The stage (verikora#364): `dev` shows the « development version » notice on every screen; `prod` hides it. Read at build too (the pages are static).
       - { key: APP_ENVIRONMENT, scope: RUN_AND_BUILD_TIME, value: "dev" }
-      - { key: APP_DEV_HOST, scope: RUN_TIME, value: "dev.yomizaka.com" }
       # www is indexed (krizaka-com AGENTS §2.4): robots allows, sitemap, no noindex. dev. and admin. are closed by host (lib/indexing.ts).
       - { key: APP_SEARCH_INDEXING, scope: RUN_AND_BUILD_TIME, value: "on" }
       - { key: APP_COMMIT_SHA, scope: BUILD_TIME, value: "${_self.COMMIT_HASH}" }
@@ -69,14 +57,14 @@ services:
           type: SECRET,
           value: __PAYMENTS_STRIPE_WEBHOOK_SECRET__,
         }
-      - { key: AI_PROVIDER, scope: RUN_TIME, value: "orazaka" }
-      - { key: AI_API_URL, scope: RUN_TIME, value: "https://dev.orazaka.com/edge" }
+      - { key: AI_PROVIDER, scope: RUN_TIME, value: "sovkora" }
+      - { key: AI_API_URL, scope: RUN_TIME, value: "https://dev.sovkora.com/edge" }
       - { key: AI_API_KEY, scope: RUN_TIME, type: SECRET, value: "__AI_API_KEY__" }
       # The live app has these (krizaka-deploy refused an apply that would delete them): the report signing key is a SECRET, kept.
       - { key: APP_REPORT_SIGNING_KEY, scope: RUN_TIME, type: SECRET, value: "__APP_REPORT_SIGNING_KEY__" }
       - { key: APP_PUBLIC_ACTIONS, scope: RUN_TIME, value: "off" }
       - { key: DATABASE_MAX_CONNECTIONS, scope: RUN_TIME, value: "2" }
-      # Kept documents in development (ADR-0007, krizaka/yomizaka#153): its own private Bunny zone (never the public media zone), signed
+      # Kept documents in development (ADR-0007, krizaka/verikora#153): its own private Bunny zone (never the public media zone), signed
       # expiring links through its token-authenticated pull zone. Fictional data only; production uses a Canadian bucket.
       - { key: MEDIA_DOCUMENTS_PROVIDER, scope: RUN_TIME, value: "bunny" }
       - { key: MEDIA_STORAGE_ENDPOINT, scope: RUN_TIME, value: "ny.storage.bunnycdn.com" }
@@ -84,7 +72,7 @@ services:
       - { key: MEDIA_STORAGE_API_KEY, scope: RUN_TIME, type: SECRET, value: "__MEDIA_STORAGE_API_KEY__" }
       - { key: MEDIA_DOCUMENTS_PULL_HOSTNAME, scope: RUN_TIME, value: "yomizaka-docs-dev.b-cdn.net" }
       - { key: MEDIA_DOCUMENTS_TOKEN_KEY, scope: RUN_TIME, type: SECRET, value: "__MEDIA_DOCUMENTS_TOKEN_KEY__" }
-# The nightly encrypted backup and its restore drill (krizaka/yomizaka#513, docs/DISASTER_RECOVERY.md). A scheduled job INSIDE the app: it
+# The nightly encrypted backup and its restore drill (krizaka/verikora#513, docs/DISASTER_RECOVERY.md). A scheduled job INSIDE the app: it
 # reaches the database with the same trusted connection as the web (no IP rule to open, krizaka-infra#24). It dumps one snapshot,
 # restores it into a scratch database to compare every table's row count, age-encrypts to a PUBLIC key and writes to the admin's default
 # provider for « backups » (Administration -> Storage; refused unless it is verified and in Canada). Retention 30 days, newest 7 always kept.
@@ -99,7 +87,7 @@ jobs:
     dockerfile_path: deploy/backup/Dockerfile
     source_dir: /
     github:
-      repo: krizaka/yomizaka
+      repo: krizaka/verikora
       branch: main
       deploy_on_push: true
     instance_count: 1
@@ -121,7 +109,7 @@ jobs:
     source_dir: /
     run_command: node deploy/backup/bin/backup.mjs check
     github:
-      repo: krizaka/yomizaka
+      repo: krizaka/verikora
       branch: main
       deploy_on_push: true
     instance_count: 1

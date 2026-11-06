@@ -3,7 +3,7 @@ import { z } from "zod";
 import { systemClock } from "@/app/system-clock";
 import { accountAct } from "@/lib/account/act";
 import { apiKeys, assertKeysAllowed, keyAct, maxActiveKeys } from "@/lib/api-access";
-import { YOMIZAKA_API_KEY_RULES } from "@/lib/api-keys";
+import { VERIKORA_API_KEY_RULES } from "@/lib/api-keys";
 import { audit } from "@/lib/audit";
 import { readJson } from "@/lib/http";
 
@@ -15,9 +15,9 @@ export const GET = (req: Request) =>
     const keys = apiKeys(systemClock);
     return {
       keys: (await keys.list(s.account.id)).map((k) => keys.publicView(k)),
-      scopes: YOMIZAKA_API_KEY_RULES.scopes,
+      scopes: VERIKORA_API_KEY_RULES.scopes,
       maxActive: await maxActiveKeys(s.account.id, systemClock.now()),
-      maxExpiryDays: YOMIZAKA_API_KEY_RULES.maxExpiryDays,
+      maxExpiryDays: VERIKORA_API_KEY_RULES.maxExpiryDays,
     };
   });
 

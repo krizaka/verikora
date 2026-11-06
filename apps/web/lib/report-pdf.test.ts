@@ -69,7 +69,7 @@ describe("the report's legal guardrail", () => {
           ? "Vérification informative, ce n’est pas un avis juridique"
           : "Informative check, not legal advice",
       );
-      expect(text).toContain("https://www.yomizaka.com/app/verifications/report");
+      expect(text).toContain("https://www.verikora.com/app/verifications/report");
       expect(text).not.toMatch(/\bconforme\b/i);
       expect(text).not.toMatch(/\bcompliant\b/i);
     },
@@ -158,7 +158,7 @@ describe("the signed PDF report", () => {
     const doc2 = await PDFDocument.load(forged.bytes);
     doc2.context
       .lookup(doc2.context.trailerInfo.Info, PDFDict)
-      .set(PDFName.of("YomizakaAttestation"), PDFString.of(Buffer.from(JSON.stringify(genuine)).toString("base64")));
+      .set(PDFName.of("VerikoraAttestation"), PDFString.of(Buffer.from(JSON.stringify(genuine)).toString("base64")));
     expect(await verifyPdf(await doc2.save(), signingKey())).toMatchObject({ ok: false, reason: "ALTERED" });
   });
 
@@ -168,7 +168,7 @@ describe("the signed PDF report", () => {
     const edited = { ...issued.attestation, payload: { ...payload, check: { ...payload.check, runId: "run-999" } } };
     doc2.context
       .lookup(doc2.context.trailerInfo.Info, PDFDict)
-      .set(PDFName.of("YomizakaAttestation"), PDFString.of(Buffer.from(JSON.stringify(edited)).toString("base64")));
+      .set(PDFName.of("VerikoraAttestation"), PDFString.of(Buffer.from(JSON.stringify(edited)).toString("base64")));
     expect(await verifyPdf(await doc2.save(), signingKey())).toMatchObject({ ok: false, reason: "BAD_SIGNATURE" });
     const other = parseSigningKey(generateSigningKeyBase64(), false);
     expect(await verifyPdf(issued.bytes, other)).toMatchObject({ ok: false, reason: "UNKNOWN_KEY" });

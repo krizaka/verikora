@@ -17,8 +17,8 @@ import { createSession, SESSION_COOKIE } from "../session";
 import { DECISION } from "./decl";
 import { seedWorkspace } from "./service";
 
-/** The workspace through its real routes (yomizaka#324): every route, the gate it shares, and what each refuses. Demo data only. */
-const enabled = process.env.YOMIZAKA_DB_IT === "1" && !!process.env.DATABASE_URL;
+/** The workspace through its real routes (verikora#324): every route, the gate it shares, and what each refuses. Demo data only. */
+const enabled = process.env.DATABASE_IT === "1" && !!process.env.DATABASE_URL;
 const NOW = new Date("2026-10-25T12:00:00Z");
 
 const as = (token: string | null, method: string, path: string, body?: object) =>
@@ -33,7 +33,7 @@ const as = (token: string | null, method: string, path: string, body?: object) =
 const at = (kind: string, id = "") => ({ params: Promise.resolve({ kind, id }) });
 const base = (kind: string) => `/api/organize/${kind}`;
 
-describe.runIf(enabled)("the workspace over HTTP (yomizaka#324)", () => {
+describe.runIf(enabled)("the workspace over HTTP (verikora#324)", () => {
   const stamp = Date.now();
   let eric = "";
   let stranger = "";
@@ -47,7 +47,7 @@ describe.runIf(enabled)("the workspace over HTTP (yomizaka#324)", () => {
     (
       await query<{ id: string }>(
         "INSERT INTO accounts (email, password_hash, role) VALUES ($1, 'x', $2) RETURNING id",
-        [`${who}-${stamp}@yomizaka.test`, role],
+        [`${who}-${stamp}@verikora.test`, role],
       )
     )[0]!.id;
   const file = async (owner: string, email: string) =>
@@ -104,8 +104,8 @@ describe.runIf(enabled)("the workspace over HTTP (yomizaka#324)", () => {
   });
 
   it("decides: { moved, skipped }, a stale expectation is 409 STALE, another account's file is 404, a body without ids is 400", async () => {
-    const [a, b] = [await file(eric, "eric@yomizaka.test"), await file(eric, "eric@yomizaka.test")];
-    const theirs = await file(stranger, "stranger@yomizaka.test");
+    const [a, b] = [await file(eric, "eric@verikora.test"), await file(eric, "eric@verikora.test")];
+    const theirs = await file(stranger, "stranger@verikora.test");
     const post = (tokenOf: string, body: object) =>
       statusRoute(as(tokenOf, "POST", `${base("applicant_file")}/status`, body), at("applicant_file"));
     expect((await post(token, { ids: [], to: DECISION.selected })).status).toBe(400);
@@ -197,7 +197,7 @@ describe.runIf(enabled)("the workspace over HTTP (yomizaka#324)", () => {
   });
 
   it("tags in bulk and sets one entity's tags; a tag of another account is 404", async () => {
-    const [a, b] = [await file(eric, "eric@yomizaka.test"), await file(eric, "eric@yomizaka.test")];
+    const [a, b] = [await file(eric, "eric@verikora.test"), await file(eric, "eric@verikora.test")];
     const tag = async (tokenOf: string, name: string) =>
       (
         await (

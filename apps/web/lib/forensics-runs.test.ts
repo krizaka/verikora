@@ -1,4 +1,4 @@
-import { analyseTextRuns } from "@yomizaka/core";
+import { analyseTextRuns } from "@verikora/core";
 import { describe, expect, it } from "vitest";
 
 import { fixture } from "./forensics-fixture";

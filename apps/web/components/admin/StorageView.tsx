@@ -107,7 +107,7 @@ function useStep(onProblem: (message: string | null) => void) {
 }
 
 /**
- * The storage providers (ADR-005, yomizaka#522): where documents and avatars are kept is chosen here, in the database, not in the environment.
+ * The storage providers (ADR-005, verikora#522): where documents and avatars are kept is chosen here, in the database, not in the environment.
  * Credentials are entered once and sealed; the screen only ever reads `set` or `not set`. A provider is tested before it can be the default,
  * and its residency is shown as soon as the test has found it.
  */

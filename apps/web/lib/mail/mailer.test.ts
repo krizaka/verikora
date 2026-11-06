@@ -3,7 +3,7 @@ import { describe, expect, it } from "vitest";
 
 import { type AccountMail, fromAuthMail, intentionOf, type MailConfig, mailEnvOf, mailerFor } from "../mailer";
 
-/** Yomizaka's mail (yomizaka#48): templates of @krizaka/email in Yomizaka's brand, through the MAIL_* provider, once per link, never to a reported address. */
+/** Verikora's mail (verikora#48): templates of @krizaka/email in Verikora's brand, through the MAIL_* provider, once per link, never to a reported address. */
 const CONFIG: MailConfig = {
   MAIL_PROVIDER: "mailgun",
   MAIL_API_KEY: "test-key",
@@ -14,21 +14,21 @@ const confirm: AccountMail = {
   kind: "confirmEmail",
   to: "Eric@Example.test",
   locale: "fr",
-  url: "https://www.yomizaka.com/fr/verify-email?token=yv1.abc",
+  url: "https://www.verikora.com/fr/verify-email?token=yv1.abc",
   hours: 24,
 };
 const reset: AccountMail = {
   kind: "passwordReset",
   to: "eric@example.test",
   locale: "en",
-  url: "https://www.yomizaka.com/en/reset-password?token=ye1.abc",
+  url: "https://www.verikora.com/en/reset-password?token=ye1.abc",
   minutes: 45,
 };
 const change: AccountMail = {
   kind: "emailChange",
   to: "new@example.test",
   locale: "fr",
-  url: "https://www.yomizaka.com/fr/confirm-email?token=ye1.def",
+  url: "https://www.verikora.com/fr/confirm-email?token=ye1.def",
   hours: 24,
 };
 
@@ -55,21 +55,22 @@ const world = (status = 200) => {
 };
 
 describe("the sender", () => {
-  it("defaults to Yomizaka at the sending domain, and keeps the one the deployment sets", () => {
+  it("defaults to Verikora at the sending domain, and keeps the one the deployment sets", () => {
     expect(mailEnvOf(CONFIG).MAIL_FROM).toBe("Verikora <no-reply@mg.example.test>");
-    expect(mailEnvOf({ ...CONFIG, MAIL_FROM: "Yomizaka <bonjour@yomizaka.com>" }).MAIL_FROM).toBe(
-      "Yomizaka <bonjour@yomizaka.com>",
+    expect(mailEnvOf({ ...CONFIG, MAIL_FROM: "Verikora <bonjour@verikora.com>" }).MAIL_FROM).toBe(
+      "Verikora <bonjour@verikora.com>",
     );
     expect(mailEnvOf({ MAIL_API_URL: "https://x.test" }).MAIL_FROM).toBeUndefined();
   });
 });
 
 describe("sending the three links", () => {
+  // The subject names the product as `@krizaka/email` 0.x knows it (« Yomizaka ») until its major release with the commercial names (krizaka-internal#2659).
   it.each([
     [confirm, /Confirmez votre adresse Yomizaka/, "verify-email?token=yv1.abc"],
     [reset, /Reset your Yomizaka password/, "reset-password?token=ye1.abc"],
     [change, /Confirmez votre nouvelle adresse Yomizaka/, "confirm-email?token=ye1.def"],
-  ])("%#: a branded e-mail with its link, to the address, from Yomizaka", async (mail, subject, link) => {
+  ])("%#: a branded e-mail with its link, to the address, from Verikora", async (mail, subject, link) => {
     const { sent, mail: send } = world();
     await send(mail);
     expect(sent).toHaveLength(1);
@@ -80,8 +81,8 @@ describe("sending the three links", () => {
     expect(form.get("subject")).toMatch(subject);
     expect(form.get("text")).toContain(link);
     expect(form.get("html")).toContain(link.replaceAll("&", "&amp;"));
-    // House of Brands: it wears Yomizaka and names no other product.
-    expect((form.get("html") ?? "") + (form.get("text") ?? "")).not.toMatch(/Orazaka|Akinaza/);
+    // House of Brands: it wears Verikora and names no other product.
+    expect((form.get("html") ?? "") + (form.get("text") ?? "")).not.toMatch(/Sovkora|Folioviv/);
   });
 
   it("mails one link once: the same link again sends nothing, a new link is a new intention", async () => {
@@ -156,12 +157,12 @@ describe("the links of @krizaka/auth", () => {
   });
 });
 
-describe("the owner-report link (yomizaka#130)", () => {
+describe("the owner-report link (verikora#130)", () => {
   const link: AccountMail = {
     kind: "reportLink",
     to: "owner@example.test",
     locale: "fr",
-    url: "https://www.yomizaka.com/fr/rapport/sc1.abc",
+    url: "https://www.verikora.com/fr/rapport/sc1.abc",
     senderName: "Eric",
     expiresOn: "2026-11-03",
     message: "Bonjour",

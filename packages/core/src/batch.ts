@@ -4,7 +4,7 @@ import { startAnalysis, type StartAnalysis } from "./index";
 import { DOCUMENT_KINDS } from "./vocabulary";
 
 /**
- * A batch of checks from a CSV (yomizaka#232): one row per document, the file it names, the check to run and its
+ * A batch of checks from a CSV (verikora#232): one row per document, the file it names, the check to run and its
  * options — the same request a single check sends (`startAnalysis`), so a batch can never ask for what one check could
  * not. Pure: the parser, the row rules and the matching with the files sent; the server stores and runs.
  */

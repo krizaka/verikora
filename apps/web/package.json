@@ -1,8 +1,8 @@
 {
-  "name": "@yomizaka/web",
+  "name": "@verikora/web",
   "version": "0.1.0",
   "private": true,
-  "description": "Yomizaka's web app and BFF: the public page, sign-in, the library, the document page, search and the administration — every analysis an Orazaka run.",
+  "description": "Verikora's web app and BFF: the public page, sign-in, the library, the document page, search and the administration — every analysis an Sovkora run.",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -43,7 +43,7 @@
     "@krizaka/webhooks": "0.3.0",
     "@tesseract.js-data/eng": "^1.0.0",
     "@tesseract.js-data/fra": "^1.0.0",
-    "@yomizaka/core": "workspace:*",
+    "@verikora/core": "workspace:*",
     "date-fns": "^4.4.0",
     "exif-reader": "^2.0.3",
     "heic-decode": "^2.1.0",

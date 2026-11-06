@@ -5,7 +5,7 @@ import { EmptyState } from "@krizaka/ui/empty-state";
 import { List } from "@krizaka/ui/list";
 import { Progress } from "@krizaka/ui/progress";
 import { BatchIcon } from "@krizaka/icons";
-import { BATCH_ITEM, type BatchItemState } from "@yomizaka/core";
+import { BATCH_ITEM, type BatchItemState } from "@verikora/core";
 
 import { useI18n } from "../i18n";
 import { queries } from "../lib/config";

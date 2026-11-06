@@ -1,4 +1,4 @@
-import { SEEDED_INPUTS } from "@yomizaka/core";
+import { SEEDED_INPUTS } from "@verikora/core";
 import { describe, expect, it } from "vitest";
 
 import { complianceOptions, documentFacts, highlightsOf, offeredKinds, placeOf } from "./document-view-model";
@@ -37,7 +37,7 @@ const run = (id: string, studio: string, extra: Record<string, unknown> = {}) =>
 const doc = (analyses: unknown[], extra: Record<string, unknown> = {}) =>
   ({ id: "d1", mimeType: "application/pdf", analyses, ...extra }) as never;
 
-/** What the document page derives from a document (yomizaka#320: DocumentView decomposed, nothing visible changed). */
+/** What the document page derives from a document (verikora#320: DocumentView decomposed, nothing visible changed). */
 describe("the document's facts", () => {
   it("takes the latest compliance report, or the run the history opened (`?run=`), and the latest authenticity report", () => {
     const analyses = [run("a2", "compliance-check"), run("a1", "compliance-check"), run("x1", "document-authenticity")];

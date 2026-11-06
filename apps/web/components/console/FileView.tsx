@@ -37,9 +37,9 @@ export function askedRows(file: Pick<ApplicantFileView, "requestedTypes" | "docu
 }
 
 /**
- * One applicant file (design § 4, yomizaka#323): the applicant, the link's state, the day it was asked, then the documents
- * asked — each with the one received, what becomes of it, and its checks as Orazaka returned them, leading to its report (the
- * run ids are there). With the organised workspace (yomizaka#324): your decision and its actions, then the tags.
+ * One applicant file (design § 4, verikora#323): the applicant, the link's state, the day it was asked, then the documents
+ * asked — each with the one received, what becomes of it, and its checks as Sovkora returned them, leading to its report (the
+ * run ids are there). With the organised workspace (verikora#324): your decision and its actions, then the tags.
  */
 export function FileView({
   file,

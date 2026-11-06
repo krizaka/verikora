@@ -3,7 +3,7 @@ import { describe, expect, it } from "vitest";
 import en from "@/messages/en.json";
 import fr from "@/messages/fr.json";
 
-/** Yomizaka reads documents; it is no identity verifier, no legal rule engine, no escrow (krizaka/yomizaka#371). */
+/** Verikora reads documents; it is no identity verifier, no legal rule engine, no escrow (krizaka/verikora#371). */
 const FORBIDDEN = /vérification d['’]identité|identity verification|règles juridiques|legal rules|séquestre|escrow/i;
 
 const strings = (value: unknown, path = ""): string[] =>

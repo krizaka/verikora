@@ -1,5 +1,5 @@
 /* The Krizaka platform, in this order: Tailwind v4; @krizaka/tailwind (the --kz-* tokens, the role utilities, the
-   dark / light variants, the motion signature); @krizaka/ui's sources; the Yomizaka brand of @krizaka/tokens — ink
+   dark / light variants, the motion signature); @krizaka/ui's sources; the Verikora brand of @krizaka/tokens — ink
    indigo: the accent, the text on it, the ring, the section gradient — in both themes. No product token: the roles say
    everything these pages draw. */
 @import "tailwindcss";

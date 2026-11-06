@@ -1,7 +1,7 @@
 #!/usr/bin/env node
-// Post-deploy check of the download page, per language (yomizaka#1968): the /en page shows only English clips, the /fr page French ones,
+// Post-deploy check of the download page, per language (verikora#1968): the /en page shows only English clips, the /fr page French ones,
 // each in its platform's frame, every poster answers, and no iOS clip exists. Public page, no secret.
-//   node scripts/check-download-page.mjs --base https://www.yomizaka.com
+//   node scripts/check-download-page.mjs --base https://www.verikora.com
 import { readFileSync } from "node:fs";
 
 import { flagReader } from "./lib/recording-kit.mjs";
@@ -39,7 +39,7 @@ export function problemsOf(html, locale) {
 }
 
 async function main() {
-  const base = flagReader(process.argv.slice(2))("base", "https://www.yomizaka.com");
+  const base = flagReader(process.argv.slice(2))("base", "https://www.verikora.com");
   const failures = [];
   for (const locale of LOCALES) {
     const res = await fetch(`${base}/${locale}/download`);

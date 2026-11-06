@@ -1,5 +1,5 @@
 {
-  "$comment": "DATA, not code (yomizaka#228). The notice windows are those of art. 1942 C.c.Q.; the yearly figures of the TAL's method are entered here, one entry per year, each with the page it was read from and the day it was entered. A year with no entry gives no figure: the radar then says so and shows this table's source. Never a percentage in code.",
+  "$comment": "DATA, not code (verikora#228). The notice windows are those of art. 1942 C.c.Q.; the yearly figures of the TAL's method are entered here, one entry per year, each with the page it was read from and the day it was entered. A year with no entry gives no figure: the radar then says so and shows this table's source. Never a percentage in code.",
   "source": {
     "label": "Tribunal administratif du logement — fixation du loyer",
     "url": "https://www.tal.gouv.qc.ca/fr/le-calcul-de-laugmentation-du-loyer"

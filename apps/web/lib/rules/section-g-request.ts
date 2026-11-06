@@ -2,8 +2,8 @@ import type { SectionGResult } from "./section-g";
 import type { SectionGDeadline } from "./section-g-deadline";
 
 /**
- * The facts for a request to the TAL to fix the rent (yomizaka#566, slice 5 of #104: the « filing template » of the epic, as a summary
- * of facts the tenant keeps and carries to the TAL, never a filing: Yomizaka files nothing). Pure: it lays out what Section G (#554) and
+ * The facts for a request to the TAL to fix the rent (verikora#566, slice 5 of #104: the « filing template » of the epic, as a summary
+ * of facts the tenant keeps and carries to the TAL, never a filing: Verikora files nothing). Pure: it lays out what Section G (#554) and
  * the deadline (#562) already found, in a stable order, as message keys with their figures (cents; the view formats them). It names no
  * form and no fee: the TAL's page « Avis au nouveau locataire » does not link the recourse to a form, so the tenant is pointed to the TAL.
  * No finding, no summary. Information, not legal advice. LAWYER REVIEW: see docs/compliance-gate.md.

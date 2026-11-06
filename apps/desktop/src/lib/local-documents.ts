@@ -7,7 +7,7 @@ export interface PathStore {
   setItem(key: string, value: string): void;
 }
 
-const KEY = "yomizaka.local-documents";
+const KEY = "verikora.local-documents";
 // @fixed: a Mac that has checked this many documents remembers the latest ones
 const MAX_REMEMBERED = 500;
 

@@ -1,13 +1,13 @@
 /**
- * Universal links (yomizaka#155): `https://www.yomizaka.com/fr/app/…` opens the app when it is installed, the page when it is not.
+ * Universal links (verikora#155): `https://www.verikora.com/fr/app/…` opens the app when it is installed, the page when it is not.
  * The two files that let a phone trust the link — Apple's `apple-app-site-association` and Android's `assetlinks.json` — are built
  * here from the app's own identity and from what signs it (the environment: never a certificate in the repository). A file with
  * nothing to say is not served: a claim the phone cannot check is worse than none.
  */
-export const IOS_BUNDLE_ID = "com.krizaka.yomizaka";
-export const ANDROID_PACKAGE = "com.krizaka.yomizaka";
+export const IOS_BUNDLE_ID = "com.krizaka.verikora";
+export const ANDROID_PACKAGE = "com.krizaka.verikora";
 /** The hosts whose links the app opens (apps/mobile/app.json lists the same: `npm run check:app-links` compares them). */
-export const APP_LINK_HOSTS = ["www.yomizaka.com", "dev.yomizaka.com"] as const;
+export const APP_LINK_HOSTS = ["www.verikora.com", "dev.verikora.com"] as const;
 /** The signed-in space, in both languages: the screens of the app mirror these paths. The public pages stay on the web. */
 export const APP_LINK_PATHS = ["/fr/app", "/fr/app/*", "/en/app", "/en/app/*"] as const;
 

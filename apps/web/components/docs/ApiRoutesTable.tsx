@@ -77,7 +77,7 @@ const routeColumns = (labels: ApiRoutesLabels, shared: readonly string[]): DataT
   },
 ];
 
-/** The API's routes as one table (yomizaka#457: one 5 100 px page of repeated sections); an answer several routes share is said once, by the page, under the table. */
+/** The API's routes as one table (verikora#457: one 5 100 px page of repeated sections); an answer several routes share is said once, by the page, under the table. */
 export function ApiRoutesTable({
   operations,
   shared,

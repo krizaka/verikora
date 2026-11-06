@@ -8,13 +8,13 @@ import { CONSOLE_ROUTES } from "./console-nav";
 import { readFilterParams, writeFilterParams } from "./filter-params";
 
 /*
- * The home's figures (yomizaka#325, P8 of the design direction § 5.1), pure: the browser reads them too. Each figure of
+ * The home's figures (verikora#325, P8 of the design direction § 5.1), pure: the browser reads them too. Each figure of
  * « À traiter » is a door to the saved view it counts, so its link carries that view's filter; the counts are queries
  * (lib/home.ts), never counters.
  */
 
 export interface ToDo {
-  /** Checks Orazaka flagged, or that did not end: Vérifications filtered on `attention,failed`. */
+  /** Checks Sovkora flagged, or that did not end: Vérifications filtered on `attention,failed`. */
   toReview: number;
   /** Applicant files the candidate sent and nobody closed yet (link state `used`); null without the applicant-file flow. */
   toDecide: number | null;

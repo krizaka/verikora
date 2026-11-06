@@ -1,5 +1,5 @@
-import type { Signal, SignalFamily } from "@yomizaka/core";
-import { landlordSignals, signalFamily } from "@yomizaka/core";
+import type { Signal, SignalFamily } from "@verikora/core";
+import { landlordSignals, signalFamily } from "@verikora/core";
 
 import { activeConsents, CONSENT_PURPOSE, hasConsent } from "./applicant-consent";
 import { LINK, linkState } from "./applicant-file-rules";
@@ -10,7 +10,7 @@ import { refuse } from "./http";
 import { ANSWER_MAX, cleanAnswer } from "./signal-answer-rules";
 
 /*
- * The applicant's answer to a trace found in their document (ADR-0014 §4, yomizaka#626). The person concerned is told which traces
+ * The applicant's answer to a trace found in their document (ADR-0014 §4, verikora#626). The person concerned is told which traces
  * were found and can add one short explanation per trace; the owner reads it next to the trace, dated. It is the person's own words:
  * kept with the document (deleted with it), never in an audit line (the line carries the signal id only).
  */

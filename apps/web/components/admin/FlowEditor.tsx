@@ -6,7 +6,7 @@ import { Badge } from "@krizaka/ui/badge";
 import { Button } from "@krizaka/ui/button";
 import { Card } from "@krizaka/ui/card";
 import { createKrizakaForm } from "@krizaka/ui/form";
-import { AUDIENCES, JURISDICTIONS } from "@yomizaka/core";
+import { AUDIENCES, JURISDICTIONS } from "@verikora/core";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { z } from "zod";

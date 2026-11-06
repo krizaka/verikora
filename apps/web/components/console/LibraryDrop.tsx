@@ -6,7 +6,7 @@ import { Button } from "@krizaka/ui/button";
 import { DropOverlay } from "@krizaka/ui/drop-overlay";
 import { Dropzone, type FileRejection, type UploadItem, useUploadQueue } from "@krizaka/ui/file-upload";
 import { QueueStatus, tally, TaskTray, UploadQueue, type UploadQueueItem } from "@krizaka/ui/upload-queue";
-import { type Jurisdiction, MAX_FILE_BYTES, STORAGE_MODE, STORAGE_MODES } from "@yomizaka/core";
+import { type Jurisdiction, MAX_FILE_BYTES, STORAGE_MODE, STORAGE_MODES } from "@verikora/core";
 import { useRouter } from "next/navigation";
 import { createContext, type ReactNode, useContext, useRef, useState } from "react";
 import { z } from "zod";
@@ -137,7 +137,7 @@ export function DropZone() {
 /**
  * Drop anywhere on the library (the review's B4) — or on a place, filing into it (Y7): a full-window overlay takes a file dragged over the page, an optional zone
  * (the empty library's only one) takes a click, and the tray follows the queue while the person keeps browsing. One path
- * (`send`) with the kind left to Yomizaka and the owner's keeping preference; the lists refresh as each file lands.
+ * (`send`) with the kind left to Verikora and the owner's keeping preference; the lists refresh as each file lands.
  */
 export function LibraryDrop({
   zone = false,

@@ -1,7 +1,7 @@
 import type { TalTable, TalYear } from "../brief/tal";
 
 /**
- * Section G of the Québec lease (yomizaka#554, slice 1 of #104): the notice of the lowest rent paid in the twelve months before the
+ * Section G of the Québec lease (verikora#554, slice 1 of #104): the notice of the lowest rent paid in the twelve months before the
  * lease (art. 1896 C.c.Q., the mandatory form's section G, the same citation as QC-LEASE-008) against the new rent. Pure and
  * deterministic. It speaks only of the lease's figures — never of the landlord — and only from what the law and the TAL's table give:
  * a year the table does not hold, or a method that needs the building's own costs, gives no figure and no claim.

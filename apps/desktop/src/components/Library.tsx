@@ -9,7 +9,7 @@ import { Switch } from "@krizaka/ui/switch";
 import { useCallback, useEffect, useState } from "react";
 
 import { useI18n } from "../i18n";
-import { folders, yomizakaNative } from "../lib/desktop";
+import { folders, verikoraNative } from "../lib/desktop";
 import { inbox } from "../lib/inbox-store";
 import { stopAll } from "../lib/subscriptions";
 import { refusalText } from "../lib/refusal";
@@ -18,12 +18,12 @@ import { sizeOf } from "../lib/size";
 import { useBatch } from "../lib/use-batch";
 import { Refused, useCheck } from "../lib/use-check";
 
-const FOLDERS_KEY = ["yomizaka-desktop", "folders"] as const;
-const folderKey = (path: string) => ["yomizaka-desktop", "folder", path] as const;
+const FOLDERS_KEY = ["verikora-desktop", "folders"] as const;
+const folderKey = (path: string) => ["verikora-desktop", "folder", path] as const;
 const lastPart = (path: string) => path.split("/").findLast(Boolean) ?? path;
 
 type Translate = ReturnType<typeof useI18n>["t"];
-type Listing = Awaited<ReturnType<typeof yomizakaNative.listDocuments>>;
+type Listing = Awaited<ReturnType<typeof verikoraNative.listDocuments>>;
 
 /** Whether the folder on screen is watched, kept in step with the folder shown. */
 function useWatched(folder: string | null) {
@@ -73,7 +73,7 @@ function useFolderWatch(
     const off = folders.onChanged(async (changed) => {
       if (changed !== folder) return;
       await queryClient.invalidateQueries({ queryKey: folderKey(folder) });
-      const fresh = inbox.arrivals(folder, (await yomizakaNative.listDocuments(folder)).entries);
+      const fresh = inbox.arrivals(folder, (await verikoraNative.listDocuments(folder)).entries);
       if (fresh.length)
         checkMany({ name: t("batch.nameOfFolder", { name: lastPart(folder) }), paths: fresh.map((e) => e.path) });
     });
@@ -177,7 +177,7 @@ export function Library({
   const granted = useQuery({ queryKey: FOLDERS_KEY, queryFn: folders.list });
   const listing = useQuery({
     queryKey: folderKey(folder ?? ""),
-    queryFn: () => yomizakaNative.listDocuments(folder as string),
+    queryFn: () => verikoraNative.listDocuments(folder as string),
     enabled: folder !== null,
   });
   const check = useCheck(go);

@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// Re-downloads the brand icons of yomizaka from the Krizaka CDN, byte for byte (never redrawn).
+// Re-downloads the brand icons of verikora from the Krizaka CDN, byte for byte (never redrawn).
 // They are generated from @krizaka/ui by krizaka-ui `tools/export-brand.mjs`; `brand/manifest.json` lists each file's SHA-256.
 //   node scripts/sync-brand-icons.mjs          # download and write
 //   node scripts/sync-brand-icons.mjs --check  # only compare with the CDN manifest (exit 1 on drift)
@@ -12,6 +12,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 export const CDN = "https://krizaka-assets.b-cdn.net";
+// The id the brand export of krizaka-ui still files this product under, until the major release of `@krizaka/org` (krizaka-internal#2659).
 export const BRAND = "yomizaka";
 /** CDN file (under brand/<brand>/) -> committed path, relative to the repository root. */
 export const ICONS = {

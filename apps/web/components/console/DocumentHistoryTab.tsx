@@ -1,7 +1,7 @@
 "use client";
 
 import { Badge } from "@krizaka/ui/badge";
-import type { DocumentView } from "@yomizaka/core";
+import type { DocumentView } from "@verikora/core";
 import Link from "next/link";
 
 import { useSay } from "@/lib/i18n-client";

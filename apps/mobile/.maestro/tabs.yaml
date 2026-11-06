@@ -1,6 +1,6 @@
 # The tabs of the signed-in space, as the demo persona Éric: Accueil (his collections), Vérifications and its second tab Lots.
 # Each stop is a capture (the PR's phone captures come from CI: the `maestro-e2e` artifact). Runs in CI (mobile-e2e.yml).
-appId: com.krizaka.yomizaka
+appId: com.krizaka.verikora
 tags:
   - ci
 ---

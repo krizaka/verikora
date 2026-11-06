@@ -1,5 +1,5 @@
 import { createSessions, dbSessionStore, memorySessionStore, sessionCookie as cookieOf } from "@krizaka/auth";
-import type { Audience } from "@yomizaka/core";
+import type { Audience } from "@verikora/core";
 
 import { systemClock } from "../app/system-clock";
 import { query } from "./db";

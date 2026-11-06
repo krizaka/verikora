@@ -7,7 +7,7 @@ use std::io::Write;
 use std::path::{Path, PathBuf};
 
 /// The files a check reads, by extension: the library lists nothing else. The same types as `ACCEPTED_TYPES` of
-/// `@yomizaka/core` (PDF, text, Word since yomizaka#229, OpenDocument since #236); the server's pre-flight decides last.
+/// `@verikora/core` (PDF, text, Word since verikora#229, OpenDocument since #236); the server's pre-flight decides last.
 const CHECKABLE: &[(&str, &str)] = &[
     ("pdf", "application/pdf"),
     ("txt", "text/plain"),
@@ -179,18 +179,18 @@ mod tests {
         fs::write(&doc, "%PDF").unwrap();
         let first = save_report(
             &doc,
-            "yomizaka-audit-1.pdf",
+            "verikora-audit-1.pdf",
             &STANDARD.encode(b"%PDF-1.7 report"),
         )
         .unwrap();
         let second = save_report(
             &doc,
-            "yomizaka-audit-1.pdf",
+            "verikora-audit-1.pdf",
             &STANDARD.encode(b"%PDF-1.7 report"),
         )
         .unwrap();
-        assert_eq!(first, d.path().join("yomizaka-audit-1.pdf"));
-        assert_eq!(second, d.path().join("yomizaka-audit-1 (2).pdf"));
+        assert_eq!(first, d.path().join("verikora-audit-1.pdf"));
+        assert_eq!(second, d.path().join("verikora-audit-1 (2).pdf"));
     }
 
     #[test]

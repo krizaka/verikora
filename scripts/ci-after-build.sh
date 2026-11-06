@@ -27,8 +27,8 @@ curl -s http://localhost:3000/en/nope | grep -q "Back to the library"
 test "$(curl -s -o /dev/null -w '%{http_code}' -X POST http://localhost:3000/api/auth/sign-up)" = "403"
 # The signed-in pages, rendered as the seeded persona Éric (the demo data set of scripts/demo-seed, CI-only credentials, never a
 # real account): exactly one h1 each, no horizontal overflow at 360-1440 px, the header's action on screen, no unnamed button, axe-core (a11y-baseline.app.json).
-APP_DEMO_ACCOUNT_EMAIL=eric@demo.yomizaka.test APP_DEMO_ACCOUNT_PASSWORD=ci-only-demo-password-0123 node scripts/demo-seed/cli.mjs --cast --check
+APP_DEMO_ACCOUNT_EMAIL=eric@demo.verikora.test APP_DEMO_ACCOUNT_PASSWORD=ci-only-demo-password-0123 node scripts/demo-seed/cli.mjs --cast --check
 # The layout audit proves itself on its own fixtures first (a card out of its panel, sections on top of each other, a cut column).
 pnpm exec krizaka-page-audit --self-test
-E2E_EMAIL=eric@demo.yomizaka.test E2E_PASSWORD=ci-only-demo-password-0123 node scripts/check-app-pages.mjs --base http://localhost:3000
-E2E_EMAIL=eric@demo.yomizaka.test E2E_PASSWORD=ci-only-demo-password-0123 node scripts/check-signed-in-landing.mjs --base http://localhost:3000
+E2E_EMAIL=eric@demo.verikora.test E2E_PASSWORD=ci-only-demo-password-0123 node scripts/check-app-pages.mjs --base http://localhost:3000
+E2E_EMAIL=eric@demo.verikora.test E2E_PASSWORD=ci-only-demo-password-0123 node scripts/check-signed-in-landing.mjs --base http://localhost:3000

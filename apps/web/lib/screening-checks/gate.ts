@@ -2,7 +2,7 @@ import { query } from "../db";
 import { appSettings } from "../settings/instance";
 
 /*
- * The compliance gate (yomizaka#135): no live resale of a screening check until every blocker is done, with the date of its
+ * The compliance gate (verikora#135): no live resale of a screening check until every blocker is done, with the date of its
  * evidence. It is a hard check in three places: a pure rule (tested), a runtime guard on every non-demo adapter, and the boot
  * (`assertLiveGate`: the server does not start with features.screeningLive on while a blocker is open). Live mode is Oussama's switch;
  * nothing here turns it on.

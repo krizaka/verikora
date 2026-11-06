@@ -6,7 +6,7 @@ import fr from "@/messages/fr.json";
 import { binderOf, creditsFigure, homeHref, leadParts, quickLinks, stripOf, weekOf } from "./home-b2";
 import type { ActivityDay } from "./home-figures";
 
-/** The B2 home's pure pieces (yomizaka#332): the sentence, the binder, the strip, the week and the credits. */
+/** The B2 home's pure pieces (verikora#332): the sentence, the binder, the strip, the week and the credits. */
 const MESSAGES = { en: en.console, fr: fr.console } as const;
 const translator =
   (locale: "en" | "fr") =>

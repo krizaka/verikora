@@ -1,11 +1,11 @@
-import { DOCX_MIME } from "@yomizaka/core";
+import { DOCX_MIME } from "@verikora/core";
 import { describe, expect, it } from "vitest";
 
 import { docxText, ODT_TOKENS } from "./docx-text";
 import { readText } from "./pdf-text";
 import { docx, zipOf } from "./preflight/fixtures";
 import { createInspector } from "./preflight/inspector";
-import { YOMIZAKA_RULES } from "./preflight/rules";
+import { VERIKORA_RULES } from "./preflight/rules";
 
 const LEASE = `<?xml version="1.0"?><w:document xmlns:w="w"><w:body>
 <w:p><w:r><w:t>BAIL DE LOGEMENT</w:t></w:r></w:p>
@@ -19,7 +19,7 @@ const lease = () =>
     { name: "word/document.xml", data: Buffer.from(LEASE) },
   ]);
 
-describe("a Word file (yomizaka#229)", () => {
+describe("a Word file (verikora#229)", () => {
   it("its text: one paragraph per line, tabs and entities kept, field codes and markup dropped", () => {
     expect(
       docxText(lease() as Uint8Array)
@@ -37,7 +37,7 @@ describe("a Word file (yomizaka#229)", () => {
   });
 
   it("is accepted by the pre-flight; a macro-bearing one is still refused", async () => {
-    const inspector = createInspector(YOMIZAKA_RULES);
+    const inspector = createInspector(VERIKORA_RULES);
     expect(await inspector.inspect(lease() as Uint8Array, { name: "bail.docx", type: DOCX_MIME })).toMatchObject({
       kind: "accepted",
       fileKind: "docx",

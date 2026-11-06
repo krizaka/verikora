@@ -5,7 +5,7 @@ import { useState } from "react";
 import { z } from "zod";
 
 import { useI18n } from "../i18n";
-import { yomizaka } from "../lib/config";
+import { verikora } from "../lib/config";
 
 const form = createKrizakaForm({
   schema: z.object({ email: z.string().trim().email(), password: z.string().min(1) }),
@@ -23,7 +23,7 @@ export function SignIn() {
     onSubmit: async ({ email, password }) => {
       setProblem(null);
       try {
-        await yomizaka.signIn(email, password);
+        await verikora.signIn(email, password);
       } catch (error) {
         setProblem(error instanceof ApiError && REFUSALS.has(error.status) ? t("signIn.wrong") : t("common.offline"));
       }

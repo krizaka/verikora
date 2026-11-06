@@ -12,7 +12,7 @@ import { money } from "./format";
 import { pricingLines } from "./page";
 
 /**
- * yomizaka#373, rewritten by ADR-0015 (it supersedes the « no overage » clause of ADR-0013): the page never advertises a charge the
+ * verikora#373, rewritten by ADR-0015 (it supersedes the « no overage » clause of ADR-0013): the page never advertises a charge the
  * code does not make. The code charges what the processor sells (`SOLD`: one document, two monthly subscriptions) and, beyond the
  * included volume, ONE thing more: the dossier at the plan's `overageCents` (`lib/overage.ts`). A plan with no rate holds the account
  * until next month (429 `FAIR_USE`, `lib/billing.ts`). So no public page shows any amount that is none of these.

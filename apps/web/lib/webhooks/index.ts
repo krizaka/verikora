@@ -7,7 +7,7 @@ import { WEBHOOK_EVENTS } from "./events";
 import { sealer } from "./seal";
 
 /**
- * Webhooks in Yomizaka (yomizaka#241): the generic module (`@krizaka/webhooks`) wired to this app's database, plans and settings.
+ * Webhooks in Verikora (verikora#241): the generic module (`@krizaka/webhooks`) wired to this app's database, plans and settings.
  * The module knows nothing of any of them; the secret to seal with is given by the caller (the edge reads the environment).
  */
 export const BACKOFF_SECONDS = [30, 300, 1800, 7200, 43200] as const;

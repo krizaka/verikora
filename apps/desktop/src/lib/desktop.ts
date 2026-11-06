@@ -4,7 +4,7 @@ import { listen } from "@tauri-apps/api/event";
 
 /**
  * The native side, typed. What every Krizaka Mac app shares (folders, drops, the Keychain, the menu, links) is
- * tauri-plugin-krizaka through @krizaka/app-desktop; Yomizaka's own commands are below. The page has no fs, no shell, no
+ * tauri-plugin-krizaka through @krizaka/app-desktop; Verikora's own commands are below. The page has no fs, no shell, no
  * opener: each call goes through the folder scope (a granted folder, or a file dropped on the window this session).
  */
 export const bridge: TauriBridge = { invoke, listen };
@@ -20,7 +20,7 @@ export interface DocumentBytes {
   data: string;
 }
 
-export const yomizakaNative = {
+export const verikoraNative = {
   /** A granted folder's documents (what a check reads) and its folders. */
   listDocuments: (path: string) => invoke<Listing>("list_documents", { path }),
   readDocument: (path: string) => invoke<DocumentBytes>("read_document", { path }),

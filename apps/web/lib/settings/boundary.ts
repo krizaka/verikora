@@ -1,4 +1,4 @@
-import { type DocumentInsight, MAX_FILE_BYTES } from "@yomizaka/core";
+import { type DocumentInsight, MAX_FILE_BYTES } from "@verikora/core";
 
 import type { FileKind, PreflightRules } from "../preflight/port";
 import type { SettingKey } from "./registry";

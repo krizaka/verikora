@@ -1,4 +1,4 @@
-// The main journeys of Yomizaka, compared to their baselines (krizaka/.github#375), as the seeded persona Éric (the cast,
+// The main journeys of Verikora, compared to their baselines (krizaka/.github#375), as the seeded persona Éric (the cast,
 // krizaka/.github#356: scripts/demo-seed, CI-only credentials, never a real account).
 import { readFileSync } from "node:fs";
 
@@ -6,7 +6,7 @@ import { defineJourneyTests } from "@krizaka/page-audit/visual";
 import { expect, test } from "@playwright/test";
 
 const BASE = process.env.VISUAL_BASE_URL ?? "http://localhost:3000";
-const EMAIL = process.env.E2E_EMAIL ?? "eric@demo.yomizaka.test";
+const EMAIL = process.env.E2E_EMAIL ?? "eric@demo.verikora.test";
 const SECRET = process.env.E2E_PASSWORD ?? "ci-only-demo-password-0123";
 // Rows are stamped with the day of the run: dates are masked, and the browser clock is the moment the seed finished.
 const NOW = (() => {
@@ -36,7 +36,7 @@ async function firstReport(page, { origin }) {
   return `/fr/app/documents/${id}/rapport`;
 }
 
-/** The report of the seeded lease whose title holds `words` (Section G on the lease without notice, art. 1904 on the one with illegal clauses; yomizaka#104). */
+/** The report of the seeded lease whose title holds `words` (Section G on the lease without notice, art. 1904 on the one with illegal clauses; verikora#104). */
 const reportTitled =
   (words) =>
   async (page, { origin }) => {
@@ -57,7 +57,7 @@ async function firstFile(page, { origin }) {
 }
 /** The hydrated first paint, settled: the account picture decoded (the initial gives way to it). The date in words is the server's, frozen by APP_VISUAL_NOW (scripts/ci-visual-start.sh). */
 async function settleHeaderLive(page) {
-  // The home no longer writes the date in words (yomizaka#680: « Check a document » is its one action); the check page still does.
+  // The home no longer writes the date in words (verikora#680: « Check a document » is its one action); the check page still does.
   if (!/\/app\/?$/.test(new URL(page.url()).pathname))
     await page.locator('time[data-testid="today"]').first().waitFor();
   await page.waitForFunction(() =>
@@ -135,7 +135,7 @@ defineJourneyTests({
     // The library, where the bookmarks live (#339): the guard they lacked.
     { name: "documents", path: "/fr/app/documents", session: true, mask: LIVE },
     { name: "document-report", path: firstReport, session: true, mask: LIVE },
-    // The tenant-shield findings in the report (yomizaka#104): Section G with the deadline and the facts for the TAL; the payment clauses (art. 1904).
+    // The tenant-shield findings in the report (verikora#104): Section G with the deadline and the facts for the TAL; the payment clauses (art. 1904).
     {
       name: "report-section-g",
       path: reportTitled("avis du TAL absent"),

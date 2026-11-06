@@ -3,13 +3,13 @@ import crypto from "node:crypto";
 import type { Mail as AccountsMail } from "@krizaka/auth";
 import { consoleLog, type IdempotencyStore, type MailEnv, sendEmail, type SuppressionList } from "@krizaka/email";
 
-import { PRODUCT_NAME } from "@/lib/brand";
+import { BRAND_ID, PRODUCT_NAME } from "@/lib/brand";
 import { currentProductName } from "@/lib/settings/display-name";
 
 import { pgIdempotency, pgSuppression } from "./mail/store";
 
 /**
- * Yomizaka's e-mail (yomizaka#48): every message is a template of `@krizaka/email` in Yomizaka's brand (never hand-written HTML), sent
+ * Verikora's e-mail (verikora#48): every message is a template of `@krizaka/email` in Verikora's brand (never hand-written HTML), sent
  * through the `MAIL_*` provider, once per link, never to an address the provider reported, with a delivery log that holds a hash of
  * the recipient and never the address.
  */
@@ -21,7 +21,7 @@ export interface MailConfig {
   MAIL_FROM?: string;
 }
 
-/** The links Yomizaka mails: confirm an address, reset a password, confirm a changed address, and the owner-report link a manager sends (link, expiry and the manager's note only; never report content). */
+/** The links Verikora mails: confirm an address, reset a password, confirm a changed address, and the owner-report link a manager sends (link, expiry and the manager's note only; never report content). */
 export type AccountMail =
   | { kind: "confirmEmail"; to: string; locale: "en" | "fr"; url: string; hours: number }
   | { kind: "passwordReset"; to: string; locale: "en" | "fr"; url: string; minutes: number }
@@ -38,7 +38,7 @@ export type AccountMail =
 
 export type Mailer = (mail: AccountMail) => Promise<void>;
 
-/** What a link mail of `@krizaka/auth` (a reset, a changed address) is, as Yomizaka sends it. A mail with no link cannot be sent: it was text only. */
+/** What a link mail of `@krizaka/auth` (a reset, a changed address) is, as Verikora sends it. A mail with no link cannot be sent: it was text only. */
 export function fromAuthMail(mail: AccountsMail): AccountMail {
   const { link } = mail;
   if (!link) throw new Error("Mail has no link to send");
@@ -73,9 +73,9 @@ export const intentionOf = (mail: AccountMail): string =>
 
 type Options = Parameters<typeof sendEmail>[2];
 
-/** The template of a link, in Yomizaka's brand. */
+/** The template of a link, in Verikora's brand. */
 function send(mail: AccountMail, options: Options) {
-  const brand = "yomizaka" as const;
+  const brand = BRAND_ID;
   switch (mail.kind) {
     case "confirmEmail":
       return sendEmail("confirmEmail", { brand, confirmUrl: mail.url, hours: mail.hours }, options);

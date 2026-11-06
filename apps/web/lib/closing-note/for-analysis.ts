@@ -1,4 +1,4 @@
-import type { Analysis } from "@yomizaka/core";
+import type { Analysis } from "@verikora/core";
 
 import { buildNote, type ClosingNote, noteInputOf } from "./build";
 import type { Lang } from "./vocabulary";

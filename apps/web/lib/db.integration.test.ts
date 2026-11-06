@@ -1,5 +1,5 @@
 import { hashPassword } from "@krizaka/auth";
-import { ODT_MIME } from "@yomizaka/core";
+import { ODT_MIME } from "@verikora/core";
 import { beforeAll, describe, expect, it } from "vitest";
 
 import { listUsers } from "./accounts";
@@ -13,13 +13,13 @@ import { getShowcase, setSample, setShowcase, showcaseFile } from "./showcase";
 import { localStore } from "./storage/local";
 
 /**
- * The SQL against a real PostgreSQL 16 (CI's service; locally `YOMIZAKA_DB_IT=1 DATABASE_URL=… pnpm test`): the
+ * The SQL against a real PostgreSQL 16 (CI's service; locally `DATABASE_IT=1 DATABASE_URL=… pnpm test`): the
  * migrations, the library, the analyses' state, search, the administration list, sessions. Skipped without a database.
  */
-const enabled = process.env.YOMIZAKA_DB_IT === "1" && !!process.env.DATABASE_URL;
+const enabled = process.env.DATABASE_IT === "1" && !!process.env.DATABASE_URL;
 
 describe.runIf(enabled)("database", () => {
-  const email = `it-${Date.now()}@yomizaka.test`;
+  const email = `it-${Date.now()}@verikora.test`;
   let owner: { id: string } | undefined;
   let stranger: { id: string } | undefined;
 

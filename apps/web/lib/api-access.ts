@@ -8,7 +8,7 @@ import {
   pgApiKeyStore,
 } from "@krizaka/api-keys";
 
-import { YOMIZAKA_API_KEY_RULES } from "./api-keys";
+import { VERIKORA_API_KEY_RULES } from "./api-keys";
 import { entitlementOf } from "./billing";
 import { query } from "./db";
 import { refuse } from "./http";
@@ -16,11 +16,11 @@ import { limit, limitWith } from "./limits";
 import { assertFeature, settingsFor } from "./settings/guards";
 
 /**
- * API keys in Yomizaka (ADR-0011): the generic module (`lib/api-keys`) wired to this app's database, plans, switches and rate
+ * API keys in Verikora (ADR-0011): the generic module (`lib/api-keys`) wired to this app's database, plans, switches and rate
  * limits. The module knows nothing of any of them; this file is the only place that does.
  */
 export const apiKeys = (clock: Clock): ApiKeys =>
-  createApiKeys({ store: pgApiKeyStore(query), rules: YOMIZAKA_API_KEY_RULES, clock });
+  createApiKeys({ store: pgApiKeyStore(query), rules: VERIKORA_API_KEY_RULES, clock });
 
 /** The HTTP answer of each refusal: stable codes the page translates and the API documents. */
 const ANSWER: Record<ApiKeyCode, number> = {

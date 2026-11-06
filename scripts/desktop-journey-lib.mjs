@@ -1,8 +1,8 @@
-// The pure parts of the Mac journey (yomizaka#636, ADR-017): where the app keeps its folder scope, what a pre-granted scope
+// The pure parts of the Mac journey (verikora#636, ADR-017): where the app keeps its folder scope, what a pre-granted scope
 // looks like, and the small W3C client of the embedded WebDriver (tauri-plugin-webdriver, 127.0.0.1:4445). No dependency.
 import { join } from "node:path";
 
-export const IDENTIFIER = "com.krizaka.yomizaka.desktop";
+export const IDENTIFIER = "com.krizaka.verikora.desktop";
 export const WEBDRIVER = "http://127.0.0.1:4445";
 const ELEMENT = "element-6066-11e4-a52e-4f735466cecf";
 

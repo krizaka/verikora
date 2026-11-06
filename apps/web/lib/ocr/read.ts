@@ -34,7 +34,7 @@ export async function readPhotoText(
       text: remote.text,
       source: {
         kind: "vision",
-        by: "orazaka",
+        by: "sovkora",
         runId: remote.runId,
         model: remote.model,
         localConfidence: Math.round(local.confidence),

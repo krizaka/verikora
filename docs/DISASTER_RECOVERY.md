@@ -1,6 +1,6 @@
 # Disaster recovery — the database and the documents
 
-Issue krizaka/yomizaka#513 (split from #17, ADR-0012). Code: `deploy/backup/`. Infrastructure: `deploy/digitalocean/dev.app.yaml`
+Issue krizaka/verikora#513 (split from #17, ADR-0012). Code: `deploy/backup/`. Infrastructure: `deploy/digitalocean/dev.app.yaml`
 (two scheduled jobs). Data stays in Canada (Loi 25).
 
 ## What is protected, and where it is
@@ -19,7 +19,7 @@ key loses every off-site dump. Keep an offline copy of each (two places, two peo
 A scheduled job **inside the DigitalOcean app** (no IP rule to open: krizaka-infra#24) runs `deploy/backup/bin/backup.mjs`:
 
 1. Opens one `REPEATABLE READ` snapshot, counts every table, and `pg_dump --format=custom --snapshot=…` of that same snapshot.
-2. **Drill, every night**: restores the dump into a scratch database (`yomizaka_drill_<time>`), counts again, and compares every
+2. **Drill, every night**: restores the dump into a scratch database (`verikora_drill_<time>`), counts again, and compares every
    table. Any difference fails the run (`DRILL_MISMATCH`). The scratch database is always dropped.
 3. Encrypts with `age` to a **public** key (`BACKUP_AGE_RECIPIENT`). A private key in the environment is refused
    (`PRIVATE_KEY_IN_ENV`); a file that is not an age file is never uploaded (`NOT_ENCRYPTED`).
@@ -30,7 +30,7 @@ A scheduled job **inside the DigitalOcean app** (no IP rule to open: krizaka-inf
 
 A second job, `backup-freshness` (08:45), fails when the newest backup is missing or older than 36 hours (`NO_BACKUP`, `STALE`).
 Every failure prints `BACKUP_FAILED <code> <reason>` and exits 1: it shows as a failed run in the app's job history. Copies are
-named `backups/yomizaka/<env>/yomizaka-<env>-<UTC stamp>.dump.age`.
+named `backups/verikora/<env>/verikora-<env>-<UTC stamp>.dump.age`.
 
 The server proves the dump **restores** and that the uploaded bytes are the encrypted ones; it cannot open them (the private key is
 offline). Opening the encrypted copy is the quarterly drill below.
@@ -42,13 +42,13 @@ Needs: the age private key (offline), `age`, `pg_restore`, a **throwaway** Postg
 ```bash
 # 1. fetch the newest copy and its manifest from the « backups » provider (with the provider's own tool; the console does not download backups)
 # 2. verify the SHA-256 in the manifest
-shasum -a 256 yomizaka-prod-<stamp>.dump.age          # must equal manifest.sha256
+shasum -a 256 verikora-prod-<stamp>.dump.age          # must equal manifest.sha256
 # 3. decrypt (the identity file stays on the offline machine)
-age --decrypt --identity ~/offline/yomizaka-backup.key --output restore.dump yomizaka-prod-<stamp>.dump.age
+age --decrypt --identity ~/offline/verikora-backup.key --output restore.dump verikora-prod-<stamp>.dump.age
 # 4. restore into a scratch database and compare with the manifest's rowCounts
-createdb yomizaka_drill && pg_restore --no-owner --no-acl --exit-on-error --dbname yomizaka_drill restore.dump
-psql yomizaka_drill -Atc "select count(*) from documents"   # each table against manifest.rowCounts
-dropdb yomizaka_drill && shred -u restore.dump 2>/dev/null || rm -f restore.dump
+createdb verikora_drill && pg_restore --no-owner --no-acl --exit-on-error --dbname verikora_drill restore.dump
+psql verikora_drill -Atc "select count(*) from documents"   # each table against manifest.rowCounts
+dropdb verikora_drill && shred -u restore.dump 2>/dev/null || rm -f restore.dump
 ```
 
 Record the date, the copy and the result in the quarterly checkpoint. A drill that cannot decrypt is an incident: rotate the key
@@ -72,7 +72,7 @@ Recovery objectives: **RPO 24 h** (nightly), **RTO 4 h** for the database plus t
 
 ## Key custody and rotation
 
-- The age **private** key is generated offline (`age-keygen -o yomizaka-backup.key`), kept in two offline places, and **only the
+- The age **private** key is generated offline (`age-keygen -o verikora-backup.key`), kept in two offline places, and **only the
   public key** (`age1…`) is set as `BACKUP_AGE_RECIPIENT` (a SECRET placeholder in the app spec, filled at apply time).
 - Rotation: generate a new pair, set the new public key, run the job once, and verify it with the hand drill using the **new**
   private key. Keep the old private key until the last copy encrypted to it has expired (30 days).

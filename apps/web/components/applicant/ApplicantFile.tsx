@@ -7,7 +7,7 @@ import { Card } from "@krizaka/ui/card";
 import { Checkbox } from "@krizaka/ui/checkbox";
 import { ConfirmButton } from "@krizaka/ui/confirm-button";
 import { Dropzone, formatBytes, UploadList, useUploadQueue } from "@krizaka/ui/file-upload";
-import { MAX_FILE_BYTES } from "@yomizaka/core";
+import { MAX_FILE_BYTES } from "@verikora/core";
 import { useState } from "react";
 
 import { formatDate } from "@/components/console/format";
@@ -35,7 +35,7 @@ type Purpose = "DOCUMENT_CHECK" | "DOCUMENT_KEEP";
 const say = (table: Record<string, string>, code: string, fallback: string) => table[code] ?? fallback;
 
 /**
- * The applicant's page (yomizaka#341), reached by the link the manager handed over: the notice, a consent per purpose, the
+ * The applicant's page (verikora#341), reached by the link the manager handed over: the notice, a consent per purpose, the
  * documents asked with what each is for, the upload, « Send my file », the withdrawal and the erasure. No account. Nothing
  * is read before the consent to the check: the drop stays closed until then (the route refuses it too).
  */

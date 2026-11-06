@@ -9,7 +9,7 @@ import { assertFeature, settingsFor } from "@/lib/settings/guards";
 
 export const dynamic = "force-dynamic";
 
-/** The account's batches, newest first (yomizaka#232). */
+/** The account's batches, newest first (verikora#232). */
 export function GET(req: Request) {
   return handle(async () => {
     const session = await requireSession(req);

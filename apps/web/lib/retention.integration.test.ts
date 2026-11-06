@@ -7,8 +7,8 @@ import { localStore } from "./storage/local";
 import { memoryStore } from "./storage/memory";
 import { noneStore } from "./storage/none";
 
-/** Keep or purge against a real PostgreSQL (skipped without YOMIZAKA_DB_IT=1 and DATABASE_URL). */
-const enabled = process.env.YOMIZAKA_DB_IT === "1" && !!process.env.DATABASE_URL;
+/** Keep or purge against a real PostgreSQL (skipped without DATABASE_IT=1 and DATABASE_URL). */
+const enabled = process.env.DATABASE_IT === "1" && !!process.env.DATABASE_URL;
 const NOW = new Date("2026-10-22T12:00:00Z");
 const LEASE = "BAIL DE LOGEMENT\nLoyer mensuel : 1 450 $, payable le premier jour du mois.\n";
 
@@ -20,7 +20,7 @@ describe.runIf(enabled)("keep or purge (ADR-0007)", () => {
     (
       await query<{ id: string }>(
         "INSERT INTO accounts (email, password_hash, email_verified_at) VALUES ($1, 'x', now()) RETURNING id",
-        [`r-${Math.random().toString(36).slice(2)}@yomizaka.test`],
+        [`r-${Math.random().toString(36).slice(2)}@verikora.test`],
       )
     )[0]!.id;
   /** Where the bytes of a document that is not kept wait for their purge (ADR-0012). */

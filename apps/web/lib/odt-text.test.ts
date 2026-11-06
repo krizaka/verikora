@@ -1,6 +1,6 @@
 import { randomBytes } from "node:crypto";
 
-import { ACCEPTED_TYPES, ODT_MIME } from "@yomizaka/core";
+import { ACCEPTED_TYPES, ODT_MIME } from "@verikora/core";
 import { describe, expect, it } from "vitest";
 
 import { runInputs } from "./analyses";
@@ -9,7 +9,7 @@ import { odtText } from "./docx-text";
 import { readText } from "./pdf-text";
 import { zipOf } from "./preflight/fixtures";
 import { createInspector, sniff, zipEntries } from "./preflight/inspector";
-import { YOMIZAKA_RULES } from "./preflight/rules";
+import { VERIKORA_RULES } from "./preflight/rules";
 
 const MIME = "application/vnd.oasis.opendocument.text";
 const CONTENT = `<?xml version="1.0"?><office:document-content xmlns:office="office" xmlns:text="text">
@@ -25,7 +25,7 @@ const odt = (extra: { name: string; data: Buffer }[] = []) =>
     ...extra,
   ]);
 
-describe("an OpenDocument text file (yomizaka#229)", () => {
+describe("an OpenDocument text file (verikora#229)", () => {
   it("is recognised by its mimetype entry, not its filename or an XML part alone", async () => {
     expect(ODT_MIME).toBe(MIME);
     expect(ACCEPTED_TYPES).toContain(MIME);
@@ -35,7 +35,7 @@ describe("an OpenDocument text file (yomizaka#229)", () => {
     expect(
       sniff(zipOf([{ name: "mimetype", data: Buffer.from("application/vnd.oasis.opendocument.spreadsheet") }])),
     ).toBe("zip");
-    const inspector = createInspector(YOMIZAKA_RULES);
+    const inspector = createInspector(VERIKORA_RULES);
     expect(await inspector.inspect(odt(), { name: "bail.odt", type: MIME })).toMatchObject({
       kind: "accepted",
       fileKind: "odt",
@@ -52,7 +52,7 @@ describe("an OpenDocument text file (yomizaka#229)", () => {
   });
 
   it("still applies the archive guards and workspace file restrictions", async () => {
-    const inspector = createInspector(YOMIZAKA_RULES);
+    const inspector = createInspector(VERIKORA_RULES);
     expect(
       await inspector.inspect(odt([{ name: "word/vbaProject.bin", data: Buffer.from("x") }]), {
         name: "bail.odt",
@@ -66,13 +66,13 @@ describe("an OpenDocument text file (yomizaka#229)", () => {
       }),
     ).toMatchObject({ kind: "rejected", reason: "ARCHIVE_BOMB" });
     expect(
-      await createInspector({ ...YOMIZAKA_RULES, maxArchiveEntries: 1 }).inspect(odt(), {
+      await createInspector({ ...VERIKORA_RULES, maxArchiveEntries: 1 }).inspect(odt(), {
         name: "bail.odt",
         type: MIME,
       }),
     ).toMatchObject({ kind: "rejected", reason: "ARCHIVE_BOMB" });
     expect(
-      await createInspector({ ...YOMIZAKA_RULES, allowedKinds: ["pdf", "text"] }).inspect(odt(), {
+      await createInspector({ ...VERIKORA_RULES, allowedKinds: ["pdf", "text"] }).inspect(odt(), {
         name: "bail.odt",
         type: MIME,
       }),
@@ -80,7 +80,7 @@ describe("an OpenDocument text file (yomizaka#229)", () => {
   });
 
   it("refuses OpenDocument's native macros, scripts and embedded script declarations", async () => {
-    const inspector = createInspector(YOMIZAKA_RULES);
+    const inspector = createInspector(VERIKORA_RULES);
     for (const name of ["Basic/Standard/Module1.xml", "Scripts/python/macro.py"]) {
       expect(
         await inspector.inspect(odt([{ name, data: Buffer.from("macro") }]), { name: "bail.odt", type: MIME }),
@@ -121,12 +121,12 @@ describe("an OpenDocument text file (yomizaka#229)", () => {
     );
     const directory = bytes.readUInt32LE(bytes.length - 6);
     bytes.writeUInt32LE(21 * 1024 * 1024, directory + 24);
-    expect(await createInspector(YOMIZAKA_RULES).inspect(bytes, { name: "bail.odt", type: MIME })).toMatchObject({
+    expect(await createInspector(VERIKORA_RULES).inspect(bytes, { name: "bail.odt", type: MIME })).toMatchObject({
       kind: "rejected",
       reason: "CORRUPT",
     });
     const missing = zipOf([{ name: "mimetype", data: Buffer.from(MIME), stored: true }]);
-    expect(await createInspector(YOMIZAKA_RULES).inspect(missing, { name: "bail.odt", type: MIME })).toMatchObject({
+    expect(await createInspector(VERIKORA_RULES).inspect(missing, { name: "bail.odt", type: MIME })).toMatchObject({
       kind: "rejected",
       reason: "CORRUPT",
     });

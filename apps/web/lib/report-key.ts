@@ -14,7 +14,7 @@ export interface SigningKey {
 }
 
 /** The development key's seed: public on purpose (this repository), so nothing signed with it proves anything. */
-const DEV_SEED = Buffer.from("yomizaka-development-report-key!!", "utf8"); // 32 bytes
+const DEV_SEED = Buffer.from("verikora-development-report-key!!", "utf8"); // 32 bytes
 const PKCS8_ED25519_PREFIX = Buffer.from("302e020100300506032b657004220420", "hex");
 export const DEVELOPMENT_KEY_BASE64 = Buffer.concat([PKCS8_ED25519_PREFIX, DEV_SEED]).toString("base64");
 

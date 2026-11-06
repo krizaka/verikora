@@ -1,11 +1,11 @@
-import { type AcceptedType, DOCX_MIME, ODT_MIME } from "@yomizaka/core";
+import { type AcceptedType, DOCX_MIME, ODT_MIME } from "@verikora/core";
 
 import { docxText, odtText } from "./docx-text";
 import { extractPdfText } from "./extraction/isolated";
 /**
  * Reading a file's text layer — deterministic parsing, no model: a PDF's embedded text (pdf.js, through unpdf) or a text
- * file as UTF-8. It is the input of Orazaka's compliance Studio and of search. A scanned PDF has no text layer: `text`
- * is empty and the page says so (reading an image is an analysis — it would be Orazaka's, never done here).
+ * file as UTF-8. It is the input of Sovkora's compliance Studio and of search. A scanned PDF has no text layer: `text`
+ * is empty and the page says so (reading an image is an analysis — it would be Sovkora's, never done here).
  */
 export interface ReadText {
   text: string;
@@ -42,7 +42,7 @@ export async function readText(mimeType: AcceptedType, bytes: Uint8Array): Promi
   if (mimeType === "text/plain") {
     return { text: normaliseText(new TextDecoder("utf-8", { fatal: false }).decode(bytes)), pages: null };
   }
-  // Off the web process: an isolated worker with its own heap, deadline and page ceiling (yomizaka#21).
+  // Off the web process: an isolated worker with its own heap, deadline and page ceiling (verikora#21).
   const { text, pages } = await extractPdfText(bytes);
   return { text: normaliseText(text), pages };
 }

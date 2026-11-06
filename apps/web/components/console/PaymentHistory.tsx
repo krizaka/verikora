@@ -40,7 +40,7 @@ export function paymentLine(p: PaymentLine, say: Say, locale: string) {
   };
 }
 
-/** Account → Billing: the last payments with a receipt link each (yomizaka#585). Read by the server from the processor; nothing about a card. */
+/** Account → Billing: the last payments with a receipt link each (verikora#585). Read by the server from the processor; nothing about a card. */
 export function PaymentHistory({ enabled }: Readonly<{ enabled: boolean }>) {
   const { say, locale } = useSay();
   const history = useQuery({

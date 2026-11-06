@@ -62,7 +62,7 @@ const workspace = (search = "", locale: "en" | "fr" = "fr") => ({
   counts: { tabs: [2, 1, 0, 1], chips: [1] },
 });
 
-describe("« Dossiers » organised (yomizaka#324)", () => {
+describe("« Dossiers » organised (verikora#324)", () => {
   const files = [
     file("f1", "Camille Fictif", { tagIds: [T1] }),
     file("f2", "Noé Imaginaire", {
@@ -133,7 +133,7 @@ describe("« Dossiers » organised (yomizaka#324)", () => {
   });
 });
 
-describe("one file's decision (yomizaka#324)", () => {
+describe("one file's decision (verikora#324)", () => {
   const detail = {
     id: "f1",
     candidateName: "Camille Fictif",

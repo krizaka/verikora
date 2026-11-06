@@ -1,6 +1,6 @@
 # ADR-0007 — Organising documents, and where they live (two modules, two ports)
 
-Status: accepted (2026-10-22); decision 2 extended by ADR-0012 (bytes out of the database). Issues: krizaka/yomizaka#163 (organisation), #153 (storage), #164 (info panel), #154 and #155 (Mac, mobile).
+Status: accepted (2026-10-22); decision 2 extended by ADR-0012 (bytes out of the database). Issues: krizaka/verikora#163 (organisation), #153 (storage), #164 (info panel), #154 and #155 (Mac, mobile).
 
 ## Context
 Today a document is a row with its bytes in the database, in a flat list. People need to organise what they keep, and to
@@ -28,7 +28,7 @@ separate responsibilities, and both are separate from the checks (analyses).
   (`kind`, `region`, `residency`, `encrypted`, `endpoint`), which the info panel (#164) shows. A contract test runs on every adapter.
 - **Adapters are configuration** (the vendor is a value, `STORAGE_PROVIDER`, per workspace as data later): 
   `none` (**the default**: the document is purged after the check, only the report stays; history is optional and chosen by
-  the user), `bunny` (dev phase: the existing zone, a private `yomizaka/…` prefix, signed URLs), `s3` (any S3-compatible
+  the user), `bunny` (dev phase: the existing zone, a private `verikora/…` prefix, signed URLs), `s3` (any S3-compatible
   provider: DigitalOcean Spaces `tor1` in production, or a customer's own bucket, or a local S3 server in CI: SeaweedFS, MinIO no longer publishes images).
 - **Residency**: Bunny Storage has **no Canadian region**: it is for **development and fictional data only**; a production
   deployment refuses it. Production is DigitalOcean Spaces `tor1` (Canada), server-side encrypted, 5 USD/month — **the

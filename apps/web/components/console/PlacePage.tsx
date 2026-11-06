@@ -31,7 +31,7 @@ export async function PlacePage({ params, searchParams }: Readonly<Props>) {
   const dict = getDictionary(locale).console;
   const t = dict.organisation;
   const tags = await org.listTags(query, owner);
-  // A document's tags are the workspace's (yomizaka#324): markers, the ALL-tags filter. A collection's and a folder's stay the first layer's.
+  // A document's tags are the workspace's (verikora#324): markers, the ALL-tags filter. A collection's and a folder's stay the first layer's.
   const workspace = workspaceFor({ clock: systemClock });
   const documentTags = (await workspace.tags.list(owner, KIND.document)).map(asTag);
   const overview = await org.overview(query, owner);

@@ -1,9 +1,9 @@
-import type { FlowDefinition, FlowEnvironment } from "@yomizaka/core";
+import type { FlowDefinition, FlowEnvironment } from "@verikora/core";
 
 /**
  * The flows that exist today, as definitions (ADR-0003): seeded into the database at start, once (an existing key is left
  * alone — the administration owns it afterwards), and the only fallback the public pages use when the database cannot be
- * reached. The Québec ruleset is data of the Orazaka pack `document-validation`; the French and Walloon ones are offered to
+ * reached. The Québec ruleset is data of the Sovkora pack `document-validation`; the French and Walloon ones are offered to
  * the landlord and the tenant alike.
  */
 const COMPLIANCE = {

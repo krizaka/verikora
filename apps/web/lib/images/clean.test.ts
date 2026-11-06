@@ -9,9 +9,9 @@ import { estimateSkew } from "./deskew";
 import { photoOfPage } from "./fixtures";
 import { pagesToPdf } from "./pdf";
 import { ImageError } from "./port";
-import { YOMIZAKA_IMAGE_RULES } from "./rules";
+import { VERIKORA_IMAGE_RULES } from "./rules";
 
-const cleaner = createImageCleaner(YOMIZAKA_IMAGE_RULES);
+const cleaner = createImageCleaner(VERIKORA_IMAGE_RULES);
 const grayOf = async (jpeg: Uint8Array) => {
   const { data, info } = await sharp(jpeg)
     .resize({ width: 600 })

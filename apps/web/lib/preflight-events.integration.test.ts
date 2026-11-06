@@ -3,8 +3,8 @@ import { beforeAll, describe, expect, it } from "vitest";
 import { migrate, query } from "./db";
 import { findReusableAnalysis, preflightMetrics, recordPreflight } from "./preflight-events";
 
-/** Reuse and metrics against a real PostgreSQL (skipped without YOMIZAKA_DB_IT=1 and DATABASE_URL). */
-const enabled = process.env.YOMIZAKA_DB_IT === "1" && !!process.env.DATABASE_URL;
+/** Reuse and metrics against a real PostgreSQL (skipped without DATABASE_IT=1 and DATABASE_URL). */
+const enabled = process.env.DATABASE_IT === "1" && !!process.env.DATABASE_URL;
 
 describe.runIf(enabled)("pre-flight: reuse and metrics", () => {
   // The newest Studio version in force is the newest row: each case takes a fresh, larger one (a shared test database keeps history).
@@ -16,7 +16,7 @@ describe.runIf(enabled)("pre-flight: reuse and metrics", () => {
   const tenant = async () =>
     (
       await query<{ id: string }>("INSERT INTO accounts (email, password_hash) VALUES ($1, 'x') RETURNING id", [
-        `p-${Math.random().toString(36).slice(2)}@yomizaka.test`,
+        `p-${Math.random().toString(36).slice(2)}@verikora.test`,
       ])
     )[0]!.id;
   const document = async (owner: string, sha: string) =>

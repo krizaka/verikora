@@ -13,7 +13,7 @@ import { asLocale } from "@/lib/i18n";
 export const dynamic = "force-dynamic";
 export const metadata: Metadata = { robots: { index: false, follow: false } };
 
-/** The signed-in space: no session, no page. The administration lives apart, on admin.yomizaka.com (app/[locale]/(admin)). */
+/** The signed-in space: no session, no page. The administration lives apart, on admin.verikora.com (app/[locale]/(admin)). */
 export default async function ConsoleLayout({
   children,
   params,
@@ -21,7 +21,7 @@ export default async function ConsoleLayout({
   const locale = asLocale((await params).locale);
   const session = await pageSession();
   if (!session) redirect(`/${locale}/sign-in`);
-  // « Dossiers » joins the rail only for the people offered the applicant-file flow (the section map, yomizaka#319).
+  // « Dossiers » joins the rail only for the people offered the applicant-file flow (the section map, verikora#319).
   const applicantFiles = applicantFilesOffered(
     await availableFlows(appEnvironment()),
     session.account.perspective ?? null,

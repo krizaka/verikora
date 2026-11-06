@@ -1,6 +1,6 @@
 import { readFileSync } from "node:fs";
 
-import type { OrazakaRun } from "@yomizaka/core";
+import type { SovkoraRun } from "@verikora/core";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 
 import { seedAudits } from "../audit-credits.testkit";
@@ -8,17 +8,17 @@ import { migrate, pool, query } from "../db";
 import { withAdvisoryLock } from "../db";
 import { seedDatabase } from "../flows";
 import { refuse } from "../http";
-import { useOrazakaClient } from "../orazaka";
 import { cleanPdf } from "../preflight/fixtures";
 import { settingsFor } from "../settings/guards";
 import { appSettings, resetAppSettings } from "../settings/instance";
 import { GLOBAL } from "../settings/service";
+import { useSovkoraClient } from "../sovkora";
 import { createBatch } from "./run";
 import { dueBatches, TICK_LOCK, tickBatches } from "./tick";
 
-/** A batch that advances without anyone opening it (yomizaka#240), against PostgreSQL and a fake Orazaka (CI's service; locally YOMIZAKA_DB_IT=1 DATABASE_URL=…). */
-const enabled = process.env.YOMIZAKA_DB_IT === "1" && !!process.env.DATABASE_URL;
-const REPORT = readFileSync(new URL("../fixtures/orazaka-compliance-qc-1.2.0.json", import.meta.url), "utf8");
+/** A batch that advances without anyone opening it (verikora#240), against PostgreSQL and a fake Sovkora (CI's service; locally DATABASE_IT=1 DATABASE_URL=…). */
+const enabled = process.env.DATABASE_IT === "1" && !!process.env.DATABASE_URL;
+const REPORT = readFileSync(new URL("../fixtures/sovkora-compliance-qc-1.2.0.json", import.meta.url), "utf8");
 
 describe.runIf(enabled)("the batch tick", () => {
   const stamp = `${Date.now()}-${Math.random().toString(16).slice(2, 8)}`;
@@ -28,7 +28,7 @@ describe.runIf(enabled)("the batch tick", () => {
   let owner = { id: "", perspective: null };
   let other = { id: "", perspective: null };
   const pdf = async (name: string, text: string) => ({ name, type: "application/pdf", bytes: await cleanPdf(text) });
-  const run = (id: string): OrazakaRun => ({
+  const run = (id: string): SovkoraRun => ({
     id,
     studioKey: "compliance-check",
     blueprintVersion: "1.0.0",
@@ -45,9 +45,9 @@ describe.runIf(enabled)("the batch tick", () => {
   beforeAll(async () => {
     await migrate();
     await seedDatabase();
-    useOrazakaClient({
+    useSovkoraClient({
       startRun: async () => {
-        if (state.busy) throw refuse(429, "ORAZAKA_BUSY", "busy", { retryAfter: 15 });
+        if (state.busy) throw refuse(429, "SOVKORA_BUSY", "busy", { retryAfter: 15 });
         const id = `run-tick-${stamp}-${++state.n}`;
         runs.set(id, "RUNNING");
         return run(id);
@@ -60,14 +60,14 @@ describe.runIf(enabled)("the batch tick", () => {
     const make = async (label: string) =>
       (
         await query<{ id: string }>("INSERT INTO accounts (email) VALUES ($1) RETURNING id", [
-          `tick-${label}-${stamp}@yomizaka.test`,
+          `tick-${label}-${stamp}@verikora.test`,
         ])
       )[0]!.id;
     owner = { id: await make("a"), perspective: null };
     other = { id: await make("b"), perspective: null };
   });
   afterAll(async () => {
-    useOrazakaClient(null);
+    useSovkoraClient(null);
     for (const key of ["limits.batchTickBatches", "limits.batchTickMaxAgeHours"] as const)
       await appSettings().reset(actor, GLOBAL, key, new Date());
     resetAppSettings();
@@ -93,7 +93,7 @@ describe.runIf(enabled)("the batch tick", () => {
   it("a busy engine: the rows wait, then start by themselves at a later look — no row fails", async () => {
     state.busy = true;
     const created = await open(owner, "occupé", "tick-b.pdf");
-    expect(created.pausedBy).toBe("ORAZAKA_BUSY");
+    expect(created.pausedBy).toBe("SOVKORA_BUSY");
     state.busy = false;
     await tickBatches(new Date(), "dev", undefined, [owner.id, other.id]);
     expect(

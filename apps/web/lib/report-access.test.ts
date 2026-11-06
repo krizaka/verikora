@@ -36,7 +36,7 @@ describe("accessTo", () => {
 describe("referenceOf", () => {
   const sha = "a".repeat(64);
   const file = (json: string) =>
-    `<html><script type="application/json" id="yomizaka-attestation">${json}</script></html>`;
+    `<html><script type="application/json" id="verikora-attestation">${json}</script></html>`;
   it("reads the run id and the document hash a report claims", () => {
     expect(
       referenceOf(file(JSON.stringify({ payload: { check: { runId: "r1" }, document: { sha256: sha } } }))),

@@ -10,7 +10,7 @@ jest.mock("expo-router", () => ({
   useRouter: () => ({ navigate: mockNavigate, replace: jest.fn() }),
   usePathname: () => "/fr/app",
 }));
-jest.mock("@/config", () => ({ queries: { me: () => ({ queryKey: ["yomizaka", "me"] }) } }));
+jest.mock("@/config", () => ({ queries: { me: () => ({ queryKey: ["verikora", "me"] }) } }));
 // The server state is @krizaka/query's (tested there); here, the account it answers.
 jest.mock(
   "@krizaka/query",
@@ -33,7 +33,7 @@ describe("a tab's header", () => {
     expect(mockNavigate).toHaveBeenCalledWith("/fr/app/settings");
   });
 
-  it("holds « Vérifier un document » as its « + », the one action of every tab (yomizaka#319)", async () => {
+  it("holds « Vérifier un document » as its « + », the one action of every tab (verikora#319)", async () => {
     await render(wrap(<AppHeader title="Bibliothèque" />));
     await fireEvent.press(await screen.findByRole("button", { name: "Vérifier un document" }));
     expect(mockNavigate).toHaveBeenCalledWith("/fr/app/check");

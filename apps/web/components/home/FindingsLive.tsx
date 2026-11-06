@@ -1,6 +1,6 @@
 "use client";
 
-import type { ComplianceReport } from "@yomizaka/core";
+import type { ComplianceReport } from "@verikora/core";
 
 import { FindingList, VerdictBand } from "@/components/console/ReportFace";
 

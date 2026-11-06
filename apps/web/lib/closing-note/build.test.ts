@@ -10,7 +10,7 @@ import { LANGS, NOTE_KIND, NOTE_SOURCE, SEVERITY, VERDICT } from "./vocabulary";
 
 const ROOT = join(__dirname, "../..");
 
-/** The compliance reports Orazaka really returned, recorded with the app: one fixture per pack and per outcome. */
+/** The compliance reports Sovkora really returned, recorded with the app: one fixture per pack and per outcome. */
 function reportsIn(dir: string) {
   return readdirSync(join(ROOT, dir))
     .filter((f) => f.endsWith(".json"))

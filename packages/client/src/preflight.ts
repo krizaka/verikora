@@ -1,4 +1,4 @@
-import { ACCEPTED_TYPES, type AcceptedType, MAX_FILE_BYTES } from "@yomizaka/core";
+import { ACCEPTED_TYPES, type AcceptedType, MAX_FILE_BYTES } from "@verikora/core";
 
 /** Why a file is refused before it leaves the phone: the same limits as the web's pre-flight, read from `/api/me/app`. */
 export const PREFLIGHT_REASON = { empty: "empty", tooLarge: "tooLarge", unsupportedType: "unsupportedType" } as const;

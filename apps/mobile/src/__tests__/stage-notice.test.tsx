@@ -22,7 +22,7 @@ const wrap = async (node: React.ReactElement) =>
     </SafeAreaProvider>,
   );
 
-describe("the development-version notice of the phone app (yomizaka#364)", () => {
+describe("the development-version notice of the phone app (verikora#364)", () => {
   it("shows in the stage dev", async () => {
     await wrap(<StageNotice />);
     expect(screen.getByText("Version de développement")).toBeTruthy();

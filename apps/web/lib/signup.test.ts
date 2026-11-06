@@ -1,6 +1,8 @@
 import { renderEmail } from "@krizaka/email";
 import { describe, expect, it } from "vitest";
 
+import { BRAND_ID } from "@/lib/brand";
+
 import { signupOpen } from "./env";
 import type { AccountMail } from "./mailer";
 import { isVerifyToken, newVerifyToken, signUp, signUpBody, VERIFY_TTL_HOURS, verifyEmail } from "./signup";
@@ -47,7 +49,7 @@ function fakeDb() {
     accounts,
     tokens,
     mails,
-    deps: { query, mail: async (m: AccountMail) => void mails.push(m), baseUrl: "https://www.yomizaka.com" },
+    deps: { query, mail: async (m: AccountMail) => void mails.push(m), baseUrl: "https://www.verikora.com" },
   };
 }
 const input = signUpBody.parse({
@@ -121,16 +123,17 @@ describe("sign-up", () => {
   });
 
   // TODO(krizaka-internal#2038): @krizaka/email still renders the code name; the package must read @krizaka/org.
-  it("the mail promises nothing about the check, in its language: it confirms an address, in Yomizaka's brand and no other", async () => {
+  it("the mail promises nothing about the check, in its language: it confirms an address, in Verikora's brand and no other", async () => {
     for (const locale of ["fr", "en"] as const) {
       const mail = await renderEmail(
         "confirmEmail",
-        { brand: "yomizaka", confirmUrl: "https://www.yomizaka.com/fr/verify-email?token=x", hours: VERIFY_TTL_HOURS },
+        { brand: BRAND_ID, confirmUrl: "https://www.verikora.com/fr/verify-email?token=x", hours: VERIFY_TTL_HOURS },
         { locale },
       );
+      // `@krizaka/email` 0.x still writes the former name until its major release (krizaka-internal#2659).
       expect(mail.text).toContain("Yomizaka");
       expect(mail.text).not.toMatch(/conforme|compliant|garanti|guarantee|approuv|approved/i);
-      expect(mail.html + mail.text).not.toMatch(/Orazaka|Akinaza/);
+      expect(mail.html + mail.text).not.toMatch(/Sovkora|Folioviv/);
     }
     expect(newVerifyToken()).not.toBe(newVerifyToken());
   });

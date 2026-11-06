@@ -1,6 +1,6 @@
 "use client";
 
-import type { ComplianceReport } from "@yomizaka/core";
+import type { ComplianceReport } from "@verikora/core";
 import dynamic from "next/dynamic";
 
 import type { Locale } from "@/lib/i18n";

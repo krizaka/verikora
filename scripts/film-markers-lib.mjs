@@ -1,4 +1,4 @@
-// The markers of a film (yomizaka#1968, « bug means a missing guard »): while a showcase journey runs, it probes the page and
+// The markers of a film (verikora#1968, « bug means a missing guard »): while a showcase journey runs, it probes the page and
 // writes `<film>.markers.json`; `film-trim.mjs` refuses a film whose markers show an error, an empty state or the dev banner, whose
 // language is not the one in its name, whose shape is not its platform's frame, or that does not end on a result.
 // Pure parts here (tested by film-markers.test.mjs); the probe runs in the page.

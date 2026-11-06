@@ -1,9 +1,9 @@
-import { CHECKS_TABS, sectionsFor } from "@yomizaka/core";
+import { CHECKS_TABS, sectionsFor } from "@verikora/core";
 
 import { routes } from "./links";
 import { checksTabOf, phoneTabs } from "./tabs";
 
-/** The phone's tab bar is the one section map (yomizaka#319): no list of its own. */
+/** The phone's tab bar is the one section map (verikora#319): no list of its own. */
 describe("the phone's tabs", () => {
   it("are the section map's phone row, in its order, each at the web's path", () => {
     expect(phoneTabs("fr").map((tab) => tab.id)).toEqual(sectionsFor("phone").map((s) => s.id));

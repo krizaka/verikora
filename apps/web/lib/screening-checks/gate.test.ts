@@ -19,7 +19,7 @@ const done = (blocker: string, over: Partial<GateRow> = {}) =>
   row(blocker, { status: "done", evidence_on: "2026-11-02", evidence_ref: "signed PDF, folder X", ...over });
 const call = { userId: "u", runId: "r", subject: { subjectId: "s", firstName: "A", lastName: "B" }, region: "QC" };
 
-describe("the compliance gate — live mode refuses to start while any blocker is open (yomizaka#135)", () => {
+describe("the compliance gate — live mode refuses to start while any blocker is open (verikora#135)", () => {
   const all = [
     "reseller-agreements",
     "lawyer-credit-for-rental",

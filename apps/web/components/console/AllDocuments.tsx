@@ -3,7 +3,7 @@
 import { EmptyState } from "@krizaka/ui/empty-state";
 import { Mascot } from "@krizaka/ui/mascots";
 import { PageHeader } from "@krizaka/ui/page-header";
-import type { DocumentSummary } from "@yomizaka/core";
+import type { DocumentSummary } from "@verikora/core";
 
 import { ButtonLink } from "@/components/ButtonLink";
 import { CONSOLE_ROUTES } from "@/lib/console-nav";
@@ -53,7 +53,7 @@ export function AllDocuments({
     <div className="flex flex-col gap-6" data-testid="all-documents">
       <PageHeader title={say("documentsPage.title")} description={say("documentsPage.lead")} />
       {tabs.length > 1 ? <BookmarkDividers tabs={tabs} path={path} /> : null}
-      {/* The bookmarks as a filter (yomizaka#339): the address is the state, `?tags=`, every bookmark asked for must be worn. */}
+      {/* The bookmarks as a filter (verikora#339): the address is the state, `?tags=`, every bookmark asked for must be worn. */}
       {bookmarks.length > 0 ? (
         <PlaceFilters
           tags={bookmarks}

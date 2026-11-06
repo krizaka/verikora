@@ -32,10 +32,10 @@ const DATE = { en: "en-CA", fr: "fr-CA" } as const;
 const ICONS = { line: CheckIcon, file: EyeIcon, find: SearchIcon } as const;
 
 /**
- * The home is the whole public site (Simplify Yomizaka, krizaka/yomizaka#120), on `LandingPage` since the UX review's Y9: the
+ * The home is the whole public site (Simplify Verikora, krizaka/verikora#120), on `LandingPage` since the UX review's Y9: the
  * promise beside the product's answer itself — the recorded check in a browser frame (the lease line, the finding, its article:
  * nothing drawn by hand, no screenshot until the final design is captured), the figures of that run under it —, the three
- * things as a bento, the run's facts and the owl once, who it is for, one way in (sign-in). Orazaka, the engine, is named
+ * things as a bento, the run's facts and the owl once, who it is for, one way in (sign-in). Sovkora, the engine, is named
  * once, in a quiet line under the proof. Static: built from the recording.
  */
 export default async function Home({ params }: Readonly<{ params: Promise<{ locale: string }> }>) {

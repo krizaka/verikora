@@ -10,7 +10,7 @@ import { DropdownMenu } from "@krizaka/ui/dropdown-menu";
 import { createKrizakaForm } from "@krizaka/ui/form";
 import { RadioGroup } from "@krizaka/ui/radio-group";
 import { TagSelector } from "@krizaka/ui/tag-selector";
-import { AVATAR_KIND, type CollectionAvatar as CollectionAvatarData } from "@yomizaka/core";
+import { AVATAR_KIND, type CollectionAvatar as CollectionAvatarData } from "@verikora/core";
 import { useRouter } from "next/navigation";
 import { type ReactNode, useState } from "react";
 import { z } from "zod";
@@ -480,7 +480,7 @@ function TagsDialog({
 }: Readonly<{ kind: ItemKind; id: string; tags: TagOption[]; current: string[]; onClose: () => void }>) {
   const { say } = useSay();
   const [value, setValue] = useState<string[]>(current);
-  // A document's tags are the workspace's (yomizaka#324); a collection's and a folder's are the first layer's.
+  // A document's tags are the workspace's (verikora#324); a collection's and a folder's are the first layer's.
   const save = useAction<string[]>(
     (tagIds) =>
       kind === "document"

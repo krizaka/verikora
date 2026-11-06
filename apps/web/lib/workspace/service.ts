@@ -21,7 +21,7 @@ import { KIND, KINDS, OWNER_ROLE, WORKSPACE } from "./decl";
 import { DEFAULT_CONFIGS } from "./defaults";
 
 /**
- * Yomizaka's wiring of the workspace layer (krizaka-ts ADR-003, yomizaka#324): the package owns the rules (roles, transitions,
+ * Verikora's wiring of the workspace layer (krizaka-ts ADR-003, verikora#324): the package owns the rules (roles, transitions,
  * the row locks, one audit line per entity); this module gives it the account's transaction, the audit trail, the clock and the
  * product's own consequence of a decision. Nothing here decides who may do what — the layer's configuration does.
  */

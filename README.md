@@ -1,27 +1,27 @@
 <p align="center">
   <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="https://krizaka-assets.b-cdn.net/brand/yomizaka/logo-dark.svg">
-    <img src="https://krizaka-assets.b-cdn.net/brand/yomizaka/logo-light.svg" alt="Verikora" width="96">
+    <source media="(prefers-color-scheme: dark)" srcset="https://krizaka-assets.b-cdn.net/brand/verikora/logo-dark.svg">
+    <img src="https://krizaka-assets.b-cdn.net/brand/verikora/logo-light.svg" alt="Verikora" width="96">
   </picture>
 </p>
 
 # Verikora
 
-> **Verikora by Krizaka** is the commercial name; `yomizaka` is the code name (repository, packages, hosts, API paths). Users read
+> **Verikora by Krizaka** is the commercial name; `verikora` is the code name (repository, packages, hosts, API paths). Users read
 > Verikora everywhere: the displayed name is the admin setting `brand.displayName`, and `pnpm run check:code-names` fails on a
 > code name in a catalogue or a built page.
 
-**Read before you sign.** Drop a lease, a contract, an invoice: Orazaka reads it against the law, examines the PDF for
+**Read before you sign.** Drop a lease, a contract, an invoice: Sovkora reads it against the law, examines the PDF for
 signs of editing, and shows you every line it relies on. Keep your documents, find any clause again in a second — and
 know exactly which run produced each finding.
 
-[![CI](https://github.com/krizaka/yomizaka/actions/workflows/ci.yml/badge.svg)](https://github.com/krizaka/yomizaka/actions/workflows/ci.yml)
-[![OpenSSF Scorecard](https://api.scorecard.dev/projects/github.com/krizaka/yomizaka/badge)](https://scorecard.dev/viewer/?uri=github.com/krizaka/yomizaka)
+[![CI](https://github.com/krizaka/verikora/actions/workflows/ci.yml/badge.svg)](https://github.com/krizaka/verikora/actions/workflows/ci.yml)
+[![OpenSSF Scorecard](https://api.scorecard.dev/projects/github.com/krizaka/verikora/badge)](https://scorecard.dev/viewer/?uri=github.com/krizaka/verikora)
 [![License: FSL-1.1-ALv2](https://img.shields.io/badge/license-FSL--1.1--ALv2-blue.svg)](LICENSE.md)
-[![dev.yomizaka.com](https://img.shields.io/badge/dev.yomizaka.com-Yomizaka-3c38b2)](https://dev.yomizaka.com)
-[![Quality Gate](https://sonarcloud.io/api/project_badges/measure?project=krizaka_yomizaka&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=krizaka_yomizaka) [![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=krizaka_yomizaka&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=krizaka_yomizaka) [![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=krizaka_yomizaka&metric=reliability_rating)](https://sonarcloud.io/summary/new_code?id=krizaka_yomizaka) [![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=krizaka_yomizaka&metric=sqale_rating)](https://sonarcloud.io/summary/new_code?id=krizaka_yomizaka) [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=krizaka_yomizaka&metric=coverage)](https://sonarcloud.io/summary/new_code?id=krizaka_yomizaka)
+[![dev.verikora.com](https://img.shields.io/badge/dev.verikora.com-Verikora-3c38b2)](https://dev.verikora.com)
+[![Quality Gate](https://sonarcloud.io/api/project_badges/measure?project=krizaka_verikora&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=krizaka_verikora) [![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=krizaka_verikora&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=krizaka_verikora) [![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=krizaka_verikora&metric=reliability_rating)](https://sonarcloud.io/summary/new_code?id=krizaka_verikora) [![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=krizaka_verikora&metric=sqale_rating)](https://sonarcloud.io/summary/new_code?id=krizaka_verikora) [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=krizaka_verikora&metric=coverage)](https://sonarcloud.io/summary/new_code?id=krizaka_verikora)
 
-Yomizaka (読み *yomi*, reading) is a Krizaka product in development: **sign-up is closed**, the dev site shows what it does
+Verikora (読み *yomi*, reading) is a Krizaka product in development: **sign-up is closed**, the dev site shows what it does
 and a real run. The Dev preview is **web only** (phone-first); the phone app (`apps/mobile`, iOS and Android) and the Mac app (`apps/desktop`) are built beside it and are not part of it.
 
 ## What it does
@@ -30,12 +30,12 @@ and a real run. The Dev preview is **web only** (phone-first); the phone app (`a
   layer read for search (in an isolated worker, after the upload answered 202 Accepted), its SHA-256 recorded; a file sent twice is one document.
 - **Document verification** — a lease read entry by entry against the extraction matrices and technical templates of its jurisdiction
   (Québec, France, Wallonia) in force on a date, tools validated by the client's counsel: each finding gives its entry, severity, verdict,
-  citation and the exact passage, highlighted in the text. Yomizaka verifies documents and screens files; it never verifies an identity.
-- **Signs of editing** — a PDF or office file (.docx, .odt) examined as a file by Orazaka (metadata, dates, revision history): signals at three
+  citation and the exact passage, highlighted in the text. Verikora verifies documents and screens files; it never verifies an identity.
+- **Signs of editing** — a PDF or office file (.docx, .odt) examined as a file by Sovkora (metadata, dates, revision history): signals at three
   plain levels, never a score, never a "fake" stamp.
 - **Search** — every document and every finding, one field (PostgreSQL full text, French and English alike).
-- **Traced** — every analysis is an **Orazaka run** (the document-validation pack's Studios); its run id is kept and shown.
-  Yomizaka never calls a model.
+- **Traced** — every analysis is an **Sovkora run** (the document-validation pack's Studios); its run id is kept and shown.
+  Verikora never calls a model.
 - **A signed report** — a finished check exports a report as HTML and as a signed PDF (a visible signature page, an Ed25519
   attestation); only a signed-in member the owner gave access to can verify it (`/app/verifications/report`, ADR-0002). A specimen is never signed.
 - **Who it is for** — a « Pour qui ? » picker (tenant, landlord, freelancer, business, other). The tenant and the landlord have
@@ -47,7 +47,7 @@ and a real run. The Dev preview is **web only** (phone-first); the phone app (`a
 - **A short public site** — the home (who it is for, one real check recorded, sign-in), sign-in and the privacy notice; nothing else is public (`docs/UX_DECISIONS.md` § 9).
 - **« Forgot your password? »** — from the sign-in page: a link mailed through the mail port (the same answer whether or not the address has an account, 3 requests an hour per address), used once, valid for the `auth.passwordResetMinutes` setting (30 by default, 5 to 1440, in the administration's General group); it sets the new password and signs every session out. Needs the `MAIL_` variables; without them the link is not offered. The audit trail records each request and each reset, never an address, a link or a password.
 
-The administration is **admin.yomizaka.com** (the same app, routed by host): people, documents, Orazaka runs, flows, operations
+The administration is **admin.verikora.com** (the same app, routed by host): people, documents, Sovkora runs, flows, operations
 and an audit log of every operator action. It answers only addresses of `AUTH_ALLOWED_IPS` and an administrator's session, and is never indexed.
 
 ## API
@@ -57,10 +57,10 @@ A Pro account can run checks and batches from its own tools with an API key: `PO
 
 ## Next
 
-Yomizaka will also check **identity documents** (photos and scans as well as PDFs) for other Krizaka products that need a
-document verified before an account can be opened — served by API, analysed through Orazaka, every finding recorded with
+Verikora will also check **identity documents** (photos and scans as well as PDFs) for other Krizaka products that need a
+document verified before an account can be opened — served by API, analysed through Sovkora, every finding recorded with
 its evidence, and a human decides anything unclear. This is not built yet: it is tracked in
-[#7](https://github.com/krizaka/yomizaka/issues/7).
+[#7](https://github.com/krizaka/verikora/issues/7).
 
 ## Start
 
@@ -86,13 +86,13 @@ Unit tests (`pnpm test`), the page audit (`scripts/check-app-pages.mjs`) and the
 | `scripts/check-overflow.mjs` | the responsive crawl (dark and light, 360–1440 px, no console error), run in CI |
 | `scripts/check-app-pages.mjs` | the signed-in pages rendered as the seeded persona (`E2E_EMAIL`, `E2E_PASSWORD`): exactly one `h1`, no overflow at 360–1440 px, the header's action on screen, no unnamed button — run in CI after the build (`@krizaka/page-audit` holds what both crawls measure) |
 | `scripts/check-admin-live.mjs` | the walk of the live administration from an allowed address (`pnpm run check:admin-live`) |
-| `deploy/` | the Docker image and the DigitalOcean App Platform spec (`dev.yomizaka.com`) |
+| `deploy/` | the Docker image and the DigitalOcean App Platform spec (`dev.verikora.com`) |
 
 ## Demo (the persona Éric) and the phone's Maestro flows
 
 - `pnpm run demo:seed -- --persona eric [--reset]` seeds Éric Tremblay (landlord) with his collections, documents and seeded checks, on **dev and local only**: it refuses any `APP_ENVIRONMENT` but `dev` before it opens a connection (tested). Its login is `APP_DEMO_ACCOUNT_EMAIL` / `APP_DEMO_ACCOUNT_PASSWORD`, never typed in the repository; see `docs/demo-data.md`.
 - `pnpm run dev:seed` (`demo-seed/cli.mjs --cast`) seeds the **whole cast** of `@krizaka/org` (krizaka/.github#356): Éric Tremblay with his data set and Mira Haddad (the administrator) and Camille Tremblay, the same three people as the deployed QA accounts. It is the one seed of local, CI (`ci-after-build.sh`, `ci-mobile-backend.sh`), Maestro and the recorders; `--check` compares the result to `scripts/demo-seed/fingerprint.json` (counts per table), so a dev database and a laptop hold the same data. `apps/web/scripts/qa-accounts.mjs` gives the QA accounts the same persona names. Names live in the cast only (`scripts/cast-drift.test.mjs` guards it); e-mails and passwords come from the environment.
-- **Reproduce a hot fix locally**: `export LOCAL_DB_PASSWORD=$(openssl rand -hex 12)`, `docker compose -f deploy/docker/compose.yml up -d`, then `export DATABASE_URL=postgres://yomizaka:$LOCAL_DB_PASSWORD@localhost:5432/yomizaka`, `pnpm run dev:seed` (on this machine the cast signs in with `eric@demo.yomizaka.test` / `mira@demo.yomizaka.test`, password `local-cast-password-0123`), `pnpm dev`, sign in as Éric.
+- **Reproduce a hot fix locally**: `export LOCAL_DB_PASSWORD=$(openssl rand -hex 12)`, `docker compose -f deploy/docker/compose.yml up -d`, then `export DATABASE_URL=postgres://verikora:$LOCAL_DB_PASSWORD@localhost:5432/verikora`, `pnpm run dev:seed` (on this machine the cast signs in with `eric@demo.verikora.test` / `mira@demo.verikora.test`, password `local-cast-password-0123`), `pnpm dev`, sign in as Éric.
 - `apps/mobile/.maestro/` holds the flows, which sign in through `shared/sign-in.yaml` with `PERSONA_EMAIL` / `PERSONA_PASSWORD`. `smoke` and `tabs` (a capture per tab: Accueil, Vérifications, Lots) are tagged `ci`; `check-document` runs a paid engine check through the system picker and is tagged `manual`.
 - **In CI**, every pull request runs them on an Android emulator (`mobile-ci.yml` → the org's `mobile-e2e.yml`, krizaka/.github#241): `scripts/ci-mobile-backend.sh` starts a throwaway PostgreSQL and the built web app and seeds Éric with a password made for the run, so the demo data is reset each time and no shared account is used. The check is **`mobile-e2e / gate`**; the screenshots, the screen recording and the JUnit report are the `maestro-e2e` artifact of the run, which is where a PR's phone captures come from.
 - Locally: `maestro test -e PERSONA_EMAIL=… -e PERSONA_PASSWORD=… --exclude-tags manual apps/mobile/.maestro` against a simulator signed into a dev backend.
@@ -104,15 +104,15 @@ Every variable is declared once in `apps/web/lib/env.ts` (see `.env.example`); a
 | Variable | Meaning |
 | :-- | :-- |
 | `APP_ENVIRONMENT` | `dev` or `prod`: which flows are enabled |
-| `APP_PUBLIC_URL` | the public address (www.yomizaka.com: canonical links, indexed) |
+| `APP_PUBLIC_URL` | the public address (www.verikora.com: canonical links, indexed) |
 | `APP_DEMO_ACCOUNT_EMAIL`, `APP_DEMO_ACCOUNT_PASSWORD` | optional credentials for the dev/local demo persona seed |
-| `APP_DEV_HOST` | the development address (dev.yomizaka.com): pages go to www with a 308, the API and /.well-known keep serving, noindex |
+| `APP_DEV_HOST` | the development address (dev.verikora.com): pages go to www with a 308, the API and /.well-known keep serving, noindex |
 | `APP_IOS_TEAM_ID` | the Apple team that signs the iOS app: `/.well-known/apple-app-site-association` (universal links; 404 while unset) |
 | `APP_ANDROID_CERT_SHA256` | the SHA-256 fingerprint(s) of the Android app's signing certificate: `/.well-known/assetlinks.json` (404 while unset) |
 | `APP_VISUAL_NOW` | an ISO instant: the date the console writes as « today » in the visual runs (dev only; refused in production) |
 | `APP_SEARCH_INDEXING` | `on` or `off`: `off` answers noindex everywhere |
 | `APP_REPORT_SIGNING_KEY` | the Ed25519 key that signs reports |
-| `DATABASE_URL`, `DATABASE_CA_CERT` | PostgreSQL (in production the PgBouncer pool `pool-yomizaka`) and its CA |
+| `DATABASE_URL`, `DATABASE_CA_CERT` | PostgreSQL (in production the PgBouncer pool `pool-verikora`) and its CA |
 | `DATABASE_DIRECT_URL` | the database reached directly: migrations and session advisory locks need one backend; unset, `DATABASE_URL` |
 | `DATABASE_MAX_CONNECTIONS` | the size of the connection pool (default 5) |
 | `AUTH_SESSION_SECRET` | keys the session hashes (≥ 32 characters in production) |
@@ -125,9 +125,9 @@ Every variable is declared once in `apps/web/lib/env.ts` (see `.env.example`); a
 | `APP_DOCUMENTS_BACKFILL` | `on` (default), `dry-run` or `off`: the sweep moves the bytes still in `documents.content` to the store, SHA-256 checked, a few documents per look (ADR-0012); `dry-run` only logs the count |
 | `APP_PURGE_AFTER_HOURS` | a document that is not kept is purged after its check; one never checked, after this many hours (default 24) |
 | `MEDIA_VAULT_KEY` | the key-encryption key of the storage providers (ADR-005; 32 bytes in base64; a secret): the admin's providers and their credentials live in the database, sealed under it. The only storage variable a deployment needs; until it is set, `APP_SETTINGS_ENCRYPTION_KEY` plays its part |
-| `MEDIA_CLOUD_DROPBOX_CLIENT_ID`, `MEDIA_CLOUD_DROPBOX_CLIENT_SECRET`, `MEDIA_CLOUD_GOOGLE_CLIENT_ID`, `MEDIA_CLOUD_GOOGLE_CLIENT_SECRET`, `MEDIA_CLOUD_MICROSOFT_CLIENT_ID`, `MEDIA_CLOUD_MICROSOFT_CLIENT_SECRET` | the app registrations at the clouds a person may connect for their kept documents (yomizaka#530); a cloud without its client id is not offered; the secrets are DO SECRETs |
-| `MEDIA_DOCUMENTS_PROVIDER` | **bootstrap only** (yomizaka#523): read once, at the first start with no provider in the database, to import the provider the deployment already used; afterwards the admin's choice (Admin, Storage) decides. Where a kept document lives (ADR-0007): `none` (default, nothing kept), `bunny` (development and fictional data only, refused in production) or `s3` (DigitalOcean Spaces `tor1`, a workspace's own bucket, a local test server) |
-| `MEDIA_DOCUMENTS_PREFIX`, `MEDIA_DOCUMENTS_ENCRYPTION_KEY` | the prefix of every object (default `yomizaka`) and the AES-256-GCM key (32 bytes, base64; a secret) that encrypts it before it leaves |
+| `MEDIA_CLOUD_DROPBOX_CLIENT_ID`, `MEDIA_CLOUD_DROPBOX_CLIENT_SECRET`, `MEDIA_CLOUD_GOOGLE_CLIENT_ID`, `MEDIA_CLOUD_GOOGLE_CLIENT_SECRET`, `MEDIA_CLOUD_MICROSOFT_CLIENT_ID`, `MEDIA_CLOUD_MICROSOFT_CLIENT_SECRET` | the app registrations at the clouds a person may connect for their kept documents (verikora#530); a cloud without its client id is not offered; the secrets are DO SECRETs |
+| `MEDIA_DOCUMENTS_PROVIDER` | **bootstrap only** (verikora#523): read once, at the first start with no provider in the database, to import the provider the deployment already used; afterwards the admin's choice (Admin, Storage) decides. Where a kept document lives (ADR-0007): `none` (default, nothing kept), `bunny` (development and fictional data only, refused in production) or `s3` (DigitalOcean Spaces `tor1`, a workspace's own bucket, a local test server) |
+| `MEDIA_DOCUMENTS_PREFIX`, `MEDIA_DOCUMENTS_ENCRYPTION_KEY` | the prefix of every object (default `verikora`) and the AES-256-GCM key (32 bytes, base64; a secret) that encrypts it before it leaves |
 | `MEDIA_STORAGE_ENDPOINT`, `MEDIA_STORAGE_ZONE`, `MEDIA_STORAGE_API_KEY` | the Bunny Storage zone of the `bunny` adapter (the key is a secret) |
 | Admin, Storage | the admin adds a provider (Bunny for development, or any S3-compatible bucket), enters its keys once (sealed, never shown back), tests it, and makes it the default for documents and avatars. Every change is in the audit log. The residency text is generated from the tested configuration. Signed links live 15 minutes at most. No provider set: nothing is kept (503 `STORAGE_NOT_CONFIGURED`) |
 | `MEDIA_DOCUMENTS_PULL_HOSTNAME`, `MEDIA_DOCUMENTS_TOKEN_KEY` | the zone's private pull zone and its token-authentication key (a secret): with both the store hands out signed, expiring links (dev: `yomizaka-docs-dev`) |
@@ -136,11 +136,11 @@ Every variable is declared once in `apps/web/lib/env.ts` (see `.env.example`); a
 | `MAIL_API_KEY` | the vendor's key (a secret) |
 | `MAIL_DOMAIN` | the sending domain |
 | `MAIL_API_URL` | the vendor's API address (default `https://api.mailgun.net`) |
-| `MAIL_FROM` | the sender (default `Yomizaka <no-reply@MAIL_DOMAIN>`) |
+| `MAIL_FROM` | the sender (default `Verikora <no-reply@MAIL_DOMAIN>`) |
 | `MAIL_WEBHOOK_SIGNING_KEY` | the key the mail provider signs its bounce and complaint webhooks with (`/api/webhooks/mail`; 404 while unset) |
 | `AUTH_ALLOWED_IPS` | the addresses of the administration (empty in production = nobody) |
 | `ABUSE_CLIENT_IP_HEADER`, `ABUSE_TRUSTED_PROXY_HOPS` | where the client address is read |
-| `AI_PROVIDER`, `AI_API_URL`, `AI_API_KEY` | Orazaka's edge and the service key (`oz_…`) |
+| `AI_PROVIDER`, `AI_API_URL`, `AI_API_KEY` | Sovkora's edge and the service key (`oz_…`) |
 
 Rules for contributors and agents: [AGENTS.md](AGENTS.md). Security: [SECURITY.md](SECURITY.md).
 

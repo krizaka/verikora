@@ -22,7 +22,7 @@ vi.mock("../db", () => ({ query: async () => [] }));
 vi.mock("@/app/accounts-edge", () => ({ accountService: () => state.service, mailConfigured: () => state.mail }));
 
 const json = (method: string, body?: unknown) =>
-  new Request("https://dev.yomizaka.com/x", {
+  new Request("https://dev.verikora.com/x", {
     method,
     body: body === undefined ? undefined : JSON.stringify(body),
     headers: { "x-forwarded-for": "203.0.113.11", "content-type": "application/json" },
@@ -36,7 +36,7 @@ beforeEach(() => {
     id: "s1",
     account: {
       id: "22222222-2222-4222-8222-222222222222",
-      email: "eric@yomizaka.test",
+      email: "eric@verikora.test",
       perspective: null,
       role: "USER",
       locale: "fr",
@@ -68,7 +68,7 @@ describe("the account routes", () => {
   it("the e-mail change fails closed while mail is not configured", async () => {
     state.mail = false;
     const { POST } = await import("../../app/api/me/email/route");
-    const res = await POST(json("POST", { newEmail: "new@yomizaka.test", password: "x" }));
+    const res = await POST(json("POST", { newEmail: "new@verikora.test", password: "x" }));
     expect(res.status).toBe(503);
     expect(await res.json()).toMatchObject({ code: "MAIL_OFF" });
   });
@@ -81,14 +81,14 @@ describe("the account routes", () => {
       },
     };
     const { POST } = await import("../../app/api/me/delete/route");
-    const res = await POST(json("POST", { password: "x", email: "someone-else@yomizaka.test" }));
+    const res = await POST(json("POST", { password: "x", email: "someone-else@verikora.test" }));
     expect(res.status).toBe(400);
     expect(await res.json()).toMatchObject({ code: "EMAIL_MISMATCH" });
     expect(touched).toBe(false);
   });
 });
 
-describe("reading routes are not limited like writes (krizaka/yomizaka#215)", () => {
+describe("reading routes are not limited like writes (krizaka/verikora#215)", () => {
   it("allows many reads of the app configuration and the storage settings in an hour, while a write is still limited", async () => {
     state.service = { updateProfile: async () => ({ name: null, locale: "fr", avatarSeed: null }) };
     const { GET } = await import("../../app/api/me/app/route");

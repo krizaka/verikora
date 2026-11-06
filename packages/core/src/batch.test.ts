@@ -10,7 +10,7 @@ import {
   writeBatchManifest,
 } from "./batch";
 
-describe("a batch manifest (yomizaka#232)", () => {
+describe("a batch manifest (verikora#232)", () => {
   it("reads RFC 4180: quotes, doubled quotes, separators and line breaks inside quotes, CRLF, a BOM", () => {
     expect(parseCsv('﻿a,b\r\n"x, y","he said ""hi"""\n"line\nbreak",z\n\n')).toEqual([
       ["a", "b"],

@@ -1,4 +1,4 @@
-import type { CloudOwner, StorageKind } from "@yomizaka/core";
+import type { CloudOwner, StorageKind } from "@verikora/core";
 import type { QueryResultRow } from "pg";
 
 import { workingStore } from "@/app/active-store";
@@ -19,8 +19,8 @@ export const holderFrom =
     EXTERNAL.has(row.storage as never) ? stores(row.storage_owner as CloudOwner) : workingStore();
 
 /**
- * What belongs to Yomizaka and not to the account port, for the export (Loi 25, access): the person's profile, billing state,
- * organisation, documents with their kept files, and reports. It is the « yomizaka » part of the privacy export (`lib/privacy.ts`).
+ * What belongs to Verikora and not to the account port, for the export (Loi 25, access): the person's profile, billing state,
+ * organisation, documents with their kept files, and reports. It is the « verikora » part of the privacy export (`lib/privacy.ts`).
  */
 type Query = <T extends QueryResultRow>(text: string, values?: unknown[]) => Promise<T[]>;
 
@@ -84,7 +84,7 @@ export interface DataExport {
   }[];
 }
 
-/** Everything the person has with Yomizaka, as one JSON document: their profile, organisation, documents (kept files included) and reports. */
+/** Everything the person has with Verikora, as one JSON document: their profile, organisation, documents (kept files included) and reports. */
 export async function exportData(q: Query, accountId: string, stores: StoresOf, now: Date): Promise<DataExport> {
   const [a] = await q<{
     id: string;
@@ -137,7 +137,7 @@ export async function exportData(q: Query, accountId: string, stores: StoresOf, 
     tagged("collections_tags", "collection_id"),
     tagged("folder_tags", "folder_id"),
   ]);
-  // The documents' tags are the workspace's (yomizaka#324): the account's own tags of kind « document », worn through the layer's join table.
+  // The documents' tags are the workspace's (verikora#324): the account's own tags of kind « document », worn through the layer's join table.
   const docTagRows = await q<{ target: string; tag: string }>(
     "SELECT w.entity_id AS target, t.name AS tag FROM organize.document_tag w JOIN organize.tag t ON t.id = w.tag_id WHERE t.scope_id = $1 AND t.kind = 'document'",
     [accountId],

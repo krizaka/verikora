@@ -9,7 +9,7 @@ import { MAX_SIGNED_URL_SECONDS } from "./providers";
 import { asDescriptor } from "./where";
 
 /**
- * The HTTP (Bunny-shaped) store against the REAL storage zone, with fictional data only, under `yomizaka/it/` (opt-in: set
+ * The HTTP (Bunny-shaped) store against the REAL storage zone, with fictional data only, under `verikora/it/` (opt-in: set
  * STORAGE_IT_BUNNY_ZONE, STORAGE_IT_BUNNY_ACCESS and optionally STORAGE_IT_BUNNY_ENDPOINT; every object is deleted after the test).
  */
 const e = process.env;
@@ -28,7 +28,7 @@ const objects = () =>
     endpoint: e.STORAGE_IT_BUNNY_ENDPOINT ?? "storage.bunnycdn.com",
     zone: e.STORAGE_IT_BUNNY_ZONE!,
     accessKey: e.STORAGE_IT_BUNNY_ACCESS!,
-    prefix: "yomizaka/it",
+    prefix: "verikora/it",
     fetch: fetch as unknown as FetchLike,
     clock: { now: () => new Date() },
   });
@@ -44,7 +44,7 @@ describe.runIf(enabled)("http store (real zone, fictional data)", () => {
     const store = make();
     await store.put("it/public-check/doc.txt", new TextEncoder().encode("fictional"), { contentType: "text/plain" });
     const anonymous = await fetch(
-      `https://${e.STORAGE_IT_BUNNY_ENDPOINT ?? "storage.bunnycdn.com"}/${e.STORAGE_IT_BUNNY_ZONE}/yomizaka/it/it/public-check/doc.txt`,
+      `https://${e.STORAGE_IT_BUNNY_ENDPOINT ?? "storage.bunnycdn.com"}/${e.STORAGE_IT_BUNNY_ZONE}/verikora/it/it/public-check/doc.txt`,
     );
     expect(anonymous.status).toBe(401);
     await store.delete("it/public-check/doc.txt");

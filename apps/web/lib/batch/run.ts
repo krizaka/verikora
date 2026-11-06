@@ -6,7 +6,7 @@ import {
   type FlowEnvironment,
   readBatchManifest,
   type StartAnalysis,
-} from "@yomizaka/core";
+} from "@verikora/core";
 
 import { storesOf, workingStore } from "@/app/active-store";
 
@@ -17,21 +17,21 @@ import { storeDocument } from "../documents";
 import { HttpError, refuse } from "../http";
 import { placeDocument } from "../organisation/store";
 import { isPhoto, storePhotos } from "../photos";
-import { YOMIZAKA_RULES } from "../preflight/rules";
+import { VERIKORA_RULES } from "../preflight/rules";
 import { preflightRulesFrom, type Snapshot } from "../settings/boundary";
 import { notifyFinished } from "./observer";
 import { pausesBatch } from "./pausing";
 import { type BatchFile, PREVIEW_ROW, previewBatch } from "./preview";
 
 /**
- * A batch of checks (yomizaka#232, part 2): created from the CSV and its files — the refused rows recorded with their reason,
+ * A batch of checks (verikora#232, part 2): created from the CSV and its files — the refused rows recorded with their reason,
  * every other file stored as a document (not kept beyond the workspace's purge) and its row pending — then advanced: the
  * running rows read back from their analyses, the pending ones started through the single check path (`startCheck`: reuse,
  * entitlement, flow) up to the workspace's concurrency. A batch advances while it is looked at, like a single check (no
  * second scheduler); a row that fails never stops the others, and a missing entitlement pauses the rest with its reason.
  */
-// The row states are the apps' contract too: @yomizaka/core holds them.
-export { BATCH_ITEM, type BatchItemState } from "@yomizaka/core";
+// The row states are the apps' contract too: @verikora/core holds them.
+export { BATCH_ITEM, type BatchItemState } from "@verikora/core";
 
 export interface BatchItemView {
   id: string;
@@ -83,7 +83,7 @@ export async function createBatch(
     working: await workingStore(),
     now,
     purgeAfterHours: settings["limits.purgeAfterHours"].value as number,
-    rules: preflightRulesFrom(YOMIZAKA_RULES, settings),
+    rules: preflightRulesFrom(VERIKORA_RULES, settings),
   };
   const byName = new Map(files.map((f) => [f.name.toLowerCase(), f]));
   const manifestRows = new Map(readBatchManifest(manifestText).rows.map((r) => [r.line, r]));
@@ -103,7 +103,7 @@ export async function createBatch(
       continue;
     }
     const file = byName.get(row.file.toLowerCase())!;
-    // One file that cannot be stored is that row's refusal, never the batch's: the others go on (yomizaka#249).
+    // One file that cannot be stored is that row's refusal, never the batch's: the others go on (verikora#249).
     try {
       const stored = isPhoto(file.bytes)
         ? await storePhotos(account.id, [file], source.documentType ?? "auto", { policy })
@@ -141,7 +141,7 @@ export async function createBatch(
   return advanceBatch(account, batch!.id, { settings, now, environment });
 }
 
-/** A row naming the building's collection files its document there (yomizaka#251); a name that is not one of the owner's collections leaves it where it is. */
+/** A row naming the building's collection files its document there (verikora#251); a name that is not one of the owner's collections leaves it where it is. */
 async function placeInCollection(ownerId: string, documentId: string, name: string | null) {
   if (!name) return;
   const [found] = await query<{ id: string }>(
@@ -181,7 +181,7 @@ async function insertItem(item: NewItem) {
 /** Reads the running rows back, starts pending ones up to the concurrency, closes the batch when nothing is left. */
 export async function advanceBatch(account: Account, batchId: string, context: Context): Promise<BatchView> {
   await ownBatch(account.id, batchId);
-  // One advance of a batch at a time (yomizaka#266): the server tick and someone reading it would both start the same pending row.
+  // One advance of a batch at a time (verikora#266): the server tick and someone reading it would both start the same pending row.
   // The caller that finds it taken gets the batch as it stands; the one working will have moved it.
   const advanced = await withNamedLock(`batch:${batchId.toLowerCase()}`, () => advanceOnce(account, batchId, context));
   return advanced ?? { ...(await batchView(account.id, batchId)), pausedBy: null };
@@ -210,7 +210,7 @@ async function advanceOnce(
     "SELECT count(*)::int AS left FROM batch_items WHERE batch_id = $1 AND state IN ('pending', 'running')",
     [batchId],
   )) as [{ left: number }];
-  // The batch closes once; the one call that closes it tells the observer (the customer's webhooks, yomizaka#241).
+  // The batch closes once; the one call that closes it tells the observer (the customer's webhooks, verikora#241).
   const closed =
     left === 0
       ? await query("UPDATE batches SET finished_at = $2 WHERE id = $1 AND finished_at IS NULL RETURNING id", [
@@ -277,7 +277,7 @@ async function outcomeOfRefusal(
   attempt: number,
 ): Promise<StartOutcome | null> {
   // The same check of the same document is already running (a row of another batch, a page). Bring it up to date — it may have
-  // finished in Orazaka while nobody looked — then the normal rules apply again (reuse its result or start); while it truly
+  // finished in Sovkora while nobody looked — then the normal rules apply again (reuse its result or start); while it truly
   // runs, this row waits for it.
   if (code === ALREADY_RUNNING) {
     if (attempt < 2 && !(await refreshBlocking(account.id, item.document_id!, item.request!.studio))) return null;

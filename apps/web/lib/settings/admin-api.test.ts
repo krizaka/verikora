@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { resetRateLimits } from "../limits";
-import { maskKey } from "../orazaka-status";
+import { maskKey } from "../sovkora-status";
 import { CONFIG_PAGE, CONFIG_PAGES, isConfigPage, isSettingsGroup } from "./admin-config";
 
 const state = vi.hoisted(() => ({ role: "ADMIN" as "ADMIN" | "USER" | null, writes: [] as string[] }));
@@ -18,7 +18,7 @@ vi.mock("../session", async (orig) => ({
           id: "s1",
           account: {
             id: "22222222-2222-4222-8222-222222222222",
-            email: "admin@yomizaka.test",
+            email: "admin@verikora.test",
             role: state.role,
             locale: "fr",
             perspective: null,
@@ -37,7 +37,7 @@ vi.mock("../db", () => ({
 }));
 
 const json = (method: string, body?: unknown) =>
-  new Request("https://admin.yomizaka.com/api/admin/settings", {
+  new Request("https://admin.verikora.com/api/admin/settings", {
     method,
     body: body === undefined ? undefined : JSON.stringify(body),
     headers: { "x-forwarded-for": "203.0.113.20", "content-type": "application/json" },
@@ -91,7 +91,7 @@ describe("the configuration API is the administration's only", () => {
 });
 
 describe("the configuration pages", () => {
-  it("are the setting groups then the price catalogue, the packs, Orazaka and the organisation, each a route", () => {
+  it("are the setting groups then the price catalogue, the packs, Sovkora and the organisation, each a route", () => {
     expect(CONFIG_PAGES).toEqual([
       "general",
       "features",
@@ -100,7 +100,7 @@ describe("the configuration pages", () => {
       "prices",
       "coupons",
       "packs",
-      "orazaka",
+      "sovkora",
       "organisation",
     ]);
     expect(isSettingsGroup(CONFIG_PAGE.prices)).toBe(false);
@@ -111,7 +111,7 @@ describe("the configuration pages", () => {
   });
 });
 
-describe("the Orazaka key is never shown", () => {
+describe("the Sovkora key is never shown", () => {
   it.each([
     ["oz_live_abcdefghijklmnop", "oz_••••••••mnop"],
     ["sk-1234567890abcdef", "sk-••••••••cdef"],

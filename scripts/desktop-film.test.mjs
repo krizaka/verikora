@@ -215,7 +215,7 @@ describe("the journey films the window, after the sign-in, without the engine's 
     assert.ok(!/^- scroll$/m.test(flow));
     assert.match(flow, /scrollUntilVisible:\s+element: "Invoices 2026"/);
   });
-  // yomizaka#1968: the phone film ends on a result and is named after its language; never an empty state in it.
+  // verikora#1968: the phone film ends on a result and is named after its language; never an empty state in it.
   it("the phone showcase is English, ends on a collection's documents and never films the empty batches", () => {
     const flow = read("../apps/mobile/.maestro-showcase/android-documents-en.yaml");
     assert.match(flow, /startRecording: android-documents-en/);

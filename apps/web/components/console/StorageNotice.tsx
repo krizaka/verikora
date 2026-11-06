@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from "@krizaka/ui/button";
-import type { StorageDescriptor } from "@yomizaka/core";
+import type { StorageDescriptor } from "@verikora/core";
 import { useState } from "react";
 
 import { useSay } from "@/lib/i18n-client";

@@ -1,4 +1,4 @@
-# Production document store in Canada — plan, switch and checklist (yomizaka#524)
+# Production document store in Canada — plan, switch and checklist (verikora#524)
 
 Slice 6 of ADR-005 (krizaka-ts `docs/adr/ADR-005-storage-providers.md`), under ADR-0007 and ADR-0012 of this repository. The provider is
 chosen **in the admin storage screen** (rule « storage configured by the admin »): nothing about it is in an environment variable of
@@ -32,7 +32,7 @@ another preset: the day a customer asks, it is §3's move, not new code.
 
 ## 3. The switch (nothing is lost, nothing is deleted before the admin says so)
 
-1. **Founder, once:** apply the `krizaka-infra` PR (bucket `yomizaka-documents-prod`, private, versioned, TLS only, lifecycle rules, one key limited to that
+1. **Founder, once:** apply the `krizaka-infra` PR (bucket `verikora-documents-prod`, private, versioned, TLS only, lifecycle rules, one key limited to that
    bucket); sign the DPA in the DigitalOcean account (checklist §4). The key is created by the stack; read it from the DigitalOcean account, never from git.
 2. **Admin screen** (`/admin`, storage): add a provider, kind `s3`, preset DigitalOcean Spaces, region `tor1`, endpoint `https://tor1.digitaloceanspaces.com`,
    bucket, the key pair. The app tests it at once (write, read, compare, delete a probe) and shows « Canada (Ontario) ». The encryption key is generated and sealed.
@@ -55,7 +55,7 @@ copies are gone: that is why step 5 is a human check, and why the bucket's versi
 Written in good faith from the act; one review before the public opening (`legal-go-until-lawyer`). Each item says what the repository already states.
 
 - [ ] **EFVP, art. 17** (communication outside Québec): add the bucket to `docs/privacy/efvp.md` and `transfers.md` as a second Toronto processor already assessed for the database; state the sensitivity (leases, pay slips, IDs may be inside a document), the purpose (the check the person asked for, then purge unless they keep it), the protections (client-side encryption, key sealed, private bucket, TLS only, signed links 15 min), the regime of Ontario and the CLOUD Act exposure of a US company. The assessment must exist **before** the first production document.
-- [ ] **EFVP, art. 3.3** (new system): the production store is part of the one assessment of yomizaka#365; the review by the person in charge of personal information is recorded at its end.
+- [ ] **EFVP, art. 3.3** (new system): the production store is part of the one assessment of verikora#365; the review by the person in charge of personal information is recorded at its end.
 - [ ] **DPA with DigitalOcean**: confirm it covers Spaces, names the sub-processors, the breach notice delay, the return and deletion of data at the end, the audit right, and the transfer clauses; keep the signed copy in the company's private folder, never in git.
 - [ ] **Written contract with the processor, art. 18.3** (a mandate to a third party): purpose limited to storage, no other use, security measures, notice of a breach, return or destruction at the end.
 - [ ] **Retention**: the lifecycle (below) matches `docs/privacy/retention.md`: a purged document leaves no current copy; the 30-day noncurrent version is disclosed in the privacy policy.
@@ -65,6 +65,6 @@ Written in good faith from the act; one review before the public opening (`legal
 
 ## 5. The infrastructure (krizaka-infra PR, applied by the founder)
 
-A provider-neutral `object-storage` role and its DigitalOcean adapter, and a `stacks/prod/yomizaka-documents` stack: bucket in `tor1`, private ACL, versioning on, a
+A provider-neutral `object-storage` role and its DigitalOcean adapter, and a `stacks/prod/verikora-documents` stack: bucket in `tor1`, private ACL, versioning on, a
 policy refusing non-TLS requests, lifecycle rules (abort incomplete multipart uploads after 1 day, expire noncurrent versions after 30 days), and one Spaces key
 with `readwrite` on this bucket only. At rest the bytes are ours: encrypted before they leave (the provider's own server-side options are not relied on). `tofu test` covers the role. Nothing is applied by an agent.

@@ -19,8 +19,8 @@ import {
 } from "./model";
 
 /*
- * The engine's door, opened (orazaka-ai-engine#105): `POST /api/v1/checks/{purpose}` and `GET /api/v1/checks/{providerRef}`,
- * through the shared client `@krizaka/orazaka-client`. The answer is Orazaka's closed `CheckResult`, read 1:1 into this module's
+ * The engine's door, opened (sovkora-engine#105): `POST /api/v1/checks/{purpose}` and `GET /api/v1/checks/{providerRef}`,
+ * through the shared client `@krizaka/orazaka-client`. The answer is Sovkora's closed `CheckResult`, read 1:1 into this module's
  * vocabulary (`model.ts` is the same set). The compliance gate still wraps the door (`engineProvider`).
  */
 type Door = Pick<OrazakaClient, "startCheck" | "collectCheck">;
@@ -46,7 +46,7 @@ const failed: CheckResult = {
 
 /**
  * `consented` says whether the applicant's consent for a purpose stands now. Submitting is called after `consent()` recorded it
- * (so it is true by construction); collecting asks again, so a consent withdrawn since stops the poll's answer at Orazaka.
+ * (so it is true by construction); collecting asks again, so a consent withdrawn since stops the poll's answer at Sovkora.
  */
 export function engineDoor(
   client: Door,

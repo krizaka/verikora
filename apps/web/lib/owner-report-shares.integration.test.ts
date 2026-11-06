@@ -5,15 +5,15 @@ import { migrate, query } from "./db";
 import type { AccountMail } from "./mailer";
 import { cleanAddress, createShare, emailShare, listShares, openShare, revokeShare } from "./owner-report-shares";
 
-/** yomizaka#128 against the real database (CI's service; locally YOMIZAKA_DB_IT=1 DATABASE_URL=…). */
-const enabled = process.env.YOMIZAKA_DB_IT === "1" && !!process.env.DATABASE_URL;
+/** verikora#128 against the real database (CI's service; locally DATABASE_IT=1 DATABASE_URL=…). */
+const enabled = process.env.DATABASE_IT === "1" && !!process.env.DATABASE_URL;
 const NOW = new Date("2026-10-27T12:00:00Z");
 const DAY_MS = 86_400_000;
 
-describe.runIf(enabled)("the owner link of a report (yomizaka#128)", () => {
+describe.runIf(enabled)("the owner link of a report (verikora#128)", () => {
   const stamp = Date.now();
   const account = async (who: string) => {
-    const email = `share-${who}-${stamp}@yomizaka.test`;
+    const email = `share-${who}-${stamp}@verikora.test`;
     const [row] = await query<{ id: string }>("INSERT INTO accounts (email) VALUES ($1) RETURNING id", [email]);
     return { id: row!.id, email };
   };
@@ -71,10 +71,10 @@ describe.runIf(enabled)("the owner link of a report (yomizaka#128)", () => {
     await expect(revokeShare(b, fileId, id)).rejects.toMatchObject({ status: 404 });
   });
 
-  describe("e-mailing the link (yomizaka#130)", () => {
+  describe("e-mailing the link (verikora#130)", () => {
     const deps = (sent: AccountMail[]) => ({
       mail: async (m: AccountMail) => void sent.push(m),
-      origin: "https://www.yomizaka.com",
+      origin: "https://www.verikora.com",
     });
     const owner = (who: { id: string; email: string }) => ({ ...who, name: "Eric" });
 
@@ -93,7 +93,7 @@ describe.runIf(enabled)("the owner link of a report (yomizaka#128)", () => {
           kind: "reportLink",
           to: "owner@exemple.test",
           locale: "fr",
-          url: `https://www.yomizaka.com/fr/rapport/${token}`,
+          url: `https://www.verikora.com/fr/rapport/${token}`,
           senderName: "Eric",
           expiresOn: "2026-10-30",
           message: "Voici",
@@ -159,14 +159,14 @@ describe.runIf(enabled)("the owner link of a report (yomizaka#128)", () => {
   });
 });
 
-describe.runIf(enabled)("the owner report's expiry and isolation (yomizaka#481)", () => {
+describe.runIf(enabled)("the owner report's expiry and isolation (verikora#481)", () => {
   it("carries the link's expiry, and a link opens only its own manager's file", async () => {
     const stamp2 = Date.now();
     const mk = async (who: string) => {
       const [row] = await query<{ id: string }>("INSERT INTO accounts (email) VALUES ($1) RETURNING id", [
-        `pdf-${who}-${stamp2}@yomizaka.test`,
+        `pdf-${who}-${stamp2}@verikora.test`,
       ]);
-      return { id: row!.id, email: `pdf-${who}-${stamp2}@yomizaka.test` };
+      return { id: row!.id, email: `pdf-${who}-${stamp2}@verikora.test` };
     };
     await migrate();
     const [x, y] = [await mk("x"), await mk("y")];

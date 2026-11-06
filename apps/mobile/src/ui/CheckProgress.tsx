@@ -1,12 +1,12 @@
 import { Stepper, Txt } from "@krizaka/ui/native";
-import { stepperSteps } from "@yomizaka/client";
-import { type CheckStep, STEP_STATE } from "@yomizaka/core";
+import { stepperSteps } from "@verikora/client";
+import { type CheckStep, STEP_STATE } from "@verikora/core";
 import * as React from "react";
 import { View } from "react-native";
 
 import { type MessageKey, useI18n } from "@/i18n";
 
-/** A check's four steps (the contract every app and the web draw, `checkSteps` of @yomizaka/core) with the Krizaka Stepper; the engine gives no percentage, so none is invented. */
+/** A check's four steps (the contract every app and the web draw, `checkSteps` of @verikora/core) with the Krizaka Stepper; the engine gives no percentage, so none is invented. */
 export function CheckProgress({ steps, runId }: Readonly<{ steps: readonly CheckStep[]; runId: string | null }>) {
   const { t } = useI18n();
   const working = steps.some((step) => step.state === STEP_STATE.current);

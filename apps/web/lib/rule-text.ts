@@ -2,7 +2,7 @@ import { allCompliancePacks, type CompliancePack, say } from "./closing-note/dat
 import type { Lang } from "./closing-note/vocabulary";
 
 /*
- * The words of a rule in the reader's language (yomizaka#246). They are written once per language with the ruleset, as data
+ * The words of a rule in the reader's language (verikora#246). They are written once per language with the ruleset, as data
  * (`closing-note/data/<pack>.json`): never translated at runtime. The ruleset's own French wording is kept exact; the legal
  * references, the quoted passages, the names, amounts and dates are never touched here. A rule the data does not know keeps the
  * engine's own text (French), and `missingRuleTexts` is the build-time guard that no rule is left without its pair.

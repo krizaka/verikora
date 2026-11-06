@@ -13,7 +13,7 @@ export PORT=3000
 export APP_VISUAL_NOW=2026-10-30T12:00:00Z
 APP_REPORT_SIGNING_KEY="$(node -e 'process.stdout.write(require("crypto").generateKeyPairSync("ed25519").privateKey.export({type:"pkcs8",format:"der"}).toString("base64"))')"
 export APP_REPORT_SIGNING_KEY
-pnpm --filter @yomizaka/web build
+pnpm --filter @verikora/web build
 export NODE_ENV=production
 # The app's declared public origin (landingRedirect requires it in production: never read from the request's Host).
 export APP_PUBLIC_URL=http://localhost:3000
@@ -22,6 +22,6 @@ trap 'tail -100 web-visual.log || true' ERR
 for _ in $(seq 1 90); do curl -sf http://localhost:3000/api/healthz >/dev/null && break; sleep 1; done
 curl -sf http://localhost:3000/api/healthz >/dev/null
 # The migrations ran at the server's start; now the cast (Éric, Mira, Camille), idempotent.
-APP_DEMO_ACCOUNT_EMAIL=eric@demo.yomizaka.test APP_DEMO_ACCOUNT_PASSWORD=ci-only-demo-password-0123 node scripts/demo-seed/cli.mjs --cast --reset --check
+APP_DEMO_ACCOUNT_EMAIL=eric@demo.verikora.test APP_DEMO_ACCOUNT_PASSWORD=ci-only-demo-password-0123 node scripts/demo-seed/cli.mjs --cast --reset --check
 date -u +%Y-%m-%dT%H:%M:%SZ > .visual-now
 echo "ready: http://localhost:3000 (dev, the cast seeded)"

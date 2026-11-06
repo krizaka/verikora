@@ -1,5 +1,5 @@
 /**
- * What a Québec lease asks the tenant to pay up front (yomizaka#104, slice 3: the part of the illegal-clause scanner the law settles in
+ * What a Québec lease asks the tenant to pay up front (verikora#104, slice 3: the part of the illegal-clause scanner the law settles in
  * one article). Art. 1904 C.c.Q.: the landlord may require in advance only the first term of the rent, within one month; no sum other
  * than the rent (a deposit, however it is called) and no postdated cheques may be demanded. Pure and deterministic, from structured
  * figures the caller read from the lease — never from free text, so it claims only what it was given. It speaks of the lease, not of

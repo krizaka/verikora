@@ -2,7 +2,7 @@ id: no-utc-day-slice
 language: Tsx
 severity: error
 message: "`toISOString().slice(0, 10)` is the UTC day, not the calendar day of the law: in Montréal after 19:00 or 20:00 it is already tomorrow. Use `localDay(instant, LAW_TIME_ZONE)` from `@krizaka/intl` (`LAW_TIME_ZONE` in `lib/rulesets.ts`)."
-note: "yomizaka#309: a check is dated on the Québec day. The clock is passed in (`now: Date`), so the day is testable."
+note: "verikora#309: a check is dated on the Québec day. The clock is passed in (`now: Date`), so the day is testable."
 rule:
   pattern: $X.toISOString().slice(0, 10)
 ignores:

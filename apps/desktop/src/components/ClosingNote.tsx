@@ -1,6 +1,6 @@
 import { Badge } from "@krizaka/ui/badge";
 import { Card } from "@krizaka/ui/card";
-import type { ClosingNote as Note } from "@yomizaka/core";
+import type { ClosingNote as Note } from "@verikora/core";
 
 /** The plain-language closing note, as the server wrote it: the web, the phone and the signed report say the same. */
 export function ClosingNote({ note }: Readonly<{ note: Note }>) {

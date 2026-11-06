@@ -3,7 +3,7 @@
 import { Alert } from "@krizaka/ui/alert";
 import { DescriptionList } from "@krizaka/ui/description-list";
 import { DocumentViewer, type Located } from "@krizaka/ui/document-viewer";
-import { type ComplianceReport, type DocumentView, passages } from "@yomizaka/core";
+import { type ComplianceReport, type DocumentView, passages } from "@verikora/core";
 import Link from "next/link";
 import { type ComponentProps, memo, type RefObject, useMemo } from "react";
 
@@ -64,7 +64,7 @@ type ViewerProps = {
   onLocate: (found: Record<string, Located | null>) => void;
 };
 
-/** The PDF with the findings' passages lit; memoised, so the page's other state (a deletion, a run asked again) never redraws it (yomizaka#110). */
+/** The PDF with the findings' passages lit; memoised, so the page's other state (a deletion, a run asked again) never redraws it (verikora#110). */
 const PdfViewer = memo(function PdfViewer({ fileUrl, highlights, activeId, onActiveChange, onLocate }: ViewerProps) {
   const { say } = useSay();
   return (
@@ -91,7 +91,7 @@ const PdfViewer = memo(function PdfViewer({ fileUrl, highlights, activeId, onAct
 
 /**
  * The document tab: the lit finding and where it sits (« Retour au rapport »), the file (the PDF viewer, or its text), what
- * Yomizaka read in it, where it lives (with « Supprimer maintenant »), and the file's facts.
+ * Verikora read in it, where it lives (with « Supprimer maintenant »), and the file's facts.
  */
 /** The file's identifiers, folded: its fingerprint, in the mono — the only place a code is drawn on this tab (design § 3.4). */
 function FileTechnicalDetails({ sha256 }: Readonly<{ sha256: string }>) {

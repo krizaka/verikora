@@ -10,7 +10,7 @@ import { logError } from "../log";
 import { appSettings } from "../settings/instance";
 
 /**
- * The coupons of the product (`@krizaka/coupons`, ADR-002, yomizaka#262): our database is the source of truth (schema `coupons`), the processor applies
+ * The coupons of the product (`@krizaka/coupons`, ADR-002, verikora#262): our database is the source of truth (schema `coupons`), the processor applies
  * a discount from immutable terms (never a Stripe promotion code), and a credit coupon grants capped, expiring credits on the same ledger as the
  * audit credits. Off until the owner turns `coupons.enabled` on.
  */

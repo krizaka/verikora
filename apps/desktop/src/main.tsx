@@ -1,6 +1,6 @@
 import "./styles.css";
 // After the tokens: the plain product faces (the sans for headings, a system mono) come from blocks.css under
-// data-surface="product", at the same specificity as the tokens' :root, so the later sheet wins (yomizaka#316).
+// data-surface="product", at the same specificity as the tokens' :root, so the later sheet wins (verikora#316).
 import "@krizaka/ui/blocks.css";
 
 import { KrizakaQueryProvider, useQueryClient } from "@krizaka/query";

@@ -1,5 +1,5 @@
-/* The Krizaka platform, as the web app of Yomizaka draws it: Tailwind v4, the --kz-* tokens, @krizaka/ui's sources and
-   Yomizaka's indigo, in both themes. The window is an app, not a page: the chrome is not selectable. */
+/* The Krizaka platform, as the web app of Verikora draws it: Tailwind v4, the --kz-* tokens, @krizaka/ui's sources and
+   Verikora's indigo, in both themes. The window is an app, not a page: the chrome is not selectable. */
 @import "tailwindcss";
 @import "@krizaka/tailwind";
 @import "@krizaka/ui/tailwind.css";

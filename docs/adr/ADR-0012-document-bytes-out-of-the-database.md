@@ -1,11 +1,11 @@
 # ADR-0012 — A document's bytes leave PostgreSQL: one store for every file, a purge that deletes the object
 
 Status: accepted (2026-10-28, delegated CTO call; the paid or irreversible steps wait for Oussama, see « Needs Oussama »).
-Extends ADR-0007 (the `DocumentStore` port, decision 2). Issues: krizaka/yomizaka#17 (web: bytes out of the database, purge),
+Extends ADR-0007 (the `DocumentStore` port, decision 2). Issues: krizaka/verikora#17 (web: bytes out of the database, purge),
 #153 (port and adapters), #154 (Mac), #155 (phone). Libraries: `@krizaka/storage` (krizaka-ts; org ADR krizaka/.github#248).
 
 ## Context — what runs on main today
-- The port is built. `DocumentStore` is `@yomizaka/core`'s (`packages/core/src/document-store.ts`, contract kit shared by
+- The port is built. `DocumentStore` is `@verikora/core`'s (`packages/core/src/document-store.ts`, contract kit shared by
   every app); the web wraps a `@krizaka/storage` `ObjectStore` (`apps/web/lib/storage/adapter.ts`), chosen in one place
   (`lib/storage/config.ts`: `none` by default, `bunny` refused when `APP_ENVIRONMENT=prod`, `s3` for DigitalOcean Spaces, a
   customer's bucket or SeaweedFS in CI). Bring your own S3 (sealed secret, connection test) is in `lib/storage/settings.ts`.
@@ -110,7 +110,7 @@ Extends ADR-0007 (the `DocumentStore` port, decision 2). Issues: krizaka/yomizak
 - **Custody of `MEDIA_DOCUMENTS_ENCRYPTION_KEY`** for production (an offline copy outside the cloud account).
 - **Dropping `documents.content`** on any deployment that holds real data (after the guard is green and a fresh backup).
 
-## Amendment (2026-10-28, yomizaka#523, krizaka-ts ADR-005)
+## Amendment (2026-10-28, verikora#523, krizaka-ts ADR-005)
 - **The store is chosen by the admin, in the database.** `storageFrom`'s selection by environment is replaced by the provider registry of `@krizaka/storage`: `storage.provider` holds the admin's providers (credentials sealed under `MEDIA_VAULT_KEY`), `storage.default_provider` the default for `documents` and `avatars`. The `MEDIA_DOCUMENTS_*`, `MEDIA_STORAGE_*` and `MEDIA_S3_*` variables only bootstrap: at the first start with no provider, they are imported once as an active provider (`source: env`, audited), so the development deployment keeps using the Bunny zone `yomizaka-docs-dev` and its existing objects still open (the encryption key is imported as the provider's sealed credential).
 - **`documents.provider_id`** records which provider holds a document's bytes (migration 0059; rows already in a store are given the imported provider). It is what lets a later provider switch move objects and read from both stores.
 - **No provider, no vault key: nothing is kept**, uploads answer 503 `STORAGE_NOT_CONFIGURED`. No bytes go into PostgreSQL and the web never writes the local disk (a `folder` provider opens only in a development runtime).

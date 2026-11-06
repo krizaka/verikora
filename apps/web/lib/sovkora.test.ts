@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { createOrazakaClient, orazakaRefusal } from "./orazaka";
+import { createSovkoraClient, sovkoraRefusal } from "./sovkora";
 
 const RUN = {
   id: "8f6b1c2e-1d2c-4b8a-9a55-0d1e2f3a4b5c",
@@ -29,7 +29,7 @@ function fakeEdge(routes: Record<string, (init: RequestInit) => { status: number
   return { fetch, calls };
 }
 
-describe("the Orazaka client", () => {
+describe("the Sovkora client", () => {
   it("installs the Studio once, then starts the run with the service key", async () => {
     const edge = fakeEdge({
       "GET /edge/api/v1/studios/installations": () => ({ status: 200, body: [] }),
@@ -39,8 +39,8 @@ describe("the Orazaka client", () => {
       }),
       "POST /edge/api/v1/studios/compliance-check/runs": () => ({ status: 202, body: RUN }),
     });
-    const client = createOrazakaClient({
-      baseUrl: "https://dev.orazaka.com/edge",
+    const client = createSovkoraClient({
+      baseUrl: "https://dev.sovkora.com/edge",
       apiKey: "oz_test",
       fetch: edge.fetch,
     });
@@ -69,8 +69,8 @@ describe("the Orazaka client", () => {
         body: { ...RUN, studioKey: "document-authenticity" },
       }),
     });
-    const client = createOrazakaClient({
-      baseUrl: "https://dev.orazaka.com/edge/",
+    const client = createSovkoraClient({
+      baseUrl: "https://dev.sovkora.com/edge/",
       apiKey: "oz_test",
       fetch: edge.fetch,
     });
@@ -78,23 +78,23 @@ describe("the Orazaka client", () => {
     expect(edge.calls.map((c) => c.method)).toEqual(["GET", "POST"]);
   });
 
-  it("turns Orazaka's refusals into stable codes, and never starts without a key", async () => {
-    expect(orazakaRefusal(401).code).toBe("ORAZAKA_KEY");
-    expect(orazakaRefusal(409).code).toBe("ORAZAKA_LOCKED");
-    expect(orazakaRefusal(500).code).toBe("ORAZAKA_UNAVAILABLE");
+  it("turns Sovkora's refusals into stable codes, and never starts without a key", async () => {
+    expect(sovkoraRefusal(401).code).toBe("SOVKORA_KEY");
+    expect(sovkoraRefusal(409).code).toBe("SOVKORA_LOCKED");
+    expect(sovkoraRefusal(500).code).toBe("SOVKORA_UNAVAILABLE");
     const locked = fakeEdge({
       "GET /edge/api/v1/studios/installations": () => ({ status: 200, body: [{ studioKey: "compliance-check" }] }),
       "POST /edge/api/v1/studios/compliance-check/runs": () => ({ status: 409 }),
     });
     await expect(
-      createOrazakaClient({ baseUrl: "https://x/edge", apiKey: "oz_t", fetch: locked.fetch }).startRun(
+      createSovkoraClient({ baseUrl: "https://x/edge", apiKey: "oz_t", fetch: locked.fetch }).startRun(
         "compliance-check",
         {},
       ),
-    ).rejects.toMatchObject({ body: { code: "ORAZAKA_LOCKED" } });
+    ).rejects.toMatchObject({ body: { code: "SOVKORA_LOCKED" } });
     await expect(
-      createOrazakaClient({ baseUrl: "https://x/edge", apiKey: undefined, fetch: locked.fetch }).getRun(RUN.id),
-    ).rejects.toMatchObject({ body: { code: "ORAZAKA_NOT_CONFIGURED" } });
+      createSovkoraClient({ baseUrl: "https://x/edge", apiKey: undefined, fetch: locked.fetch }).getRun(RUN.id),
+    ).rejects.toMatchObject({ body: { code: "SOVKORA_NOT_CONFIGURED" } });
   });
 
   it("does not start a kind that the pinned 1.x Studio would judge as a lease (declaredKind is read by 2.x only)", async () => {
@@ -104,14 +104,14 @@ describe("the Orazaka client", () => {
         body: [{ studioKey: "compliance-check", pinnedVersion: "1.4.0" }],
       }),
     });
-    const client = createOrazakaClient({ baseUrl: "https://x/edge", apiKey: "oz_t", fetch: old.fetch });
+    const client = createSovkoraClient({ baseUrl: "https://x/edge", apiKey: "oz_t", fetch: old.fetch });
     await expect(
       client.startRun("compliance-check", { document: "Avis", declaredKind: "NOTICE" }),
-    ).rejects.toMatchObject({ body: { code: "ORAZAKA_STUDIO_OLD" } });
+    ).rejects.toMatchObject({ body: { code: "SOVKORA_STUDIO_OLD" } });
     expect(old.calls.some((c) => c.url.includes("/runs"))).toBe(false);
   });
-  it("a busy engine (429, « too many concurrent runs ») is ORAZAKA_BUSY with the wait it asked for — not a failure (yomizaka#248)", async () => {
-    expect(orazakaRefusal(429)).toEqual({ status: 429, code: "ORAZAKA_BUSY" });
+  it("a busy engine (429, « too many concurrent runs ») is SOVKORA_BUSY with the wait it asked for — not a failure (verikora#248)", async () => {
+    expect(sovkoraRefusal(429)).toEqual({ status: 429, code: "SOVKORA_BUSY" });
     const busy = fakeEdge({
       "GET /edge/api/v1/studios/installations": () => ({ status: 200, body: [{ studioKey: "compliance-check" }] }),
       "POST /edge/api/v1/studios/compliance-check/runs": () => ({
@@ -119,12 +119,12 @@ describe("the Orazaka client", () => {
         body: { status: "too_many_concurrent_runs", limit: 2, active: 2, retryAfterSeconds: 15 },
       }),
     });
-    const error = await createOrazakaClient({ baseUrl: "https://x/edge", apiKey: "oz_t", fetch: busy.fetch })
+    const error = await createSovkoraClient({ baseUrl: "https://x/edge", apiKey: "oz_t", fetch: busy.fetch })
       .startRun("compliance-check", {})
       .catch((e: unknown) => e as { status: number; body: Record<string, unknown>; headers: Record<string, string> });
     expect(error).toMatchObject({
       status: 429,
-      body: { code: "ORAZAKA_BUSY", retryAfter: 15 },
+      body: { code: "SOVKORA_BUSY", retryAfter: 15 },
       headers: { "Retry-After": "15" },
     });
   });
@@ -132,7 +132,7 @@ describe("the Orazaka client", () => {
   it("refuses a run id that is not one before calling anyone", async () => {
     const edge = fakeEdge({});
     expect(() =>
-      createOrazakaClient({ baseUrl: "https://x/edge", apiKey: "oz_t", fetch: edge.fetch }).getRun("../admin"),
+      createSovkoraClient({ baseUrl: "https://x/edge", apiKey: "oz_t", fetch: edge.fetch }).getRun("../admin"),
     ).toThrow();
     expect(edge.calls).toHaveLength(0);
   });
@@ -142,7 +142,7 @@ describe("the Orazaka client", () => {
       "GET /edge/api/v1/studios/runs/8f6b1c2e-1d2c-4b8a-9a55-0d1e2f3a4b5c": () => ({ status: 200, body: { nope: 1 } }),
     });
     await expect(
-      createOrazakaClient({ baseUrl: "https://x/edge", apiKey: "oz_t", fetch: edge.fetch }).getRun(RUN.id),
-    ).rejects.toMatchObject({ body: { code: "ORAZAKA_SHAPE" } });
+      createSovkoraClient({ baseUrl: "https://x/edge", apiKey: "oz_t", fetch: edge.fetch }).getRun(RUN.id),
+    ).rejects.toMatchObject({ body: { code: "SOVKORA_SHAPE" } });
   });
 });

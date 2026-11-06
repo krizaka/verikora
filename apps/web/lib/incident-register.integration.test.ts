@@ -7,8 +7,8 @@ import { describe, expect, it } from "vitest";
 import { MIGRATION_LOCK_KEY } from "./db";
 import { MIGRATIONS } from "./migrations";
 
-/** Migration 0055 creates the incident register; each scope sees only its own entries, and an entry stays until its retention ends (skipped without YOMIZAKA_DB_IT=1 and a database). */
-const enabled = process.env.YOMIZAKA_DB_IT === "1" && !!process.env.DATABASE_URL;
+/** Migration 0055 creates the incident register; each scope sees only its own entries, and an entry stays until its retention ends (skipped without DATABASE_IT=1 and a database). */
+const enabled = process.env.DATABASE_IT === "1" && !!process.env.DATABASE_URL;
 
 describe.runIf(enabled)("0055_privacy_incident_register", () => {
   it("keeps one register per scope on the real database", async () => {
@@ -29,20 +29,20 @@ describe.runIf(enabled)("0055_privacy_incident_register", () => {
     try {
       await runMigrations(connect, MIGRATIONS, { lockKey: MIGRATION_LOCK_KEY });
       const register = createIncidentRegister({ clock: { now: () => new Date() } });
-      const actor = { id: null, label: "admin@yomizaka.test" };
+      const actor = { id: null, label: "admin@verikora.test" };
       const mine = await register.open(
         run,
-        { scope: "yomizaka", kind: "loss", description: "A laptop was lost.", information: ["lease"] },
+        { scope: "verikora", kind: "loss", description: "A laptop was lost.", information: ["lease"] },
         actor,
       );
       await register.open(
         run,
-        { scope: "akinaza", kind: "access", description: "Another tenant.", information: ["invoice"] },
+        { scope: "folioviv", kind: "access", description: "Another tenant.", information: ["invoice"] },
         actor,
       );
-      expect((await register.list(run, "yomizaka")).map((i) => i.id)).toEqual([mine.id]);
-      expect(await register.get(run, "akinaza", mine.id)).toBeNull();
-      await expect(register.close(run, "akinaza", mine.id, actor)).rejects.toMatchObject({ code: "INCIDENT_UNKNOWN" });
+      expect((await register.list(run, "verikora")).map((i) => i.id)).toEqual([mine.id]);
+      expect(await register.get(run, "folioviv", mine.id)).toBeNull();
+      await expect(register.close(run, "folioviv", mine.id, actor)).rejects.toMatchObject({ code: "INCIDENT_UNKNOWN" });
       await expect(pool.query("DELETE FROM privacy.incident WHERE id = $1", [mine.id])).rejects.toThrow(/retention/);
     } finally {
       await endPool(pool);

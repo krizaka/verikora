@@ -6,11 +6,11 @@
     },
     {
       "path": "a11y-baseline.json",
-      "why": "the axe baseline of the public pages (ratchet: only goes down), read by scripts/check-overflow.mjs and the page audits at the root they run from (yomizaka#462)"
+      "why": "the axe baseline of the public pages (ratchet: only goes down), read by scripts/check-overflow.mjs and the page audits at the root they run from (verikora#462)"
     },
     {
       "path": "a11y-baseline.app.json",
-      "why": "the axe baseline of the signed-in pages (ratchet: only goes down), read by scripts/check-app-pages.mjs (yomizaka#462)"
+      "why": "the axe baseline of the signed-in pages (ratchet: only goes down), read by scripts/check-app-pages.mjs (verikora#462)"
     },
     {
       "path": "osv-scanner.toml",

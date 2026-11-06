@@ -43,7 +43,7 @@ beforeEach(() => {
   krizakaFetch.mockReset();
 });
 
-describe("the public bar knows who is signed in (yomizaka#243) — a quiet account entry, never the raw e-mail (the review's F0)", () => {
+describe("the public bar knows who is signed in (verikora#243) — a quiet account entry, never the raw e-mail (the review's F0)", () => {
   it("signed in: the account (avatar, the name when there is one) with « My documents » inside; no primary button in the bar, no « Sign in »", () => {
     const html = view({ me: ME });
     expect(html).toContain('aria-label="Account"');

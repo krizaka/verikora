@@ -1,16 +1,16 @@
-import { BATCH_CHECKS, BATCH_COLUMNS, BATCH_ROW_ERROR } from "@yomizaka/core";
+import { BATCH_CHECKS, BATCH_COLUMNS, BATCH_ROW_ERROR } from "@verikora/core";
 
 import { PRODUCT_NAME } from "@/lib/brand";
 import { ENGINE_NAME } from "@/lib/brand";
 
-import { YOMIZAKA_API_KEY_RULES } from "../api-keys";
+import { VERIKORA_API_KEY_RULES } from "../api-keys";
 
 /**
- * The OpenAPI 3.1 document of `/api/v1` (yomizaka#202), served at `GET /api/v1/openapi.json`. Built from the code's own data (the
+ * The OpenAPI 3.1 document of `/api/v1` (verikora#202), served at `GET /api/v1/openapi.json`. Built from the code's own data (the
  * scopes, the check words, the row codes), so the document cannot drift from what the routes accept; `openapi.test.ts` also
  * refuses a route without an entry here, and an entry without a route.
  */
-const [WRITE, READ, SEAL] = YOMIZAKA_API_KEY_RULES.scopes;
+const [WRITE, READ, SEAL] = VERIKORA_API_KEY_RULES.scopes;
 
 const ref = (name: string) => ({ $ref: `#/components/schemas/${name}` });
 const json = (schema: unknown) => ({ "application/json": { schema } });
@@ -213,7 +213,7 @@ export function openApiDocument(serverUrl: string) {
           operationId: "sealContract",
           summary: "Seal a contract",
           description:
-            "Renders a contract's content and parties as a PDF and signs it (Ed25519, folios, a visible signature page, the attestation embedded). The same request is the same contract: a retry answers 200 with the first seal. Yomizaka seals — it verifies no identity, no age and no law; `complianceRuleset` is shown as the partner's own statement. The file is kept in the zone of `X-Data-Residency-Zone` (`CA` by default) or the request is refused (`ZONE_UNAVAILABLE`).",
+            "Renders a contract's content and parties as a PDF and signs it (Ed25519, folios, a visible signature page, the attestation embedded). The same request is the same contract: a retry answers 200 with the first seal. Verikora seals — it verifies no identity, no age and no law; `complianceRuleset` is shown as the partner's own statement. The file is kept in the zone of `X-Data-Residency-Zone` (`CA` by default) or the request is refused (`ZONE_UNAVAILABLE`).",
           security: secured(SEAL),
           parameters: [
             {
@@ -279,7 +279,7 @@ export function openApiDocument(serverUrl: string) {
         apiKey: {
           type: "http",
           scheme: "bearer",
-          description: `\`Authorization: Bearer ${YOMIZAKA_API_KEY_RULES.prefix}_…\`, created in the account (Pro). Scopes: ${YOMIZAKA_API_KEY_RULES.scopes.join(", ")}.`,
+          description: `\`Authorization: Bearer ${VERIKORA_API_KEY_RULES.prefix}_…\`, created in the account (Pro). Scopes: ${VERIKORA_API_KEY_RULES.scopes.join(", ")}.`,
         },
       },
       schemas: {

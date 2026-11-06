@@ -4,7 +4,7 @@ import { describe, expect, it } from "vitest";
 import { readText } from "./pdf-text";
 import { textLayer, textPdf } from "./test-pdf";
 
-// The lease Yomizaka's demo uses (lib/sample-lease.ts) — Latin-1 only so a plain Helvetica PDF holds it.
+// The lease Verikora's demo uses (lib/sample-lease.ts) — Latin-1 only so a plain Helvetica PDF holds it.
 const LEASE = [
   "BAIL DE LOGEMENT - 4 1/2, rue Saint-Denis, Montreal",
   "Entre le locateur Monsieur Marc Tremblay, domicilie a Montreal,",
@@ -16,7 +16,7 @@ const LEASE = [
   "Il est interdit d'avoir des enfants dans le logement.",
 ];
 
-describe("a finding's quote, from Yomizaka's text to a box on the PDF", () => {
+describe("a finding's quote, from Verikora's text to a box on the PDF", () => {
   const pdf = textPdf(
     [
       ...LEASE,
@@ -26,7 +26,7 @@ describe("a finding's quote, from Yomizaka's text to a box on the PDF", () => {
     20,
   );
 
-  it("places the quote Orazaka returns (taken from the text Yomizaka extracted) on the right page, where the line is", async () => {
+  it("places the quote Sovkora returns (taken from the text Verikora extracted) on the right page, where the line is", async () => {
     const { text, pages } = await readText("application/pdf", pdf);
     expect(pages).toBe(3);
     const quote = "Il est interdit d'avoir des enfants dans le logement.";

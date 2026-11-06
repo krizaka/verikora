@@ -15,7 +15,7 @@ export default async function NotFound() {
   const h = await headers();
   const locale = asLocale(h.get("x-locale") ?? "");
   const t = getDictionary(locale).console.notFound;
-  // On admin.yomizaka.com every address is the console: the way back is the console's home, not the product's library.
+  // On admin.verikora.com every address is the console: the way back is the console's home, not the product's library.
   const admin = isAdminHost(h.get("host"));
   return (
     <main id="content">

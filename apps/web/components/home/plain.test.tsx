@@ -15,7 +15,7 @@ import en from "@/messages/en.json";
 import fr from "@/messages/fr.json";
 
 /**
- * The public site, plain (design § 3.2, P10, yomizaka#327): it is the product's site, not a Cahier site. No red mono
+ * The public site, plain (design § 3.2, P10, verikora#327): it is the product's site, not a Cahier site. No red mono
  * eyebrow, no figures row under the hero, no mono captions, a bento without an orphan card. A mono only for code
  * (`<code>`, `<pre>`: a hash, a key, a link), never the margin's red for text.
  */
@@ -122,14 +122,14 @@ describe("the public site, plain (P10)", () => {
       expect(html).not.toContain("kz-tpl-band");
     });
 
-    it("writes no mono caption: the window bar says nothing, and the owl's quote is not repeated (yomizaka#457)", () => {
+    it("writes no mono caption: the window bar says nothing, and the owl's quote is not repeated (verikora#457)", () => {
       expect(html).toMatch(/<div class="kz-tpl-stage-bar" aria-hidden="true"><\/div>/);
       expect(html).not.toMatch(/<figure class="kz-quote/);
     });
 
     it("uses a mono only on code in its content (the bar is the family's NavBar, its language code is @krizaka/ui's)", () => {
       const whole = html.slice(html.indexOf('<main id="content"'), html.indexOf("</main>"));
-      // The feature cards hold the app's own screens (inert, drawn with its components, yomizaka#478): the app's mono (a fingerprint, a run id) is its own, not the page's.
+      // The feature cards hold the app's own screens (inert, drawn with its components, verikora#478): the app's mono (a fingerprint, a run id) is its own, not the page's.
       const main = whole.slice(0, whole.indexOf('id="app"')) + whole.slice(whole.indexOf('id="proof"'));
       expect(main.length).toBeGreaterThan(0);
       expect(monoTags(main).filter((tag) => tag !== "code" && tag !== "pre")).toEqual([]);

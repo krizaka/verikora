@@ -4,8 +4,8 @@ import { asLocale, otherLocale } from "./i18n";
 import { llmsText, pageMetadata } from "./seo";
 import { SITE_URL } from "./site";
 
-// yomizaka#366 (Loi 96): French is the default language of the product; English stays available by choice.
-describe("French by default (yomizaka#366)", () => {
+// verikora#366 (Loi 96): French is the default language of the product; English stays available by choice.
+describe("French by default (verikora#366)", () => {
   it("reads an unknown or missing language as French, and English only when asked", () => {
     expect(asLocale(undefined)).toBe("fr");
     expect(asLocale("")).toBe("fr");

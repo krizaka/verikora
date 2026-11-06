@@ -1,8 +1,8 @@
 import { z } from "zod";
 
 /*
- * The vocabulary of an external check, as Orazaka's engine answers it (orazaka-ai-engine `CheckResult`, #73): closed sets,
- * never free text. Yomizaka shows every outcome honestly and never invents one — a check that cannot run says so.
+ * The vocabulary of an external check, as Sovkora's engine answers it (sovkora-engine `CheckResult`, #73): closed sets,
+ * never free text. Verikora shows every outcome honestly and never invents one — a check that cannot run says so.
  */
 export const CHECK_OUTCOME = {
   MATCH: "MATCH",
@@ -31,7 +31,7 @@ export const CHECK_CATEGORY = {
   NONE: "NONE",
 } as const;
 
-/** The purposes Yomizaka asks of the engine. Identity is never one of them: Yomizaka does document verification and screening, not ID verification. */
+/** The purposes Verikora asks of the engine. Identity is never one of them: Verikora does document verification and screening, not ID verification. */
 export const CHECK_PURPOSE = { COURT_RECORDS: "COURT_RECORDS", CREDIT: "CREDIT" } as const;
 export type CheckPurpose = (typeof CHECK_PURPOSE)[keyof typeof CHECK_PURPOSE];
 
@@ -96,7 +96,7 @@ export const NOT_CONFIGURED: CheckResult = {
 };
 
 /**
- * The engine's door for external checks (`/api/v1/checks`, orazaka-ai-engine#105). The transport is injected: `engine-door.ts` is the
+ * The engine's door for external checks (`/api/v1/checks`, sovkora-engine#105). The transport is injected: `engine-door.ts` is the
  * live one, `closedDoor` answers NOT_CONFIGURED to everything (tests, and a product without the door).
  */
 export interface ChecksDoor {

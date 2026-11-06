@@ -1,5 +1,5 @@
 import { KrizakaQueryProvider } from "@krizaka/query";
-import { DOCUMENT_KINDS, offerOf } from "@yomizaka/core";
+import { DOCUMENT_KINDS, offerOf } from "@verikora/core";
 import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it, vi } from "vitest";
 
@@ -34,7 +34,7 @@ const wrap = (node: React.ReactNode, locale: "en" | "fr" = "fr") =>
 const render = (locale: "en" | "fr" = "fr") => wrap(<CheckView />, locale);
 
 describe("« Vérifier un document » (the UX review's Y4)", () => {
-  it("has one h1 and the drop zone; the kind is not asked before a drop, Yomizaka recognises it from the file (yomizaka#318)", () => {
+  it("has one h1 and the drop zone; the kind is not asked before a drop, Verikora recognises it from the file (verikora#318)", () => {
     const html = render();
     expect(html.match(/<h1\b/g)).toHaveLength(1);
     expect(html.indexOf(fr.console.library.dropTitle)).toBeGreaterThan(0);
@@ -43,7 +43,7 @@ describe("« Vérifier un document » (the UX review's Y4)", () => {
     expect(readable(html)).not.toContain(fr.console.library.kindPick);
   });
 
-  it("names the defaults before the drop, with « Modifier » (Errata 6, yomizaka#326), and says the check is informative", () => {
+  it("names the defaults before the drop, with « Modifier » (Errata 6, verikora#326), and says the check is informative", () => {
     const html = render();
     const defaults = html.indexOf('data-testid="check-defaults"');
     expect(defaults).toBeGreaterThan(0);
@@ -60,7 +60,7 @@ describe("« Vérifier un document » (the UX review's Y4)", () => {
   });
 });
 
-describe("the kind picker, asked only when the kind is uncertain (yomizaka#318, P1 of the design direction)", () => {
+describe("the kind picker, asked only when the kind is uncertain (verikora#318, P1 of the design direction)", () => {
   for (const locale of ["fr", "en"] as const) {
     const m = MESSAGES[locale].console;
     it(`asks « ${m.library.kindPick} » for that file as a labelled radiogroup of cards, each kind's title and hint as separate text (${locale})`, () => {
@@ -82,7 +82,7 @@ describe("the kind picker, asked only when the kind is uncertain (yomizaka#318, 
   }
 });
 
-describe("the queue: one row per file, its stage in words (yomizaka#326, P9)", () => {
+describe("the queue: one row per file, its stage in words (verikora#326, P9)", () => {
   const row = (id: string, stage: string, refused: string | null = null) =>
     ({ id, filename: `${id}.pdf`, stage, refused }) as never;
   const queue = (rows: never[], locale: "en" | "fr" = "fr") =>
@@ -150,7 +150,7 @@ const withCatalogue = (props: Partial<Parameters<typeof CheckView>[0]> = {}, loc
     locale,
   );
 
-describe("« Vérifier un document », B2: the plan strip, the catalogue, the drop and the run (yomizaka#333)", () => {
+describe("« Vérifier un document », B2: the plan strip, the catalogue, the drop and the run (verikora#333)", () => {
   it("shows where the account stands: its plan and its audits from the billing state, with the meter", () => {
     const html = withCatalogue();
     const strip = html.slice(html.indexOf('data-testid="plan-strip"'), html.indexOf('data-testid="check-drop"'));

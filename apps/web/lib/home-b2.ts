@@ -4,7 +4,7 @@ import { type ActivityDay, HOME_PERIOD_KEY, type HomePeriod, nothingToDo, type T
 import { pluralKey } from "./plural";
 
 /*
- * The B2 home's pure pieces (yomizaka#332, design § 5.6): the sentence under the heading, « Le classeur », the activity
+ * The B2 home's pure pieces (verikora#332, design § 5.6): the sentence under the heading, « Le classeur », the activity
  * strip, the week chart and the credits. Pure: the queries are lib/home.ts and lib/credits.ts, the words are messages, the
  * drawing is components/console. Every figure here is computed from rows read over the chosen period.
  */

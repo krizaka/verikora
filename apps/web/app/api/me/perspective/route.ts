@@ -1,4 +1,4 @@
-import { audience } from "@yomizaka/core";
+import { audience } from "@verikora/core";
 import { z } from "zod";
 
 import { requireSession } from "@/lib/access";

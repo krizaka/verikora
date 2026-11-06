@@ -3,7 +3,7 @@ import { describe, expect, it } from "vitest";
 import config from "./vitest.config.mjs";
 
 /**
- * yomizaka#268: the integration files write global rows (settings, rate limits, maintenance flag) read through a cache by other
+ * verikora#268: the integration files write global rows (settings, rate limits, maintenance flag) read through a cache by other
  * files; side by side on one database they flaked (api-keys rotation, global switch, api audit). The cause is fixed by running
  * the database files one at a time; this keeps it so — a file added to that project can never run in parallel with another.
  */

@@ -5,7 +5,7 @@ import { query } from "./db";
 import { isUuid } from "./documents";
 import { refuse } from "./http";
 
-/** What the administration console reads: counts, accounts, the audit trail, documents (metadata only), Orazaka runs. */
+/** What the administration console reads: counts, accounts, the audit trail, documents (metadata only), Sovkora runs. */
 
 export interface Overview {
   accounts: number;
@@ -296,7 +296,7 @@ export async function setUserRole(
   return userDetail(id);
 }
 
-/** The plan an administrator may set by hand, and where: a QA account has no card, so only a development environment accepts it (yomizaka#252). */
+/** The plan an administrator may set by hand, and where: a QA account has no card, so only a development environment accepts it (verikora#252). */
 export function planChangeRefusal(environment: "dev" | "prod"): { code: string; message: string } | null {
   return environment === "prod"
     ? {
@@ -356,9 +356,9 @@ export async function revokeUserSessions(
 }
 
 /**
- * Law 25 portability: everything Yomizaka holds about an account, as one JSON document — the account (never its password
+ * Law 25 portability: everything Verikora holds about an account, as one JSON document — the account (never its password
  * hash), its documents' metadata (never the files or their text: each is downloadable from the library), its analyses with
- * the reports Orazaka returned, its open sessions' addresses and the audit trail that names it.
+ * the reports Sovkora returned, its open sessions' addresses and the audit trail that names it.
  */
 export async function exportAccount(
   actor: { id: string; email: string },
@@ -410,7 +410,7 @@ export async function exportAccount(
     headers,
   });
   return {
-    format: "yomizaka-account-export/1",
+    format: "verikora-account-export/1",
     exportedAt: new Date().toISOString(),
     account: {
       id: user.id,

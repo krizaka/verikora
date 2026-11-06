@@ -9,7 +9,7 @@ import { refuse } from "./http";
 import { appSettings } from "./settings/instance";
 
 /**
- * The credits of audits, on `@krizaka/credits`'s ledger (yomizaka#261). A paid credit is a PURCHASED pot; the month's free dossiers are a granted
+ * The credits of audits, on `@krizaka/credits`'s ledger (verikora#261). A paid credit is a PURCHASED pot; the month's free dossiers are a granted
  * pot (source `free-audit`, one a month) that, once spent, moves on to purchased credits (`fallback_paid`). The pots are never edited: what is left
  * is the sum of their lines, and a spent audit is one operation (`consume.audit-<id>`) that a refund gives back, once, to the pots it drew from.
  */

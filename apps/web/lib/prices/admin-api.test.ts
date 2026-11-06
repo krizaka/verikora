@@ -24,7 +24,7 @@ vi.mock("../session", async (orig) => ({
           id: "s1",
           account: {
             id: "22222222-2222-4222-8222-222222222222",
-            email: "admin@yomizaka.test",
+            email: "admin@verikora.test",
             role: state.role,
             locale: "fr",
             perspective: null,
@@ -40,7 +40,7 @@ vi.mock("../env", async (orig) => ({ ...(await orig<typeof import("../env")>()),
 vi.mock("./catalogue", () => ({ appPrices: () => prices.catalogue }));
 
 const req = (method: string, body?: unknown) =>
-  new Request("https://admin.yomizaka.com/api/admin/prices", {
+  new Request("https://admin.verikora.com/api/admin/prices", {
     method,
     body: body === undefined ? undefined : JSON.stringify(body),
     headers: { "x-forwarded-for": "203.0.113.20", "content-type": "application/json" },
@@ -55,7 +55,7 @@ beforeEach(() => {
   prices.catalogue = priceCatalogue(PRICES, memoryPriceStore());
 });
 
-describe("the price catalogue's admin API (yomizaka#367)", () => {
+describe("the price catalogue's admin API (verikora#367)", () => {
   it.each([null, "USER"] as const)("refuses %s", async (role) => {
     state.role = role;
     const { GET, POST } = await import("../../app/api/admin/prices/route");
@@ -82,7 +82,7 @@ describe("the price catalogue's admin API (yomizaka#367)", () => {
     expect(agency.amountCents).toBe(4900);
     expect(agency.upcoming).toEqual([expect.objectContaining({ amountCents: 6900, effectiveFrom: LATER })]);
     expect(body.history[PRICE.agency][0]).toMatchObject({
-      actorLabel: "admin@yomizaka.test",
+      actorLabel: "admin@verikora.test",
       before: { amountCents: 4900 },
       after: { amountCents: 6900 },
     });
@@ -95,7 +95,7 @@ describe("the price catalogue's admin API (yomizaka#367)", () => {
       400,
       "BAD_DATE",
     ],
-    ["an unknown entry", { key: "yomizaka.gold", amountCents: 100 }, 404, "UNKNOWN_PRICE"],
+    ["an unknown entry", { key: "verikora.gold", amountCents: 100 }, 404, "UNKNOWN_PRICE"],
     ["an entry on sale without a figure", { key: PRICE.document, amountCents: null }, 400, "BAD_VALUE"],
   ])("refuses %s with its code", async (_, body, status, code) => {
     const { POST } = await import("../../app/api/admin/prices/route");

@@ -7,7 +7,7 @@ import type { PricingPlan, PricingSoon } from "@/lib/prices/page";
 import { contactHref, pagePath } from "@/lib/site";
 
 /**
- * The pricing page on the pricing template of @krizaka/ui (yomizaka#388). Prices and included volumes come from the catalogue
+ * The pricing page on the pricing template of @krizaka/ui (verikora#388). Prices and included volumes come from the catalogue
  * (props); every word is a message. What is not built is « soon » and carries no figure. Sign-up is closed while the product is in
  * development, so the call to action is « request access » (the contact page) and the status line says the same as the home. Above the largest included volume
  * there is no figure (the code bills no usage, #373): a quiet line leads to the contact form (#360).
@@ -44,7 +44,7 @@ export function PricingContent({
           <p>{p.plannedNote}</p>
           {largest > 0 ? (
             <p data-volume>
-              <a href={contactHref("dev-yomizaka-pricing-volume", locale)}>{format(p.volume, { included: largest })}</a>
+              <a href={contactHref("dev-verikora-pricing-volume", locale)}>{format(p.volume, { included: largest })}</a>
             </p>
           ) : null}
           {launch ? (

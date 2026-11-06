@@ -5,7 +5,7 @@ import { useSay } from "@/lib/i18n-client";
 import type { LeaseBundle } from "@/lib/lease-bundle";
 
 /**
- * A lease and its annexes read as one (yomizaka#499, API of #129): the documents of the submission, then every finding that needs a look,
+ * A lease and its annexes read as one (verikora#499, API of #129): the documents of the submission, then every finding that needs a look,
  * with its document, its line, the passage quoted, the rule and the article. It says what the rules report and that a lawyer has not
  * reviewed them yet; it gives no advice and no verdict about the lease.
  */

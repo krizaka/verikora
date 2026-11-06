@@ -145,7 +145,7 @@ describe("a refusal of something else is not hidden", () => {
   });
 });
 
-describe("a production default for the documents must be in Canada (yomizaka#524, Loi 25 art. 17)", () => {
+describe("a production default for the documents must be in Canada (verikora#524, Loi 25 art. 17)", () => {
   const tested = (key: string, ok = true) =>
     ({ id: "p1", dataKind: "documents", lastTest: { ok, residency: { key } } }) as never;
 

@@ -1,5 +1,5 @@
 /*
- * One section map for the web, the phone and the Mac (§ 3.6 of the design direction, yomizaka#319): the same destinations,
+ * One section map for the web, the phone and the Mac (§ 3.6 of the design direction, verikora#319): the same destinations,
  * in the same order, with their labels under the same message key (`sections.<id>`). « Vérifier un document » is not a
  * destination (it is the header's one action), the account lives under the avatar, and search is the top bar's ⌘K palette (B2, P14),
  * not a destination. Structure only: the words are the
@@ -29,7 +29,7 @@ export interface Section {
 }
 
 const NO_APPLICANT_SCREEN =
-  "the applicant files' list and detail are on the web first (P6); @yomizaka/client has no applications call yet";
+  "the applicant files' list and detail are on the web first (P6); @verikora/client has no applications call yet";
 const FROM_THE_HOME =
   "the web rail holds Home, Dossiers (when offered) and Checks (krizaka-internal#2001, #2289); the documents are reached from the home";
 const NO_DOCUMENTS_LIST =

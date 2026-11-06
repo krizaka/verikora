@@ -1,4 +1,4 @@
-import type { CloudOwner, StorageKind } from "@yomizaka/core";
+import type { CloudOwner, StorageKind } from "@verikora/core";
 import type { QueryResultRow } from "pg";
 
 import { type ObjectHolder, removeObject } from "../document-objects";

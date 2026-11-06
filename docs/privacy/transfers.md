@@ -1,7 +1,7 @@
 # Transfers outside Québec — register and art. 17 assessment
 
 Act respecting the protection of personal information in the private sector, CQLR c. P-39.1, art. 17 (communication outside
-Québec) and art. 18.3 (service providers). Issue: krizaka/yomizaka#365. The data map is in [efvp.md](efvp.md).
+Québec) and art. 18.3 (service providers). Issue: krizaka/verikora#365. The data map is in [efvp.md](efvp.md).
 
 **The register is [transfers.json](transfers.json).** `scripts/privacy-register.test.mjs` fails the build when
 `deploy/digitalocean/dev.app.yaml` or `apps/web/lib/env.ts` adds a variable of a data context (`DATABASE_`, `MEDIA_`,
@@ -18,7 +18,7 @@ Every place below is outside Québec as the register states (the application its
 | `documents-user-cloud` | The documents a person chooses to keep, in a folder of this app in their own cloud; the sealed refresh token stays here | Dropbox, Google Drive or Microsoft OneDrive, the one the person connected | The provider's, under the person's own account | Not stated |
 | `mail` | The recipient's address and the message of verification and notice e-mails | Mailgun | Not stated (default endpoint `api.mailgun.net`) | Not stated |
 | `payments` | The account e-mail, the plan, payment events | Stripe | Not stated | Not stated |
-| `engine` | The text of a document sent for a check; the run id comes back | Orazaka (Krizaka's engine) | `dev.orazaka.com/edge`; hosting described in Orazaka's repository | Not stated here |
+| `engine` | The text of a document sent for a check; the run id comes back | Sovkora (Krizaka's engine) | `dev.sovkora.com/edge`; hosting described in Sovkora's repository | Not stated here |
 
 ## Art. 17 assessment, one line per place
 

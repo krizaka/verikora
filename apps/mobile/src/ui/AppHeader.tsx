@@ -5,14 +5,14 @@ import { useRouter } from "expo-router";
 import * as React from "react";
 import { Pressable, View } from "react-native";
 
-import { queries } from "@/config";
+import { BRAND_ID, queries } from "@/config";
 import { routes } from "@/domain/links";
 import { useI18n } from "@/i18n";
 import { useLocale } from "@/use-locale";
 
 /**
  * A tab's header: its title, « Vérifier un document » as its « + » (the one action of every tab, the section map of
- * yomizaka#319), and the signed-in account on the right at every size (Oussama's decision, 2026-10-23) — the avatar opens
+ * verikora#319), and the signed-in account on the right at every size (Oussama's decision, 2026-10-23) — the avatar opens
  * the account and the settings.
  */
 export function AppHeader({ title }: Readonly<{ title: string }>) {
@@ -42,7 +42,7 @@ export function AppHeader({ title }: Readonly<{ title: string }>) {
           >
             <Avatar
               size="sm"
-              defaultAvatar={{ brand: "yomizaka", seed: me.data?.avatarSeed ?? me.data?.email ?? "yomizaka" }}
+              defaultAvatar={{ brand: BRAND_ID, seed: me.data?.avatarSeed ?? me.data?.email ?? "verikora" }}
               fallback={name.charAt(0).toUpperCase() || "Y"}
             />
           </Pressable>

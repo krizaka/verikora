@@ -1,7 +1,7 @@
-import type { ComplianceReport, Finding } from "@yomizaka/core";
+import type { ComplianceReport, Finding } from "@verikora/core";
 
 /**
- * The line a finding's evidence sits on (yomizaka#129), 1-based, counted in the document's text: by the offsets when they still match,
+ * The line a finding's evidence sits on (verikora#129), 1-based, counted in the document's text: by the offsets when they still match,
  * else by the first occurrence of the quote. A finding with no quote, or a quote not in the text, has no line (null, never a guess).
  */
 export function lineOf(text: string, finding: Pick<Finding, "evidenceSpan">): number | null {

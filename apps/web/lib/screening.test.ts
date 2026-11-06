@@ -141,7 +141,7 @@ describe("minimal data", () => {
   });
 });
 
-describe("every outcome is shown as it stands (yomizaka#132)", () => {
+describe("every outcome is shown as it stands (verikora#132)", () => {
   const out = (outcome: string, refusal: string | null = null) =>
     itemOf("credit", { outcome, refusal } as never).outcome;
   it("reads MATCH as « to review » (a file found is not a verdict) and NO_MATCH as clear", () => {

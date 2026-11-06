@@ -9,7 +9,7 @@ import { query, transaction } from "./db";
 import { appSettings } from "./settings/instance";
 
 /**
- * Privacy (Loi 25) on `@krizaka/privacy` (yomizaka#264): the consents by purpose, the export of what every module holds about a person, and
+ * Privacy (Loi 25) on `@krizaka/privacy` (verikora#264): the consents by purpose, the export of what every module holds about a person, and
  * their erasure in one transaction. A subject here is an account.
  */
 export const accountSubject = (accountId: string): Subject => ({ kind: "account", id: accountId });
@@ -36,7 +36,7 @@ const contributors = (deps: { stores: StoresOf; now: Date }, privacy: () => Priv
     },
   },
   {
-    name: "yomizaka",
+    name: "verikora",
     // the profile, the billing state, the libraries, the tags and the documents with their kept files and reports
     async exportFor(q, subject) {
       return exportData(q, subject.id, deps.stores, deps.now);

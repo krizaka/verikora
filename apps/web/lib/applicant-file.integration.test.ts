@@ -1,4 +1,4 @@
-import { memoryStore, type OrazakaRun } from "@yomizaka/core";
+import { memoryStore, type SovkoraRun } from "@verikora/core";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 
 import {
@@ -25,20 +25,20 @@ import { applicantFileState } from "./applicant-file";
 import { fileByToken } from "./applicant-file";
 import { loadApplicantPage } from "./applicant-page";
 import { migrate, query } from "./db";
-import { useOrazakaClient } from "./orazaka";
 import { cleanPdf } from "./preflight/fixtures";
 import { consent as screeningConsent, requestScreening } from "./screening";
 import { answerSignal, answersOf } from "./signal-answers";
+import { useSovkoraClient } from "./sovkora";
 
-/** yomizaka#127 against the real database (CI's service; locally YOMIZAKA_DB_IT=1 DATABASE_URL=…). Orazaka is a fake that records the runs. */
-const enabled = process.env.YOMIZAKA_DB_IT === "1" && !!process.env.DATABASE_URL;
+/** verikora#127 against the real database (CI's service; locally DATABASE_IT=1 DATABASE_URL=…). Sovkora is a fake that records the runs. */
+const enabled = process.env.DATABASE_IT === "1" && !!process.env.DATABASE_URL;
 const NOW = new Date("2026-10-24T12:00:00Z");
 const DAY_MS = 86_400_000;
 
-describe.runIf(enabled)("the applicant file (yomizaka#127)", () => {
+describe.runIf(enabled)("the applicant file (verikora#127)", () => {
   const runs = new Map<string, string>();
   let n = 0;
-  const run = (id: string, status: string): OrazakaRun => ({
+  const run = (id: string, status: string): SovkoraRun => ({
     id,
     studioKey: "x",
     blueprintVersion: "1.0.0",
@@ -58,7 +58,7 @@ describe.runIf(enabled)("the applicant file (yomizaka#127)", () => {
 
   beforeAll(async () => {
     await migrate();
-    useOrazakaClient({
+    useSovkoraClient({
       startRun: async () => {
         const id = `run-file-${++n}`;
         runs.set(id, "RUNNING");
@@ -68,7 +68,7 @@ describe.runIf(enabled)("the applicant file (yomizaka#127)", () => {
     } as never);
     const [a, b] = await Promise.all(
       ["a", "b"].map(async (who) => {
-        const email = `file-${who}-${stamp}@yomizaka.test`;
+        const email = `file-${who}-${stamp}@verikora.test`;
         const [row] = await query<{ id: string }>(
           "INSERT INTO accounts (email, audit_credits) VALUES ($1, 50) RETURNING id",
           [email],
@@ -79,7 +79,7 @@ describe.runIf(enabled)("the applicant file (yomizaka#127)", () => {
     landlordA = a!;
     landlordB = b!;
   });
-  afterAll(() => useOrazakaClient(null));
+  afterAll(() => useSovkoraClient(null));
 
   let seq = 0;
   /** A new applicant file for landlord A, with the consent to the document check already given (the applicant read the notice). */
@@ -226,7 +226,7 @@ describe.runIf(enabled)("the applicant file (yomizaka#127)", () => {
     const [doc] = await documentsOf(made.id);
     expect(doc).toMatchObject({ document_type: "pay-stub", retention_policy: "after-check", storage: "none" });
     expect(doc).toMatchObject({ content_len: 0, in_store: true });
-    // The checks end: both runs fail at Orazaka here, which is an end of the check all the same.
+    // The checks end: both runs fail at Sovkora here, which is an end of the check all the same.
     for (const id of runs.keys()) {
       runs.set(id, "FAILED");
     }
@@ -283,7 +283,7 @@ describe.runIf(enabled)("the applicant file (yomizaka#127)", () => {
     await refusal(screeningConsent(made.token, NOW));
   });
 
-  it("the applicant's page opens for a file token and not for a screening's (yomizaka#341)", async () => {
+  it("the applicant's page opens for a file token and not for a screening's (verikora#341)", async () => {
     const made = await askWithConsent(["pay-stub"]);
     const deps = { fileByToken, applicantFileState, activeConsents };
     const page = await loadApplicantPage(made.token, NOW, deps);
@@ -291,13 +291,13 @@ describe.runIf(enabled)("the applicant file (yomizaka#127)", () => {
     expect(page?.consents).toContain(CONSENT_PURPOSE.DOCUMENT_CHECK);
     const screening = await requestScreening(
       landlordA,
-      { tenantName: "Camille Fictif", tenantEmail: `s-${stamp}@yomizaka.test`, scope: ["payment-history"] },
+      { tenantName: "Camille Fictif", tenantEmail: `s-${stamp}@verikora.test`, scope: ["payment-history"] },
       NOW,
     );
     expect(await loadApplicantPage(screening.token, NOW, deps)).toBeNull();
   });
 
-  describe("the applicant's answer to a trace (ADR-0014, yomizaka#626)", () => {
+  describe("the applicant's answer to a trace (ADR-0014, verikora#626)", () => {
     const REPORT = {
       header: "x",
       signals: [

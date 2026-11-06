@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// Generates the Ed25519 key that signs Yomizaka's audit reports. Prints NOTHING of it: it writes
+// Generates the Ed25519 key that signs Verikora's audit reports. Prints NOTHING of it: it writes
 // APP_REPORT_SIGNING_KEY into the env file you name (mode 0600), to be stored as a DO SECRET.
 //
 //   node scripts/generate-report-key.mjs <env-file>      (refuses to replace a key already there: rotate on purpose)

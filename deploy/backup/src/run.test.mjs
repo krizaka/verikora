@@ -54,10 +54,10 @@ describe("runBackup", () => {
     expect(events.filter((e) => !e.startsWith("remove"))).toEqual([
       "snapshot",
       "dump",
-      "create yomizaka_drill_" + events[2].slice(-14),
+      "create verikora_drill_" + events[2].slice(-14),
       "restore",
       "encrypt",
-      "drop yomizaka_drill_" + events[2].slice(-14),
+      "drop verikora_drill_" + events[2].slice(-14),
     ]);
     expect(manifest.sha256).toBe(sha(AGE));
     expect(manifest.rowCounts).toEqual({ "public.documents": 3, "public.users": 2 });

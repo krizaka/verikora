@@ -41,7 +41,7 @@ type Lang = ReturnType<typeof useSay>["locale"];
 
 type TagOption = { id: string; name: string; color: "blue" | "green" | "amber" | "red" | "violet" | "gray" };
 
-/** What the organised workspace gives « Dossiers » (yomizaka#324): the decision set, the account's tags, the views and the one the address names. */
+/** What the organised workspace gives « Dossiers » (verikora#324): the decision set, the account's tags, the views and the one the address names. */
 export interface FilesWorkspace {
   set: StatusSet;
   tags: readonly TagOption[];
@@ -75,7 +75,7 @@ export function useFileFacts() {
   };
 }
 // The link's state is a priority-1 column: on a phone the list puts it in the row's detail, whole. At priority 2 it became the one-line
-// « facts » under the name, truncated beside the decision chip and the toggle, and the layout audit saw it cut off (yomizaka#496).
+// « facts » under the name, truncated beside the decision chip and the toggle, and the layout audit saw it cut off (verikora#496).
 function fileColumns(
   say: Say,
   base: string,
@@ -152,7 +152,7 @@ function fileColumns(
 }
 
 /**
- * « Dossiers » (design § 4, § 5.2, yomizaka#323, #324): the applicant files, newest first, as `listApplicantFiles` returns them —
+ * « Dossiers » (design § 4, § 5.2, verikora#323, #324): the applicant files, newest first, as `listApplicantFiles` returns them —
  * the applicant, the link's state as a line of facts, **your decision** (the set's chip, sorted by the set's order — never by a check's
  * result), the documents in against those asked, the tags with their markers, the day it was asked — the views, the filters of the
  * address, the selection bar and « Demander des documents ».
@@ -170,7 +170,7 @@ export function FilesView({
   origin: string;
   workspace?: FilesWorkspace;
 }>) {
-  // The link-state filter of the address (`?state=used`), the door of the home's « À traiter » (yomizaka#325).
+  // The link-state filter of the address (`?state=used`), the door of the home's « À traiter » (verikora#325).
   const files = filesInStates(all, states);
   const { say, locale } = useSay();
   const facts = useFileFacts();
@@ -394,7 +394,7 @@ function FilesBody({
 }
 
 /**
- * The binder (design B2, yomizaka#334): the decision states as binder tabs with their counts, the tags as chips with theirs. Every
+ * The binder (design B2, verikora#334): the decision states as binder tabs with their counts, the tags as chips with theirs. Every
  * one is a link, the address is the state; each count is the length of the view it opens (`countApplicantFiles`, the list's filter).
  */
 function Binder({ workspace, base }: Readonly<{ workspace: FilesWorkspace; base: string }>) {

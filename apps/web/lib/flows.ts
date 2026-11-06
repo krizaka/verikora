@@ -11,7 +11,7 @@ import {
   STEP_KIND,
   type Studio,
   VERSION_STATUS,
-} from "@yomizaka/core";
+} from "@verikora/core";
 
 import { audit } from "./audit";
 import { purposeOfKey } from "./consent-purpose";
@@ -102,10 +102,10 @@ export function audiencesOf(flows: readonly AvailableFlow[]): { audience: Audien
 export const flowsFor = (flows: readonly AvailableFlow[], audience: Audience | null): AvailableFlow[] =>
   audience ? flows.filter((f) => f.definition.audiences.includes(audience)) : [...flows];
 
-/** The flow that carries the applicant files (yomizaka#127: a screening row of flow « file »). */
+/** The flow that carries the applicant files (verikora#127: a screening row of flow « file »). */
 export const APPLICANT_FILE_FLOW = "tenant-screening";
 
-/** Whether « Dossiers » is offered: the applicant-file flow is enabled and offered to this person's audience (yomizaka#319). */
+/** Whether « Dossiers » is offered: the applicant-file flow is enabled and offered to this person's audience (verikora#319). */
 export const applicantFilesOffered = (flows: readonly AvailableFlow[], audience: Audience | null): boolean =>
   flowsFor(flows, audience).some((f) => f.key === APPLICANT_FILE_FLOW);
 

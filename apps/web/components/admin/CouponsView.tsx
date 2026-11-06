@@ -53,7 +53,7 @@ const partnerForm = createKrizakaForm({
 });
 
 /**
- * The coupons of the product (ADR-002, yomizaka#262): create a discount or a credit code with its window and limits, pause or archive it, see who used it and what it
+ * The coupons of the product (ADR-002, verikora#262): create a discount or a credit code with its window and limits, pause or archive it, see who used it and what it
  * brought, and manage the people who sell with it. The terms are locked once a code has been used. A credit code always has a cap or an expiry: the form asks for both.
  */
 export function CouponsView() {

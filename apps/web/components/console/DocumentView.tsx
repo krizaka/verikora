@@ -16,7 +16,7 @@ import {
   type Jurisdiction,
   queryKeys,
   type Studio,
-} from "@yomizaka/core";
+} from "@verikora/core";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useRef, useState } from "react";
@@ -46,10 +46,10 @@ import { StartCards, StartCheckActions } from "./StartChecks";
 /**
  * The document on `DetailLayout` (the UX review's Y5): the title the insight knows, the status, the one primary action by state,
  * the rest in a menu; three tabs as routes — the report first (the verdict, the findings with what failed first, the engine's
- * facts folded), the document (the file or its text, what Yomizaka read in it, where it lives), the history of its runs —; the
+ * facts folded), the document (the file or its text, what Verikora read in it, where it lives), the history of its runs —; the
  * sharing in the side panel. The way back leads to the document's collection; once a report is shown, the aside holds the facts
- * (collection, file, retention), the other checks as actions (each a dialog) and the sharing (design § 5.3). Every analysis is an Orazaka run, shown as it came back. This component holds what the tabs share
- * (the document, the lit finding, the deletion); each tab and the actions are their own component (yomizaka#320, #110).
+ * (collection, file, retention), the other checks as actions (each a dialog) and the sharing (design § 5.3). Every analysis is an Sovkora run, shown as it came back. This component holds what the tabs share
+ * (the document, the lit finding, the deletion); each tab and the actions are their own component (verikora#320, #110).
  */
 /** Where the document sits: its collection (the way back), or null when the page could not say. */
 export interface DocumentPlace {

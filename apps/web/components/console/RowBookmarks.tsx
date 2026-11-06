@@ -15,7 +15,7 @@ import type { Tag } from "@/lib/organisation/store";
 import { TagChips } from "./TagChips";
 
 /**
- * One tap to bookmark a document from its row (yomizaka#339): a menu of the person's bookmarks, each a toggle that applies or lifts it on
+ * One tap to bookmark a document from its row (verikora#339): a menu of the person's bookmarks, each a toggle that applies or lifts it on
  * this document alone (`/api/organize/document/tags/apply`, one audit line). The row's chips follow at once; the page refreshes behind.
  */
 export function RowBookmarks({

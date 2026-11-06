@@ -8,7 +8,7 @@ import { objectKey } from "./retention";
 import { memoryStore } from "./storage/memory";
 
 /** ADR-0012 step 4 against a real PostgreSQL (skipped without the database test switch). */
-const enabled = process.env.YOMIZAKA_DB_IT === "1" && !!process.env.DATABASE_URL;
+const enabled = process.env.DATABASE_IT === "1" && !!process.env.DATABASE_URL;
 const BYTES = new TextEncoder().encode("BAIL DE LOGEMENT\nLoyer mensuel : 1 450 $.\n");
 const SHA = createHash("sha256").update(BYTES).digest("hex");
 
@@ -21,7 +21,7 @@ describe.runIf(enabled)("documents backfill (ADR-0012)", () => {
   const legacy = async (sha = SHA) => {
     const [owner] = await query<{ id: string }>(
       "INSERT INTO accounts (email, password_hash, email_verified_at) VALUES ($1, 'x', now()) RETURNING id",
-      [`b-${Math.random().toString(36).slice(2)}@yomizaka.test`],
+      [`b-${Math.random().toString(36).slice(2)}@verikora.test`],
     );
     const [doc] = await query<{ id: string }>(
       "INSERT INTO documents (owner_id, title, filename, mime_type, kind, size_bytes, sha256, content, text, storage) VALUES ($1, 'bail', 'bail.txt', 'text/plain', 'lease', $2, $3, $4, 'Loyer', 'database') RETURNING id",

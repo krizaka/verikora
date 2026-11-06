@@ -1,13 +1,13 @@
-import { JURISDICTIONS } from "@yomizaka/core";
+import { JURISDICTIONS } from "@verikora/core";
 import { describe, expect, it } from "vitest";
 
 import { LEASE_REFS, leaseRefOn } from "../../../scripts/smoke-lease-check.mjs";
 import { runInputs } from "./analyses";
 import { rulesFor } from "./check-flow";
-import contract from "./orazaka-contract/compliance-check-inputs.json";
 import { CHECK_KINDS, rulesetFor } from "./rulesets";
+import contract from "./sovkora-contract/compliance-check-inputs.json";
 
-/* The contract test of the Yomizaka -> Orazaka call (the 10-29 refusal « Orazaka refused the document as sent »): every run the UI can
+/* The contract test of the Verikora -> Sovkora call (the 10-29 refusal « Sovkora refused the document as sent »): every run the UI can
  * start is turned into the Studio's inputs and checked against the Studio's own input schema, the one the engine enforces. */
 
 type Property = { type: string; enum?: string[]; pattern?: string; maxLength?: number };
@@ -43,7 +43,7 @@ function everyRequest() {
   return requests;
 }
 
-describe("what Yomizaka sends to the compliance Studio is what the Studio accepts", () => {
+describe("what Verikora sends to the compliance Studio is what the Studio accepts", () => {
   const requests = everyRequest();
   it("covers a lease, an invoice, a service contract, a visit notice and an état des lieux", () => {
     expect(new Set(requests.map((r) => r.kind))).toEqual(new Set(CHECK_KINDS));

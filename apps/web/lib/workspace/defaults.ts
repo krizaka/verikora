@@ -46,7 +46,7 @@ export const DEFAULT_CONFIGS: Record<Kind, KindConfig> = {
       },
     ],
   },
-  // Documents carry tags only: a document already has Orazaka's fact (« À regarder », « Aucun problème trouvé… »), and a second,
+  // Documents carry tags only: a document already has Sovkora's fact (« À regarder », « Aucun problème trouvé… »), and a second,
   // user-made status on the same row would compete with it (design § 4).
   [KIND.document]: {
     kind: KIND.document,

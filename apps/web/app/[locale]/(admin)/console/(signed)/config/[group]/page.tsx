@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 
-import { OrazakaPanel, PacksPanel, ScopeBar } from "@/components/admin/ConfigPanels";
+import { PacksPanel, ScopeBar, SovkoraPanel } from "@/components/admin/ConfigPanels";
 import { ConfigView } from "@/components/admin/ConfigView";
 import { CouponsView } from "@/components/admin/CouponsView";
 import { OrganisationPanel } from "@/components/admin/OrganisationPanel";
@@ -16,7 +16,7 @@ export const dynamic = "force-dynamic";
 
 const SCOPES = Object.values(SCOPE) as string[];
 
-/** One page of the app configuration, one route: /config/general | features | limits | plans | prices | coupons | packs | orazaka, at a scope given in the URL. */
+/** One page of the app configuration, one route: /config/general | features | limits | plans | prices | coupons | packs | sovkora, at a scope given in the URL. */
 export default async function ConfigPage({
   params,
   searchParams,
@@ -47,7 +47,7 @@ export default async function ConfigPage({
             <PacksPanel flows={await listAdminFlows()} environment={appEnvironment()} />
           ) : null}
           {group === CONFIG_PAGE.organisation ? <OrganisationPanel /> : null}
-          {group === CONFIG_PAGE.orazaka ? <OrazakaPanel /> : null}
+          {group === CONFIG_PAGE.sovkora ? <SovkoraPanel /> : null}
         </div>
       </RouteTabs>
     </div>

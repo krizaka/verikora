@@ -1,18 +1,18 @@
 import { locateQuote } from "@krizaka/ui/document-viewer";
 import { describe, expect, it } from "vitest";
 
-import { YOMIZAKA_OCR_RULES } from "../ocr/rules";
+import { VERIKORA_OCR_RULES } from "../ocr/rules";
 import { tesseractEngine } from "../ocr/tesseract";
 import { textLayer } from "../test-pdf";
 import { createImageCleaner } from "./clean";
 import { photoOfPage } from "./fixtures";
 import { pagesToPdf } from "./pdf";
-import { YOMIZAKA_IMAGE_RULES } from "./rules";
+import { VERIKORA_IMAGE_RULES } from "./rules";
 
 describe("the recognised words of a photo, as the text layer of its PDF", () => {
   it("finds a quote on the photo, where the words are", async () => {
-    const { page } = await createImageCleaner(YOMIZAKA_IMAGE_RULES).clean({ bytes: await photoOfPage(), kind: "jpeg" });
-    const read = await tesseractEngine().read([page.jpeg], YOMIZAKA_OCR_RULES.languages);
+    const { page } = await createImageCleaner(VERIKORA_IMAGE_RULES).clean({ bytes: await photoOfPage(), kind: "jpeg" });
+    const read = await tesseractEngine().read([page.jpeg], VERIKORA_OCR_RULES.languages);
     const words = read.pages[0]!.words!;
     expect(words.length).toBeGreaterThan(10);
 
@@ -33,13 +33,13 @@ describe("the recognised words of a photo, as the text layer of its PDF", () => 
   }, 90_000);
 
   it("adds nothing without words: the same photos give the same bytes", async () => {
-    const { page } = await createImageCleaner(YOMIZAKA_IMAGE_RULES).clean({ bytes: await photoOfPage(), kind: "jpeg" });
+    const { page } = await createImageCleaner(VERIKORA_IMAGE_RULES).clean({ bytes: await photoOfPage(), kind: "jpeg" });
     expect(Buffer.from(await pagesToPdf([page])).equals(Buffer.from(await pagesToPdf([page], [[]])))).toBe(true);
     expect(await textLayer(await pagesToPdf([page]))).toEqual([expect.objectContaining({ items: [] })]);
   });
 
   it("draws what the standard font cannot as a question mark, never failing", async () => {
-    const { page } = await createImageCleaner(YOMIZAKA_IMAGE_RULES).clean({ bytes: await photoOfPage(), kind: "jpeg" });
+    const { page } = await createImageCleaner(VERIKORA_IMAGE_RULES).clean({ bytes: await photoOfPage(), kind: "jpeg" });
     const pdf = await pagesToPdf([page], [[{ text: "→ œuvre", bbox: { x0: 10, y0: 10, x1: 200, y1: 40 } }]]);
     expect((await textLayer(pdf))[0]!.items.map((i) => i.str).join("")).toContain("œuvre");
   });

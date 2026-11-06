@@ -34,7 +34,7 @@ describe("a web link opens the same place in the Mac app", () => {
 
   it("opens the library for any other path", () => {
     for (const link of ["/app", "/app/search", "/tarifs", "/", ""]) expect(routeOfLink(link)).toEqual(HOME);
-    // Vérifications and its « Lots » tab, at the web's address (yomizaka#319).
+    // Vérifications and its « Lots » tab, at the web's address (verikora#319).
     expect(routeOfLink("/app/verifications")).toEqual({ screen: "reports" });
     expect(routeOfLink("/app/verifications?tab=lots")).toEqual({ screen: "batches" });
   });

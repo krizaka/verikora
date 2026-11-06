@@ -1,12 +1,14 @@
-// The demo cast of Yomizaka, read from `@krizaka/org` (krizaka/.github#356): who is seeded, with which name, role and language.
+// The demo cast of Verikora, read from `@krizaka/org` (krizaka/.github#356): who is seeded, with which name, role and language.
 // E-mail addresses and passwords are NOT in the cast: they come from the environment (the deployment's own configuration), with
 // documented defaults that exist only for a local database.
 import { castOf, persona, personaByRole, seedFingerprint } from "@krizaka/org";
 
-export const CAST = castOf("yomizaka");
-export const CAST_MEMBER = personaByRole("yomizaka", "member");
-export const CAST_ADMIN = personaByRole("yomizaka", "admin");
-export const CAST_CAMILLE = persona("yomizaka", "camille");
+/** The id `@krizaka/org` still knows this product by, until its major release with the commercial ids (krizaka-internal#2659). */
+export const BRAND_ID = "yomizaka";
+export const CAST = castOf(BRAND_ID);
+export const CAST_MEMBER = personaByRole(BRAND_ID, "member");
+export const CAST_ADMIN = personaByRole(BRAND_ID, "admin");
+export const CAST_CAMILLE = persona(BRAND_ID, "camille");
 export { seedFingerprint };
 
 /** The password a LOCAL database gets when none is given. Never used on a host that is not this machine. */
@@ -27,7 +29,7 @@ const isLocalHost = (databaseUrl) => {
 export function castAccounts(env) {
   const local = isLocalHost(env.DATABASE_URL ?? "");
   const pick = (role, persona, emailKeys, passwordKeys) => {
-    const email = emailKeys.map((k) => env[k]).find(Boolean) ?? `${persona.id}@demo.yomizaka.test`;
+    const email = emailKeys.map((k) => env[k]).find(Boolean) ?? `${persona.id}@demo.verikora.test`;
     const password = passwordKeys.map((k) => env[k]).find(Boolean) ?? (local ? LOCAL_PASSWORD : undefined);
     if (!password || password.length < 12)
       throw new Error(`the ${role} password is missing or shorter than 12 characters (${passwordKeys.join(" or ")})`);

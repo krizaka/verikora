@@ -1,4 +1,4 @@
-import { documentStoreContractWith } from "@yomizaka/core/document-store/contract-kit";
+import { documentStoreContractWith } from "@verikora/core/document-store/contract-kit";
 
 import { createDeviceStore, createPhoneStore, DEVICE_PLACE, extensionOf, type FilePort } from "./device-store";
 
@@ -61,7 +61,7 @@ describe("the document store of the device", () => {
   ])("reads the extension of %s as %s", (name, ext) => expect(extensionOf(name)).toBe(ext));
 });
 
-// The phone's adapter is a DocumentStore like the web's and the Mac's: it passes the same contract (yomizaka#155, ADR-0007).
+// The phone's adapter is a DocumentStore like the web's and the Mac's: it passes the same contract (verikora#155, ADR-0007).
 describe("the phone's DocumentStore", () => {
   documentStoreContractWith("phone sandbox", () => createPhoneStore(memoryFiles().port, "file:///sandbox"), {
     it,

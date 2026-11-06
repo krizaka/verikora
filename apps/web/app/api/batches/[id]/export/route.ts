@@ -12,7 +12,7 @@ export const dynamic = "force-dynamic";
 
 /**
  * The batch's results as CSV, one line per row of the CSV it came from: what each became, and its reason when it did not run.
- * `?format=zip&lang=fr|en` is the archive of its reports instead (yomizaka#242): the CSV, the signed PDFs, the authenticity signals.
+ * `?format=zip&lang=fr|en` is the archive of its reports instead (verikora#242): the CSV, the signed PDFs, the authenticity signals.
  */
 export function GET(req: Request, { params }: { params: Promise<{ id: string }> }) {
   return handle(async () => {

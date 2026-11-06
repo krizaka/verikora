@@ -42,13 +42,13 @@ import { SITE_URL } from "./site";
  *
  * The same attestation as the HTML report, in a file people print and file: the report's pages, then a visible signature
  * page. What is signed is the canonical JSON `payload` and the SHA-256 of the report's TEXT (every page before the
- * signature page); the attestation is embedded in the PDF (its Info dictionary, key `YomizakaAttestation`, base64 JSON).
+ * signature page); the attestation is embedded in the PDF (its Info dictionary, key `VerikoraAttestation`, base64 JSON).
  * Verification reads it back, checks the Ed25519 signature, then extracts the text of the pages with pdf.js and compares
  * it: a changed word on any page is `ALTERED`. Deterministic: the same payload and labels give the same bytes.
  *
  * It does NOT sign the PDF's bytes (a viewer that re-saves a file changes them): it signs what the file says.
  */
-export const ATTESTATION_KEY = "YomizakaAttestation";
+export const ATTESTATION_KEY = "VerikoraAttestation";
 
 /** How each kind of line of the closing note is printed. */
 const NOTE_STYLE: Record<LineKind, { size: number; bold?: boolean; gap?: number }> = {

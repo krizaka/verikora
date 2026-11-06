@@ -3,7 +3,7 @@ import { join } from "node:path";
 
 import { describe, expect, it } from "vitest";
 
-/** Yomizaka verifies documents and screens files: it never verifies an identity (#371). */
+/** Verikora verifies documents and screens files: it never verifies an identity (#371). */
 const FORBIDDEN: Record<string, RegExp> = {
   en: /identity verif|verif\w* (?:your |an? |the )?identity|identity check|identity proof|\bKYC\b/i,
   fr: /v[ée]rification d.identit[ée]|v[ée]rifi\w* (?:votre |l.|une )?identit[ée]|contr[ôo]le d.identit[ée]|\bKYC\b/i,
@@ -24,7 +24,7 @@ function catalogue(lang: string): [string, string][] {
 describe.each(["en", "fr"])("public wording (%s)", (lang) => {
   const texts = catalogue(lang);
 
-  it("never says Yomizaka verifies an identity, nor calls its tools « legal rules »", () => {
+  it("never says Verikora verifies an identity, nor calls its tools « legal rules »", () => {
     const offenders = texts.filter(([, v]) => FORBIDDEN[lang].test(v) || LEGAL_RULES[lang].test(v)).map(([k]) => k);
     expect(offenders).toEqual([]);
   });

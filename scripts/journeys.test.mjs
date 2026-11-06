@@ -11,7 +11,7 @@ const index = JSON.parse(readFileSync(new URL("journeys.json", DIR), "utf8"));
 const files = readdirSync(DIR);
 const cast = castOf("yomizaka").map((p) => p.id);
 
-describe("the journey catalogue of Yomizaka", () => {
+describe("the journey catalogue of Verikora", () => {
   it("has a row for every journey file and a file for every row", () => {
     expect(checkCatalogue({ files, index })).toEqual([]);
   });

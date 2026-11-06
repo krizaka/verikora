@@ -5,12 +5,12 @@ import {
   type ComplianceReport,
   type Signal,
   signalFamily,
-} from "@yomizaka/core";
+} from "@verikora/core";
 
 import type { ApplicantFileView } from "./applicant-file";
 
 /**
- * The verification report an owner reads (yomizaka#128), pure: what is kept of an applicant file, and what is dropped.
+ * The verification report an owner reads (verikora#128), pure: what is kept of an applicant file, and what is dropped.
  * Kept: a reference, the date, per document its type, hash and page count, the signals observed, the rule, verdict and article
  * of each finding, the runs and versions. Dropped: the candidate's name and e-mail, the file names (they carry names), every
  * quoted passage, the document text and images. It never scores, ranks or decides: the signals are observations.
@@ -27,7 +27,7 @@ export interface OwnerSignal {
   /** The family and where in the file (page, later save, field): facts, never a value of the document. The box stays in the person's own report. */
   family?: string;
   evidence?: { page?: number; revision?: number; field?: string };
-  /** The applicant's own explanation of this trace and its date (ADR-0014, yomizaka#626), shown next to it. */
+  /** The applicant's own explanation of this trace and its date (ADR-0014, verikora#626), shown next to it. */
   answer?: { text: string; at: string };
 }
 export interface OwnerFinding {

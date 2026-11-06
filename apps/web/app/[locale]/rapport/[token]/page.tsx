@@ -19,7 +19,7 @@ import { pagePath } from "@/lib/site";
 export const dynamic = "force-dynamic";
 export const metadata: Metadata = { robots: { index: false, follow: false }, referrer: "no-referrer" };
 
-/** The building owner's page (yomizaka#128): a read-only report by link, public by token, never indexed, never cached; no account, no document. */
+/** The building owner's page (verikora#128): a read-only report by link, public by token, never indexed, never cached; no account, no document. */
 export default async function OwnerReportPage({
   params,
   searchParams,
@@ -34,7 +34,7 @@ export default async function OwnerReportPage({
   await limit("applicant", { headers: h }, null);
   const now = new Date();
   const report = await openShare(token, now, h);
-  // One answer for an unknown, expired or revoked link: 404, nothing leaks (yomizaka#128).
+  // One answer for an unknown, expired or revoked link: 404, nothing leaks (verikora#128).
   if (!report) notFound();
   const back = { href: pagePath(locale, "home"), label: t.meta.siteName };
   const date = new Date(report.issuedAt).toLocaleDateString(INTL[lang], {

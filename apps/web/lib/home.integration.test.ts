@@ -6,8 +6,8 @@ import { migrate, query } from "./db";
 import { activity, activityStrip, filesToDecide, toDo } from "./home";
 import { toDoLinks } from "./home-figures";
 
-/** The home's figures against a real PostgreSQL (yomizaka#325): each one counted over the rows its view lists. */
-const enabled = process.env.YOMIZAKA_DB_IT === "1" && !!process.env.DATABASE_URL;
+/** The home's figures against a real PostgreSQL (verikora#325): each one counted over the rows its view lists. */
+const enabled = process.env.DATABASE_IT === "1" && !!process.env.DATABASE_URL;
 
 describe.runIf(enabled)("the home's figures", () => {
   beforeAll(async () => {
@@ -113,7 +113,7 @@ describe.runIf(enabled)("the home's figures", () => {
     expect(days.reduce((n, d) => n + d.checks, 0)).toBe(2);
   });
 
-  it("the strip's four figures are queries over the chosen period, the owner's own rows only (yomizaka#332)", async () => {
+  it("the strip's four figures are queries over the chosen period, the owner's own rows only (verikora#332)", async () => {
     const owner = await account();
     const doc = await document(owner);
     await query("UPDATE documents SET created_at = $2 WHERE id = $1", [doc, "2026-10-23T12:00:00Z"]);

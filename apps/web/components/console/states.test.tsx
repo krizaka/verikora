@@ -11,7 +11,7 @@ import fr from "@/messages/fr.json";
 import { SEGMENT_SHAPES, SegmentError, SegmentLoading } from "./SegmentStates";
 
 /**
- * The states pass (design § 3.5, P11, yomizaka#328): every page of the signed-in space has its own `loading.tsx` (a skeleton
+ * The states pass (design § 3.5, P11, verikora#328): every page of the signed-in space has its own `loading.tsx` (a skeleton
  * in the page's shape, never a centred spinner) and its own `error.tsx` (an Alert in place with the way back; the shell stays).
  */
 const WEB = join(__dirname, "../..");

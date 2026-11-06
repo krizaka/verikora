@@ -6,7 +6,7 @@ import { MIGRATIONS } from "./migrations";
 describe("db", () => {
   it("verifies the cluster's certificate against its CA, never blindly", () => {
     const config = poolConfig({
-      DATABASE_URL: "postgresql://u:p@db.example:25060/yomizaka_db?sslmode=require",
+      DATABASE_URL: "postgresql://u:p@db.example:25060/verikora_db?sslmode=require",
       DATABASE_CA_CERT: "-----BEGIN CERTIFICATE-----\\nX",
     });
     expect(config.connectionString).not.toContain("sslmode");
@@ -14,11 +14,11 @@ describe("db", () => {
   });
 
   it("speaks plain TCP to a local database", () => {
-    expect(poolConfig({ DATABASE_URL: "postgresql://u:p@localhost:5432/yomizaka_db" }).ssl).toBeUndefined();
+    expect(poolConfig({ DATABASE_URL: "postgresql://u:p@localhost:5432/verikora_db" }).ssl).toBeUndefined();
   });
 
   it("sizes the pool by DATABASE_MAX_CONNECTIONS (5 by default), and refuses a nonsense size", () => {
-    const base = { DATABASE_URL: "postgresql://u:p@localhost:5432/yomizaka_db" };
+    const base = { DATABASE_URL: "postgresql://u:p@localhost:5432/verikora_db" };
     expect(poolConfig(base).max).toBe(5);
     expect(poolConfig({ ...base, DATABASE_MAX_CONNECTIONS: "12" }).max).toBe(12);
     expect(() => poolConfig({ ...base, DATABASE_MAX_CONNECTIONS: "0" })).toThrow();
@@ -26,8 +26,8 @@ describe("db", () => {
   });
 
   it("keeps session locks and migrations on the direct URL, so a transaction pooler never sits under them", () => {
-    const pooled = "postgresql://u:p@pool.example:25061/pool-yomizaka";
-    const direct = "postgresql://u:p@db.example:25060/yomizaka_db";
+    const pooled = "postgresql://u:p@pool.example:25061/pool-verikora";
+    const direct = "postgresql://u:p@db.example:25060/verikora_db";
     expect(poolConfig({ DATABASE_URL: pooled, DATABASE_DIRECT_URL: direct }).connectionString).toBe(pooled);
     const session = sessionPoolConfig({
       DATABASE_URL: pooled,
@@ -39,7 +39,7 @@ describe("db", () => {
   });
 
   it("falls back to DATABASE_URL for session locks when there is no direct URL (no pooler)", () => {
-    const url = "postgresql://u:p@localhost:5432/yomizaka_db";
+    const url = "postgresql://u:p@localhost:5432/verikora_db";
     expect(sessionPoolConfig({ DATABASE_URL: url }).connectionString).toBe(url);
   });
 

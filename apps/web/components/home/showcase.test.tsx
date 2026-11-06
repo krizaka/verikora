@@ -12,7 +12,7 @@ import { DEMO_SCREENING, demoOwnerDocument } from "@/lib/landing-demo";
 import { recordedRun } from "@/lib/recorded-runs";
 import { screeningResult } from "@/lib/screening";
 
-/** yomizaka#478: the home's feature cards hold the app's own screens, inert, hidden from assistive technology, with a text alternative. */
+/** verikora#478: the home's feature cards hold the app's own screens, inert, hidden from assistive technology, with a text alternative. */
 describe("the home's feature cards", () => {
   it("draws three screens, each inert and aria-hidden, each card with its text alternative", async () => {
     const html = renderToStaticMarkup(

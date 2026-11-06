@@ -20,7 +20,7 @@ import {
   type StorageKind,
   type Studio,
   type TextSource,
-} from "@yomizaka/core";
+} from "@verikora/core";
 
 import { query } from "./db";
 import { ExtractionError } from "./extraction/isolated";
@@ -30,7 +30,7 @@ import { readText } from "./pdf-text";
 import { personalInfo } from "./pii";
 import { createInspector } from "./preflight/inspector";
 import { type FileKind, OUTCOME, type PreflightRules, type RejectReason } from "./preflight/port";
-import { YOMIZAKA_RULES } from "./preflight/rules";
+import { VERIKORA_RULES } from "./preflight/rules";
 import { EXTERNAL, objectKey, purgeDeadline, storageFor } from "./retention";
 import { localStore } from "./storage/local";
 import type { DocumentStore, StoreDescriptor } from "./storage/port";
@@ -65,7 +65,7 @@ export interface AnalysisRow {
   finished_at: Date | null;
 }
 
-/** Whether a report asks for attention: a failed blocking rule, or a signal Orazaka calls incoherent. */
+/** Whether a report asks for attention: a failed blocking rule, or a signal Sovkora calls incoherent. */
 export function needsAttention(report: ComplianceReport | AuthenticityReport | null): boolean {
   if (!report) return false;
   if ("findings" in report) return report.findings.some((f) => f.verdict === "FAIL" && f.severity === "BLOCKING");
@@ -107,7 +107,7 @@ function summary(row: DocumentRow): DocumentSummary {
 export function toAnalysis(row: AnalysisRow): Analysis {
   const report = { ...((row.report ?? {}) as Record<string, unknown>) };
   delete report.attention;
-  // The signals over the false-positive bar stay in the stored report (the run, for measurement) and are never given on (yomizaka#651).
+  // The signals over the false-positive bar stay in the stored report (the run, for measurement) and are never given on (verikora#651).
   if (Array.isArray(report.signals)) {
     report.signals = landlordSignals(report.signals as Signal[]);
   }
@@ -170,7 +170,7 @@ export async function getDocument(ownerId: string, id: string): Promise<Document
   };
 }
 
-/** Whether a document was made from photos (its file is a PDF Yomizaka assembled: file-level authenticity signals would describe Yomizaka, not the document). */
+/** Whether a document was made from photos (its file is a PDF Verikora assembled: file-level authenticity signals would describe Verikora, not the document). */
 export async function isPhotoDocument(ownerId: string, id: string): Promise<boolean> {
   const [row] = await query<{ photo: boolean }>(
     "SELECT text_source IS NOT NULL AS photo FROM documents WHERE owner_id = $1 AND id = $2",
@@ -317,7 +317,7 @@ const REFUSALS: Record<RejectReason, { status: number; code: string }> = {
   IMAGE_TOO_LARGE: { status: 413, code: "IMAGE_TOO_LARGE" },
 };
 
-const defaultInspector = createInspector(YOMIZAKA_RULES);
+const defaultInspector = createInspector(VERIKORA_RULES);
 
 /** The pre-flight (lib/preflight, ADR-0005): what an upload must be, decided here for nothing before anything is stored or sent to an engine. */
 export async function inspectUpload(
@@ -560,7 +560,7 @@ export async function storeDocument(
     return { summary: summary(existing), duplicate: true };
   const filename = safeFilename(file.name);
   const deadline = where === "none" && policy ? purgeDeadline(policy.now, policy.purgeAfterHours) : null;
-  // Deferred (the upload route): the row is saved at once with its text still to read — an isolated worker reads it after the answer (yomizaka#21).
+  // Deferred (the upload route): the row is saved at once with its text still to read — an isolated worker reads it after the answer (verikora#21).
   const deferred = options.defer === true && !textOf;
   const {
     read,
@@ -608,7 +608,7 @@ export async function storeDocument(
 
 /**
  * Reads the text of a deferred document in the isolated worker and completes its row: the text, the pages, the kind it turns out
- * to be (when the person left it to Yomizaka) and the title. A failure is kept on the row, with the code the page translates.
+ * to be (when the person left it to Verikora) and the title. A failure is kept on the row, with the code the page translates.
  */
 export async function finishExtraction(args: {
   ownerId: string;

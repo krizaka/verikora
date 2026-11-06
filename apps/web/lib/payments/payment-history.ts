@@ -1,7 +1,7 @@
 import type { StripeCall } from "@krizaka/payments";
 
 /**
- * The payments of an account, as Account → Billing shows them (yomizaka#585): the date, what was bought, the amount, whether it was
+ * The payments of an account, as Account → Billing shows them (verikora#585): the date, what was bought, the amount, whether it was
  * refunded, and the processor's receipt link. Read from the processor on the server; only these facts leave this module, never a
  * card, a name or an address (the receipt page holds them, at the processor).
  */

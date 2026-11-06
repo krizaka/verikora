@@ -26,7 +26,7 @@ export const JARGON = [
   "payload",
   "evidenceSpan",
   "run id",
-  "Orazaka",
+  "Sovkora",
 ] as const;
 /** Acronyms that may only appear when the sentence explains them. */
 export const ACRONYMS_TO_EXPLAIN = ["TAL", "TPS", "TVQ", "GST", "QST"] as const;

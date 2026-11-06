@@ -7,7 +7,7 @@ import { memoryStore } from "./storage/memory";
 import { noneStore } from "./storage/none";
 
 /** ADR-0012: a new document's bytes go to a store at upload, kept or not; the column stays empty (PostgreSQL; skipped without the database test switch). */
-const enabled = process.env.YOMIZAKA_DB_IT === "1" && !!process.env.DATABASE_URL;
+const enabled = process.env.DATABASE_IT === "1" && !!process.env.DATABASE_URL;
 const NOW = new Date("2026-10-28T12:00:00Z");
 const TEXT = "BAIL DE LOGEMENT\nLoyer mensuel : 1 450 $, payable le premier jour du mois.\n";
 const file = { name: "bail.txt", type: "text/plain", size: 100 };
@@ -20,7 +20,7 @@ describe.runIf(enabled)("the write path puts bytes in the store (ADR-0012)", () 
     (
       await query<{ id: string }>(
         "INSERT INTO accounts (email, password_hash, email_verified_at) VALUES ($1, 'x', now()) RETURNING id",
-        [`w-${Math.random().toString(36).slice(2)}@yomizaka.test`],
+        [`w-${Math.random().toString(36).slice(2)}@verikora.test`],
       )
     )[0]!.id;
   const bytes = (n: string) => new TextEncoder().encode(`${TEXT}${n}`);

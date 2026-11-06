@@ -1,5 +1,5 @@
 import { KrizakaQueryProvider } from "@krizaka/query";
-import type { DocumentSummary } from "@yomizaka/core";
+import type { DocumentSummary } from "@verikora/core";
 import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it, vi } from "vitest";
 

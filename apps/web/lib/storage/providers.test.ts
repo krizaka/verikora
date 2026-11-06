@@ -8,7 +8,7 @@ const KEY_B = Buffer.alloc(32, 2).toString("base64");
 
 const bunnyEnv: ProviderEnv = {
   MEDIA_DOCUMENTS_PROVIDER: "bunny",
-  MEDIA_DOCUMENTS_PREFIX: "yomizaka",
+  MEDIA_DOCUMENTS_PREFIX: "verikora",
   MEDIA_STORAGE_ENDPOINT: "storage.bunnycdn.com",
   MEDIA_STORAGE_ZONE: "yomizaka-docs-dev",
   MEDIA_STORAGE_API_KEY: "zone-password",
@@ -36,7 +36,7 @@ describe("the environment's old coordinates", () => {
     expect(imported.coordinates).toMatchObject({
       zone: "yomizaka-docs-dev",
       endpoint: "storage.bunnycdn.com",
-      prefix: "yomizaka",
+      prefix: "verikora",
       pullHostname: "yomizaka-docs-dev.b-cdn.net",
     });
     expect(imported.credentials).toEqual({ accessKey: "zone-password", tokenKey: "token-key", encryptionKey: KEY_B });
@@ -45,7 +45,7 @@ describe("the environment's old coordinates", () => {
   it("become an s3 provider", () => {
     const imported = envProvider({
       MEDIA_DOCUMENTS_PROVIDER: "s3",
-      MEDIA_DOCUMENTS_PREFIX: "yomizaka",
+      MEDIA_DOCUMENTS_PREFIX: "verikora",
       MEDIA_STORAGE_ENDPOINT: "x",
       MEDIA_S3_ENDPOINT: "https://tor1.digitaloceanspaces.com",
       MEDIA_S3_REGION: "tor1",

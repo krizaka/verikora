@@ -3,7 +3,7 @@ import type { Query } from "@krizaka/db";
 import { longDate, money } from "./format";
 
 /**
- * The launch offer the pricing page announces (ADR-0013 amendment, yomizaka#548). It is NOT typed anywhere: it is a promo code the
+ * The launch offer the pricing page announces (ADR-0013 amendment, verikora#548). It is NOT typed anywhere: it is a promo code the
  * administrator created at /config/coupons (percent, months, plans, dates, uses), and the setting `pricing.announcedCode` names the one
  * to announce. The page reads that coupon; checkout applies it with the same rules (`coupons.apply`), so the page can never promise
  * what the checkout refuses. Québec consumer protection: the regular price and the end of the offer are always shown.

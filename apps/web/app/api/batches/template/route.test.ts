@@ -1,9 +1,9 @@
-import { readBatchManifest } from "@yomizaka/core";
+import { readBatchManifest } from "@verikora/core";
 import { describe, expect, it } from "vitest";
 
 import { GET } from "./route";
 
-describe("the batch template (yomizaka#232)", () => {
+describe("the batch template (verikora#232)", () => {
   it("is a CSV a spreadsheet opens with its accents, and it reads back as two valid rows", async () => {
     const res = GET();
     expect(res.headers.get("content-type")).toBe("text/csv; charset=utf-8");

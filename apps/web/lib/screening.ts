@@ -30,7 +30,7 @@ import { adapterFor, type CheckProvider } from "./screening-checks/providers";
  * (docs/product/tenant-screening-research.md). The landlord asks; the TENANT consents or declines, sees the result FIRST and
  * shares it or contests it. Minimal data: a short summary, never a provider's raw report, deleted after the retention window.
  * What may be asked is DATA (check types and each owner's row, lib/screening-checks): a type is offered only while its row is enabled and
- * allowed for the owner. The sensitive type stays off until the compliance gate says a lawyer confirmed it (yomizaka#135).
+ * allowed for the owner. The sensitive type stays off until the compliance gate says a lawyer confirmed it (verikora#135).
  */
 export const SCREENING_STATUS = {
   requested: "requested",
@@ -75,7 +75,7 @@ export const bandOf = (items: readonly { outcome: string }[]): ScreeningResult["
   return items.every((i) => i.outcome === "clear") ? "no-concern" : "incomplete";
 };
 
-/** « Camille Fictif » → first name, last name (the rest). The engine searches by names; Yomizaka keeps no more than the application already holds. */
+/** « Camille Fictif » → first name, last name (the rest). The engine searches by names; Verikora keeps no more than the application already holds. */
 export function namesOf(fullName: string): { firstName: string; lastName: string } {
   const [first = "", ...rest] = fullName.trim().split(/\s+/);
   return { firstName: first, lastName: rest.join(" ") || first };
@@ -111,7 +111,7 @@ interface Row {
   result: unknown;
   result_expires_at: Date | null;
   purged_at: Date | null;
-  /** The applicant file's link (yomizaka#127); null for a screening. */
+  /** The applicant file's link (verikora#127); null for a screening. */
   revoked_at: Date | null;
   submitted_at: Date | null;
   closed_at: Date | null;
@@ -144,7 +144,7 @@ export interface TenantView {
   result: ScreeningResult | null;
   resultExpiresAt: string | null;
   contestComment: string | null;
-  /** What each check costs and who pays, shown before the applicant consents (yomizaka#133). Prices are data; taxes are added where they apply. */
+  /** What each check costs and who pays, shown before the applicant consents (verikora#133). Prices are data; taxes are added where they apply. */
   quote: { lines: { key: string; cents: number; currency: string }[]; totalCents: number; payer: Payer };
 }
 
@@ -269,7 +269,7 @@ export async function viewForTenant(token: string, now: Date): Promise<TenantVie
   return viewOf(await screeningRow(token), now);
 }
 
-/** The answer to a screening request by its token: an applicant file (yomizaka#127) has its own routes, never this one. */
+/** The answer to a screening request by its token: an applicant file (verikora#127) has its own routes, never this one. */
 const screeningRow = async (token: string): Promise<Row> => {
   const row = await byToken(token);
   if (row.flow !== "screening") throw refuse(404, "NOT_FOUND", "No such request");
@@ -372,7 +372,7 @@ export async function consent(token: string, now: Date, headers?: Headers): Prom
     throw refuse(409, "NOT_PENDING", "This request is no longer waiting for an answer");
   const types = await typesByKey(row.scope);
   const purposes = purposesOfTypes(types);
-  // The consent per purpose is recorded first (notice version, date, means); the check then runs only while each stands (yomizaka#131).
+  // The consent per purpose is recorded first (notice version, date, means); the check then runs only while each stands (verikora#131).
   // The consent logs what the applicant was shown: the notice version, the price of the checks under that purpose and who pays.
   for (const purpose of purposes) {
     const priceCentsOfPurpose = types.filter((t) => t.purpose === purpose).reduce((sum, t) => sum + priceCents(t), 0);

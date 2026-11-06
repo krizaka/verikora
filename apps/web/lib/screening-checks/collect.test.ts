@@ -12,7 +12,7 @@ const result = (outcome: CheckResult["outcome"]): CheckResult => ({
   providerRef: "r",
 });
 
-describe("what follows a poll (yomizaka#134)", () => {
+describe("what follows a poll (verikora#134)", () => {
   it("settles on any answer, including an error or a timeout", () => {
     for (const o of ["MATCH", "NO_MATCH", "PROVIDER_ERROR", "TIMEOUT", "REFUSED"] as const)
       expect(decide(result(o), 0, 96, 15, NOW)).toEqual({ settle: result(o) });

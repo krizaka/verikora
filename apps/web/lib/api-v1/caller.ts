@@ -1,5 +1,5 @@
 import type { Clock } from "@krizaka/api-keys";
-import type { Audience } from "@yomizaka/core";
+import type { Audience } from "@verikora/core";
 
 import { requireApiKey } from "../api-access";
 import { query } from "../db";
@@ -13,7 +13,7 @@ export interface ApiCaller {
 }
 
 /**
- * The caller of a `/api/v1` route (yomizaka#202): a key with the scope (`requireApiKey`: switch, plan, rate limit), then its
+ * The caller of a `/api/v1` route (verikora#202): a key with the scope (`requireApiKey`: switch, plan, rate limit), then its
  * owner — refused like a session would be (maintenance) — so a key can do what its owner can, never more.
  */
 export async function apiCaller(req: Request, scope: string, clock: Clock): Promise<ApiCaller> {

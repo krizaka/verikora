@@ -38,7 +38,7 @@ export async function databaseBudget(): Promise<DatabaseBudget> {
 
 export interface Queue {
   byStatus: Record<string, number>;
-  /** Runs still `running` after more than `stuckMinutes` — Orazaka may have lost them. */
+  /** Runs still `running` after more than `stuckMinutes` — Sovkora may have lost them. */
   stuck: number;
   stuckMinutes: number;
   oldestRunningMinutes: number | null;
@@ -65,7 +65,7 @@ export interface RecentError {
   target: string | null;
 }
 
-/** The latest failures: runs that failed (with Orazaka's message) and refused sign-ins, newest first. */
+/** The latest failures: runs that failed (with Sovkora's message) and refused sign-ins, newest first. */
 export async function recentErrors(limit = 20): Promise<RecentError[]> {
   const runs = await query<{ at: Date; studio: string; error: string | null; id: string }>(
     "SELECT coalesce(finished_at, created_at) AS at, studio, error, id FROM analyses WHERE status = 'failed' ORDER BY 1 DESC LIMIT $1",
@@ -101,7 +101,7 @@ export interface RulesetUse {
   lastAt: string;
 }
 
-/** Which rulesets the checks really ran against (read from the reports Orazaka returned), and how often. */
+/** Which rulesets the checks really ran against (read from the reports Sovkora returned), and how often. */
 export async function rulesetsInUse(): Promise<RulesetUse[]> {
   const rows = await query<{
     id: string | null;

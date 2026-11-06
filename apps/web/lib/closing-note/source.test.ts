@@ -35,7 +35,7 @@ describe("the closing note says how the text was read", () => {
   it.each(LANGS)("%s: a model's reading is named as a model's, without the jargon of the run", (lang) => {
     const note = buildNote(lease({ kind: "vision" }), lang);
     expect(note.how.sentences.join(" ")).toMatch(lang === "fr" ? /modèle/ : /model/);
-    expect(note.how.sentences.join(" ")).not.toMatch(/Orazaka|run/);
+    expect(note.how.sentences.join(" ")).not.toMatch(/Sovkora|run/);
   });
 
   it.each(LANGS)("%s: a PDF or a text file has no such sentence, and the note reads the same as before", (lang) => {

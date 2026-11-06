@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 // Records the real runs of the Québec lease pack on the two fictitious lease fixtures of the demo generator (issue #302),
-// exactly as Orazaka returns them: run id, Studio version, outputs verbatim. Output: apps/web/content/demo-lease-runs/.
+// exactly as Sovkora returns them: run id, Studio version, outputs verbatim. Output: apps/web/content/demo-lease-runs/.
 //
-//   AI_API_KEY=$(~/.krizaka-worktrees/tools/secret.sh @yomizaka AI_API_KEY) node scripts/record-demo-leases.mjs
+//   AI_API_KEY=$(~/.krizaka-worktrees/tools/secret.sh @verikora AI_API_KEY) node scripts/record-demo-leases.mjs
 //
 // The key is read from the environment and never printed or written. The document is the generator's text, the same
 // words the check reads from the PDF's text layer.
@@ -13,7 +13,7 @@ import { fileURLToPath } from "node:url";
 import { generateDocument } from "./demo-documents/index.mjs";
 
 const OUT = join(dirname(fileURLToPath(import.meta.url)), "../apps/web/content/demo-lease-runs");
-const base = (process.env.AI_API_URL ?? "https://dev.orazaka.com/edge").replace(/\/$/, "");
+const base = (process.env.AI_API_URL ?? "https://dev.sovkora.com/edge").replace(/\/$/, "");
 const key = process.env.AI_API_KEY;
 if (!key) throw new Error("AI_API_KEY is not set");
 const STUDIO = "compliance-check";
@@ -32,7 +32,7 @@ async function call(path, init = {}) {
     },
     body: init.body ? JSON.stringify(init.body) : undefined,
   });
-  if (!res.ok) throw new Error(`Orazaka answered ${res.status} on ${init.method ?? "GET"} ${path.split("?")[0]}`);
+  if (!res.ok) throw new Error(`Sovkora answered ${res.status} on ${init.method ?? "GET"} ${path.split("?")[0]}`);
   return res.json();
 }
 

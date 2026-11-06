@@ -17,7 +17,7 @@ describe("the files of the Mac the documents came from", () => {
 
   it("starts again from nothing when what was stored is not readable", () => {
     const store = memory();
-    store.setItem("yomizaka.local-documents", "not json");
+    store.setItem("verikora.local-documents", "not json");
     const documents = createLocalDocuments(store);
     expect(documents.pathOf("d1")).toBeNull();
     documents.remember("d1", "/a.pdf");

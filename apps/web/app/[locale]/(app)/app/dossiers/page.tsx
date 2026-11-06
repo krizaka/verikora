@@ -39,7 +39,7 @@ export default async function FilesPage({
   if (!session) notFound();
   if (!applicantFilesOffered(await availableFlows(appEnvironment()), session.account.perspective ?? null))
     return <ApplicantFilesNotOffered locale={locale} />;
-  // The organised workspace (yomizaka#324): the decision set and the views are data; the address holds the filters (`?view=&tags=&status=`).
+  // The organised workspace (verikora#324): the decision set and the views are data; the address holds the filters (`?view=&tags=&status=`).
   const workspace = workspaceFor({ clock: systemClock });
   const owner = session.account.id;
   const search = await searchParams;
@@ -59,7 +59,7 @@ export default async function FilesPage({
     listApplicantFiles(owner, new Date(), { filters: resolved.filters, set }),
     documentTypes(),
   ]);
-  // The binder's counts are the lengths of the views: the same filter as the list (yomizaka#334).
+  // The binder's counts are the lengths of the views: the same filter as the list (verikora#334).
   const plan = set
     ? binderPlan(
         set,

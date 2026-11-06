@@ -1,4 +1,4 @@
-import { analysePdf, type ForensicsDocumentKind, type FraudReport, withTextRuns } from "@yomizaka/core";
+import { analysePdf, type ForensicsDocumentKind, type FraudReport, withTextRuns } from "@verikora/core";
 
 import { readTextRuns } from "../forensics-runs";
 

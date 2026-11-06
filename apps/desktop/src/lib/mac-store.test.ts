@@ -1,4 +1,4 @@
-import { documentStoreContract } from "@yomizaka/core/document-store/contract";
+import { documentStoreContract } from "@verikora/core/document-store/contract";
 import { describe, expect, it } from "vitest";
 
 import { createMacStore, MAC_STORE_PLACE, type StoreInvoke } from "./mac-store";

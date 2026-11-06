@@ -23,7 +23,7 @@ export default async function ChecksPage({ params }: Readonly<{ params: Promise<
     listChecks(query, session.account.id),
     featureOn("batches", session.account.id),
   ]);
-  // A running check is refreshed from Orazaka here (as its own page does), so the list never stays « Analysing » after the run ended.
+  // A running check is refreshed from Sovkora here (as its own page does), so the list never stays « Analysing » after the run ended.
   const running = runningChecks(listed);
   if (running.length)
     await Promise.all(running.map((c) => getAnalysis(session.account.id, c.documentId, c.id).catch(() => null)));

@@ -12,7 +12,7 @@ import { kindOfSchema, pdfSchemaId, verifyOwnerPdfView } from "@/lib/verify-disp
 
 export const dynamic = "force-dynamic";
 
-/** True for an owner-report PDF; refuses a schema Yomizaka does not verify; false for a compliance PDF or a file with no attestation. */
+/** True for an owner-report PDF; refuses a schema Verikora does not verify; false for a compliance PDF or a file with no attestation. */
 async function ownerKindOrRefuse(pdf: Uint8Array | null) {
   if (!pdf) return false;
   const kind = kindOfSchema(await pdfSchemaId(pdf));
@@ -44,7 +44,7 @@ async function verifyOwner(input: Uint8Array | null, who: { id: string; email: s
 }
 
 /**
- * Checks a Yomizaka audit report (multipart: `report` file or `reportText`, optionally the original `document`).
+ * Checks a Verikora audit report (multipart: `report` file or `reportText`, optionally the original `document`).
  * Members only, and only for a report the caller owns or was granted (ADR-0002):
  *   no session → 401 · a report without a grant (or one this server does not hold) → 403 NO_ACCESS · a grant → 200.
  * Every verification, and every refusal, is written to the audit log: who checked what, and when.

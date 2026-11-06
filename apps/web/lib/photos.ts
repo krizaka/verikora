@@ -1,4 +1,4 @@
-import type { DocumentKind, DocumentSummary, PhotoOrigin } from "@yomizaka/core";
+import type { DocumentKind, DocumentSummary, PhotoOrigin } from "@verikora/core";
 
 import { inspectUpload, type StoragePolicy, storeDocument } from "./documents";
 import { refuse } from "./http";
@@ -12,7 +12,7 @@ import {
   type PhotoKind,
   type QualityProblem,
   qualityProblem,
-  YOMIZAKA_IMAGE_RULES,
+  VERIKORA_IMAGE_RULES,
 } from "./images";
 import { logError } from "./log";
 import {
@@ -20,12 +20,12 @@ import {
   type OcrRules,
   readPhotoText,
   tesseractEngine,
+  VERIKORA_OCR_RULES,
   type VisionReader,
-  YOMIZAKA_OCR_RULES,
 } from "./ocr";
 import { sniff } from "./preflight/inspector";
 import type { PreflightRules } from "./preflight/port";
-import { YOMIZAKA_RULES } from "./preflight/rules";
+import { VERIKORA_RULES } from "./preflight/rules";
 
 /**
  * Photos of a document become ONE document (ADR-0010): each is checked by the pre-flight (real type by its bytes, pixel limit),
@@ -42,18 +42,18 @@ export interface PhotoFile {
 export interface PhotoDeps {
   cleaner: ImageCleaner;
   ocr: OcrEngine;
-  /** Orazaka's vision model, when a Studio for it is configured. None today: the local reading stands, flagged when it is weak. */
+  /** Sovkora's vision model, when a Studio for it is configured. None today: the local reading stands, flagged when it is weak. */
   vision: VisionReader | null;
   ocrRules: OcrRules;
   imageRules: ImageRules;
 }
 
 export const defaultPhotoDeps = (): PhotoDeps => ({
-  cleaner: createImageCleaner(YOMIZAKA_IMAGE_RULES),
+  cleaner: createImageCleaner(VERIKORA_IMAGE_RULES),
   ocr: tesseractEngine(),
   vision: null,
-  ocrRules: YOMIZAKA_OCR_RULES,
-  imageRules: YOMIZAKA_IMAGE_RULES,
+  ocrRules: VERIKORA_OCR_RULES,
+  imageRules: VERIKORA_IMAGE_RULES,
 });
 
 /** The code the page translates (messages `console.errors.*`) for each thing a photo can be refused for. */
@@ -89,7 +89,7 @@ export async function storePhotos(
   options: { policy?: StoragePolicy; deps?: PhotoDeps } = {},
 ): Promise<{ summary: DocumentSummary; duplicate: boolean }> {
   const deps = options.deps ?? defaultPhotoDeps();
-  const rules: PreflightRules = options.policy?.rules ?? YOMIZAKA_RULES;
+  const rules: PreflightRules = options.policy?.rules ?? VERIKORA_RULES;
   if (files.length === 0) throw refuse(400, "BAD_REQUEST", "At least one photo is expected");
   if (files.length > deps.imageRules.maxPhotos)
     throw refuse(422, "TOO_MANY_PHOTOS", `At most ${deps.imageRules.maxPhotos} photos make one document`);
@@ -108,7 +108,7 @@ export async function storePhotos(
     } catch (error) {
       throw error instanceof ImageError ? refuse(422, error.code, "This photo cannot be read") : error;
     }
-    // The quality gate (yomizaka#8): a photo too blurred, glared or cut off is refused with what to do, before anything is stored or read.
+    // The quality gate (verikora#8): a photo too blurred, glared or cut off is refused with what to do, before anything is stored or read.
     const problem = qualityProblem(cleaned.at(-1)!.page.quality, deps.imageRules.quality);
     if (problem)
       throw refuse(422, PHOTO_QUALITY_CODE[problem], `Photo ${index + 1} cannot be read: ${problem}`, {
@@ -136,7 +136,7 @@ export async function storePhotos(
           { ocr: deps.ocr, vision: deps.vision, rules: deps.ocrRules, origin },
         );
         // The file kept carries the recognised words, invisible, where they sit on each photo: a finding's passage is lit on the photo
-        // like on a text PDF (yomizaka#8). Its identity (duplicates) stays that of the photos alone.
+        // like on a text PDF (verikora#8). Its identity (duplicates) stays that of the photos alone.
         return {
           text: read.text,
           source: read.source,
@@ -150,7 +150,7 @@ export async function storePhotos(
             : {}),
         };
       } catch (error) {
-        logError("[yomizaka] reading a photo failed:", error);
+        logError("[verikora] reading a photo failed:", error);
         throw refuse(422, "OCR_FAILED", "The text of this photo could not be read");
       }
     },

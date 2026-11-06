@@ -6,11 +6,11 @@ import { refuse } from "./http";
 import type { DocumentStore } from "./storage/port";
 
 /*
- * The applicant's consent (yomizaka#131, Loi 25). The subject is the APPLICATION (a screening row, one per applicant and
+ * The applicant's consent (verikora#131, Loi 25). The subject is the APPLICATION (a screening row, one per applicant and
  * landlord request); consent is recorded per purpose, with the notice version the applicant was shown, the date and the
  * means. Withdrawal stops further checks; erasure deletes what was kept. The purposes are the engine's external-check
- * purposes (orazaka-ai-engine `CheckPurpose`: COURT_RECORDS, CREDIT) plus DOCUMENT_CHECK, the analysis of the document itself,
- * and DOCUMENT_KEEP, the keeping of the applicant file's documents until the manager's decision (yomizaka#127).
+ * purposes (sovkora-engine `CheckPurpose`: COURT_RECORDS, CREDIT) plus DOCUMENT_CHECK, the analysis of the document itself,
+ * and DOCUMENT_KEEP, the keeping of the applicant file's documents until the manager's decision (verikora#127).
  */
 
 export { CONSENT_PURPOSE, type ConsentPurpose };
@@ -23,7 +23,7 @@ export { APPLICATION_ERASED };
 /** How consent was given: the applicant's own form, on the link they received. */
 export const CONSENT_MEANS = { WEB_FORM: "web-form" } as const;
 
-/** The consent purposes a set of check types needs: each type names the engine purpose it runs under (data, yomizaka#132). */
+/** The consent purposes a set of check types needs: each type names the engine purpose it runs under (data, verikora#132). */
 export const purposesOfTypes = (types: readonly { purpose: string }[]): ConsentPurpose[] => [
   ...new Set(
     types

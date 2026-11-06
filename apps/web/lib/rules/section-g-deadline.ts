@@ -1,5 +1,5 @@
 /**
- * The deadline to ask the TAL to fix the rent (yomizaka#562, slice 4 of #104), the recourse of art. 1950 C.c.Q. that Section G (#554) points to.
+ * The deadline to ask the TAL to fix the rent (verikora#562, slice 4 of #104), the recourse of art. 1950 C.c.Q. that Section G (#554) points to.
  * Source: the TAL's page « Avis au nouveau locataire » — the request is made within 10 days of the conclusion of the lease when the landlord gave the
  * notice; within two months of the start of the lease when no notice was given; within two months of learning of it when the notice held a false statement.
  * Pure: dates are `YYYY-MM-DD` strings, `today` is a parameter (no clock). Information about dates, not legal advice. LAWYER REVIEW: how days and months are

@@ -4,10 +4,11 @@ import { krizakaFetch } from "@krizaka/query";
 import { AvatarPicker, ChoiceCards, LanguagePicker } from "@krizaka/ui/account-settings";
 import { Input } from "@krizaka/ui/field";
 import { SettingsRow, SettingsSection, useSaveStatus } from "@krizaka/ui/settings-layout";
-import { type Audience, AVATAR_SEEDS } from "@yomizaka/core";
+import { type Audience, AVATAR_SEEDS } from "@verikora/core";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
+import { BRAND_ID } from "@/lib/brand";
 import { errorKey } from "@/lib/client";
 import { useSay } from "@/lib/i18n-client";
 
@@ -147,7 +148,7 @@ export function ProfileSection({
           options={AVATAR_SEEDS.map((seed, i) => ({
             id: seed,
             label: say("settings.profile.avatarOption", { n: i + 1 }),
-            defaultAvatar: { brand: "yomizaka" as const, seed },
+            defaultAvatar: { brand: BRAND_ID, seed },
           }))}
           value={values.avatarSeed}
           onValueChange={(id) => setValues({ ...values, avatarSeed: id })}

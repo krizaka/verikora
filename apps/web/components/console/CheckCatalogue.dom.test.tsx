@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 import { KrizakaQueryProvider } from "@krizaka/query";
-import { offerOf } from "@yomizaka/core";
+import { offerOf } from "@verikora/core";
 import { act } from "react";
 import { createRoot, type Root } from "react-dom/client";
 import { afterEach, beforeAll, describe, expect, it, vi } from "vitest";
@@ -58,7 +58,7 @@ afterEach(async () => {
   root = null;
 });
 
-describe("the catalogue's state is the address (yomizaka#333)", () => {
+describe("the catalogue's state is the address (verikora#333)", () => {
   it("a group chosen in the address narrows the rows, and the chip says so", async () => {
     await mount("?groupe=notice");
     expect(rows()).toHaveLength(2);

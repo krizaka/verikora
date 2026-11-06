@@ -11,7 +11,7 @@ import {
   toDoLinks,
 } from "./home-figures";
 
-/** The home's figures (yomizaka#325, P8 of the design direction): each one a door to the view it counts. */
+/** The home's figures (verikora#325, P8 of the design direction): each one a door to the view it counts. */
 describe("« À traiter »: each figure's link carries its view's filter", () => {
   it("the checks to look at open Vérifications filtered on what needs a look (attention, failed)", () => {
     const link = new URL(toDoLinks("fr").toReview, "https://x.test");

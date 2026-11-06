@@ -31,7 +31,7 @@ export async function readBatchForm(req: Request): Promise<BatchForm> {
 const csvCell = (value: string) => (/[",\r\n;]/.test(value) ? `"${value.replaceAll('"', '""')}"` : value);
 
 /**
- * One check over the API (yomizaka#202): `file`, `check` (`compliance`, `audit`… — the batch's names) and an optional
+ * One check over the API (verikora#202): `file`, `check` (`compliance`, `audit`… — the batch's names) and an optional
  * `reference`, read as a batch of one row, so a single check and a batch take exactly the same path (store, preflight,
  * reuse, entitlement, flow) and answer the same refusals.
  */
