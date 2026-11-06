@@ -98,7 +98,7 @@
 - **The live DO spec must equal `deploy/digitalocean/dev.app.yaml`** (the repository is the intent; `doctl apps update` is not run by CI). The sitemap was a 404 because the live app still had `APP_SEARCH_INDEXING=off` while the file said `on`: after any spec change, run `node scripts/check-seo-family.mjs --base https://www.verikora.com --host https://www.verikora.com`. **`dev.*` is never indexed** (www is production; dev redirects to it today and becomes a separate dev environment later): `indexableOn` is false for any `dev.*` host, tested in `lib/indexing.test.ts`.
 
 - **Sealed contracts** (`lib/contracts/`, verikora#71): `POST /api/v1/contracts/seal` (API key, scope `contracts:seal`) renders a partner's contract — its content,
-  its parties, the framework the partner *names* — as a PDF signed like a report (folios, signature page, Ed25519 attestation embedded; `lib/pdf-layout.ts` is the
+  its parties, the framework the partner _names_ — as a PDF signed like a report (folios, signature page, Ed25519 attestation embedded; `lib/pdf-layout.ts` is the
   layout both share). It seals; it verifies no identity, no age and no law, and says so on the file. The same request is the same contract (id by content: a retry
   is 200, nothing sealed twice). The file is kept in the database (Toronto): `X-Data-Residency-Zone` is answered only for a zone the file is in (`CA`, `CA-ON`),
   `CA-QC` is refused (`ZONE_UNAVAILABLE`) until a store there exists. `/verify/contract/<sha256>` (308 to `/api/verify/contract/…`) is public and shows who sealed it
@@ -137,18 +137,18 @@ The org code rules (addendum 2026-10-15) are lint rules, not review comments. [`
 is a **pinned devDependency** (no global install, CI reproduces local): `sgconfig.yml` + `rules/*.yml` (one rule per file,
 with a message and, where safe, a `fix:`; written for Tsx and `.ts` is parsed as Tsx too, so each rule covers `.ts` and `.tsx`), `rule-tests/` (valid/invalid cases of each rule).
 
-| Rule | What it refuses |
-| :--- | :--- |
-| `no-hand-ms-*`, `no-get-time-difference`, `no-get-time-arithmetic` | hand-written time arithmetic (`n * 60 * 1000`, `a.getTime() - b.getTime()`): date-fns, or a duration read from the settings |
-| `no-env-in-domain` | an `env` import in domain code (`packages/*/src`, `src/`): the value arrives as a parameter |
-| `no-db-in-service-or-rules` | a db client / schema import in `*.service.ts`, `*-service.ts`, `*.rules.ts`, `*-rules.ts` |
-| `no-ts-enum` | the TypeScript `enum` keyword (`as const` object + derived type, or a Postgres enum) |
-| `no-enum-string-compare` | `x.status === "OPEN"` (field named status/kind/role/reason/state/direction compared to a string literal) |
-| `no-ambient-clock` | `new Date()` / `Date.now()` in domain code: the clock is injected |
-| `no-types-at-package-root` | `types.ts` at a package root (`<feature>/<feature>.types.ts`) |
-| `no-unjustified-numeric-export` | a numeric (or `…ToMilliseconds(n)`) `export const` in feature code without `// @fixed: <reason>` just above |
-| `no-direct-organize-write` | a hand-written `INSERT`, `UPDATE` or `DELETE` on the `organize` schema (tags, decisions, views, configuration) outside the migration: write through `createWorkspace` (`lib/workspace/service.ts`), which holds the roles, the row locks, the 200-entity ceiling and one audit line per entity (verikora#324) |
-| `no-hand-made-nav`, `no-hand-made-language-switch` | a navigation bar that is not `NavBar` of @krizaka/ui (own Radix NavigationMenu, a local `NavBar`/`TopNav`), a hand-made language switch (`hrefLang` in a component, a row of `aria-pressed={locale === …}` buttons): use `NavBar` and `NavBar.Language` (« Navigation in the family », ui.krizaka.com) |
+| Rule                                                               | What it refuses                                                                                                                                                                                                                                                                                               |
+| :----------------------------------------------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `no-hand-ms-*`, `no-get-time-difference`, `no-get-time-arithmetic` | hand-written time arithmetic (`n * 60 * 1000`, `a.getTime() - b.getTime()`): date-fns, or a duration read from the settings                                                                                                                                                                                   |
+| `no-env-in-domain`                                                 | an `env` import in domain code (`packages/*/src`, `src/`): the value arrives as a parameter                                                                                                                                                                                                                   |
+| `no-db-in-service-or-rules`                                        | a db client / schema import in `*.service.ts`, `*-service.ts`, `*.rules.ts`, `*-rules.ts`                                                                                                                                                                                                                     |
+| `no-ts-enum`                                                       | the TypeScript `enum` keyword (`as const` object + derived type, or a Postgres enum)                                                                                                                                                                                                                          |
+| `no-enum-string-compare`                                           | `x.status === "OPEN"` (field named status/kind/role/reason/state/direction compared to a string literal)                                                                                                                                                                                                      |
+| `no-ambient-clock`                                                 | `new Date()` / `Date.now()` in domain code: the clock is injected                                                                                                                                                                                                                                             |
+| `no-types-at-package-root`                                         | `types.ts` at a package root (`<feature>/<feature>.types.ts`)                                                                                                                                                                                                                                                 |
+| `no-unjustified-numeric-export`                                    | a numeric (or `…ToMilliseconds(n)`) `export const` in feature code without `// @fixed: <reason>` just above                                                                                                                                                                                                   |
+| `no-direct-organize-write`                                         | a hand-written `INSERT`, `UPDATE` or `DELETE` on the `organize` schema (tags, decisions, views, configuration) outside the migration: write through `createWorkspace` (`lib/workspace/service.ts`), which holds the roles, the row locks, the 200-entity ceiling and one audit line per entity (verikora#324) |
+| `no-hand-made-nav`, `no-hand-made-language-switch`                 | a navigation bar that is not `NavBar` of @krizaka/ui (own Radix NavigationMenu, a local `NavBar`/`TopNav`), a hand-made language switch (`hrefLang` in a component, a row of `aria-pressed={locale === …}` buttons): use `NavBar` and `NavBar.Language` (« Navigation in the family », ui.krizaka.com)        |
 
 - **Run**: `npm run lint` runs everything (it includes `ast-grep test` and the ratchet). `npx ast-grep scan` lists the
   violations with their message; `npm run lint:sg:test` runs the rule tests.
@@ -168,6 +168,7 @@ with a message and, where safe, a `fix:`; written for Tsx and `.ts` is parsed as
 ## Before you open or update a pull request (coding agents)
 
 These are the defects code review found most often on 2026-10-23. Check them yourself before you open or update a pull request:
+
 1. **Checks:** run the repository's full check (lint, typecheck, tests, build) and fix it. Never push a red check.
 2. **Concurrency:** any « count then insert » or « check then write » runs in one transaction with a lock, and has a concurrency test.
 3. **One gate:** a rule (limit, permission, validation) is enforced in the service, so no route can skip it. Test every route.
@@ -184,6 +185,7 @@ These are the defects code review found most often on 2026-10-23. Check them you
 - **A bug means a missing guard** ([standard](https://github.com/krizaka/.github/blob/main/docs/standards/bug-means-missing-guard.md)): the fix PR first adds a guard that fails on `main`, then fixes the bug; the bug issue says why the guards missed it.
 
 **Repository layout:** the root follows [krizaka/.github `docs/standards/repo-layout.md`](https://github.com/krizaka/.github/blob/main/docs/standards/repo-layout.md); the CI guard `check-repo-layout` fails on a stray root file, and a justified extra is declared in `.repo-layout.json` with its why.
+
 - **Default media** (avatars, banners, logos): their URLs come from the Krizaka org JSON (`@krizaka/org`: `listDefaults(kind)`, `defaultFor(kind, seed)`) — never hard-coded or bundled in this repository; a folder is never given a person (`scripts/lib/default-media.test.mjs`). [Standard](https://github.com/krizaka/.github/blob/main/docs/standards/default-media.md).
 
 ## Storage (ADR-010)
