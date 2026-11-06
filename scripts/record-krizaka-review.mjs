@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+// MANUAL TOOL (ADR-026), run by a person; owner: verikora lane; listed in README.md « Manual tools »; the header below says how to run it.
 // « Krizaka reviews its own documents with Verikora » — one narrated walkthrough on the real dev site, as the persona Éric
 // (the studio's owner, never an administrator): the redacted invoice and service-contract templates are dropped in the
 // library, checked against the Québec rulesets (qc-invoice, qc-service-contract) by real Sovkora runs, and the findings are read

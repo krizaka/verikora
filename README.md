@@ -88,6 +88,16 @@ Unit tests (`pnpm test`), the page audit (`scripts/check-app-pages.mjs`) and the
 | `scripts/check-admin-live.mjs` | the walk of the live administration from an allowed address (`pnpm run check:admin-live`) |
 | `deploy/` | the Docker image and the DigitalOcean App Platform spec (`dev.verikora.com`) |
 
+## Manual tools
+
+Scripts a person runs by hand (ADR-026: nothing runs unlisted). Each opens with a header that says why, how to run it and who owns it. The shared pieces they import (`scripts/lib/take.mjs`, `scripts/lib/check-selectors.mjs`, `scripts/lib/shot.mjs`) are tested libraries, not tools.
+
+| Script | What it does |
+| :-- | :-- |
+| `scripts/landing-take.mjs` | records the landing's journey (« Du fichier au constat ») as one phone take on dev |
+| `scripts/record-krizaka-review.mjs` | records the narrated « Krizaka reviews its own documents » walkthrough on dev |
+| `scripts/record-packs.mjs` | records one real Sovkora run per Québec ruleset into apps/web/content/pack-proofs/ |
+
 ## Demo (the persona Éric) and the phone's Maestro flows
 
 - `pnpm run demo:seed -- --persona eric [--reset]` seeds Éric Tremblay (landlord) with his collections, documents and seeded checks, on **dev and local only**: it refuses any `APP_ENVIRONMENT` but `dev` before it opens a connection (tested). Its login is `APP_DEMO_ACCOUNT_EMAIL` / `APP_DEMO_ACCOUNT_PASSWORD`, never typed in the repository; see `docs/demo-data.md`.
