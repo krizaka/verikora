@@ -1,5 +1,7 @@
 import { Worker } from "node:worker_threads";
 
+import type { TextRun } from "@yomizaka/core";
+
 import { findPackageDir } from "./package-dir";
 
 /**
@@ -30,7 +32,8 @@ export interface ExtractionLimits {
 export const DEFAULT_LIMITS: ExtractionLimits = { timeoutMs: 10_000, maxHeapMb: 384, maxPages: 150 };
 
 type Answer =
-  { id: number; ok: true; pages: number; text: string } | { id: number; ok: false; code: "TOO_MANY_PAGES" | "FAILED" };
+  | { id: number; ok: true; pages: number; text: string; runs?: TextRun[] }
+  | { id: number; ok: false; code: "TOO_MANY_PAGES" | "FAILED" };
 
 /**
  * The worker's program (CommonJS, run from a string: nothing to trace into the standalone image but `unpdf` itself, which is external).
@@ -40,13 +43,40 @@ type Answer =
 const WORKER_SOURCE = String.raw`
 const { parentPort, workerData } = require("node:worker_threads");
 const { extractText, getDocumentProxy } = require(workerData.unpdf);
-parentPort.on("message", async ({ id, bytes, maxPages }) => {
+const round = (n) => Math.round(n * 100) / 100;
+// The face, size and box of each text run of a page (document forensics, krizaka-internal#6): the face's real name comes from the
+// font object pdf.js loads while it reads the page's operators. Read here, in the isolated worker, never in the web process.
+async function readRuns(pdf) {
+  const runs = [];
+  for (let page = 1; page <= pdf.numPages; page++) {
+    const p = await pdf.getPage(page);
+    const content = await p.getTextContent();
+    await p.getOperatorList();
+    for (const item of content.items) {
+      if (!("str" in item) || !("transform" in item) || item.str.trim() === "") continue;
+      const font = p.commonObjs.get(item.fontName);
+      runs.push({
+        page,
+        text: item.str,
+        font: (font && font.name) || item.fontName,
+        size: round(Math.hypot(item.transform[2] || 0, item.transform[3] || 0)),
+        x: item.transform[4] || 0,
+        y: item.transform[5] || 0,
+        width: item.width,
+        height: item.height,
+      });
+    }
+  }
+  return runs;
+}
+parentPort.on("message", async ({ id, bytes, maxPages, withRuns }) => {
   let pdf;
   try {
     pdf = await getDocumentProxy(new Uint8Array(bytes));
     if (pdf.numPages > maxPages) return parentPort.postMessage({ id, ok: false, code: "TOO_MANY_PAGES" });
     const { totalPages, text } = await extractText(pdf, { mergePages: true });
-    parentPort.postMessage({ id, ok: true, pages: totalPages, text: Array.isArray(text) ? text.join("\n") : text });
+    const answer = { id, ok: true, pages: totalPages, text: Array.isArray(text) ? text.join("\n") : text };
+    parentPort.postMessage(withRuns ? { ...answer, runs: await readRuns(pdf) } : answer);
   } catch {
     parentPort.postMessage({ id, ok: false, code: "FAILED" });
   } finally {
@@ -106,7 +136,8 @@ function runJob(
   bytes: Uint8Array,
   { timeoutMs, maxHeapMb, maxPages }: ExtractionLimits,
   unpdf: string,
-): Promise<{ text: string; pages: number }> {
+  withRuns: boolean,
+): Promise<PdfRead> {
   return new Promise((resolve, reject) => {
     const w = workerFor(maxHeapMb, unpdf);
     clearTimeout(w.idle);
@@ -137,7 +168,9 @@ function runJob(
       }
       settle(
         () =>
-          answer.ok ? resolve({ text: answer.text, pages: answer.pages }) : reject(new ExtractionError(answer.code)),
+          answer.ok
+            ? resolve({ text: answer.text, pages: answer.pages, runs: answer.runs ?? [] })
+            : reject(new ExtractionError(answer.code)),
         answer.ok || answer.code === "TOO_MANY_PAGES",
       );
     };
@@ -149,16 +182,35 @@ function runJob(
     w.worker.once("error", onError);
     w.worker.once("exit", onExit);
     const copy = new Uint8Array(bytes).buffer; // the worker gets its own copy; the caller keeps its bytes
-    w.worker.postMessage({ id, bytes: copy, maxPages }, [copy]);
+    w.worker.postMessage({ id, bytes: copy, maxPages, withRuns }, [copy]);
   });
 }
 
+export interface PdfRead {
+  text: string;
+  pages: number;
+  /** The text runs with their face, size and box; empty unless asked for. */
+  runs: TextRun[];
+}
+
+function readInWorker(bytes: Uint8Array, limits: Partial<ExtractionLimits>, withRuns: boolean): Promise<PdfRead> {
+  const job = queue.then(async () =>
+    runJob(bytes, { ...DEFAULT_LIMITS, ...limits }, await findPackageDir("unpdf"), withRuns),
+  );
+  queue = job.catch(() => undefined);
+  return job;
+}
+
 /** Reads a PDF's text layer (as pdf.js gives it: normalising is the caller's) in an isolated worker. Rejects with an `ExtractionError`, never with a crash of this process. */
-export function extractPdfText(
+export async function extractPdfText(
   bytes: Uint8Array,
   limits: Partial<ExtractionLimits> = {},
 ): Promise<{ text: string; pages: number }> {
-  const job = queue.then(async () => runJob(bytes, { ...DEFAULT_LIMITS, ...limits }, await findPackageDir("unpdf")));
-  queue = job.catch(() => undefined);
-  return job;
+  const { text, pages } = await readInWorker(bytes, limits, false);
+  return { text, pages };
+}
+
+/** The text runs of a PDF (face, size, box), read by the same isolated worker and under the same limits. */
+export async function extractPdfRuns(bytes: Uint8Array, limits: Partial<ExtractionLimits> = {}): Promise<TextRun[]> {
+  return (await readInWorker(bytes, limits, true)).runs;
 }
