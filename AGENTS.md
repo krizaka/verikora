@@ -58,6 +58,10 @@
 - No link to another Krizaka product, no family switcher, no family columns in the footer. Krizaka is the publisher,
   named **only in the footer** ("A Krizaka product" → www.krizaka.com) and the legal mentions. Sovkora is named as the
   engine in words (it is the point), never as a link.
+- **No Krizaka e-mail address is public** (founder, 2026-11-06, verikora#2763; org rule `no-public-email`): « Support » (footer, `/contact`, `llms.txt`) is
+  Krizaka's contact form, built by the one `contactHref(source, locale, kind?)` of `lib/site.ts`
+  (`https://www.krizaka.com/<locale>/contact?topic=support&product=verikora&source=verikora-<page>`), so each message says its kind and product. The one exception is the privacy
+  officer's contact on the privacy page (Quebec Law 25, `PRIVACY_OFFICER_EMAIL`). `lib/no-public-email.test.ts` guards it. Privacy and Terms show once, in the footer's legal line (`@krizaka/org`).
 - The colour is the Verikora brand of `@krizaka/tokens` (ink indigo), the mark `VerikoraLogo`, the bird the owl ("reads
   and knows every face"). Components use `--kz-*` roles only; dark and light are first-class (dark by default).
 

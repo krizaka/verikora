@@ -57,4 +57,15 @@ describe("the pages render exactly one footer", () => {
       for (const link of org.footer.legal) expect(html).toContain(link.label[locale]);
     }
   });
+
+  it("shows « Privacy » and « Terms » once: in the legal line, not also in the links row", () => {
+    for (const locale of ["en", "fr"] as const) {
+      const html = renderToStaticMarkup(SiteFooter({ locale }));
+      for (const link of org.footer.legal) {
+        expect(html.split(`>${link.label[locale]}<`)).toHaveLength(2);
+      }
+      expect(html).not.toContain(`href="/${locale}/privacy"`);
+      expect(html).not.toContain(`href="/${locale}/terms"`);
+    }
+  });
 });

@@ -10,7 +10,7 @@ import { SiteFooter } from "@/components/SiteFooter";
 
 import { getDictionary } from "./i18n";
 import { llmsText } from "./seo";
-import { pagePath, SITE_URL, SUPPORT_EMAIL } from "./site";
+import { contactHref, pagePath, SITE_URL } from "./site";
 
 const ROOT = join(__dirname, "..");
 const text = (html: string) => html.replaceAll(/<[^>]+>/g, " ").replaceAll(/\s+/gu, " ");
@@ -41,17 +41,18 @@ describe("the public face says only what is true (audit 2026-11-04, krizaka-inte
     expect(page).not.toMatch(/launch=/);
   });
 
-  it("answers on /contact in both languages, names the support address, promises no delay", () => {
+  it("answers on /contact in both languages, sends support to Krizaka's form (no address), promises no delay", () => {
     expect(existsSync(join(ROOT, "app/[locale]/contact/page.tsx"))).toBe(true);
-    expect(SUPPORT_EMAIL).toBe("support@verikora.com");
     for (const locale of ["en", "fr"] as const) {
       const c = getDictionary(locale).contact;
       expect(JSON.stringify(c)).not.toMatch(/ouvrable|business day|\b24 ?h|48 ?h/i);
       expect(sitemap().some((e) => e.url === `${SITE_URL}${pagePath(locale, "contact")}`)).toBe(true);
       const footer = renderToStaticMarkup(SiteFooter({ locale }));
-      expect(footer).toContain(`mailto:${SUPPORT_EMAIL}`);
+      expect(footer).not.toContain("mailto:");
+      expect(footer).toContain(`href="${contactHref("verikora-footer", locale).replaceAll("&", "&amp;")}"`);
       expect(footer).toContain(`href="/${locale}/contact"`);
     }
-    expect(llmsText()).toContain(SUPPORT_EMAIL);
+    expect(llmsText()).not.toMatch(/@(verikora|krizaka)\.com/);
+    expect(llmsText()).toContain(contactHref("verikora-llms", "en"));
   });
 });

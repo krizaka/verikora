@@ -20,6 +20,7 @@
     "footerLabel": "Site footer",
     "sourceCode": "Source code",
     "contact": "Contact",
+    "support": "Support",
     "legal": "Privacy",
     "preferences": "Preferences",
     "menu": {
@@ -3846,7 +3847,8 @@
     "title": "Contact",
     "lead": "A question about Verikora, or an access request? Write to us.",
     "supportLabel": "Support",
-    "supportText": "For any question, or to ask for access while sign-up is closed:",
+    "supportText": "For any question, or to ask for access while sign-up is closed, use Krizaka's contact form: it knows your message is about Verikora.",
+    "supportCta": "Open the support form",
     "privacyText": "For your personal information, see the Privacy page."
   },
   "terms": {
