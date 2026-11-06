@@ -18,7 +18,7 @@ vi.mock("@/lib/mail/store", () => ({
 
 import { POST } from "@/app/api/webhooks/mail/route";
 
-/** The mail provider's bounce and complaint webhook (yomizaka#48): signed by the vendor, feeds the suppression list. */
+/** The mail provider's bounce and complaint webhook (verikora#48): signed by the vendor, feeds the suppression list. */
 const KEY = "webhook-signing-key-for-tests";
 const NAME = "MAIL_WEBHOOK_SIGNING_KEY";
 const saved = process.env[NAME];

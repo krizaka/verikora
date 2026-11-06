@@ -1,0 +1,6 @@
+{
+  "about": "The Studio versions Verikora's Sovkora account is pinned on, ONE list for local and deployed (scripts/sync-sovkora-installations.mjs applies it through Sovkora's documented path, POST /api/v1/studios/installations/{id}/upgrade). Dev only: production is moved by the founder.",
+  "studios": {
+    "compliance-check": "2.0.0"
+  }
+}

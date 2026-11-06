@@ -6,7 +6,7 @@ import { describe, expect, it } from "vitest";
 
 import { GET as openApiRoute } from "@/app/api/v1/openapi.json/route";
 
-import { YOMIZAKA_API_KEY_RULES } from "../api-keys";
+import { VERIKORA_API_KEY_RULES } from "../api-keys";
 import { openApiDocument } from "./openapi";
 
 const ROOT = fileURLToPath(new URL("../../app/api/v1", import.meta.url));
@@ -31,12 +31,12 @@ async function routes(): Promise<string[]> {
   return found.sort();
 }
 
-const spec = openApiDocument("https://dev.yomizaka.com");
+const spec = openApiDocument("https://dev.verikora.com");
 const documented = Object.entries(spec.paths)
   .flatMap(([path, ops]) => Object.keys(ops).map((m) => `${m.toUpperCase()} ${path}`))
   .sort();
 
-describe("the OpenAPI document of /api/v1 (yomizaka#202)", () => {
+describe("the OpenAPI document of /api/v1 (verikora#202)", () => {
   it("documents every route under app/api/v1, and only those", async () => {
     const actual = await routes();
     expect(actual.length).toBeGreaterThanOrEqual(5);
@@ -57,7 +57,7 @@ describe("the OpenAPI document of /api/v1 (yomizaka#202)", () => {
         expect(Object.keys(op.responses).length).toBeGreaterThan(0);
         for (const requirement of op.security)
           for (const scopes of Object.values(requirement))
-            for (const scope of scopes) expect(YOMIZAKA_API_KEY_RULES.scopes).toContain(scope);
+            for (const scope of scopes) expect(VERIKORA_API_KEY_RULES.scopes).toContain(scope);
       }
     }
   });

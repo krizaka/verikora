@@ -1,5 +1,7 @@
 import { Avatar } from "@krizaka/ui/avatar";
-import { AVATAR_KIND, type CollectionAvatar as Avatar_ } from "@yomizaka/core";
+import { AVATAR_KIND, type CollectionAvatar as Avatar_ } from "@verikora/core";
+
+import { BRAND_ID } from "@/lib/brand";
 
 /**
  * A collection's picture: one of the folder set (the UI draws the seed in the product's colours: a folder glyph, never a person), an uploaded image (its address carries the
@@ -18,7 +20,7 @@ export function CollectionAvatar({
   return (
     <Avatar
       size={size}
-      defaultAvatar={{ brand: "yomizaka", kind: "folder", seed: avatar?.kind === AVATAR_KIND.set ? avatar.seed : id }}
+      defaultAvatar={{ brand: BRAND_ID, kind: "folder", seed: avatar?.kind === AVATAR_KIND.set ? avatar.seed : id }}
       alt=""
       fallback={initial}
     />

@@ -16,11 +16,11 @@ import { query } from "./db";
 import { refuse } from "./http";
 
 /**
- * The confidentiality incident register (Loi 25, yomizaka#418) on `@krizaka/privacy`: the administration opens an incident, assesses the
+ * The confidentiality incident register (Loi 25, verikora#418) on `@krizaka/privacy`: the administration opens an incident, assesses the
  * risk of serious injury, records the notices to the Commission and to the people concerned, closes it, and exports the register.
  * The register holds the facts and no personal data of the people concerned. Its scope is this product: another scope is never read.
  */
-export const INCIDENT_SCOPE = "yomizaka";
+export const INCIDENT_SCOPE = "verikora";
 
 const register = createIncidentRegister({ clock: systemClock });
 
@@ -184,11 +184,11 @@ export async function exportIncidentRegister(
     ? {
         body: registerToCsv(document.entries),
         type: "text/csv; charset=utf-8",
-        filename: `yomizaka-incident-register-${day}.csv`,
+        filename: `verikora-incident-register-${day}.csv`,
       }
     : {
         body: JSON.stringify(document, null, 2),
         type: "application/json; charset=utf-8",
-        filename: `yomizaka-incident-register-${day}.json`,
+        filename: `verikora-incident-register-${day}.json`,
       };
 }

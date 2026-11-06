@@ -1,5 +1,5 @@
 /**
- * The default collection (krizaka/yomizaka#205), kept by the database itself so no path can break it: every account has exactly one,
+ * The default collection (krizaka/verikora#205), kept by the database itself so no path can break it: every account has exactly one,
  * every file has a collection, and the default one is never deleted. These are the migration's SQL pieces, kept in a module of their
  * own so the backfill can be run by its test on an account as it was before the feature.
  */
@@ -36,7 +36,7 @@ UPDATE documents d SET collection_id = c.id, folder_id = NULL FROM collections c
 `;
 
 export const DEFAULT_COLLECTION_MIGRATION = `
--- krizaka/yomizaka#205: every account has one default collection, never deleted; a file always has a collection.
+-- krizaka/verikora#205: every account has one default collection, never deleted; a file always has a collection.
 -- A collection knows its owner (a composite key to its library keeps them the same), so « one per owner » is a constraint.
 ALTER TABLE libraries ADD CONSTRAINT libraries_id_owner UNIQUE (id, owner_id);
 ALTER TABLE collections ADD COLUMN owner_id uuid;

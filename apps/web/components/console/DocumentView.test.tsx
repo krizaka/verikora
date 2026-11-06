@@ -1,5 +1,5 @@
 import { KrizakaQueryProvider } from "@krizaka/query";
-import { SEEDED_INPUTS } from "@yomizaka/core";
+import { SEEDED_INPUTS } from "@verikora/core";
 import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it, vi } from "vitest";
 
@@ -25,7 +25,7 @@ const readable = (html: string) =>
     .replace(/&[a-z#0-9]+;/gi, " ")
     .replace(/\s+/g, " ");
 
-/** A finished compliance check, as Orazaka returns it — or as the demo seed wrote it (`inputs.seeded`). */
+/** A finished compliance check, as Sovkora returns it — or as the demo seed wrote it (`inputs.seeded`). */
 const check = (inputs: Record<string, string>, id = "a1", runId = "run_8f3a2c") => ({
   id,
   studio: "compliance-check",
@@ -234,7 +234,7 @@ describe("the document on DetailLayout (the UX review's Y5)", () => {
     expect(readable(two)).toContain(fr.console.reportFace.history);
   });
 
-  it("the document tab holds the file's text, what Yomizaka read — each kind of amount once —, where it lives, and the file facts", () => {
+  it("the document tab holds the file's text, what Verikora read — each kind of amount once —, where it lives, and the file facts", () => {
     const html = render(document([check({ jurisdiction: "QC" })]), "document");
     expect(html).toContain('data-testid="tab-document"');
     expect(html).toContain('data-testid="document-insight"');
@@ -309,7 +309,7 @@ describe("the document on DetailLayout (the UX review's Y5)", () => {
   });
 });
 
-describe("the business registers in the report (yomizaka#627)", () => {
+describe("the business registers in the report (verikora#627)", () => {
   // Synthetic: a fictitious number and a fake register answer, nothing from a real document.
   const registry: RegistryReport = {
     source: "Revenu Québec (SW-340)",

@@ -40,7 +40,7 @@ test("the hosted page is Stripe's own and nothing else", () => {
   for (const bad of [
     "http://checkout.stripe.com/x",
     "https://checkout.stripe.com.evil.example/x",
-    "https://dev.yomizaka.com/pay",
+    "https://dev.verikora.com/pay",
     "not a url",
     undefined,
   ])
@@ -48,10 +48,10 @@ test("the hosted page is Stripe's own and nothing else", () => {
 });
 
 test("bought means pro, active and the plan that was sold", () => {
-  assert.equal(isSubscribed({ pro: true, subscriptionStatus: "active", planKey: "yomizaka.agency" }), true);
-  assert.equal(isSubscribed({ pro: false, subscriptionStatus: "active", planKey: "yomizaka.agency" }), false);
-  assert.equal(isSubscribed({ pro: true, subscriptionStatus: "past_due", planKey: "yomizaka.agency" }), false);
-  assert.equal(isSubscribed({ pro: true, subscriptionStatus: "active", planKey: "yomizaka.firm" }), false);
+  assert.equal(isSubscribed({ pro: true, subscriptionStatus: "active", planKey: "verikora.agency" }), true);
+  assert.equal(isSubscribed({ pro: false, subscriptionStatus: "active", planKey: "verikora.agency" }), false);
+  assert.equal(isSubscribed({ pro: true, subscriptionStatus: "past_due", planKey: "verikora.agency" }), false);
+  assert.equal(isSubscribed({ pro: true, subscriptionStatus: "active", planKey: "verikora.firm" }), false);
   assert.equal(isSubscribed(undefined), false);
 });
 
@@ -84,7 +84,7 @@ test("a signed report is a PDF with its fingerprint", () => {
 
 test("the issue names the run and a failure with no line break", () => {
   const { body } = issueFor({
-    runUrl: "https://github.com/krizaka/yomizaka/actions/runs/1",
+    runUrl: "https://github.com/krizaka/verikora/actions/runs/1",
     sha: "abc",
     failure: "checkout FAILED: x\n- forged line",
   });
@@ -93,10 +93,10 @@ test("the issue names the run and a failure with no line break", () => {
 });
 
 test("the report is the issue of the standard title, written for the shared alert action", () => {
-  assert.match(ISSUE_TITLE, /^yomizaka · fix\(checkout\): /);
+  assert.match(ISSUE_TITLE, /^verikora · fix\(checkout\): /);
   const { title, body } = reportFor({
     GITHUB_SERVER_URL: "https://github.com",
-    GITHUB_REPOSITORY: "krizaka/yomizaka",
+    GITHUB_REPOSITORY: "krizaka/verikora",
     GITHUB_RUN_ID: "9",
     GITHUB_SHA: "abc",
     JOURNEY_FAILURE: "boom",
@@ -126,11 +126,11 @@ test("the workflow runs on main and by schedule only, never on a pull request, a
 
 test("paying returns to the product's public address, not to the dev host the API is driven on (krizaka-internal#2273)", () => {
   const hosted = "https://checkout.stripe.com/c/pay/cs_test_abc#frag";
-  assert.equal(returnedFromCheckout("https://www.yomizaka.com/fr/app?paid=pro", hosted), true);
-  assert.equal(returnedFromCheckout("https://dev.yomizaka.com/fr/app?paid=pro", hosted), true);
+  assert.equal(returnedFromCheckout("https://www.verikora.com/fr/app?paid=pro", hosted), true);
+  assert.equal(returnedFromCheckout("https://dev.verikora.com/fr/app?paid=pro", hosted), true);
   assert.equal(returnedFromCheckout("https://checkout.stripe.com/c/pay/cs_test_abc", hosted), false);
   assert.equal(returnedFromCheckout("about:blank", hosted), false);
-  assert.equal(returnedFromCheckout("http://www.yomizaka.com/fr/app", hosted), false);
+  assert.equal(returnedFromCheckout("http://www.verikora.com/fr/app", hosted), false);
 });
 
 test("the report is written only inside the runner's temporary folder (no path traversal)", () => {
@@ -144,15 +144,15 @@ test("the report is written only inside the runner's temporary folder (no path t
 test("the stuck page is described by its address without secrets, its title and the card digits masked (krizaka-internal#2273)", () => {
   const d = describeStuckPage({
     url: "https://checkout.stripe.com/c/pay/cs_test_a1B2c3?token=abc123&x=1#fidkdWxOYHwnPyd1blpxYHZxWjA0",
-    title: "Pay Yomizaka 4242 4242 4242 4242",
+    title: "Pay Verikora 4242 4242 4242 4242",
   });
   assert.equal(d.url, "https://checkout.stripe.com/c/pay/cs_test_[id]");
-  assert.equal(d.title, "Pay Yomizaka [card]");
+  assert.equal(d.title, "Pay Verikora [card]");
   assert.doesNotMatch(JSON.stringify(d), /abc123|fidkdWx|a1B2c3|4242/);
   assert.equal(describeStuckPage({ url: "not a url", title: undefined }).url, "[unreadable address]");
   assert.equal(
-    describeStuckPage({ url: "https://www.yomizaka.com/fr/app?paid=pro", title: "" }).url,
-    "https://www.yomizaka.com/fr/app",
+    describeStuckPage({ url: "https://www.verikora.com/fr/app?paid=pro", title: "" }).url,
+    "https://www.verikora.com/fr/app",
   );
 });
 

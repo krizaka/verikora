@@ -6,7 +6,7 @@ import { afterAll, describe, expect, it } from "vitest";
 
 import { localStore } from "./local";
 
-const dir = mkdtempSync(join(tmpdir(), "yomizaka-local-"));
+const dir = mkdtempSync(join(tmpdir(), "verikora-local-"));
 afterAll(() => rmSync(dir, { recursive: true, force: true }));
 
 describe("localStore (the working store of a laptop and of the tests)", () => {

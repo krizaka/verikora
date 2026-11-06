@@ -25,7 +25,7 @@ signal that would tell us we are wrong. Feedback: the pinned Discussion of the r
 
 ## 3. The run id is visible
 
-- **Decision**: each check shows the Orazaka run id and the Studio version.
+- **Decision**: each check shows the Sovkora run id and the Studio version.
 - **Problem**: "who decided this, on which rules?" must have an answer.
 - **Principle**: traceability builds trust in automated advice (Lee & See, *Trust in automation*, 2004).
 - **Refused**: hiding the engine behind a generic "AI".
@@ -49,7 +49,7 @@ signal that would tell us we are wrong. Feedback: the pinned Discussion of the r
 ## 5. A signed audit report, and a members-only page where it is checked
 
 - **Decision**: a finished compliance check exports a self-contained HTML report (print it to PDF) carrying the document's
-  SHA-256, jurisdiction, rules version, Studio version, Orazaka run id, dates, every finding with passage and article, and
+  SHA-256, jurisdiction, rules version, Studio version, Sovkora run id, dates, every finding with passage and article, and
   an Ed25519 signature over those and over the report's own text. `/verify` checks a file for a signed-in member the report's owner gave access to (ADR-0002: leases and identity
   documents are confidential), with the original document if wanted, and says exactly what a green result guarantees and
   what it does not. Without a grant it says so and offers « Request access ».
@@ -65,9 +65,9 @@ signal that would tell us we are wrong. Feedback: the pinned Discussion of the r
 ## 6. The proof is a real run — recorded, one per side of the lease
 
 - **Decision** (revised 2026-10-17, Oussama): « A real run » shows two recorded runs, one per side of the lease — a
-  fictitious tenant's lease and a landlord's template, each sent to Orazaka's compliance Studio on dev (Québec) and kept
+  fictitious tenant's lease and a landlord's template, each sent to Sovkora's compliance Studio on dev (Québec) and kept
   exactly as returned (`content/recorded-runs/`, written by `scripts/record-runs.mjs`): a summary line (counted, not typed),
-  the findings with the non-compliant first, the sample with the quoted passages lit, the Orazaka run id (copy), the date
+  the findings with the non-compliant first, the sample with the quoted passages lit, the Sovkora run id (copy), the date
   and source of the recording, and the signed report. A page without a recorded run does not build.
 - **Problem**: the first version read the one run an administrator promoted on the platform — and showed « nothing yet »
   until someone did. An empty proof is worse than none; and one lease spoke for one side only.
@@ -82,10 +82,10 @@ signal that would tell us we are wrong. Feedback: the pinned Discussion of the r
 
 ## 7. The landing tells one story in five sections, and its proof is the real app recorded
 
-- **Decision**: the home is five sections: the promise with the real journey recorded on dev.yomizaka.com (StepShowcase:
-  a phone below md, a browser from md; keep → check → find, the check a live Orazaka run whose id is printed under it),
+- **Decision**: the home is five sections: the promise with the real journey recorded on dev.verikora.com (StepShowcase:
+  a phone below md, a browser from md; keep → check → find, the check a live Sovkora run whose id is printed under it),
   three outcomes (each card a way in), how it works in three steps with the owl's promise, trust (Canada, traced, open
-  source, Orazaka named once, the status read from dev-preview.json), the closing call. « A real run » moved to its own
+  source, Sovkora named once, the status read from dev-preview.json), the closing call. « A real run » moved to its own
   address (/run). The bar has one « Product » menu and no version chip; the version is in the footer.
 - **Problem**: the old home had nine blocks (traps, decisions, two checks, search, the run…): a visitor met the details
   before knowing what the product does for them, and the real run was buried at the bottom.
@@ -104,7 +104,7 @@ signal that would tell us we are wrong. Feedback: the pinned Discussion of the r
   static, indexable addresses (`/fr/locataire`, `/fr/proprietaire`, `/en/tenant`, `/en/landlord`) whose hero, steps and
   examples speak to that side. In the app the side is asked once at onboarding (the library) and changeable in settings;
   it picks the check offered first (a landlord's « other » documents — the tenant's papers — start with the PDF
-  examination) and the wording of the checks. The rules do not change: both sides run the same Orazaka Studios on the same
+  examination) and the wording of the checks. The rules do not change: both sides run the same Sovkora Studios on the same
   rulesets (a side-specific rule would be data of the pack, not code here).
 - **Problem**: the product spoke from one side only (the tenant checking a lease), while the landlord has the same need —
   a compliant template, the tenant's papers, a report to keep and share.
@@ -137,7 +137,7 @@ signal that would tell us we are wrong. Feedback: the pinned Discussion of the r
 - **Decision**: the public bar has five entries (Product, How it works, A real run, Privacy, Verify a report) and the family's
   language switch; the members' app has two (Library, Search) because everything else is reached from a document; the
   administration has seven pages in **three groups** — People and files (Overview, People, Documents), Flows and engine
-  (Flows, Orazaka runs), Operations (Operations, Audit log) — each page its own address, shareable (`lib/admin-nav.ts`, guarded by
+  (Flows, Sovkora runs), Operations (Operations, Audit log) — each page its own address, shareable (`lib/admin-nav.ts`, guarded by
   `lib/admin-nav.test.ts`). Dates in the console are always written in Montréal's time zone, whoever draws them.
 - **Problem**: the console grew a page per need (seven flat entries, two with the same icon) and its dates were drawn in the
   machine's own time zone on the server and again in the browser: React refused the page (hydration error #418) on five of its
@@ -150,10 +150,10 @@ signal that would tell us we are wrong. Feedback: the pinned Discussion of the r
 
 ## 9. Three public pages: the home, sign-in, the privacy notice
 
-- **Decision** (2026-10-21, krizaka/yomizaka#120): the signed-out site is the home (what Yomizaka does for you, one real
+- **Decision** (2026-10-21, krizaka/verikora#120): the signed-out site is the home (what Verikora does for you, one real
   check recorded as it came back, one way in: sign-in), sign-in and the legal page. The menu has three places (what it
   does, a real run, privacy) and the bar's actions. `/run`, `/changelog`, the four audience pages (§ 8) and the old
-  « Pour qui ? » picker are gone: 308 to the home (`lib/removed-urls.mjs`). Orazaka is one quiet line under the proof.
+  « Pour qui ? » picker are gone: 308 to the home (`lib/removed-urls.mjs`). Sovkora is one quiet line under the proof.
 - **Problem**: eleven page templates for a product in development, the same promise said on the home, on `/run` and on
   four audience pages; a bar with a dropdown to reach three of them; effects (animated flow, glow, counters) that read as
   template rather than as a tool.
@@ -166,8 +166,8 @@ signal that would tell us we are wrong. Feedback: the pinned Discussion of the r
 
 ## 10. One product bar: use the app first, and the signed-in person always visible
 
-- **Decision** (2026-10-23, krizaka/yomizaka#243, krizaka-ui#505): the bar's primary action is using the app —
-  « Sign in » while sign-up is closed, « Try Yomizaka » (then « Sign in » beside it) once the product's own setting opens it,
+- **Decision** (2026-10-23, krizaka/verikora#243, krizaka-ui#505): the bar's primary action is using the app —
+  « Sign in » while sign-up is closed, « Try Verikora » (then « Sign in » beside it) once the product's own setting opens it,
   « Open the app » and the avatar when signed in (`ProductBarActions` of `@krizaka/ui/nav-bar`). « Talk to us » is gone from
   the bar and the mobile panel; Contact stays in the footer. The public pages stay static: a client island asks
   `/api/me` (401 = signed out) and `/api/auth/sign-up/status` through `@krizaka/query`. The result only changes what is
@@ -178,11 +178,11 @@ signal that would tell us we are wrong. Feedback: the pinned Discussion of the r
   column to the phone's tab bar until the rail counts hidden children).
 - **Signal we are wrong**: the avatar flashes « Sign in » visibly before the island answers.
 
-## 11. The shell on Orazaka's pattern: destinations on the rail, the product in the header, the action in the header
+## 11. The shell on Sovkora's pattern: destinations on the rail, the product in the header, the action in the header
 
-- **Decision** (2026-10-23, the UX review of October 2026 — `docs/ux/2026-10-full-review.md`, krizaka/yomizaka#278, #281):
+- **Decision** (2026-10-23, the UX review of October 2026 — `docs/ux/2026-10-full-review.md`, krizaka/verikora#278, #281):
   the rail holds destinations only — Bibliothèque · Vérifications · Recherche — with the collapse control alone at its
-  foot; the header names the product (`AppHeader name="Yomizaka"`), carries the DEV build as a chip and the one action of
+  foot; the header names the product (`AppHeader name="Verikora"`), carries the DEV build as a chip and the one action of
   every signed-in screen, « Vérifier un document » (its word from `sm`, its icon with the same accessible name below);
   the account menu owns the settings (Profil · Réglages · Facturation · Langue · Thème · Se déconnecter) and shows the
   name only when there is one, never the raw address; every page draws its own `h1` with `PageHeader`. Vérifications is
@@ -203,7 +203,7 @@ signal that would tell us we are wrong. Feedback: the pinned Discussion of the r
 
 ## 12. The library home answers « what did I check » before « what do I have », and takes a file anywhere
 
-- **Decision** (2026-10-23, the UX review's Y3, krizaka/yomizaka#275, #281): under the page's `h1`, the five latest checks
+- **Decision** (2026-10-23, the UX review's Y3, krizaka/verikora#275, #281): under the page's `h1`, the five latest checks
   come first (from the same list as Vérifications, each a link to its report, « Tout voir » to the destination); the
   collections are link cards — a place mark, the name in the language being read, the count, the last check's result —
   with their menu beside the card, never inside the link; the recent documents keep the table, and on a phone its card
@@ -243,7 +243,7 @@ signal that would tell us we are wrong. Feedback: the pinned Discussion of the r
   drop zone comes first and large, « Quel document ? » under it as a choice grid (Automatique first; the URL is the
   state), and the options (keep the document, « these photos are one document ») fold under the zone once files are
   known — the grouping only with two photos or more. A file that landed opens on its report: the check starts at once
-  when the kind is sure (the person named it, or Yomizaka recognised it with high confidence), otherwise the report tab
+  when the kind is sure (the person named it, or Verikora recognised it with high confidence), otherwise the report tab
   asks to confirm. The rules follow the kind — Québec's named rulesets for an invoice or a contract, said in one line; a
   lease keeps its jurisdiction. While it runs, a step progress (Lecture › Contrôle › Règles › Rapport) tops the tab.
 - **Problem**: the kind picker was a tab bar glued to the top with no question; two checkboxes made no sense before a
@@ -275,7 +275,7 @@ signal that would tell us we are wrong. Feedback: the pinned Discussion of the r
   `/api/search` as the search page; a hit opens its document, « Tous les résultats » leads to the page with the query in its
   address. The language is `LanguageSwitch` (it left the account menu). The one action is a `gradient` cut button. The account
   shows the name from 1024 px (`showName="lg"`) and holds « Crédits et usage », not « Facturation ».
-- **No messages and no notifications**: Yomizaka has no messaging, and notifications wait for `@krizaka/notifications`
+- **No messages and no notifications**: Verikora has no messaging, and notifications wait for `@krizaka/notifications`
   (krizaka-ts#60). An empty slot is hidden, never filled with an invented feature; a test holds it.
 - **The rail's badge** on « Dossiers » counts the files the candidate sent and nobody decided (`filesToDecide`, one query that
   equals the home's « Dossiers à décider »), said in words for a screen reader (« 2 dossiers à décider »).
@@ -297,7 +297,7 @@ signal that would tell us we are wrong. Feedback: the pinned Discussion of the r
 
 ## 26. The organised workspace: your decision, tags with markers, saved views, bulk actions (P7, #324)
 
-Krizaka-ts ADR-003, `@krizaka/organize` 0.4. Yomizaka is the pilot, on « Dossiers » and on the documents' tags.
+Krizaka-ts ADR-003, `@krizaka/organize` 0.4. Verikora is the pilot, on « Dossiers » and on the documents' tags.
 
 - **Decision**: a manager decides an applicant file with a status set kept as data in the database (`organize.kind_config`,
   seeded once, edited by the administration through `PUT /api/admin/organize/<kind>/config`, versioned). The set is
@@ -314,7 +314,7 @@ Krizaka-ts ADR-003, `@krizaka/organize` 0.4. Yomizaka is the pilot, on « Dossie
 - **Tags** have a colour **marker** from the closed palette (blue · green · amber · red · violet · gray) and always a written
   name. Files and documents have their own tags per kind. A document's tags moved from the first layer to the workspace
   (migration 0033 copies names and markers, then drops `document_tags`); a collection's and a folder's stay as they were.
-  Documents have **no status** in v1: they already carry Orazaka's fact.
+  Documents have **no status** in v1: they already carry Sovkora's fact.
 - **Saved views**: the address holds the state (`?view=&tags=&status=&q=`), the database keeps the name. The system views
   (« À décider », « Décidés ») come first, then the account's, then the person's. On a phone the views are a menu.
 - **Bulk**: at most 200 files, one transaction, one audit line per file; a foreign id is 404 for the whole call; what cannot
@@ -384,14 +384,14 @@ Krizaka-ts ADR-003, `@krizaka/organize` 0.4. Yomizaka is the pilot, on « Dossie
   document » still comes once photos are known (C3), and the library's drop keeps B4.
 - **One row per file** once it landed (`lib/check-queue.ts`): « Lecture du document… », « Lancement de la
   vérification… », « Vérification lancée », « Non lancée : … ». Every stage is a word, so reduced motion loses nothing.
-  The run's own stages come with #208 when orazaka#189 lands.
+  The run's own stages come with #208 when sovkora#189 lands.
 - **A confident kind starts on the drop; an uncertain one is asked « Quel document ? » for that file only**, its own
   question under the list. A single file opens its report as soon as it is under way; with several, each row links to its
   report, and nothing navigates away from the others.
 
 ## 22. The home's data: « À traiter » as doors, the activity of a period, « Récents » off the home (P8, #325)
 
-- **« À traiter »** comes first: the checks to look at (Orazaka flagged a point, or the run did not end), and with the
+- **« À traiter »** comes first: the checks to look at (Sovkora flagged a point, or the run did not end), and with the
   applicant-file flow the files to decide (documents sent, file not closed) and the open links (with the first expiry).
   Each figure is a query over the rows its view lists, and a link to that view **with its filter in the address**
   (`/app/verifications?result=attention,failed`, `/app/dossiers?state=used`, `?state=open`). At zero, one line:
@@ -401,7 +401,7 @@ Krizaka-ts ADR-003, `@krizaka/organize` 0.4. Yomizaka is the pilot, on « Dossie
 - **« Récents » leaves the home**: every document is in its collection and in Recherche.
 - « Dossiers » reads `?state=` and says the filter, with « Tout voir ».
 
-## 21. One section map on the web, the phone and the Mac (yomizaka#319, P2 of the design direction)
+## 21. One section map on the web, the phone and the Mac (verikora#319, P2 of the design direction)
 
 - **Problem**: three apps, three maps: the web's rail (Bibliothèque · Vérifications · Recherche), the phone's tabs
   (Vérifier · Bibliothèque · Réglages) and the Mac's sidebar (Library · Batches · Reports, ⌘1 to ⌘3).
@@ -411,27 +411,27 @@ Krizaka-ts ADR-003, `@krizaka/organize` 0.4. Yomizaka is the pilot, on « Dossie
   action (the phone's « + »), and the settings live under the avatar. The Mac numbers what it shows, ⌘1 to ⌘4, and builds
   its « Aller » menu from the same list.
 - **Refused**: a different map per platform. A platform that lacks a screen says why in the map (`pending`): Dossiers on
-  the phone and the Mac (P6), and Recherche there (no search call in `@yomizaka/client` yet, and ⌘K with P14).
+  the phone and the Mac (P6), and Recherche there (no search call in `@verikora/client` yet, and ⌘K with P14).
 - **Cost**: the phone no longer opens a « Réglages » tab (the avatar does); the Mac's « Rapports » is now « Vérifications ».
 - **Signal we are wrong**: people look for the settings in the phone's tab bar.
 
 
-## 20. « Quel document ? » only when the kind is uncertain (yomizaka#318, P1 of the design direction)
+## 20. « Quel document ? » only when the kind is uncertain (verikora#318, P1 of the design direction)
 
 - **Problem**: `/app/verifier` asked the kind of every file before the drop, as a five-tile story grid (`ChoiceGrid`)
   whose name and hint read glued without its stylesheet (#316); most files are recognised, so the question was noise.
-- **Principle**: ask only what Yomizaka does not know (§ 5.4): the page opens on the drop zone; a file recognised with
+- **Principle**: ask only what Verikora does not know (§ 5.4): the page opens on the drop zone; a file recognised with
   high confidence starts its check and opens on its report; an uncertain one is asked « Quel document ? » with
   `ChoiceCards` (the four kinds, a title and a hint each, a labelled radio group), for that file only.
 - **Refused**: keeping « Automatique » as a fifth card (it is what the drop already does); a local card grid.
 - **Cost**: choosing the kind before the drop is only `?type=` in the address now (links that name it keep working);
   a mismatch between the named and the read kind is still confirmed on the report tab.
-- **Signal we are wrong**: people drop, then look for a way to say the kind before Yomizaka asks.
+- **Signal we are wrong**: people drop, then look for a way to say the kind before Verikora asks.
 
 ## 19. The public home: the product's answer on screen, the session answered once, no void above the hero
 
 - **Decision** (2026-10-23, the UX review's Y9, #281): the home is `LandingPage` — the promise beside the product's answer
-  itself: the recorded check in a panel that grows with its text (the lease line lit, the finding Yomizaka returned, its
+  itself: the recorded check in a panel that grows with its text (the lease line lit, the finding Verikora returned, its
   article — the `BeforeAfter` block, read from the recorded run, nothing drawn by hand; a fixed-aspect device frame
   clipped the finding on a phone), the figures of that run under it
   (rules checked, articles cited, findings), the three things as a bento (signature icons), the run's facts with the owl
@@ -516,7 +516,7 @@ Krizaka-ts ADR-003, `@krizaka/organize` 0.4. Yomizaka is the pilot, on « Dossie
   one line of context: the jurisdiction's rules, the ruleset, its date), the findings with what failed first (blocking
   before major, in words and tone, the quote, the article; what passed folded), then the engine's facts folded (the run
   id once, the Studio version, the ruleset, the dates, the report's fingerprint and key) and the detailed note folded;
-  `/document` — the file or its text, what Yomizaka read (each kind of amount once), where it lives, the file facts;
+  `/document` — the file or its text, what Verikora read (each kind of amount once), where it lives, the file facts;
   `/historique` — only once a second run exists. The sharing sits in the side panel, only for a check that can be
   certified; a seeded demo check says it has no certified report. The old addresses (`/infos`, `/fichier`, `/texte`,
   `/verifications`) answer 308 to their tab.
@@ -525,7 +525,7 @@ Krizaka-ts ADR-003, `@krizaka/organize` 0.4. Yomizaka is the pilot, on « Dossie
   tabs for two things; two equal export buttons.
 - **Principle**: the answer first, the proof on demand; the title is what the document is, not what the file is called;
   one primary action by state.
-- **Refused**: a verdict of Yomizaka's own (the report's figures only — rules read, points to look at —, never
+- **Refused**: a verdict of Verikora's own (the report's figures only — rules read, points to look at —, never
   « conforme »); a tab per analysis; hiding the run id (it is in the technical details, once); a local copy of a verdict
   block (K5 goes to krizaka-ui; until it ships, the band is `Stat` in a toned section and the findings are cards).
 - **Cost**: the authenticity signals share the report tab, under the verdict; a document with no check shows the start
@@ -567,7 +567,7 @@ Krizaka-ts ADR-003, `@krizaka/organize` 0.4. Yomizaka is the pilot, on « Dossie
   day it was asked. There is no status chip: the decision is P7 (krizaka-ts#89), and the list never sorts by a check's result.
 - `/app/dossiers/[id]` lists the documents asked, each with the one received. A row says what becomes of the document
   (deleted after its checks, or kept until the decision with the applicant's consent) and gives its checks in words as
-  Orazaka returned them. It leads to the document's report, where the run ids are.
+  Sovkora returned them. It leads to the document's report, where the run ids are.
 - « Demander des documents » is a dialog on `createKrizakaForm`. It offers only the requestable types: the minimisation
   list (SIN, health card, passport, licence, bank details) is never offered, the form's schema refuses it, and the service
   keeps its 422 `TYPE_NOT_NECESSARY`. The link comes back once and is shown once, to copy. The applicant's page is `/[locale]/dossier/[token]` (#341).
@@ -636,7 +636,7 @@ Krizaka-ts ADR-003, `@krizaka/organize` 0.4. Yomizaka is the pilot, on « Dossie
 
 ## Prices: one catalogue, edited in the administration (ADR-009, #367)
 
-- `admin.yomizaka.com/config/prices`: one flat `SettingsSection` per entry (amount in dollars, availability, its limits, « À partir du »
+- `admin.verikora.com/config/prices`: one flat `SettingsSection` per entry (amount in dollars, availability, its limits, « À partir du »
   — empty or today is now, a later day is its start, never the past), one save « Planifier le changement »; beside it what the
   processor charges, « Égal » or « Différent » (sales stop while different). Then every change, who and from when. Composed from
   `SettingsSection` / `SettingsRow` until the price-list block exists (krizaka/krizaka-ui#713).

@@ -1,18 +1,18 @@
 import { readFileSync } from "node:fs";
 
-import { type Analysis, type ComplianceReport, passages, reportOf } from "@yomizaka/core";
+import { type Analysis, type ComplianceReport, passages, reportOf } from "@verikora/core";
 import { describe, expect, it } from "vitest";
 
 import { buildPayload, issueReport, sha256, verifyReport } from "./report";
 import { generateSigningKeyBase64, parseSigningKey } from "./report-key";
 import { reportLabels } from "./report-labels";
 
-// The compliance report of a REAL run of Orazaka's Studio (blueprint 1.2.0, dev.orazaka.com, 2026-10-15, run
+// The compliance report of a REAL run of Sovkora's Studio (blueprint 1.2.0, dev.sovkora.com, 2026-10-15, run
 // ba5a20f1-d67e-4966-ac55-dc40db6bf1b5) on the sample Québec lease, exactly as it came back — nine findings, one of
 // which quotes a passage without offsets (`evidenceSpan.start/end: null`), which the first version of the schema refused.
-const RAW = readFileSync(new URL("./fixtures/orazaka-compliance-qc-1.2.0.json", import.meta.url), "utf8");
+const RAW = readFileSync(new URL("./fixtures/sovkora-compliance-qc-1.2.0.json", import.meta.url), "utf8");
 
-describe("a real Orazaka compliance report", () => {
+describe("a real Sovkora compliance report", () => {
   it("is read in full, including a quoted passage whose offsets are null", () => {
     const report = reportOf("compliance-check", [
       { key: "report", type: "JSON", value: RAW },

@@ -1,5 +1,5 @@
 import { filterSql } from "@krizaka/organize";
-import type { CollectionAvatar } from "@yomizaka/core";
+import type { CollectionAvatar } from "@verikora/core";
 import type { QueryResultRow } from "pg";
 
 import { refuse } from "../http";
@@ -415,7 +415,7 @@ export async function placeOf(
     : null;
 }
 
-/** The files of a collection (its root, or one of its folders), newest first, matching ALL the selected tags (the workspace layer's filter, yomizaka#324). */
+/** The files of a collection (its root, or one of its folders), newest first, matching ALL the selected tags (the workspace layer's filter, verikora#324). */
 export async function browse(
   q: Query,
   owner: string,

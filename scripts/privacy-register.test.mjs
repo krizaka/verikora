@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { describe, it } from "vitest";
 
-// yomizaka#365: the transfer register (docs/privacy/transfers.json) lists every place personal information can go.
+// verikora#365: the transfer register (docs/privacy/transfers.json) lists every place personal information can go.
 // It follows the deployment spec and the environment schema: a store, host, provider or variable of a data context that
 // the register does not list fails here, so the privacy assessment cannot fall behind the configuration.
 const read = (p) => readFileSync(new URL(`../${p}`, import.meta.url), "utf8");
@@ -11,7 +11,7 @@ const spec = read(register.app.spec);
 const envSource = read("apps/web/lib/env.ts");
 
 const DATA_CONTEXTS = /^(DATABASE|MEDIA|MAIL|PAYMENTS|AI)_/;
-const OWN = /(^|\.)yomizaka\.com$/;
+const OWN = /(^|\.)verikora\.com$/;
 const listedKeys = new Set(register.entries.flatMap((e) => e.env));
 const listedHosts = new Set(register.entries.flatMap((e) => e.hosts));
 
@@ -50,7 +50,7 @@ describe("the transfer register follows the deployment", () => {
     const missing = declared.filter((k) => !listedKeys.has(k));
     assert.deepEqual(missing, [], `add these to docs/privacy/transfers.json: ${missing.join(", ")}`);
   });
-  it("lists every host outside yomizaka.com that the spec's values or the schema's defaults name", () => {
+  it("lists every host outside verikora.com that the spec's values or the schema's defaults name", () => {
     const fromSpec = specValues
       .filter(([, v]) => /^(https?:\/\/)?[a-z0-9-]+(\.[a-z0-9-]+)+(:\d+)?(\/.*)?$/i.test(v))
       .map(([, v]) => hostOf(v));

@@ -17,7 +17,7 @@ permissions:
 
 jobs:
   # The pipeline is the org's (krizaka/.github docs/standards/ci-and-deploy.md): the changes gate, the pnpm and Playwright
-  # caches, parallel legs, the timeouts and the gate that always reports live there. This file says only what is Yomizaka's.
+  # caches, parallel legs, the timeouts and the gate that always reports live there. This file says only what is Verikora's.
   ci:
     uses: krizaka/.github/.github/workflows/node-ci.yml@79f6ff6292edefebc59fc968dbc2c203da81c3ea # main (merge queue, layout guard)
     permissions:
@@ -46,16 +46,16 @@ jobs:
       typecheck-script: typecheck
       next-cache-paths: apps/web/.next/cache
       postgres-image: postgres:16
-      postgres-name: yomizaka_db
+      postgres-name: verikora_db
       # Test values only — no real secret anywhere.
       env: |
-        DATABASE_URL=postgresql://yomizaka_db:ci-only-password@localhost:5432/yomizaka_db
-        YOMIZAKA_DB_IT=1
+        DATABASE_URL=postgresql://verikora_db:ci-only-password@localhost:5432/verikora_db
+        DATABASE_IT=1
       playwright: chromium
       after-build: scripts/ci-after-build.sh
 
   # The S3 adapter against a real S3-compatible server (a throwaway SeaweedFS), never skipped: STORAGE_IT_S3_REQUIRED makes the
-  # tests fail if their variables are missing (ADR-0007, krizaka/yomizaka#198). Test values only — no real secret.
+  # tests fail if their variables are missing (ADR-0007, krizaka/verikora#198). Test values only — no real secret.
   storage-s3:
     name: Storage (S3, SeaweedFS)
     runs-on: ubuntu-latest
@@ -66,7 +66,7 @@ jobs:
       STORAGE_IT_S3_ENDPOINT: http://localhost:8333
       STORAGE_IT_S3_USER: ci-s3-user
       STORAGE_IT_S3_PASS: ci-only-s3-password
-      STORAGE_IT_S3_BUCKET: yomizaka-it
+      STORAGE_IT_S3_BUCKET: verikora-it
       STORAGE_IT_S3_REQUIRED: "1"
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -79,4 +79,4 @@ jobs:
           cache: pnpm
       - run: bash scripts/ci-s3.sh
       - run: pnpm install --frozen-lockfile --prefer-offline
-      - run: pnpm --filter @yomizaka/web exec vitest run lib/storage/s3.test.ts
+      - run: pnpm --filter @verikora/web exec vitest run lib/storage/s3.test.ts

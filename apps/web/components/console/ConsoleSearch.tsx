@@ -9,7 +9,7 @@ import {
   CommandList,
   CommandLoading,
 } from "@krizaka/ui/command";
-import { queryKeys, searchHit } from "@yomizaka/core";
+import { queryKeys, searchHit } from "@verikora/core";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";

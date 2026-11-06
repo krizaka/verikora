@@ -9,8 +9,8 @@ import { memoryStore } from "../storage/memory";
 import { noneStore } from "../storage/none";
 import { eraseAccount, exportData } from "./data";
 
-/** Export and erasure against a real PostgreSQL (skipped without YOMIZAKA_DB_IT=1 and DATABASE_URL). */
-const enabled = process.env.YOMIZAKA_DB_IT === "1" && !!process.env.DATABASE_URL;
+/** Export and erasure against a real PostgreSQL (skipped without DATABASE_IT=1 and DATABASE_URL). */
+const enabled = process.env.DATABASE_IT === "1" && !!process.env.DATABASE_URL;
 const NOW = new Date("2026-10-22T12:00:00Z");
 
 describe.runIf(enabled)("export and erasure (Loi 25)", () => {
@@ -21,7 +21,7 @@ describe.runIf(enabled)("export and erasure (Loi 25)", () => {
     (
       await query<{ id: string }>(
         `INSERT INTO accounts (email, password_hash, email_verified_at, name ${extra ? ", " + extra.split("=")[0] : ""}) VALUES ($1, 'x', now(), 'Éric' ${extra ? ", " + extra.split("=")[1] : ""}) RETURNING id`,
-        [`d-${Math.random().toString(36).slice(2)}@yomizaka.test`],
+        [`d-${Math.random().toString(36).slice(2)}@verikora.test`],
       )
     )[0]!.id;
   const dev = () => memoryStore({ kind: "bunny", devOnly: true, owner: "krizaka", residency: "elsewhere" });
@@ -55,7 +55,7 @@ describe.runIf(enabled)("export and erasure (Loi 25)", () => {
     expect(out.exportedAt).toBe(NOW.toISOString());
     expect(JSON.stringify(out)).not.toContain("password");
     expect(out.profile).toMatchObject({ name: "Éric" });
-    // every account has a default collection (krizaka/yomizaka#205): the export says which one it is
+    // every account has a default collection (krizaka/verikora#205): the export says which one it is
     expect(out.libraries.flatMap((l) => l.collections).filter((c) => c.isDefault)).toHaveLength(1);
     expect(out.libraries.find((l) => l.name === "Ma bibliothèque")).toMatchObject({
       collections: [{ name: "Baux", isDefault: false }],
@@ -90,7 +90,7 @@ describe.runIf(enabled)("export and erasure (Loi 25)", () => {
     expect(trail).toEqual({ actor_label: "deleted account", ip: null, detail: {}, actor_id: null });
   });
 
-  it("an account that holds a credits ledger is erased like any other: the ledger keeps its lines under a bare id, nothing points at the person (yomizaka#261)", async () => {
+  it("an account that holds a credits ledger is erased like any other: the ledger keeps its lines under a bare id, nothing points at the person (verikora#261)", async () => {
     const owner = await account();
     const store = dev();
     await storeDocument(owner, file, bytes("g"), "lease", policy(true, store));
@@ -111,9 +111,9 @@ describe.runIf(enabled)("export and erasure (Loi 25)", () => {
     ).toBe(2);
   });
 
-  it("the export lists every module's data: the person's part, screenings, credits, coupons, consents and the trail (yomizaka#264, #262)", async () => {
+  it("the export lists every module's data: the person's part, screenings, credits, coupons, consents and the trail (verikora#264, #262)", async () => {
     const owner = await account();
-    const label = `${owner}@yomizaka.test`;
+    const label = `${owner}@verikora.test`;
     const store = dev();
     await storeDocument(owner, file, bytes("x"), "lease", policy(true, store));
     await seedAudits(owner, { credits: 2 });
@@ -137,9 +137,9 @@ describe.runIf(enabled)("export and erasure (Loi 25)", () => {
       "credits",
       "identity",
       "screenings",
-      "yomizaka",
+      "verikora",
     ]);
-    const mine = out.modules.yomizaka as { documents: unknown[]; profile: { id: string } };
+    const mine = out.modules.verikora as { documents: unknown[]; profile: { id: string } };
     expect(mine.profile.id).toBe(owner);
     expect(mine.documents).toHaveLength(1);
     expect(out.modules.screenings as unknown[]).toHaveLength(1);
@@ -150,9 +150,9 @@ describe.runIf(enabled)("export and erasure (Loi 25)", () => {
     expect(JSON.stringify(out)).not.toContain("password");
   });
 
-  it("consents are granted, read and withdrawn through the privacy module, each change a line (yomizaka#264)", async () => {
+  it("consents are granted, read and withdrawn through the privacy module, each change a line (verikora#264)", async () => {
     const owner = await account();
-    const label = `${owner}@yomizaka.test`;
+    const label = `${owner}@verikora.test`;
     const who = { id: owner, email: label };
     await grantConsent(who, "screening-landlord-undertaking", undefined, "flow@2");
     await grantConsent(who, "screening-landlord-undertaking", undefined, "flow@2"); // already given: no second line
@@ -171,9 +171,9 @@ describe.runIf(enabled)("export and erasure (Loi 25)", () => {
     ]);
   });
 
-  it("an erasure withdraws the live consents, records the request without naming the person, and leaves the trail without them (yomizaka#264)", async () => {
+  it("an erasure withdraws the live consents, records the request without naming the person, and leaves the trail without them (verikora#264)", async () => {
     const owner = await account();
-    const label = `${owner}@yomizaka.test`;
+    const label = `${owner}@verikora.test`;
     const store = dev();
     await grantConsent({ id: owner, email: label }, "screening-landlord-undertaking", undefined, "flow@1");
     await query(

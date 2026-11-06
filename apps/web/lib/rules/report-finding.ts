@@ -1,8 +1,8 @@
-import type { ComplianceReport, Finding } from "@yomizaka/core";
+import type { ComplianceReport, Finding } from "@verikora/core";
 
 /**
  * Adds one deterministic finding to a report, once (a report already holding the rule's id is returned as it came), and counts it in
- * the summary the way the engine's own findings are counted (yomizaka#104: the tenant-shield rules reach the report one finding each).
+ * the summary the way the engine's own findings are counted (verikora#104: the tenant-shield rules reach the report one finding each).
  */
 export function appendFinding(report: ComplianceReport, finding: Finding): ComplianceReport {
   if (report.findings.some((f) => f.ruleId === finding.ruleId)) return report;

@@ -4,7 +4,7 @@ import { type CheckTypeRow, priceCents } from "./catalogue";
 import { CHECK_STATE, type CheckState } from "./model";
 
 /*
- * Per-check billing (yomizaka#133). A check's charge is its row's provider cost plus margin (price DATA, never code), billed to
+ * Per-check billing (verikora#133). A check's charge is its row's provider cost plus margin (price DATA, never code), billed to
  * the payer chosen for the request, with the taxes (GST/QST) computed by Stripe Tax and an invoice line that names the check as a
  * service by Krizaka. It is OFF (`features.screeningBilling`) and test-mode only: nothing here calls a live processor.
  *

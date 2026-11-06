@@ -1,6 +1,6 @@
 import crypto from "node:crypto";
 
-import { STORAGE_MODE, STORAGE_MODES } from "@yomizaka/core";
+import { STORAGE_MODE, STORAGE_MODES } from "@verikora/core";
 import { z } from "zod";
 
 import { cloudsOffered } from "@/app/cloud-flow";

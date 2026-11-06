@@ -2,7 +2,7 @@ import { query } from "./db";
 import { refuse } from "./http";
 
 /**
- * Who may verify a signed report (ADR-0002). Verification is for a signed-in member of Yomizaka who is the owner of the
+ * Who may verify a signed report (ADR-0002). Verification is for a signed-in member of Verikora who is the owner of the
  * checked document, or to whom the owner granted access on that report. A grant names an e-mail, may carry an expiry, and
  * can be revoked; a revoked or expired grant opens nothing. Unknown report and no access answer the same 403, so the answer
  * tells a stranger nothing about what exists.
@@ -52,7 +52,7 @@ const toGrant = (r: GrantRow): Grant => ({
   revokedAt: r.revoked_at,
 });
 
-/** The analysis a report points to — by its Orazaka run id and the SHA-256 of its document — with its grants; null if this server holds none. */
+/** The analysis a report points to — by its Sovkora run id and the SHA-256 of its document — with its grants; null if this server holds none. */
 export async function loadTarget(runId: string, documentSha256: string): Promise<Target | null> {
   const [row] = await query<{ analysis_id: string; document_id: string; owner_id: string }>(
     `SELECT a.id AS analysis_id, d.id AS document_id, d.owner_id
@@ -75,7 +75,7 @@ export async function loadTarget(runId: string, documentSha256: string): Promise
 
 /** The pair a report file claims (run id, document hash), read without trusting it: only used to find the report's owner. */
 export function referenceOf(file: string): { runId: string; documentSha256: string } | null {
-  const match = /<script type="application\/json" id="yomizaka-attestation">([^<]*)<\/script>/.exec(
+  const match = /<script type="application\/json" id="verikora-attestation">([^<]*)<\/script>/.exec(
     file.includes("\r") ? file.replaceAll("\r\n", "\n") : file,
   );
   if (!match) return null;

@@ -266,7 +266,7 @@ describe("the notice the manager sends", () => {
     );
   });
 
-  it("is information the landlord signs and sends: it never says compliant, approved or that Yomizaka sends it", () => {
+  it("is information the landlord signs and sends: it never says compliant, approved or that Verikora sends it", () => {
     for (const locale of ["fr", "en"] as const) {
       const { text } = renewalNotice(input, locale);
       expect(text).not.toMatch(/conforme|compliant|approuv|approved/i);

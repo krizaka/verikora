@@ -5,7 +5,7 @@ import {
   createSessionStore,
   secureStorage,
 } from "@krizaka/app-client";
-import { createQueries, createYomizakaApi } from "@yomizaka/client";
+import { createQueries, createVerikoraApi } from "@verikora/client";
 import Constants from "expo-constants";
 import * as SecureStore from "expo-secure-store";
 
@@ -15,23 +15,25 @@ import { currentLocale } from "./i18n";
  * The app's wiring, once: where the backend is comes from the signed manifest on krizaka.com (ADR-003), not from the
  * build; `EXPO_PUBLIC_APP_URL` points a development build at another machine, `EXPO_PUBLIC_APP_ENV` picks the manifest entry.
  */
-export const PRODUCT = "yomizaka";
+export const PRODUCT = "verikora";
+/** The id `@krizaka/ui` and `@krizaka/org` still know this product by, until their major release with the commercial ids (krizaka-internal#2659). */
+export const BRAND_ID = "yomizaka";
 export const APP_VERSION = Constants.expoConfig?.version ?? "0.0.0";
 
 /** Until a verified manifest answers: the address of the dev deployment. */
-const BAKED = { apiBase: "https://dev.yomizaka.com", webBase: "https://dev.yomizaka.com" } as const;
+const BAKED = { apiBase: "https://dev.verikora.com", webBase: "https://dev.verikora.com" } as const;
 // @fixed: a phone call that waits longer is a phone that has lost its network
 const API_TIMEOUT_MS = 20_000;
 
 const storage = secureStorage(SecureStore);
-export const session = createSessionStore({ storage, key: "yomizaka.session" });
+export const session = createSessionStore({ storage, key: "verikora.session" });
 
-/** The stage this build follows (`dev` | `prod`): `prod` hides the development-version notice (yomizaka#364). */
+/** The stage this build follows (`dev` | `prod`): `prod` hides the development-version notice (verikora#364). */
 export const stage = appEnvironmentFrom(process.env.EXPO_PUBLIC_APP_ENV);
 
 export const discovery = createAppDiscovery({
   product: PRODUCT,
-  hostSuffix: "yomizaka.com",
+  hostSuffix: "verikora.com",
   appVersion: APP_VERSION,
   baked: BAKED,
   storage,
@@ -50,5 +52,5 @@ export const api = createApiClient({
 /** The website, for what the app leaves to it (creating an account, the legal pages). */
 export const webUrl = (path = ""): string => `${discovery.getService(PRODUCT).webBase}${path}`;
 
-export const yomizaka = createYomizakaApi(api, session);
-export const queries = createQueries(yomizaka);
+export const verikora = createVerikoraApi(api, session);
+export const queries = createQueries(verikora);

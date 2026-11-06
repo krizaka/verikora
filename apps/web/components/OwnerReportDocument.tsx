@@ -5,7 +5,7 @@ import type { OwnerDocument } from "@/lib/owner-report";
 import { traceCardsOf } from "@/lib/owner-traces";
 import { ruleTitle } from "@/lib/rule-text";
 
-/** One document of the owner's report (yomizaka#128): read by the public page, and drawn — inert, with demo data — on the home. */
+/** One document of the owner's report (verikora#128): read by the public page, and drawn — inert, with demo data — on the home. */
 export function OwnerReportDocument({
   doc: d,
   n,

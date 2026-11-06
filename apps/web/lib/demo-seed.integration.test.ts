@@ -9,7 +9,7 @@ import { migrate, pool, query } from "./db";
 import * as org from "./organisation/store";
 
 /** The persona's seed against a real PostgreSQL: idempotent, resettable, one at a time per account, and the library shows the three collections with their counts. */
-const enabled = process.env.YOMIZAKA_DB_IT === "1" && !!process.env.DATABASE_URL;
+const enabled = process.env.DATABASE_IT === "1" && !!process.env.DATABASE_URL;
 const messagesByLocale = { fr, en };
 /** The seed is one transaction: it needs one connection, not the pool. */
 const onOneConnection = async <T>(
@@ -49,7 +49,7 @@ describe.runIf(enabled)("the demo seed (Éric)", () => {
       collections: 6,
     });
   });
-  const fresh = () => `eric-${Math.random().toString(36).slice(2)}@demo.yomizaka.test`;
+  const fresh = () => `eric-${Math.random().toString(36).slice(2)}@demo.verikora.test`;
   const snapshot = async (owner: string) => ({
     documents: (await query<{ n: number }>("SELECT count(*)::int AS n FROM documents WHERE owner_id = $1", [owner]))[0]!
       .n,
@@ -135,7 +135,7 @@ describe.runIf(enabled)("the demo seed (Éric)", () => {
     ]);
   });
 
-  // yomizaka#1968: the English web film was made on French fixtures, because a re-seed kept the account's first language.
+  // verikora#1968: the English web film was made on French fixtures, because a re-seed kept the account's first language.
   it("a reset takes the language asked for, a plain re-run keeps the person's", async () => {
     const email = fresh();
     await run(email, { locale: "fr" });

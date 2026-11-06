@@ -6,7 +6,7 @@ import {
   STORAGE_OWNER,
   STORAGE_RESIDENCY,
   type StoreDescriptor,
-} from "@yomizaka/core";
+} from "@verikora/core";
 
 /** What the device store needs from the file system: the app's sandbox, never a path outside it. */
 export interface FilePort {
@@ -39,7 +39,7 @@ const DESCRIPTOR: StoreDescriptor = {
 };
 
 /**
- * The `DocumentStore` port of ADR-0007 for the phone (yomizaka#155): objects live in the app's sandbox and nowhere else — the
+ * The `DocumentStore` port of ADR-0007 for the phone (verikora#155): objects live in the app's sandbox and nowhere else — the
  * files leave the device only for the one check that needs them, which the server purges. A key is one file whose name is the
  * key, percent-encoded, then `@` and the content type (`@` is never in an encoded name, so a key and a longer key stay two files).
  * It passes `documentStoreContract` like every adapter.

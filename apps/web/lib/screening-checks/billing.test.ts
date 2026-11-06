@@ -35,7 +35,7 @@ const type = (key: string, cost: number, margin: number, over: Partial<CheckType
   ...over,
 });
 
-describe("per-check billing (yomizaka#133) — test fixtures only, flag off", () => {
+describe("per-check billing (verikora#133) — test fixtures only, flag off", () => {
   it("is OFF by default: nothing is charged until an administrator turns the flag on", () => {
     expect(SETTINGS["features.screeningBilling"].default).toBe(false);
   });

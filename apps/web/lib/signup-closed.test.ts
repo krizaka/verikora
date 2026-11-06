@@ -29,7 +29,7 @@ const body = JSON.stringify({
 });
 const call = () =>
   POST(
-    new Request("https://dev.yomizaka.test/api/auth/sign-up", {
+    new Request("https://dev.verikora.test/api/auth/sign-up", {
       method: "POST",
       headers: { "content-type": "application/json", "x-forwarded-for": "203.0.113.9" },
       body,

@@ -1,7 +1,7 @@
 import zlib from "node:zlib";
 
 /**
- * A zip file, written in memory (yomizaka#242): UTF-8 names (French accents survive), deflate when it helps and a plain copy when it does
+ * A zip file, written in memory (verikora#242): UTF-8 names (French accents survive), deflate when it helps and a plain copy when it does
  * not (a PDF is already compressed), a fixed timestamp per entry so the same content always gives the same bytes. No zip64: the
  * caller bounds the size. Pure — the clock is each entry's `modified` date.
  */

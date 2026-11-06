@@ -1,12 +1,12 @@
 /**
- * Why a batch waits instead of failing its rows one by one (yomizaka#248). Two kinds, both transient:
+ * Why a batch waits instead of failing its rows one by one (verikora#248). Two kinds, both transient:
  *  - the account cannot pay for the next row (`PAYWALL`, `DAILY_LIMIT`, `FAIR_USE`): it waits for the account;
- *  - the engine cannot take it now (`ORAZAKA_BUSY`: Orazaka allows a few concurrent runs per service account and says when to
- *    come back; `ORAZAKA_UNAVAILABLE`: it did not answer): it waits for the engine, and the batch keeps going by itself.
+ *  - the engine cannot take it now (`SOVKORA_BUSY`: Sovkora allows a few concurrent runs per service account and says when to
+ *    come back; `SOVKORA_UNAVAILABLE`: it did not answer): it waits for the engine, and the batch keeps going by itself.
  * Pure: the batch's runner and its page read the same list.
  */
 export const PAUSE_FOR_ACCOUNT = ["PAYWALL", "DAILY_LIMIT", "FAIR_USE"] as const;
-export const PAUSE_FOR_ENGINE = ["ORAZAKA_BUSY", "ORAZAKA_UNAVAILABLE"] as const;
+export const PAUSE_FOR_ENGINE = ["SOVKORA_BUSY", "SOVKORA_UNAVAILABLE"] as const;
 
 const ACCOUNT = new Set<string>(PAUSE_FOR_ACCOUNT);
 const ENGINE = new Set<string>(PAUSE_FOR_ENGINE);

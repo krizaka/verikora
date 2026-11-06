@@ -1,8 +1,8 @@
 {
-  "name": "@yomizaka/mobile",
+  "name": "@verikora/mobile",
   "version": "0.1.0",
   "private": true,
-  "description": "Yomizaka for iOS and Android (Expo): check a document, read the result, keep a library, with the files on the device.",
+  "description": "Verikora for iOS and Android (Expo): check a document, read the result, keep a library, with the files on the device.",
   "main": "expo-router/entry",
   "scripts": {
     "start": "expo start",
@@ -23,8 +23,8 @@
     "@krizaka/tokens": "^3.63.0",
     "@krizaka/ui": "^3.64.0",
     "@shopify/flash-list": "2.3.2",
-    "@yomizaka/client": "workspace:*",
-    "@yomizaka/core": "workspace:*",
+    "@verikora/client": "workspace:*",
+    "@verikora/core": "workspace:*",
     "expo": "~58.0.17",
     "expo-constants": "~58.0.13",
     "expo-document-picker": "~58.0.4",

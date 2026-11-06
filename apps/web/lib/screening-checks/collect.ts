@@ -10,8 +10,8 @@ import { CHECK_OUTCOME, CHECK_STATE, type CheckPurpose, type CheckResult, stateO
 import { adapterFor, type CheckProvider } from "./providers";
 
 /*
- * Collecting the answers of the checks a provider accepted but did not answer (PENDING), by polling (yomizaka#134; a signed
- * webhook comes later, yomizaka#426). Idempotent: a check is settled once (`WHERE state = 'pending'`), so a second poll, a
+ * Collecting the answers of the checks a provider accepted but did not answer (PENDING), by polling (verikora#134; a signed
+ * webhook comes later, verikora#426). Idempotent: a check is settled once (`WHERE state = 'pending'`), so a second poll, a
  * replay or two instances at once change nothing twice. Only a closed outcome, the opaque reference and the run id are kept.
  */
 export interface Due {

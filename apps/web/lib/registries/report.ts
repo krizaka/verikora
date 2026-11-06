@@ -2,7 +2,7 @@ import { ANSWER, type BusinessRegistry, NOT_LOOKED_UP, type NotLookedUpReason } 
 import { checkIssuer, type PrintedIssuer, registrantOfNeq, type RegistrySignal } from "./signals";
 
 /*
- * What the document report says of the registers (yomizaka#627): the number printed on the document, read against the public registers,
+ * What the document report says of the registers (verikora#627): the number printed on the document, read against the public registers,
  * as questions to ask the issuer — never a verdict. A register that did not answer is said as « not looked up », with its reason.
  */
 

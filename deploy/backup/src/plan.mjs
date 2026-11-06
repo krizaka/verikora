@@ -33,18 +33,18 @@ export const dateOfStamp = (stamp) => {
   return m ? new Date(Date.UTC(+m[1], +m[2] - 1, +m[3], +m[4], +m[5], +m[6])) : null;
 };
 
-export const prefixOf = (environment) => `backups/yomizaka/${environment}/`;
+export const prefixOf = (environment) => `backups/verikora/${environment}/`;
 export function dumpKey(environment, date) {
   if (!/^[a-z0-9-]{2,20}$/.test(environment))
     throw new BackupError("BAD_ENVIRONMENT", `the environment name is not usable in a key: ${environment}`);
-  return `${prefixOf(environment)}yomizaka-${environment}-${stampOf(date)}${DUMP_SUFFIX}`;
+  return `${prefixOf(environment)}verikora-${environment}-${stampOf(date)}${DUMP_SUFFIX}`;
 }
 export const manifestKeyOf = (dump) => `${dump.slice(0, -DUMP_SUFFIX.length)}${MANIFEST_SUFFIX}`;
 
 /** The backups among the listed objects, newest first; anything that is not ours (foreign names) is ignored and never deleted. */
 export function backupsIn(listed, environment) {
   const prefix = prefixOf(environment);
-  const own = new RegExp(`^${prefix}yomizaka-${environment}-(\\d{8}T\\d{6}Z)\\.dump\\.age$`);
+  const own = new RegExp(`^${prefix}verikora-${environment}-(\\d{8}T\\d{6}Z)\\.dump\\.age$`);
   return listed
     .map((o) => ({ key: o.key, size: o.size, at: dateOfStamp(own.exec(o.key)?.[1] ?? "") }))
     .filter((b) => b.at !== null)
@@ -126,4 +126,4 @@ export function assertRecipient(value) {
   return value;
 }
 
-export const scratchName = (date) => `yomizaka_drill_${format(date, "yyyyMMddHHmmss")}`;
+export const scratchName = (date) => `verikora_drill_${format(date, "yyyyMMddHHmmss")}`;

@@ -5,7 +5,7 @@ import { describe, expect, it } from "vitest";
 
 import { StageNotice } from "./StageNotice";
 
-describe("the development-version notice (yomizaka#364)", () => {
+describe("the development-version notice (verikora#364)", () => {
   it("shows in the stage dev, in both languages", () => {
     expect(renderToStaticMarkup(<StageNotice locale="fr" stage="dev" />)).toContain("Version de développement");
     expect(renderToStaticMarkup(<StageNotice locale="en" stage="dev" />)).toContain("Development version");
@@ -23,7 +23,7 @@ describe("the development-version notice (yomizaka#364)", () => {
     expect(renderToStaticMarkup(<StageNotice locale="en" stage="" />)).toContain("Development version");
   });
 
-  it("is cleared by the site bar with CSS only: a zero-height sticky wrapper after it, no layout listener (yomizaka#449)", () => {
+  it("is cleared by the site bar with CSS only: a zero-height sticky wrapper after it, no layout listener (verikora#449)", () => {
     const bar = readFileSync(new URL("./SiteChrome.tsx", import.meta.url), "utf8");
     expect(bar).toMatch(/className="[^"]*\bsticky\b[^"]*\btop-0\b[^"]*\bh-0\b[^"]*" data-site-bar/);
     expect(bar).toContain('className="relative top-3"');

@@ -1,65 +1,65 @@
 {
   "$schema": "https://raw.githubusercontent.com/krizaka/.github/main/docs/standards/dev-preview.schema.json",
   "version": 1,
-  "product": "yomizaka",
+  "product": "verikora",
   "index": "on",
   "criteria": {
     "site.healthy": {
-      "evidence": "https://www.yomizaka.com/api/healthz",
+      "evidence": "https://www.verikora.com/api/healthz",
       "checked": "2026-10-16"
     },
     "site.signup-closed": {
-      "evidence": "https://github.com/krizaka/yomizaka/blob/main/apps/web/app/api/auth/sign-up/route.ts",
+      "evidence": "https://github.com/krizaka/verikora/blob/main/apps/web/app/api/auth/sign-up/route.ts",
       "checked": "2026-10-16"
     },
     "site.qa-signin": {
-      "evidence": "https://www.yomizaka.com/en/sign-in",
+      "evidence": "https://www.verikora.com/en/sign-in",
       "checked": "2026-10-16"
     },
     "journey.core": {
-      "evidence": "https://github.com/krizaka/yomizaka/pull/53",
+      "evidence": "https://github.com/krizaka/verikora/pull/53",
       "checked": "2026-10-17"
     },
-    "journey.ai-via-orazaka": {
-      "evidence": "https://github.com/krizaka/yomizaka/pull/53",
+    "journey.ai-via-sovkora": {
+      "evidence": "https://github.com/krizaka/verikora/pull/53",
       "checked": "2026-10-17"
     },
     "ui.krizaka-ui": {
-      "evidence": "https://github.com/krizaka/yomizaka/blob/main/apps/web/lib/footer.test.ts",
+      "evidence": "https://github.com/krizaka/verikora/blob/main/apps/web/lib/footer.test.ts",
       "checked": "2026-10-19"
     },
     "ui.themes-devices": {
-      "evidence": "https://github.com/krizaka/yomizaka/blob/main/.github/workflows/ci.yml",
+      "evidence": "https://github.com/krizaka/verikora/blob/main/.github/workflows/ci.yml",
       "checked": "2026-10-19"
     },
     "ux.ia-review": {
-      "evidence": "https://github.com/krizaka/yomizaka/blob/main/docs/UX_DECISIONS.md",
+      "evidence": "https://github.com/krizaka/verikora/blob/main/docs/UX_DECISIONS.md",
       "checked": "2026-10-19"
     },
     "mobile.build": {
       "na": "No mobile app for the Dev preview: web only, phone-first; AGENTS.md section 3 says so (decision 2026-10-17)."
     },
     "mobile.ux-review": {
-      "na": "mobile.build is not applicable: Yomizaka has no mobile app in the Dev preview (web only, phone-first)."
+      "na": "mobile.build is not applicable: Verikora has no mobile app in the Dev preview (web only, phone-first)."
     },
     "quality.ci-green": {
-      "evidence": "https://github.com/krizaka/yomizaka/actions?query=branch%3Amain",
+      "evidence": "https://github.com/krizaka/verikora/actions?query=branch%3Amain",
       "checked": "2026-10-16"
     },
     "quality.tests": {
-      "evidence": "https://github.com/krizaka/yomizaka/actions?query=branch%3Amain",
+      "evidence": "https://github.com/krizaka/verikora/actions?query=branch%3Amain",
       "checked": "2026-10-16"
     },
     "security.alerts": {
-      "evidence": "https://github.com/krizaka/yomizaka/security",
+      "evidence": "https://github.com/krizaka/verikora/security",
       "checked": "2026-10-16"
     },
     "docs.current": {
-      "evidence": "https://github.com/krizaka/yomizaka/blob/main/apps/web/lib/readme.test.ts",
+      "evidence": "https://github.com/krizaka/verikora/blob/main/apps/web/lib/readme.test.ts",
       "checked": "2026-10-19"
     },
     "seo.family": {
-      "evidence": "https://github.com/krizaka/yomizaka/blob/main/.github/workflows/ci.yml",
+      "evidence": "https://github.com/krizaka/verikora/blob/main/.github/workflows/ci.yml",
       "checked": "2026-10-19"
     },
     "ops.cost": {
@@ -68,31 +68,31 @@
       "issue": "https://github.com/krizaka/.github/issues/78"
     },
     "admin.gated": {
-      "evidence": "https://github.com/krizaka/yomizaka/blob/main/apps/web/lib/access.test.ts",
+      "evidence": "https://github.com/krizaka/verikora/blob/main/apps/web/lib/access.test.ts",
       "checked": "2026-10-19"
     },
     "admin.noindex": {
-      "evidence": "https://admin.yomizaka.com/robots.txt",
+      "evidence": "https://admin.verikora.com/robots.txt",
       "checked": "2026-10-16"
     },
     "admin.operator-tasks": {
-      "evidence": "https://github.com/krizaka/yomizaka/blob/main/scripts/check-admin-live.mjs",
+      "evidence": "https://github.com/krizaka/verikora/blob/main/scripts/check-admin-live.mjs",
       "checked": "2026-10-19"
     },
     "admin.audit-log": {
-      "evidence": "https://github.com/krizaka/yomizaka/blob/main/apps/web/lib/admin-audit.test.ts",
+      "evidence": "https://github.com/krizaka/verikora/blob/main/apps/web/lib/admin-audit.test.ts",
       "checked": "2026-10-19"
     },
     "admin.shell": {
-      "evidence": "https://github.com/krizaka/yomizaka/blob/main/scripts/check-admin-live.mjs",
+      "evidence": "https://github.com/krizaka/verikora/blob/main/scripts/check-admin-live.mjs",
       "checked": "2026-10-19"
     },
     "admin.ux-review": {
-      "evidence": "https://github.com/krizaka/yomizaka/blob/main/docs/UX_DECISIONS.md",
+      "evidence": "https://github.com/krizaka/verikora/blob/main/docs/UX_DECISIONS.md",
       "checked": "2026-10-19"
     },
     "admin.ci": {
-      "evidence": "https://github.com/krizaka/yomizaka/actions?query=branch%3Amain",
+      "evidence": "https://github.com/krizaka/verikora/actions?query=branch%3Amain",
       "checked": "2026-10-16"
     }
   }

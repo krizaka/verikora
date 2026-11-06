@@ -3,10 +3,10 @@ import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import { migrate, query } from "./db";
 import { attachToLease, detachFromLease, DOCUMENT_ROLE, leaseBundle, MAX_ANNEXES } from "./lease-bundle";
 
-/** yomizaka#129 against the real database (CI's service; locally YOMIZAKA_DB_IT=1 DATABASE_URL=…). */
-const enabled = process.env.YOMIZAKA_DB_IT === "1" && !!process.env.DATABASE_URL;
+/** verikora#129 against the real database (CI's service; locally DATABASE_IT=1 DATABASE_URL=…). */
+const enabled = process.env.DATABASE_IT === "1" && !!process.env.DATABASE_URL;
 
-describe.runIf(enabled)("a lease and its annexes (yomizaka#129)", () => {
+describe.runIf(enabled)("a lease and its annexes (verikora#129)", () => {
   const stamp = Date.now();
   let seq = 0;
   let a: string;
@@ -47,7 +47,7 @@ describe.runIf(enabled)("a lease and its annexes (yomizaka#129)", () => {
   beforeAll(async () => {
     await migrate();
     const ids = await Promise.all(
-      [`bundle-a-${stamp}@yomizaka.test`, `bundle-b-${stamp}@yomizaka.test`].map(
+      [`bundle-a-${stamp}@verikora.test`, `bundle-b-${stamp}@verikora.test`].map(
         async (email) =>
           (await query<{ id: string }>("INSERT INTO accounts (email) VALUES ($1) RETURNING id", [email]))[0]!.id,
       ),

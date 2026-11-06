@@ -1,4 +1,4 @@
-import { flowDefinition } from "@yomizaka/core";
+import { flowDefinition } from "@verikora/core";
 import { z } from "zod";
 
 import { requireAdmin } from "@/lib/access";

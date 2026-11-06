@@ -36,7 +36,7 @@ const LANGS = ["en", "fr"] as const;
 const sent = z.object({ sentTo: z.string() });
 const created = z.object({ id: z.string(), token: z.string(), expiresAt: z.string() });
 
-/** The owner link of a file's report (yomizaka#128): create it with an expiry, copy it, see the active links with their views, revoke one. */
+/** The owner link of a file's report (verikora#128): create it with an expiry, copy it, see the active links with their views, revoke one. */
 export function OwnerShare({ fileId, origin }: Readonly<{ fileId: string; origin?: string }>) {
   const { say, locale } = useSay();
   const facts = useFileFacts();

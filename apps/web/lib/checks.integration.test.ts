@@ -4,7 +4,7 @@ import { listChecks } from "./checks";
 import { migrate, query } from "./db";
 
 /** The Vérifications list against a real PostgreSQL: every check of the owner, newest first, with the result the library's words give it. */
-const enabled = process.env.YOMIZAKA_DB_IT === "1" && !!process.env.DATABASE_URL;
+const enabled = process.env.DATABASE_IT === "1" && !!process.env.DATABASE_URL;
 
 describe.runIf(enabled)("the list of checks (Vérifications)", () => {
   beforeAll(async () => {

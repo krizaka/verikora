@@ -1,4 +1,4 @@
-import type { DocumentKind, DocumentSummary, StartAnalysis } from "@yomizaka/core";
+import type { DocumentKind, DocumentSummary, StartAnalysis } from "@verikora/core";
 
 /** The rules each kind of document is checked against: a lease has the jurisdiction's own, the others a named Québec ruleset. */
 const RULESET_OF_KIND: Record<DocumentKind, "qc-invoice" | "qc-service-contract" | undefined> = {

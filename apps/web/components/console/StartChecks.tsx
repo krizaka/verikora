@@ -15,7 +15,7 @@ import {
   JURISDICTIONS,
   queryKeys,
   type Studio,
-} from "@yomizaka/core";
+} from "@verikora/core";
 import { useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { z } from "zod";
@@ -249,7 +249,7 @@ function ComplianceBody({ doc, offer, running }: Readonly<Pick<StartProps, "doc"
   );
 }
 
-/** What starting one check holds: the compliance form (the kind declared and the one Yomizaka read select the ruleset, ADR-089; a mismatch is shown and confirmed in the form) or the authenticity form — or why it cannot run. */
+/** What starting one check holds: the compliance form (the kind declared and the one Verikora read select the ruleset, ADR-089; a mismatch is shown and confirmed in the form) or the authenticity form — or why it cannot run. */
 function StartBody({ studio, doc, offer, examinable, running }: StartProps & { studio: Studio }) {
   if (studio === "document-authenticity")
     return <AuthenticityBody doc={doc} examinable={examinable} running={running} />;

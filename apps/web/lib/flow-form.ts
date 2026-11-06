@@ -1,4 +1,4 @@
-import { AUDIENCES, type FlowDefinition, flowDefinition, JURISDICTIONS } from "@yomizaka/core";
+import { AUDIENCES, type FlowDefinition, flowDefinition, JURISDICTIONS } from "@verikora/core";
 
 /**
  * The administration form of a flow and its definition, both ways (pure: tested). The form is flat — booleans for what is

@@ -1,4 +1,4 @@
-import type { ComplianceReport, DocumentInsight } from "@yomizaka/core";
+import type { ComplianceReport, DocumentInsight } from "@verikora/core";
 
 /* Pure (no database, no clock): what the document page shows first — the UX review's Y5 (D1 → D5). The client reads it too. */
 
@@ -40,7 +40,7 @@ export function displayTitle(
 
 export type VerdictTone = "success" | "warning" | "danger";
 
-/** The verdict in figures, from the report alone (never a verdict of Yomizaka's): the rules read, the points to look at, how many block. */
+/** The verdict in figures, from the report alone (never a verdict of Verikora's): the rules read, the points to look at, how many block. */
 export function verdictOf(report: Pick<ComplianceReport, "findings" | "summary">): {
   rules: number;
   attention: number;

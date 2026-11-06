@@ -1,4 +1,4 @@
-import { DOCX_MIME, ODT_MIME, type StartAnalysis } from "@yomizaka/core";
+import { DOCX_MIME, ODT_MIME, type StartAnalysis } from "@verikora/core";
 
 /*
  * A check that did not finish (krizaka-internal#1900). Pure (no database, no clock): the client reads it too.

@@ -71,7 +71,7 @@ async function countTables(client) {
 
 /** All the ports for a real run. `close()` removes the temporary folder and ends the pool. */
 export async function realPorts(env) {
-  const dir = await mkdtemp(join(tmpdir(), "yomizaka-backup-"));
+  const dir = await mkdtemp(join(tmpdir(), "verikora-backup-"));
   const caPath = env.DATABASE_CA_CERT ? join(dir, "ca.pem") : null;
   if (caPath) await writeFile(caPath, env.DATABASE_CA_CERT, { mode: 0o600 });
   const main = connectionOf(env, caPath);
@@ -99,7 +99,7 @@ export async function realPorts(env) {
   const tools = {
     clientMajor: async () => majorOf(await run("pg_dump", ["--version"])),
     async dump(snapshotId) {
-      const out = join(dir, "yomizaka.dump");
+      const out = join(dir, "verikora.dump");
       await run(
         "pg_dump",
         ["--format=custom", "--no-owner", "--no-acl", `--snapshot=${snapshotId}`, `--file=${out}`],

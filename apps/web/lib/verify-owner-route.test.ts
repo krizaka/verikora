@@ -8,7 +8,7 @@ import { reportLabels } from "./report-labels";
 import { ATTESTATION_KEY, issuePdf } from "./report-pdf";
 import { signingKey } from "./report-signer";
 
-/** /api/verify tells the owner PDF from the compliance PDF by the payload's schema id (yomizaka#481). Only database edges are faked. */
+/** /api/verify tells the owner PDF from the compliance PDF by the payload's schema id (verikora#481). Only database edges are faked. */
 const MEMBER = { id: "22222222-2222-4222-8222-222222222222", email: "guest@example.test" };
 const state = vi.hoisted(() => ({ audits: [] as Record<string, unknown>[] }));
 vi.mock("next/headers", () => ({ cookies: async () => ({ get: () => undefined }) }));
@@ -61,7 +61,7 @@ const post = async (bytes: Uint8Array) => {
   const form = new FormData();
   form.set("report", new File([bytes as BlobPart], "report.pdf", { type: "application/pdf" }));
   return POST(
-    new Request("https://dev.yomizaka.com/api/verify", {
+    new Request("https://dev.verikora.com/api/verify", {
       method: "POST",
       body: form,
       headers: { "x-forwarded-for": "203.0.113.9" },
@@ -114,7 +114,7 @@ describe("POST /api/verify — dispatch on the schema id", () => {
   });
 
   it("refuses an unknown schema", async () => {
-    const res = await post(await withSchema(ownerPdf, (a) => (a.schema = "yomizaka.other/9")));
+    const res = await post(await withSchema(ownerPdf, (a) => (a.schema = "verikora.other/9")));
     expect(res.status).toBe(422);
     expect((await res.json()).code).toBe("UNKNOWN_SCHEMA");
   });

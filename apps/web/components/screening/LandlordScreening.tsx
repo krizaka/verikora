@@ -15,7 +15,7 @@ import type { LandlordView } from "@/lib/screening";
 
 import { type ResultWords, ScreeningResultCard } from "./ScreeningResultCard";
 
-/** A check type this owner may ask, labelled in the page's language (the labels are data, yomizaka#132). */
+/** A check type this owner may ask, labelled in the page's language (the labels are data, verikora#132). */
 export interface OfferedCheck {
   key: string;
   label: string;

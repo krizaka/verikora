@@ -8,12 +8,12 @@ import {
   preflight,
   PREFLIGHT_REASON,
   type PreflightReason,
-} from "@yomizaka/client";
+} from "@verikora/client";
 import { useRouter } from "expo-router";
 import * as React from "react";
 import { View } from "react-native";
 
-import { queries, yomizaka } from "@/config";
+import { queries, verikora } from "@/config";
 import { deviceStore } from "@/data/expo-files";
 import { uploadForm } from "@/data/upload";
 import { routes } from "@/domain/links";
@@ -42,7 +42,7 @@ const SOURCES: readonly {
 ];
 
 /**
- * Check a document: pick it (camera, photo, PDF), the web's pre-flight, the upload, the Orazaka run — then the document's
+ * Check a document: pick it (camera, photo, PDF), the web's pre-flight, the upload, the Sovkora run — then the document's
  * checks screen follows the run. The copy of the file stays in the app's sandbox.
  */
 export default function Verify() {
@@ -59,12 +59,12 @@ export default function Verify() {
       if (!picked) return null;
       const result = preflight(picked, limits);
       if (!result.ok) throw new Refused(result.reason);
-      const { document } = await yomizaka.uploadDocument(uploadForm(result.file));
+      const { document } = await verikora.uploadDocument(uploadForm(result.file));
       deviceStore.keep(document.id, picked.name, picked.uri);
       const [first] = availableChecks(document);
       if (!first) return { document, analysisId: null };
       try {
-        return { document, analysisId: (await yomizaka.startAnalysis(document.id, first)).analysis.id };
+        return { document, analysisId: (await verikora.startAnalysis(document.id, first)).analysis.id };
       } catch (error) {
         // The same document is already being checked: its checks screen shows that run.
         if (error instanceof ApiError && error.status === CONFLICT_STATUS) return { document, analysisId: null };

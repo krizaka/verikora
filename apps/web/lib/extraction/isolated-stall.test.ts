@@ -18,7 +18,7 @@ const stall = (ms: number) => {
   }
 };
 
-// yomizaka#603: the read runs in a worker, so the web process keeps turning while a PDF is read, even when a loaded runner
+// verikora#603: the read runs in a worker, so the web process keeps turning while a PDF is read, even when a loaded runner
 // starves the main thread for a moment after the job started. The first version of this guard asserted an ORDER of two
 // callbacks (a setImmediate against the read's resolution), which flips as soon as the main thread is starved; this one
 // counts the loop's turns, which only a read that blocked the process could keep low. (Proof, 6 runs: the order assertion

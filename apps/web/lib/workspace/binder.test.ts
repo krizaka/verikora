@@ -4,7 +4,7 @@ import { binderPlan } from "./binder";
 import { DECISION } from "./decl";
 import { DECISION_SET } from "./defaults";
 
-describe("the binder's plan (yomizaka#334)", () => {
+describe("the binder's plan (verikora#334)", () => {
   const plan = binderPlan(DECISION_SET, ["t1", "t2"], { tags: ["t1"], status: [DECISION.selected] });
 
   it("makes a tab per state of the set, after « Tous », in the set's order", () => {

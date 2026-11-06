@@ -24,12 +24,12 @@ describe("the administration's address lock", () => {
 describe("the administration host", () => {
   const env = { NODE_ENV: "production", AUTH_ALLOWED_IPS: "203.0.113.7", ABUSE_CLIENT_IP_HEADER: "do-connecting-ip" };
   const call = (host: string, ip: string) => new Headers({ host, "do-connecting-ip": ip });
-  it("refuses a foreign address everywhere on admin.yomizaka.com, the sign-in included", () => {
-    expect(hostAllowed(call("admin.yomizaka.com", "198.51.100.9"), env)).toBe(false);
-    expect(hostAllowed(call("admin.yomizaka.com", "203.0.113.7"), env)).toBe(true);
+  it("refuses a foreign address everywhere on admin.verikora.com, the sign-in included", () => {
+    expect(hostAllowed(call("admin.verikora.com", "198.51.100.9"), env)).toBe(false);
+    expect(hostAllowed(call("admin.verikora.com", "203.0.113.7"), env)).toBe(true);
   });
   it("leaves the product host open to everyone", () => {
-    expect(hostAllowed(call("dev.yomizaka.com", "198.51.100.9"), env)).toBe(true);
+    expect(hostAllowed(call("dev.verikora.com", "198.51.100.9"), env)).toBe(true);
   });
 });
 
@@ -55,7 +55,7 @@ describe("run durations", async () => {
 describe("the session token of a request", () => {
   const token = newToken();
   it("reads the cookie of the web", () => {
-    expect(sessionTokenOf(new Headers({ cookie: `a=b; yomizaka_session=${token}` }))).toBe(token);
+    expect(sessionTokenOf(new Headers({ cookie: `a=b; verikora_session=${token}` }))).toBe(token);
   });
   it("reads the bearer of a native app", () => {
     expect(sessionTokenOf(new Headers({ authorization: `Bearer ${token}` }))).toBe(token);
@@ -63,7 +63,7 @@ describe("the session token of a request", () => {
   });
   it("prefers the bearer: an app never replays a stale cookie", () => {
     const other = newToken();
-    expect(sessionTokenOf(new Headers({ authorization: `Bearer ${token}`, cookie: `yomizaka_session=${other}` }))).toBe(
+    expect(sessionTokenOf(new Headers({ authorization: `Bearer ${token}`, cookie: `verikora_session=${other}` }))).toBe(
       token,
     );
   });

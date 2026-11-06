@@ -1,11 +1,11 @@
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 
-import { type ComplianceReport, orazakaRun, reportOf } from "@yomizaka/core";
+import { type ComplianceReport, reportOf, sovkoraRun } from "@verikora/core";
 import { describe, expect, it } from "vitest";
 
-// The two fictitious leases of issue #302, sent to Orazaka's Québec lease pack on dev (blueprint 1.4.0, after orazaka-packs#127)
-// by scripts/record-demo-leases.mjs. The recordings are the answers exactly as Orazaka returned them; never edited by hand.
+// The two fictitious leases of issue #302, sent to Sovkora's Québec lease pack on dev (blueprint 1.4.0, after sovkora-packs#127)
+// by scripts/record-demo-leases.mjs. The recordings are the answers exactly as Sovkora returned them; never edited by hand.
 import { generateDocument } from "../../../scripts/demo-documents/index.mjs";
 
 const DIR = join(__dirname, "../content/demo-lease-runs");
@@ -26,7 +26,7 @@ const EXPECTED_FAILS: Record<string, { quote: string; article: string }> = {
 
 function reportOfRecording(name: string): { text: string; report: ComplianceReport } {
   const rec = recorded(name);
-  const run = orazakaRun.parse(rec.run);
+  const run = sovkoraRun.parse(rec.run);
   expect(run.status).toBe("SUCCEEDED");
   const report = reportOf("compliance-check", run.outputs);
   if (!report || !("findings" in report)) throw new Error(`${name}: no compliance report`);

@@ -1,6 +1,6 @@
 # Retention — what is kept, for how long, and what a purge leaves
 
-Retention is **data** (yomizaka#125, Loi 25: keep only as long as necessary). A policy is a row of `retention_policies`
+Retention is **data** (verikora#125, Loi 25: keep only as long as necessary). A policy is a row of `retention_policies`
 (`after-check`, `after-decision`, or `days`); a document type points at one (`document_types.retention_policy`); an owner may
 override a subject with a `retention_rule`; the screening result's window is the global rule of the subject
 `screening-result` (policy `thirty-days`). Changing a row changes the behaviour, with no deploy.
@@ -17,7 +17,7 @@ A purge removes the file and its text and **keeps** the hash, the report and the
 ## Backups — not covered
 
 A purge acts on the live database and the document store. Database backups of the provider keep a copy until their own rotation
-ends, and a restore would bring a purged file back until the purge runs again. The backup window is the provider's (see Orazaka
+ends, and a restore would bring a purged file back until the purge runs again. The backup window is the provider's (see Sovkora
 ADR-078 « not covered »); the lawyer review states it in the privacy notice. Until then the notice says purged documents may remain
 in encrypted backups for their rotation period.
 

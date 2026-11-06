@@ -9,7 +9,7 @@ import { fetchPaymentHistory } from "@/lib/payments/payment-history";
 
 export const dynamic = "force-dynamic";
 
-/** The last payments of the account (date, what, amount, receipt link), read from the processor on the server (yomizaka#585). Empty when payments are off or nothing was bought. */
+/** The last payments of the account (date, what, amount, receipt link), read from the processor on the server (verikora#585). Empty when payments are off or nothing was bought. */
 export function GET(req: Request) {
   return handle(async () => {
     const session = await requireSession(req);

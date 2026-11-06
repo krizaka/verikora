@@ -160,7 +160,7 @@ describe("checking a seal", () => {
     doc.context
       .lookup(doc.context.trailerInfo.Info, PDFDict)
       .set(
-        PDFName.of("YomizakaContractAttestation"),
+        PDFName.of("VerikoraContractAttestation"),
         PDFString.of(Buffer.from(JSON.stringify(edited)).toString("base64")),
       );
     expect(await verifySeal(await doc.save(), signingKey())).toEqual({ valid: false, reason: "BAD_SIGNATURE" });
@@ -177,7 +177,7 @@ describe("checking a seal", () => {
     doc.context
       .lookup(doc.context.trailerInfo.Info, PDFDict)
       .set(
-        PDFName.of("YomizakaContractAttestation"),
+        PDFName.of("VerikoraContractAttestation"),
         PDFString.of(Buffer.from(JSON.stringify(genuine)).toString("base64")),
       );
     expect(await verifySeal(await doc.save(), signingKey())).toEqual({ valid: false, reason: "ALTERED" });

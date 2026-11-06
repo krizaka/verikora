@@ -5,7 +5,7 @@ import { money } from "./format";
 
 /**
  * One plan of the pricing page, from the public catalogue: its entry (the words are `pricing.plans.<plan>`), its figure and
- * the verifications it includes. A volume above the included one is NOT priced here: the code does not bill it (yomizaka#373),
+ * the verifications it includes. A volume above the included one is NOT priced here: the code does not bill it (verikora#373),
  * so the catalogue holds no such figure and the page cannot show one.
  */
 export interface PricingPlan {

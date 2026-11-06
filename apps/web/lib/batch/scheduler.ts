@@ -1,5 +1,5 @@
 /**
- * A loop that looks again after the interval the settings give *now* (yomizaka#240): an administrator changing it, or turning it
+ * A loop that looks again after the interval the settings give *now* (verikora#240): an administrator changing it, or turning it
  * off (0), is obeyed at the next look, no restart. Never two runs at once, never keeps the process alive, one failure never ends it.
  */
 export interface Scheduler {

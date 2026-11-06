@@ -1,4 +1,4 @@
-import type { DocumentInsight, DocumentKind, Jurisdiction, StartAnalysis } from "@yomizaka/core";
+import type { DocumentInsight, DocumentKind, Jurisdiction, StartAnalysis } from "@verikora/core";
 
 import { isPhotoFile } from "@/components/console/upload";
 
@@ -74,7 +74,7 @@ export function planCheck({
 
 /**
  * What happens once a file landed (the review's C4, decided by the CTO): the check starts at once when the kind is sure — the
- * person named it, or Yomizaka recognised it with high confidence — and the page opens on the report; otherwise the report
+ * person named it, or Verikora recognised it with high confidence — and the page opens on the report; otherwise the report
  * tab opens with one confirmation to give (the kind, its rules).
  */
 export function afterUpload({

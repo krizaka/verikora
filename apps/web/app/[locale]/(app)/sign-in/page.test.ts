@@ -59,10 +59,10 @@ describe("sign-in (the UX review's Y8)", () => {
   });
 
   it("makes only the claims the deployment keeps: no residency promise (dev stores in New York), and the report language stated as it is", () => {
-    // Regression (krizaka/yomizaka#297 review): dev.app.yaml stores documents on ny.storage.bunnycdn.com, so « stay in Canada » was false here.
+    // Regression (krizaka/verikora#297 review): dev.app.yaml stores documents on ny.storage.bunnycdn.com, so « stay in Canada » was false here.
     expect(en.console.signIn.proofTwo).not.toMatch(/Canada|Canadian/);
     expect(fr.console.signIn.proofTwo).not.toMatch(/Canada|Canad/);
-    // Regression: lib/report.ts keeps Orazaka's French titles and explanations, even for an English export.
+    // Regression: lib/report.ts keeps Sovkora's French titles and explanations, even for an English export.
     expect(en.console.signIn.proofThree).not.toMatch(/English/);
     expect(fr.console.signIn.proofThree).not.toMatch(/anglais/);
   });

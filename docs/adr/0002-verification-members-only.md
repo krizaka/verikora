@@ -5,7 +5,7 @@
 
 ## Context
 
-Every compliance check exports a signed HTML report: the SHA-256 of the document, the Orazaka run id, the rules, every
+Every compliance check exports a signed HTML report: the SHA-256 of the document, the Sovkora run id, the rules, every
 finding with the quoted passage. The first version let anyone check a report on `/verify` without an account. But the
 documents are leases and identity documents: the report names the document (title, file name, hash) and quotes its
 passages. A verification page open to everyone, plus an API that answers « this hash is a real report » to anybody, is a
@@ -13,9 +13,9 @@ confirmation oracle on a confidential document, and a door a shared link or a pr
 
 ## Decision
 
-**Verifying a report is for a signed-in Yomizaka member who owns the report, or to whom its owner granted access.**
+**Verifying a report is for a signed-in Verikora member who owns the report, or to whom its owner granted access.**
 
-- *Who*: the owner of the checked document, and the people the owner shared the report with. Yomizaka has no
+- *Who*: the owner of the checked document, and the people the owner shared the report with. Verikora has no
   organisations yet: « the owner's members with the right role » is the owner account today; when accounts group into
   organisations the rule `accessTo` (`lib/report-access.ts`) gains the role check, nowhere else.
 - *Grant*: from a report, the owner shares it with an e-mail address, optionally until a date. A member has access at
@@ -23,7 +23,7 @@ confirmation oracle on a confidential document, and a door a shared link or a pr
   honoured the day the account exists. A grant can be **revoked**; a revoked or expired grant opens nothing.
 - *The API* (`POST /api/verify`): no session → 401; a session without a grant, or a report this server does not hold →
   the same 403 `NO_ACCESS` (the answer tells a stranger nothing about what exists); a grant, or the owner → 200 with the
-  full check (signature, file hash, Orazaka run id, and the original document if given). `POST /api/verify/request-access`
+  full check (signature, file hash, Sovkora run id, and the original document if given). `POST /api/verify/request-access`
   (« Demander l'accès ») records a request the owner sees beside the grants; it answers the same 202 whatever exists.
 - *The page* `/verify`: signed out → sign-in, returning to `/verify` (`?next=`, same-site paths only); signed in without a
   grant → « Vous n'avez pas accès à ce rapport » with « Demander l'accès ».
@@ -44,7 +44,7 @@ confirmation oracle on a confidential document, and a door a shared link or a pr
 
 ## Specimens — a sample is never a signed file (added 2026-10-17, after a review by Oussama)
 
-A first version of the landing let anyone download a report of a fictitious lease **validly signed with Yomizaka's key**,
+A first version of the landing let anyone download a report of a fictitious lease **validly signed with Verikora's key**,
 with nothing in its text or its signed payload saying it was a sample: a file that could be passed off as a real attestation,
 and a public door around the members-only verification above. Removed (routes deleted, so 404). The rules:
 

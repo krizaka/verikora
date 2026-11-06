@@ -1,7 +1,7 @@
 import { MAX_OFFICE_PART_BYTES, zipEntryBytes } from "./preflight/inspector";
 
 /**
- * The text of a Word file (.docx), read without a library and without a model (yomizaka#229): the main part
+ * The text of a Word file (.docx), read without a library and without a model (verikora#229): the main part
  * `word/document.xml`, its paragraphs one per line, its tabs and breaks kept, its markup and its fields' codes dropped.
  * The pre-flight already refused a bomb, a macro or an ActiveX control; the inflate is bounded again here.
  */

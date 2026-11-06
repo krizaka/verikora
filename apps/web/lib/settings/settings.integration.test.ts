@@ -6,10 +6,10 @@ import { appSettings } from "./instance";
 import { seedLegacySettings } from "./seed";
 import { GLOBAL, postgresSettings, type ScopeRef, SettingsError } from "./service";
 
-/** The settings service against a real PostgreSQL (skipped without YOMIZAKA_DB_IT=1 and DATABASE_URL). */
-const enabled = process.env.YOMIZAKA_DB_IT === "1" && !!process.env.DATABASE_URL;
+/** The settings service against a real PostgreSQL (skipped without DATABASE_IT=1 and DATABASE_URL). */
+const enabled = process.env.DATABASE_IT === "1" && !!process.env.DATABASE_URL;
 const NOW = new Date("2026-10-22T12:00:00Z");
-const ADMIN = { id: null, label: "admin@yomizaka.test" };
+const ADMIN = { id: null, label: "admin@verikora.test" };
 
 describe.runIf(enabled)("settings (ADR-0009)", () => {
   beforeAll(async () => {
@@ -78,7 +78,7 @@ describe.runIf(enabled)("settings (ADR-0009)", () => {
       [null, "live"],
     ]);
     expect(h[0]).toMatchObject({
-      actorLabel: "admin@yomizaka.test",
+      actorLabel: "admin@verikora.test",
       scope: "global",
       scopeId: "",
       at: "2026-10-22T14:00:00.000Z",

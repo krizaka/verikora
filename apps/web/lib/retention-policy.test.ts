@@ -4,7 +4,7 @@ import { inForce, type Policy, resultDays } from "./retention-policy";
 
 const p = (id: string, purgeOn: Policy["purgeOn"], days: number | null = null): Policy => ({ id, purgeOn, days });
 
-describe("the retention policy in force (yomizaka#125)", () => {
+describe("the retention policy in force (verikora#125)", () => {
   it("the owner's own rule wins over the global one, which wins over the document type's", () => {
     expect(
       inForce([

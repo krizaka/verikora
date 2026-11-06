@@ -13,19 +13,19 @@ export {
 } from "./vocabulary";
 
 /*
- * Yomizaka's contracts — what the API answers and the web reads, validated on both sides. Structure only: the words are
- * messages (apps/web/messages). Every analysis is an Orazaka run: these schemas describe what Yomizaka keeps of it (the
- * run id, its status, the report Orazaka returned), never a verdict of its own.
+ * Verikora's contracts — what the API answers and the web reads, validated on both sides. Structure only: the words are
+ * messages (apps/web/messages). Every analysis is an Sovkora run: these schemas describe what Verikora keeps of it (the
+ * run id, its status, the report Sovkora returned), never a verdict of its own.
  */
 
-/** The largest file Yomizaka keeps (the MVP stores files in its own database). */
+/** The largest file Verikora keeps (the MVP stores files in its own database). */
 export const MAX_FILE_BYTES = 10 * 1024 * 1024;
-/** The largest file Orazaka's authenticity Studio reads (its input is the file in base64, ≤ 7 000 000 characters since document-authenticity 1.3.0). */
+/** The largest file Sovkora's authenticity Studio reads (its input is the file in base64, ≤ 7 000 000 characters since document-authenticity 1.3.0). */
 export const AUTHENTICITY_MAX_BYTES = 5_000_000;
-/** The longest text Orazaka's compliance Studio reads (its `document` input). */
+/** The longest text Sovkora's compliance Studio reads (its `document` input). */
 export const COMPLIANCE_MAX_CHARS = 60_000;
 /** What can be uploaded: a PDF (its text layer is read) or plain text. */
-/** A Word file (.docx), accepted since yomizaka#229: its text is read for the checks, the file itself is examined for authenticity. */
+/** A Word file (.docx), accepted since verikora#229: its text is read for the checks, the file itself is examined for authenticity. */
 export const DOCX_MIME = "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
 export const ODT_MIME = "application/vnd.oasis.opendocument.text";
 export const ACCEPTED_TYPES = ["application/pdf", "text/plain", DOCX_MIME, ODT_MIME] as const;
@@ -38,7 +38,7 @@ export type DocumentKind = z.infer<typeof documentKind>;
 /**
  * Which side of the lease a person is on: the tenant (locataire) checks a lease before signing, the landlord (locateur,
  * « propriétaire » in everyday words) checks a template and the tenant's papers. It changes the defaults and the wording,
- * never the rules: both sides run the same Orazaka Studios on the same rulesets.
+ * never the rules: both sides run the same Sovkora Studios on the same rulesets.
  */
 export const PERSPECTIVES = ["tenant", "landlord"] as const;
 export const perspective = z.enum(PERSPECTIVES);
@@ -59,7 +59,7 @@ export const AUDIENCE_STATUS = {
 } as const satisfies Record<Audience, "available" | "soon">;
 
 /**
- * A flow is data administered in the database (ADR-0003): who it is offered to, the Orazaka Studio and the rulesets of each
+ * A flow is data administered in the database (ADR-0003): who it is offered to, the Sovkora Studio and the rulesets of each
  * step, the consents it requires, the providers it uses, its price. The app only reads it.
  */
 export const FLOW_ENVIRONMENTS = ["dev", "prod"] as const;
@@ -79,7 +79,7 @@ export const STEP_KIND = { studio: "studio", provider: "provider" } as const;
 const localised = z.object({ en: z.string().trim().min(1).max(300), fr: z.string().trim().min(1).max(300) });
 export const flowStep = z.object({
   id: z.string().regex(/^[a-z0-9-]{1,40}$/),
-  /** `studio`: an Orazaka Studio of a pack. `provider`: an external provider (a credit bureau…). */
+  /** `studio`: an Sovkora Studio of a pack. `provider`: an external provider (a credit bureau…). */
   kind: z.enum(["studio", "provider"]),
   studio: z.enum(["compliance-check", "document-authenticity"]).optional(),
   pack: z.string().max(60).optional(),
@@ -137,12 +137,12 @@ export function offerOf(definitions: readonly FlowDefinition[]): {
   };
 }
 
-/** The two Orazaka Studios of the document-validation pack Yomizaka runs. */
+/** The two Sovkora Studios of the document-validation pack Verikora runs. */
 export const STUDIOS = ["compliance-check", "document-authenticity"] as const;
 export const studio = z.enum(STUDIOS);
 export type Studio = z.infer<typeof studio>;
 
-/** The rulesets the compliance Studio carries (orazaka-packs document-validation/rulesets). Québec first: our market. */
+/** The rulesets the compliance Studio carries (sovkora-packs document-validation/rulesets). Québec first: our market. */
 export const JURISDICTIONS = ["QC", "FR", "BE-WAL"] as const;
 export const jurisdiction = z.enum(JURISDICTIONS);
 export type Jurisdiction = z.infer<typeof jurisdiction>;
@@ -158,7 +158,7 @@ export const ANALYSIS_STATUS = {
 export const analysisStatus = z.enum(ANALYSIS_STATUSES);
 export type AnalysisStatus = z.infer<typeof analysisStatus>;
 
-/** Orazaka's run statuses (orazaka-studio RunStatus) as Yomizaka shows them. Unknown → running (it will be asked again). */
+/** Sovkora's run statuses (sovkora-studio-service RunStatus) as Verikora shows them. Unknown → running (it will be asked again). */
 export function fromRunStatus(status: string): AnalysisStatus {
   switch (status) {
     case "SUCCEEDED":
@@ -178,7 +178,7 @@ export const isTerminal = (status: AnalysisStatus) => status !== "running";
 export const documentStatus = z.enum(DOCUMENT_STATUSES);
 export type DocumentStatus = z.infer<typeof documentStatus>;
 
-// ── Reports, as Orazaka returns them (orazaka-packs document-validation) ─────────────────────────────────────────────
+// ── Reports, as Sovkora returns them (sovkora-packs document-validation) ─────────────────────────────────────────────
 
 export const VERDICTS = ["PASS", "FAIL", "INSUFFICIENT_EVIDENCE"] as const;
 export const finding = z.object({
@@ -191,7 +191,7 @@ export const finding = z.object({
     .nullable()
     .optional(),
   explanation: z.string(),
-  /** The same sentence in English, for the findings Yomizaka itself writes (the tenant-shield rules, #104); the engine's own are French only. */
+  /** The same sentence in English, for the findings Verikora itself writes (the tenant-shield rules, #104); the engine's own are French only. */
   explanationEn: z.string().optional(),
   method: z.string().optional(),
   /** A sentence (1.x), or `{ reference, pinned, notice }` (compliance-check 2.x): the reference is the sentence shown. */
@@ -199,14 +199,14 @@ export const finding = z.object({
     (v) => (v && typeof v === "object" && "reference" in v ? (v as { reference: unknown }).reference : v),
     z.string().optional(),
   ),
-  /** The line of the document the evidence sits on (1-based), set by Yomizaka while the text is still there (yomizaka#129). */
+  /** The line of the document the evidence sits on (1-based), set by Verikora while the text is still there (verikora#129). */
   line: z.number().int().positive().optional(),
 });
 export type Finding = z.infer<typeof finding>;
 
 /**
  * A figure the ruleset declares it reads: found with its value, blank (the label with no amount) or absent. A value is cents (the rents of
- * Section G, yomizaka#554), a number of months (rent asked in advance), a yes/no (postdated cheques, notice given) or a date `YYYY-MM-DD`
+ * Section G, verikora#554), a number of months (rent asked in advance), a yes/no (postdated cheques, notice given) or a date `YYYY-MM-DD`
  * (conclusion and start of the lease): the tenant-shield rules (#104) read these and nothing else, never free text.
  */
 const factEvidence = z.object({ quote: z.string() }).passthrough().optional();
@@ -307,9 +307,9 @@ export function signalFamily(s: Pick<Signal, "signalId" | "family">): SignalFami
 }
 
 /**
- * The signals the landlord does not see (yomizaka#651, CTO 2026-10-30, Law 25: no automated verdict, and a false alarm on 1 genuine
+ * The signals the landlord does not see (verikora#651, CTO 2026-10-30, Law 25: no automated verdict, and a false alarm on 1 genuine
  * document in 8 is not a fact about the applicant). Each measured over the 5 % false-positive bar on the 280 genuine documents of
- * the forensic corpus (orazaka-packs#191, #176); the run keeps them for measurement and the operator reads them there. `level`
+ * the forensic corpus (sovkora-packs#191, #176); the run keeps them for measurement and the operator reads them there. `level`
  * limits the withholding to the case measured (the « absent » cases are `inhabituel`; the « declared » ones are plain facts).
  * A signal returns to the landlord's view when its measured rate passes the bar: remove its line, with the measurement linked in the PR.
  */
@@ -319,18 +319,18 @@ export const WITHHELD_FROM_LANDLORD: ReadonlyArray<{
   falsePositiveRate: number;
   measurement: string;
 }> = [
-  { signalId: "PDF-ID-001", falsePositiveRate: 0.12, measurement: "https://github.com/krizaka/orazaka-packs/pull/191" },
+  { signalId: "PDF-ID-001", falsePositiveRate: 0.12, measurement: "https://github.com/krizaka/sovkora-packs/pull/191" },
   {
     signalId: "PDF-META-001",
     level: "inhabituel",
     falsePositiveRate: 0.125,
-    measurement: "https://github.com/krizaka/orazaka-packs/pull/191",
+    measurement: "https://github.com/krizaka/sovkora-packs/pull/191",
   },
   {
     signalId: "IMG-META-001",
     level: "inhabituel",
     falsePositiveRate: 0.06,
-    measurement: "https://github.com/krizaka/orazaka-packs/pull/191",
+    measurement: "https://github.com/krizaka/sovkora-packs/pull/191",
   },
 ];
 
@@ -351,7 +351,7 @@ export const authenticityReport = z.object({
 });
 export type AuthenticityReport = z.infer<typeof authenticityReport>;
 
-/** One output of an Orazaka run (orazaka-studio RunArtefactResponse). */
+/** One output of an Sovkora run (sovkora-studio-service RunArtefactResponse). */
 export const runArtefact = z.object({
   key: z.string(),
   label: z.string().nullable().optional(),
@@ -360,8 +360,8 @@ export const runArtefact = z.object({
 });
 export type RunArtefact = z.infer<typeof runArtefact>;
 
-/** An Orazaka run, as the edge answers it (`GET /api/v1/studios/runs/{id}`). Only what Yomizaka reads. */
-export const orazakaRun = z.object({
+/** An Sovkora run, as the edge answers it (`GET /api/v1/studios/runs/{id}`). Only what Verikora reads. */
+export const sovkoraRun = z.object({
   id: z.string(),
   studioKey: z.string(),
   blueprintVersion: z.string().nullable().optional(),
@@ -371,7 +371,7 @@ export const orazakaRun = z.object({
   startedAt: z.string().nullable().optional(),
   finishedAt: z.string().nullable().optional(),
 });
-export type OrazakaRun = z.infer<typeof orazakaRun>;
+export type SovkoraRun = z.infer<typeof sovkoraRun>;
 
 const json = (value: string | null | undefined): unknown => {
   if (!value) return undefined;
@@ -384,7 +384,7 @@ const json = (value: string | null | undefined): unknown => {
 
 /**
  * The report a finished run carries, read from its outputs: the compliance Studio's `report` (JSON — the assembled
- * report, wrapped in `{ report }` or bare), the authenticity Studio's `signals` (JSON). A shape Orazaka did not send is
+ * report, wrapped in `{ report }` or bare), the authenticity Studio's `signals` (JSON). A shape Sovkora did not send is
  * `null`, never a guess.
  */
 export function reportOf(
@@ -408,7 +408,7 @@ export const analysis = z.object({
   id: z.string(),
   studio,
   status: analysisStatus,
-  /** The Orazaka run this analysis is — shown in the UI, the trace of what ran. */
+  /** The Sovkora run this analysis is — shown in the UI, the trace of what ran. */
   runId: z.string().nullable(),
   blueprintVersion: z.string().nullable(),
   inputs: z.record(z.string(), z.string()),
@@ -435,7 +435,7 @@ export const documentSummary = z.object({
   /** Whether a text layer was read (a scanned PDF has none: the compliance check needs one). */
   hasText: z.boolean(),
   status: documentStatus,
-  /** Whether the text is read yet (yomizaka#21); absent on a document read before the status existed: it is `done`. */
+  /** Whether the text is read yet (verikora#21); absent on a document read before the status existed: it is `done`. */
   extraction: extractionStatus.optional(),
   createdAt: z.string(),
 });
@@ -540,7 +540,7 @@ export const photoOrigin = z.object({
 });
 export type PhotoOrigin = z.infer<typeof photoOrigin>;
 
-/** How a document's text was read when it was not a text layer: by local character recognition, or — when that was not reliable — by Orazaka's vision model (with its run). */
+/** How a document's text was read when it was not a text layer: by local character recognition, or — when that was not reliable — by Sovkora's vision model (with its run). */
 /** How a document's text was read, as constants. */
 export const TEXT_SOURCE = { ocr: "ocr", vision: "vision" } as const;
 /** A collection's avatar: one of the set (a seed the UI draws) or an uploaded image (served at `/api/collections/{id}/avatar?v=<version>`). The same shape on the web, the Mac, iOS and Android. */
@@ -563,7 +563,7 @@ export const textSource = z.discriminatedUnion("kind", [
   }),
   z.object({
     kind: z.literal(TEXT_SOURCE.vision),
-    by: z.literal("orazaka"),
+    by: z.literal("sovkora"),
     runId: z.string(),
     model: z.string().nullable(),
     localConfidence: z.number(),
@@ -595,7 +595,7 @@ export const documentView = documentDetail.extend({
 });
 export type DocumentView = z.infer<typeof documentView>;
 
-/** The rulesets the Studio takes by name besides each jurisdiction's lease (orazaka-packs `document-validation`): Québec's supplier invoice, service contract, visit notice and état des lieux (orazaka-packs#128). */
+/** The rulesets the Studio takes by name besides each jurisdiction's lease (sovkora-packs `document-validation`): Québec's supplier invoice, service contract, visit notice and état des lieux (sovkora-packs#128). */
 export const NAMED_RULESETS = [
   "qc-invoice",
   "qc-service-contract",

@@ -1,14 +1,14 @@
 #!/usr/bin/env node
-// « Krizaka reviews its own documents with Yomizaka » — one narrated walkthrough on the real dev site, as the persona Éric
+// « Krizaka reviews its own documents with Verikora » — one narrated walkthrough on the real dev site, as the persona Éric
 // (the studio's owner, never an administrator): the redacted invoice and service-contract templates are dropped in the
-// library, checked against the Québec rulesets (qc-invoice, qc-service-contract) by real Orazaka runs, and the findings are read
+// library, checked against the Québec rulesets (qc-invoice, qc-service-contract) by real Sovkora runs, and the findings are read
 // with their quoted passages. EN and FR, desktop and phone.
 //
 //   E2E_EMAIL=… E2E_PASSWORD=… E2E_DOCS=<dir with the three redacted .txt files> \
 //     node scripts/record-krizaka-review.mjs <out-dir> [--device phone|desktop] [--locale en|fr] [--voice]
 //
 // The documents are REDACTED copies (no NEQ, address, bank or personal data), kept outside every repository. Credentials stay
-// in the environment and are never printed. The waiting for Orazaka is sped up (said in the metadata); nothing else is cut.
+// in the environment and are never printed. The waiting for Sovkora is sped up (said in the metadata); nothing else is cut.
 import { createRequire } from "node:module";
 import path from "node:path";
 
@@ -23,7 +23,7 @@ const out = path.resolve(args[0] ?? "record-out");
 const device = flag("device", "desktop");
 const locale = flag("locale", "en") === "fr" ? "fr" : "en";
 const voice = args.includes("--voice");
-const BASE = (process.env.APP_BASE_URL ?? "https://www.yomizaka.com").replace(/\/$/, "");
+const BASE = (process.env.APP_BASE_URL ?? "https://www.verikora.com").replace(/\/$/, "");
 const need = (n) => {
   if (!process.env[n]) throw new Error(`${n} is required`);
   return process.env[n];
@@ -34,36 +34,36 @@ const docs = path.resolve(need("E2E_DOCS"));
 const FILES = {
   invoice: "facture-modele-krizaka.txt",
   contract: "contrat-de-prestation-modele-krizaka.txt",
-  akinaza: "facture-akinaza-krizaka.txt",
+  folioviv: "facture-folioviv-krizaka.txt",
 };
 
-/** What is said at each beat (also the captions). Honest about what Yomizaka found and what it did not. */
+/** What is said at each beat (also the captions). Honest about what Verikora found and what it did not. */
 export const WORDS = {
   intro: {
-    en: "Éric runs Krizaka, a software studio in Montréal. Before Krizaka becomes Akinaza's first client, its own invoice and contract templates go through Yomizaka.",
-    fr: "Éric dirige Krizaka, un studio de logiciel à Montréal. Avant que Krizaka devienne le premier client d'Akinaza, ses propres modèles de facture et de contrat passent par Yomizaka.",
+    en: "Éric runs Krizaka, a software studio in Montréal. Before Krizaka becomes Folioviv's first client, its own invoice and contract templates go through Verikora.",
+    fr: "Éric dirige Krizaka, un studio de logiciel à Montréal. Avant que Krizaka devienne le premier client d'Folioviv, ses propres modèles de facture et de contrat passent par Verikora.",
   },
   drop: {
     en: "He drops two templates. They are redacted copies: no company number, address or bank detail leaves the company.",
     fr: "Il dépose deux modèles. Ce sont des copies caviardées : aucun numéro d'entreprise, adresse ou coordonnée bancaire ne sort de la société.",
   },
   invoice: {
-    en: "Yomizaka keeps the invoice as sent and shows its text. Éric asks for the Québec invoice check.",
-    fr: "Yomizaka garde la facture telle qu'envoyée et en montre le texte. Éric demande la vérification de facture québécoise.",
+    en: "Verikora keeps the invoice as sent and shows its text. Éric asks for the Québec invoice check.",
+    fr: "Verikora garde la facture telle qu'envoyée et en montre le texte. Éric demande la vérification de facture québécoise.",
   },
   running: {
-    en: "Every check is a traced run of Orazaka, the engine. Here the wait is sped up.",
-    fr: "Chaque vérification est une exécution tracée d'Orazaka, le moteur. Ici, l'attente est accélérée.",
+    en: "Every check is a traced run of Sovkora, the engine. Here the wait is sped up.",
+    fr: "Chaque vérification est une exécution tracée d'Sovkora, le moteur. Ici, l'attente est accélérée.",
   },
   invoiceFindings: {
     en: "Eight rules, eight passed, each with the passage it relied on and the article behind it: the date, the GST and QST numbers, the total, the taxes, the payment terms.",
     fr: "Huit règles, huit réussies, chacune avec le passage retenu et l'article qui la fonde : la date, les numéros de TPS et de TVQ, le total, les taxes, les conditions de paiement.",
   },
-  akinaza: {
-    en: "Then the invoice Akinaza issues for Krizaka, as the text a PDF would give: a label on one line, its value on the next. It carries its payment terms and due date, and Yomizaka reads that layout too.",
-    fr: "Puis la facture qu'Akinaza émet pour Krizaka, en texte comme le donnerait un PDF : un libellé sur une ligne, sa valeur sur la suivante. Elle porte ses conditions de paiement et son échéance, et Yomizaka lit aussi cette mise en page.",
+  folioviv: {
+    en: "Then the invoice Folioviv issues for Krizaka, as the text a PDF would give: a label on one line, its value on the next. It carries its payment terms and due date, and Verikora reads that layout too.",
+    fr: "Puis la facture qu'Folioviv émet pour Krizaka, en texte comme le donnerait un PDF : un libellé sur une ligne, sa valeur sur la suivante. Elle porte ses conditions de paiement et son échéance, et Verikora lit aussi cette mise en page.",
   },
-  akinazaFindings: {
+  foliovivFindings: {
     en: "Eight rules, eight passed: the date, the total and the taxes are found over their labels, and the payment terms are there.",
     fr: "Huit règles, huit réussies : la date, le total et les taxes sont retrouvés sous leurs libellés, et les conditions de paiement y sont.",
   },
@@ -76,12 +76,12 @@ export const WORDS = {
     fr: "Quatre règles, quatre réussies. Le rapport dit clairement ce qu'il ne couvre pas : le Code civil, à faire relire par un avocat.",
   },
   notes: {
-    en: "What no rule reads, such as a late-interest rate stated two different ways, is written up for Éric in a review note. Yomizaka helps; it does not replace a lawyer.",
-    fr: "Ce qu'aucune règle ne lit, comme un taux d'intérêt de retard énoncé de deux façons, est consigné pour Éric dans une note de revue. Yomizaka aide; il ne remplace pas un avocat.",
+    en: "What no rule reads, such as a late-interest rate stated two different ways, is written up for Éric in a review note. Verikora helps; it does not replace a lawyer.",
+    fr: "Ce qu'aucune règle ne lit, comme un taux d'intérêt de retard énoncé de deux façons, est consigné pour Éric dans une note de revue. Verikora aide; il ne remplace pas un avocat.",
   },
   outro: {
-    en: "The wording Krizaka just checked is what it will print from Akinaza.",
-    fr: "Le texte que Krizaka vient de faire vérifier est celui qu'elle imprimera depuis Akinaza.",
+    en: "The wording Krizaka just checked is what it will print from Folioviv.",
+    fr: "Le texte que Krizaka vient de faire vérifier est celui qu'elle imprimera depuis Folioviv.",
   },
 };
 const VOICES = { en: "Samantha", fr: "Amélie" };
@@ -99,7 +99,7 @@ const take = await createTake({
   scale: device === "phone" ? 2 : 1,
   locale,
   outDir: path.join(out, device),
-  name: `yomizaka-review-${locale}`,
+  name: `verikora-review-${locale}`,
   mobile: device === "phone",
   words: WORDS,
   voices: VOICES,
@@ -135,7 +135,7 @@ async function openDoc(file) {
   await page.waitForURL(/\/app\/documents\//);
   await page.waitForLoadState("networkidle");
 }
-/** Runs the check and waits for Orazaka's report (its ruleset line appears with the findings). */
+/** Runs the check and waits for Sovkora's report (its ruleset line appears with the findings). */
 async function check(type, ruleset, announce = false) {
   const seen = (re) => (document.body.innerText.match(new RegExp(re, "g")) ?? []).length;
   const marker = JSON.stringify(`${ruleset} ·`);
@@ -172,7 +172,7 @@ await take.speak("intro");
 take.beat("drop");
 await upload(T.invoiceKind, FILES.invoice);
 await upload(T.contractKind, FILES.contract);
-await upload(T.invoiceKind, FILES.akinaza);
+await upload(T.invoiceKind, FILES.folioviv);
 await take.speak("drop");
 take.beat("invoice");
 await openDoc(FILES.invoice);
@@ -184,14 +184,14 @@ await readFindings();
 await take.speak("invoiceFindings");
 await page.goBack();
 await page.waitForLoadState("networkidle");
-take.beat("akinaza");
-await openDoc(FILES.akinaza);
+take.beat("folioviv");
+await openDoc(FILES.folioviv);
 await page.waitForFunction(() => document.body.innerText.includes("Facture / Invoice"), null, { timeout: 30_000 });
-await take.speak("akinaza");
+await take.speak("folioviv");
 await check("invoice", "qc-invoice");
-take.beat("akinazaFindings");
+take.beat("foliovivFindings");
 await readFindings();
-await take.speak("akinazaFindings");
+await take.speak("foliovivFindings");
 await page.goBack();
 await page.waitForLoadState("networkidle");
 take.beat("contract");

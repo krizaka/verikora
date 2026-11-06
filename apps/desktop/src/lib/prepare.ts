@@ -1,6 +1,6 @@
-import { type PreflightLimits, type PreflightReason, preflight } from "@yomizaka/client";
+import { type PreflightLimits, type PreflightReason, preflight } from "@verikora/client";
 
-import { bytesOf, yomizakaNative } from "./desktop";
+import { bytesOf, verikoraNative } from "./desktop";
 
 /** Why a file did not become a check: a refusal of the pre-flight, or the server's. */
 export class Refused extends Error {
@@ -27,7 +27,7 @@ export interface Prepared {
  * pre-flight (the server's limits). Nothing leaves the Mac before this answers.
  */
 export async function prepare(path: string, limits: PreflightLimits): Promise<Prepared> {
-  const document = await yomizakaNative.readDocument(path).catch(() => {
+  const document = await verikoraNative.readDocument(path).catch(() => {
     throw new Refused("unreadable");
   });
   const verdict = preflight({ uri: path, name: document.name, mimeType: document.mime, size: document.size }, limits);

@@ -10,7 +10,7 @@ export interface InboxStore {
   setItem(key: string, value: string): void;
 }
 
-const KEY = "yomizaka.inbox";
+const KEY = "verikora.inbox";
 // @fixed: the names remembered per folder, enough for a year of leases, small enough for the page's storage
 const MAX_SEEN = 2000;
 

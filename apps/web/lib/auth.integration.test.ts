@@ -28,9 +28,9 @@ import { GLOBAL } from "./settings/service";
 
 /**
  * Sign-in, session, sign-out, expiry, the administration's locks and the 429, through the real routes and PostgreSQL
- * (CI's service; locally YOMIZAKA_DB_IT=1 DATABASE_URL=…). yomizaka#263: the paths `@krizaka/auth` now serves.
+ * (CI's service; locally DATABASE_IT=1 DATABASE_URL=…). verikora#263: the paths `@krizaka/auth` now serves.
  */
-const enabled = process.env.YOMIZAKA_DB_IT === "1" && !!process.env.DATABASE_URL;
+const enabled = process.env.DATABASE_IT === "1" && !!process.env.DATABASE_URL;
 
 const PASSWORD = "correct horse battery staple";
 const post = (path: string, body: unknown, headers: Record<string, string> = {}) =>
@@ -52,7 +52,7 @@ const refusalOf = async (run: Promise<unknown>) => {
 
 describe.runIf(enabled)("sign-in, sessions and the administration's locks", () => {
   const stamp = Date.now();
-  const emailOf = (who: string) => `auth-${who}-${stamp}@yomizaka.test`;
+  const emailOf = (who: string) => `auth-${who}-${stamp}@verikora.test`;
   const ids: Record<string, string> = {};
 
   const account = async (who: string, extra = "") => {
@@ -71,7 +71,7 @@ describe.runIf(enabled)("sign-in, sessions and the administration's locks", () =
   });
   afterAll(async () => {
     await appSettings().reset({ id: null, label: "test" }, GLOBAL, "auth.sessionDays", new Date());
-    await query("DELETE FROM accounts WHERE email LIKE $1", [`auth-%-${stamp}@yomizaka.test`]);
+    await query("DELETE FROM accounts WHERE email LIKE $1", [`auth-%-${stamp}@verikora.test`]);
     await pool().end();
   });
   beforeEach(() => {
@@ -122,7 +122,7 @@ describe.runIf(enabled)("sign-in, sessions and the administration's locks", () =
   it("login: a wrong password and an unknown address get the same 401; a suspended account is refused only with the right password", async () => {
     const wrong = await login("user", "not the password at all");
     const unknown = await signIn(
-      post("/api/auth/sign-in", { email: `nobody-${stamp}@yomizaka.test`, password: PASSWORD }),
+      post("/api/auth/sign-in", { email: `nobody-${stamp}@verikora.test`, password: PASSWORD }),
     );
     expect([wrong.status, unknown.status]).toEqual([401, 401]);
     expect(await wrong.json()).toEqual(await unknown.json());

@@ -4,7 +4,7 @@ import {
   type ComplianceReport,
   TEXT_SOURCE,
   type TextSource,
-} from "@yomizaka/core";
+} from "@verikora/core";
 
 import { pluralKey } from "../plural";
 import { authenticityData, type Bilingual, compliancePackOf, say, template } from "./data";
@@ -22,8 +22,8 @@ import {
   VERDICT,
 } from "./vocabulary";
 
-/** The note's shape is a contract the apps read too: it lives in `@yomizaka/core`. */
-export { type ClosingNote, closingNote } from "@yomizaka/core";
+/** The note's shape is a contract the apps read too: it lives in `@verikora/core`. */
+export { type ClosingNote, closingNote } from "@verikora/core";
 
 export interface FindingInput {
   ruleId: string;
@@ -257,7 +257,7 @@ function authenticityNote(input: Extract<NoteInput, { kind: "authenticity" }>, l
   });
 }
 
-/** The note's input from a report as Orazaka returned it (a compliance report has findings, an authenticity report has signals). */
+/** The note's input from a report as Sovkora returned it (a compliance report has findings, an authenticity report has signals). */
 export function noteInputOf(
   report: ComplianceReport | AuthenticityReport,
   textSource?: TextSourceInput | null,

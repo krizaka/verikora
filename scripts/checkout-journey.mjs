@@ -1,11 +1,11 @@
 #!/usr/bin/env node
-// The checkout journey (yomizaka P0, 2026-10-30): a persona BUYS a plan on the deployed dev with Stripe's TEST card, as a customer would.
+// The checkout journey (verikora P0, 2026-10-30): a persona BUYS a plan on the deployed dev with Stripe's TEST card, as a customer would.
 //   sign in (bearer) -> the plan is for sale (paymentsOn) -> start the checkout -> pay on Stripe's hosted page with the 4242 card ->
 //   the subscription turns active (the webhook) -> the payment history carries a receipt that opens -> one lease check ends in the signed PDF.
 // It runs on main and by hand against the dev environment (never on a pull request: the persona and the TEST key are that environment's), and
 // it ends by cancelling what it bought, so the next run starts clean. A red run on main files an issue in krizaka-internal (checkout-journey-report.mjs).
 //
-//   SMOKE_EMAIL=... SMOKE_PASSWORD=... PAYMENTS_STRIPE_TEST_SECRET_KEY=sk_test_... node scripts/checkout-journey.mjs --base https://dev.yomizaka.com
+//   SMOKE_EMAIL=... SMOKE_PASSWORD=... PAYMENTS_STRIPE_TEST_SECRET_KEY=sk_test_... node scripts/checkout-journey.mjs --base https://dev.verikora.com
 import { mkdirSync, writeFileSync } from "node:fs";
 import { createRequire } from "node:module";
 import { fileURLToPath } from "node:url";
@@ -269,7 +269,7 @@ export async function checkoutJourney({
 
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
   const i = process.argv.indexOf("--base");
-  const base = (i >= 0 ? process.argv[i + 1] : "https://dev.yomizaka.com").replace(/\/$/, "");
+  const base = (i >= 0 ? process.argv[i + 1] : "https://dev.verikora.com").replace(/\/$/, "");
   try {
     const { chromium } = createRequire(import.meta.url)("playwright-core");
     const openBrowser = async () => {

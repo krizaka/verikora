@@ -10,7 +10,7 @@ import { ALIAS_RULES, OLD_AUDIENCE_SLUGS, PARKED_PAGES, redirectRules } from "./
 import { pagePath, PAGES } from "./site";
 
 /**
- * Simplify Yomizaka (krizaka/yomizaka#120): the public site is the home, sign-in and the privacy notice. Every item of the
+ * Simplify Verikora (krizaka/verikora#120): the public site is the home, sign-in and the privacy notice. Every item of the
  * menu resolves to a page or an anchor that exists, and every address that was removed answers 308 to its new home.
  */
 const ROOT = join(__dirname, "..");
@@ -54,7 +54,7 @@ describe("every menu item resolves", () => {
   });
 });
 
-/** The signed-in space's renamed addresses (yomizaka#389), as opposed to the public pages that went to the home. */
+/** The signed-in space's renamed addresses (verikora#389), as opposed to the public pages that went to the home. */
 const isAppRule = (r: { source: string; destination: string }) => /\/app(\/|$)/.test(r.destination);
 
 /** Whether a path (without its language) is served by a page file of app/[locale]: groups ignored, `[param]` matches any segment. */
@@ -118,7 +118,7 @@ describe("every removed address redirects (308) to its new home", () => {
       expect(existsSync(join(ROOT, "app/[locale]/(app)/app", dir)), dir).toBe(false);
   });
 
-  it("every moved address answers 308 to a page that exists (yomizaka#389)", () => {
+  it("every moved address answers 308 to a page that exists (verikora#389)", () => {
     const moved = rules.filter(isAppRule);
     expect(moved.length).toBeGreaterThan(0);
     for (const rule of moved) {

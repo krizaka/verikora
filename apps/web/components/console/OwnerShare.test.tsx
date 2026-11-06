@@ -20,12 +20,12 @@ const render = (locale: "en" | "fr") =>
   renderToStaticMarkup(
     <I18nProvider locale={locale} messages={MESSAGES[locale] as never}>
       <KrizakaQueryProvider>
-        <OwnerShare fileId="f1" origin="https://dev.yomizaka.com" />
+        <OwnerShare fileId="f1" origin="https://dev.verikora.com" />
       </KrizakaQueryProvider>
     </I18nProvider>,
   );
 
-describe("the owner link block of a file (yomizaka#128)", () => {
+describe("the owner link block of a file (verikora#128)", () => {
   it("offers 7 days first and 30 at most, with the create action, in French", () => {
     const html = render("fr");
     expect(SHARE_CHOICES[0]).toBe(7);

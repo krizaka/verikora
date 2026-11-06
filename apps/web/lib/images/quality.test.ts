@@ -4,10 +4,10 @@ import { describe, expect, it } from "vitest";
 import { createImageCleaner } from "./clean";
 import { pageSvg, photoOfPage } from "./fixtures";
 import { assessQuality, laplacianVariance, qualityProblem } from "./quality";
-import { YOMIZAKA_IMAGE_RULES } from "./rules";
+import { VERIKORA_IMAGE_RULES } from "./rules";
 
-const cleaner = createImageCleaner(YOMIZAKA_IMAGE_RULES);
-const rules = YOMIZAKA_IMAGE_RULES.quality;
+const cleaner = createImageCleaner(VERIKORA_IMAGE_RULES);
+const rules = VERIKORA_IMAGE_RULES.quality;
 const jpeg = async (pipeline: Sharp) => new Uint8Array(await pipeline.jpeg().toBuffer());
 const problemOf = async (bytes: Uint8Array) =>
   qualityProblem((await cleaner.clean({ bytes, kind: "jpeg" })).page.quality, rules);
@@ -32,7 +32,7 @@ async function fixtures() {
   };
 }
 
-describe("can this photo be read? (yomizaka#8)", () => {
+describe("can this photo be read? (verikora#8)", () => {
   it("lets a sharp photo through, tilted or not, and a flat scan", async () => {
     const f = await fixtures();
     expect(await problemOf(f.flat)).toBeNull();

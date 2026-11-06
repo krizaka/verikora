@@ -11,20 +11,20 @@ const charge = (over: Record<string, unknown> = {}) => ({
   paid: true,
   refunded: false,
   amount_refunded: 0,
-  description: "Yomizaka — one document verified",
+  description: "Verikora — one document verified",
   receipt_url: "https://pay.stripe.com/receipts/payment/abc",
   payment_method_details: { card: { last4: "4242", brand: "visa" } },
   billing_details: { name: "Éric Tremblay", email: "eric@example.test" },
   ...over,
 });
 
-describe("payment history (yomizaka#585)", () => {
+describe("payment history (verikora#585)", () => {
   it("keeps the date, what was bought, the amount, the state and the receipt link", () => {
     const [row] = paymentHistoryOf([charge()]);
     expect(row).toEqual({
       id: "ch_1",
       at: new Date(1_793_000_000 * 1000).toISOString(),
-      what: "Yomizaka — one document verified",
+      what: "Verikora — one document verified",
       amountCents: 999,
       currency: "cad",
       state: "paid",

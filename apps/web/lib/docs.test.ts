@@ -14,7 +14,7 @@ import { apiOperations, apiWebhooks } from "./docs-api";
 import { llmsText } from "./seo";
 import { SITE_URL } from "./site";
 
-/** yomizaka#387: Yomizaka documents itself, from its OpenAPI document and its own words, with only what is true. */
+/** verikora#387: Verikora documents itself, from its OpenAPI document and its own words, with only what is true. */
 const LOCALES = ["en", "fr"] as const;
 const html = (locale: (typeof LOCALES)[number]) => renderToStaticMarkup(DocsContent({ locale }));
 

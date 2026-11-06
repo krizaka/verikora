@@ -11,8 +11,8 @@ import { legacyAvatarKey } from "./organize";
 const avatarKey = (owner: string, id: string, version: number) => storedAvatarKey("collection", owner, id, version);
 import * as org from "./store";
 
-/** A collection's avatar (krizaka/yomizaka#206) against a real PostgreSQL: one from the set, or an uploaded image kept behind the storage port. */
-const enabled = process.env.YOMIZAKA_DB_IT === "1" && !!process.env.DATABASE_URL;
+/** A collection's avatar (krizaka/verikora#206) against a real PostgreSQL: one from the set, or an uploaded image kept behind the storage port. */
+const enabled = process.env.DATABASE_IT === "1" && !!process.env.DATABASE_URL;
 
 const RULES = { allowedSeeds: ["person", "plain-1", "plain-2"], maxBytes: 200 * 1024, size: 256 };
 const memory = () => memoryStore({ kind: "bunny", devOnly: true, owner: "krizaka", residency: "elsewhere" });
@@ -25,7 +25,7 @@ describe.runIf(enabled)("a collection's avatar", () => {
     (
       await query<{ id: string }>(
         "INSERT INTO accounts (email, password_hash, email_verified_at) VALUES ($1, 'x', now()) RETURNING id",
-        [`a-${Math.random().toString(36).slice(2)}@yomizaka.test`],
+        [`a-${Math.random().toString(36).slice(2)}@verikora.test`],
       )
     )[0]!.id;
   const collection = async (owner: string) =>

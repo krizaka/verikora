@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 /**
- * Reading a new document's text happens after the upload answered (yomizaka#21): `POST /api/documents` answers 202 Accepted
+ * Reading a new document's text happens after the upload answered (verikora#21): `POST /api/documents` answers 202 Accepted
  * with the document `queued`, an isolated worker reads it, and the document becomes `done` (or `failed`, with the reason).
  * A document with no value here was read before this existed: it is `done`.
  */

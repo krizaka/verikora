@@ -8,12 +8,12 @@ import fr from "@/messages/fr.json";
 
 const read = (p: string) => readFileSync(join(__dirname, "..", p), "utf8");
 
-/** A check's progress is Krizaka UI's Stepper fed by the shared core contract (krizaka/yomizaka#208): nothing hand-made, nothing invented. */
+/** A check's progress is Krizaka UI's Stepper fed by the shared core contract (krizaka/verikora#208): nothing hand-made, nothing invented. */
 describe("the check's steps on the document page", () => {
-  it("are drawn with @krizaka/ui's Stepper from @yomizaka/core's checkSteps, in the document view", () => {
+  it("are drawn with @krizaka/ui's Stepper from @verikora/core's checkSteps, in the document view", () => {
     const steps = read("components/console/CheckSteps.tsx");
     expect(steps).toContain('from "@krizaka/ui/stepper"');
-    expect(steps).toContain("@yomizaka/core");
+    expect(steps).toContain("@verikora/core");
     expect(steps).not.toMatch(/<ol\b/);
     const view = read("components/console/DocumentReportTab.tsx");
     expect(view).toMatch(/<CheckSteps\s+steps=\{checkSteps\(/);

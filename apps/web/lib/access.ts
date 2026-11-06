@@ -22,7 +22,7 @@ export function ipAllowed(requestHeaders: Headers, source: Record<string, string
   return listed(clientAddress(requestHeaders, source), consoleAllowedIps(source));
 }
 
-/** admin.yomizaka.com answers only addresses of AUTH_ALLOWED_IPS, its sign-in page and sign-in call included; the product host is open. */
+/** admin.verikora.com answers only addresses of AUTH_ALLOWED_IPS, its sign-in page and sign-in call included; the product host is open. */
 export function hostAllowed(
   requestHeaders: Headers,
   source: Record<string, string | undefined> = process.env,

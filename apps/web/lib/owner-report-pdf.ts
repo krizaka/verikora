@@ -15,13 +15,13 @@ import { type SigningKey } from "./report-key";
 import { ATTESTATION_KEY } from "./report-pdf";
 
 /*
- * The signed PDF of the owner report (yomizaka#481): the redacted report of an applicant file (hashes, signals, rules,
+ * The signed PDF of the owner report (verikora#481): the redacted report of an applicant file (hashes, signals, rules,
  * runs — no name, e-mail, file name or quoted passage), sealed like the compliance PDF: Ed25519 over the canonical
- * payload and the SHA-256 of the pages' text, the attestation in the Info key `YomizakaAttestation`. It has its own
- * payload schema (`yomizaka.owner-report/1`); the signature format, the key and the verification are the same.
+ * payload and the SHA-256 of the pages' text, the attestation in the Info key `VerikoraAttestation`. It has its own
+ * payload schema (`verikora.owner-report/1`); the signature format, the key and the verification are the same.
  * ADR-0002: no specimen exists, nothing public — only the owner link, while it is valid, delivers it.
  */
-export const OWNER_REPORT_SCHEMA = "yomizaka.owner-report/1";
+export const OWNER_REPORT_SCHEMA = "verikora.owner-report/1";
 
 const sha = z.string().regex(/^[0-9a-f]{64}$/);
 export const ownerReportPayload = z

@@ -20,8 +20,8 @@ const RECIPIENT = `age1${"q".repeat(58)}`;
 describe("names", () => {
   it("sorts in time as a string and round-trips", () => {
     const key = dumpKey("prod", at("2026-10-29T03:15:00Z"));
-    expect(key).toBe("backups/yomizaka/prod/yomizaka-prod-20261029T031500Z.dump.age");
-    expect(manifestKeyOf(key)).toBe("backups/yomizaka/prod/yomizaka-prod-20261029T031500Z.manifest.json");
+    expect(key).toBe("backups/verikora/prod/verikora-prod-20261029T031500Z.dump.age");
+    expect(manifestKeyOf(key)).toBe("backups/verikora/prod/verikora-prod-20261029T031500Z.manifest.json");
     expect(backupsIn([{ key, size: 1 }], "prod")[0].at.toISOString()).toBe("2026-10-29T03:15:00.000Z");
   });
   it("refuses an environment that is not a key segment", () => {
@@ -29,8 +29,8 @@ describe("names", () => {
   });
   it("ignores foreign objects: they are never listed for deletion", () => {
     const listed = [
-      { key: "backups/yomizaka/prod/notes.txt", size: 1 },
-      { key: "backups/yomizaka/dev/yomizaka-dev-20260101T000000Z.dump.age", size: 1 },
+      { key: "backups/verikora/prod/notes.txt", size: 1 },
+      { key: "backups/verikora/dev/verikora-dev-20260101T000000Z.dump.age", size: 1 },
     ];
     expect(backupsIn(listed, "prod")).toEqual([]);
   });

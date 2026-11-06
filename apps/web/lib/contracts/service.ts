@@ -1,4 +1,4 @@
-import { STORAGE_KIND } from "@yomizaka/core";
+import { STORAGE_KIND } from "@verikora/core";
 
 import { currentProductName } from "@/lib/settings/display-name";
 
@@ -13,7 +13,7 @@ import { keepSealed, type SealedRow } from "./store";
 import { inZone, ZONE } from "./zone";
 
 /**
- * Sealing a contract for a partner (yomizaka#71). The sealed file is kept in Yomizaka's database (Toronto, `tor1`, encrypted at rest) —
+ * Sealing a contract for a partner (verikora#71). The sealed file is kept in Verikora's database (Toronto, `tor1`, encrypted at rest) —
  * the zone it can honestly name today is `CA` or `CA-ON`: a request for another zone (`CA-QC`) is refused until a store in that zone exists,
  * never answered with a place the file is not in.
  */

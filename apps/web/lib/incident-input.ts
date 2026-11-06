@@ -1,7 +1,7 @@
 import { INCIDENT_KIND, LEVEL, NOTICE_TARGET } from "@krizaka/privacy";
 import { z } from "zod";
 
-/** What the administration may send about an incident (yomizaka#418). Descriptions hold facts and categories of information, never a person's data. */
+/** What the administration may send about an incident (verikora#418). Descriptions hold facts and categories of information, never a person's data. */
 const kind = z.enum([INCIDENT_KIND.access, INCIDENT_KIND.use, INCIDENT_KIND.communication, INCIDENT_KIND.loss]);
 const level = z.enum([LEVEL.low, LEVEL.medium, LEVEL.high]);
 

@@ -3,8 +3,8 @@ import { beforeAll, describe, expect, it } from "vitest";
 import { migrate } from "../db";
 import { pgIdempotency, pgSuppression } from "./store";
 
-/** The mail memory in PostgreSQL (yomizaka#48): CI's service; locally YOMIZAKA_DB_IT=1 DATABASE_URL=…. */
-const enabled = process.env.YOMIZAKA_DB_IT === "1" && !!process.env.DATABASE_URL;
+/** The mail memory in PostgreSQL (verikora#48): CI's service; locally DATABASE_IT=1 DATABASE_URL=…. */
+const enabled = process.env.DATABASE_IT === "1" && !!process.env.DATABASE_URL;
 const stamp = `${Date.now()}-${Math.random().toString(16).slice(2, 8)}`;
 
 describe.runIf(enabled)("the suppression list and the intentions already mailed", () => {

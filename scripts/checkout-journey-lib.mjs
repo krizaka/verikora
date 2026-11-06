@@ -6,7 +6,7 @@ export const TEST_CARD = {
   number: "4242424242424242",
   expiry: "12 / 34",
   cvc: "123",
-  name: "Persona Yomizaka",
+  name: "Persona Verikora",
 };
 
 /**
@@ -39,7 +39,7 @@ export function billingSteps(billing = TEST_BILLING, name = TEST_CARD.name) {
 }
 
 /** The plan the persona buys: the cheapest subscription of the catalogue (apps/web/lib/pricing.ts, SOLD). */
-export const PLAN = { kind: "agency", priceKey: "yomizaka.agency" };
+export const PLAN = { kind: "agency", priceKey: "verikora.agency" };
 
 /** A processor key is accepted only if it is a TEST key: the journey never touches live mode. Pure. */
 export function assertTestKey(key) {
@@ -60,7 +60,7 @@ export function isHostedCheckout(value) {
 
 /**
  * Whether the browser is back on the product after paying: off the hosted checkout, on any address of the product. The
- * checkout returns to APP_PUBLIC_URL (www.yomizaka.com), which is not the dev host the journey drives the API on
+ * checkout returns to APP_PUBLIC_URL (www.verikora.com), which is not the dev host the journey drives the API on
  * (krizaka-internal#2273): the origin of `--base` is never the test. Pure.
  */
 export function returnedFromCheckout(value, hostedUrl) {
@@ -138,7 +138,7 @@ export const plain = (text) =>
     .slice(0, 300);
 
 export const ISSUE_TITLE =
-  "yomizaka · fix(checkout): a persona cannot buy a plan on dev (the checkout journey is red on main)";
+  "verikora · fix(checkout): a persona cannot buy a plan on dev (the checkout journey is red on main)";
 
 /** The issue a red run files (or, when one is open, the comment it adds). The failure text is the journey's own. Pure. */
 export function issueFor({ runUrl, sha, failure }) {

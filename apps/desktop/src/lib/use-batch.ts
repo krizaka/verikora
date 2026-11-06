@@ -1,8 +1,8 @@
 import { ApiError } from "@krizaka/app-client";
 import { useMutation, useQueryClient } from "@krizaka/query";
-import { type BatchCheck, DEFAULT_LIMITS, keys } from "@yomizaka/client";
+import { type BatchCheck, DEFAULT_LIMITS, keys } from "@verikora/client";
 
-import { yomizaka } from "./config";
+import { verikora } from "./config";
 import { localDocuments } from "./local-documents";
 import { prepare, type Prepared, Refused } from "./prepare";
 import { type Route } from "./route";
@@ -20,7 +20,7 @@ export interface BatchRequest {
 }
 
 /**
- * A batch from the Mac (yomizaka#232): several documents — a folder, the files dropped together, the arrivals of a watched
+ * A batch from the Mac (verikora#232): several documents — a folder, the files dropped together, the arrivals of a watched
  * folder — each read and pre-flighted here (a refused file stays on the Mac and is counted), the others sent as one batch.
  * Each row's document is remembered with its file, so its signed report lands next to it.
  */
@@ -32,13 +32,13 @@ export function useBatch(onStarted: (route: Route) => void) {
       paths,
       check = "compliance",
     }: BatchRequest): Promise<{ route: Route; refused: number }> => {
-      const limits = await yomizaka.fetchLimits().catch(() => DEFAULT_LIMITS);
+      const limits = await verikora.fetchLimits().catch(() => DEFAULT_LIMITS);
       // A file that cannot be read or is refused by the pre-flight stays on the Mac; the others go.
       const prepared = await Promise.all(paths.map((path) => prepare(path, limits).catch(() => null)));
       const ready = prepared.filter((file): file is Prepared => file !== null);
       if (ready.length === 0) throw new Refused("unreadable");
       try {
-        const batch = await yomizaka.createBatch(name, ready, check);
+        const batch = await verikora.createBatch(name, ready, check);
         rememberFiles(batch.items, ready);
         keptOnMac.set(batch.id, paths.length - ready.length);
         return { route: { screen: "batch", batchId: batch.id }, refused: paths.length - ready.length };

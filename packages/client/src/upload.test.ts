@@ -1,7 +1,7 @@
-import { ExtractionNotReady } from "@yomizaka/core";
+import { ExtractionNotReady } from "@verikora/core";
 import { describe, expect, it } from "vitest";
 
-import { type ApiPort, createYomizakaApi } from "./api";
+import { type ApiPort, createVerikoraApi } from "./api";
 
 const summary = (over: Record<string, unknown> = {}) => ({
   id: "d1",
@@ -30,7 +30,7 @@ function api(answers: Record<string, unknown[]>) {
     authHeaders: async () => ({}),
   };
   const session = { saveToken: async () => undefined, clearToken: async () => undefined };
-  return { calls, client: createYomizakaApi(port, session, { sleep: async () => undefined }) };
+  return { calls, client: createVerikoraApi(port, session, { sleep: async () => undefined }) };
 }
 
 describe("uploading a document (202 Accepted)", () => {

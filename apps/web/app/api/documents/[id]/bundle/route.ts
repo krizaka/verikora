@@ -12,7 +12,7 @@ type Params = { params: Promise<{ id: string }> };
 const attach = z.object({ documentId: z.string(), role: z.enum([DOCUMENT_ROLE.annex, DOCUMENT_ROLE.buildingRules]) });
 const detach = z.object({ documentId: z.string() });
 
-/** A lease and its annexes read as one: per line, the document, the line, the quoted text, the rule, the article, and the ruleset's review status (yomizaka#129). */
+/** A lease and its annexes read as one: per line, the document, the line, the quoted text, the rule, the article, and the ruleset's review status (verikora#129). */
 export function GET(req: Request, { params }: Params) {
   return handle(async () => {
     const session = await requireSession(req);

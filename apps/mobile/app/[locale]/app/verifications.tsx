@@ -1,7 +1,7 @@
 import { useQuery } from "@krizaka/query";
 import { Card, EmptyState, Screen, Segmented, Txt } from "@krizaka/ui/native";
 import { List } from "@krizaka/ui/native/list";
-import { CHECKS_TABS, type DocumentSummary } from "@yomizaka/core";
+import { CHECKS_TABS, type DocumentSummary } from "@verikora/core";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import * as React from "react";
 import { View } from "react-native";
@@ -17,7 +17,7 @@ import { useLocale } from "@/use-locale";
 type Batch = { id: string; name: string; items: number; done: number };
 
 /**
- * Vérifications, a destination of the section map (yomizaka#319): the documents checked, then the batches as its second
+ * Vérifications, a destination of the section map (verikora#319): the documents checked, then the batches as its second
  * tab (« Lots »), the tab in the address as on the web. A batch is imported from the web or the Mac; the phone reads it.
  */
 export default function Checks() {

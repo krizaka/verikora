@@ -1,4 +1,4 @@
-import { SIGNAL_LEVELS } from "@yomizaka/core";
+import { SIGNAL_LEVELS } from "@verikora/core";
 
 import { formatDate } from "@/components/console/format";
 
@@ -7,7 +7,7 @@ import type { OwnerSignal } from "./owner-report";
 import { askForOf, evidenceLines, groupByFamily, ordinaryOf, type TraceSay } from "./signal-cards";
 
 /**
- * The owner's traces of editing (yomizaka#625), as plain lines for the page and for the signed PDF, from the same cards as the
+ * The owner's traces of editing (verikora#625), as plain lines for the page and for the signed PDF, from the same cards as the
  * person's own report: the level and what was observed, where (page, later save, field), the ordinary explanations, what to ask for.
  * The same words in both; never a total, a score or a verdict.
  */

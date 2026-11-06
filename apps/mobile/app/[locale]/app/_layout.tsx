@@ -1,6 +1,6 @@
 import { CheckIcon, HomeIcon, KnowledgeIcon, UsersIcon } from "@krizaka/icons/native";
 import { TabBar } from "@krizaka/ui/native";
-import type { SectionId } from "@yomizaka/core";
+import type { SectionId } from "@verikora/core";
 import { Redirect, Tabs, useRouter } from "expo-router";
 import type { ComponentProps } from "react";
 
@@ -27,7 +27,7 @@ const tabBarOf =
   };
 
 /**
- * The signed-in space: the tabs are the one section map (`phoneTabs`, yomizaka#319), each a route (the URL is the state).
+ * The signed-in space: the tabs are the one section map (`phoneTabs`, verikora#319), each a route (the URL is the state).
  * « Vérifier un document » is the header's « + » and the settings are under the avatar: both stay routes, never tabs.
  * Signed out, the way is back to sign-in.
  */

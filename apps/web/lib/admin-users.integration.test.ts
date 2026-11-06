@@ -15,7 +15,7 @@ import { databaseBudget, poolUsage, queue, recentErrors, rulesetsInUse } from ".
 import { createSession } from "./session";
 
 /** The administration's account actions against a real PostgreSQL (see db.integration.test.ts for how to run it). */
-const enabled = process.env.YOMIZAKA_DB_IT === "1" && !!process.env.DATABASE_URL;
+const enabled = process.env.DATABASE_IT === "1" && !!process.env.DATABASE_URL;
 
 describe.runIf(enabled)("administration of an account", () => {
   const stamp = Date.now();
@@ -31,8 +31,8 @@ describe.runIf(enabled)("administration of an account", () => {
           [email, role],
         )
       )[0]!.id;
-    admin = { id: await make(`adm-${stamp}@yomizaka.test`, "ADMIN"), email: `adm-${stamp}@yomizaka.test` };
-    person = { id: await make(`per-${stamp}@yomizaka.test`, "USER"), email: `per-${stamp}@yomizaka.test` };
+    admin = { id: await make(`adm-${stamp}@verikora.test`, "ADMIN"), email: `adm-${stamp}@verikora.test` };
+    person = { id: await make(`per-${stamp}@verikora.test`, "USER"), email: `per-${stamp}@verikora.test` };
   });
   afterAll(async () => {
     await query("DELETE FROM accounts WHERE id = ANY($1)", [[admin.id, person.id]]);
@@ -46,7 +46,7 @@ describe.runIf(enabled)("administration of an account", () => {
     expect((await auditLog(10, person.id)).filter((e) => e.action === "admin.user_role_changed")).toHaveLength(2);
   });
 
-  it("puts an account on Pro without a card and back on Free, says so in the audit log, and the entitlement follows (yomizaka#252)", async () => {
+  it("puts an account on Pro without a card and back on Free, says so in the audit log, and the entitlement follows (verikora#252)", async () => {
     expect((await setUserPlan(admin, person.id, "PRO", "dev")).plan).toBe("PRO");
     expect((await entitlementOf(query, person.id, new Date())).pro).toBe(true);
     expect((await setUserPlan(admin, person.id, "FREE", "dev")).plan).toBe("FREE");
@@ -81,7 +81,7 @@ describe.runIf(enabled)("administration of an account", () => {
     expect(text).not.toContain("password");
     expect(text).not.toContain('"content"');
     expect(out).toMatchObject({
-      format: "yomizaka-account-export/1",
+      format: "verikora-account-export/1",
       account: { email: person.email },
       documents: [{ title: "Lease" }],
       analyses: [{ studio: "compliance-check", status: "failed" }],

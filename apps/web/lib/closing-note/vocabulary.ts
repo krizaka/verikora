@@ -3,7 +3,7 @@ export const LANG = { fr: "fr", en: "en" } as const;
 export type Lang = (typeof LANG)[keyof typeof LANG];
 export const LANGS = Object.values(LANG);
 
-/** How a finding came out in Orazaka's report (the verdicts of the packs). */
+/** How a finding came out in Sovkora's report (the verdicts of the packs). */
 export const VERDICT = {
   pass: "PASS",
   fail: "FAIL",
@@ -19,9 +19,9 @@ export const SEVERITY_ORDER: readonly string[] = [SEVERITY.blocking, SEVERITY.ma
 export const FINDING_STATE = { ok: "ok", attention: "attention", undecided: "undecided", skipped: "skipped" } as const;
 export type FindingState = (typeof FINDING_STATE)[keyof typeof FINDING_STATE];
 
-export { NOTE_KIND, NOTE_SOURCE, type NoteKind, type NoteSource } from "@yomizaka/core";
+export { NOTE_KIND, NOTE_SOURCE, type NoteKind, type NoteSource } from "@verikora/core";
 
-/** The levels Orazaka gives a signal of the authenticity check, mildest first. */
+/** The levels Sovkora gives a signal of the authenticity check, mildest first. */
 export const SIGNAL_LEVEL = { observed: "observé", unusual: "inhabituel", incoherent: "incohérent" } as const;
 export const SIGNAL_LEVELS_ORDERED = [SIGNAL_LEVEL.observed, SIGNAL_LEVEL.unusual, SIGNAL_LEVEL.incoherent] as const;
 

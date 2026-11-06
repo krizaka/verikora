@@ -1,4 +1,4 @@
-import type { ComplianceReport } from "@yomizaka/core";
+import type { ComplianceReport } from "@verikora/core";
 
 import en from "../../messages/en.json";
 import fr from "../../messages/fr.json";
@@ -18,7 +18,7 @@ const VERDICT: Record<PaymentClausesResult["status"], string | null> = {
 };
 
 /**
- * Adds the payment clauses' finding (TS-P-001, art. 1904 C.c.Q.) to a Québec lease report that carries the figures, once (yomizaka#104).
+ * Adds the payment clauses' finding (TS-P-001, art. 1904 C.c.Q.) to a Québec lease report that carries the figures, once (verikora#104).
  * A finding fails and says which clause; clauses within the article pass; a report without the figures, or another ruleset, is returned as it came.
  * Stored in French like the engine's own findings, the title and sentence follow the reader's language through the catalogue. Information,
  * not legal advice: the disclaimer always ends the text.

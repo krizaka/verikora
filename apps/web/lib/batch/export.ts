@@ -1,4 +1,4 @@
-import type { Analysis } from "@yomizaka/core";
+import type { Analysis } from "@verikora/core";
 
 import { refuse } from "../http";
 import { trimEdges } from "../trim-edges";
@@ -7,8 +7,8 @@ import { csvCell } from "./csv-out";
 import { BATCH_ITEM, type BatchItemView, type BatchView } from "./run";
 
 /**
- * The reports of a batch in one ZIP (yomizaka#242): `lot.csv` (each row's state, reason and report file), `rapports/` (the signed PDF of
- * every compliance row that has a report, in the language asked) and `signaux/` (the signals of every authenticity row, as Orazaka
+ * The reports of a batch in one ZIP (verikora#242): `lot.csv` (each row's state, reason and report file), `rapports/` (the signed PDF of
+ * every compliance row that has a report, in the language asked) and `signaux/` (the signals of every authenticity row, as Sovkora
  * returned them), and a LISEZ-MOI. A row whose report cannot be issued is listed with its reason, never silently missing. The reports
  * are the ones the page offers one by one — same bytes, same signature — and the same rules as the batch's other exports.
  */
@@ -72,7 +72,7 @@ export async function exportBatchZip(batch: BatchView, lang: "fr" | "en", deps: 
       add(
         name,
         Buffer.from(
-          `${JSON.stringify({ file: item.file, reference: item.reference, orazaka: { runId: analysis.runId, studioVersion: analysis.blueprintVersion }, report: analysis.report }, null, 2)}\n`,
+          `${JSON.stringify({ file: item.file, reference: item.reference, sovkora: { runId: analysis.runId, studioVersion: analysis.blueprintVersion }, report: analysis.report }, null, 2)}\n`,
         ),
       );
       rows.push({ line: item.line, file: name, reason: null });

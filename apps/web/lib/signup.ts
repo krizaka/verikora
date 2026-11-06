@@ -8,7 +8,7 @@ import type { Mailer } from "./mailer";
 import { tokenHash } from "./session";
 
 /**
- * Self-serve sign-up, for Yomizaka only (decision 2026-10-21). An account is created unverified; a mailed link (random
+ * Self-serve sign-up, for Verikora only (decision 2026-10-21). An account is created unverified; a mailed link (random
  * token, kept as a keyed hash, 24 h, single use) verifies the address; only then can the person sign in. The terms and the
  * privacy notice must be accepted (version and date kept). The answer never tells whether an address already has an
  * account (no enumeration).

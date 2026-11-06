@@ -1,7 +1,7 @@
 import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 
-import { movedDocumentTab, OLD_DOCUMENT_TABS, SECTIONS } from "@yomizaka/core";
+import { movedDocumentTab, OLD_DOCUMENT_TABS, SECTIONS } from "@verikora/core";
 import { describe, expect, it } from "vitest";
 
 import {
@@ -44,7 +44,7 @@ describe("the rail's active entry comes from the route", () => {
     ["/fr/app/settings", "account"],
     ["/fr/app/settings/profil", "account"],
   ])("%s → %s", (path, nav) => expect(activeNav(path)).toBe(nav));
-  it("its routes are the section map's addresses (yomizaka#319)", () => {
+  it("its routes are the section map's addresses (verikora#319)", () => {
     const routes: Record<string, string> = CONSOLE_ROUTES;
     for (const section of SECTIONS) expect(routes[section.id], section.id).toBe(section.path);
   });
@@ -114,7 +114,7 @@ describe("tabs are routes: the URL is the state", () => {
     });
   });
   it("the view takes its tab from the route and a click navigates (no local tab state)", () => {
-    // The view and the run it follows (yomizaka#320: the polling is its own component, LiveAnalysis).
+    // The view and the run it follows (verikora#320: the polling is its own component, LiveAnalysis).
     const view = read("components/console/DocumentView.tsx") + read("components/console/LiveAnalysis.tsx");
     // Y5: the tabs are `Tabs.Nav` links to the tab routes, lit by the current path; the view never holds a tab in state.
     expect(view).toContain("<Tabs.Nav");
@@ -169,10 +169,10 @@ describe("the settings' sections are routes", () => {
   });
 });
 
-describe("the shell follows Orazaka's pattern (krizaka/yomizaka#278, the UX review's Y1)", () => {
+describe("the shell follows Sovkora's pattern (krizaka/verikora#278, the UX review's Y1)", () => {
   const shell = read("components/console/ConsoleShell.tsx");
-  it("the rail holds the section map's destinations only (yomizaka#319) — no footer, no « + » action, no settings cog", () => {
-    // The rail is the frame's (`AppFrame`, yomizaka#429): the shell gives it the section map and nothing at the foot.
+  it("the rail holds the section map's destinations only (verikora#319) — no footer, no « + » action, no settings cog", () => {
+    // The rail is the frame's (`AppFrame`, verikora#429): the shell gives it the section map and nothing at the foot.
     expect(shell).toContain('sectionsFor("web", { applicantFiles })');
     expect(shell).toContain("href: href(section.path)");
     expect(shell).not.toContain('place: "foot"');
@@ -198,7 +198,7 @@ describe("the shell follows Orazaka's pattern (krizaka/yomizaka#278, the UX revi
       expect(JSON.stringify(m)).not.toMatch(/Ouvrir la plateforme|Open the platform/i);
     }
   });
-  it("the type picker is a labelled choice of cards with a hint each, asked only for an uncertain kind (yomizaka#318), « auto » the route's fallback", () => {
+  it("the type picker is a labelled choice of cards with a hint each, asked only for an uncertain kind (verikora#318), « auto » the route's fallback", () => {
     const view = read("components/console/CheckView.tsx");
     expect(view).toContain("library.kindPick");
     expect(view).toContain("<ChoiceCards");

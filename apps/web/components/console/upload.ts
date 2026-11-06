@@ -1,4 +1,4 @@
-import type { DocumentKind, DocumentSummary } from "@yomizaka/core";
+import type { DocumentKind, DocumentSummary } from "@verikora/core";
 
 /** What the drop zones offer: PDF, office text and photos. A HEIC is named by extension too (a browser often gives it no type). */
 export const ACCEPT =

@@ -5,10 +5,10 @@ import { dirname, join } from "node:path";
 import { describe, expect, it } from "vitest";
 
 /*
- * A @krizaka/ui component is only as styled as the stylesheet the app imports for it (yomizaka#316). Most components are
+ * A @krizaka/ui component is only as styled as the stylesheet the app imports for it (verikora#316). Most components are
  * Tailwind classes (`@krizaka/ui/tailwind.css`) or page blocks (`blocks.css`, imported by the locale layout); the story
  * blocks (`ChoiceGrid`, `ScrollStage`…) draw `kzs-*` classes that only `@krizaka/ui/story.css` styles. The kind picker of
- * /app/check shipped unstyled because nothing imported it (it is `ChoiceCards` since yomizaka#318). This test reads every @krizaka/ui module the app imports and
+ * /app/check shipped unstyled because nothing imported it (it is `ChoiceCards` since verikora#318). This test reads every @krizaka/ui module the app imports and
  * refuses one whose built code uses `kzs-` classes while no source file imports `@krizaka/ui/story.css`.
  */
 const WEB = join(import.meta.dirname, "..");

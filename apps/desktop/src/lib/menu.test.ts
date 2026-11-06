@@ -1,8 +1,8 @@
 import { describe, expect, it } from "vitest";
 
-import sharedEn from "@yomizaka/client/messages/en.json";
-import sharedFr from "@yomizaka/client/messages/fr.json";
-import { sectionsFor } from "@yomizaka/core";
+import sharedEn from "@verikora/client/messages/en.json";
+import sharedFr from "@verikora/client/messages/fr.json";
+import { sectionsFor } from "@verikora/core";
 import { describe as group } from "vitest";
 
 import ownEn from "../i18n/own.en.json";
@@ -14,7 +14,7 @@ const fr = { ...ownFr, ...sharedFr };
 const en = { ...ownEn, ...sharedEn };
 
 describe("the native menu bar", () => {
-  it("is built in the app's words, its « Aller » menu from the section map with ⌘1 to ⌘4 (yomizaka#319)", () => {
+  it("is built in the app's words, its « Aller » menu from the section map with ⌘1 to ⌘4 (verikora#319)", () => {
     const spec = menuSpec(fr);
     expect(spec.labels.quit).toBe("Quitter Verikora");
     expect(spec.menus.map((m) => m.title)).toEqual(["Fichier", "Aller"]);
@@ -40,7 +40,7 @@ describe("the native menu bar", () => {
   });
 });
 
-group("the Mac's sidebar (yomizaka#319)", () => {
+group("the Mac's sidebar (verikora#319)", () => {
   it("is the section map: Bibliothèque then Vérifications, numbered in the order shown", () => {
     expect(macSections().map((s) => [s.id, s.shortcut])).toEqual(
       sectionsFor("mac").map((s, i) => [s.id, `mod+${i + 1}`]),

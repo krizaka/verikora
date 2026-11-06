@@ -44,8 +44,8 @@ afterEach(async () => {
   host?.remove();
 });
 
-// yomizaka#366 (Loi 96, art. 55): the terms of a contract of adhesion are given in French first; English is a choice made after.
-describe("sign-up shows the French terms first (yomizaka#366)", () => {
+// verikora#366 (Loi 96, art. 55): the terms of a contract of adhesion are given in French first; English is a choice made after.
+describe("sign-up shows the French terms first (verikora#366)", () => {
   it("in French (the default), the consents link the French terms and privacy notice", async () => {
     await mount("fr");
     const hrefs = [...host.querySelectorAll("a")].map((a) => a.getAttribute("href"));

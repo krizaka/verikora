@@ -2,7 +2,7 @@
 
 import { Badge } from "@krizaka/ui/badge";
 import { DataTable, type DataTableColumn } from "@krizaka/ui/data-table";
-import type { AdminUser } from "@yomizaka/core";
+import type { AdminUser } from "@verikora/core";
 import Link from "next/link";
 import { useMemo } from "react";
 

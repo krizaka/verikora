@@ -1,7 +1,7 @@
 import { useQuery } from "@krizaka/query";
 import { Chip, EmptyState, Header, Screen, Txt } from "@krizaka/ui/native";
 import { List } from "@krizaka/ui/native/list";
-import { type DocumentSummary, parseTagsParam, toggleTag } from "@yomizaka/core";
+import { type DocumentSummary, parseTagsParam, toggleTag } from "@verikora/core";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import * as React from "react";
 import { View } from "react-native";

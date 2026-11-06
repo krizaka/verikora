@@ -1,4 +1,4 @@
-# The Yomizaka app (apps/mobile): the org's reusable Expo pipeline (krizaka/.github expo-ci.yml, ADR-004) and the Maestro flows
+# The Verikora app (apps/mobile): the org's reusable Expo pipeline (krizaka/.github expo-ci.yml, ADR-004) and the Maestro flows
 # on an Android emulator (mobile-e2e.yml, krizaka/.github#241). On every pull request: the changes gate inside each skips the
 # heavy jobs when neither the app, the contracts it reads nor these workflows changed, and the gates always report (so
 # `mobile-e2e / gate` can be a required check). Lint, types, tests and the bundle export run side by side.
@@ -38,12 +38,12 @@ jobs:
       contents: read
     uses: krizaka/.github/.github/workflows/mobile-e2e.yml@79f6ff6292edefebc59fc968dbc2c203da81c3ea # main (merge queue, layout guard)
     with:
-      app-id: com.krizaka.yomizaka
+      app-id: com.krizaka.verikora
       app-directory: apps/mobile
       package-manager: pnpm
       lockfile-directory: .
       install-command: pnpm install --frozen-lockfile
-      demo-email: eric@demo.yomizaka.test
+      demo-email: eric@demo.verikora.test
       setup-command: bash scripts/ci-mobile-backend.sh
       reverse-ports: "3000"
       allow-cleartext: true

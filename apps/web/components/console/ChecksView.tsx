@@ -8,7 +8,7 @@ import { Mascot } from "@krizaka/ui/mascots";
 import { PageHeader } from "@krizaka/ui/page-header";
 import { SearchField } from "@krizaka/ui/search-field";
 import { Tabs } from "@krizaka/ui/tabs";
-import { DOCUMENT_KINDS, type DocumentKind, type DocumentStatus } from "@yomizaka/core";
+import { DOCUMENT_KINDS, type DocumentKind, type DocumentStatus } from "@verikora/core";
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
@@ -257,7 +257,7 @@ export function ChecksView({
     const qs = writeCheckFilters(params, next).toString();
     return qs ? `${path}?${qs}` : path;
   };
-  // While a check runs the list asks again every 4 s (the page refreshes it from Orazaka), as the documents table does.
+  // While a check runs the list asks again every 4 s (the page refreshes it from Sovkora), as the documents table does.
   const live = runningChecks(checks).length > 0;
   useEffect(() => {
     if (!live) return;

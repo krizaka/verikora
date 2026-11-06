@@ -71,7 +71,7 @@ const post = async (html = issued.html) => {
   const form = new FormData();
   form.set("report", new File([html], "report.html", { type: "text/html" }));
   return POST(
-    new Request("https://dev.yomizaka.com/api/verify", {
+    new Request("https://dev.verikora.com/api/verify", {
       method: "POST",
       body: form,
       headers: { "x-forwarded-for": "203.0.113.9" },
@@ -167,7 +167,7 @@ describe("POST /api/verify — members only, by grant", () => {
     state.session = { account: GUEST };
     const { POST } = await import("../app/api/verify/route");
     const res = await POST(
-      new Request("https://dev.yomizaka.com/api/verify", {
+      new Request("https://dev.verikora.com/api/verify", {
         method: "POST",
         body: "x",
         headers: { "content-length": String(13 * 1024 * 1024), "content-type": "multipart/form-data; boundary=x" },
@@ -224,7 +224,7 @@ const postPdf = async (bytes: Uint8Array = pdfIssued.bytes) => {
   const form = new FormData();
   form.set("report", new File([new Uint8Array(bytes)], "report.pdf", { type: "application/pdf" }));
   return POST(
-    new Request("https://dev.yomizaka.com/api/verify", {
+    new Request("https://dev.verikora.com/api/verify", {
       method: "POST",
       body: form,
       headers: { "x-forwarded-for": "203.0.113.9" },

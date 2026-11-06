@@ -13,7 +13,7 @@ export function GET(req: Request, { params }: { params: Promise<{ id: string }> 
     return new Response(JSON.stringify(data, null, 2), {
       headers: {
         "Content-Type": "application/json; charset=utf-8",
-        "Content-Disposition": `attachment; filename="yomizaka-account-${id}.json"`,
+        "Content-Disposition": `attachment; filename="verikora-account-${id}.json"`,
         "Cache-Control": "no-store",
       },
     });

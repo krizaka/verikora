@@ -1,24 +1,24 @@
 import { AVAILABILITY, definePrices, UNIT } from "@krizaka/settings";
 
 /**
- * Yomizaka's price catalogue — its SEED (ADR-009, krizaka/.github#253, yomizaka#367). Prices are data: the administrator
- * schedules a change from a date on admin.yomizaka.com (`/config/prices`), every change is audited, a subscription keeps the
+ * Verikora's price catalogue — its SEED (ADR-009, krizaka/.github#253, verikora#367). Prices are data: the administrator
+ * schedules a change from a date on admin.verikora.com (`/config/prices`), every change is audited, a subscription keeps the
  * version it was sold at. These are only the defaults, the grid of ADR-0013 (CAD, plus taxes — the processor adds GST and QST).
  * Nothing but the catalogue (`lib/prices/catalogue.ts`) reads this module; pages, the paywall and the checkout read the catalogue.
  */
 export const PRICE = {
   /** One dossier verified, paid per dossier (the applicant's documents of the month are one dossier, ADR-0015). */
-  document: "yomizaka.document",
+  document: "verikora.document",
   /** Agencies and landlords with several files: a month, with verifications included (past them, the account waits until next month). */
-  agency: "yomizaka.agency",
+  agency: "verikora.agency",
   /** Building managers and firms: a month, with more verifications included. */
-  firm: "yomizaka.firm",
+  firm: "verikora.firm",
   /** A dedicated API over 5 000 verifications a month: on quote; its internal target per document, never on a public page. */
-  api: "yomizaka.api",
+  api: "verikora.api",
   /** In preparation (no figure): the full applicant file, background checks, screening alone. */
-  fullFile: "yomizaka.fullFile",
-  backgroundCheck: "yomizaka.backgroundCheck",
-  screening: "yomizaka.screening",
+  fullFile: "verikora.fullFile",
+  backgroundCheck: "verikora.backgroundCheck",
+  screening: "verikora.screening",
 } as const;
 export type PriceKey = (typeof PRICE)[keyof typeof PRICE];
 
@@ -31,9 +31,9 @@ export type PriceKey = (typeof PRICE)[keyof typeof PRICE];
 export const LIMIT = { included: "included", overage: "overageCents" } as const;
 
 export const PRICES = definePrices([
-  { product: "yomizaka", plan: "document", unit: UNIT.document, amountCents: 999, availability: AVAILABILITY.public },
+  { product: "verikora", plan: "document", unit: UNIT.document, amountCents: 999, availability: AVAILABILITY.public },
   {
-    product: "yomizaka",
+    product: "verikora",
     plan: "agency",
     unit: UNIT.month,
     amountCents: 4900,
@@ -41,30 +41,30 @@ export const PRICES = definePrices([
     limits: { [LIMIT.included]: 15, [LIMIT.overage]: 300 },
   },
   {
-    product: "yomizaka",
+    product: "verikora",
     plan: "firm",
     unit: UNIT.month,
     amountCents: 14900,
     availability: AVAILABILITY.public,
     limits: { [LIMIT.included]: 60, [LIMIT.overage]: 200 },
   },
-  { product: "yomizaka", plan: "api", unit: UNIT.document, amountCents: 22, availability: AVAILABILITY.internal },
+  { product: "verikora", plan: "api", unit: UNIT.document, amountCents: 22, availability: AVAILABILITY.internal },
   {
-    product: "yomizaka",
+    product: "verikora",
     plan: "fullFile",
     unit: UNIT.document,
     amountCents: null,
     availability: AVAILABILITY.preparing,
   },
   {
-    product: "yomizaka",
+    product: "verikora",
     plan: "backgroundCheck",
     unit: UNIT.document,
     amountCents: null,
     availability: AVAILABILITY.preparing,
   },
   {
-    product: "yomizaka",
+    product: "verikora",
     plan: "screening",
     unit: UNIT.document,
     amountCents: null,
@@ -78,9 +78,9 @@ export const PRICES = definePrices([
  * catalogue needs a new processor price under a new key — the checkout refuses while the two differ.
  */
 export const SOLD = {
-  document: { key: PRICE.document, lookupKey: "yomizaka_dossier_grid_cad", mode: "payment" },
-  agency: { key: PRICE.agency, lookupKey: "yomizaka_agency_monthly_pilot_cad", mode: "subscription" },
-  firm: { key: PRICE.firm, lookupKey: "yomizaka_firm_monthly_pilot_cad", mode: "subscription" },
+  document: { key: PRICE.document, lookupKey: "verikora_dossier_grid_cad", mode: "payment" },
+  agency: { key: PRICE.agency, lookupKey: "verikora_agency_monthly_pilot_cad", mode: "subscription" },
+  firm: { key: PRICE.firm, lookupKey: "verikora_firm_monthly_pilot_cad", mode: "subscription" },
 } as const;
 export type SoldKind = keyof typeof SOLD;
 export const SOLD_KINDS = Object.keys(SOLD) as SoldKind[];

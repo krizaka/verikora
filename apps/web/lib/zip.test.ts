@@ -8,7 +8,7 @@ import { buildZip } from "./zip";
 const at = new Date("2026-10-23T10:05:00Z");
 const text = (s: string) => Buffer.from(s);
 
-describe("the zip writer (yomizaka#242)", () => {
+describe("the zip writer (verikora#242)", () => {
   it("reads back through the pre-flight's own zip reader: names, sizes and contents", () => {
     const csv = "line,file\r\n".repeat(200);
     const zip = buildZip([

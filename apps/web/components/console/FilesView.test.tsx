@@ -50,7 +50,7 @@ const summary = (id: string, name: string, extra: Partial<FileSummary> = {}): Fi
   ...extra,
 });
 
-describe("« Dossiers »: the list (P6, yomizaka#323)", () => {
+describe("« Dossiers »: the list (P6, verikora#323)", () => {
   it("draws a row per file of listApplicantFiles — the applicant, the link in words, the documents in against those asked — each leading to its file", () => {
     const html = wrap(
       <FilesView
@@ -59,7 +59,7 @@ describe("« Dossiers »: the list (P6, yomizaka#323)", () => {
           summary("f2", "Noé Imaginaire", { status: "used", submittedAt: "2026-10-22T14:00:00.000Z", documents: 3 }),
         ]}
         types={TYPES}
-        origin="https://www.yomizaka.com"
+        origin="https://www.verikora.com"
       />,
     );
     const text = readable(html);
@@ -180,7 +180,7 @@ describe("« Dossiers »: one file (P6)", () => {
   });
 });
 
-describe("« Dossiers » filtered by the link's state, from the home's figures (yomizaka#325)", () => {
+describe("« Dossiers » filtered by the link's state, from the home's figures (verikora#325)", () => {
   const files = [
     summary("f1", "Camille Fictif"),
     summary("f2", "Noé Imaginaire", { status: "used", submittedAt: "2026-10-22T14:00:00.000Z" }),

@@ -1,4 +1,4 @@
-import { readBatchManifest } from "@yomizaka/core";
+import { readBatchManifest } from "@verikora/core";
 import { describe, expect, it } from "vitest";
 
 import { readBatchForm, readCheckForm } from "./form";
@@ -18,7 +18,7 @@ const codeOf = async (p: Promise<unknown>) => {
   }
 };
 
-describe("readCheckForm (yomizaka#202)", () => {
+describe("readCheckForm (verikora#202)", () => {
   it("reads one check as a batch of one row that the batch's own reader understands", async () => {
     const form = new FormData();
     form.set("file", pdf("bail A.pdf"));

@@ -1,8 +1,8 @@
 {
-  "name": "@yomizaka/core",
+  "name": "@verikora/core",
   "version": "0.1.0",
   "private": true,
-  "description": "Yomizaka's contracts: the zod schemas the API answers with and the web reads, and the query keys.",
+  "description": "Verikora's contracts: the zod schemas the API answers with and the web reads, and the query keys.",
   "type": "module",
   "exports": {
     ".": "./src/index.ts",

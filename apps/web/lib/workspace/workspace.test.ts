@@ -21,7 +21,7 @@ const SCOPE = ACTOR.id;
 const id = (n: number) => `00000000-0000-4000-8000-${String(n).padStart(12, "0")}`;
 const NOW = new Date("2026-10-25T12:00:00Z");
 
-/** The layer over its in-memory store, as Yomizaka wires it (the transaction is the identity; the consequence is a spy). */
+/** The layer over its in-memory store, as Verikora wires it (the transaction is the identity; the consequence is a spy). */
 function workspaceWith(files: string[], onMoved: (moves: readonly unknown[]) => Promise<void> = async () => undefined) {
   const entities = new Map([
     [KIND.applicantFile, new Map(files.map((f) => [f, SCOPE]))],
@@ -37,7 +37,7 @@ function workspaceWith(files: string[], onMoved: (moves: readonly unknown[]) => 
   return { workspace, store };
 }
 
-describe("the decision set (yomizaka#324)", () => {
+describe("the decision set (verikora#324)", () => {
   it("is a valid status set, and the defaults of both kinds are valid configurations", () => {
     for (const config of Object.values(DEFAULT_CONFIGS)) expect(() => checkKindConfig(config)).not.toThrow();
   });
@@ -149,7 +149,7 @@ describe("the filter replaces the ALL-tags clause", () => {
   });
 });
 
-describe("the layer as Yomizaka wires it", () => {
+describe("the layer as Verikora wires it", () => {
   it("decides a file: the move is made, handed to the consequence (the file closes and its documents go) and nothing else moves", async () => {
     const seen: unknown[][] = [];
     const { workspace } = workspaceWith([id(1), id(2)], async (moves) => void seen.push([...moves]));

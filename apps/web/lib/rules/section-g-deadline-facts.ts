@@ -1,4 +1,4 @@
-import type { ReportFact } from "@yomizaka/core";
+import type { ReportFact } from "@verikora/core";
 
 import type { SectionGDeadlineInput } from "./section-g-deadline";
 

@@ -1,5 +1,5 @@
 import { Badge, Card, Txt } from "@krizaka/ui/native";
-import type { DocumentSummary } from "@yomizaka/core";
+import type { DocumentSummary } from "@verikora/core";
 import { useRouter } from "expo-router";
 import * as React from "react";
 import { View } from "react-native";

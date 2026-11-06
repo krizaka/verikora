@@ -1,10 +1,10 @@
 import { defineKeys, queryOptions } from "@krizaka/query";
-import { ANALYSIS_STATUS } from "@yomizaka/core";
+import { ANALYSIS_STATUS } from "@verikora/core";
 
-import type { Locale, YomizakaApi } from "./api";
+import type { Locale, VerikoraApi } from "./api";
 
 /** One module for the server state: the keys and the queries, so a screen reads and an action invalidates the same names. */
-export const keys = defineKeys("yomizaka", {
+export const keys = defineKeys("verikora", {
   limits: () => [],
   me: () => [],
   documents: () => [],
@@ -21,7 +21,7 @@ export const ANALYSIS_POLL_MS = 2_500;
 // @fixed: the limits change when an operator publishes a setting, not while a person is checking a lease
 const LIMITS_STALE_MS = 5 * 60_000;
 
-export function createQueries(api: YomizakaApi) {
+export function createQueries(api: VerikoraApi) {
   return {
     me: () => queryOptions({ queryKey: keys.me(), queryFn: api.fetchMe }),
     limits: () => queryOptions({ queryKey: keys.limits(), queryFn: api.fetchLimits, staleTime: LIMITS_STALE_MS }),

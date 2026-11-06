@@ -1,4 +1,4 @@
-import type { ReportFact } from "@yomizaka/core";
+import type { ReportFact } from "@verikora/core";
 
 import type { PaymentClausesInput } from "./payment-clauses";
 

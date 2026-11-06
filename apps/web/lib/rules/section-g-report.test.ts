@@ -1,4 +1,4 @@
-import type { ComplianceReport } from "@yomizaka/core";
+import type { ComplianceReport } from "@verikora/core";
 import { describe, expect, it } from "vitest";
 
 import en from "../../messages/en.json";

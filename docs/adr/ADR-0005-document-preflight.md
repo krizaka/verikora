@@ -1,12 +1,12 @@
 # ADR-0005 — Document pre-flight, in its own module behind a port
 
-Status: accepted (2026-10-22). Issue: krizaka/yomizaka#141.
+Status: accepted (2026-10-22). Issue: krizaka/verikora#141.
 
 ## Context
-Every check is an engine run (Orazaka) with a cost. A corrupted, encrypted, active or duplicate file must never reach it.
+Every check is an engine run (Sovkora) with a cost. A corrupted, encrypted, active or duplicate file must never reach it.
 
 ## Decision
-- **`lib/preflight/` is its own module, generic, with no import from the app** (Akinaza can lift it as a package). Its port
+- **`lib/preflight/` is its own module, generic, with no import from the app** (Folioviv can lift it as a package). Its port
   `DocumentPreflight.inspect(bytes, declared)` returns a typed outcome: `accepted` (kind, SHA-256, pages, cheap PDF facts:
   producer, creator, dates, incremental saves) or `rejected(reason)`; the application adds `reused(runId)`.
 - **Rules are data** (`rules.ts`: size, allowed kinds, page limit, archive guards, the PDF names that mean active content):

@@ -7,7 +7,7 @@ const read = (p) => readFileSync(new URL(`../${p}`, import.meta.url), "utf8");
 const FLOWS = "apps/mobile/.maestro";
 const flows = readdirSync(new URL(`../${FLOWS}`, import.meta.url)).filter((f) => f.endsWith(".yaml"));
 
-// The phone's Maestro flows run in CI on every pull request (krizaka/.github#241) as the seeded persona Éric (krizaka/yomizaka#346).
+// The phone's Maestro flows run in CI on every pull request (krizaka/.github#241) as the seeded persona Éric (krizaka/verikora#346).
 describe("the phone's Maestro flows in CI", () => {
   it("every flow runs in CI unless it is tagged `manual` (a flow is fixed or tagged, never deleted)", () => {
     expect(flows).toEqual(expect.arrayContaining(["smoke.yaml", "tabs.yaml", "check-document.yaml"]));

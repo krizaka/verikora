@@ -1,21 +1,21 @@
 {
   "expo": {
     "name": "Verikora",
-    "slug": "yomizaka",
-    "scheme": "yomizaka",
+    "slug": "verikora",
+    "scheme": "verikora",
     "version": "0.1.0",
     "orientation": "portrait",
     "userInterfaceStyle": "automatic",
     "ios": {
-      "bundleIdentifier": "com.krizaka.yomizaka",
+      "bundleIdentifier": "com.krizaka.verikora",
       "supportsTablet": false,
       "infoPlist": {
         "ITSAppUsesNonExemptEncryption": false
       },
-      "associatedDomains": ["applinks:www.yomizaka.com", "applinks:dev.yomizaka.com"]
+      "associatedDomains": ["applinks:www.verikora.com", "applinks:dev.verikora.com"]
     },
     "android": {
-      "package": "com.krizaka.yomizaka",
+      "package": "com.krizaka.verikora",
       "intentFilters": [
         {
           "action": "VIEW",
@@ -23,11 +23,11 @@
           "data": [
             {
               "scheme": "https",
-              "host": "www.yomizaka.com"
+              "host": "www.verikora.com"
             },
             {
               "scheme": "https",
-              "host": "dev.yomizaka.com"
+              "host": "dev.verikora.com"
             }
           ],
           "category": ["BROWSABLE", "DEFAULT"]

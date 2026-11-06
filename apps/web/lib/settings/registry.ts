@@ -19,7 +19,7 @@ import {
 import { storageSettings } from "@krizaka/storage/settings";
 import type { z } from "zod";
 
-import { PRODUCT_NAME } from "../brand";
+import { BRAND_ID, PRODUCT_NAME } from "../brand";
 import { LIMIT_SETTINGS } from "./limits";
 
 /**
@@ -55,7 +55,7 @@ function inGroup<F extends Registry>(group: Group, fragment: F): F {
 export const SETTINGS = {
   // General: the switches that open and close the app for consumers.
   // The name the app shows (krizaka-internal#2035): the commercial name of @krizaka/org by default, audited when changed.
-  ...inGroup(GROUP.general, { [DISPLAY_NAME_KEY]: displayNameSetting("yomizaka") }),
+  ...inGroup(GROUP.general, { [DISPLAY_NAME_KEY]: displayNameSetting(BRAND_ID) }),
   "app.maintenance": flag(GROUP.general, false),
   "app.maintenanceMessage": bilingual(GROUP.general, {
     fr: `${PRODUCT_NAME} est en maintenance. Revenez dans quelques minutes.`,
@@ -69,7 +69,7 @@ export const SETTINGS = {
   "audit.freeFirst": flag(GROUP.general, true, WORKSPACE),
   // The promo code the pricing page announces (a coupon the administrator created at /config/coupons; empty = no announcement). The offer itself (percent, months, plans, dates) is the coupon's.
   "pricing.announcedCode": text(GROUP.general, "", { max: 40, empty: true }),
-  // The TAL's published rent-adjustment percentage of the year (yomizaka#554), as DATA the administrator edits: Section G's check compares a lease with it.
+  // The TAL's published rent-adjustment percentage of the year (verikora#554), as DATA the administrator edits: Section G's check compares a lease with it.
   // Seeded with the 2026 base percentage as the TAL published it on 2026-01-19 (leases starting 2026-04-02 to 2027-04-01), read on quebec.ca on 2026-10-29.
   // Basis points of the current rent (0 = nothing entered: the check then makes no claim). The source URL and the day it was entered are shown beside every figure.
   "tal.rate.year": integer(GROUP.general, 2026, { min: 2000, max: 2100, unit: "year" }),
@@ -81,7 +81,7 @@ export const SETTINGS = {
     { max: 300, empty: true },
   ),
   "tal.rate.enteredOn": text(GROUP.general, "2026-10-29", { max: 10, empty: true }),
-  /** How long the free first audit, once given, can be used (yomizaka#261: it is a pot of the credits ledger, and a pot lapses). */
+  /** How long the free first audit, once given, can be used (verikora#261: it is a pot of the credits ledger, and a pot lapses). */
   // The credits ledger's knobs (the zone days and months are counted in, how long a hold keeps credits back): @krizaka/credits'.
   ...inGroup(GROUP.general, creditsSettings),
   // Where kept documents live (ADR-010): the provider and its coordinates, chosen by the admin. `local` (the default) follows the deployment's environment.
@@ -94,14 +94,14 @@ export const SETTINGS = {
   "features.assistant": flag(GROUP.features, false, ALL),
   // API keys (ADR-0011): the global switch; what a plan holds is below.
   "features.apiKeys": flag(GROUP.features, true, WORKSPACE),
-  // Collection avatars (krizaka/yomizaka#206): on or off, which of the set are offered, how heavy an uploaded image may be.
+  // Collection avatars (krizaka/verikora#206): on or off, which of the set are offered, how heavy an uploaded image may be.
   "features.collectionAvatars": flag(GROUP.features, true, WORKSPACE),
-  /** A batch of checks from a CSV and its files (yomizaka#232). */
+  /** A batch of checks from a CSV and its files (verikora#232). */
   "features.batches": flag(GROUP.features, true, WORKSPACE),
-  /** Signed webhooks when a batch or a check finishes (yomizaka#241): the global switch; what a plan holds is below. */
+  /** Signed webhooks when a batch or a check finishes (verikora#241): the global switch; what a plan holds is below. */
   "features.webhooks": flag(GROUP.features, true, WORKSPACE),
-  /** Per-check billing of the screening checks (yomizaka#133): OFF. Nothing is charged while it is off; it also needs a payments port that can charge a check. */
-  /** Live screening checks (real providers, real people): Oussama's switch only, OFF. Refused at start, and at every call, unless every blocker of the compliance gate is done (yomizaka#135). */
+  /** Per-check billing of the screening checks (verikora#133): OFF. Nothing is charged while it is off; it also needs a payments port that can charge a check. */
+  /** Live screening checks (real providers, real people): Oussama's switch only, OFF. Refused at start, and at every call, unless every blocker of the compliance gate is done (verikora#135). */
   "features.screeningLive": flag(GROUP.features, false),
   "features.screeningBilling": flag(GROUP.features, false),
   "features.avatarSet": subset(GROUP.features, AVATAR_SEED_CHOICES, [...AVATAR_SEED_CHOICES]),
@@ -119,17 +119,17 @@ export const SETTINGS = {
   "limits.apiRequestsPerMinute": integer(GROUP.limits, 60, { min: 1, max: 6000, unit: "requests" }, WORKSPACE),
   "limits.batchMaxRows": integer(GROUP.limits, 200, { min: 1, max: 1000, unit: "rows" }, WORKSPACE),
   "limits.batchConcurrency": integer(GROUP.limits, 2, { min: 1, max: 10, unit: "checks" }),
-  /** A batch advances by itself (yomizaka#240): how often the server looks (0 = never, the batch then advances only when read), how old a batch may be, how many it takes per look. */
+  /** A batch advances by itself (verikora#240): how often the server looks (0 = never, the batch then advances only when read), how old a batch may be, how many it takes per look. */
   "limits.batchTickSeconds": integer(GROUP.limits, 20, { min: 0, max: 3600, unit: "seconds" }),
   "limits.batchTickMaxAgeHours": integer(GROUP.limits, 48, { min: 1, max: 720, unit: "hours" }),
   "limits.batchTickBatches": integer(GROUP.limits, 10, { min: 1, max: 100, unit: "batches" }),
   /** Tries before a webhook delivery is given up (the first included); the waits grow from 30 s to 12 h. */
   "limits.webhookMaxAttempts": integer(GROUP.limits, 6, { min: 1, max: 12, unit: "tries" }),
-  /** The heaviest ZIP of a batch's reports the server will build (yomizaka#242). */
+  /** The heaviest ZIP of a batch's reports the server will build (verikora#242). */
   "limits.batchExportMaxMb": integer(GROUP.limits, 50, { min: 1, max: 200, unit: "MB" }),
   "limits.avatarMaxKb": integer(GROUP.limits, 512, { min: 16, max: 2048, unit: "KB" }),
   "limits.bonusAuditsPerMonth": integer(GROUP.limits, 0, { min: 0, max: 10000, unit: "audits" }, [SCOPE.user]),
-  // What an action may do in a window (yomizaka#260): `limits.<action>.perIp|perSubject|windowSeconds`, from `@krizaka/rate-limit`.
+  // What an action may do in a window (verikora#260): `limits.<action>.perIp|perSubject|windowSeconds`, from `@krizaka/rate-limit`.
   ...LIMIT_SETTINGS,
   // Plans: what each plan allows beside its price. The prices and the verifications a subscription includes are the price
   // catalogue's (ADR-009, `lib/pricing.ts`, admin `/config/prices`); « pro » is any subscription (Agencies or Law firms).
@@ -141,7 +141,7 @@ export const SETTINGS = {
   "plans.free.webhookEndpoints": integer(GROUP.plans, 0, { min: 0, max: 100, unit: "endpoints" }, WORKSPACE),
   "plans.pro.webhookEndpoints": integer(GROUP.plans, 3, { min: 0, max: 100, unit: "endpoints" }, WORKSPACE),
   "plans.pro.auditsPerDay": integer(GROUP.plans, 0, { min: 0, max: 5000, unit: "audits" }, WORKSPACE),
-  // Coupons (ADR-002, yomizaka#262): off until the owner turns them on; the codes themselves are data, managed at /config/coupons.
+  // Coupons (ADR-002, verikora#262): off until the owner turns them on; the codes themselves are data, managed at /config/coupons.
   ...inGroup(GROUP.plans, couponSettings),
 } as const satisfies Registry;
 

@@ -1,11 +1,11 @@
-import { STORAGE_MODE } from "@yomizaka/core";
+import { STORAGE_MODE } from "@verikora/core";
 import { z } from "zod";
 
 import { storesOf, workingStore } from "@/app/active-store";
 import { fileByToken, uploadApplicantDocument } from "@/lib/applicant-file";
 import { handle, refuse } from "@/lib/http";
 import { limit } from "@/lib/limits";
-import { YOMIZAKA_RULES } from "@/lib/preflight/rules";
+import { VERIKORA_RULES } from "@/lib/preflight/rules";
 import { capsFor } from "@/lib/prices/caps";
 import { preflightRulesFrom } from "@/lib/settings/boundary";
 import { settingsFor } from "@/lib/settings/guards";
@@ -16,9 +16,9 @@ const token = z.string().min(20).max(80);
 const typeId = z.string().min(2).max(40);
 
 /**
- * The applicant sends one document of the file (yomizaka#127): multipart, fields `token`, `typeId` and `file` (a PDF). The
+ * The applicant sends one document of the file (verikora#127): multipart, fields `token`, `typeId` and `file` (a PDF). The
  * link must be open and the applicant must have consented to the document check (refused before any byte is stored). The
- * document is checked by the owner's Orazaka runs and kept only if the applicant consented to keep it until the decision.
+ * document is checked by the owner's Sovkora runs and kept only if the applicant consented to keep it until the decision.
  */
 export function POST(req: Request) {
   return handle(async () => {
@@ -40,7 +40,7 @@ export function POST(req: Request) {
         store: stores.write,
         working: await workingStore(),
         purgeAfterHours: settings["limits.purgeAfterHours"].value as number,
-        rules: preflightRulesFrom(YOMIZAKA_RULES, settings),
+        rules: preflightRulesFrom(VERIKORA_RULES, settings),
         keepAllowed: stores.settings.mode !== STORAGE_MODE.none,
         auditCaps: capsFor(settings, new Date()),
       },

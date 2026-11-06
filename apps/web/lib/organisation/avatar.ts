@@ -1,12 +1,12 @@
 import { type Avatar, storedAvatarKey } from "@krizaka/organize";
-import { AVATAR_KIND, type CollectionAvatar } from "@yomizaka/core";
+import { AVATAR_KIND, type CollectionAvatar } from "@verikora/core";
 
 import type { DocumentStore } from "../storage/port";
 import { guard, legacyAvatarKey, organizeOver } from "./organize";
 import type { Query } from "./store";
 
 /**
- * A collection's avatar (krizaka/yomizaka#206), now the package's (`@krizaka/organize`): one from the set the administrator allows, or an
+ * A collection's avatar (krizaka/verikora#206), now the package's (`@krizaka/organize`): one from the set the administrator allows, or an
  * uploaded image — checked by the pre-flight, made square with no metadata, kept behind the storage port. A new image is a new version.
  * Images stored before the package (`<owner>/<id>/<version>.jpg`) are still read; new ones are written under the package's key only.
  */

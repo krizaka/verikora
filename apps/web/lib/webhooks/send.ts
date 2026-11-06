@@ -6,7 +6,7 @@ import type { OutgoingRequest, Send } from "@krizaka/webhooks";
 import { isPrivateAddress } from "./address";
 
 /**
- * The HTTP call of a webhook (yomizaka#241): https only, no redirect followed, a short timeout, and the connection is made to an
+ * The HTTP call of a webhook (verikora#241): https only, no redirect followed, a short timeout, and the connection is made to an
  * address checked *at connect time* (a name that resolved to a public address when the endpoint was saved may resolve to the
  * server's own network later). Resolves with the status; throws when it could not connect or the address is private.
  */

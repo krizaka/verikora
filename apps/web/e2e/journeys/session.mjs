@@ -8,12 +8,12 @@ export const BASE = process.env.VISUAL_BASE_URL ?? "http://localhost:3000";
 // CI-only credentials of the seeded cast (scripts/ci-visual-start.sh), never a real account.
 const CAST = {
   eric: {
-    email: process.env.E2E_EMAIL ?? "eric@demo.yomizaka.test",
+    email: process.env.E2E_EMAIL ?? "eric@demo.verikora.test",
     password: process.env.E2E_PASSWORD ?? "ci-only-demo-password-0123",
   },
   // The cast's Camille holds no document and no dossier: a person on their first day (the local cast secret of a CI database).
   camille: {
-    email: process.env.E2E_CAMILLE_EMAIL ?? "camille@demo.yomizaka.test",
+    email: process.env.E2E_CAMILLE_EMAIL ?? "camille@demo.verikora.test",
     password: process.env.E2E_CAMILLE_PASSWORD ?? "local-cast-password-0123",
   },
 };
@@ -21,7 +21,7 @@ const CAST = {
 /** Signs the persona in through the form, as a person would, and keeps the browser state in `file`. */
 export function sessionsFor(browser, workerIndex) {
   return personaSessions({
-    dir: join(tmpdir(), "yomizaka-journeys"),
+    dir: join(tmpdir(), "verikora-journeys"),
     worker: workerIndex,
     async signIn(id, file) {
       const who = seededPersona(CAST, id);
@@ -57,7 +57,7 @@ const hideForFilm = () => {
     for (const el of document.querySelectorAll("body *")) {
       if (el.childElementCount !== 0) continue;
       const text = el.textContent ?? "";
-      if (/@[a-z0-9.-]+\.[a-z]{2,}|yomizaka|^\s*dev\b|^\s*dev[\s-]?v?\d/i.test(text)) el.style.visibility = "hidden";
+      if (/@[a-z0-9.-]+\.[a-z]{2,}|verikora|^\s*dev\b|^\s*dev[\s-]?v?\d/i.test(text)) el.style.visibility = "hidden";
     }
   };
   document.addEventListener("DOMContentLoaded", () => {

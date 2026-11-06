@@ -1,8 +1,8 @@
 #!/usr/bin/env node
-// Records one real Orazaka run per Québec ruleset on a whole demo document (orazaka-packs `document-validation`
-// fixtures), exactly as Orazaka returns it — run id, Studio version, outputs verbatim. Output: apps/web/content/pack-proofs/.
+// Records one real Sovkora run per Québec ruleset on a whole demo document (sovkora-packs `document-validation`
+// fixtures), exactly as Sovkora returns it — run id, Studio version, outputs verbatim. Output: apps/web/content/pack-proofs/.
 //
-//   AI_API_URL=https://dev.orazaka.com/edge AI_API_KEY=oz_… node scripts/record-packs.mjs <orazaka-packs/document-validation/worker/fixtures>
+//   AI_API_URL=https://dev.sovkora.com/edge AI_API_KEY=oz_… node scripts/record-packs.mjs <sovkora-packs/document-validation/worker/fixtures>
 //
 // Never typed by hand; the key is read from the environment and never printed.
 import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
@@ -11,11 +11,11 @@ import { fileURLToPath } from "node:url";
 
 import { localDay } from "@krizaka/intl";
 
-// The calendar day of the law (apps/web/lib/rulesets.ts LAW_TIME_ZONE), never the UTC day (yomizaka#309).
+// The calendar day of the law (apps/web/lib/rulesets.ts LAW_TIME_ZONE), never the UTC day (verikora#309).
 const LAW_TIME_ZONE = "America/Toronto";
 
 const OUT = join(dirname(fileURLToPath(import.meta.url)), "../apps/web/content/pack-proofs");
-const base = (process.env.AI_API_URL ?? "https://dev.orazaka.com/edge").replace(/\/$/, "");
+const base = (process.env.AI_API_URL ?? "https://dev.sovkora.com/edge").replace(/\/$/, "");
 const key = process.env.AI_API_KEY;
 if (!key) throw new Error("AI_API_KEY is not set");
 const fixtures = resolve(process.argv[2] ?? "");
@@ -65,7 +65,7 @@ async function call(path, init = {}) {
     },
     body: init.body ? JSON.stringify(init.body) : undefined,
   });
-  if (!res.ok) throw new Error(`Orazaka answered ${res.status} on ${init.method ?? "GET"} ${path.split("?")[0]}`);
+  if (!res.ok) throw new Error(`Sovkora answered ${res.status} on ${init.method ?? "GET"} ${path.split("?")[0]}`);
   return res.json();
 }
 

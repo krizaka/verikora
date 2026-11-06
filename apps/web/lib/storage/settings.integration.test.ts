@@ -9,8 +9,8 @@ import { memoryStore } from "./memory";
 import { migratedProviderId, migrateOwnS3, type OwnProviders, userScope } from "./own-providers";
 import { loadSettings, ownS3Store, saveSettings, storeForOwner } from "./settings";
 
-/** A person's own S3 against a real PostgreSQL (skipped without YOMIZAKA_DB_IT=1 and DATABASE_URL): saved as a provider at user scope of the registry, and the move of the rows that kept their own key (ADR-005). */
-const enabled = process.env.YOMIZAKA_DB_IT === "1" && !!process.env.DATABASE_URL;
+/** A person's own S3 against a real PostgreSQL (skipped without DATABASE_IT=1 and DATABASE_URL): saved as a provider at user scope of the registry, and the move of the rows that kept their own key (ADR-005). */
+const enabled = process.env.DATABASE_IT === "1" && !!process.env.DATABASE_URL;
 const NOW = new Date("2026-10-22T12:00:00Z");
 const S3 = {
   endpoint: "https://s3.example.com",
@@ -80,7 +80,7 @@ describe.runIf(enabled)("a person's own S3 in the registry (ADR-005)", () => {
     (
       await query<{ id: string }>(
         "INSERT INTO accounts (email, password_hash, email_verified_at) VALUES ($1, 'x', now()) RETURNING id",
-        [`s-${Math.random().toString(36).slice(2)}@yomizaka.test`],
+        [`s-${Math.random().toString(36).slice(2)}@verikora.test`],
       )
     )[0]!.id;
   const sealedInRow = async (owner: string) =>
@@ -122,7 +122,7 @@ describe.runIf(enabled)("a person's own S3 in the registry (ADR-005)", () => {
       kind: "s3",
       status: "active",
       credentials: { accessKeyId: "set", secretAccessKey: "set" },
-      coordinates: { bucket: "docs", prefix: "yomizaka" },
+      coordinates: { bucket: "docs", prefix: "verikora" },
     });
     const [raw] = await query<{ sealed_credentials: string }>(
       "SELECT sealed_credentials FROM storage.provider WHERE id = $1",
@@ -232,7 +232,7 @@ describe.runIf(enabled)("a person's own S3 in the registry (ADR-005)", () => {
       devOnly: false,
     });
     await theirs.put("probe/a.txt", new TextEncoder().encode("hello"), { contentType: "text/plain" });
-    expect([...bucket.objects.keys()].some((k) => k.includes("/docs/yomizaka/probe/a.txt"))).toBe(true);
+    expect([...bucket.objects.keys()].some((k) => k.includes("/docs/verikora/probe/a.txt"))).toBe(true);
     expect(await ownS3Store(query, owner, null)).toBeNull();
   });
 
@@ -280,7 +280,7 @@ describe.runIf(enabled)("a person's own S3 in the registry (ADR-005)", () => {
           endpoint: "https://s3.ca-central-1.amazonaws.com",
           region: "ca-central-1",
           bucket: "my-docs",
-          prefix: "yomizaka",
+          prefix: "verikora",
         },
         keyId: "media-1",
       });

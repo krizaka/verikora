@@ -1,5 +1,5 @@
 /**
- * The window of a feature card (yomizaka#478): the app's own component, drawn with demo data at 70 % in a fixed box (no layout
+ * The window of a feature card (verikora#478): the app's own component, drawn with demo data at 70 % in a fixed box (no layout
  * shift), inert and hidden from assistive technology — the card's sentence and `summary` are its text alternative. A page-local
  * wrapper until krizaka-ui ships a block for it (see krizaka-ui "ScreenCard" request).
  */

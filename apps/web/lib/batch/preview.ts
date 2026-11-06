@@ -1,15 +1,15 @@
-import { BATCH_ROW_ERROR, type BatchRow, matchBatchFiles, readBatchManifest } from "@yomizaka/core";
+import { BATCH_ROW_ERROR, type BatchRow, matchBatchFiles, readBatchManifest } from "@verikora/core";
 
 import { entitlementOf } from "../billing";
 import { query } from "../db";
 import { inspectUpload } from "../documents";
 import { HttpError, refuse } from "../http";
-import { YOMIZAKA_RULES } from "../preflight/rules";
+import { VERIKORA_RULES } from "../preflight/rules";
 import { findReusableAnalysis } from "../preflight-events";
 import { preflightRulesFrom, type Snapshot } from "../settings/boundary";
 
 /**
- * What a batch would do, before anything is stored or run (yomizaka#232, part 1): each row checked against the single-check
+ * What a batch would do, before anything is stored or run (verikora#232, part 1): each row checked against the single-check
  * rules and the pre-flight, a file already known found by its SHA-256, a result that can be reused (no audit spent), and
  * the audits the rest needs against what the account has. Nothing is written: the preview is read-only.
  */
@@ -101,7 +101,7 @@ async function previewRow(
     ({ sha256 } = await inspectUpload(
       { name: file.name, type: file.type, size: file.bytes.length },
       file.bytes,
-      preflightRulesFrom(YOMIZAKA_RULES, settings),
+      preflightRulesFrom(VERIKORA_RULES, settings),
     ));
   } catch (error) {
     return { ...base, state: PREVIEW_ROW.refused, errors: [preflightCode(error)] };

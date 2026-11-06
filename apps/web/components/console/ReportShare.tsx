@@ -5,7 +5,7 @@ import { Alert } from "@krizaka/ui/alert";
 import { Badge } from "@krizaka/ui/badge";
 import { Button } from "@krizaka/ui/button";
 import { createKrizakaForm } from "@krizaka/ui/form";
-import { queryKeys } from "@yomizaka/core";
+import { queryKeys } from "@verikora/core";
 import { useEffect, useState } from "react";
 import { z } from "zod";
 

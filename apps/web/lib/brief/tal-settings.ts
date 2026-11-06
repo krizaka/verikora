@@ -1,7 +1,7 @@
 import type { TalTable } from "./tal";
 
 /**
- * The TAL's rate of the year as the administrator keeps it (yomizaka#554): settings `tal.rate.*` in the database, never a number in code.
+ * The TAL's rate of the year as the administrator keeps it (verikora#554): settings `tal.rate.*` in the database, never a number in code.
  * It is laid over the shipped table (`content/tal/renewal-radar.json`, which keeps the notice windows): the year it names replaces
  * that year's entry. Basis points 0 or an unreadable source leave the table as it is, so the check makes no claim.
  * Source of the seed: the TAL's release of 2026-01-19 on https://www.quebec.ca/nouvelles/actualites/details/le-calcul-de-lajustement-des-loyers-en-2026-68053

@@ -1,6 +1,6 @@
 import { isShowcase, noticeStage } from "./showcase";
 
-describe("showcase mode (yomizaka#1968)", () => {
+describe("showcase mode (verikora#1968)", () => {
   it("is on only for 1", () => {
     expect(isShowcase("1")).toBe(true);
     expect(isShowcase(undefined)).toBe(false);

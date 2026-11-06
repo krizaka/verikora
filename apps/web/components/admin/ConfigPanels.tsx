@@ -130,27 +130,27 @@ export function PacksPanel({ flows, environment }: Readonly<{ flows: AdminFlow[]
   );
 }
 
-const orazakaStatus = z.object({
+const sovkoraStatus = z.object({
   key: z.object({ configured: z.boolean(), masked: z.string().nullable() }),
   baseUrl: z.string(),
   usage: z.object({ runs: z.number(), failed: z.number(), estimatedCostCents: z.number() }),
 });
-const orazakaTest = z.object({
+const sovkoraTest = z.object({
   ok: z.boolean(),
   ms: z.number(),
   code: z.string().optional(),
   studios: z.array(z.string()),
 });
 
-/** This product's connection to Orazaka: key (masked), address, a connection test, and this month's usage as recorded here. */
-export function OrazakaPanel() {
+/** This product's connection to Sovkora: key (masked), address, a connection test, and this month's usage as recorded here. */
+export function SovkoraPanel() {
   const { say, locale } = useSay();
   const status = useQuery({
-    queryKey: ["admin-orazaka"],
-    queryFn: () => krizakaFetch("/api/admin/orazaka", { schema: orazakaStatus }),
+    queryKey: ["admin-sovkora"],
+    queryFn: () => krizakaFetch("/api/admin/sovkora", { schema: sovkoraStatus }),
   });
   const test = useMutation({
-    mutationFn: () => krizakaFetch("/api/admin/orazaka/test", { method: "POST", schema: orazakaTest }),
+    mutationFn: () => krizakaFetch("/api/admin/sovkora/test", { method: "POST", schema: sovkoraTest }),
   });
   const money = (cents: number) =>
     new Intl.NumberFormat(locale, { style: "currency", currency: "USD" }).format(cents / 100);
@@ -158,39 +158,39 @@ export function OrazakaPanel() {
   const { key, baseUrl, usage } = status.data;
   const result = test.data;
   return (
-    <section className="flex max-w-2xl flex-col gap-4" data-testid="orazaka-panel">
+    <section className="flex max-w-2xl flex-col gap-4" data-testid="sovkora-panel">
       <div className="flex flex-col gap-1">
-        <h2 className="m-0 font-display text-lg font-bold text-fg">{say("adminConfig.orazaka.keyTitle")}</h2>
-        <p className="m-0 text-sm text-fg-secondary" data-testid="orazaka-key">
+        <h2 className="m-0 font-display text-lg font-bold text-fg">{say("adminConfig.sovkora.keyTitle")}</h2>
+        <p className="m-0 text-sm text-fg-secondary" data-testid="sovkora-key">
           {key.configured
-            ? say("adminConfig.orazaka.masked", { key: key.masked ?? "" })
-            : say("adminConfig.orazaka.none")}
+            ? say("adminConfig.sovkora.masked", { key: key.masked ?? "" })
+            : say("adminConfig.sovkora.none")}
         </p>
-        <p className="m-0 text-sm text-fg-secondary">{say("adminConfig.orazaka.address", { url: baseUrl })}</p>
-        <p className="m-0 text-xs text-fg-muted">{say("adminConfig.orazaka.rotate")}</p>
+        <p className="m-0 text-sm text-fg-secondary">{say("adminConfig.sovkora.address", { url: baseUrl })}</p>
+        <p className="m-0 text-xs text-fg-muted">{say("adminConfig.sovkora.rotate")}</p>
       </div>
       <div className="flex flex-col gap-2">
         <div>
           <Button size="md" variant="secondary" loading={test.isPending} onClick={() => test.mutate()}>
-            {test.isPending ? say("adminConfig.orazaka.testing") : say("adminConfig.orazaka.test")}
+            {test.isPending ? say("adminConfig.sovkora.testing") : say("adminConfig.sovkora.test")}
           </Button>
         </div>
         {result ? (
           <Alert tone={result.ok ? "success" : "danger"}>
             {result.ok
-              ? say("adminConfig.orazaka.ok", { ms: result.ms, count: result.studios.length })
-              : say("adminConfig.orazaka.fail", { code: result.code ?? "?" })}
+              ? say("adminConfig.sovkora.ok", { ms: result.ms, count: result.studios.length })
+              : say("adminConfig.sovkora.fail", { code: result.code ?? "?" })}
           </Alert>
         ) : null}
       </div>
       <div className="flex flex-col gap-1">
-        <h2 className="m-0 font-display text-lg font-bold text-fg">{say("adminConfig.orazaka.usageTitle")}</h2>
-        <p className="m-0 text-sm text-fg-secondary">{say("adminConfig.orazaka.runs", { count: usage.runs })}</p>
-        <p className="m-0 text-sm text-fg-secondary">{say("adminConfig.orazaka.failed", { count: usage.failed })}</p>
+        <h2 className="m-0 font-display text-lg font-bold text-fg">{say("adminConfig.sovkora.usageTitle")}</h2>
+        <p className="m-0 text-sm text-fg-secondary">{say("adminConfig.sovkora.runs", { count: usage.runs })}</p>
+        <p className="m-0 text-sm text-fg-secondary">{say("adminConfig.sovkora.failed", { count: usage.failed })}</p>
         <p className="m-0 text-sm text-fg-secondary">
-          {say("adminConfig.orazaka.cost", { amount: money(usage.estimatedCostCents) })}
+          {say("adminConfig.sovkora.cost", { amount: money(usage.estimatedCostCents) })}
         </p>
-        <p className="m-0 text-xs text-fg-muted">{say("adminConfig.orazaka.notExposed")}</p>
+        <p className="m-0 text-xs text-fg-muted">{say("adminConfig.sovkora.notExposed")}</p>
       </div>
     </section>
   );

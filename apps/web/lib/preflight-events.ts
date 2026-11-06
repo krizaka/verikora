@@ -3,8 +3,8 @@ import type { QueryResultRow } from "pg";
 import type { PreflightOutcome } from "./preflight/port";
 
 /**
- * The application side of the pre-flight (ADR-0005): the outcomes kept for the metrics, and the reuse of a result Yomizaka
- * already holds. A refused file and a reused result are Orazaka runs that did not happen; the estimated cost of one run is
+ * The application side of the pre-flight (ADR-0005): the outcomes kept for the metrics, and the reuse of a result Verikora
+ * already holds. A refused file and a reused result are Sovkora runs that did not happen; the estimated cost of one run is
  * configuration (`APP_ESTIMATED_RUN_COST_CENTS`) and the figures are labelled as an estimate.
  */
 type Query = <T extends QueryResultRow>(text: string, values?: unknown[]) => Promise<T[]>;

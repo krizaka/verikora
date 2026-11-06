@@ -5,7 +5,7 @@ import { addDays, formatDay, parseDay } from "./calendar";
 import type { NoticeWindow } from "./renewal-radar";
 
 /**
- * The notice of renewal with a rent increase (yomizaka#228): the document the manager reads, signs and sends — Yomizaka never
+ * The notice of renewal with a rent increase (verikora#228): the document the manager reads, signs and sends — Verikora never
  * sends it on their behalf. Plain lines from the messages; the rent proposed is the manager's (blank when the TAL's figures are
  * not entered). Informative, not legal advice.
  */

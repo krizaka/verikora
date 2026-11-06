@@ -14,7 +14,7 @@ import { addMinutes, isBefore } from "@krizaka/time";
 import { refuse } from "../http";
 
 /**
- * A person connects a cloud they already have (yomizaka#530, ADR-005 amendment): the OAuth exchange is `@krizaka/storage`'s (Arctic:
+ * A person connects a cloud they already have (verikora#530, ADR-005 amendment): the OAuth exchange is `@krizaka/storage`'s (Arctic:
  * authorization code + PKCE S256), the files are OpenDAL's, behind the same registry as every provider. This module is the product's
  * side: which clouds this deployment offers, the state that carries the PKCE verifier (sealed, so no table), and the refusals.
  */

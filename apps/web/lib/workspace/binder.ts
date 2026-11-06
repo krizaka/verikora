@@ -29,7 +29,7 @@ const without = (f: ViewFilters, key: keyof ViewFilters): ViewFilters => {
 };
 
 /**
- * The binder of « Dossiers » (yomizaka#334, design B2): a tab per decision state of the set, plus « Tous », and a chip per tag.
+ * The binder of « Dossiers » (verikora#334, design B2): a tab per decision state of the set, plus « Tous », and a chip per tag.
  * Each tab and chip carries the filters it opens — and **the same filters are what its count counts** (`filterSql`, as the list), so the
  * numbers on the tabs are the lengths of the views. Pure.
  */

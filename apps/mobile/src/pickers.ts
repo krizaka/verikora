@@ -1,4 +1,4 @@
-import type { PickedFile } from "@yomizaka/client";
+import type { PickedFile } from "@verikora/client";
 import * as DocumentPicker from "expo-document-picker";
 import * as ImagePicker from "expo-image-picker";
 import * as Print from "expo-print";

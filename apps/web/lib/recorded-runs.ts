@@ -1,11 +1,11 @@
 import {
   type Analysis,
   type ComplianceReport,
-  orazakaRun,
   type Perspective,
   PERSPECTIVES,
   reportOf,
-} from "@yomizaka/core";
+  sovkoraRun,
+} from "@verikora/core";
 
 import landlord from "@/content/recorded-runs/landlord.json";
 import tenant from "@/content/recorded-runs/tenant.json";
@@ -14,14 +14,14 @@ import { type buildPayload, sha256 } from "./report";
 import type { Showcase } from "./showcase";
 
 /**
- * « A real run », one per side of the lease: a sample lease sent to Orazaka's compliance Studio (the Québec ruleset) on
- * dev, and the answer kept exactly as Orazaka returned it (`content/recorded-runs/<side>.json`, written by
+ * « A real run », one per side of the lease: a sample lease sent to Sovkora's compliance Studio (the Québec ruleset) on
+ * dev, and the answer kept exactly as Sovkora returned it (`content/recorded-runs/<side>.json`, written by
  * `scripts/record-runs.mjs` — never by hand). The page is built from these files, so a page without a recorded run does
  * not build: this module throws when one is missing or unreadable, and the home imports it.
  */
 export class RecordedRunError extends Error {}
 
-/** Orazaka's status of a finished, successful run. */
+/** Sovkora's status of a finished, successful run. */
 const RUN_SUCCEEDED = "SUCCEEDED";
 
 const FILES: Record<Perspective, unknown> = { tenant, landlord };
@@ -50,7 +50,7 @@ export function readRecording(
   } | null;
   if (!file || file.side !== side || file.studio !== "compliance-check" || !file.document?.text || !file.recordedAt)
     throw fail("the file is not a recording");
-  const parsed = orazakaRun.safeParse(file.run);
+  const parsed = sovkoraRun.safeParse(file.run);
   if (!parsed.success || parsed.data.status !== RUN_SUCCEEDED || !parsed.data.finishedAt)
     throw fail("The engine did not return a finished run");
   const run = parsed.data;

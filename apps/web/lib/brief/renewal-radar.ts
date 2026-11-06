@@ -11,11 +11,11 @@ import { addDays, addMonths, type Day, daysBetween, formatDay, parseDay } from "
 import type { NoticeWindowRule, TalTable, TalYear } from "./tal";
 
 /**
- * The TAL renewal radar (yomizaka#228) — Yomizaka's first detector of the Monday brief, on `@krizaka/brief`. For each lease:
+ * The TAL renewal radar (verikora#228) — Verikora's first detector of the Monday brief, on `@krizaka/brief`. For each lease:
  * the window in which a notice of rent increase may be given (art. 1942 C.c.Q.: between 6 and 3 months before the end of a lease
  * of 12 months or more; the other durations per the table), an alert when it opens, a reminder before it closes, and the increase
  * the TAL's method gives for the year — from the table's figures and the building's own costs, never from a number in code.
- * Informative, not legal advice: the manager decides and sends the notice; Yomizaka never sends on their behalf.
+ * Informative, not legal advice: the manager decides and sends the notice; Verikora never sends on their behalf.
  */
 export interface RadarLease {
   id: string;

@@ -1,7 +1,7 @@
 import { readFileSync } from "node:fs";
 
 import { countryOf } from "@krizaka/storage";
-import { STORAGE_KIND } from "@yomizaka/core";
+import { STORAGE_KIND } from "@verikora/core";
 import { describe, expect, it } from "vitest";
 
 import en from "@/messages/en.json";

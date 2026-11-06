@@ -26,7 +26,7 @@ const batch = (items: BatchItemView[], patch: Partial<BatchView> = {}): BatchVie
 });
 const REPORT = { findings: [] } as never;
 
-describe("checkView (yomizaka#202)", () => {
+describe("checkView (verikora#202)", () => {
   it("is the one row of its batch, under the batch's id", () => {
     expect(checkView(batch([item()]))).toEqual({
       id: "b1",

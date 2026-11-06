@@ -7,7 +7,7 @@ import { useSay } from "@/lib/i18n-client";
 import type { Divider } from "@/lib/organisation/bookmarks";
 
 /**
- * The bookmarks as the binder's dividers over the documents (yomizaka#339): « All » and a tab per bookmark with its count. Each tab is a link,
+ * The bookmarks as the binder's dividers over the documents (verikora#339): « All » and a tab per bookmark with its count. Each tab is a link,
  * the address is the state (`?tags=`); the filter bar below stays the way to combine several.
  */
 export function BookmarkDividers({ tabs, path }: Readonly<{ tabs: readonly Divider[]; path: string }>) {

@@ -1,4 +1,4 @@
-import type { FlowEnvironment } from "@yomizaka/core";
+import type { FlowEnvironment } from "@verikora/core";
 
 import { systemClock } from "@/app/system-clock";
 
@@ -9,7 +9,7 @@ import { settingsFor } from "../settings/guards";
 import { type ApiCaller, apiCaller } from "./caller";
 
 /**
- * What a `GET /api/v1/{checks,batches}/{id}` shares (yomizaka#202): the key with `reports:read`, the id (a malformed one is a
+ * What a `GET /api/v1/{checks,batches}/{id}` shares (verikora#202): the key with `reports:read`, the id (a malformed one is a
  * 404, like an unknown one), and the batch advanced as it is read, like the web page does.
  */
 export async function readAdvanced(

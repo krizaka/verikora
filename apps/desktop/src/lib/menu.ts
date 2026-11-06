@@ -1,10 +1,10 @@
 import type { MenuSpec } from "@krizaka/app-desktop";
 import { acceleratorOf } from "@krizaka/ui/app-shell";
-import { type Section, sectionShortcut, sectionsFor } from "@yomizaka/core";
+import { type Section, sectionShortcut, sectionsFor } from "@verikora/core";
 
 import type { Messages } from "../i18n";
 
-/** The Mac's destinations: the one section map of `@yomizaka/core` (yomizaka#319), numbered ⌘1 to ⌘4 in the order shown. */
+/** The Mac's destinations: the one section map of `@verikora/core` (verikora#319), numbered ⌘1 to ⌘4 in the order shown. */
 export const macSections = (): (Section & {
   shortcut: ReturnType<typeof sectionShortcut>;
   menuId: `go.${Section["id"]}`;

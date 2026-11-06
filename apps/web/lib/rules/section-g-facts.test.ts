@@ -1,4 +1,4 @@
-import { complianceReport } from "@yomizaka/core";
+import { complianceReport } from "@verikora/core";
 import { describe, expect, it } from "vitest";
 
 import { sectionGInputFromFacts } from "./section-g-facts";

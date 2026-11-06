@@ -4,7 +4,7 @@ import { looksLikePdf } from "./pdf-text";
 import { normaliseQuery } from "./search";
 import { safeNext } from "./site";
 
-// Sonar S7758 (yomizaka#406): code points, not UTF-16 units. Each case pins what the code did before, for text outside the Basic Multilingual Plane too.
+// Sonar S7758 (verikora#406): code points, not UTF-16 units. Each case pins what the code did before, for text outside the Basic Multilingual Plane too.
 describe("control characters are found by code point", () => {
   it("normaliseQuery turns a control character into a space, and keeps emoji and accents whole", () => {
     expect(normaliseQuery("bail\u0000 1\u001f 🏠 é")).toBe("bail  1  🏠 é");

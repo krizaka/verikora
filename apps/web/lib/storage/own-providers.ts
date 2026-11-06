@@ -24,8 +24,8 @@ export interface OwnProviders {
 type Query = <T extends QueryResultRow>(text: string, values?: unknown[]) => Promise<T[]>;
 
 export const userScope = (owner: string) => `user:${owner}`;
-/** The key prefix of Yomizaka's objects in a person's bucket (kept as it was, so every existing key still resolves). */
-export const OWN_PREFIX = "yomizaka";
+/** The key prefix of Verikora's objects in a person's bucket (kept as it was, so every existing key still resolves). */
+export const OWN_PREFIX = "verikora";
 const LABEL = "My S3";
 
 export interface OwnS3Coordinates {
@@ -180,7 +180,7 @@ function openLegacySecret(row: LegacyRow, ring: LocalKeys): string | null {
 
 /** A stable id for a person's migrated provider, so a start interrupted half-way finds what it already wrote instead of adding a second one. */
 export function migratedProviderId(owner: string): string {
-  const h = createHash("sha256").update(`yomizaka:own-s3:${owner}`).digest("hex");
+  const h = createHash("sha256").update(`verikora:own-s3:${owner}`).digest("hex");
   return `${h.slice(0, 8)}-${h.slice(8, 12)}-4${h.slice(13, 16)}-a${h.slice(17, 20)}-${h.slice(20, 32)}`;
 }
 

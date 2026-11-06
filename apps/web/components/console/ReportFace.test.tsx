@@ -1,5 +1,5 @@
 import { KrizakaQueryProvider } from "@krizaka/query";
-import { SEEDED_INPUTS } from "@yomizaka/core";
+import { SEEDED_INPUTS } from "@verikora/core";
 import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it } from "vitest";
 

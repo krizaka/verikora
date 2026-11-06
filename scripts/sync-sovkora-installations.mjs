@@ -1,9 +1,9 @@
 #!/usr/bin/env node
-// Puts the Studio installations of Yomizaka's Orazaka account on the versions of scripts/orazaka-installations.json, through Orazaka's own
+// Puts the Studio installations of Verikora's Sovkora account on the versions of scripts/sovkora-installations.json, through Sovkora's own
 // API (GET /api/v1/studios/installations, POST /api/v1/studios/installations/{id}/upgrade) — never by hand in the database. Idempotent:
 // an installation already on the wanted version (or newer) is left alone; a Studio not installed yet is installed (it pins the latest).
 //
-//   AI_API_URL=https://dev.orazaka.com/edge AI_API_TOKEN=… node scripts/sync-orazaka-installations.mjs [--check]
+//   AI_API_URL=https://dev.sovkora.com/edge AI_API_TOKEN=… node scripts/sync-sovkora-installations.mjs [--check]
 //
 // `--check` changes nothing and exits 1 when an installation is behind. The token is read from the environment, never printed.
 import { readFileSync } from "node:fs";
@@ -45,7 +45,7 @@ export async function syncInstallations({ base, token, wanted, check = false, fe
       },
       body: body ? JSON.stringify(body) : undefined,
     });
-    if (!res.ok) throw new Error(`Orazaka answered ${res.status} on ${method} ${path.split("?")[0]}`);
+    if (!res.ok) throw new Error(`Sovkora answered ${res.status} on ${method} ${path.split("?")[0]}`);
     return res.json();
   };
   const steps = plan(wanted, await call("/api/v1/studios/installations"));
@@ -76,10 +76,10 @@ export async function syncInstallations({ base, token, wanted, check = false, fe
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
   const token = process.env.AI_API_TOKEN;
   if (!token) throw new Error("AI_API_TOKEN is not set");
-  const { studios } = JSON.parse(readFileSync(join(here, "orazaka-installations.json"), "utf8"));
+  const { studios } = JSON.parse(readFileSync(join(here, "sovkora-installations.json"), "utf8"));
   const check = process.argv.includes("--check");
   const { behind } = await syncInstallations({
-    base: process.env.AI_API_URL ?? "https://dev.orazaka.com/edge",
+    base: process.env.AI_API_URL ?? "https://dev.sovkora.com/edge",
     token,
     wanted: studios,
     check,

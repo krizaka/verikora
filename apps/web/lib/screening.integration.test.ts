@@ -16,8 +16,8 @@ import { type BillingPort, chargeCheck, refundCheck } from "./screening-checks/b
 import { collectOne, collectPending, dueChecks } from "./screening-checks/collect";
 import { demoProvider } from "./screening-checks/providers";
 
-/** The consent flow against a real PostgreSQL (CI's service; locally `YOMIZAKA_DB_IT=1 DATABASE_URL=… pnpm test`). */
-const enabled = process.env.YOMIZAKA_DB_IT === "1" && !!process.env.DATABASE_URL;
+/** The consent flow against a real PostgreSQL (CI's service; locally `DATABASE_IT=1 DATABASE_URL=… pnpm test`). */
+const enabled = process.env.DATABASE_IT === "1" && !!process.env.DATABASE_URL;
 const DAY = 86_400_000;
 /** The seeded global rule of « screening-result » (retention policy « thirty-days »): a row, not a constant. */
 const RETENTION_DAYS = 30;
@@ -31,7 +31,7 @@ describe.runIf(enabled)("tenant screening (database)", () => {
     await migrate();
     [landlord] = (await query<{ id: string; email: string }>(
       "INSERT INTO accounts (email) VALUES ($1) RETURNING id, email",
-      [`screening-landlord-${stamp}@yomizaka.test`],
+      [`screening-landlord-${stamp}@verikora.test`],
     )) as [typeof landlord];
   });
 
@@ -77,7 +77,7 @@ describe.runIf(enabled)("tenant screening (database)", () => {
       status: "shared",
       result: { band: "no-concern" },
     });
-    // The consent for the purpose is recorded before the provider runs (yomizaka#131): one active row, with the notice version.
+    // The consent for the purpose is recorded before the provider runs (verikora#131): one active row, with the notice version.
     expect(await actions(id)).toEqual([
       "screening.requested",
       "consent.granted",

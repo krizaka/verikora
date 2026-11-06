@@ -12,10 +12,10 @@ import { GLOBAL } from "../settings/service";
 import { giveBack, reserve } from "./checkout";
 import { coupons } from "./instance";
 
-/** The money path of coupons against a real PostgreSQL (skipped without YOMIZAKA_DB_IT=1 and DATABASE_URL): reserve, pay once, release, refund, credit codes, erasure. */
-const enabled = process.env.YOMIZAKA_DB_IT === "1" && !!process.env.DATABASE_URL;
+/** The money path of coupons against a real PostgreSQL (skipped without DATABASE_IT=1 and DATABASE_URL): reserve, pay once, release, refund, credit codes, erasure. */
+const enabled = process.env.DATABASE_IT === "1" && !!process.env.DATABASE_URL;
 const NOW = new Date();
-const ADMIN = { id: null, label: "admin@yomizaka.test" };
+const ADMIN = { id: null, label: "admin@verikora.test" };
 const FACTS = {
   checkoutRef: null,
   paymentRef: null,
@@ -37,7 +37,7 @@ describe.runIf(enabled)("coupons", () => {
   const account = async () => {
     const [a] = await query<{ id: string }>(
       "INSERT INTO accounts (email, password_hash, email_verified_at, terms_accepted_at) VALUES ($1, 'x', now(), now()) RETURNING id",
-      [`c-${randomUUID()}@yomizaka.test`],
+      [`c-${randomUUID()}@verikora.test`],
     );
     return a!.id;
   };

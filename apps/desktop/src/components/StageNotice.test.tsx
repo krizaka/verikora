@@ -10,12 +10,12 @@ const render = (stage: string, showcase = false) =>
     </I18nProvider>,
   );
 
-describe("the development-version notice of the Mac app (yomizaka#364)", () => {
+describe("the development-version notice of the Mac app (verikora#364)", () => {
   it("shows in the stage dev", () => {
     expect(render("dev")).toContain("Version de développement");
   });
 
-  it("renders nothing in the filmed showcase build, whatever its stage (yomizaka#1968)", () => {
+  it("renders nothing in the filmed showcase build, whatever its stage (verikora#1968)", () => {
     expect(render("dev", true)).toBe("");
   });
 

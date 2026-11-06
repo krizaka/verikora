@@ -1,4 +1,4 @@
-# The checkout journey on the deployed dev (yomizaka P0, 2026-10-30): a persona buys a plan with Stripe's TEST card, the subscription turns
+# The checkout journey on the deployed dev (verikora P0, 2026-10-30): a persona buys a plan with Stripe's TEST card, the subscription turns
 # active, the receipt opens and the signed PDF is reachable. Every day and on demand, on main only (the persona and the TEST key are the
 # `dev` environment's, which pull request refs may not use). Never required, so it cannot block a merge. A red run on main files an issue
 # (scripts/checkout-journey-report.mjs + the shared alert-issue action, in krizaka-internal; tested by scripts/checkout-journey.test.mjs). Dev deploys on every push to main (6-10 min): run it by
@@ -40,7 +40,7 @@ jobs:
           SMOKE_EMAIL: ${{ secrets.SMOKE_EMAIL }}
           SMOKE_PASSWORD: ${{ secrets.SMOKE_PASSWORD }}
           PAYMENTS_STRIPE_TEST_SECRET_KEY: ${{ secrets.PAYMENTS_STRIPE_TEST_SECRET_KEY }}
-        run: node scripts/checkout-journey.mjs --base https://dev.yomizaka.com 2>&1 | tee checkout-journey.log; test "${PIPESTATUS[0]}" -eq 0
+        run: node scripts/checkout-journey.mjs --base https://dev.verikora.com 2>&1 | tee checkout-journey.log; test "${PIPESTATUS[0]}" -eq 0
         shell: bash
       # Where the page was stuck (address without secrets, title, screenshot): kept a few days, for whoever reads the red run.
       - name: Keep the diagnosis
@@ -66,6 +66,6 @@ jobs:
         with:
           app-id: ${{ vars.RELEASE_APP_ID }}
           private-key: ${{ secrets.RELEASE_APP_PRIVATE_KEY }}
-          title: "yomizaka · fix(checkout): a persona cannot buy a plan on dev (the checkout journey is red on main)"
+          title: "verikora · fix(checkout): a persona cannot buy a plan on dev (the checkout journey is red on main)"
           body-file: ${{ runner.temp }}/journey.md
-          labels: repo:yomizaka,type:fix
+          labels: repo:verikora,type:fix

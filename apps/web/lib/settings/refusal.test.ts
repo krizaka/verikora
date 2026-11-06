@@ -3,7 +3,7 @@ import { describe, expect, it } from "vitest";
 import { settingsRefusal } from "./refusal";
 import { SettingsError } from "./service";
 
-describe("a setting refused is a clean answer, whatever copy of the class threw it (yomizaka#252)", () => {
+describe("a setting refused is a clean answer, whatever copy of the class threw it (verikora#252)", () => {
   it("the service's own error becomes its status and code", () => {
     expect(
       settingsRefusal(new SettingsError(400, "BAD_SCOPE", "plans.free.apiKeys cannot be set at the user level")),

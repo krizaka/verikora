@@ -15,7 +15,7 @@ vi.mock("./session", async (orig) => ({
 }));
 vi.mock("./settings/guards", () => ({ assertOpen: async () => undefined }));
 vi.mock("./audit", () => ({ audit: async (entry: Record<string, unknown>) => void state.audits.push(entry) }));
-// The limits read their numbers from the settings (yomizaka#260): here they are the defaults, and not a query of this test's.
+// The limits read their numbers from the settings (verikora#260): here they are the defaults, and not a query of this test's.
 vi.mock("./settings/instance", () => ({ appSettings: () => ({ get: async () => undefined }) }));
 vi.mock("./db", () => ({ query: async (_sql: string, values: unknown[]) => void state.saved.push(values) }));
 
@@ -23,7 +23,7 @@ import { firstCheck, wordingOf } from "./perspective-defaults";
 
 const call = async (method: "GET" | "PUT", body?: unknown) => {
   const { GET, PUT } = await import("../app/api/me/perspective/route");
-  const req = new Request("https://dev.yomizaka.com/api/me/perspective", {
+  const req = new Request("https://dev.verikora.com/api/me/perspective", {
     method,
     body: body === undefined ? undefined : JSON.stringify(body),
     headers: { "x-forwarded-for": "203.0.113.7" },

@@ -50,7 +50,7 @@ export default async function AdminOverview({ params }: Readonly<{ params: Promi
               ),
             },
             { term: t.database, details: up(db) },
-            { term: t.orazaka, details: up(edge) },
+            { term: t.sovkora, details: up(edge) },
           ]}
         />
       </Card.Root>

@@ -7,7 +7,7 @@ import { assertFeature, settingsFor } from "@/lib/settings/guards";
 export const dynamic = "force-dynamic";
 
 /**
- * The preview of a batch (yomizaka#232): `manifest` (the CSV) and `files` (the documents it names), as multipart. Answers
+ * The preview of a batch (verikora#232): `manifest` (the CSV) and `files` (the documents it names), as multipart. Answers
  * row by row what would be checked, reused or refused, and the audits it costs — nothing is stored, nothing runs.
  */
 export function POST(req: Request) {

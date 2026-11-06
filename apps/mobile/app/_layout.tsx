@@ -8,7 +8,7 @@ import { AppState } from "react-native";
 import { SafeAreaProvider, useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { AuthProvider } from "@/auth";
-import { discovery, session } from "@/config";
+import { BRAND_ID, discovery, session } from "@/config";
 import { I18nProvider } from "@/i18n";
 import { SessionBoundary } from "@/session-boundary";
 import { StageNotice } from "@/ui/StageNotice";
@@ -20,7 +20,7 @@ const onForeground = (callback: () => void) => {
   return () => subscription.remove();
 };
 
-/** The app's root: Yomizaka's indigo on the Krizaka native theme (dark and light), the backend found by discovery, the session. */
+/** The app's root: Verikora's indigo on the Krizaka native theme (dark and light), the backend found by discovery, the session. */
 export default function RootLayout() {
   return (
     <SafeAreaProvider>
@@ -41,7 +41,7 @@ export default function RootLayout() {
 function Themed({ children }: Readonly<{ children: React.ReactNode }>) {
   const insets = useSafeAreaInsets();
   return (
-    <ThemeProvider overrides={brands.yomizaka} insets={insets}>
+    <ThemeProvider overrides={brands[BRAND_ID]} insets={insets}>
       {children}
     </ThemeProvider>
   );

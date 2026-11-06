@@ -67,7 +67,7 @@ interface Pending {
 }
 
 /**
- * The price catalogue (ADR-009, yomizaka#367 · #548): `PriceCatalogueEditor` of @krizaka/ui draws each entry; a change applies from a
+ * The price catalogue (ADR-009, verikora#367 · #548): `PriceCatalogueEditor` of @krizaka/ui draws each entry; a change applies from a
  * day (never in the past), keeps every version, and is confirmed in a dialog before it can touch what customers pay. The processor's
  * price is shown beside the catalogue's, with a « Sync » that creates the matching price in test mode (live is the owner's).
  */

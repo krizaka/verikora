@@ -1,10 +1,10 @@
 # The phone video of the download page (krizaka/.github#315): the signed-in space as the demo persona Éric, ~15 s, in English (the emulator
-# and the seeded fixtures are English: the clip is android-documents-en, shown on /en only, yomizaka#1968).
+# and the seeded fixtures are English: the clip is android-documents-en, shown on /en only, verikora#1968).
 # NOT a required flow: it lives in .maestro-showcase, run by the « Download page videos » jobs of download-videos.yml on main.
 # The sign-in happens before the recording starts (nothing typed is filmed); the build is the showcase one (no development notice).
 # The film ends on a result (a collection and its documents), never on an empty or an error state: the asserts below fail the flow
-# rather than publish one. « Run a check » needs the Orazaka engine, which the CI backend does not have: it is not shown.
-appId: com.krizaka.yomizaka
+# rather than publish one. « Run a check » needs the Sovkora engine, which the CI backend does not have: it is not shown.
+appId: com.krizaka.verikora
 ---
 - runFlow: ../.maestro/shared/launch.yaml
 - runFlow: ../.maestro/shared/sign-in.yaml

@@ -1,4 +1,4 @@
-import type { ComplianceReport } from "@yomizaka/core";
+import type { ComplianceReport } from "@verikora/core";
 import { describe, expect, it } from "vitest";
 
 import { bundleOf, DOCUMENT_ROLE } from "./lease-bundle";
@@ -32,7 +32,7 @@ const report = (over: Partial<ComplianceReport> = {}): ComplianceReport => ({
   ...over,
 });
 
-describe("the line of a finding (yomizaka#129)", () => {
+describe("the line of a finding (verikora#129)", () => {
   it("counts lines from the offsets, else from the first occurrence of the quote, else says nothing", () => {
     expect(lineOf(TEXT, { evidenceSpan: { start: 40, quote: "Le locataire renonce à tout recours." } })).toBe(3);
     expect(lineOf(TEXT, { evidenceSpan: { start: 2, quote: "Le loyer est payable le 1er." } })).toBe(2);
@@ -48,7 +48,7 @@ describe("the line of a finding (yomizaka#129)", () => {
   });
 });
 
-describe("a lease and its annexes read as one (yomizaka#129)", () => {
+describe("a lease and its annexes read as one (verikora#129)", () => {
   const annex = report({
     findings: [
       {

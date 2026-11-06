@@ -14,7 +14,7 @@ import { PRICE, PRICES } from "../pricing";
 import { pricingLines } from "./page";
 
 const NOW = new Date("2026-10-26T12:00:00Z");
-const ADMIN = { id: null, label: "admin@yomizaka.test" };
+const ADMIN = { id: null, label: "admin@verikora.test" };
 const nb = (s: string | null) => s?.replaceAll(/\s/gu, " ") ?? null;
 /** The text of an HTML fragment: what sits between a `>` and the next `<`, without entities. No tag is stripped by pattern. */
 const textOf = (html: string) =>
@@ -71,7 +71,7 @@ describe("the pricing page reads the catalogue (#388)", () => {
     const c = fresh();
     const volume = (html: string) => /<p data-volume[^>]*><a href="([^"]+)">([^<]+)<\/a><\/p>/.exec(html);
     const fr = volume(nb(await render(c, "fr"))!)!;
-    expect(fr[1]).toContain("/contact?topic=yomizaka");
+    expect(fr[1]).toContain("/contact?topic=verikora");
     expect(fr[2]).toBe("Plus de 60 dossiers par mois ? Écrivez-nous");
     expect(volume(nb(await render(c, "en"))!)![2]).toBe("More than 60 dossiers a month? Write to us");
     await c.schedule(ADMIN, PRICE.firm, { limits: { included: 600 } }, NOW, NOW);

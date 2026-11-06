@@ -49,7 +49,7 @@ const bundle = (reviewStatus: string | null): LeaseBundle => ({
   ],
 });
 
-describe("the bundle screen (yomizaka#499)", () => {
+describe("the bundle screen (verikora#499)", () => {
   it("lists the documents with their role, then each finding with document, line, quote and article", () => {
     const html = wrap(<LeaseBundleSection bundle={bundle(null)} />);
     expect(html).toContain('data-testid="lease-bundle"');

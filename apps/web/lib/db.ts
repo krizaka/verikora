@@ -39,7 +39,7 @@ export function sessionPoolConfig(source: Record<string, string | undefined> = p
 
 /**
  * Reads a connection string. A bad one says WHICH variable is wrong and never shows any part of it: Node's `Invalid URL`
- * error keeps the rejected input, so it is dropped here, not rethrown (yomizaka#386).
+ * error keeps the rejected input, so it is dropped here, not rethrown (verikora#386).
  */
 function parseDatabaseUrl(variable: string, value: string): URL {
   let url: URL;
@@ -70,11 +70,11 @@ function configFor(
   };
 }
 
-const holder = globalThis as unknown as { __yomizakaPool?: pg.Pool };
+const holder = globalThis as unknown as { __verikoraPool?: pg.Pool };
 
 export function pool(): pg.Pool {
-  holder.__yomizakaPool ??= new pg.Pool(poolConfig());
-  return holder.__yomizakaPool;
+  holder.__verikoraPool ??= new pg.Pool(poolConfig());
+  return holder.__verikoraPool;
 }
 
 /** The main pool as a `Query` (`@krizaka/db`): the rows of one statement. Any Krizaka module takes it as it is. */
@@ -152,10 +152,10 @@ export async function withNamedLock<T>(name: string, work: () => Promise<T>): Pr
 /**
  * Locks (and migrations) live on their own small pool, on the direct URL: a holder keeps its connection for the whole of its work, and that work runs its queries on the
  * main pool — if both came from one pool, as many concurrent holders as it has connections would wait forever for a connection to
- * read with (yomizaka#266, review). Holders beyond the pool simply wait their turn for a lock connection.
+ * read with (verikora#266, review). Holders beyond the pool simply wait their turn for a lock connection.
  */
-const lockHolder = globalThis as unknown as { __yomizakaLockPool?: pg.Pool };
-const lockPool = (): pg.Pool => (lockHolder.__yomizakaLockPool ??= new pg.Pool(sessionPoolConfig()));
+const lockHolder = globalThis as unknown as { __verikoraLockPool?: pg.Pool };
+const lockPool = (): pg.Pool => (lockHolder.__verikoraLockPool ??= new pg.Pool(sessionPoolConfig()));
 
 async function withLock<T>(
   lock: string,

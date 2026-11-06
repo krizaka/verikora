@@ -8,7 +8,7 @@ import { createShare, listShares, revokeShare } from "@/lib/owner-report-shares"
 export const dynamic = "force-dynamic";
 const noStore = { "Cache-Control": "private, no-store" };
 
-/** The links of this file's report (yomizaka#128), for its manager only. */
+/** The links of this file's report (verikora#128), for its manager only. */
 export function GET(req: Request, { params }: { params: Promise<{ id: string }> }) {
   return handle(async () => {
     const session = await requireSession(req);

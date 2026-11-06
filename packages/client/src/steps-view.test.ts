@@ -1,4 +1,4 @@
-import { checkSteps } from "@yomizaka/core";
+import { checkSteps } from "@verikora/core";
 import { describe, expect, it } from "vitest";
 
 import fr from "./messages/fr.json";

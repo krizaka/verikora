@@ -1,6 +1,6 @@
 # The core journey on a simulator: sign in, pick a PDF in Files, the check runs, the result and its closing note.
 # maestro test -e PERSONA_EMAIL=… -e PERSONA_PASSWORD=… .maestro/check-document.yaml   (the persona's, never a QA account)
-appId: com.krizaka.yomizaka
+appId: com.krizaka.verikora
 # `manual`: it runs a paid engine check and picks the PDF by position in the iOS system picker, so mobile-e2e.yml leaves it out.
 tags:
   - manual

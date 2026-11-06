@@ -2,14 +2,14 @@ import { Alert } from "@krizaka/ui/alert";
 import { Button } from "@krizaka/ui/button";
 import { useMutation, useQuery } from "@krizaka/query";
 import { fetch as tauriFetch } from "@tauri-apps/plugin-http";
-import { stepperSteps } from "@yomizaka/client";
-import { ANALYSIS_STATUS, checkSteps } from "@yomizaka/core";
+import { stepperSteps } from "@verikora/client";
+import { ANALYSIS_STATUS, checkSteps } from "@verikora/core";
 import { Stepper } from "@krizaka/ui/stepper";
 
 import { type MessageKey, useI18n } from "../i18n";
-import { queries, yomizaka } from "../lib/config";
+import { queries, verikora } from "../lib/config";
 import { localDocuments } from "../lib/local-documents";
-import { base64Of, yomizakaNative } from "../lib/desktop";
+import { base64Of, verikoraNative } from "../lib/desktop";
 import { type Route } from "../lib/route";
 import { ClosingNote } from "./ClosingNote";
 
@@ -19,14 +19,14 @@ type Locale = ReturnType<typeof useI18n>["locale"];
 function useReportSave(documentId: string, analysisId: string, locale: Locale) {
   return useMutation({
     mutationFn: async () => {
-      const { url, headers } = await yomizaka.reportRequest(documentId, analysisId, locale);
+      const { url, headers } = await verikora.reportRequest(documentId, analysisId, locale);
       const res = await tauriFetch(url, { headers });
       if (!res.ok) throw new Error(String(res.status));
       const path = localDocuments.pathOf(documentId);
       if (!path) throw new Error("the document's file is not known on this Mac");
-      return yomizakaNative.saveReport(
+      return verikoraNative.saveReport(
         path,
-        `yomizaka-audit-${analysisId.slice(0, 8)}.pdf`,
+        `verikora-audit-${analysisId.slice(0, 8)}.pdf`,
         base64Of(new Uint8Array(await res.arrayBuffer())),
       );
     },

@@ -3,7 +3,7 @@ import { DocsArticlePage } from "@krizaka/ui/docs-article-page";
 import { DocsNav } from "@krizaka/ui/docs-nav";
 import Link from "next/link";
 
-import { YOMIZAKA_API_KEY_RULES } from "@/lib/api-keys";
+import { VERIKORA_API_KEY_RULES } from "@/lib/api-keys";
 import { DOCS_SECTIONS, ERROR_BODY_CODE, quickstartCode, WEBHOOK_SIGNATURE_CODE } from "@/lib/docs";
 import { type ApiAnswer, type ApiOperation, apiOperations, apiWebhooks, OPENAPI_PATH } from "@/lib/docs-api";
 import { format, getDictionary, type Locale } from "@/lib/i18n";
@@ -26,7 +26,7 @@ function sharedAnswers(operations: readonly ApiOperation[]): Map<string, ApiAnsw
 }
 
 /**
- * The documentation of Yomizaka, on its own site (yomizaka#387): how a check works, the API (generated from the OpenAPI
+ * The documentation of Verikora, on its own site (verikora#387): how a check works, the API (generated from the OpenAPI
  * document), and the data. On the docs template of @krizaka/ui. Every word is a message; the API reference is read from the
  * OpenAPI document, so nothing the document says is typed here.
  */
@@ -38,7 +38,7 @@ export function DocsContent({ locale }: Readonly<{ locale: Locale }>) {
   const webhooks = apiWebhooks();
   // An answer several routes share is said once under the table, never repeated on each route.
   const commonAnswers = sharedAnswers(operations);
-  const rules = YOMIZAKA_API_KEY_RULES;
+  const rules = VERIKORA_API_KEY_RULES;
   const home = pagePath(locale, "home");
   const sections = DOCS_SECTIONS.map((id) => ({ id, label: d.sections[id] }));
   return (
@@ -51,7 +51,7 @@ export function DocsContent({ locale }: Readonly<{ locale: Locale }>) {
           linkAs={Link}
           groups={[
             {
-              id: "yomizaka",
+              id: "verikora",
               title: t.meta.siteName,
               items: sections.map((s) => ({ href: `#${s.id}`, label: s.label })),
             },
@@ -171,7 +171,7 @@ export function DocsContent({ locale }: Readonly<{ locale: Locale }>) {
         <DocH2>{d.sections.data}</DocH2>
         <p>{d.data.intro}</p>
         <p>{d.data.retention}</p>
-        <p>{d.data.orazaka}</p>
+        <p>{d.data.sovkora}</p>
         <p>
           <Link href={pagePath(locale, "privacy")}>{d.data.privacy}</Link>
         </p>

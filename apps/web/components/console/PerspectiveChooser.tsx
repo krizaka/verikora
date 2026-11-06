@@ -5,7 +5,7 @@ import { Alert } from "@krizaka/ui/alert";
 import { Button } from "@krizaka/ui/button";
 import { Card } from "@krizaka/ui/card";
 import { RadioGroup } from "@krizaka/ui/radio-group";
-import { type Audience } from "@yomizaka/core";
+import { type Audience } from "@verikora/core";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 

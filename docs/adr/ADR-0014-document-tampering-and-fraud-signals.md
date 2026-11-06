@@ -1,8 +1,8 @@
 # ADR-0014: Document tampering and fraud signals
 
-- Status: accepted (2026-10-30, the CTO's design session, a decision the founder delegated). Issue: krizaka/yomizaka#102
+- Status: accepted (2026-10-30, the CTO's design session, a decision the founder delegated). Issue: krizaka/verikora#102
   (epic #100). Extends ADR-0001 (the trust SPI, residency), ADR-0006 (understanding), ADR-0010 (photos) and ADR-0012
-  (retention); the analysis stays in Orazaka (AGENTS.md §2, « products run on Orazaka »).
+  (retention); the analysis stays in Sovkora (AGENTS.md §2, « products run on Sovkora »).
 
 ## Context
 
@@ -10,13 +10,13 @@ A landlord or an agency receives an applicant's pay stubs, an employment letter,
 gross pay changed in an online PDF editor, a figure pasted over, a stub made by a fake-stub generator. #102 asks for a
 « tamper score 0-100 ». What already runs:
 
-- Orazaka's `document-validation` pack, Studio `document-authenticity` (no model call): 22 signal cases as data
+- Sovkora's `document-validation` pack, Studio `document-authenticity` (no model call): 22 signal cases as data
   (`worker/authenticity-signals.json`) over PDF metadata (`PDF-META-001…004`), incremental saves (`PDF-REV-001`), the two
   `/ID` (`PDF-ID-001`), an OCR text layer (`PDF-TEXT-001`), a font on one page only (`PDF-FONT-001`), orphan objects
   (`PDF-OBJ-001`), the XMP history (`XMP-HIST-001`), image EXIF (`IMG-META-001…005`), office packages (`OFF-META-*`), and
   document profiles (`pay-stub`, `bank-statement`, `employment-letter`: `DOC-PROFILE-001`). Three levels written in words
   (`observé`, `inhabituel`, `incohérent`), no score, a `NOT_EXAMINED` list printed in every report, tests that refuse
-  verdict words. Yomizaka shows these in `AuthenticitySignals.tsx`, without evidence positions.
+  verdict words. Verikora shows these in `AuthenticitySignals.tsx`, without evidence positions.
 - `identity-document-check` (MRZ check digits, dates, printed fields vs zone vs barcode; a vision reading never fails a
   document alone) and `message-authenticity` (AI-text classifier for chat messages, measured: it recognises a small
   minority of generated texts at the price of not accusing humans).
@@ -33,16 +33,16 @@ prove it before a landlord reads it.
 - **Refused: the tamper score of #102.** A number without a measured base rate is a lie, and it gets quoted in a dispute as
   if it were one. The same holds for a percentage, a « risk level », a colour scale summed across documents, a sort or a
   filter of applicants by their signals.
-- Yomizaka **never says that a document is forged, fake, falsified or fraudulent, and never says anything about the person**.
+- Verikora **never says that a document is forged, fake, falsified or fraudulent, and never says anything about the person**.
   Forgery is a legal conclusion (Criminal Code s. 366) about an intent we cannot see; saying it of an applicant harms a
   reputation (C.c.Q. art. 3 and 35) and can refuse a lease on a ground the Québec Charter protects (s. 10 and 12, social
   condition, as for the rent share #559).
-- What Yomizaka reports is an **observed fact about the file**, its **evidence** (page, box, revision), what it **may
-  indicate** with its ordinary explanations, and **what to ask for**. The landlord decides; Yomizaka decides nothing, so
+- What Verikora reports is an **observed fact about the file**, its **evidence** (page, box, revision), what it **may
+  indicate** with its ordinary explanations, and **what to ask for**. The landlord decides; Verikora decides nothing, so
   there is no decision based exclusively on automated processing about the applicant (Law 25, private sector Act s. 12.1).
 - A document with no signal is **not** declared genuine: a careful forger who regenerates a whole file leaves none of these
   traces. Every report says so and lists what was not examined.
-- Words refused by tests in Yomizaka's messages and rendered report, EN/FR: forged, fake, fraud, fraudulent, falsified,
+- Words refused by tests in Verikora's messages and rendered report, EN/FR: forged, fake, fraud, fraudulent, falsified,
   counterfeit, faux, falsifié, frauduleux, contrefait, trafiqué, score, risk score, %. Internally the families are named
   « tampering signals »; on the page they are « traces of editing » / « traces de modification ».
 
@@ -76,12 +76,12 @@ Refused on purpose:
 
 ### 3. Where it runs and what it costs
 
-- **Detection is Orazaka's**: the `document-validation` pack, Studio `document-authenticity`, its worker
-  (`orazaka-worker-validation`, Python, pypdf; Pillow HPND and OpenCV Apache-2.0 for the image cases). Deterministic, CPU
+- **Detection is Sovkora's**: the `document-validation` pack, Studio `document-authenticity`, its worker
+  (`sovkora-worker-validation`, Python, pypdf; Pillow HPND and OpenCV Apache-2.0 for the image cases). Deterministic, CPU
   only, no model, no GPU. The cross-document comparison is a new step of the same pack (`job.validation.file`) that receives
   **facts, not files**: the fields each document's run already returned.
-- **Yomizaka** keeps what is a product's job: the registry connectors (ADR-0001 §1: third-party connectors live in
-  Yomizaka, behind a `BusinessRegistry` port in `lib/registries/`), grouping one applicant's documents, the consent, the
+- **Verikora** keeps what is a product's job: the registry connectors (ADR-0001 §1: third-party connectors live in
+  Verikora, behind a `BusinessRegistry` port in `lib/registries/`), grouping one applicant's documents, the consent, the
   report, the applicant's answer. It never judges a document itself.
 - **Cost per check**: a target of under 1 cent of compute per document (median CPU time measured by the corpus harness,
   §5; the image cases downscale to 2 MP and stop at 5 s). It is an estimate until the harness prints the measured figure.
@@ -93,21 +93,21 @@ Refused on purpose:
 
 - **Consent and transparency**: an applicant's documents are examined only for the purpose they consented to
   (`applicant-consent`, purpose `DOCUMENTS`); the notice (a new `NOTICE_VERSION`) says that the files are examined as files,
-  what is reported, that Yomizaka decides nothing, and how to answer (Law 25 s. 8 and 8.1). The applicant **sees the signals
+  what is reported, that Verikora decides nothing, and how to answer (Law 25 s. 8 and 8.1). The applicant **sees the signals
   about their own documents** and can add an explanation and the issuer's original, shown next to the signal.
 - **Minimisation**: only documents the applicant chose to give are compared; the product never asks for a bank statement to
   make a comparison possible (whether a landlord may ask for one at all is on the lawyer's list, #303). Signals and audit
   lines carry ids, levels and boxes, never a value of the document (an amount appears only inside the person's own report);
   no log carries an explanation.
-- **Canada**: the bytes stay in Yomizaka's store in Canada (ADR-0012, #524) and go to Orazaka only for the run. Orazaka's
+- **Canada**: the bytes stay in Verikora's store in Canada (ADR-0012, #524) and go to Sovkora only for the run. Sovkora's
   hosting is « not stated » in `docs/privacy/transfers.md` today: **no production check on a real applicant's document runs
-  before the engine states where its document workers run and keep data** (krizaka/orazaka-ai-engine#196), and, if any part
+  before the engine states where its document workers run and keep data** (krizaka/sovkora-engine#196), and, if any part
   is outside Canada, before the EFVP covers it (Law 25 s. 17; `docs/privacy/efvp.md`).
 - **Retention**: the pack is `SENSITIVE` (bytes in memory in the worker, the run record on the shortened schedule); in
-  Yomizaka the signals are part of the analysis, follow the document's retention and are deleted with it (cascade); an
+  Verikora the signals are part of the analysis, follow the document's retention and are deleted with it (cascade); an
   erased screening erases the applicant's explanations.
-- **No automatic stop**: a document signal is never a default cut-off of a screening (krizaka/orazaka-packs#181 replaces
-  the default that stops on `incohérent`); Yomizaka's screening band (`no-concern · review · incomplete`) never reads
+- **No automatic stop**: a document signal is never a default cut-off of a screening (krizaka/sovkora-packs#181 replaces
+  the default that stops on `incohérent`); Verikora's screening band (`no-concern · review · incomplete`) never reads
   authenticity signals.
 
 ### 5. Validation: a synthetic corpus, precision targets, false positives
@@ -140,29 +140,29 @@ Refused on purpose:
   the cross-document signals, each pointing at both documents.
 - A « what this check is not » box at the top: not a finding of forgery, nothing about the person, what was not examined.
 - Levels in words; `incohérent` is a warning tone, **never red** (red reads as a verdict). No total, no sort.
-- `@yomizaka/core` `signal` gains optional `evidence` (`page`, `box` in PDF points, `revision`, `field`) and `family`; old
+- `@verikora/core` `signal` gains optional `evidence` (`page`, `box` in PDF points, `revision`, `field`) and `family`; old
   reports still parse. The signed PDF report carries the same cards. Every word in `messages/{en,fr}.json`.
 
 ## Slices, in order
 
-Yomizaka (this repository), sub-issues of #102:
+Verikora (this repository), sub-issues of #102:
 
 1. #625: the report shows each signal with its evidence, grouped, no verdict words, no red (can start now).
 2. #626: the applicant sees the signals about their own documents and can answer.
 3. #627: an issuer's business number against the public registries (terms read first).
-4. #628: the measured numbers published (after krizaka/orazaka-packs#176).
-5. #629: across the file, through the file-consistency step (after krizaka/orazaka-packs#179 and #180).
-6. #630: a photographed document's original image read before cleaning (after krizaka/orazaka-packs#178).
+4. #628: the measured numbers published (after krizaka/sovkora-packs#176).
+5. #629: across the file, through the file-consistency step (after krizaka/sovkora-packs#179 and #180).
+6. #630: a photographed document's original image read before cleaning (after krizaka/sovkora-packs#178).
 
-For the Orazaka lane, also sub-issues of #102:
+For the Sovkora lane, also sub-issues of #102:
 
-1. krizaka/orazaka-packs#176: the synthetic corpus and its measurement harness, the gate of every new case (**first**).
-2. krizaka/orazaka-packs#181: no document signal as a default screening cut-off (independent, can start now).
-3. krizaka/orazaka-ai-engine#196: state where the document workers run and keep data (blocks production use).
-4. krizaka/orazaka-packs#177: PDF structure v2 with evidence boxes.
-5. krizaka/orazaka-packs#179: figures that do not add up, rates as dated data with sources.
-6. krizaka/orazaka-packs#180: the file-consistency step.
-7. krizaka/orazaka-packs#178: image forensics.
+1. krizaka/sovkora-packs#176: the synthetic corpus and its measurement harness, the gate of every new case (**first**).
+2. krizaka/sovkora-packs#181: no document signal as a default screening cut-off (independent, can start now).
+3. krizaka/sovkora-engine#196: state where the document workers run and keep data (blocks production use).
+4. krizaka/sovkora-packs#177: PDF structure v2 with evidence boxes.
+5. krizaka/sovkora-packs#179: figures that do not add up, rates as dated data with sources.
+6. krizaka/sovkora-packs#180: the file-consistency step.
+7. krizaka/sovkora-packs#178: image forensics.
 
 ## Consequences
 

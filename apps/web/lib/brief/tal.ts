@@ -3,7 +3,7 @@ import { z } from "zod";
 import table from "../../content/tal/renewal-radar.json";
 
 /**
- * The data of the renewal radar (yomizaka#228): the notice windows of art. 1942 C.c.Q. and the TAL's yearly figures, entered one
+ * The data of the renewal radar (verikora#228): the notice windows of art. 1942 C.c.Q. and the TAL's yearly figures, entered one
  * year at a time with their source — never a percentage in code. The file is `content/tal/renewal-radar.json`.
  */
 const dayText = z.string().regex(/^\d{4}-\d{2}-\d{2}$/);

@@ -2,7 +2,7 @@ import { ChipLink } from "@krizaka/ui/chip-link";
 import { EmptyState } from "@krizaka/ui/empty-state";
 import { Mascot } from "@krizaka/ui/mascots";
 import { PageHeader } from "@krizaka/ui/page-header";
-import { type CollectionAvatar as CollectionAvatarData, type DocumentSummary, type Jurisdiction } from "@yomizaka/core";
+import { type CollectionAvatar as CollectionAvatarData, type DocumentSummary, type Jurisdiction } from "@verikora/core";
 import Link from "next/link";
 
 import { CollectionMark } from "@/components/console/CollectionMark";

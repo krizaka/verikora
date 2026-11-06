@@ -8,7 +8,7 @@ import { runningChecks } from "./checks-live";
 const check = (id: string, result: "analysing" | "checked" | "attention" | "failed" | "stored") => ({ id, result });
 
 describe("the checks still running", () => {
-  it("are the ones the page refreshes from Orazaka before listing, and the reason the view asks again", () => {
+  it("are the ones the page refreshes from Sovkora before listing, and the reason the view asks again", () => {
     expect(
       runningChecks([
         check("a1", "analysing"),

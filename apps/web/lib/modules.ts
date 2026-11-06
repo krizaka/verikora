@@ -29,7 +29,7 @@ export const ADOPTED: readonly ComposedModule[] = [
   { schema: workspaceSchema(WORKSPACE), context: { tables: {} } },
 ];
 
-/** The modules whose tables this product created through `emitMigration` (committed in its own sequence): `audit` (0037, yomizaka#259), `credits` (0050, yomizaka#261), `privacy` (0051, yomizaka#264), `payments` and `coupons` (0052, yomizaka#262), `storage` (0058, yomizaka#523: the admin's providers). */
+/** The modules whose tables this product created through `emitMigration` (committed in its own sequence): `audit` (0037, verikora#259), `credits` (0050, verikora#261), `privacy` (0051, verikora#264), `payments` and `coupons` (0052, verikora#262), `storage` (0058, verikora#523: the admin's providers). */
 export const EMITTED: readonly ComposedModule[] = [
   { schema: auditSchema, context: { tables: { owner: "accounts" } } },
   { schema: creditsSchema, context: { tables: { owner: "accounts" } } },

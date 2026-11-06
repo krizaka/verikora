@@ -1,19 +1,19 @@
-import { memoryStore, type OrazakaRun } from "@yomizaka/core";
+import { memoryStore, type SovkoraRun } from "@verikora/core";
 import { afterAll, beforeAll, describe, expect, it, vi } from "vitest";
 
 import { CONSENT_MEANS, CONSENT_PURPOSE, grantConsent, NOTICE_VERSION } from "./applicant-consent";
 import { requestApplicantFile, uploadApplicantDocument, type UploadContext } from "./applicant-file";
 import { dossiersUsedThisMonth, entitlementOf, reserveAudit } from "./billing";
 import { migrate, query } from "./db";
-import { useOrazakaClient } from "./orazaka";
 import { cleanPdf } from "./preflight/fixtures";
+import { useSovkoraClient } from "./sovkora";
 
 /**
  * The unit of billing is the dossier (krizaka-internal#45, slice A): all the documents and checks of one applicant are one
  * audit, whether it is the free one, a credit or the plan's included volume. Against the real database (CI's service; locally
- * YOMIZAKA_DB_IT=1 DATABASE_URL=…), Orazaka a fake.
+ * DATABASE_IT=1 DATABASE_URL=…), Sovkora a fake.
  */
-const enabled = process.env.YOMIZAKA_DB_IT === "1" && !!process.env.DATABASE_URL;
+const enabled = process.env.DATABASE_IT === "1" && !!process.env.DATABASE_URL;
 const NOW = new Date("2026-10-24T12:00:00Z");
 
 describe.runIf(enabled)("the dossier is the unit of billing", () => {
@@ -28,7 +28,7 @@ describe.runIf(enabled)("the dossier is the unit of billing", () => {
   const store = memoryStore();
   const stamp = Date.now();
   let n = 0;
-  const run = (id: string): OrazakaRun => ({
+  const run = (id: string): SovkoraRun => ({
     id,
     studioKey: "x",
     blueprintVersion: "1.0.0",
@@ -42,7 +42,7 @@ describe.runIf(enabled)("the dossier is the unit of billing", () => {
     auditCaps: () => ({ perMonth: 1000, perDay: 0, freeDossiers: 1, overageCents: 0 }),
   });
   const selfServe = async (who: string) => {
-    const email = `dossier-${who}-${stamp}@yomizaka.test`;
+    const email = `dossier-${who}-${stamp}@verikora.test`;
     const [row] = await query<{ id: string }>(
       "INSERT INTO accounts (email, password_hash, email_verified_at, terms_accepted_at) VALUES ($1, 'x', now(), $2) RETURNING id",
       [email, NOW],
@@ -74,12 +74,12 @@ describe.runIf(enabled)("the dossier is the unit of billing", () => {
 
   beforeAll(async () => {
     await migrate();
-    useOrazakaClient({
+    useSovkoraClient({
       startRun: async () => run(`run-dossier-${++n}`),
       getRun: async (id: string) => run(id),
     } as never);
   });
-  afterAll(() => useOrazakaClient(null));
+  afterAll(() => useSovkoraClient(null));
 
   it("two documents of one applicant are one dossier: one free audit, the meter reads 1, the next applicant meets the paywall", async () => {
     const landlord = await selfServe("journey");

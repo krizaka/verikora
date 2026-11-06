@@ -45,7 +45,7 @@ describe("sitemap.xml", () => {
       expect(Object.keys(e.alternates?.languages ?? {}).sort()).toEqual(["en", "fr", "x-default"]);
   });
 
-  it("points x-default to the French page: French is the default language (yomizaka#366)", () => {
+  it("points x-default to the French page: French is the default language (verikora#366)", () => {
     for (const e of entries) expect(e.alternates?.languages?.["x-default"]).toBe(e.alternates?.languages?.fr);
   });
 
@@ -55,7 +55,7 @@ describe("sitemap.xml", () => {
 });
 
 describe("the proxy serves /sitemap.xml and /robots.txt only when the deployment is indexed", () => {
-  const ask = (path: string, host = "www.yomizaka.com") =>
+  const ask = (path: string, host = "www.verikora.com") =>
     proxy(new NextRequest(`https://${host}${path}`, { headers: { host } }));
   const before = process.env.APP_SEARCH_INDEXING;
   const restore = () =>
@@ -72,10 +72,10 @@ describe("the proxy serves /sitemap.xml and /robots.txt only when the deployment
     }
   });
 
-  it("on: a dev.* host never serves it (krizaka/yomizaka#239)", async () => {
+  it("on: a dev.* host never serves it (krizaka/verikora#239)", async () => {
     process.env.APP_SEARCH_INDEXING = "on";
     try {
-      const res = ask("/sitemap.xml", "dev.yomizaka.com");
+      const res = ask("/sitemap.xml", "dev.verikora.com");
       expect(res.status).toBe(404);
       expect(res.headers.get("x-robots-tag")).toContain("noindex");
     } finally {

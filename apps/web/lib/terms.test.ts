@@ -9,7 +9,7 @@ import { TERMS_VERSION } from "./signup";
 
 const text = (d: typeof fr) => d.terms.sections.map((s) => `${s.h} ${s.p}`).join("\n");
 
-describe("the terms of use (yomizaka#439)", () => {
+describe("the terms of use (verikora#439)", () => {
   it("has the same sections in French (the reference) and in English", () => {
     expect(fr.terms.sections).toHaveLength(en.terms.sections.length);
     for (const s of [...fr.terms.sections, ...en.terms.sections]) {

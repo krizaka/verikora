@@ -4,7 +4,7 @@ import { ConsoleProviders } from "@/components/console/ConsoleProviders";
 import { PRODUCT_NAME } from "@/lib/brand";
 import { asLocale, getDictionary } from "@/lib/i18n";
 
-// admin.yomizaka.com: never indexed, never cached.
+// admin.verikora.com: never indexed, never cached.
 export const dynamic = "force-dynamic";
 export const metadata: Metadata = {
   robots: { index: false, follow: false },

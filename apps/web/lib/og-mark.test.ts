@@ -1,10 +1,11 @@
 import { describe, expect, it } from "vitest";
 
+import { BRAND_ID } from "./brand";
 import { MARK_URL, markDataUri } from "./og-mark";
 
 describe("the social card's mark (#575)", () => {
   it("is the brand export on the media CDN, not a drawn shape", () => {
-    expect(MARK_URL).toMatch(/\/brand\/yomizaka\/logo-dark\.svg$/);
+    expect(MARK_URL.endsWith(`/brand/${BRAND_ID}/logo-dark.svg`)).toBe(true);
   });
   it("becomes a data address of the exported mark", async () => {
     const svg = "<svg xmlns='http://www.w3.org/2000/svg'/>";

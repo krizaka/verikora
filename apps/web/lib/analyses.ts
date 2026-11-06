@@ -11,11 +11,11 @@ import {
   isTerminal,
   landlordSignals,
   ODT_MIME,
-  type OrazakaRun,
   reportOf,
+  type SovkoraRun,
   type StartAnalysis,
   type StorageKind,
-} from "@yomizaka/core";
+} from "@verikora/core";
 
 import { holderOf as documentHolder } from "@/app/active-store";
 import { PRODUCT_NAME } from "@/lib/brand";
@@ -28,27 +28,27 @@ import { query } from "./db";
 import { type AnalysisRow, declaredKindOf, isUuid, needsAttention, readBytes, toAnalysis } from "./documents";
 import { refuse } from "./http";
 import { withLines } from "./lease-lines";
-import { orazaka } from "./orazaka";
 import { purgeIfDone } from "./retention";
 import { withTenantShield } from "./rules/tenant-shield-report";
 import { LAW_TIME_ZONE } from "./rulesets";
 import { appSettings } from "./settings/instance";
+import { sovkora } from "./sovkora";
 import type { DocumentStore } from "./storage/port";
 
 /**
- * An analysis is an Orazaka run. Starting one sends the document to the Studio that does the job — the compliance
+ * An analysis is an Sovkora run. Starting one sends the document to the Studio that does the job — the compliance
  * check reads the text against a jurisdiction's rules, the authenticity check reads the PDF file itself — and keeps the
- * run id. Reading one asks Orazaka for the run until it is finished, then keeps the report Orazaka returned (and the
- * words a search should find in it). Yomizaka adds no verdict of its own.
+ * run id. Reading one asks Sovkora for the run until it is finished, then keeps the report Sovkora returned (and the
+ * words a search should find in it). Verikora adds no verdict of its own.
  */
 /** What the authenticity Studio examines as a file (document-authenticity 1.3.0 reads PDF, images and office files; a photo document is read at upload instead, ADR-0010). */
 const AUTHENTICITY_TYPES: ReadonlySet<string> = new Set(["application/pdf", DOCX_MIME, ODT_MIME]);
 
 /**
- * What the Studio's input schema takes for a ruleset (orazaka-packs `compliance-check`, enforced by the engine: 400 outside it, which
- * Yomizaka showed as « Orazaka refused the document as sent »). `ruleset` names only the invoice and the service contract; the lease
+ * What the Studio's input schema takes for a ruleset (sovkora-packs `compliance-check`, enforced by the engine: 400 outside it, which
+ * Verikora showed as « Sovkora refused the document as sent »). `ruleset` names only the invoice and the service contract; the lease
  * is the jurisdiction's own and its version comes from `asOf`; the visit notice and the état des lieux are declared by their kind
- * (`declaredKind`, compliance-check 2.x). The dated lease reference stays Yomizaka's own record, never sent.
+ * (`declaredKind`, compliance-check 2.x). The dated lease reference stays Verikora's own record, never sent.
  */
 const STUDIO_RULESET: Record<string, Record<string, string>> = {
   "qc-invoice": { ruleset: "qc-invoice" },
@@ -97,7 +97,7 @@ export function runInputs(
 
 /**
  * What is kept of a run's inputs (the text and the file are not): the Studio's inputs plus the ruleset the person's request named, which
- * is Yomizaka's own record (the reuse of a held result compares it, so a lease at two versions is never confused) even when the Studio
+ * is Verikora's own record (the reuse of a held result compares it, so a lease at two versions is never confused) even when the Studio
  * is not sent it.
  */
 export function keptInputs(request: StartAnalysis, inputs: Record<string, string>): Record<string, string> {
@@ -147,14 +147,14 @@ export async function startAnalysis(
   if (!doc) {
     throw refuse(404, "NOT_FOUND", "No such document");
   }
-  // The text is read after the upload answered (yomizaka#21): a check waits for it, or says why it will never come.
+  // The text is read after the upload answered (verikora#21): a check waits for it, or says why it will never come.
   if (isExtracting(doc.extraction)) {
     throw refuse(409, "EXTRACTING", "The document is still being read");
   }
   if (doc.extraction === "failed") {
     throw refuse(422, doc.extraction_error ?? "UNREADABLE_FILE", "The document could not be read");
   }
-  // A document of an application is checked only while the applicant's consent to the document check stands (yomizaka#131).
+  // A document of an application is checked only while the applicant's consent to the document check stands (verikora#131).
   await assertAnalysisAllowed(doc.screening_id);
   // The file comes from where the document lives (a purged one has none: 409 NOT_KEPT); the compliance check reads the text, which a purge also removes.
   const content =
@@ -185,7 +185,7 @@ export async function startAnalysis(
   ) {
     throw refuse(422, "KIND_NOT_VERIFIED", "This kind of document is not checked against the law yet");
   }
-  const run = await orazaka().startRun(request.studio, inputs);
+  const run = await sovkora().startRun(request.studio, inputs);
   const kept = keptInputs(request, inputs);
   const [row] = await query<AnalysisRow>(
     "INSERT INTO analyses (document_id, studio, status, run_id, blueprint_version, inputs, flow_version_id, billed_via) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *",
@@ -203,21 +203,21 @@ export async function startAnalysis(
   return isTerminal(row!.status) ? refresh(row!, run) : toAnalysis(row!);
 }
 
-/** Brings an analysis up to date with its Orazaka run (only while it runs; a finished one is kept as it was). */
-export async function refresh(row: AnalysisRow, known?: OrazakaRun): Promise<Analysis> {
+/** Brings an analysis up to date with its Sovkora run (only while it runs; a finished one is kept as it was). */
+export async function refresh(row: AnalysisRow, known?: SovkoraRun): Promise<Analysis> {
   if (row.status !== "running" && !known) {
     return toAnalysis(row);
   }
   if (!row.run_id) {
     return toAnalysis(row);
   }
-  const run = known ?? (await orazaka().getRun(row.run_id));
+  const run = known ?? (await sovkora().getRun(row.run_id));
   const status = fromRunStatus(run.status);
   if (!isTerminal(status)) {
     return toAnalysis(row);
   }
   const read = status === "succeeded" ? reportOf(row.studio, run.outputs) : null;
-  // The line of each finding is read now: the text is purged once the check has run (yomizaka#129).
+  // The line of each finding is read now: the text is purged once the check has run (verikora#129).
   const lined =
     read && "findings" in read
       ? withLines(
@@ -225,7 +225,7 @@ export async function refresh(row: AnalysisRow, known?: OrazakaRun): Promise<Ana
           (await query<{ text: string }>("SELECT text FROM documents WHERE id = $1", [row.document_id]))[0]?.text ?? "",
         )
       : read;
-  // Tenant shield (yomizaka#104): when the lease ruleset exposed its figures, Section G (#554) compares the rents with the TAL's rate, and the payment clauses (#560) are read against art. 1904.
+  // Tenant shield (verikora#104): when the lease ruleset exposed its figures, Section G (#554) compares the rents with the TAL's rate, and the payment clauses (#560) are read against art. 1904.
   const report = lined && "findings" in lined ? await withTenantShield(lined, appSettings()) : lined;
   const noReport = report ? null : `The engine finished without a report ${PRODUCT_NAME} can read`;
   const error = status === "succeeded" ? noReport : (run.errorMessage ?? `The run ended ${run.status}`);

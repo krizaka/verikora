@@ -7,7 +7,7 @@ import type { ReactNode } from "react";
 import { PRODUCT_NAME } from "@/lib/brand";
 import { getDictionary, type Locale } from "@/lib/i18n";
 
-/** The frame of the sign-in family — sign-in, forgot password, new password: Yomizaka's mark, the owl large and the three proofs. */
+/** The frame of the sign-in family — sign-in, forgot password, new password: Verikora's mark, the owl large and the three proofs. */
 export function AuthShell({
   locale,
   promise,

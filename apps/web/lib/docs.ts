@@ -4,11 +4,11 @@ export type DocsSection = (typeof DOCS_SECTIONS)[number];
 
 /** The curl of the quickstart: start a check, then read it. */
 export const quickstartCode = (origin: string): string => String.raw`curl -X POST ${origin}/api/v1/checks \
-  -H "Authorization: Bearer $YOMIZAKA_KEY" \
+  -H "Authorization: Bearer $VERIKORA_KEY" \
   -F file=@bail.pdf -F check=compliance -F reference=APT-12
 # 201 { "check": { "id": "…", "state": "running", … } }
 
-curl ${origin}/api/v1/checks/<id> -H "Authorization: Bearer $YOMIZAKA_KEY"
+curl ${origin}/api/v1/checks/<id> -H "Authorization: Bearer $VERIKORA_KEY"
 # poll until "state" is "done" (the "report" is there), "failed" or "refused"`;
 
 /** The body of an error of the API: the code is stable, the message is for logs. */

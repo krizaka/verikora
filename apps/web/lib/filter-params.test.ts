@@ -3,7 +3,7 @@ import { describe, expect, it } from "vitest";
 
 import { readFilterParams, writeFilterParams } from "./filter-params";
 
-describe("the address's filters, as plain functions (a server page cannot call the client module's, yomizaka#457)", () => {
+describe("the address's filters, as plain functions (a server page cannot call the client module's, verikora#457)", () => {
   const search = new URLSearchParams("state=open,used&state=%20closed%20&q=&page=3&x=1");
   it("reads repeated and comma-separated values, trimmed", () => {
     expect(readFilterParams(search, ["state", "q", "none"])).toEqual({

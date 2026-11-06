@@ -1,10 +1,10 @@
-import { type PhotoOrigin, SIGNAL_LEVELS } from "@yomizaka/core";
+import { type PhotoOrigin, SIGNAL_LEVELS } from "@verikora/core";
 import { differenceInSeconds, parseISO } from "date-fns";
 
 /**
- * What a photo document's origin says, as authenticity signals (yomizaka#229). A photo's metadata never leaves the intake
- * (ADR-0010): its facts are read at upload, then the metadata is dropped. So the photo is not sent to Orazaka; its kept
- * facts are read here, with the ids and levels of Orazaka's image signals (orazaka-packs `authenticity-signals.json`,
+ * What a photo document's origin says, as authenticity signals (verikora#229). A photo's metadata never leaves the intake
+ * (ADR-0010): its facts are read at upload, then the metadata is dropped. So the photo is not sent to Sovkora; its kept
+ * facts are read here, with the ids and levels of Sovkora's image signals (sovkora-packs `authenticity-signals.json`,
  * IMG-META-*), so a reader meets one vocabulary. Facts, never a verdict; the words are messages (`analysis.photoOrigin.*`).
  */
 const [OBSERVED, UNUSUAL, INCONSISTENT] = SIGNAL_LEVELS;

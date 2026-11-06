@@ -1,5 +1,5 @@
 import { type StoreDescriptor as PackageDescriptor, where } from "@krizaka/storage";
-import { STORAGE_KIND, type StorageKind } from "@yomizaka/core";
+import { STORAGE_KIND, type StorageKind } from "@verikora/core";
 
 import type { StoreDescriptor } from "./port";
 

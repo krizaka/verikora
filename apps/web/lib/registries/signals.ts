@@ -1,4 +1,4 @@
-import type { Signal } from "@yomizaka/core";
+import type { Signal } from "@verikora/core";
 
 import { ANSWER, type BusinessRegistry, FOUND_STATUS, type NotLookedUpReason, type RegistryAnswer } from "./model";
 

@@ -29,7 +29,7 @@ export interface AskableType {
 }
 
 /**
- * « Demander des documents » (design § 5.2, yomizaka#323): a dialog with the applicant's name and e-mail and the documents to
+ * « Demander des documents » (design § 5.2, verikora#323): a dialog with the applicant's name and e-mail and the documents to
  * ask for, among the requestable types only (`requestableTypes`; the schema and the service refuse the others too). The link
  * comes back once and is shown once, to copy; the list follows.
  */

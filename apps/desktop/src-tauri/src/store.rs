@@ -1,4 +1,4 @@
-//! The Mac's `DocumentStore` (ADR-0007): the documents Yomizaka keeps for the person on this Mac — « keep my history » when
+//! The Mac's `DocumentStore` (ADR-0007): the documents Verikora keeps for the person on this Mac — « keep my history » when
 //! the workspace allows it — in a folder of the app's own (`~/Library/Application Support/<bundle id>/documents`), never
 //! anywhere else. The page reaches it through `apps/desktop/src/lib/mac-store.ts`, which passes the same contract test as
 //! every other adapter. A key is the port's (lowercase letters, digits, `/_.-`), checked again here: no `..`, no empty or `.`
@@ -13,7 +13,7 @@ use std::io::Write;
 use std::path::{Path, PathBuf};
 use std::sync::atomic::{AtomicU64, Ordering};
 
-/// The longest key the port accepts (`assertKey` of `@yomizaka/core`).
+/// The longest key the port accepts (`assertKey` of `@verikora/core`).
 // @fixed: the port's key rule, not a setting
 const MAX_KEY: usize = 255;
 const META_DIR: &str = ".meta";

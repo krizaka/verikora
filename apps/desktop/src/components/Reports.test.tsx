@@ -9,7 +9,7 @@ vi.mock("@krizaka/query", async (importOriginal) => ({
   ...(await importOriginal<typeof import("@krizaka/query")>()),
   useQuery: vi.fn(),
 }));
-vi.mock("../lib/config", () => ({ queries: { documents: () => ({ queryKey: ["yomizaka", "documents"] }) } }));
+vi.mock("../lib/config", () => ({ queries: { documents: () => ({ queryKey: ["verikora", "documents"] }) } }));
 
 const OFFLINE = "Verikora ne répond pas. Vérifiez votre connexion.";
 const EMPTY = /Aucun document vérifié pour l'instant/;

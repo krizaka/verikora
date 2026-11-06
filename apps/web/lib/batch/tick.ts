@@ -1,4 +1,4 @@
-import type { FlowEnvironment } from "@yomizaka/core";
+import type { FlowEnvironment } from "@verikora/core";
 import { addMinutes, subHours } from "date-fns";
 
 import { query, withAdvisoryLock } from "../db";
@@ -8,7 +8,7 @@ import { waitsForAccount } from "./pausing";
 import { advanceBatch } from "./run";
 
 /**
- * A batch that advances without anyone looking at it (yomizaka#240). A property manager who sends 200 leases and closes the tab
+ * A batch that advances without anyone looking at it (verikora#240). A property manager who sends 200 leases and closes the tab
  * still gets a finished batch: every `limits.batchTickSeconds` the server takes the unfinished batches (the oldest first,
  * younger than `limits.batchTickMaxAgeHours`, at most `limits.batchTickBatches`) and advances each with its owner's settings,
  * exactly as opening the page does. One instance does it at a time (an advisory lock); one batch failing never stops the others.

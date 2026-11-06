@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// End-to-end walk of the administration console (admin.yomizaka.com, served here as admin.localhost): sign in as the
+// End-to-end walk of the administration console (admin.verikora.com, served here as admin.localhost): sign in as the
 // administrator from an allowed address, open every page, act on an account (role, sessions, export, erasure), and check
 // that an address outside AUTH_ALLOWED_IPS is refused.
 //
@@ -25,8 +25,8 @@ const ALLOWED = "203.0.113.7";
 const OTHER = "198.51.100.9";
 const stamp = Date.now();
 const password = crypto.randomBytes(18).toString("base64url");
-const admin = `e2e-admin-${stamp}@yomizaka.test`;
-const member = `e2e-member-${stamp}@yomizaka.test`;
+const admin = `e2e-admin-${stamp}@verikora.test`;
+const member = `e2e-member-${stamp}@verikora.test`;
 if (!process.env.DATABASE_URL) throw new Error("DATABASE_URL (a local PostgreSQL) is required");
 accountsFromEnv({
   QA_USER_EMAIL: member,
@@ -42,7 +42,7 @@ const check = (ok, what) => {
   if (!ok) failed += 1;
 };
 
-const nextDev = ["--filter", "@yomizaka/web", "exec", "next", "dev", "-p", String(PORT)];
+const nextDev = ["--filter", "@verikora/web", "exec", "next", "dev", "-p", String(PORT)];
 const appEnv = {
   ...process.env,
   AUTH_ALLOWED_IPS: ALLOWED,
@@ -90,7 +90,7 @@ try {
     )
   ).rows[0].id;
   await db.query(
-    "INSERT INTO analyses (document_id, studio, status, run_id, error) VALUES ($1, 'compliance-check', 'failed', 'run-e2e', 'orazaka unreachable')",
+    "INSERT INTO analyses (document_id, studio, status, run_id, error) VALUES ($1, 'compliance-check', 'failed', 'run-e2e', 'sovkora unreachable')",
     [doc],
   );
 
@@ -149,7 +149,7 @@ try {
       });
   }
   await loadSettled(page, `${BASE}/en/operations`, { waitUntil: "networkidle" });
-  check(await page.getByText("orazaka unreachable").first().isVisible(), "/operations lists the failed run's error");
+  check(await page.getByText("sovkora unreachable").first().isVisible(), "/operations lists the failed run's error");
 
   await loadSettled(page, `${BASE}/en/users/${ids.USER}`, { waitUntil: "networkidle" });
   await page.getByRole("button", { name: "Make administrator" }).click();

@@ -1,4 +1,4 @@
-import type { Signal } from "@yomizaka/core";
+import type { Signal } from "@verikora/core";
 import { describe, expect, it } from "vitest";
 
 import en from "@/messages/en.json";
@@ -19,7 +19,7 @@ const SIGNALS: Signal[] = [
   { signalId: "PDF-META-001", level: "observé", observation: "Producteur : un éditeur en ligne." },
 ];
 
-describe("the applicant's answer to a trace (ADR-0014, yomizaka#626)", () => {
+describe("the applicant's answer to a trace (ADR-0014, verikora#626)", () => {
   it("collapses spaces and trims; an empty answer removes it", () => {
     expect(cleanAnswer("  Téléchargé   du portail\n de paie \t")).toBe("Téléchargé du portail de paie");
     expect(cleanAnswer(" \n ")).toBe("");

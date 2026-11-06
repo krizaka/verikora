@@ -7,16 +7,16 @@ import { cleanPdf, javascriptPdf } from "../preflight/fixtures";
 import { settingsFor } from "../settings/guards";
 import { previewBatch } from "./preview";
 
-/** A batch's preview against the real pre-flight, reuse rule and PostgreSQL (CI's service; locally YOMIZAKA_DB_IT=1 DATABASE_URL=…). Nothing is stored by it. */
-const enabled = process.env.YOMIZAKA_DB_IT === "1" && !!process.env.DATABASE_URL;
+/** A batch's preview against the real pre-flight, reuse rule and PostgreSQL (CI's service; locally DATABASE_IT=1 DATABASE_URL=…). Nothing is stored by it. */
+const enabled = process.env.DATABASE_IT === "1" && !!process.env.DATABASE_URL;
 
-describe.runIf(enabled)("the preview of a batch (yomizaka#232)", () => {
+describe.runIf(enabled)("the preview of a batch (verikora#232)", () => {
   let owner = "";
   const pdf = (name: string, bytes: Uint8Array) => ({ name, type: "application/pdf", bytes });
   beforeAll(async () => {
     await migrate();
     const [row] = await query<{ id: string }>("INSERT INTO accounts (email) VALUES ($1) RETURNING id", [
-      `batch-${Date.now()}-${Math.random().toString(16).slice(2, 8)}@yomizaka.test`,
+      `batch-${Date.now()}-${Math.random().toString(16).slice(2, 8)}@verikora.test`,
     ]);
     owner = row!.id;
   });

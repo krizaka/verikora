@@ -10,13 +10,13 @@ import {
   isSeededCheck,
   ODT_MIME,
   type Studio,
-} from "@yomizaka/core";
+} from "@verikora/core";
 
 import type { CheckPlan } from "@/lib/check-flow";
 import type { DocumentTab } from "@/lib/console-nav";
 import { type CheckKind, isCheckKind } from "@/lib/rulesets";
 
-/* Pure (no React, no fetch): what the document page derives from a document and its address (yomizaka#320, #110). */
+/* Pure (no React, no fetch): what the document page derives from a document and its address (verikora#320, #110). */
 
 type Say = (key: string, vars?: Record<string, string | number>) => string;
 
@@ -114,7 +114,7 @@ export function complianceOptions(
     : offered;
 }
 
-/** Where Orazaka's finding sits in the file, in words — never a place the PDF's text layer did not confirm. */
+/** Where Sovkora's finding sits in the file, in words — never a place the PDF's text layer did not confirm. */
 export function placeOf(found: Located | null | undefined, say: Say): string | null {
   if (found === undefined) return null;
   if (found === null) return say("analysis.findingNotFound");

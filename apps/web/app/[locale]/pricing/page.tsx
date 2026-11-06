@@ -23,7 +23,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
 
 /**
  * The prices, read from the catalogue in force (`publicCatalogue`: never an internal entry, an entry in preparation without its
- * figure — ADR-009). HELD behind `PRICING_PUBLISHED` until Oussama approves the grid (yomizaka#300): a 404 until then.
+ * figure — ADR-009). HELD behind `PRICING_PUBLISHED` until Oussama approves the grid (verikora#300): a 404 until then.
  */
 export default async function Pricing({ params }: Readonly<{ params: Promise<{ locale: string }> }>) {
   if (!PRICING_PUBLISHED) notFound();

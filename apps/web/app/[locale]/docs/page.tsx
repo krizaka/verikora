@@ -10,7 +10,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   return pageMetadata(asLocale((await params).locale), "docs");
 }
 
-/** Yomizaka documents itself (yomizaka#387): how a check works, the API from its OpenAPI document, your data. Static, English and French. */
+/** Verikora documents itself (verikora#387): how a check works, the API from its OpenAPI document, your data. Static, English and French. */
 export default async function Docs({ params }: Readonly<{ params: Promise<{ locale: string }> }>) {
   const locale = asLocale((await params).locale);
   return (

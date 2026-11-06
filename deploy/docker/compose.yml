@@ -1,17 +1,17 @@
-# The local database of Yomizaka: the same engine and version as the dev deployment, on this machine only.
+# The local database of Verikora: the same engine and version as the dev deployment, on this machine only.
 #   export LOCAL_DB_PASSWORD=$(openssl rand -hex 12)   # one per machine, never committed
 #   docker compose -f deploy/docker/compose.yml up -d
-#   DATABASE_URL=postgres://yomizaka:$LOCAL_DB_PASSWORD@localhost:5432/yomizaka pnpm run dev:seed
+#   DATABASE_URL=postgres://verikora:$LOCAL_DB_PASSWORD@localhost:5432/verikora pnpm run dev:seed
 services:
   postgres:
     image: postgres:17-alpine
     environment:
-      POSTGRES_USER: yomizaka
+      POSTGRES_USER: verikora
       POSTGRES_PASSWORD: ${LOCAL_DB_PASSWORD:?export LOCAL_DB_PASSWORD first (openssl rand -hex 12)}
-      POSTGRES_DB: yomizaka
+      POSTGRES_DB: verikora
     ports:
       - "127.0.0.1:5432:5432"
     volumes:
-      - yomizaka-pg:/var/lib/postgresql/data
+      - verikora-pg:/var/lib/postgresql/data
 volumes:
-  yomizaka-pg:
+  verikora-pg:

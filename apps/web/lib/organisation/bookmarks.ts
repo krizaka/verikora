@@ -1,5 +1,5 @@
 /**
- * Bookmarks on the documents (yomizaka#339): the person's own tags of kind « document » read as a filter. Pure: the page loads the
+ * Bookmarks on the documents (verikora#339): the person's own tags of kind « document » read as a filter. Pure: the page loads the
  * ids and the tags of each, these rules say which documents remain — a document must wear **every** bookmark asked for (the same
  * rule as a place's `?tags=`), and a bookmark that no longer exists is ignored, never an empty list.
  */
@@ -54,7 +54,7 @@ export interface Divider {
 }
 
 /**
- * The bookmarks as the binder's dividers (yomizaka#339): « All » then one tab per bookmark with the number of documents that wear it;
+ * The bookmarks as the binder's dividers (verikora#339): « All » then one tab per bookmark with the number of documents that wear it;
  * a tab opens that bookmark alone (`?tags=<id>`, the address is the state). The active tab is the one bookmark in force, « All » when none.
  */
 export function dividers(input: {

@@ -52,7 +52,7 @@ const REPORT = {
   ],
 };
 
-describe("the traces of editing (ADR-0014, yomizaka#625)", () => {
+describe("the traces of editing (ADR-0014, verikora#625)", () => {
   for (const locale of ["en", "fr"] as const) {
     it(`groups by family, shows the evidence, the ordinary explanations, what to ask for and the run, in ${locale}`, () => {
       const html = wrap(<AuthenticitySignals report={REPORT} runId="run_7c1d" />, locale);
@@ -85,7 +85,7 @@ describe("the traces of editing (ADR-0014, yomizaka#625)", () => {
           source={
             {
               kind: "vision",
-              by: "orazaka",
+              by: "sovkora",
               runId: "r",
               model: null,
               localConfidence: 1,

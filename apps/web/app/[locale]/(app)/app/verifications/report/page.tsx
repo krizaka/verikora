@@ -11,7 +11,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
 }
 
 /**
- * Members only (ADR-0002), inside the signed-in space (`/app/verifications/report`, the old `/verify`, yomizaka#389): a
+ * Members only (ADR-0002), inside the signed-in space (`/app/verifications/report`, the old `/verify`, verikora#389): a
  * member checks a report they own or were given access to — what a green result guarantees, what it does not, and the
  * public key. The space's layout holds the session: no session, no page.
  */

@@ -1,5 +1,5 @@
 {
-  "source": "krizaka/orazaka-packs document-validation/studios/compliance-check/blueprint.json (inputSchema), revision 31b4479; the engine refuses an input outside it with 400 invalid_request",
+  "source": "krizaka/sovkora-packs document-validation/studios/compliance-check/blueprint.json (inputSchema), revision 31b4479; the engine refuses an input outside it with 400 invalid_request",
   "versions": {
     "1.7.2": {
       "required": ["document", "jurisdiction"],

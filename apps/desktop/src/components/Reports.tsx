@@ -3,7 +3,7 @@ import { useQuery } from "@krizaka/query";
 import { Badge } from "@krizaka/ui/badge";
 import { EmptyState } from "@krizaka/ui/empty-state";
 import { List } from "@krizaka/ui/list";
-import { ANALYSIS_STATUS, type AnalysisStatus } from "@yomizaka/core";
+import { ANALYSIS_STATUS, type AnalysisStatus } from "@verikora/core";
 
 import { useI18n } from "../i18n";
 import { queries } from "../lib/config";

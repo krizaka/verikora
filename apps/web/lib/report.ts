@@ -1,6 +1,6 @@
 import crypto from "node:crypto";
 
-import { type Analysis, type ComplianceReport, type DocumentDetail, isSeededCheck, textSource } from "@yomizaka/core";
+import { type Analysis, type ComplianceReport, type DocumentDetail, isSeededCheck, textSource } from "@verikora/core";
 import { z } from "zod";
 
 import { type SigningKey } from "./report-key";
@@ -11,18 +11,18 @@ import { SITE_URL } from "./site";
  * guarantees, exactly:
  *
  *   - the file carries an attestation: a canonical JSON `payload` (the document's SHA-256, the check — jurisdiction,
- *     rules version, Studio and its version, the Orazaka run id, the date — and every finding with its passage and
+ *     rules version, Studio and its version, the Sovkora run id, the date — and every finding with its passage and
  *     article), the SHA-256 of the report's own visible text (`bodySha256`) and an Ed25519 signature over both;
  *   - a member the owner gave access to (ADR-0002) checks on /app/verifications/report that THIS server's key signed exactly this content
  *     and that not one byte of the file changed since; and, given the original document, that it is the one checked;
  *   - it does NOT prove the law was applied correctly (the Québec ruleset awaits a lawyer's review), that the run id
- *     exists on Orazaka's side (only its operator can say), or WHEN the report was made beyond the date the check
+ *     exists on Sovkora's side (only its operator can say), or WHEN the report was made beyond the date the check
  *     finished: there is no independent time-stamp, no blockchain. The trust is in the key holder, Krizaka.
  *
  * Deterministic: the same stored check always gives the same bytes (no "generated now"), so the same signature.
  */
 
-export const REPORT_SCHEMA = "yomizaka.report/1";
+export const REPORT_SCHEMA = "verikora.report/1";
 
 import { buildNote, closingNote, noteInputOf, noteSourceOf } from "./closing-note/build";
 import { LINE, noteLines } from "./closing-note/render";
@@ -51,7 +51,7 @@ export const reportPayload = z.object({
     textSource: textSource.optional(),
   }),
   check: z.object({
-    engine: z.literal("Orazaka"),
+    engine: z.literal("Sovkora"),
     studio: z.literal("compliance-check"),
     studioVersion: z.string().nullable(),
     runId: z.string(),
@@ -114,7 +114,7 @@ export function buildPayload(
       ...(doc.textSource ? { textSource: doc.textSource } : {}),
     },
     check: {
-      engine: "Orazaka",
+      engine: "Sovkora",
       studio: "compliance-check",
       studioVersion: analysis.blueprintVersion,
       runId: analysis.runId,
@@ -172,8 +172,8 @@ export const fill = (template: string, vars: Record<string, string | number>) =>
   template.replace(/\{(\w+)\}/g, (m, k: string) => (k in vars ? String(vars[k]) : m));
 
 /** Where the attestation goes. The body is hashed with this marker removed, the file has the block in its place. */
-export const ATTESTATION_MARKER = "<!--yomizaka-attestation-->";
-const BLOCK = /<script type="application\/json" id="yomizaka-attestation">([^<]*)<\/script>/;
+export const ATTESTATION_MARKER = "<!--verikora-attestation-->";
+const BLOCK = /<script type="application\/json" id="verikora-attestation">([^<]*)<\/script>/;
 
 const CSS = `:root{color-scheme:light}*{box-sizing:border-box}body{margin:0 auto;max-width:52rem;padding:2rem 1.25rem;font:15px/1.55 system-ui,-apple-system,"Segoe UI",sans-serif;color:#14161f;background:#fff}h1{font-size:1.6rem;margin:.2rem 0 .4rem}h2{font-size:1.1rem;margin:2rem 0 .6rem;border-bottom:1px solid #d6d9e2;padding-bottom:.3rem}.eyebrow{font-size:.75rem;letter-spacing:.08em;text-transform:uppercase;color:#4b5163}dl{display:grid;grid-template-columns:max-content 1fr;gap:.25rem 1rem;margin:0}dt{color:#4b5163}dd{margin:0;overflow-wrap:anywhere}code{font:12px/1.4 ui-monospace,SFMono-Regular,Menlo,monospace}.note{border:1px solid #d6d9e2;border-left:4px solid #6b5bd2;background:#f6f5fd;padding:.7rem .9rem;border-radius:6px;margin:1rem 0}.finding{border:1px solid #d6d9e2;border-radius:8px;padding:.8rem 1rem;margin:.7rem 0;break-inside:avoid}.finding h3{font-size:1rem;margin:0 0 .3rem;display:flex;justify-content:space-between;gap:1rem}.verdict{font-size:.8rem;font-weight:700;padding:.1rem .5rem;border-radius:99px;border:1px solid currentColor;white-space:nowrap}.v-PASS{color:#0b6b3a}.v-FAIL{color:#a1182b}.v-INSUFFICIENT_EVIDENCE{color:#8a5a00}blockquote{margin:.5rem 0;padding:.2rem .8rem;border-left:3px solid #b8bccb;color:#2b2f3d;font-style:italic}footer{margin-top:2.5rem;font-size:.85rem;color:#4b5163}@media print{body{padding:0}a{color:inherit}}`;
 
@@ -303,7 +303,7 @@ export function issueReport(payload: ReportPayload, labels: ReportLabels, key: S
   };
   // `<` is escaped so the JSON can never close its own script element; it parses back to the same value.
   const json = JSON.stringify(attestation).replaceAll("<", String.raw`\u003c`);
-  const block = `<script type="application/json" id="yomizaka-attestation">${json}</script>`;
+  const block = `<script type="application/json" id="verikora-attestation">${json}</script>`;
   const html = body.replace(ATTESTATION_MARKER, block);
   return { html, fileSha256: sha256(html), attestation };
 }

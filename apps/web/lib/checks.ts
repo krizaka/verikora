@@ -7,7 +7,7 @@ import type {
   FlowEnvironment,
   StartAnalysis,
   Studio,
-} from "@yomizaka/core";
+} from "@verikora/core";
 
 import { storeForDocument } from "@/app/active-store";
 
@@ -25,7 +25,7 @@ import { settingsFor } from "./settings/guards";
 
 /**
  * One check started on one document, the single path every entry takes — the document page and a batch's rows
- * (yomizaka#232): the photo guard, the flow's decision (offered, consents), reuse of an identical result (no run, no audit),
+ * (verikora#232): the photo guard, the flow's decision (offered, consents), reuse of an identical result (no run, no audit),
  * the entitlement (free audit, credit or Pro; 402 PAYWALL otherwise), the run, and the audit given back if it cannot start.
  */
 export type StartedCheck = { analysis: Analysis; reused: true } | { analysis: Analysis; reused: false; via: AuditVia };
@@ -81,14 +81,14 @@ export async function startCheck(
   }
 }
 
-/** One check of the Vérifications list (the UX review's § 4.1): the document it read, what ran, how it ended, and its Orazaka run. */
+/** One check of the Vérifications list (the UX review's § 4.1): the document it read, what ran, how it ended, and its Sovkora run. */
 export interface CheckSummary {
   id: string;
   documentId: string;
   title: string;
   kind: DocumentKind;
   studio: Studio;
-  /** The run's state, then the report's own attention flag — Orazaka's answer in the library's words, never a verdict of Yomizaka's. */
+  /** The run's state, then the report's own attention flag — Sovkora's answer in the library's words, never a verdict of Verikora's. */
   result: DocumentStatus;
   runId: string | null;
   /** When it finished, or started while it runs (ISO). */

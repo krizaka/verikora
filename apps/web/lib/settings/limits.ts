@@ -1,7 +1,7 @@
 import { rateLimitSettings } from "@krizaka/rate-limit/settings";
 
 /**
- * The limits of the API's actions, as they were hard-coded at each call site (yomizaka#260): per address, per subject (an account or an
+ * The limits of the API's actions, as they were hard-coded at each call site (verikora#260): per address, per subject (an account or an
  * address) and the window. They are the DEFAULTS of the settings `limits.<action>.perIp|perSubject|windowSeconds` (the administrator's);
  * `lib/limits.ts` enforces them with `@krizaka/rate-limit`. An action id is letters and digits (it is part of a settings key).
  */

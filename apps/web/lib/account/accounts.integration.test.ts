@@ -7,9 +7,9 @@ import { beforeAll, describe, expect, it } from "vitest";
 import { migrate, query } from "../db";
 import { tokenHash } from "../session";
 
-/** The account adapter (`@krizaka/auth`, whose own tests cover the rules) wired as Yomizaka wires it, against a real PostgreSQL (skipped without YOMIZAKA_DB_IT=1 and DATABASE_URL). */
-const enabled = process.env.YOMIZAKA_DB_IT === "1" && !!process.env.DATABASE_URL;
-// The clock, not a date written in the file: the e-mail change token lives 24 h, and a fixed date became a time bomb (yomizaka#271).
+/** The account adapter (`@krizaka/auth`, whose own tests cover the rules) wired as Verikora wires it, against a real PostgreSQL (skipped without DATABASE_IT=1 and DATABASE_URL). */
+const enabled = process.env.DATABASE_IT === "1" && !!process.env.DATABASE_URL;
+// The clock, not a date written in the file: the e-mail change token lives 24 h, and a fixed date became a time bomb (verikora#271).
 const NOW = new Date();
 const PASSWORD = "correct-horse-battery";
 
@@ -22,8 +22,8 @@ describe.runIf(enabled)("account service (Postgres adapter)", () => {
   const service = postgresAccounts({
     query: async (sql, params) => query(sql, params) as never,
     mail: async (m) => void mails.push(m),
-    baseUrl: "https://www.yomizaka.com",
-    product: "Yomizaka",
+    baseUrl: "https://www.verikora.com",
+    product: "Verikora",
     tokenPrefix: "ye",
     tokenHash: (token) => tokenHash(token),
     passwords: { hash: hashPassword, verify: verifyPassword },
@@ -35,7 +35,7 @@ describe.runIf(enabled)("account service (Postgres adapter)", () => {
   });
   const last = () => issued[issued.length - 1]!;
   const account = async () => {
-    const email = `p-${Math.random().toString(36).slice(2)}@yomizaka.test`;
+    const email = `p-${Math.random().toString(36).slice(2)}@verikora.test`;
     const [row] = await query<{ id: string }>(
       "INSERT INTO accounts (email, password_hash, email_verified_at, locale) VALUES ($1, $2, now(), 'fr') RETURNING id",
       [email, await hashPassword(PASSWORD)],
@@ -63,7 +63,7 @@ describe.runIf(enabled)("account service (Postgres adapter)", () => {
   it("changes the e-mail address only after the new address confirms, and the link works once", async () => {
     const { id } = await account();
     mails.length = 0;
-    const next = `n-${Math.random().toString(36).slice(2)}@yomizaka.test`;
+    const next = `n-${Math.random().toString(36).slice(2)}@verikora.test`;
     await expect(service.requestEmailChange(id, { newEmail: next, password: "wrong" }, NOW)).rejects.toMatchObject({
       status: 403,
       code: "WRONG_PASSWORD",
@@ -82,7 +82,7 @@ describe.runIf(enabled)("account service (Postgres adapter)", () => {
     const { id, email } = await account();
     await service.requestEmailChange(
       id,
-      { newEmail: `e-${Math.random().toString(36).slice(2)}@yomizaka.test`, password: PASSWORD },
+      { newEmail: `e-${Math.random().toString(36).slice(2)}@verikora.test`, password: PASSWORD },
       NOW,
     );
     expect(await service.confirmEmailChange(last(), addHours(NOW, 49))).toBe("INVALID");

@@ -1,15 +1,15 @@
 {
-  "product": "yomizaka",
+  "product": "verikora",
   "plans": [
     {
-      "lookupKey": "yomizaka_dossier_grid_cad",
+      "lookupKey": "verikora_dossier_grid_cad",
       "name": "Verikora — one dossier verified",
       "amount": 999,
       "currency": "cad",
       "taxCode": "txcd_10103001"
     },
     {
-      "lookupKey": "yomizaka_agency_monthly_pilot_cad",
+      "lookupKey": "verikora_agency_monthly_pilot_cad",
       "name": "Verikora Agency — monthly",
       "amount": 4900,
       "currency": "cad",
@@ -17,7 +17,7 @@
       "taxCode": "txcd_10103001"
     },
     {
-      "lookupKey": "yomizaka_firm_monthly_pilot_cad",
+      "lookupKey": "verikora_firm_monthly_pilot_cad",
       "name": "Verikora Building manager — monthly",
       "amount": 14900,
       "currency": "cad",

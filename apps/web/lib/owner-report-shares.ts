@@ -13,7 +13,7 @@ import { type OwnerReport, ownerReportOf, shareDays, type ShareState, shareState
 import { LAW_TIME_ZONE } from "./rulesets";
 import { addDays, hash, newToken } from "./screening";
 
-/** The owner link of an applicant file's verification report (yomizaka#128): create, list, revoke by the file's manager; open by token. */
+/** The owner link of an applicant file's verification report (verikora#128): create, list, revoke by the file's manager; open by token. */
 
 interface ShareRow {
   id: string;
@@ -137,7 +137,7 @@ export function cleanAddress(raw: string): string | null {
 }
 
 /**
- * Mails the link to the building owner (yomizaka#130). The token is known only to the manager's page (only its hash is kept), so it comes
+ * Mails the link to the building owner (verikora#130). The token is known only to the manager's page (only its hash is kept), so it comes
  * back with the request and is checked against the hash, the manager and the file. A link that is unknown, expired or revoked is refused
  * (one answer). The mail holds the link, its expiry and the manager's note: never the report. The address is kept on the row until the link
  * ends; the audit trail holds a hash of it.

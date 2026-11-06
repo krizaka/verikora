@@ -9,7 +9,7 @@ import { emailShare } from "@/lib/owner-report-shares";
 
 export const dynamic = "force-dynamic";
 
-/** E-mails the owner link (yomizaka#130), for the file's manager only: the link's token comes back with the address, a short note and the owner's language. */
+/** E-mails the owner link (verikora#130), for the file's manager only: the link's token comes back with the address, a short note and the owner's language. */
 export function POST(req: Request, { params }: { params: Promise<{ id: string }> }) {
   return handle(async () => {
     const session = await requireSession(req);

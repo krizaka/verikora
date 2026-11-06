@@ -1,4 +1,4 @@
-import { type AcceptedType, type Analysis, type ComplianceReport, complianceReport } from "@yomizaka/core";
+import { type AcceptedType, type Analysis, type ComplianceReport, complianceReport } from "@verikora/core";
 
 import { audit } from "./audit";
 import { query } from "./db";

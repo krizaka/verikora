@@ -6,7 +6,7 @@ import {
   ExtractionNotReady,
   type Jurisdiction,
   waitForExtraction,
-} from "@yomizaka/core";
+} from "@verikora/core";
 import { z } from "zod";
 
 import { afterUpload } from "@/lib/check-flow";
@@ -21,9 +21,9 @@ export interface StartOutcome {
 }
 
 /**
- * Once a file landed: reads what Yomizaka understood of it, starts the check when the kind is sure (`afterUpload`), and keeps
+ * Once a file landed: reads what Verikora understood of it, starts the check when the kind is sure (`afterUpload`), and keeps
  * the refusal's code for the report tab instead of dropping it. One path for the task page and the library's drop-anywhere.
- * `now` is the moment of the drop: the check is dated on its day in Québec (yomizaka#309).
+ * `now` is the moment of the drop: the check is dated on its day in Québec (verikora#309).
  */
 export async function startIfSure(
   id: string,
@@ -34,7 +34,7 @@ export async function startIfSure(
 ): Promise<StartOutcome> {
   let start = null;
   try {
-    // The upload answered 202: the text is read after the answer (yomizaka#21), so wait for it before looking at what the document is.
+    // The upload answered 202: the text is read after the answer (verikora#21), so wait for it before looking at what the document is.
     const document = await waitForExtraction(() =>
       fetcher(`/api/documents/${id}`, { schema: z.object({ document: documentView }) }).then((r) => r.document),
     );

@@ -3,9 +3,9 @@
 // videos follow the product. Two journeys, on the seeded demo persona Éric (CI) or the dev QA member (never the administrator):
 //   web-binder  sign in (on camera in CI: the persona's address is a demo one), the library, the binder (collections), a collection.
 //   web-report  a document of the library, then its signed report.
-// « Run a check » needs the Orazaka engine, which the CI backend does not have: that step is the landing's `check` clip
+// « Run a check » needs the Sovkora engine, which the CI backend does not have: that step is the landing's `check` clip
 // (scripts/landing-journey.mjs, on dev). Nothing personal is on screen: the e-mail shown in the app is hidden, the password
-// is a field of dots, the development banner is hidden (showcase mode, yomizaka#1968).
+// is a field of dots, the development banner is hidden (showcase mode, verikora#1968).
 //
 //   E2E_EMAIL=… E2E_PASSWORD=… node scripts/showcase-web.mjs <out-dir> [--base http://localhost:3000] [--locale en|fr] [--sign-in camera|off]
 //
@@ -154,7 +154,7 @@ const reportPath = await (async () => {
 await record(
   "web-report",
   async (page, mark) => {
-    // The poster is the frame at 2 s (yomizaka#575): the film opens ON the report, not on the library it is reached from.
+    // The poster is the frame at 2 s (verikora#575): the film opens ON the report, not on the library it is reached from.
     await page.goto(`${base}/${locale}${reportPath}/rapport`, { waitUntil: "networkidle" });
     await page.waitForTimeout(2200);
     await page.mouse.wheel(0, 320);

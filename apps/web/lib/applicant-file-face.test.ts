@@ -19,7 +19,7 @@ const file = (
   extra: Partial<{ submittedAt: string | null; closedAt: string | null }> = {},
 ) => ({ status, expiresAt: "2026-11-07T15:00:00.000Z", submittedAt: null, closedAt: null, ...extra });
 
-describe("an applicant file's face (« Dossiers », P6, yomizaka#323)", () => {
+describe("an applicant file's face (« Dossiers », P6, verikora#323)", () => {
   it("says the link's state in words, from linkState: open until a date, sent on a date, closed on a date, expired, revoked, erased", () => {
     expect(linkFact(file(LINK.open))).toEqual({
       key: "dossiers.link.open",
@@ -65,7 +65,7 @@ describe("an applicant file's face (« Dossiers », P6, yomizaka#323)", () => {
     expect(applicantRequest.safeParse({ ...ok, candidateEmail: "pas une adresse" }).success).toBe(false);
   });
 
-  it("says each check of a received document as Orazaka returned it: points to look at, signals, nothing found, running, failed", () => {
+  it("says each check of a received document as Sovkora returned it: points to look at, signals, nothing found, running, failed", () => {
     const compliance = (findings: { verdict: string; severity: string }[]) => ({
       studio: "compliance-check",
       status: "succeeded",
@@ -112,8 +112,8 @@ describe("an applicant file's face (« Dossiers », P6, yomizaka#323)", () => {
   });
 
   it("builds the applicant's link from the token the request returns once", () => {
-    expect(applicantLink("https://www.yomizaka.com", "fr", "tok_123")).toBe(
-      "https://www.yomizaka.com/fr/dossier/tok_123",
+    expect(applicantLink("https://www.verikora.com", "fr", "tok_123")).toBe(
+      "https://www.verikora.com/fr/dossier/tok_123",
     );
   });
 

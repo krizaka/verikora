@@ -1,5 +1,5 @@
 import { filterSql, type StatusSet, type ViewFilters } from "@krizaka/organize";
-import type { Analysis, StartAnalysis, StorageKind, Studio } from "@yomizaka/core";
+import type { Analysis, StartAnalysis, StorageKind, Studio } from "@verikora/core";
 
 import { holderOf as documentHolder, storeForDocument } from "@/app/active-store";
 
@@ -36,10 +36,10 @@ import type { DocumentStore } from "./storage/port";
 import { DECISION, KIND, WORKSPACE } from "./workspace/decl";
 
 /*
- * The applicant file (yomizaka#127). A manager asks for a file: a screening row of flow « file » carries the link (its
+ * The applicant file (verikora#127). A manager asks for a file: a screening row of flow « file » carries the link (its
  * token's hash, 14 days) and the document types asked for. The applicant reads the notice and consents per purpose (#131),
  * then uploads: each document is typed by the catalogue, checked by the document-authenticity and compliance Studios (each
- * an Orazaka run, the trace kept), and purged after its checks unless the applicant consented to keep it until the manager's
+ * an Sovkora run, the trace kept), and purged after its checks unless the applicant consented to keep it until the manager's
  * decision. The file goes to the manager's account only; the link is refused once expired, revoked, used or closed.
  */
 
@@ -209,7 +209,7 @@ export interface UploadFile {
   bytes: Uint8Array;
 }
 
-/** The checks one document runs: each studio of its type is an Orazaka run billed to the manager; one that cannot run is listed. */
+/** The checks one document runs: each studio of its type is an Sovkora run billed to the manager; one that cannot run is listed. */
 async function runChecks(
   ownerId: string,
   documentId: string,
@@ -257,7 +257,7 @@ export async function uploadApplicantDocument(
     throw refuse(422, "TYPE_NOT_REQUESTED", "This document was not asked for", { type: typeId });
   }
   const type = await documentTypeOf(typeId);
-  // The consent to the document check comes first (yomizaka#131): no byte is stored without it.
+  // The consent to the document check comes first (verikora#131): no byte is stored without it.
   await assertUploadForApplication(link.landlord_id, link.id);
   const keepConsent = hasConsent(await activeConsents(link.id), CONSENT_PURPOSE.DOCUMENT_KEEP);
   const retention = retentionOf(
@@ -460,9 +460,9 @@ export interface FileDocumentView {
   retention: string;
   purged: boolean;
   skipped: SkippedCheck[];
-  /** One analysis per studio: the signals or findings Orazaka returned, its run id, and its state. */
+  /** One analysis per studio: the signals or findings Sovkora returned, its run id, and its state. */
   checks: Analysis[];
-  /** The applicant's explanations of the traces, by signal id (ADR-0014, yomizaka#626). */
+  /** The applicant's explanations of the traces, by signal id (ADR-0014, verikora#626). */
   answers: Record<string, Answer>;
 }
 
@@ -602,7 +602,7 @@ export async function listApplicantFiles(
 }
 
 /**
- * How many files a view holds: the same `filterSql` as the list, so the binder's counts are the lengths of the views (yomizaka#334).
+ * How many files a view holds: the same `filterSql` as the list, so the binder's counts are the lengths of the views (verikora#334).
  * The list is capped at 100 rows; the count is not, and the tabs say the true number.
  */
 export async function countApplicantFiles(landlordId: string, organised: Organised = {}): Promise<number> {

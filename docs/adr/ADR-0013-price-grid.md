@@ -2,7 +2,7 @@
 
 - Status: grid replaced 2026-10-30 by the founder-validated one below (« Superseded grid »); accepted (2026-10-29, the CTO, a decision the founder delegated: « définis les prix avec notre audit ; on essaie
   d'être concurrentiel et on ajuste »)
-- Issues: yomizaka#388 (the public page), #360 (the volume line), #133 (per-check billing, later), krizaka/.github#269
+- Issues: verikora#388 (the public page), #360 (the volume line), #133 (per-check billing, later), krizaka/.github#269
 - Superseded in part by ADR-0015: « past the included volume the account waits, no overage » is replaced by a billed overage where the plan has a rate; the rest of this grid stands.
 - Builds on: ADR-0004 (payments port), ADR-009 of krizaka/.github (prices are catalogue data the administrator schedules)
 
@@ -11,7 +11,7 @@
 Two grids were on record and neither fit. The first one (2026-10-21) had 9,99 $ per audit and Pro at 29 $ a month: Pro cost
 less than three single checks, so the single price only paid for the first two documents and the plan read as a consumer app.
 The catalogue's seed (from the pricing audit) had 0,65 $ per document, 59 $ a month for 100 and 279 $ a month for 750. It was
-benchmarked against identity-verification APIs, which Yomizaka is not (it verifies documents and screens files, it never
+benchmarked against identity-verification APIs, which Verikora is not (it verifies documents and screens files, it never
 verifies identities). Next to what a landlord pays to screen an applicant, 0,65 $ reads as a toy price, and 279 $ is a big
 first ticket for a pilot.
 
@@ -26,7 +26,7 @@ What a landlord or a manager pays today in Québec and Canada to screen one appl
 | Document-fraud tools for property managers (pay stubs, bank statements) | per applicant or per document, on quote only | e.g. Snappt, Ocrolus Detect ([docs.ocrolus.com](https://docs.ocrolus.com/docs/product-sku-core))                                         |
 
 None of the public offers examines the documents themselves (a pay stub as a file, a lease against the Civil Code); the ones
-that do sell to managers on quote. A Yomizaka check is an add-on to a credit report, not a replacement: an applicant's file is
+that do sell to managers on quote. A Verikora check is an add-on to a credit report, not a replacement: an applicant's file is
 about three documents (a lease or offer, two pay stubs).
 
 ## Decision
@@ -36,9 +36,9 @@ the page already says. Monthly only, cancel any time, no annual commitment, no s
 
 | Plan (catalogue key)               | Price                   | Includes                              |
 | ---------------------------------- | ----------------------- | ------------------------------------- |
-| One document (`yomizaka.document`) | **4,99 $** per document | one verification, no subscription     |
-| Agency (`yomizaka.agency`)         | **49 $** a month        | 100 verifications a month             |
-| Building manager (`yomizaka.firm`) | **149 $** a month       | 500 verifications a month             |
+| One document (`verikora.document`) | **4,99 $** per document | one verification, no subscription     |
+| Agency (`verikora.agency`)         | **49 $** a month        | 100 verifications a month             |
+| Building manager (`verikora.firm`) | **149 $** a month       | 500 verifications a month             |
 | More than 500 a month              | on quote                | a line to the contact form, no figure |
 
 - **The free offer is one dossier a calendar month, renewed on the 1st, no card** (krizaka-internal#45: `plans.free.dossiersPerMonth`, set by the administrator; `audit.freeFirst` switches it off). No timed
@@ -92,16 +92,16 @@ Founder decision: « un discount pour les 3 premiers mois pour faire un prix d'a
   offer are always clear). An ended, paused or unknown code announces nothing.
 - Guards: `lib/prices/launch-offer.test.ts` (offer price, 4th month at the regular price, EN/FR rendering with the regular price and
   the end date) and `lib/coupons/coupons.integration.test.ts` (valid, once per account, wrong plan, expired).
-- **Set up on dev with one command**: `pnpm dev:launch-offer -- --base https://admin.yomizaka.com` (`scripts/launch-offer.mjs`, idempotent, refuses a
+- **Set up on dev with one command**: `pnpm dev:launch-offer -- --base https://admin.verikora.com` (`scripts/launch-offer.mjs`, idempotent, refuses a
   production base) creates `LANCEMENT` through the admin API and sets `pricing.announcedCode`; the admin credentials come from the environment
   (`QA_ADMIN_EMAIL` / `QA_ADMIN_PASSWORD`), never the command line. The switch `coupons.enabled` must be on, or a checkout with the code answers
   `COUPON_DISABLED`. Checked on dev with a Stripe test card: Agency 49,00 $ -> 24,50 $ the first month (−50 %, 3 months), tax on the discounted amount.
-- Still to build (yomizaka#548): the administrator's price editor (versions from a date, audit, processor sync in test mode).
+- Still to build (verikora#548): the administrator's price editor (versions from a date, audit, processor sync in test mode).
 
 ## Superseded grid (2026-10-30, krizaka-internal#44)
 
 The founder validated a per-dossier grid, seeded in `lib/pricing.ts` and `deploy/payments-catalogue.json` (all CAD before taxes, all
 editable data in `/config/prices`): **Free** 1 dossier a month, no card (`plans.free.dossiersPerMonth`); **one dossier 9,99 $**
-(processor key `yomizaka_dossier_grid_cad`); **Agency 49 $ a month**, 15 dossiers included then 3 $ each; **Building manager 149 $
+(processor key `verikora_dossier_grid_cad`); **Agency 49 $ a month**, 15 dossiers included then 3 $ each; **Building manager 149 $
 a month**, 60 dossiers included then 2 $ each (`overageCents`, ADR-0015). Pages say « per dossier ». Agency pays for itself from
 the 5th dossier. The 4,99 $ document price, the 100 and 500 volumes and the « no overage » clause above no longer apply.

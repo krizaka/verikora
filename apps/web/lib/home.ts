@@ -7,7 +7,7 @@ import { type ActivityDay, activityOf, type HomePeriod, PERIOD_DAYS, type ToDo }
 import type { Query } from "./organisation/store";
 
 /*
- * The home's queries (yomizaka#325, P8): « À traiter » and the activity of a period, each figure counted by a query over
+ * The home's queries (verikora#325, P8): « À traiter » and the activity of a period, each figure counted by a query over
  * the same rows its view lists, never a counter kept aside.
  */
 
@@ -76,7 +76,7 @@ export async function activity(q: Query, owner: string, period: HomePeriod, now:
 }
 
 /**
- * The activity strip's four series over the period (yomizaka#332), each a query over the rows it counts: the checks run, those to
+ * The activity strip's four series over the period (verikora#332), each a query over the rows it counts: the checks run, those to
  * look at (the predicate of « À traiter »), the documents added and — with the applicant-file flow — the files received. Every
  * one is bucketed by Québec day with `activityOf`; the figure is the sum of its days.
  */

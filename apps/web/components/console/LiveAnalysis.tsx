@@ -7,11 +7,11 @@ import {
   ANALYSIS_STATUS,
   type AnalysisStatus,
   queryKeys,
-} from "@yomizaka/core";
+} from "@verikora/core";
 import { useEffect } from "react";
 import { z } from "zod";
 
-// @fixed: the BFF asks Orazaka again at this pace while a run is running
+// @fixed: the BFF asks Sovkora again at this pace while a run is running
 const POLL_MS = 3000;
 
 /** How often a run is asked again: every 3 s while it runs, never once it ended. */
@@ -19,8 +19,8 @@ export const pollInterval = (status: AnalysisStatus | undefined): number | false
   status === ANALYSIS_STATUS.running ? POLL_MS : false;
 
 /**
- * A running analysis, asked again every 3 s (the BFF fetches and keeps Orazaka's result); once it ends, the document and the
- * lists are read again. Its own query, so the polling never re-renders the page around it (yomizaka#110).
+ * A running analysis, asked again every 3 s (the BFF fetches and keeps Sovkora's result); once it ends, the document and the
+ * lists are read again. Its own query, so the polling never re-renders the page around it (verikora#110).
  */
 export function useLiveAnalysis(documentId: string, initial: Analysis): AnalysisStatus {
   const client = useQueryClient();

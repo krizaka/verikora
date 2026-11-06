@@ -1,8 +1,8 @@
 /**
- * The DocumentStore PORT (ADR-0007), shared by every Yomizaka app: the application keeps a document through it and never
+ * The DocumentStore PORT (ADR-0007), shared by every Verikora app: the application keeps a document through it and never
  * names a vendor. The web chooses its adapter in configuration (apps/web/lib/storage/providers.ts) — nothing kept (the default),
  * Bunny (development and fictional data only), any S3-compatible provider —; the Mac keeps documents in a folder of its own
- * (apps/desktop), the phone in its sandbox. Every adapter passes `documentStoreContract` (`@yomizaka/core/document-store/contract`).
+ * (apps/desktop), the phone in its sandbox. Every adapter passes `documentStoreContract` (`@verikora/core/document-store/contract`).
  */
 import type { StorageKind, StorageOwner, StorageResidency } from "./index";
 

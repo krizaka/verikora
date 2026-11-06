@@ -1,4 +1,4 @@
-import { DOCUMENT_KINDS, DOCUMENT_STATUSES, type DocumentKind, type DocumentStatus } from "@yomizaka/core";
+import { DOCUMENT_KINDS, DOCUMENT_STATUSES, type DocumentKind, type DocumentStatus } from "@verikora/core";
 import { differenceInMinutes, isBefore, subHours, subMinutes } from "date-fns";
 
 import { DISPLAY_TIME_ZONE } from "@/components/console/format";

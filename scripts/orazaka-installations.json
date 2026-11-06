@@ -1,6 +1,0 @@
-{
-  "about": "The Studio versions Yomizaka's Orazaka account is pinned on, ONE list for local and deployed (scripts/sync-orazaka-installations.mjs applies it through Orazaka's documented path, POST /api/v1/studios/installations/{id}/upgrade). Dev only: production is moved by the founder.",
-  "studios": {
-    "compliance-check": "2.0.0"
-  }
-}

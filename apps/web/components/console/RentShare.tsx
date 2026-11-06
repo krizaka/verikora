@@ -39,8 +39,8 @@ export function rentShareSentences(
 }
 
 /**
- * The rent as a share of an income the applicant gave (yomizaka#104, TS-A-001): INFORMATION for the landlord on the applicant's file, never
- * a verdict, score or threshold (guardrail yomizaka#557/#559). The two figures are typed here and used in memory: nothing is sent or kept.
+ * The rent as a share of an income the applicant gave (verikora#104, TS-A-001): INFORMATION for the landlord on the applicant's file, never
+ * a verdict, score or threshold (guardrail verikora#557/#559). The two figures are typed here and used in memory: nothing is sent or kept.
  */
 export function RentShare({ words }: Readonly<{ words: RentShareWords }>) {
   const { say, locale } = useSay();

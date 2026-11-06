@@ -1,9 +1,9 @@
-import type { SearchHit } from "@yomizaka/core";
+import type { SearchHit } from "@verikora/core";
 
 import { query } from "./db";
 
 /**
- * Search across one's documents — their titles and text, and the findings Orazaka returned on them. PostgreSQL full text
+ * Search across one's documents — their titles and text, and the findings Sovkora returned on them. PostgreSQL full text
  * (`simple` configuration: French and English alike, no stemming guesses), passages cut by ts_headline around the words,
  * everything else escaped. A finding is searched in the latest successful run of each check on a document: a re-run replaces
  * the earlier one in the results instead of piling up duplicates. The query is the person's words, parsed by websearch_to_tsquery (quotes, OR, -word).

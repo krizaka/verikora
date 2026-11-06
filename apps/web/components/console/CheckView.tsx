@@ -5,7 +5,7 @@ import { ChoiceCards } from "@krizaka/ui/account-settings";
 import { List } from "@krizaka/ui/list";
 import { PageHeader } from "@krizaka/ui/page-header";
 import { Stepper, type StepStatus } from "@krizaka/ui/stepper";
-import { DOCUMENT_KINDS, type DocumentKind, type Jurisdiction } from "@yomizaka/core";
+import { DOCUMENT_KINDS, type DocumentKind, type Jurisdiction } from "@verikora/core";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useReducer, useRef } from "react";
@@ -32,7 +32,7 @@ const ICONS: Record<DocumentKind, typeof HomeIcon> = {
 };
 
 /**
- * « Quel document ? » for one file whose kind Yomizaka did not recognise for sure (yomizaka#318, § 5.4 of the design
+ * « Quel document ? » for one file whose kind Verikora did not recognise for sure (verikora#318, § 5.4 of the design
  * direction): the kinds as `ChoiceCards`, each with its title and its hint. Picking one starts the check of that file.
  */
 export function KindQuestion({
@@ -62,7 +62,7 @@ export function KindQuestion({
   );
 }
 
-/** One row per file that landed, its stage in words (yomizaka#326): « Quel document ? » under each uncertain one; a row under way links to its report. */
+/** One row per file that landed, its stage in words (verikora#326): « Quel document ? » under each uncertain one; a row under way links to its report. */
 export function CheckQueue({
   rows,
   onPick,
@@ -128,7 +128,7 @@ export function FlowSteps({ rows }: Readonly<{ rows: readonly CheckRow[] }>) {
  * the defaults said before the drop with « Modifier » (Errata 6), the drop zone, then one row per file in words. The kind is
  * never asked before the drop (`?type=` may still name it): a file whose kind is sure starts at once, an uncertain one is
  * asked « Quel document ? » for that file only. A single file opens its report as soon as it is under way; with several,
- * each row links to its own (yomizaka#318, #326).
+ * each row links to its own (verikora#318, #326).
  */
 /** The question arrives under the title and the steps: on a phone it is brought on screen, never left below the fold. */
 function showQuestion(el: HTMLDivElement | null) {
@@ -170,7 +170,7 @@ export function CheckView({
   const asking = rows.filter((r) => r.stage === "asking");
   const pick = (row: CheckRow, chosen: DocumentKind) => {
     dispatch({ type: "picked", id: row.id });
-    // Named by the person, the kind is sure; a mismatch with what Yomizaka read is still confirmed on the report tab.
+    // Named by the person, the kind is sure; a mismatch with what Verikora read is still confirmed on the report tab.
     void follow(row.id, chosen);
   };
   return (

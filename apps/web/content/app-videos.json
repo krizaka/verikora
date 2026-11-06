@@ -1,5 +1,5 @@
 {
-  "product": "yomizaka",
+  "product": "verikora",
   "cdn": "https://krizaka-assets.b-cdn.net",
   "videos": [
     {
@@ -8,9 +8,9 @@
       "seconds": 10,
       "capturedAt": "2026-10-31T10:47:29.721Z",
       "files": {
-        "webm": "sites/yomizaka/download/android-documents-en.a31c48b7a8.webm",
-        "mp4": "sites/yomizaka/download/android-documents-en.08312fdbd2.mp4",
-        "poster": "sites/yomizaka/download/android-documents-en.a4ec833788.jpg"
+        "webm": "sites/verikora/download/android-documents-en.a31c48b7a8.webm",
+        "mp4": "sites/verikora/download/android-documents-en.08312fdbd2.mp4",
+        "poster": "sites/verikora/download/android-documents-en.a4ec833788.jpg"
       }
     },
     {
@@ -19,9 +19,9 @@
       "seconds": 6.2,
       "capturedAt": "2026-10-31T10:47:33.333Z",
       "files": {
-        "webm": "sites/yomizaka/download/mac-library-fr.aaa86dc5a9.webm",
-        "mp4": "sites/yomizaka/download/mac-library-fr.4a2163d61c.mp4",
-        "poster": "sites/yomizaka/download/mac-library-fr.dd1ca6402d.jpg"
+        "webm": "sites/verikora/download/mac-library-fr.aaa86dc5a9.webm",
+        "mp4": "sites/verikora/download/mac-library-fr.4a2163d61c.mp4",
+        "poster": "sites/verikora/download/mac-library-fr.dd1ca6402d.jpg"
       }
     },
     {
@@ -30,9 +30,9 @@
       "seconds": 4.6,
       "capturedAt": "2026-10-31T10:47:07.190Z",
       "files": {
-        "webm": "sites/yomizaka/download/web-binder-en.facb390cb9.webm",
-        "mp4": "sites/yomizaka/download/web-binder-en.8ac64b1a9f.mp4",
-        "poster": "sites/yomizaka/download/web-binder-en.f3789ea4ae.jpg"
+        "webm": "sites/verikora/download/web-binder-en.facb390cb9.webm",
+        "mp4": "sites/verikora/download/web-binder-en.8ac64b1a9f.mp4",
+        "poster": "sites/verikora/download/web-binder-en.f3789ea4ae.jpg"
       }
     },
     {
@@ -41,9 +41,9 @@
       "seconds": 4.8,
       "capturedAt": "2026-10-31T10:47:11.075Z",
       "files": {
-        "webm": "sites/yomizaka/download/web-binder-fr.9dc6b3dccb.webm",
-        "mp4": "sites/yomizaka/download/web-binder-fr.a0738e6b04.mp4",
-        "poster": "sites/yomizaka/download/web-binder-fr.24eed663b2.jpg"
+        "webm": "sites/verikora/download/web-binder-fr.9dc6b3dccb.webm",
+        "mp4": "sites/verikora/download/web-binder-fr.a0738e6b04.mp4",
+        "poster": "sites/verikora/download/web-binder-fr.24eed663b2.jpg"
       }
     },
     {
@@ -52,9 +52,9 @@
       "seconds": 2,
       "capturedAt": "2026-10-31T10:47:13.423Z",
       "files": {
-        "webm": "sites/yomizaka/download/web-report-en.bb49275fb3.webm",
-        "mp4": "sites/yomizaka/download/web-report-en.75bd2d64c0.mp4",
-        "poster": "sites/yomizaka/download/web-report-en.187444b80b.jpg"
+        "webm": "sites/verikora/download/web-report-en.bb49275fb3.webm",
+        "mp4": "sites/verikora/download/web-report-en.75bd2d64c0.mp4",
+        "poster": "sites/verikora/download/web-report-en.187444b80b.jpg"
       }
     },
     {
@@ -63,9 +63,9 @@
       "seconds": 1.9,
       "capturedAt": "2026-10-31T10:47:15.601Z",
       "files": {
-        "webm": "sites/yomizaka/download/web-report-fr.67681660f3.webm",
-        "mp4": "sites/yomizaka/download/web-report-fr.9f14a2242f.mp4",
-        "poster": "sites/yomizaka/download/web-report-fr.96370b67e5.jpg"
+        "webm": "sites/verikora/download/web-report-fr.67681660f3.webm",
+        "mp4": "sites/verikora/download/web-report-fr.9f14a2242f.mp4",
+        "poster": "sites/verikora/download/web-report-fr.96370b67e5.jpg"
       }
     }
   ]

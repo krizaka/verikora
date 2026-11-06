@@ -36,11 +36,11 @@ describe("the payments vendor is chosen here, from configuration", () => {
         cancelUrl: "https://c",
         locale: "fr",
       });
-    expect(calls[0]!.url).toContain("lookup_keys%5B0%5D=yomizaka_dossier_grid_cad");
+    expect(calls[0]!.url).toContain("lookup_keys%5B0%5D=verikora_dossier_grid_cad");
     expect(new URLSearchParams(calls[1]!.body).get("mode")).toBe("payment");
-    expect(calls[2]!.url).toContain("lookup_keys%5B0%5D=yomizaka_agency_monthly_pilot_cad");
+    expect(calls[2]!.url).toContain("lookup_keys%5B0%5D=verikora_agency_monthly_pilot_cad");
     expect(new URLSearchParams(calls[3]!.body).get("mode")).toBe("subscription");
-    expect(calls[4]!.url).toContain("lookup_keys%5B0%5D=yomizaka_firm_monthly_pilot_cad");
+    expect(calls[4]!.url).toContain("lookup_keys%5B0%5D=verikora_firm_monthly_pilot_cad");
     expect(new URLSearchParams(calls[5]!.body).get("mode")).toBe("subscription");
   });
 

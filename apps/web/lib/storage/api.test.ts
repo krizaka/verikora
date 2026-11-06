@@ -18,7 +18,7 @@ vi.mock("../audit", () => ({ audit: async () => undefined }));
 vi.mock("../db", () => ({ query: async () => [] }));
 
 const json = (method: string, body?: unknown) =>
-  new Request("https://dev.yomizaka.com/x", {
+  new Request("https://dev.verikora.com/x", {
     method,
     body: body === undefined ? undefined : JSON.stringify(body),
     headers: { "x-forwarded-for": "203.0.113.12", "content-type": "application/json" },
@@ -37,7 +37,7 @@ beforeEach(() => {
     id: "s1",
     account: {
       id: "22222222-2222-4222-8222-222222222222",
-      email: "eric@yomizaka.test",
+      email: "eric@verikora.test",
       perspective: null,
       role: "USER",
       locale: "fr",

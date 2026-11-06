@@ -7,7 +7,7 @@ import { EmptyState } from "@krizaka/ui/empty-state";
 import { List } from "@krizaka/ui/list";
 import { Mascot } from "@krizaka/ui/mascots";
 import { PageHeader } from "@krizaka/ui/page-header";
-import { type Audience, type Jurisdiction } from "@yomizaka/core";
+import { type Audience, type Jurisdiction } from "@verikora/core";
 import Link from "next/link";
 
 import type { FileSummary } from "@/lib/applicant-file";

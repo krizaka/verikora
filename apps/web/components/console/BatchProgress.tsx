@@ -95,7 +95,7 @@ function itemColumns(say: Say, locale: Lang): DataTableColumn<Item>[] {
 /** While rows run, the page asks again; each read advances the batch on the server (no second scheduler). */
 const POLL_MS = 3000;
 
-/** A batch's page (yomizaka#232): how far it is, each row's state with its document, why a row did not run, the export. */
+/** A batch's page (verikora#232): how far it is, each row's state with its document, why a row did not run, the export. */
 export function BatchProgress({ initial }: Readonly<{ initial: Batch }>) {
   const { say, locale } = useSay();
   const live = useQuery({

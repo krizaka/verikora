@@ -9,11 +9,12 @@ import { type NavSession, ProductBarActions, sessionKey, useNavSession, useSessi
 import Link from "next/link";
 import { z } from "zod";
 
+import { BRAND_ID } from "@/lib/brand";
 import { type Locale, translator } from "@/lib/i18n";
 import { signInPath } from "@/lib/nav";
 
 /**
- * The public site knows who is signed in (yomizaka#243) without the pages stopping being static: a small client island asks
+ * The public site knows who is signed in (verikora#243) without the pages stopping being static: a small client island asks
  * `/api/me` (`signedIn: false` = signed out) and `/api/auth/sign-up/status`. What it learns only changes what the page SHOWS — the bar's
  * account and the hero's action — never what anyone may do: the app and the API check the real session on every request.
  * The bar and the hero read the same answer (one `BarQueryRoot` around the page), so they never disagree (the review's F0).
@@ -84,7 +85,7 @@ export function BarActionsView({
         email={me.email}
         showName={Boolean(me.name)}
         avatar={{
-          defaultAvatar: { brand: "yomizaka", seed: me.avatarSeed ?? me.email },
+          defaultAvatar: { brand: BRAND_ID, seed: me.avatarSeed ?? me.email },
           fallback: (me.name ?? me.email).charAt(0).toUpperCase(),
         }}
         linkAs={Link}

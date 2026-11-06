@@ -33,14 +33,14 @@ import { resetRateLimits } from "./limits";
 const FILE = "22222222-2222-4222-8222-222222222222";
 const ERIC = {
   id: "11111111-1111-4111-8111-111111111111",
-  email: "eric@yomizaka.test",
+  email: "eric@verikora.test",
   role: "USER",
   locale: "fr",
   perspective: "landlord",
 };
 const ctx = { params: Promise.resolve({ id: FILE }) };
 const req = (method: string, body?: unknown) =>
-  new Request(`https://dev.yomizaka.com/api/applications/${FILE}/report-shares`, {
+  new Request(`https://dev.verikora.com/api/applications/${FILE}/report-shares`, {
     method,
     headers: { "x-forwarded-for": "203.0.113.9", "content-type": "application/json" },
     body: body ? JSON.stringify(body) : undefined,
@@ -52,7 +52,7 @@ beforeEach(() => {
   state.calls = [];
 });
 
-describe("the owner links of a file (yomizaka#128)", () => {
+describe("the owner links of a file (verikora#128)", () => {
   it("creates a link with the chosen days: 201, the token once, never cached", async () => {
     const res = await POST(req("POST", { days: 30 }), ctx);
     expect(res.status).toBe(201);
@@ -85,7 +85,7 @@ describe("the owner links of a file (yomizaka#128)", () => {
   });
 });
 
-describe("e-mailing the owner link (yomizaka#130)", () => {
+describe("e-mailing the owner link (verikora#130)", () => {
   const send = (body: unknown) => SEND(req("POST", body), ctx);
   const body = { token: "sc1.tok", email: "o@exemple.test", locale: "fr" };
 

@@ -1,8 +1,8 @@
 {
-  "name": "@yomizaka/backup",
+  "name": "@verikora/backup",
   "version": "0.1.0",
   "private": true,
-  "description": "The nightly encrypted pg_dump, its off-site copy in Canada and its restore drill (krizaka/yomizaka#513).",
+  "description": "The nightly encrypted pg_dump, its off-site copy in Canada and its restore drill (krizaka/verikora#513).",
   "type": "module",
   "scripts": {
     "test": "vitest run",

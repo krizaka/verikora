@@ -1,4 +1,4 @@
-import { type Audience, type DocumentKind, type Studio } from "@yomizaka/core";
+import { type Audience, type DocumentKind, type Studio } from "@verikora/core";
 
 /* Pure (no database): the client reads it too. */
 

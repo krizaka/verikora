@@ -10,7 +10,7 @@ import { diffSnapshot, readSnapshot, type SchemaSnapshot } from "./schema-check"
 import expected from "./schema-expected.json";
 
 const url = process.env.DATABASE_URL;
-const enabled = process.env.YOMIZAKA_DB_IT === "1" && !!url;
+const enabled = process.env.DATABASE_IT === "1" && !!url;
 
 /**
  * The database rebuilds from ZERO (krizaka-internal#2044): a database of its own, the baseline, the configuration seeded from code

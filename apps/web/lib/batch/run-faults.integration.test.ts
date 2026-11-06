@@ -1,26 +1,26 @@
 import { readFileSync } from "node:fs";
 
-import type { OrazakaRun } from "@yomizaka/core";
+import type { SovkoraRun } from "@verikora/core";
 import sharp from "sharp";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 
 import { migrate, query } from "../db";
 import { seedDatabase } from "../flows";
 import { refuse } from "../http";
-import { useOrazakaClient } from "../orazaka";
 import { createCollection, createLibrary } from "../organisation/store";
 import { cleanPdf } from "../preflight/fixtures";
 import { settingsFor } from "../settings/guards";
+import { useSovkoraClient } from "../sovkora";
 import { advanceBatch, createBatch } from "./run";
 
 /**
- * What the B2B demo found (docs/demo-b2b.md), against the real database and a fake Orazaka: a busy engine pauses the batch and it
+ * What the B2B demo found (docs/demo-b2b.md), against the real database and a fake Sovkora: a busy engine pauses the batch and it
  * resumes by itself (#248); one file that cannot be stored is that row's refusal, a photo is a document (#249); one lease listed
  * for two checks survives the first (#250); a row's collection is where its document goes (#251). CI's service; locally
- * YOMIZAKA_DB_IT=1 DATABASE_URL=….
+ * DATABASE_IT=1 DATABASE_URL=….
  */
-const enabled = process.env.YOMIZAKA_DB_IT === "1" && !!process.env.DATABASE_URL;
-const REPORT = readFileSync(new URL("../fixtures/orazaka-compliance-qc-1.2.0.json", import.meta.url), "utf8");
+const enabled = process.env.DATABASE_IT === "1" && !!process.env.DATABASE_URL;
+const REPORT = readFileSync(new URL("../fixtures/sovkora-compliance-qc-1.2.0.json", import.meta.url), "utf8");
 
 describe.runIf(enabled)("a batch against a busy engine and awkward files", () => {
   const state = { busy: false, n: 0, started: [] as string[] };
@@ -30,7 +30,7 @@ describe.runIf(enabled)("a batch against a busy engine and awkward files", () =>
   const pdf = async (name: string, text: string) => ({ name, type: "application/pdf", bytes: await cleanPdf(text) });
   const finishAll = () => runs.forEach((r) => (r.status = "SUCCEEDED"));
 
-  const run = (id: string): OrazakaRun => {
+  const run = (id: string): SovkoraRun => {
     const r = runs.get(id)!;
     const outputs =
       r.status !== "SUCCEEDED"
@@ -44,9 +44,9 @@ describe.runIf(enabled)("a batch against a busy engine and awkward files", () =>
   beforeAll(async () => {
     await migrate();
     await seedDatabase();
-    useOrazakaClient({
+    useSovkoraClient({
       startRun: async (studio: string) => {
-        if (state.busy) throw refuse(429, "ORAZAKA_BUSY", "Orazaka is busy", { retryAfter: 15 });
+        if (state.busy) throw refuse(429, "SOVKORA_BUSY", "Sovkora is busy", { retryAfter: 15 });
         const id = `run-fault-${++state.n}`;
         state.started.push(id);
         runs.set(id, { studio, status: "RUNNING" });
@@ -55,11 +55,11 @@ describe.runIf(enabled)("a batch against a busy engine and awkward files", () =>
       getRun: async (id: string) => run(id),
     } as never);
     const [row] = await query<{ id: string }>("INSERT INTO accounts (email) VALUES ($1) RETURNING id", [
-      `batch-faults-${Date.now()}-${Math.random().toString(16).slice(2, 8)}@yomizaka.test`,
+      `batch-faults-${Date.now()}-${Math.random().toString(16).slice(2, 8)}@verikora.test`,
     ]);
     account = { id: row!.id, perspective: null };
   });
-  afterAll(() => useOrazakaClient(null));
+  afterAll(() => useSovkoraClient(null));
 
   it("a busy engine pauses the batch with its reason — no row fails — and the rows start by themselves once there is room", async () => {
     state.busy = true;
@@ -70,7 +70,7 @@ describe.runIf(enabled)("a batch against a busy engine and awkward files", () =>
       [await pdf("busy-a.pdf", "BAIL BUSY A"), await pdf("busy-b.pdf", "BAIL BUSY B")],
       await ctx(),
     );
-    expect(created.pausedBy).toBe("ORAZAKA_BUSY");
+    expect(created.pausedBy).toBe("SOVKORA_BUSY");
     expect(created.items.map((i) => i.state)).toEqual(["pending", "pending"]);
     expect(created.counts.failed).toBe(0);
     expect(created.finishedAt).toBeNull();
@@ -98,7 +98,7 @@ describe.runIf(enabled)("a batch against a busy engine and awkward files", () =>
       ],
       await ctx(),
     );
-    // A flat photo has no edges: the gate of yomizaka#8 refuses its row before anything is stored or read.
+    // A flat photo has no edges: the gate of verikora#8 refuses its row before anything is stored or read.
     expect(created.items.map((i) => i.state)).toEqual(["refused", "refused", "running"]);
     expect(created.items[0]).toMatchObject({ error: "PHOTO_BLURRY" });
     expect(created.items[0]!.documentId).toBeNull();
@@ -165,7 +165,7 @@ describe.runIf(enabled)("a batch against a busy engine and awkward files", () =>
     expect((await advanceBatch(account, created.id, await ctx())).finishedAt).not.toBeNull();
   });
 
-  it("a check already running on the document waits for it — and when Orazaka has finished it meanwhile the row moves on (#266)", async () => {
+  it("a check already running on the document waits for it — and when Sovkora has finished it meanwhile the row moves on (#266)", async () => {
     state.busy = true;
     const created = await createBatch(
       account,
@@ -187,9 +187,9 @@ describe.runIf(enabled)("a batch against a busy engine and awkward files", () =>
     );
     const advanced = await advanceBatch(account, created.id, await ctx());
     expect(advanced.counts.failed).toBe(0);
-    // still running at Orazaka: the row waits
+    // still running at Sovkora: the row waits
     expect(advanced.items[0]!.state).toBe("pending");
-    // finished at Orazaka while nobody looked: refreshed, then the normal rules (here a new run) — never stuck behind it
+    // finished at Sovkora while nobody looked: refreshed, then the normal rules (here a new run) — never stuck behind it
     expect(advanced.items[1]!.state).not.toBe("pending");
   });
 

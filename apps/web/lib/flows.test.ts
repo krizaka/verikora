@@ -1,4 +1,4 @@
-import { AUDIENCES, flowDefinition } from "@yomizaka/core";
+import { AUDIENCES, flowDefinition } from "@verikora/core";
 import { describe, expect, it } from "vitest";
 
 import { definitionFromForm, emptyForm, formFromDefinition } from "./flow-form";
@@ -205,7 +205,7 @@ describe("the service contract is a second named ruleset of the same step", () =
   });
 });
 
-describe("« Dossiers » is gated by the flow (yomizaka#319)", () => {
+describe("« Dossiers » is gated by the flow (verikora#319)", () => {
   const screening = flow("tenant-screening", { audiences: ["landlord"] });
   it("is offered to the audience of the applicant-file flow, and to whoever has not chosen a side yet", () => {
     expect(applicantFilesOffered([screening], "landlord")).toBe(true);

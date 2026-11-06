@@ -6,7 +6,7 @@ import { preflightMetrics } from "@/lib/preflight-events";
 
 export const dynamic = "force-dynamic";
 
-/** The pre-flight's metrics per tenant: files accepted, refused, results reused — Orazaka runs avoided, with an ESTIMATED saving. */
+/** The pre-flight's metrics per tenant: files accepted, refused, results reused — Sovkora runs avoided, with an ESTIMATED saving. */
 export function GET(req: Request) {
   return handle(async () => {
     await requireAdmin(req);

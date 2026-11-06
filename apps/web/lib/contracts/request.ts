@@ -3,7 +3,7 @@ import { z } from "zod";
 import { canonicalJson } from "../report";
 
 /**
- * `POST /api/v1/contracts/seal` (yomizaka#71): what a partner platform sends to have a contract sealed. Yomizaka seals what it is
+ * `POST /api/v1/contracts/seal` (verikora#71): what a partner platform sends to have a contract sealed. Verikora seals what it is
  * given — it checks the shape and the size, never the identities or the law: the partner's statements stay the partner's.
  */
 const day = z.string().datetime({ offset: true });

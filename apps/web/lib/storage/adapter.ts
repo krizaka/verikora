@@ -4,7 +4,7 @@ import type { DocumentStore, StoreDescriptor } from "./port";
 import { assertKey, StorageError } from "./port";
 
 /**
- * Yomizaka's DocumentStore (`@yomizaka/core`, shared with the Mac and the phone) over a `@krizaka/storage` ObjectStore: the same
+ * Verikora's DocumentStore (`@verikora/core`, shared with the Mac and the phone) over a `@krizaka/storage` ObjectStore: the same
  * keys, put/get/delete/signedUrl one for one. What the package refuses (a provider that answers an error) becomes the 502 the routes
  * already answer; the descriptor is the one the product says (where it is, whose it is), computed from the configuration. A signed link never outlives `maxTtlSeconds`, whatever a caller asks.
  */

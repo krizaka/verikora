@@ -5,11 +5,11 @@ import {
   type DocumentTab,
   movedDocumentTab,
   type SectionId,
-} from "@yomizaka/core";
+} from "@verikora/core";
 
 /**
  * The signed-in space's navigation, as data and pure functions (the active state comes from the route, never from local
- * state). The rail draws the one section map of `@yomizaka/core` (yomizaka#319) — Bibliothèque · Dossiers (offered with the
+ * state). The rail draws the one section map of `@verikora/core` (verikora#319) — Bibliothèque · Dossiers (offered with the
  * applicant-file flow) · Vérifications · Recherche —, the account owns the settings, and the header owns the one action of
  * every screen, « Vérifier un document », whose task page (`check`) lights Vérifications.
  */
@@ -26,7 +26,7 @@ export const CONSOLE_ROUTES = {
   plans: "/app/plans",
 } as const;
 
-/** The tabs of the Vérifications destination (the map's, `@yomizaka/core`); the second lives in the address: `/app/verifications?tab=lots`. */
+/** The tabs of the Vérifications destination (the map's, `@verikora/core`); the second lives in the address: `/app/verifications?tab=lots`. */
 export { CHECKS_TABS, type ChecksTab };
 export const CHECKS_TAB_KEY = "tab";
 /** The tab named by the address; an unknown or missing one is the list of checks (a stale link never breaks the page). */

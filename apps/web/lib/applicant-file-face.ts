@@ -1,11 +1,11 @@
-import { type Analysis, ANALYSIS_STATUS } from "@yomizaka/core";
+import { type Analysis, ANALYSIS_STATUS } from "@verikora/core";
 import { z } from "zod";
 
 import { LINK, type LinkState, NOT_NECESSARY_TYPES } from "./applicant-file-rules";
 import { verdictOf } from "./document-face";
 
 /*
- * What « Dossiers » shows of an applicant file (yomizaka#323, design § 4): its link's state as a line of facts and the
+ * What « Dossiers » shows of an applicant file (verikora#323, design § 4): its link's state as a line of facts and the
  * documents received against those asked. Pure: the state comes from `linkState` (lib/applicant-file-rules); the words are
  * messages. There is no decision here yet (P7, krizaka-ts#89).
  */
@@ -79,7 +79,7 @@ export interface CheckFact {
   tone: "danger" | "warning" | "success" | "neutral";
 }
 
-/** A received document's check, in words, from what Orazaka returned: never a grade of the person, never Yomizaka's own verdict. */
+/** A received document's check, in words, from what Sovkora returned: never a grade of the person, never Verikora's own verdict. */
 export function checkFact(check: Pick<Analysis, "studio" | "status" | "report">): CheckFact {
   if (check.status === ANALYSIS_STATUS.running) return { key: "dossiers.check.running", count: 0, tone: "neutral" };
   const report = check.report;
@@ -100,7 +100,7 @@ export function checkFact(check: Pick<Analysis, "studio" | "status" | "report">)
   return { key: "dossiers.check.failed", count: 0, tone: "neutral" };
 }
 
-/** The address the applicant opens (the token is returned once by the request; only its hash is kept). Its page: app/[locale]/dossier/[token] (yomizaka#341). */
+/** The address the applicant opens (the token is returned once by the request; only its hash is kept). Its page: app/[locale]/dossier/[token] (verikora#341). */
 export const applicantLink = (origin: string, locale: "en" | "fr", token: string): string =>
   `${origin}/${locale}/dossier/${token}`;
 

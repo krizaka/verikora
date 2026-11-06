@@ -9,7 +9,7 @@ const ROOT = join(import.meta.dirname, "..");
 const read = (p) => readFileSync(join(ROOT, p), "utf8");
 const json = (p) => JSON.parse(read(p));
 
-/** One section map, read by the three apps (§ 3.6 of the design direction, yomizaka#319). */
+/** One section map, read by the three apps (§ 3.6 of the design direction, verikora#319). */
 describe("the web, the phone and the Mac draw the same section map", () => {
   const readers = {
     web: "apps/web/components/console/ConsoleShell.tsx",
@@ -18,10 +18,10 @@ describe("the web, the phone and the Mac draw the same section map", () => {
   };
 
   it.each(Object.entries(readers))(
-    "%s imports the list from @yomizaka/core and asks for its own platform",
+    "%s imports the list from @verikora/core and asks for its own platform",
     (platform, file) => {
       const src = read(file);
-      expect(src).toMatch(/import \{[^}]*\bsectionsFor\b[^}]*\} from "@yomizaka\/core"/);
+      expect(src).toMatch(/import \{[^}]*\bsectionsFor\b[^}]*\} from "@verikora\/core"/);
       expect(src).toContain(`sectionsFor("${platform}"`);
     },
   );

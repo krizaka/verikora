@@ -7,12 +7,12 @@ import { memoryStore } from "./memory";
 import { bootstrapStorage, DATA_KIND, documentsStoreOver, ORG_SCOPE, type ProviderEnv } from "./providers";
 
 /** ADR-005 on PostgreSQL: the environment bootstraps one provider, the database then chooses, a document records which provider holds it (skipped without the database test switch). */
-const enabled = process.env.YOMIZAKA_DB_IT === "1" && !!process.env.DATABASE_URL;
+const enabled = process.env.DATABASE_IT === "1" && !!process.env.DATABASE_URL;
 const KEY = Buffer.alloc(32, 7);
 const NOW = new Date("2026-10-28T12:00:00Z");
 const bootstrapEnv: ProviderEnv = {
   MEDIA_DOCUMENTS_PROVIDER: "bunny",
-  MEDIA_DOCUMENTS_PREFIX: "yomizaka",
+  MEDIA_DOCUMENTS_PREFIX: "verikora",
   MEDIA_STORAGE_ENDPOINT: "storage.bunnycdn.com",
   MEDIA_STORAGE_ZONE: "yomizaka-docs-dev",
   MEDIA_STORAGE_API_KEY: "zone-password",
@@ -59,7 +59,7 @@ describe.runIf(enabled)("the storage providers in the database", () => {
     const owner = (
       await query<{ id: string }>(
         "INSERT INTO accounts (email, password_hash, email_verified_at) VALUES ($1, 'x', now()) RETURNING id",
-        [`p-${Math.random().toString(36).slice(2)}@yomizaka.test`],
+        [`p-${Math.random().toString(36).slice(2)}@verikora.test`],
       )
     )[0]!.id;
     const working = memoryStore({ kind: "none", devOnly: true, owner: "krizaka", residency: "elsewhere" });

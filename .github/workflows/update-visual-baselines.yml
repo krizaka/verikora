@@ -29,5 +29,5 @@ jobs:
       test-command: pnpm exec playwright test -c apps/web/e2e/visual/playwright.config.mjs
       snapshot-paths: apps/web/e2e/visual/__screenshots__
       env: |
-        E2E_EMAIL=eric@demo.yomizaka.test
+        E2E_EMAIL=eric@demo.verikora.test
         E2E_PASSWORD=ci-only-demo-password-0123

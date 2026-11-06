@@ -21,7 +21,7 @@ vi.mock("../db", () => ({
 }));
 
 const json = (method: string, body?: unknown) =>
-  new Request("https://dev.yomizaka.com/x", {
+  new Request("https://dev.verikora.com/x", {
     method,
     body: body === undefined ? undefined : JSON.stringify(body),
     headers: { "x-forwarded-for": "203.0.113.9", "content-type": "application/json" },
@@ -32,7 +32,7 @@ beforeEach(() => {
   resetRateLimits();
   state.calls = [];
   state.session = {
-    account: { id: "22222222-2222-4222-8222-222222222222", email: "eric@yomizaka.test", perspective: "tenant" },
+    account: { id: "22222222-2222-4222-8222-222222222222", email: "eric@verikora.test", perspective: "tenant" },
   };
 });
 

@@ -1,4 +1,4 @@
-import type { ComplianceReport } from "@yomizaka/core";
+import type { ComplianceReport } from "@verikora/core";
 
 import en from "../../messages/en.json";
 import fr from "../../messages/fr.json";
@@ -19,7 +19,7 @@ export const LEASE_RULESET = "qc-residential-lease";
 type Reader = Parameters<typeof talTableFrom>[0];
 
 /**
- * Adds Section G's finding (TS-G-001) to a Québec lease report that carries the rents, once, as the report is kept (yomizaka#554).
+ * Adds Section G's finding (TS-G-001) to a Québec lease report that carries the rents, once, as the report is kept (verikora#554).
  * The stored text is French like the engine's own findings; the catalogue entry gives the title in the reader's language. A report
  * without the rents, a result that makes no claim, or a report already holding the finding is returned as it came.
  */

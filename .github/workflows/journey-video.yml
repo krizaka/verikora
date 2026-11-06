@@ -34,7 +34,7 @@ jobs:
       XDG_CACHE_HOME: /root/.cache
       CI: "true"
       VISUAL_BASE_URL: http://localhost:3000
-      E2E_EMAIL: eric@demo.yomizaka.test
+      E2E_EMAIL: eric@demo.verikora.test
       E2E_PASSWORD: ci-only-demo-password-0123
     services:
       postgres:

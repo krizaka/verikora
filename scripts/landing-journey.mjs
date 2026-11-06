@@ -1,11 +1,11 @@
 #!/usr/bin/env node
-// The landing's living proof: the real journey on dev.yomizaka.com, recorded as the QA member (never the administrator),
-// one clip per step of « How it works » — keep (the library), check (a compliance check run by Orazaka, waited for, its
+// The landing's living proof: the real journey on dev.verikora.com, recorded as the QA member (never the administrator),
+// one clip per step of « How it works » — keep (the library), check (a compliance check run by Sovkora, waited for, its
 // findings), find (a search across the library). Run once per device; the clips go to Bunny, never into the repository.
 //
 //   QA_USER_EMAIL=… QA_USER_PASSWORD=… node scripts/landing-journey.mjs <out-dir> [--device phone|desktop] [--locale en|fr]
 //
-// Writes <out-dir>/<device>/{keep,check,find}.{webm,mp4,jpg} and <out-dir>/<device>/evidence.json (the Orazaka run id of
+// Writes <out-dir>/<device>/{keep,check,find}.{webm,mp4,jpg} and <out-dir>/<device>/evidence.json (the Sovkora run id of
 // the check, the times of each step). The waiting is sped up uniformly (never edited otherwise); the e-mail of the account
 // is hidden on screen. Needs a Chromium for playwright-core and ffmpeg. Credentials are read from the environment, never printed.
 import { execFileSync } from "node:child_process";
@@ -23,7 +23,7 @@ const flag = flagReader(args);
 const outRoot = path.resolve(args[0] ?? "journey");
 const device = flag("device", "phone");
 const locale = flag("locale", "en");
-const BASE = process.env.APP_BASE_URL ?? "https://dev.yomizaka.com";
+const BASE = process.env.APP_BASE_URL ?? "https://dev.verikora.com";
 const email = process.env.QA_USER_EMAIL;
 const password = process.env.QA_USER_PASSWORD;
 if (!email || !password) throw new Error("QA_USER_EMAIL and QA_USER_PASSWORD are required");
@@ -128,7 +128,7 @@ await record("keep", async (page, mark) => {
   await page.waitForTimeout(1500);
 });
 
-// 2 · Check — the compliance check of the lease, run by Orazaka now, waited for, then its findings.
+// 2 · Check — the compliance check of the lease, run by Sovkora now, waited for, then its findings.
 let documentUrl = "";
 await record("check", async (page, mark) => {
   await page.goto(`${BASE}/${locale}/app`, { waitUntil: "networkidle" });
@@ -139,9 +139,9 @@ await record("check", async (page, mark) => {
     .click();
   await page.waitForLoadState("networkidle");
   documentUrl = page.url();
-  await page.waitForSelector('[data-testid="orazaka-run-id"]');
+  await page.waitForSelector('[data-testid="sovkora-run-id"]');
   await page.waitForLoadState("networkidle");
-  const runIds = () => page.locator('[data-testid="orazaka-run-id"]').allTextContents();
+  const runIds = () => page.locator('[data-testid="sovkora-run-id"]').allTextContents();
   const failures = () =>
     page.evaluate(() => (document.body.innerText.match(/NON-COMPLIANT|NON CONFORME/gi) ?? []).length);
   const before = new Set((await runIds()).map((s) => s.trim()));
@@ -155,10 +155,10 @@ await record("check", async (page, mark) => {
   await page.waitForTimeout(1500);
   await form.locator('button[type="submit"]').click();
   mark("run");
-  // The new run appears in the list (its id is the trace), polled until Orazaka answers with its findings.
+  // The new run appears in the list (its id is the trace), polled until Sovkora answers with its findings.
   await page.waitForFunction(
     (known) =>
-      [...document.querySelectorAll('[data-testid="orazaka-run-id"]')].some(
+      [...document.querySelectorAll('[data-testid="sovkora-run-id"]')].some(
         (el) => !known.includes(el.textContent.trim()),
       ),
     [...before],

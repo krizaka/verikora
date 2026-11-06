@@ -3,4 +3,4 @@ export { createImageCleaner } from "./clean";
 export { pagesToPdf, type PageWord } from "./pdf";
 export * from "./port";
 export { assessQuality, type PhotoQuality, type QualityProblem, qualityProblem, type QualityRules } from "./quality";
-export { YOMIZAKA_IMAGE_RULES } from "./rules";
+export { VERIKORA_IMAGE_RULES } from "./rules";

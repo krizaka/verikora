@@ -4,7 +4,7 @@ import { CHECKS_TABS, PLATFORMS, SECTION_IDS, SECTIONS, sectionShortcut, section
 
 const ids = (sections: ReturnType<typeof sectionsFor>) => sections.map((s) => s.id);
 
-/** One section map on the web, the phone and the Mac (§ 3.6 of the design direction, yomizaka#319). */
+/** One section map on the web, the phone and the Mac (§ 3.6 of the design direction, verikora#319). */
 describe("the section map", () => {
   it("is Accueil · Dossiers · Documents · Vérifications (B2, P14), in that order, each with its address; Recherche is ⌘K, not a destination", () => {
     expect(SECTION_IDS).toEqual(["library", "files", "documents", "checks"]);

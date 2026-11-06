@@ -7,7 +7,7 @@ import { isToken, newToken, tokenHash } from "./session";
 vi.mock("./db", () => ({ query: async () => [] }));
 
 /**
- * What the product stored BEFORE `@krizaka/auth` (yomizaka#263) must keep working: a password hash written by the former
+ * What the product stored BEFORE `@krizaka/auth` (verikora#263) must keep working: a password hash written by the former
  * `lib/password.ts`, a session token and the keyed hash the former `lib/session.ts` kept for it. The vectors were computed with the
  * former code (scrypt N=2^15 r=8 p=1; HMAC-SHA256 keyed `session:<secret>`): they never change.
  */

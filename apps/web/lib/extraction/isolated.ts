@@ -1,11 +1,11 @@
 import { Worker } from "node:worker_threads";
 
-import type { TextRun } from "@yomizaka/core";
+import type { TextRun } from "@verikora/core";
 
 import { findPackageDir } from "./package-dir";
 
 /**
- * The PDF's text layer, read OFF the web process (yomizaka#21). pdf.js is CPU-bound: read in the request it would hold the
+ * The PDF's text layer, read OFF the web process (verikora#21). pdf.js is CPU-bound: read in the request it would hold the
  * event loop for seconds (health checks and page loads stall, App Platform answers 504), and a hostile file could exhaust the
  * heap and kill the whole container. Here it runs in a `node:worker_threads` worker with its own heap limit, a deadline and a
  * page ceiling: whatever goes wrong ends the worker, and the web process keeps serving.

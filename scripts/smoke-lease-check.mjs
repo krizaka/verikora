@@ -1,15 +1,15 @@
 #!/usr/bin/env node
-// The post-deploy smoke of the lease check (yomizaka P0, 2026-10-29: « Orazaka refused the document as sent » on dev for a lease while
-// every unit test was green, because no test crossed the real Orazaka). ONE real lease check on a deployed Yomizaka, as a persona:
+// The post-deploy smoke of the lease check (verikora P0, 2026-10-29: « Sovkora refused the document as sent » on dev for a lease while
+// every unit test was green, because no test crossed the real Sovkora). ONE real lease check on a deployed Verikora, as a persona:
 //   sign in ONCE (bearer) -> upload the demo lease -> wait for its text -> start the compliance check the way the UI does -> wait for the
-//   report -> delete the document. It fails, with the code Yomizaka answered (never a secret), if the engine refuses or the report is empty.
+//   report -> delete the document. It fails, with the code Verikora answered (never a secret), if the engine refuses or the report is empty.
 //
-//   SMOKE_EMAIL=… SMOKE_PASSWORD=… node scripts/smoke-lease-check.mjs --base https://dev.yomizaka.com
+//   SMOKE_EMAIL=… SMOKE_PASSWORD=… node scripts/smoke-lease-check.mjs --base https://dev.verikora.com
 import { fileURLToPath } from "node:url";
 
 import { generateDocument } from "./demo-documents/index.mjs";
 
-/** The Québec lease versions the UI asks for (apps/web/lib/rulesets.ts; apps/web/lib/orazaka-contract.test.ts keeps them equal). */
+/** The Québec lease versions the UI asks for (apps/web/lib/rulesets.ts; apps/web/lib/sovkora-contract.test.ts keeps them equal). */
 export const LEASE_REFS = [
   { effectiveFrom: null, ref: "qc-residential-lease/2024-02-21" },
   { effectiveFrom: "2026-10-24", ref: "qc-residential-lease/2026-10-24" },
@@ -149,7 +149,7 @@ export const plain = (text) => String(text).replace(/[^\x20-\x7E\u00C0-\u017F]/g
 
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
   const i = process.argv.indexOf("--base");
-  const base = (i >= 0 ? process.argv[i + 1] : "https://dev.yomizaka.com").replace(/\/$/, "");
+  const base = (i >= 0 ? process.argv[i + 1] : "https://dev.verikora.com").replace(/\/$/, "");
   try {
     const result = await smokeLeaseCheck({
       base,

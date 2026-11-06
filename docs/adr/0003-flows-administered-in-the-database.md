@@ -1,13 +1,13 @@
 # ADR-0003 — Flows are administered in the database
 
 - **Status**: accepted (2026-10-17, Oussama)
-- **Context**: Yomizaka will carry many flows — a lease check for a tenant, for a landlord, a freelance contract, an invoice,
+- **Context**: Verikora will carry many flows — a lease check for a tenant, for a landlord, a freelance contract, an invoice,
   a tenant screening. Until now the audiences (`AUDIENCES`), what each is offered (`firstCheck`), the jurisdictions and the
   « Pour qui ? » picker were constants in the code: adding or switching off a flow was a release.
 
 ## Decision
 
-A **flow** is data: the platform administrator (admin.yomizaka.com) defines and administers it; the app only reads it.
+A **flow** is data: the platform administrator (admin.verikora.com) defines and administers it; the app only reads it.
 
 **Schema** (migration `0006_flows`):
 
@@ -19,8 +19,8 @@ A **flow** is data: the platform administrator (admin.yomizaka.com) defines and 
 | `consents` | `account_id`, `key`, `granted_at`, `revoked_at` — what the person agreed to |
 | `analyses.flow_version_id` | the exact version that produced a check |
 
-**The definition** (`flowDefinition` in `@yomizaka/core`, validated by zod on both sides): `title` and `lead` in `en`/`fr`;
-`status` (`available` · `soon`); `audiences` (who it is offered to); `steps` — each step names the **Orazaka Studio**, its
+**The definition** (`flowDefinition` in `@verikora/core`, validated by zod on both sides): `title` and `lead` in `en`/`fr`;
+`status` (`available` · `soon`); `audiences` (who it is offered to); `steps` — each step names the **Sovkora Studio**, its
 **pack**, and the **rulesets by jurisdiction** (data, never code: `QC → qc-residential-lease`); `consents` (keys the person
 must have granted before the flow runs); `providers` (external providers a step uses, e.g. a credit bureau); `pricing`
 (`free` · `per-run` · `subscription`, amount in cents CAD).
@@ -43,12 +43,12 @@ seeded definitions only when the database cannot be reached, so a build or an ou
    `flow.environment_set`) with the actor and the version.
 5. **Nothing is hard-coded but the vocabulary**: audiences keep their words in `messages/` (the keys are the vocabulary); which
    audiences, studios and jurisdictions are *offered* is data. The existing flows are seeded (`SEED_FLOWS`), idempotently, at start.
-6. The platform admin edits flows on admin.yomizaka.com (people with the ADMIN role from an allowed address, as for every
+6. The platform admin edits flows on admin.verikora.com (people with the ADMIN role from an allowed address, as for every
    administration page): a list (Krizaka UI `DataTable`), a create/edit form, publish and enable-per-environment actions.
 
 ## Consequences
 
 - Adding an audience's flow, switching one off, or changing its rulesets is an administration action, not a release.
-- A new Studio or a new ruleset still needs its Orazaka pack (the engine) — the flow only points to it.
+- A new Studio or a new ruleset still needs its Sovkora pack (the engine) — the flow only points to it.
 - The `AUDIENCES` constant remains as the **vocabulary** (labels, URLs); a new audience key is a code change once.
 - Pricing is recorded, not yet charged (no payment flow exists).

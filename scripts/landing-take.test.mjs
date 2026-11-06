@@ -4,8 +4,8 @@ import { describe, expect, it } from "vitest";
 
 const source = readFileSync(new URL("./landing-take.mjs", import.meta.url), "utf8");
 
-// yomizaka#602: a CDP `clip` at y=0 cut the frame at the top of the page, so a scrolled page left a blank band in the film.
-// yomizaka#575: the take waited for a <mark> that never exists when the document is deleted after its check; the keep
+// verikora#602: a CDP `clip` at y=0 cut the frame at the top of the page, so a scrolled page left a blank band in the film.
+// verikora#575: the take waited for a <mark> that never exists when the document is deleted after its check; the keep
 // choice is read when the file leaves, so it is made BEFORE the drop, and every wait is bounded and logged.
 describe("the /story take", () => {
   it("never clips at a fixed origin: the clip is the visual viewport as it is now", () => {

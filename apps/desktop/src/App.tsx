@@ -5,7 +5,7 @@ import { AccountMenu } from "@krizaka/ui/account-menu";
 import { AppShell } from "@krizaka/ui/app-shell";
 import { Tabs } from "@krizaka/ui/tabs";
 import { ThemeToggle } from "@krizaka/ui/theme";
-import { CHECKS_TABS, type ChecksTab, type SectionId } from "@yomizaka/core";
+import { CHECKS_TABS, type ChecksTab, type SectionId } from "@verikora/core";
 import { useCallback, useEffect, useState } from "react";
 
 import { BatchesView, BatchView } from "./components/Batches";
@@ -16,7 +16,7 @@ import { Settings } from "./components/Settings";
 import { StageNotice } from "./components/StageNotice";
 import { SignIn } from "./components/SignIn";
 import { I18nProvider, type Locale, LOCALES, currentLocale, rememberLocale, useI18n } from "./i18n";
-import { APP_VERSION, queries, stage, yomizaka } from "./lib/config";
+import { APP_VERSION, BRAND_ID, queries, stage, verikora } from "./lib/config";
 import { bridge, folders, followLinks, setNativeMenu } from "./lib/desktop";
 import { macSections, MENU_IDS, menuSpec } from "./lib/menu";
 import { hashOf, type Route, routeOfLink, sectionOf } from "./lib/route";
@@ -55,7 +55,7 @@ const TAB_ROUTES: Record<ChecksTab, Route> = { checks: { screen: "reports" }, lo
 /**
  * Signed out, the sign-in; signed in, the window (krizaka-ui ADR-002: `AppShell desktop`, its header and sidebar are the
  * title bar). The signed-in account is always in the header (Oussama's decision, 2026-10-23). The screen is the hash; the
- * native menu and `yomizaka://` links move it too.
+ * native menu and `verikora://` links move it too.
  */
 function Gate({ onLocale }: Readonly<{ onLocale: (locale: Locale) => void }>) {
   const { t, messages, locale } = useI18n();
@@ -108,7 +108,7 @@ function Gate({ onLocale }: Readonly<{ onLocale: (locale: Locale) => void }>) {
           />
         }
       >
-        {/* The section map of @yomizaka/core, the same as the web's rail and the phone's tabs (yomizaka#319). */}
+        {/* The section map of @verikora/core, the same as the web's rail and the phone's tabs (verikora#319). */}
         {macSections().flatMap((s) => {
           const to = SECTION_ROUTES[s.id];
           if (!to) return [];
@@ -179,7 +179,7 @@ function Account({
       email={name ? email : undefined}
       showName
       avatar={{
-        defaultAvatar: { brand: "yomizaka", seed: me.data?.avatarSeed ?? email },
+        defaultAvatar: { brand: BRAND_ID, seed: me.data?.avatarSeed ?? email },
         fallback: (name || email || "Y").charAt(0).toUpperCase(),
       }}
       links={[
@@ -198,7 +198,7 @@ function Account({
       }}
       signOut={{
         label: t("nav.signOut"),
-        onSelect: () => void yomizaka.signOut().then(() => go({ screen: "library", folder: null })),
+        onSelect: () => void verikora.signOut().then(() => go({ screen: "library", folder: null })),
         icon: <LogoutIcon size={16} />,
       }}
     >

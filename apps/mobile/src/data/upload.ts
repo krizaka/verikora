@@ -1,4 +1,4 @@
-import type { PickedFile } from "@yomizaka/client";
+import type { PickedFile } from "@verikora/client";
 import { File } from "expo-file-system";
 
 /** One file as the multipart body the API reads. Expo's fetch takes a `File` as a part, not React Native's `{ uri, name, type }`. */

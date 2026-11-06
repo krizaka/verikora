@@ -8,7 +8,7 @@ import { pgSuppression } from "@/lib/mail/store";
 export const dynamic = "force-dynamic";
 
 /**
- * The mail provider's bounce and complaint webhook (yomizaka#48): signed by the vendor (HMAC with `MAIL_WEBHOOK_SIGNING_KEY`, a replay
+ * The mail provider's bounce and complaint webhook (verikora#48): signed by the vendor (HMAC with `MAIL_WEBHOOK_SIGNING_KEY`, a replay
  * window), refused without a valid signature; a hard bounce, a complaint or an unsubscribe puts the address on the suppression list,
  * and it is never mailed again. 404 while no signing key is set (the route has nothing to check a signature with).
  */

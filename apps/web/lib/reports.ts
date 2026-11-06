@@ -32,7 +32,7 @@ export async function reportFor(
   }
   const issued = issueReport(payload, reportLabels(lang), signingKey());
   const slug = slugOf(document.title);
-  return { issued, filename: `yomizaka-audit-${slug}-${(analysis.runId ?? analysis.id).slice(0, 8)}.html` };
+  return { issued, filename: `verikora-audit-${slug}-${(analysis.runId ?? analysis.id).slice(0, 8)}.html` };
 }
 
 /** The signed PDF of the same check: the report's pages, a visible signature page, the attestation embedded. */
@@ -53,5 +53,5 @@ export async function reportPdfFor(
   }
   const issued = await issuePdf(payload, reportLabels(lang), signingKey(), await currentProductName());
   const slug = slugOf(document.title);
-  return { issued, filename: `yomizaka-audit-${slug}-${(analysis.runId ?? analysis.id).slice(0, 8)}.pdf` };
+  return { issued, filename: `verikora-audit-${slug}-${(analysis.runId ?? analysis.id).slice(0, 8)}.pdf` };
 }

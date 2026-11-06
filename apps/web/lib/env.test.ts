@@ -5,7 +5,7 @@ import { generateSigningKeyBase64 } from "./report-key";
 
 const PROD = {
   NODE_ENV: "production",
-  DATABASE_URL: "postgresql://yomizaka_db:x@db.example:25060/yomizaka_db?sslmode=require",
+  DATABASE_URL: "postgresql://verikora_db:x@db.example:25060/verikora_db?sslmode=require",
   DATABASE_CA_CERT: "-----BEGIN CERTIFICATE-----",
   AUTH_SESSION_SECRET: "a".repeat(40),
   AI_API_KEY: "oz_live_key",
@@ -17,7 +17,7 @@ describe("env", () => {
     expect(Object.keys(envSchema.shape)).not.toContain("APP_PUBLIC_ACTIONS");
   });
 
-  it("holds no price and no included volume: they are the price catalogue's (ADR-009, yomizaka#367)", () => {
+  it("holds no price and no included volume: they are the price catalogue's (ADR-009, verikora#367)", () => {
     for (const gone of ["PAYMENTS_PRICE_KEY_AUDIT", "PAYMENTS_PRICE_KEY_PRO", "APP_FAIR_USE_AUDITS_PER_MONTH"])
       expect(Object.keys(envSchema.shape)).not.toContain(gone);
   });
@@ -37,24 +37,24 @@ describe("env", () => {
     expect(readEnv({ AUTH_SIGNUP_ENABLED: "TRUE" }).AUTH_SIGNUP_ENABLED).toBe(true);
   });
 
-  it("runs the analyses on Orazaka only", () => {
-    expect(readEnv({}).AI_PROVIDER).toBe("orazaka");
+  it("runs the analyses on Sovkora only", () => {
+    expect(readEnv({}).AI_PROVIDER).toBe("sovkora");
     expect(() => readEnv({ AI_PROVIDER: "openai" })).toThrow();
-    expect(readEnv({}).AI_API_URL).toBe("https://dev.orazaka.com/edge");
+    expect(readEnv({}).AI_API_URL).toBe("https://dev.sovkora.com/edge");
   });
 
   it("refuses a production start without its secrets, naming them, never showing them", () => {
     expect(() => assertProductionEnv(PROD)).not.toThrow();
     const problems = productionProblems(
-      readEnv({ NODE_ENV: "production", AI_API_KEY: "sk-not-orazaka", DATABASE_URL: PROD.DATABASE_URL }),
+      readEnv({ NODE_ENV: "production", AI_API_KEY: "sk-not-sovkora", DATABASE_URL: PROD.DATABASE_URL }),
     );
     expect(problems).toEqual([
       "AUTH_SESSION_SECRET must be at least 32 characters",
-      "AI_API_KEY must be an Orazaka key (oz_…)",
+      "AI_API_KEY must be an Sovkora key (oz_…)",
       "APP_REPORT_SIGNING_KEY is not set",
       "DATABASE_CA_CERT is required for a TLS database",
     ]);
-    expect(problems.join(" ")).not.toContain("sk-not-orazaka");
+    expect(problems.join(" ")).not.toContain("sk-not-sovkora");
     expect(productionProblems(readEnv({}))).toEqual([]);
   });
 

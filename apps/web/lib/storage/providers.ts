@@ -5,7 +5,7 @@ import {
   type ProviderStore,
   type PublicProvider,
 } from "@krizaka/storage/provider-admin";
-import { STORAGE_KIND } from "@yomizaka/core";
+import { STORAGE_KIND } from "@verikora/core";
 
 import { logError } from "../log";
 import { documentStoreOver } from "./adapter";

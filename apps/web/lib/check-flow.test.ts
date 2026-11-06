@@ -72,7 +72,7 @@ describe("the check flow (the UX review's Y4)", () => {
     });
   });
 
-  it("starts it when Yomizaka recognised the kind with high confidence; asks to confirm otherwise, or when it is another kind of document", () => {
+  it("starts it when Verikora recognised the kind with high confidence; asks to confirm otherwise, or when it is another kind of document", () => {
     expect(afterUpload({ requested: "auto", insight: insight("lease", "high"), asOf: DAY })).toEqual({
       start: { studio: "compliance-check", jurisdiction: "QC", ruleset: "qc-residential-lease/2026-10-24", asOf: DAY },
       confirm: false,
@@ -117,7 +117,7 @@ describe("the keep choice and the files already sent", () => {
   });
 });
 
-describe("the kind the person declared and the kind Yomizaka detected (ADR-089)", () => {
+describe("the kind the person declared and the kind Verikora detected (ADR-089)", () => {
   it("the mismatch is shown and nothing runs by itself: the declared kind stays the default until the person confirms", () => {
     const plan = afterUpload({ requested: "lease", insight: insight("visit-notice", "high"), asOf: DAY });
     expect(plan).toEqual({

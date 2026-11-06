@@ -1,7 +1,7 @@
 import type { ImageRules } from "./port";
 
-/** Yomizaka's photo rules — data. */
-export const YOMIZAKA_IMAGE_RULES: ImageRules = {
+/** Verikora's photo rules — data. */
+export const VERIKORA_IMAGE_RULES: ImageRules = {
   maxSide: 2400,
   jpegQuality: 85,
   maxPhotos: 12,

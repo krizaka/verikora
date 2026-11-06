@@ -57,7 +57,7 @@ function lease(rng, flaw) {
   const landlord = person(rng);
   const tenant = person(rng);
   const rent = rng.int(9, 19) * 100 + rng.pick([0, 25, 50]);
-  // The lease with no TAL notice also carries a lowest rent well under the new one (Section G, yomizaka#104): the increase is over the TAL's rate.
+  // The lease with no TAL notice also carries a lowest rent well under the new one (Section G, verikora#104): the increase is over the TAL's rate.
   const lowest = flaw === "no-tal" ? rent - 90 : rent - 25;
   const lines = [
     ...banner("bail de logement"),
@@ -289,7 +289,7 @@ function contract(rng) {
   return { lines, findings: [] };
 }
 
-/** Every document of the demo: id, kind in Yomizaka, family (what it is), flaw (null = clean) and the builder. */
+/** Every document of the demo: id, kind in Verikora, family (what it is), flaw (null = clean) and the builder. */
 export const SPECS = [
   {
     id: "bail-rosemont-1-conforme",
@@ -410,7 +410,7 @@ export const PERSONA_ERIC = {
     { key: "rosemont", documents: SPECS.filter((s) => /rosemont/.test(s.id)).map((s) => s.id) },
     { key: "villeray", documents: SPECS.filter((s) => /villeray/.test(s.id)).map((s) => s.id) },
     { key: "invoices", documents: SPECS.filter((s) => /^facture-2026/.test(s.id)).map((s) => s.id) },
-    // Two folders with nothing in them (and the default one stays empty): the empty state of the open folder's card is rendered and audited (yomizaka#435).
+    // Two folders with nothing in them (and the default one stays empty): the empty state of the open folder's card is rendered and audited (verikora#435).
     { key: "empty-a", documents: [] },
     { key: "empty-b", documents: [] },
   ],
@@ -432,13 +432,13 @@ export const PERSONA_ERIC = {
     {
       id: "bail-rosemont-2-conforme",
       studio: "compliance-check",
-      error: "Orazaka finished without a report Yomizaka can read",
+      error: "Sovkora finished without a report Verikora can read",
     },
     { id: "bail-rosemont-3-conforme", studio: "compliance-check", error: "The run ended failed" },
     {
       id: "contrat-entretien-rosemont",
       studio: "document-authenticity",
-      error: "Orazaka refused the document as sent",
+      error: "Sovkora refused the document as sent",
     },
   ],
 };

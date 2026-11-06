@@ -18,7 +18,7 @@ import {
 } from "./applicant-file-rules";
 import { CONFIG_SEED } from "./config-seed";
 
-/** yomizaka#127, the rules that need no database: the link's states, what a request may ask, the retention and the words. */
+/** verikora#127, the rules that need no database: the link's states, what a request may ask, the retention and the words. */
 const NOW = new Date("2026-10-24T12:00:00Z");
 const open = {
   status: "requested",

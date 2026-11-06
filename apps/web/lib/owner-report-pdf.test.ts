@@ -75,7 +75,7 @@ const textOf = async (bytes: Uint8Array) => {
   ).replace(/\s+/g, " ");
 };
 
-describe("the owner report PDF (yomizaka#481)", () => {
+describe("the owner report PDF (verikora#481)", () => {
   it.each(["en", "fr"] as const)("validates its schema, signs, and verifies in %s", async (lang) => {
     const payload = ownerPayloadOf(report as never, lang);
     expect(ownerReportPayload.safeParse(payload).success).toBe(true);
@@ -203,7 +203,7 @@ describe("GET /api/rapport/<token>/pdf", () => {
   });
   const ask = (token: string, query = "") =>
     GET(
-      new Request(`https://dev.yomizaka.com/api/rapport/${token}/pdf${query}`, {
+      new Request(`https://dev.verikora.com/api/rapport/${token}/pdf${query}`, {
         headers: { "x-forwarded-for": "203.0.113.9" },
       }),
       { params: Promise.resolve({ token }) },

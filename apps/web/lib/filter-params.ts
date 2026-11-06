@@ -1,6 +1,6 @@
 /*
  * The address's filters, read and written the way `@krizaka/ui/filter-bar` does — as plain functions. That package module is a
- * `"use client"` one, and a server page cannot call a function it exports (React #441 on « Dossiers », yomizaka#457), so the
+ * `"use client"` one, and a server page cannot call a function it exports (React #441 on « Dossiers », verikora#457), so the
  * lists' filters are read and written here, where the server and the browser both reach them. `tests/filter-params` keeps the
  * two identical.
  */

@@ -82,7 +82,7 @@ function useStep(onProblem: (message: string | null) => void) {
 }
 
 /**
- * The confidentiality incident register (Loi 25, ss. 3.5 to 3.8; yomizaka#418): open an incident, assess the risk of serious injury, record the
+ * The confidentiality incident register (Loi 25, ss. 3.5 to 3.8; verikora#418): open an incident, assess the risk of serious injury, record the
  * notices to the Commission and to the people concerned, close it, export the register. It holds facts and categories of information, never a person's data.
  */
 const riskKey = (serious: boolean) =>

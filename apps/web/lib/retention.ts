@@ -1,4 +1,4 @@
-import { STORAGE_KIND, type StorageKind } from "@yomizaka/core";
+import { STORAGE_KIND, type StorageKind } from "@verikora/core";
 import { addHours } from "date-fns";
 import type { QueryResultRow } from "pg";
 
@@ -94,7 +94,7 @@ export async function purgeDocument(
 
 /**
  * After a check: purges the document when it is not kept, no other check of it is still running and no batch row is still
- * waiting to check it (yomizaka#250: one lease listed for compliance and for authenticity is one document).
+ * waiting to check it (verikora#250: one lease listed for compliance and for authenticity is one document).
  */
 export async function purgeIfDone(q: Query, documentId: string, holder: ObjectHolder = noHolder): Promise<boolean> {
   const running = await q(

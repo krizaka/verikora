@@ -6,7 +6,7 @@ import { describeError, REDACTED, redactSecrets, sanitizedError } from "./redact
 
 // Fake credentials, shaped like the real ones: a failing connection must never print any part of them.
 const PASSWORD = "s3cr3t-Pa55w0rd";
-const BAD_URL = `postgresql://yomizaka_db:${PASSWORD}@<nil>:<nil>/yomizaka_db?sslmode=require`;
+const BAD_URL = `postgresql://verikora_db:${PASSWORD}@<nil>:<nil>/verikora_db?sslmode=require`;
 
 afterEach(() => {
   vi.restoreAllMocks();
@@ -18,7 +18,7 @@ describe("redactSecrets", () => {
   it("hides URLs that carry credentials and every database address", () => {
     expect(redactSecrets(`connect ${BAD_URL} failed`)).toBe(`connect ${REDACTED} failed`);
     expect(redactSecrets("https://user:pw@example.com/x")).toBe(REDACTED);
-    expect(redactSecrets("postgresql://db.example:25060/yomizaka_db")).toBe(REDACTED);
+    expect(redactSecrets("postgresql://db.example:25060/verikora_db")).toBe(REDACTED);
   });
 
   it("hides key=value credentials", () => {
@@ -40,13 +40,13 @@ describe("describeError", () => {
     const line = describeError(error);
     expect(line).toContain("ERR_INVALID_URL");
     expect(line).not.toContain(PASSWORD);
-    expect(line).not.toContain("yomizaka_db:");
+    expect(line).not.toContain("verikora_db:");
     expect(sanitizedError(error).cause).toBeUndefined();
     expect(Object.keys(sanitizedError(error))).toEqual([]);
   });
 });
 
-describe("a failing database connection logs no password (yomizaka#386)", () => {
+describe("a failing database connection logs no password (verikora#386)", () => {
   it("names the wrong variable and shows no part of its value", () => {
     for (const run of [
       () => poolConfig({ DATABASE_URL: BAD_URL }),
@@ -61,13 +61,13 @@ describe("a failing database connection logs no password (yomizaka#386)", () => 
       expect(thrown).toBeInstanceOf(Error);
       const text = JSON.stringify(thrown, Object.getOwnPropertyNames(thrown as object));
       expect(text).not.toContain(PASSWORD);
-      expect(text).not.toContain("yomizaka_db:");
+      expect(text).not.toContain("verikora_db:");
       expect((thrown as Error).message).toMatch(/DATABASE_(DIRECT_)?URL is not a valid URL/);
     }
   });
 
   it("says which variable has no host", () => {
-    expect(() => poolConfig({ DATABASE_URL: "postgresql:///yomizaka_db" })).toThrow("DATABASE_URL has no host");
+    expect(() => poolConfig({ DATABASE_URL: "postgresql:///verikora_db" })).toThrow("DATABASE_URL has no host");
   });
 
   it("start-up logs a redacted line and throws a clean error, whatever the database layer throws", async () => {
@@ -97,7 +97,7 @@ describe("a failing database connection logs no password (yomizaka#386)", () => 
       .join("\n");
     expect(printed).toContain("start-up failed");
     expect(printed).not.toContain(PASSWORD);
-    expect(printed).not.toContain("yomizaka_db:");
+    expect(printed).not.toContain("verikora_db:");
   });
 
   it("logError never prints an error object's own properties", () => {

@@ -5,7 +5,7 @@ import { fileURLToPath } from "node:url";
 import { describe, expect, it, vi } from "vitest";
 
 /**
- * The gate (yomizaka#243): without a session the signed-in space redirects to sign-in and the API answers 401. Proved on every
+ * The gate (verikora#243): without a session the signed-in space redirects to sign-in and the API answers 401. Proved on every
  * route of `app/api` — a new route is guarded or it is named in PUBLIC with the reason, and the test says which.
  */
 const API = fileURLToPath(new URL("../app/api", import.meta.url));
@@ -15,9 +15,9 @@ const ID = "5c0e3f3e-0000-4000-8000-000000000001";
 /** The routes that answer without a session, and why. Everything else must answer 401 (or 403 for the API-key and administration locks). */
 const PUBLIC: Record<string, string> = {
   "auth/confirm-email": "the link mailed to the person (a single-use token)",
-  "auth/forgot-password": "asks for a reset link by e-mail: the same answer for every address, limited (yomizaka#288)",
+  "auth/forgot-password": "asks for a reset link by e-mail: the same answer for every address, limited (verikora#288)",
   "auth/reset-password":
-    "sets the new password from the mailed link (single use, time-limited), limited (yomizaka#288)",
+    "sets the new password from the mailed link (single use, time-limited), limited (verikora#288)",
   "auth/sign-in": "it opens the session",
   "auth/sign-out": "it ends the session; harmless without one",
   "auth/sign-up": "it creates the account (closed by its own switch)",
@@ -27,25 +27,25 @@ const PUBLIC: Record<string, string> = {
   me: "who is signed in: signed out is a 200 `{ signedIn: false }`, the family's contract (krizaka-ui#551); lib/me-route.test.ts holds it",
   "screenings/respond": "the applicant's own link (a token), not a member",
   applicant:
-    "the applicant's own link (a token), not a member: the notice, consent per purpose, erasure (yomizaka#131)",
+    "the applicant's own link (a token), not a member: the notice, consent per purpose, erasure (verikora#131)",
   "applicant/documents":
-    "the applicant's own link (a token, open and consented): one document of the file, checked and purged (yomizaka#127)",
+    "the applicant's own link (a token, open and consented): one document of the file, checked and purged (verikora#127)",
   showcase: "the home's recorded sample, nothing personal",
   "showcase/file": "the home's recorded sample, nothing personal",
   "webhooks/payments": "signed by the payment vendor, refused without its signature",
-  "webhooks/mail": "signed by the mail vendor (bounces, complaints), refused without its signature (yomizaka#48)",
+  "webhooks/mail": "signed by the mail vendor (bounces, complaints), refused without its signature (verikora#48)",
   "batches/template": "the CSV template: a static file",
   "v1/openapi.json": "the public contract of the API",
   "rapport/[token]/pdf":
-    "the signed PDF of the owner report (yomizaka#481): the token of a live owner link is the credential, 404 otherwise, each download logged",
+    "the signed PDF of the owner report (verikora#481): the token of a live owner link is the credential, 404 otherwise, each download logged",
   "verify/contract/[id]":
-    "the public check of a sealed contract by its SHA-256 (yomizaka#71): who sealed it and when, no name, no account, no content",
+    "the public check of a sealed contract by its SHA-256 (verikora#71): who sealed it and when, no name, no account, no content",
 };
 
 const walk = (dir: string): string[] =>
   readdirSync(dir).flatMap((n) => (statSync(join(dir, n)).isDirectory() ? walk(join(dir, n)) : [join(dir, n)]));
 
-describe("the API answers 401 without a session (yomizaka#243)", () => {
+describe("the API answers 401 without a session (verikora#243)", () => {
   const files = walk(API).filter((f) => f.endsWith(`${sep}route.ts`));
   it("finds the routes", () => expect(files.length).toBeGreaterThan(40));
 
@@ -73,7 +73,7 @@ describe("the API answers 401 without a session (yomizaka#243)", () => {
   }
 });
 
-describe("the signed-in space redirects to sign-in without a session (yomizaka#243)", () => {
+describe("the signed-in space redirects to sign-in without a session (verikora#243)", () => {
   it("the layout of /{locale}/app/** sends a signed-out visitor to /{locale}/sign-in, in each language", async () => {
     vi.resetModules();
     vi.doMock("@/lib/access", () => ({ pageSession: async () => null }));

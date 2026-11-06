@@ -1,13 +1,13 @@
 import { useMutation, useQuery, useQueryClient } from "@krizaka/query";
 import { Badge, Button, Card, DescriptionList, EmptyState, Header, Screen, Segmented, Txt } from "@krizaka/ui/native";
-import { availableChecks, CHECK, type DocumentDetail, keys, type Locale } from "@yomizaka/client";
-import type { Analysis } from "@yomizaka/core";
-import { ANALYSIS_STATUS, checkSteps } from "@yomizaka/core";
+import { availableChecks, CHECK, type DocumentDetail, keys, type Locale } from "@verikora/client";
+import type { Analysis } from "@verikora/core";
+import { ANALYSIS_STATUS, checkSteps } from "@verikora/core";
 import { Redirect, useLocalSearchParams, useRouter } from "expo-router";
 import * as React from "react";
 import { View } from "react-native";
 
-import { queries, yomizaka } from "@/config";
+import { queries, verikora } from "@/config";
 import { deviceStore } from "@/data/expo-files";
 import { legacyDocumentHref, routes } from "@/domain/links";
 import { useI18n } from "@/i18n";
@@ -93,7 +93,7 @@ function Verifications({
   const queryClient = useQueryClient();
   const checks = availableChecks(document);
   const start = useMutation({
-    mutationFn: (request: (typeof checks)[number]) => yomizaka.startAnalysis(document.id, request),
+    mutationFn: (request: (typeof checks)[number]) => verikora.startAnalysis(document.id, request),
     onSuccess: async ({ analysis }) => {
       await queryClient.invalidateQueries({ queryKey: keys.document(document.id) });
       router.replace(`${routes.document(locale, document.id, "rapport")}?analysis=${analysis.id}` as never);

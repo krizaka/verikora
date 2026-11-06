@@ -7,7 +7,7 @@ import { Button } from "@krizaka/ui/button";
 import { createKrizakaForm } from "@krizaka/ui/form";
 import { SettingsRow, SettingsSection } from "@krizaka/ui/settings-layout";
 import { Switch } from "@krizaka/ui/switch";
-import { STORAGE_MODE, STORAGE_MODES, type StorageMode } from "@yomizaka/core";
+import { STORAGE_MODE, STORAGE_MODES, type StorageMode } from "@verikora/core";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense, useState } from "react";
 import { z } from "zod";

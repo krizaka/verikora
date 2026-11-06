@@ -1,11 +1,11 @@
-import { type Audience, offerOf } from "@yomizaka/core";
+import { type Audience, offerOf } from "@verikora/core";
 import { describe, expect, it } from "vitest";
 
 import { catalogueOf, checkHref, chipsOf, GROUPS, planStrip, visibleItems } from "./check-catalogue";
 import { SEED_FLOWS } from "./flows-seed";
 import { ROUTE_STATES } from "./route-state";
 
-/** « Vérifier un document », B2 (yomizaka#333): the catalogue is what the registry runs, nothing more. */
+/** « Vérifier un document », B2 (verikora#333): the catalogue is what the registry runs, nothing more. */
 const offerFor = (audience: Audience) =>
   offerOf(SEED_FLOWS.filter((f) => f.definition.audiences.includes(audience)).map((f) => f.definition));
 const ids = (items: readonly { id: string }[]) => items.map((i) => i.id);

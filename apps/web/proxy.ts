@@ -8,8 +8,8 @@ import { SITE_URL } from "./lib/site";
 
 /**
  * Every page exists in French and English (`/fr/…`, `/en/…`); an address without a language goes to the visitor's choice
- * (cookie `NEXT_LOCALE`), else French (Loi 96, yomizaka#366): English is a choice, never the default. admin.yomizaka.com serves only the administration console (lib/host.ts), never
- * indexed; dev.yomizaka.com never serves it. A deployment with APP_SEARCH_INDEXING=off (lib/indexing.ts) answers noindex on
+ * (cookie `NEXT_LOCALE`), else French (Loi 96, verikora#366): English is a choice, never the default. admin.verikora.com serves only the administration console (lib/host.ts), never
+ * indexed; dev.verikora.com never serves it. A deployment with APP_SEARCH_INDEXING=off (lib/indexing.ts) answers noindex on
  * every response — pages, redirects and the API — and a closed robots.txt without a sitemap.
  */
 const isLocale = (value: string | undefined): value is "en" | "fr" => value === "en" || value === "fr";
@@ -24,7 +24,7 @@ const seal = <T extends Response>(response: T, closed: boolean): T => {
   return response;
 };
 
-/** dev.yomizaka.com (APP_DEV_HOST): robots.txt closes everything; a page goes to www (308); healthz keeps serving. */
+/** dev.verikora.com (APP_DEV_HOST): robots.txt closes everything; a page goes to www (308); healthz keeps serving. */
 function devResponse(request: NextRequest): NextResponse {
   if (request.nextUrl.pathname === "/robots.txt") return closedRobots();
   const to = devRedirect(
@@ -36,7 +36,7 @@ function devResponse(request: NextRequest): NextResponse {
   return to ? NextResponse.redirect(to, 308) : NextResponse.next();
 }
 
-/** The answers that need no page: a closed robots.txt, a 404, a redirect to the public host (admin.yomizaka.com stays admin.yomizaka.com). */
+/** The answers that need no page: a closed robots.txt, a 404, a redirect to the public host (admin.verikora.com stays admin.verikora.com). */
 function directResponse(request: NextRequest, route: HostRoute, host: string | null): NextResponse | null {
   switch (route.kind) {
     case "robotsClosed":
@@ -58,7 +58,7 @@ export function proxy(request: NextRequest) {
   const admin = isAdminHost(host);
   const dev = isDevHost(host);
   // Closed to search engines: the consoles and the dev host always; every other host but the public one (APP_PUBLIC_URL's:
-  // www.yomizaka.com) when APP_SEARCH_INDEXING=off.
+  // www.verikora.com) when APP_SEARCH_INDEXING=off.
   const closed = admin || dev || !indexableOn(host);
   const pathname = request.nextUrl.pathname;
   // The API (and /.well-known) is not routed by language or host: it only carries the noindex header.

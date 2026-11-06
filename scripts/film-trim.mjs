@@ -62,7 +62,7 @@ for (const name of readdirSync(dir).filter((n) => /\.(webm|mp4)$/.test(n))) {
     renameSync(tmp, file);
   }
   assertStart(analyse(file));
-  // yomizaka#1968: the film's language, shape, banner and ending are checked against what the journey saw (<film>.markers.json).
+  // verikora#1968: the film's language, shape, banner and ending are checked against what the journey saw (<film>.markers.json).
   // A film without markers is refused (the Mac film is joined, and checked, by desktop-film-join.mjs).
   const markersFile = join(dir, name.replace(/\.(webm|mp4)$/, ".markers.json"));
   const markers = existsSync(markersFile) ? JSON.parse(readFileSync(markersFile, "utf8")) : undefined;

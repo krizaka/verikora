@@ -47,7 +47,7 @@ const render = (b: ReturnType<typeof batch>, locale: "en" | "fr" = "fr") =>
     </I18nProvider>,
   );
 
-describe("a batch's page (yomizaka#232)", () => {
+describe("a batch's page (verikora#232)", () => {
   it("says how far it is, each row's state, and why a row did not run — in the reader's language", () => {
     const text = readable(render(batch()));
     expect(text).toContain("Immeuble Laurier");

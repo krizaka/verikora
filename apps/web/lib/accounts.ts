@@ -1,5 +1,5 @@
 import { decoyHash, verifyPassword } from "@krizaka/auth";
-import type { AdminUser } from "@yomizaka/core";
+import type { AdminUser } from "@verikora/core";
 
 import { audit } from "./audit";
 import { query } from "./db";

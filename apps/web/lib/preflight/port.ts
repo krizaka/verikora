@@ -1,6 +1,6 @@
 /**
  * The document PRE-FLIGHT port (ADR-0005). Generic on purpose — no import from this app, so another Krizaka product
- * (Akinaza) can lift the folder as a package. It decides, in-process and for nothing, whether a file deserves an engine run:
+ * (Folioviv) can lift the folder as a package. It decides, in-process and for nothing, whether a file deserves an engine run:
  * real type by magic bytes, integrity, safety, cheap metadata. Deduplication (a run already exists) is the application's
  * `ReuseStore`, because it needs its data. Nothing here executes or renders a file.
  */

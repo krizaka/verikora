@@ -1,8 +1,8 @@
 #!/usr/bin/env node
-// The launch offer of ADR-0013 (amendment 2026-10-29, yomizaka#548), created through the DOCUMENTED path: the administration's own API,
+// The launch offer of ADR-0013 (amendment 2026-10-29, verikora#548), created through the DOCUMENTED path: the administration's own API,
 // signed in as the seeded administrator persona (Mira). Never SQL. Idempotent: a coupon with the code is kept, the setting is set again.
 //
-//   node scripts/launch-offer.mjs --base https://admin.yomizaka.com        (dev: from an address of AUTH_ALLOWED_IPS)
+//   node scripts/launch-offer.mjs --base https://admin.verikora.com        (dev: from an address of AUTH_ALLOWED_IPS)
 //   node scripts/launch-offer.mjs --base http://admin.localhost:3000       (local, after `pnpm dev:seed`)
 //
 // The credentials are the cast's administrator: QA_ADMIN_EMAIL / QA_ADMIN_PASSWORD (or APP_DEMO_ADMIN_*), read from the environment,
@@ -50,9 +50,9 @@ export function offerBody(now) {
 export function assertNotProductionBase(base) {
   const host = new URL(base).hostname;
   const local = ["localhost", "127.0.0.1", "admin.localhost"].includes(host) || host.endsWith(".localhost");
-  if (!local && !/(^|\.)dev\./.test(host) && !host.startsWith("admin.yomizaka."))
+  if (!local && !/(^|\.)dev\./.test(host) && !host.startsWith("admin.verikora."))
     throw new Error(`refused: ${host} is not dev or local`);
-  if (host === "yomizaka.com" || host === "www.yomizaka.com")
+  if (host === "verikora.com" || host === "www.verikora.com")
     throw new Error("refused: production belongs to the founder");
 }
 

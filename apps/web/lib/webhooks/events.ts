@@ -1,7 +1,7 @@
 import type { BatchView } from "../batch/run";
 
 /**
- * What Yomizaka tells a customer's system (yomizaka#241): a batch has finished, a check has finished. The payload carries ids,
+ * What Verikora tells a customer's system (verikora#241): a batch has finished, a check has finished. The payload carries ids,
  * states, the customer's own references and reasons — never a document, a quoted passage or a report: the receiver reads those
  * with the API and its key (`GET /api/v1/checks/{id}`). Pure.
  */

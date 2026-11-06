@@ -92,7 +92,7 @@ function consent(url: string): { code: string; state: string } {
   return { code, state: u.searchParams.get("state")! };
 }
 
-describe("the clouds a person may connect (yomizaka#530)", () => {
+describe("the clouds a person may connect (verikora#530)", () => {
   it("offers a cloud only when the deployment holds its registration", () => {
     expect(offeredClouds(env, PUBLIC)).toEqual(["dropbox", "google"]);
     expect(offeredClouds({}, PUBLIC)).toEqual([]);

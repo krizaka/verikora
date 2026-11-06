@@ -7,7 +7,7 @@ import { Mascot } from "@krizaka/ui/mascots";
 import { PageHeader } from "@krizaka/ui/page-header";
 import { SearchField } from "@krizaka/ui/search-field";
 import { Skeleton } from "@krizaka/ui/skeleton";
-import { queryKeys, searchHit } from "@yomizaka/core";
+import { queryKeys, searchHit } from "@verikora/core";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
@@ -64,7 +64,7 @@ export function SearchResults({ hits, q }: Readonly<{ hits: SearchHit[]; q: stri
   );
 }
 
-/** Search across the documents and Orazaka's findings; the query lives in the address. */
+/** Search across the documents and Sovkora's findings; the query lives in the address. */
 export function SearchView({ initialQuery }: Readonly<{ initialQuery: string }>) {
   const { say } = useSay();
   const router = useRouter();

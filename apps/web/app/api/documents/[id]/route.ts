@@ -1,4 +1,4 @@
-import { startAnalysis as startAnalysisBody } from "@yomizaka/core";
+import { startAnalysis as startAnalysisBody } from "@verikora/core";
 
 import { storeForDocument, storesOf } from "@/app/active-store";
 import { requireSession } from "@/lib/access";
@@ -29,7 +29,7 @@ export function GET(req: Request, { params }: Params) {
   });
 }
 
-/** Starts an Orazaka run on the document: `{ studio: "compliance-check", jurisdiction, asOf? }` or `{ studio: "document-authenticity", expectedIssuer? }`. */
+/** Starts an Sovkora run on the document: `{ studio: "compliance-check", jurisdiction, asOf? }` or `{ studio: "document-authenticity", expectedIssuer? }`. */
 export function POST(req: Request, { params }: Params) {
   return handle(async () => {
     const session = await requireSession(req);

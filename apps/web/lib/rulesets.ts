@@ -1,4 +1,4 @@
-import type { Jurisdiction } from "@yomizaka/core";
+import type { Jurisdiction } from "@verikora/core";
 
 /* Pure (no database, no clock): the client reads it too. Which ruleset a kind of document is checked against, and which version
  * of it is in force on the check's date (ADR-089: the kind selects the rules, the date selects the version). */
@@ -8,7 +8,7 @@ export const CHECK_KINDS = ["lease", "invoice", "contract", "visit-notice", "pre
 export type CheckKind = (typeof CHECK_KINDS)[number];
 export const isCheckKind = (value: string): value is CheckKind => (CHECK_KINDS as readonly string[]).includes(value);
 
-/** The calendar of the law: a check is dated on the day in Québec (Montréal), never on the UTC day (yomizaka#309). */
+/** The calendar of the law: a check is dated on the day in Québec (Montréal), never on the UTC day (verikora#309). */
 export const LAW_TIME_ZONE = "America/Toronto";
 
 /** A version of a ruleset: in force from `effectiveFrom` (null: from the start), and the reference the Studio is asked for. */
@@ -18,7 +18,7 @@ export interface RulesetVersion {
 }
 
 /**
- * The Québec rulesets, by kind, with their dated versions (orazaka-packs `document-validation`). The lease has two versions
+ * The Québec rulesets, by kind, with their dated versions (sovkora-packs `document-validation`). The lease has two versions
  * (2024-02-21, then 2026-10-24); the visit notice and the état des lieux come into force with the same release (2026-10-24).
  */
 const QC_RULESETS: Partial<Record<CheckKind, readonly RulesetVersion[]>> = {

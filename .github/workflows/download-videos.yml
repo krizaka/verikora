@@ -40,13 +40,13 @@ jobs:
         run: |
           password="$(openssl rand -hex 16)"
           echo "::add-mask::$password"
-          DEMO_ACCOUNT_EMAIL=eric@demo.yomizaka.test DEMO_ACCOUNT_PASSWORD="$password" bash scripts/ci-mobile-backend.sh
-          # One film per page language (yomizaka#1968): the French fixtures first, then the same database seeded in English.
+          DEMO_ACCOUNT_EMAIL=eric@demo.verikora.test DEMO_ACCOUNT_PASSWORD="$password" bash scripts/ci-mobile-backend.sh
+          # One film per page language (verikora#1968): the French fixtures first, then the same database seeded in English.
           for locale in fr en; do
             if [ "$locale" = "en" ]; then
-              DEMO_ACCOUNT_EMAIL=eric@demo.yomizaka.test DEMO_ACCOUNT_PASSWORD="$password" bash scripts/ci-mobile-backend.sh reseed en
+              DEMO_ACCOUNT_EMAIL=eric@demo.verikora.test DEMO_ACCOUNT_PASSWORD="$password" bash scripts/ci-mobile-backend.sh reseed en
             fi
-            E2E_EMAIL=eric@demo.yomizaka.test E2E_PASSWORD="$password" node scripts/showcase-web.mjs showcase-web --base http://localhost:3000 --locale "$locale" --sign-in off
+            E2E_EMAIL=eric@demo.verikora.test E2E_PASSWORD="$password" node scripts/showcase-web.mjs showcase-web --base http://localhost:3000 --locale "$locale" --sign-in off
           done
       # The runner has no ffmpeg/ffprobe of its own (Playwright's is a private build): run 41135654722 died in the trim for want of ffprobe.
       - run: sudo apt-get update && sudo apt-get install -y --no-install-recommends ffmpeg
@@ -59,7 +59,7 @@ jobs:
           retention-days: 7
 
   # The phone's video (English only for now: the emulator is in English, so is the app; the English fixtures are seeded, and the build wears no
-  # development notice, EXPO_PUBLIC_APP_SHOWCASE; yomizaka#1968): a second call of the Maestro workflow, never required, so it can not block `mobile-e2e / gate`. Its flows are
+  # development notice, EXPO_PUBLIC_APP_SHOWCASE; verikora#1968): a second call of the Maestro workflow, never required, so it can not block `mobile-e2e / gate`. Its flows are
   # in apps/mobile/.maestro-showcase (startRecording / stopRecording); the whole-run recorder is off (two recorders fight).
   mobile-showcase:
     name: Showcase video (phone)
@@ -68,7 +68,7 @@ jobs:
       contents: read
     uses: krizaka/.github/.github/workflows/mobile-e2e.yml@79f6ff6292edefebc59fc968dbc2c203da81c3ea # main (krizaka/.github#318)
     with:
-      app-id: com.krizaka.yomizaka
+      app-id: com.krizaka.verikora
       app-directory: apps/mobile
       flows-directory: .maestro-showcase
       artifact-name: maestro-showcase
@@ -76,7 +76,7 @@ jobs:
       package-manager: pnpm
       lockfile-directory: .
       install-command: pnpm install --frozen-lockfile
-      demo-email: eric@demo.yomizaka.test
+      demo-email: eric@demo.verikora.test
       setup-command: DEMO_LOCALE=en bash scripts/ci-mobile-backend.sh
       reverse-ports: "3000"
       allow-cleartext: true
@@ -85,7 +85,7 @@ jobs:
         EXPO_PUBLIC_APP_ENV=dev
         EXPO_PUBLIC_APP_SHOWCASE=1
 
-  # The Mac's video (yomizaka#636): the Mac journey filmed on a macOS runner (WebDriver screenshots of the window, no screen-recording permission), on main only, never required.
+  # The Mac's video (verikora#636): the Mac journey filmed on a macOS runner (WebDriver screenshots of the window, no screen-recording permission), on main only, never required.
   showcase-mac:
     name: Showcase video (Mac)
     if: github.ref == 'refs/heads/main'
@@ -111,7 +111,7 @@ jobs:
       - name: The film as mp4 (the app-videos workflow names files <platform>-<flow>)
         run: |
           brew install ffmpeg
-          # The clip is named after the language the app was filmed in (film-locale.txt); the page of that language shows it, yomizaka#1968.
+          # The clip is named after the language the app was filmed in (film-locale.txt); the page of that language shows it, verikora#1968.
           locale="$(cat showcase-mac/film-locale.txt)"
           case "$locale" in en|fr) ;; *) echo "the Mac film is in '$locale', not en or fr" >&2; exit 1 ;; esac
           node scripts/desktop-film-join.mjs showcase-mac "showcase-mac/mac-library-$locale.mp4"
@@ -131,7 +131,7 @@ jobs:
       pull-requests: write
     uses: krizaka/.github/.github/workflows/app-videos.yml@79f6ff6292edefebc59fc968dbc2c203da81c3ea # main (krizaka/.github#374: sites/<product>/download)
     with:
-      product: yomizaka
+      product: verikora
       manifest: apps/web/content/app-videos.json
       artifacts: |
         showcase-web

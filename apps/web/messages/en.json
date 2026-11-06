@@ -727,7 +727,7 @@
       "findingPage": "Page {page}",
       "findingPageOnly": "Page {page} (exact place not found)",
       "findingNotFound": "Not found in the file's text layer",
-      "orazakaRun": "Sovkora run",
+      "sovkoraRun": "Sovkora run",
       "exportReport": "Audit report",
       "exportHint": "A signed report as an HTML file and as a PDF (the report's pages, then a visible signature page; the attestation is embedded in the file): document SHA-256, rules version, date, every finding with its passage and article, the Sovkora run id.",
       "exportDownload": "Download the report",
@@ -901,15 +901,15 @@
       "PDF_TOO_LARGE": "Verikora examines files up to 5 MB.",
       "ALREADY_RUNNING": "This check is already running.",
       "EXTRACTING": "Verikora is still reading this document. Try again in a moment.",
-      "ORAZAKA_NOT_CONFIGURED": "The connection to Sovkora is not configured.",
-      "ORAZAKA_UNAVAILABLE": "Sovkora did not answer. Try again in a moment.",
-      "ORAZAKA_KEY": "Sovkora refused Verikora's key.",
-      "ORAZAKA_LOCKED": "This Studio is not open to Verikora on Sovkora.",
-      "ORAZAKA_CREDITS": "Sovkora has no credits left for this check.",
-      "ORAZAKA_INPUT": "Sovkora refused the document as sent.",
-      "ORAZAKA_STUDIO_OLD": "Sovkora does not read this kind of document yet on Verikora's account.",
-      "ORAZAKA_NOT_FOUND": "Sovkora does not know this run.",
-      "ORAZAKA_SHAPE": "Sovkora's answer could not be read.",
+      "SOVKORA_NOT_CONFIGURED": "The connection to Sovkora is not configured.",
+      "SOVKORA_UNAVAILABLE": "Sovkora did not answer. Try again in a moment.",
+      "SOVKORA_KEY": "Sovkora refused Verikora's key.",
+      "SOVKORA_LOCKED": "This Studio is not open to Verikora on Sovkora.",
+      "SOVKORA_CREDITS": "Sovkora has no credits left for this check.",
+      "SOVKORA_INPUT": "Sovkora refused the document as sent.",
+      "SOVKORA_STUDIO_OLD": "Sovkora does not read this kind of document yet on Verikora's account.",
+      "SOVKORA_NOT_FOUND": "Sovkora does not know this run.",
+      "SOVKORA_SHAPE": "Sovkora's answer could not be read.",
       "BAD_REQUEST": "The request is not valid.",
       "INTERNAL": "Something went wrong.",
       "NETWORK": "The network did not answer.",
@@ -1007,7 +1007,7 @@
       "FAILED": "The check did not complete.",
       "CANCELLED": "The check was cancelled.",
       "REFUSED": "Row refused.",
-      "ORAZAKA_BUSY": "Sovkora is busy right now. The batch goes on by itself as soon as it has room.",
+      "SOVKORA_BUSY": "Sovkora is busy right now. The batch goes on by itself as soon as it has room.",
       "EXPORT_TOO_LARGE": "The reports of this batch are too heavy for one archive: export fewer rows.",
       "NOT_ON_SALE": "This offer is not on sale.",
       "PRICE_MISMATCH": "This price is being updated. Try again in a moment.",
@@ -1101,7 +1101,7 @@
         "audit": "Audit log",
         "dev": "DEV",
         "signOut": "Sign out",
-        "openSite": "Open dev.yomizaka.com",
+        "openSite": "Open dev.verikora.com",
         "operations": "Operations",
         "incidents": "Incidents",
         "flows": "Flows",
@@ -1118,7 +1118,7 @@
         "health": "Health",
         "version": "Version",
         "database": "Database",
-        "orazaka": "Sovkora edge",
+        "sovkora": "Sovkora edge",
         "up": "Up",
         "down": "Unreachable",
         "accounts": "Accounts",
@@ -1892,7 +1892,7 @@
         "plans": "Plans",
         "prices": "Prices",
         "packs": "Rules packs",
-        "orazaka": "Sovkora",
+        "sovkora": "Sovkora",
         "organisation": "Organisation",
         "coupons": "Coupons"
       },
@@ -2657,7 +2657,7 @@
       "plans": {
         "entitlementsTitle": "What each plan includes"
       },
-      "orazaka": {
+      "sovkora": {
         "keyTitle": "This product's API key",
         "masked": "Key: {key}",
         "none": "No key configured.",
@@ -3125,7 +3125,7 @@
         "refused": "Refused"
       },
       "engineBusy": "Sovkora is busy with other checks: the remaining rows wait their turn and start by themselves. Nothing to do.",
-      "exportReadme": "Verikora — reports of a batch of checks.\n\nlot.csv lists every row: its state, the reason when it did not run, and its file here.\nrapports/ holds the signed PDF of each compliance check.\nsignaux/ holds the signals of each authenticity check, as Sovkora returned them.\n\nThese are informative checks, not legal advice. To verify a signed report, sign in to Verikora and open https://www.yomizaka.com/app/verifications/report (only the people the report's owner gave access to can).\nThe Québec rules are still to be reviewed by a lawyer.\n",
+      "exportReadme": "Verikora — reports of a batch of checks.\n\nlot.csv lists every row: its state, the reason when it did not run, and its file here.\nrapports/ holds the signed PDF of each compliance check.\nsignaux/ holds the signals of each authenticity check, as Sovkora returned them.\n\nThese are informative checks, not legal advice. To verify a signed report, sign in to Verikora and open https://www.verikora.com/app/verifications/report (only the people the report's owner gave access to can).\nThe Québec rules are still to be reviewed by a lawyer.\n",
       "exportZip": "Reports (ZIP)"
     },
     "notFound": {
@@ -4027,7 +4027,7 @@
     "data": {
       "intro": "Your account and your checks are kept in a database in Toronto, Canada, visible to your account alone. A document is kept only if you choose it, and its information panel says where.",
       "retention": "A kept document stays until you delete it; deleting it deletes its file, its text and its results, and closing your account deletes your documents.",
-      "orazaka": "When you ask for a check, the document is sent to Sovkora, Krizaka's analysis engine, over HTTPS. Nothing is sold, shared or used to train a model.",
+      "sovkora": "When you ask for a check, the document is sent to Sovkora, Krizaka's analysis engine, over HTTPS. Nothing is sold, shared or used to train a model.",
       "privacy": "Read the privacy notice"
     }
   },
@@ -4121,8 +4121,7 @@
   },
   "stage": {
     "title": "Development version",
-    "message": "Data can be reset at any time. This is not a commercial offer yet.",
-    "codeName": "code name: {code}"
+    "message": "Data can be reset at any time. This is not a commercial offer yet."
   },
   "contractSeal": {
     "eyebrow": "Verikora — seal of a contract",

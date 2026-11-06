@@ -7,6 +7,7 @@ import Link from "next/link";
 import type { ReactNode } from "react";
 
 import { useAppConfig } from "@/lib/app-config-client";
+import { BRAND_ID } from "@/lib/brand";
 import { SETTINGS_SECTIONS, type SettingsSection } from "@/lib/console-nav";
 import { useSay } from "@/lib/i18n-client";
 
@@ -70,7 +71,7 @@ export function SettingsShell({
           unverifiedLabel={say("settings.unverified")}
           memberSince={say("settings.memberSince", { date: formatDate(account.memberSince, locale) })}
           avatar={{
-            defaultAvatar: { brand: "yomizaka", seed: account.avatarSeed ?? account.email },
+            defaultAvatar: { brand: BRAND_ID, seed: account.avatarSeed ?? account.email },
             fallback: title.charAt(0).toUpperCase(),
           }}
           data-testid="settings-identity"

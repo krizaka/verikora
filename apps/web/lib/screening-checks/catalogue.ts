@@ -2,7 +2,7 @@ import { query } from "../db";
 import type { CheckPurpose } from "./model";
 
 /**
- * The provider rows, the check types and what each owner may request — all data (yomizaka#132). A check type or a provider is
+ * The provider rows, the check types and what each owner may request — all data (verikora#132). A check type or a provider is
  * switched by a row, no deploy. Multi-tenant: `tenant_check_setting` is per owner (the account that asks for checks).
  */
 export interface ProviderRow {
@@ -12,7 +12,7 @@ export interface ProviderRow {
   region: string;
   enabled: boolean;
   note: string | null;
-  /** A pending answer is asked again after this many minutes, at most `poll_max` times (data, yomizaka#134). */
+  /** A pending answer is asked again after this many minutes, at most `poll_max` times (data, verikora#134). */
   poll_minutes: number;
   poll_max: number;
 }
@@ -22,7 +22,7 @@ export interface CheckTypeRow {
   purpose: CheckPurpose;
   label_fr: string;
   label_en: string;
-  /** What the provider charges Krizaka, and Krizaka's margin: both price data, in cents (CAD). The charge is their sum (yomizaka#133). */
+  /** What the provider charges Krizaka, and Krizaka's margin: both price data, in cents (CAD). The charge is their sum (verikora#133). */
   provider_cost_cents: number;
   margin_cents: number;
   currency: string;
@@ -32,7 +32,7 @@ export interface CheckTypeRow {
   enabled: boolean;
   /** Offered to an owner with no row of their own. */
   default_on: boolean;
-  /** Set on a type that stays off until a lawyer confirms it is lawful (the compliance gate, yomizaka#135). */
+  /** Set on a type that stays off until a lawyer confirms it is lawful (the compliance gate, verikora#135). */
   requires_lawyer: string | null;
   /** The applicant may be asked to pay this check only where a lawyer confirmed it (C.c.Q. art. 1904): off by default. */
   applicant_may_pay: boolean;

@@ -12,7 +12,7 @@ export const dynamic = "force-dynamic";
 const sha256Of = (bytes: Buffer) => createHash("sha256").update(bytes).digest("hex");
 
 /**
- * The public check of a sealed contract (yomizaka#71), by the SHA-256 of its file: whether Yomizaka sealed it, when and under which
+ * The public check of a sealed contract (verikora#71), by the SHA-256 of its file: whether Verikora sealed it, when and under which
  * key — and nothing of what it says: no name, no account, no content. Anyone who holds a copy can compute its hash and ask.
  * Also reachable at `/verify/contract/<sha256>` (308).
  */

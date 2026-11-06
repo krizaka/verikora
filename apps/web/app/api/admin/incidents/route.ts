@@ -5,7 +5,7 @@ import { incidentRegister, openIncident } from "@/lib/incidents";
 
 export const dynamic = "force-dynamic";
 
-/** The confidentiality incident register of this product (Loi 25, yomizaka#418). Administrators only. */
+/** The confidentiality incident register of this product (Loi 25, verikora#418). Administrators only. */
 export const GET = (req: Request) =>
   handle(async () => {
     await requireAdmin(req);

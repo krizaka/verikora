@@ -14,7 +14,7 @@ jest.mock("expo-router", () => ({
 // The account the server answers, read through the real query client: what the header shows is what the cache holds.
 jest.mock("@/config", () => {
   const fetchMe = jest.fn();
-  return { fetchMe, queries: { me: () => ({ queryKey: ["yomizaka", "me"], queryFn: fetchMe }) } };
+  return { fetchMe, queries: { me: () => ({ queryKey: ["verikora", "me"], queryFn: fetchMe }) } };
 });
 const { fetchMe } = jest.requireMock("@/config") as { fetchMe: jest.Mock };
 
@@ -52,7 +52,7 @@ describe("one account's data never shows to the next", () => {
     const client = createQueryClient({ staleTime: 0, maxRetries: 0, throwOnError: false, gcTime: Infinity });
     const session = fakeSession();
     // Alice's identity is cached; every refresh fails (the phone is offline): Query keeps her beside the error.
-    client.setQueryData(["yomizaka", "me"], { name: "Alice Tremblay", email: "alice@example.test", avatarSeed: null });
+    client.setQueryData(["verikora", "me"], { name: "Alice Tremblay", email: "alice@example.test", avatarSeed: null });
     fetchMe.mockRejectedValue(new Error("offline"));
     await render(wrap(client, session, <AppHeader title="Aujourd'hui" />));
     expect(await screen.findByRole("button", { name: "Votre compte : Alice Tremblay" })).toBeTruthy();

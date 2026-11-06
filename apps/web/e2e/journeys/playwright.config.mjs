@@ -1,4 +1,4 @@
-// The customer journeys of Yomizaka (ADR-017, krizaka/.github#423), run as the seeded cast against the built app by
+// The customer journeys of Verikora (ADR-017, krizaka/.github#423), run as the seeded cast against the built app by
 // scripts/ci-visual-start.sh (the cast is seeded there). The kit is @krizaka/page-audit/journey; nothing of it is copied here.
 import { assertNoRetries } from "@krizaka/page-audit/journey";
 import { defineConfig } from "@playwright/test";

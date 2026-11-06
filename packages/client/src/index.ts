@@ -3,11 +3,11 @@ export {
   type Batch,
   type BatchCheck,
   type BatchSummary,
-  createYomizakaApi,
+  createVerikoraApi,
   type DocumentDetail,
   type Locale,
   type SessionPort,
-  type YomizakaApi,
+  type VerikoraApi,
 } from "./api";
 export { availableChecks, CHECK } from "./checks";
 export {

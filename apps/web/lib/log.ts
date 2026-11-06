@@ -1,6 +1,6 @@
 import { describeError, redactSecrets } from "./redact";
 
-/** The server's logs. Every line goes through `redactSecrets`; an error is described, never printed as an object (yomizaka#386). */
+/** The server's logs. Every line goes through `redactSecrets`; an error is described, never printed as an object (verikora#386). */
 export function logInfo(message: string): void {
   console.log(redactSecrets(message));
 }

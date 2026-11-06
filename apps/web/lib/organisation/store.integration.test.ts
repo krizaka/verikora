@@ -5,8 +5,8 @@ import { KIND, OWNER_ROLE } from "../workspace/decl";
 import { seedWorkspace, workspaceFor } from "../workspace/service";
 import * as org from "./store";
 
-/** The organisation against a real PostgreSQL (skipped without YOMIZAKA_DB_IT=1 and DATABASE_URL, like billing.integration.test.ts). */
-const enabled = process.env.YOMIZAKA_DB_IT === "1" && !!process.env.DATABASE_URL;
+/** The organisation against a real PostgreSQL (skipped without DATABASE_IT=1 and DATABASE_URL, like billing.integration.test.ts). */
+const enabled = process.env.DATABASE_IT === "1" && !!process.env.DATABASE_URL;
 
 describe.runIf(enabled)("organisation (ADR-0007)", () => {
   beforeAll(async () => {
@@ -18,7 +18,7 @@ describe.runIf(enabled)("organisation (ADR-0007)", () => {
     (
       await query<{ id: string }>(
         "INSERT INTO accounts (email, password_hash, email_verified_at) VALUES ($1, 'x', now()) RETURNING id",
-        [`o-${Math.random().toString(36).slice(2)}@yomizaka.test`],
+        [`o-${Math.random().toString(36).slice(2)}@verikora.test`],
       )
     )[0]!.id;
   const doc = async (owner: string) =>
@@ -195,7 +195,7 @@ describe.runIf(enabled)("organisation (ADR-0007)", () => {
     const done = await org.createTag(query, owner, "Fait", "green");
     await expect(org.createTag(query, owner, "fait", "blue")).rejects.toMatchObject({ status: 409 });
     const w = workspaceFor({ clock: { now: () => new Date() } });
-    const actor = { id: owner, label: "eric@yomizaka.test", role: OWNER_ROLE };
+    const actor = { id: owner, label: "eric@verikora.test", role: OWNER_ROLE };
     const urgent = await w.tags.create(owner, actor, KIND.document, { name: "Urgent", marker: "red" });
     const fait = await w.tags.create(owner, actor, KIND.document, { name: "Fait", marker: "green" });
     await expect(w.tags.create(owner, actor, KIND.document, { name: "urgent", marker: "blue" })).rejects.toMatchObject({

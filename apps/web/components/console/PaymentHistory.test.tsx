@@ -12,14 +12,14 @@ const sayIn = (dict: typeof en) => (key: string, vars?: Record<string, string | 
 const P = {
   id: "ch_1",
   at: "2026-10-12T15:00:00.000Z",
-  what: "Yomizaka — one document verified",
+  what: "Verikora — one document verified",
   amountCents: 999,
   currency: "cad",
   state: "paid" as const,
   receiptUrl: "https://pay.stripe.com/receipts/payment/abc",
 };
 
-describe("a payment line (yomizaka#585)", () => {
+describe("a payment line (verikora#585)", () => {
   it("says the day, what, the amount in the language, the state and a receipt label naming the day", () => {
     const l = paymentLine(P, sayIn(fr), "fr");
     expect(l.amount).toMatch(/9,99/);

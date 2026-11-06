@@ -76,7 +76,7 @@ describe("the API's action limits (@krizaka/rate-limit)", () => {
     expect(error?.body.code).toBe("RATE_LIMITED");
   });
 
-  it("keeps a blocked caller blocked when the store is flooded with distinct keys (yomizaka#46)", async () => {
+  it("keeps a blocked caller blocked when the store is flooded with distinct keys (verikora#46)", async () => {
     const attacker = from("203.0.113.66");
     for (let i = 0; i < 6; i += 1) await refused(() => limit("signUp", attacker, null));
     expect((await refused(() => limit("signUp", attacker, null)))?.status).toBe(429);

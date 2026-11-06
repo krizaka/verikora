@@ -11,7 +11,7 @@ export const dynamic = "force-dynamic";
 /**
  * Seals a contract for a partner platform with an API key (`contracts:seal`): the content, the parties and the framework the
  * partner names, sent as JSON; the answer carries the sealed PDF's SHA-256 and attestation. The same request is the same contract:
- * a retry answers 200 with the first seal, a new one 201. Yomizaka seals — it verifies no identity and no law.
+ * a retry answers 200 with the first seal, a new one 201. Verikora seals — it verifies no identity and no law.
  */
 export function POST(req: Request) {
   return handle(async () => {

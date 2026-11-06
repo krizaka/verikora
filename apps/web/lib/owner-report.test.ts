@@ -1,4 +1,4 @@
-import type { Analysis } from "@yomizaka/core";
+import type { Analysis } from "@verikora/core";
 import { describe, expect, it } from "vitest";
 
 import en from "../messages/en.json";
@@ -77,7 +77,7 @@ const compliance = check({
   },
 });
 
-describe("the owner's report (yomizaka#128)", () => {
+describe("the owner's report (verikora#128)", () => {
   const report = ownerReportOf(file([authenticity, compliance]), new Map([["d1", sha]]), NOW);
   const text = JSON.stringify(report);
 
@@ -155,7 +155,7 @@ describe("the share link's state", () => {
   });
 });
 
-describe("the owner's signal (yomizaka#625)", () => {
+describe("the owner's signal (verikora#625)", () => {
   it("keeps the family and the page, revision and field, never the box", async () => {
     const { ownerSignalOf } = await import("./owner-report");
     expect(
@@ -181,7 +181,7 @@ describe("the owner's signal (yomizaka#625)", () => {
   });
 });
 
-describe("the applicant's answer in the owner's report (yomizaka#626)", () => {
+describe("the applicant's answer in the owner's report (verikora#626)", () => {
   const answered = file([authenticity]);
   answered.documents[0]!.answers = {
     s1: { text: "Téléchargé du portail de paie, puis signé.", at: "2026-10-29T15:00:00.000Z" },

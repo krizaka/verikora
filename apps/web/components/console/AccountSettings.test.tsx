@@ -38,7 +38,7 @@ describe("billing as flat rows (the review's E3)", () => {
   it("a subscribed account: its plan, named by the catalogue entry it was sold at, and its renewal; an account that is not self-serve has no free audit row", () => {
     expect(
       billingRows(
-        { ...FREE, pro: true, planKey: "yomizaka.firm", proUntil: "2026-11-23T00:00:00.000Z", selfServe: false },
+        { ...FREE, pro: true, planKey: "verikora.firm", proUntil: "2026-11-23T00:00:00.000Z", selfServe: false },
         say,
         date,
       )[0]!.value,
@@ -55,7 +55,7 @@ describe("billing as flat rows (the review's E3)", () => {
   });
 });
 
-describe("a subscription cancelled at the end of the period (yomizaka#139)", () => {
+describe("a subscription cancelled at the end of the period (verikora#139)", () => {
   const CANCELLED = {
     ...FREE,
     pro: true,

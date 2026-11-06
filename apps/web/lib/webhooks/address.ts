@@ -1,7 +1,7 @@
 import net from "node:net";
 
 /**
- * An address a webhook must never be sent to (yomizaka#241): the server's own network — loopback, private, link-local (the cloud
+ * An address a webhook must never be sent to (verikora#241): the server's own network — loopback, private, link-local (the cloud
  * metadata address), carrier-grade NAT, multicast, reserved — in IPv4, IPv6 and IPv4-mapped IPv6. Pure.
  */
 const V4: [number, number][] = [

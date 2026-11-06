@@ -1,7 +1,7 @@
 import type { Gray } from "./deskew";
 
 /**
- * Can this photo be read? Measured on the cleaned page, in grey, before its contrast is stretched (yomizaka#8). Three things a
+ * Can this photo be read? Measured on the cleaned page, in grey, before its contrast is stretched (verikora#8). Three things a
  * reader loses a document to: a blur (the text has no edges), a glare (a flash or a window washed the paper out) and a page cut off
  * by the frame (the text runs out of the photo). Deterministic, in-process, no model.
  */

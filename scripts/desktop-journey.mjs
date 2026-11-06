@@ -1,8 +1,8 @@
 #!/usr/bin/env node
-// The Mac app's journey (yomizaka#636, ADR-017): the persona opens Yomizaka for the Mac on a folder of leases, one lease is read and
+// The Mac app's journey (verikora#636, ADR-017): the persona opens Verikora for the Mac on a folder of leases, one lease is read and
 // checked by the real engine, the result is shown, and a relaunch keeps the folder and the session.
 //
-//   node scripts/desktop-journey.mjs --app apps/desktop/src-tauri/target/debug/yomizaka-desktop --out desktop-journey
+//   node scripts/desktop-journey.mjs --app apps/desktop/src-tauri/target/debug/verikora-desktop --out desktop-journey
 //   (the persona of the dev environment is read from the SMOKE_EMAIL / SMOKE_PASSWORD variables, as the dev smoke does)
 //
 // The native folder dialog cannot be driven by a WebDriver: the folder is granted the way the dialog would, by writing the
@@ -40,10 +40,18 @@ const CHECK_MS = 240_000;
 // @fixed: a screen of the app that is not there in 30 s is not coming
 const SCREEN_MS = 30_000;
 
-/** The fixture: a folder under the home (the kit refuses the home itself, `/`, `/tmp`, `/var`) holding one demo lease. */
+/**
+ * Where the fixture folder lives: the CI runner's temp (`RUNNER_TEMP`), else the Krizaka workspace's `tmp/` (`KRIZAKA_WORKSPACE`,
+ * default `~/krizaka-workspace`). Never a person's own folders: a journey run on the founder's Mac leaves nothing there (the kit
+ * refuses the home itself, `/`, `/tmp`, `/var` anyway). Guarded by scripts/no-home-writes.test.mjs.
+ */
+const fixtureRoot = () =>
+  process.env.RUNNER_TEMP ?? join(process.env.KRIZAKA_WORKSPACE ?? join(home, "krizaka-workspace"), "tmp");
+
+/** The fixture: a folder of the journey's own holding one demo lease. */
 async function fixtureFolder() {
-  // A friendly name (the library shows it), not a work folder under the runner's home (yomizaka#1968).
-  const folder = join(home, "Leases");
+  // A friendly name (the library shows it), not a work folder path (verikora#1968).
+  const folder = join(fixtureRoot(), "Leases");
   await rm(folder, { recursive: true, force: true });
   await mkdir(folder, { recursive: true });
   const lease = await generateDocument("bail-rosemont-5-clause-illegale");
@@ -84,14 +92,14 @@ async function signInIfAsked(driver) {
   return true;
 }
 
-// The film (yomizaka#636): the app's window only, from the signed-in library, as WebDriver screenshots, skipping the engine's wait.
+// The film (verikora#636): the app's window only, from the signed-in library, as WebDriver screenshots, skipping the engine's wait.
 const film = createFilm({ dir: values.film ? out : undefined, shoot: () => driver.screenshot() });
 // @fixed: long enough to read a screen of the app, short enough for a clip under 30 s in all
 const READ_MS = 3000;
 const hold = (ms = READ_MS) => new Promise((resolveHold) => setTimeout(resolveHold, ms));
 const filmWindow = () => film.start();
 
-// yomizaka#1968: a filmed screen is never an error, an empty state or the development notice. Checked by the app's own markers at each
+// verikora#1968: a filmed screen is never an error, an empty state or the development notice. Checked by the app's own markers at each
 // screen of the film; the journey fails (and so no clip is published) rather than film one.
 const UNFIT = { error: "[data-testid$='-error']", empty: "[data-testid$='-empty']", notice: "[data-stage]" };
 async function assertFit(drv, screen) {
@@ -138,7 +146,7 @@ try {
   const hash = await driver.hash();
   if (!hash.startsWith("#/check/")) throw new Error(`the result is shown on ${hash}, not on a check`);
   await shot(driver, "3-result");
-  // The language the film is in (the page of the same language shows it, yomizaka#1968): the workflow names the clip after it.
+  // The language the film is in (the page of the same language shows it, verikora#1968): the workflow names the clip after it.
   if (values.film)
     await writeFile(join(out, "film-locale.txt"), String(await driver.run("return document.documentElement.lang")));
   filmWindow();
@@ -157,7 +165,7 @@ try {
   const kept = JSON.parse(await readFile(scope, "utf8")).roots;
   if (!kept.includes(folder)) throw new Error(`the scope lost the folder: ${JSON.stringify(kept)}`);
   await shot(driver, "4-relaunch");
-  // The relaunch is proved, not filmed: the film ends on the check's result, never on the library it is reached from (yomizaka#1968).
+  // The relaunch is proved, not filmed: the film ends on the check's result, never on the library it is reached from (verikora#1968).
   film.finish(); // too few frames: the journey fails loudly, no empty clip
   console.log("desktop journey: ok");
 } catch (error) {

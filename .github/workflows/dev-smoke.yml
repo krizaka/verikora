@@ -1,5 +1,5 @@
-# The lease check on the deployed dev, as the persona (yomizaka P0, 2026-10-29): one REAL check through Yomizaka and Orazaka, so a refusal of
-# the engine (« Orazaka refused the document as sent ») is found by a red run, not by a customer. Every two hours and on demand (dev deploys
+# The lease check on the deployed dev, as the persona (verikora P0, 2026-10-29): one REAL check through Verikora and Sovkora, so a refusal of
+# the engine (« Sovkora refused the document as sent ») is found by a red run, not by a customer. Every two hours and on demand (dev deploys
 # on every push to main, 6-10 min, no release train: run it by hand after a deploy). Never required, so it cannot block a merge.
 # Secrets: SMOKE_EMAIL / SMOKE_PASSWORD, the persona of the dev environment (environment `dev`).
 name: Dev smoke
@@ -35,9 +35,9 @@ jobs:
         env:
           SMOKE_EMAIL: ${{ secrets.SMOKE_EMAIL }}
           SMOKE_PASSWORD: ${{ secrets.SMOKE_PASSWORD }}
-        run: node scripts/smoke-lease-check.mjs --base https://dev.yomizaka.com
+        run: node scripts/smoke-lease-check.mjs --base https://dev.verikora.com
 
-  # The download page's films, per language (yomizaka#1968): /en shows English clips only, /fr French ones, each in its platform's frame
+  # The download page's films, per language (verikora#1968): /en shows English clips only, /fr French ones, each in its platform's frame
   # (a Mac clip in a phone frame, French data on /en, an iOS slot with another platform's film). A public page: no secret.
   download-page:
     name: Download page films (en, fr)
@@ -47,7 +47,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        base: [https://dev.yomizaka.com, https://www.yomizaka.com]
+        base: [https://dev.verikora.com, https://www.verikora.com]
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:

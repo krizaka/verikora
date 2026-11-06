@@ -1,6 +1,6 @@
 import { readFileSync } from "node:fs";
 
-import type { OrazakaRun } from "@yomizaka/core";
+import type { SovkoraRun } from "@verikora/core";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 
 import { POST as createKeyRoute } from "@/app/api/me/api-keys/route";
@@ -12,27 +12,27 @@ import { POST as createCheckRoute } from "@/app/api/v1/checks/route";
 import { migrate, pool, query } from "../db";
 import { seedDatabase } from "../flows";
 import { resetRateLimits } from "../limits";
-import { useOrazakaClient } from "../orazaka";
 import { cleanPdf } from "../preflight/fixtures";
 import { createSession, SESSION_COOKIE } from "../session";
+import { useSovkoraClient } from "../sovkora";
 
 /**
  * The public API v1 through its real route handlers, a Pro account's API key, PostgreSQL and the audit trail (CI's service; locally
- * YOMIZAKA_DB_IT=1 DATABASE_URL=…). Orazaka is a fake that records the runs and finishes them when told.
+ * DATABASE_IT=1 DATABASE_URL=…). Sovkora is a fake that records the runs and finishes them when told.
  */
-const enabled = process.env.YOMIZAKA_DB_IT === "1" && !!process.env.DATABASE_URL;
+const enabled = process.env.DATABASE_IT === "1" && !!process.env.DATABASE_URL;
 
-const REPORT = readFileSync(new URL("../fixtures/orazaka-compliance-qc-1.2.0.json", import.meta.url), "utf8");
+const REPORT = readFileSync(new URL("../fixtures/sovkora-compliance-qc-1.2.0.json", import.meta.url), "utf8");
 const params = (id: string) => ({ params: Promise.resolve({ id }) });
 
 /** The secret part of `yzk_<public id>_<secret>`: the secret is base64url, so it may itself contain « _ » — never split on it. */
 const secretOf = (key: string) => key.slice(key.indexOf("_", key.indexOf("_") + 1) + 1);
 
-describe.runIf(enabled)("the public API v1 (yomizaka#202)", () => {
+describe.runIf(enabled)("the public API v1 (verikora#202)", () => {
   const stamp = `${Date.now()}-${Math.random().toString(16).slice(2, 8)}`;
   const runs = new Map<string, string>();
   let n = 0;
-  const run = (id: string, status: string): OrazakaRun => ({
+  const run = (id: string, status: string): SovkoraRun => ({
     id,
     studioKey: "compliance-check",
     blueprintVersion: "1.0.0",
@@ -82,7 +82,7 @@ describe.runIf(enabled)("the public API v1 (yomizaka#202)", () => {
   beforeAll(async () => {
     await migrate();
     await seedDatabase();
-    useOrazakaClient({
+    useSovkoraClient({
       startRun: async () => {
         const id = `run-api-${stamp}-${++n}`;
         runs.set(id, "RUNNING");
@@ -90,21 +90,21 @@ describe.runIf(enabled)("the public API v1 (yomizaka#202)", () => {
       },
       getRun: async (id: string) => run(id, runs.get(id) ?? "RUNNING"),
     } as never);
-    const a = await proAccount(`api-v1-${stamp}@yomizaka.test`);
+    const a = await proAccount(`api-v1-${stamp}@verikora.test`);
     owner = a.id;
     bearer = await a.mint("ERP", ["checks:write", "reports:read"]);
     readOnly = await a.mint("Lecture", ["reports:read"]);
-    const b = await proAccount(`api-v1-other-${stamp}@yomizaka.test`);
+    const b = await proAccount(`api-v1-other-${stamp}@verikora.test`);
     stranger = b.id;
     strangerBearer = await b.mint("ERP", ["checks:write", "reports:read"]);
   });
   afterAll(async () => {
-    useOrazakaClient(null);
+    useSovkoraClient(null);
     await query("DELETE FROM accounts WHERE id = ANY($1)", [[owner, stranger]]);
     await pool().end();
   });
 
-  it("starts a check, reads it back while it runs, then with its report once Orazaka has finished", async () => {
+  it("starts a check, reads it back while it runs, then with its report once Sovkora has finished", async () => {
     resetRateLimits();
     const created = await createCheckRoute(
       call(bearer, "POST", "/api/v1/checks", await checkForm("bail.pdf", "BAIL RESIDENTIEL")),

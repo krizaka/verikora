@@ -9,7 +9,7 @@ import { useSay } from "@/lib/i18n-client";
 // @fixed: the characters of a run id shown before the ellipsis; the full id is the title and what « copy » puts on the clipboard.
 const SHOWN = 8;
 
-/** A run id in a table: mono, one line, cut with an ellipsis in a column of fixed minimum width, and a copy action (yomizaka#457: it wrapped a character per line). */
+/** A run id in a table: mono, one line, cut with an ellipsis in a column of fixed minimum width, and a copy action (verikora#457: it wrapped a character per line). */
 export function RunId({ id }: Readonly<{ id: string | null | undefined }>) {
   const { say } = useSay();
   const [copied, setCopied] = useState(false);

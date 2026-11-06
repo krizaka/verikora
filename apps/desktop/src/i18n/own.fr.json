@@ -20,12 +20,12 @@
   },
   "signIn": {
     "title": "Se connecter",
-    "lead": "Le même compte que sur yomizaka.com.",
+    "lead": "Le même compte que sur verikora.com.",
     "email": "Adresse courriel",
     "password": "Mot de passe",
     "submit": "Se connecter",
     "wrong": "Adresse ou mot de passe incorrect.",
-    "createAccount": "Créer un compte sur yomizaka.com"
+    "createAccount": "Créer un compte sur verikora.com"
   },
   "library": {
     "title": "Bibliothèque",
@@ -89,7 +89,7 @@
     "title": "Réglages",
     "language": "Langue",
     "storage": "Stockage",
-    "storageBody": "Vos documents sont lus dans vos dossiers et n'en sortent pas. Pour une copie dans le nuage, choisissez-la sur yomizaka.com.",
+    "storageBody": "Vos documents sont lus dans vos dossiers et n'en sortent pas. Pour une copie dans le nuage, choisissez-la sur verikora.com.",
     "watched": "Dossiers surveillés",
     "watchedNone": "Aucun dossier surveillé.",
     "version": "Version {version}",

@@ -7,7 +7,7 @@ import type { QueryResultRow } from "pg";
 
 import { SETTINGS, settings } from "./registry";
 
-/** The SettingsService (ADR-0009) is `@krizaka/settings`; this binds it to Yomizaka's own registry. */
+/** The SettingsService (ADR-0009) is `@krizaka/settings`; this binds it to Verikora's own registry. */
 export type SettingsService = Service<typeof SETTINGS>;
 export { SCOPES_BY_SPECIFICITY } from "./registry";
 export type { Actor, AuditEntry, Context, ScopeRef } from "@krizaka/settings";

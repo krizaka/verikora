@@ -28,7 +28,7 @@ const sign = (body: string, at: number, secret = SECRET) =>
   `t=${at},v1=${createHmac("sha256", secret).update(`${at}.${body}`).digest("hex")}`;
 const call = (signature: string | null, body = payload) =>
   POST(
-    new Request("https://dev.yomizaka.test/api/webhooks/payments", {
+    new Request("https://dev.verikora.test/api/webhooks/payments", {
       method: "POST",
       headers: signature === null ? {} : { "stripe-signature": signature },
       body,

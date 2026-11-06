@@ -4,7 +4,7 @@ import { krizakaFetch, useQuery } from "@krizaka/query";
 import { Alert } from "@krizaka/ui/alert";
 import { Checkbox } from "@krizaka/ui/checkbox";
 import { Dropzone, type FileRejection, UploadList, useUploadQueue } from "@krizaka/ui/file-upload";
-import { type DocumentKind, type DocumentSummary, MAX_FILE_BYTES, STORAGE_MODE, STORAGE_MODES } from "@yomizaka/core";
+import { type DocumentKind, type DocumentSummary, MAX_FILE_BYTES, STORAGE_MODE, STORAGE_MODES } from "@verikora/core";
 import { useRouter } from "next/navigation";
 import { type MutableRefObject, type ReactNode, useEffect, useRef, useState } from "react";
 import { z } from "zod";

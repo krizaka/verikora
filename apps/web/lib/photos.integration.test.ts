@@ -8,15 +8,15 @@ import { migrate, query } from "./db";
 import { getDocument, getFile } from "./documents";
 import { createImageCleaner } from "./images/clean";
 import { photoOfPage } from "./images/fixtures";
-import { YOMIZAKA_IMAGE_RULES } from "./images/rules";
+import { VERIKORA_IMAGE_RULES } from "./images/rules";
 import type { OcrEngine, VisionReader } from "./ocr/port";
-import { YOMIZAKA_OCR_RULES } from "./ocr/rules";
+import { VERIKORA_OCR_RULES } from "./ocr/rules";
 import { storePhotos } from "./photos";
 import { cleanPdf } from "./preflight/fixtures";
 import { localStore } from "./storage/local";
 
-/** Photos become one document through the real pre-flight, cleaner and PostgreSQL (CI's service; locally YOMIZAKA_DB_IT=1 DATABASE_URL=…); the engine is a fake so this stays fast. */
-const enabled = process.env.YOMIZAKA_DB_IT === "1" && !!process.env.DATABASE_URL;
+/** Photos become one document through the real pre-flight, cleaner and PostgreSQL (CI's service; locally DATABASE_IT=1 DATABASE_URL=…); the engine is a fake so this stays fast. */
+const enabled = process.env.DATABASE_IT === "1" && !!process.env.DATABASE_URL;
 
 const LEASE =
   "BAIL DE LOGEMENT\nLe locateur loue au locataire le logement situé au 123 rue Exemple.\nLoyer mensuel : 1 150,00 $ payable le premier du mois.";
@@ -25,11 +25,11 @@ const engine = (confidence: number): OcrEngine => ({
   read: async (images) => ({ text: LEASE, confidence, pages: images.map(() => ({ text: LEASE, confidence })) }),
 });
 const deps = (ocr: OcrEngine, vision: VisionReader | null = null) => ({
-  cleaner: createImageCleaner(YOMIZAKA_IMAGE_RULES),
+  cleaner: createImageCleaner(VERIKORA_IMAGE_RULES),
   ocr,
   vision,
-  ocrRules: YOMIZAKA_OCR_RULES,
-  imageRules: YOMIZAKA_IMAGE_RULES,
+  ocrRules: VERIKORA_OCR_RULES,
+  imageRules: VERIKORA_IMAGE_RULES,
 });
 
 describe.runIf(enabled)("photos become one document", () => {
@@ -37,7 +37,7 @@ describe.runIf(enabled)("photos become one document", () => {
   beforeAll(async () => {
     await migrate();
     const [row] = await query<{ id: string }>("INSERT INTO accounts (email) VALUES ($1) RETURNING id", [
-      `photos-${Date.now()}@yomizaka.test`,
+      `photos-${Date.now()}@verikora.test`,
     ]);
     owner = row!.id;
   });
@@ -142,7 +142,7 @@ describe.runIf(enabled)("photos become one document", () => {
     const viaModel = await storePhotos(owner, [await file("dark.jpg", -1)], "auto", { deps: deps(engine(35), vision) });
     expect((await getDocument(owner, viaModel.summary.id)).textSource).toMatchObject({
       kind: "vision",
-      by: "orazaka",
+      by: "sovkora",
       runId: "run-vision-1",
       localConfidence: 35,
     });

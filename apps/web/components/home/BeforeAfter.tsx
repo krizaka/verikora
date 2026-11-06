@@ -1,5 +1,5 @@
 import { Badge } from "@krizaka/ui/badge";
-import { passages } from "@yomizaka/core";
+import { passages } from "@verikora/core";
 
 import { getDictionary, type Locale } from "@/lib/i18n";
 import { HERO_RULE } from "@/lib/landing";
@@ -8,7 +8,7 @@ import { atOffsets } from "@/lib/text-parts";
 
 /**
  * One clear before/after, stacked so it is as sharp on a phone as on a desktop: the lease with the forbidden clause lit,
- * and under it the finding Yomizaka returns for that line, with its article of law. Both halves are read from the recorded
+ * and under it the finding Verikora returns for that line, with its article of law. Both halves are read from the recorded
  * run (content/recorded-runs/tenant.json). It is the home's proof.
  */
 export function BeforeAfter({ locale }: Readonly<{ locale: Locale }>) {

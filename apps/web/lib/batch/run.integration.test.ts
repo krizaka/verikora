@@ -1,25 +1,25 @@
 import { readFileSync } from "node:fs";
 
-import type { OrazakaRun } from "@yomizaka/core";
+import type { SovkoraRun } from "@verikora/core";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 
 import { seedAudits } from "../audit-credits.testkit";
 import { migrate, query } from "../db";
 import { seedDatabase } from "../flows";
-import { useOrazakaClient } from "../orazaka";
 import { cleanPdf } from "../preflight/fixtures";
 import { settingsFor } from "../settings/guards";
+import { useSovkoraClient } from "../sovkora";
 import { advanceBatch, createBatch } from "./run";
 
-/** A batch's life against the real database, check path and billing (CI's service; locally YOMIZAKA_DB_IT=1 DATABASE_URL=…). Orazaka is a fake that records the runs. */
-const enabled = process.env.YOMIZAKA_DB_IT === "1" && !!process.env.DATABASE_URL;
+/** A batch's life against the real database, check path and billing (CI's service; locally DATABASE_IT=1 DATABASE_URL=…). Sovkora is a fake that records the runs. */
+const enabled = process.env.DATABASE_IT === "1" && !!process.env.DATABASE_URL;
 
-describe.runIf(enabled)("a batch of checks (yomizaka#232)", () => {
+describe.runIf(enabled)("a batch of checks (verikora#232)", () => {
   const runs = new Map<string, string>();
   let n = 0;
   // A real compliance report (a live run's, kept as a fixture): a « SUCCEEDED » without one is a hollow success, read as failed.
-  const REPORT = readFileSync(new URL("../fixtures/orazaka-compliance-qc-1.2.0.json", import.meta.url), "utf8");
-  const run = (id: string, status: string): OrazakaRun => ({
+  const REPORT = readFileSync(new URL("../fixtures/sovkora-compliance-qc-1.2.0.json", import.meta.url), "utf8");
+  const run = (id: string, status: string): SovkoraRun => ({
     id,
     studioKey: "compliance-check",
     blueprintVersion: "1.0.0",
@@ -32,7 +32,7 @@ describe.runIf(enabled)("a batch of checks (yomizaka#232)", () => {
   beforeAll(async () => {
     await migrate();
     await seedDatabase();
-    useOrazakaClient({
+    useSovkoraClient({
       startRun: async () => {
         const id = `run-batch-${++n}`;
         runs.set(id, "RUNNING");
@@ -42,11 +42,11 @@ describe.runIf(enabled)("a batch of checks (yomizaka#232)", () => {
     } as never);
     const [row] = await query<{ id: string }>(
       "INSERT INTO accounts (email, audit_credits) VALUES ($1, 2) RETURNING id",
-      [`batch-run-${Date.now()}-${Math.random().toString(16).slice(2, 8)}@yomizaka.test`],
+      [`batch-run-${Date.now()}-${Math.random().toString(16).slice(2, 8)}@verikora.test`],
     );
     account = { id: row!.id, perspective: null };
   });
-  afterAll(() => useOrazakaClient(null));
+  afterAll(() => useSovkoraClient(null));
 
   it("records the refused rows, stores the others and starts them up to the concurrency; a failed row never stops the rest", async () => {
     const settings = { ...(await settingsFor(account.id)), "limits.batchConcurrency": { value: 1 } } as Awaited<
@@ -69,7 +69,7 @@ describe.runIf(enabled)("a batch of checks (yomizaka#232)", () => {
     ]);
     expect(created.items[2]!.error).toBe("UNKNOWN_CHECK,FILE_NOT_SENT");
 
-    // The first run fails at Orazaka: its row says so, and the next row starts.
+    // The first run fails at Sovkora: its row says so, and the next row starts.
     runs.set("run-batch-1", "FAILED");
     const next = await advanceBatch(account, created.id, { settings, now: new Date(), environment: "dev" });
     expect(next.items.map((i) => i.state)).toEqual(["failed", "running", "refused"]);

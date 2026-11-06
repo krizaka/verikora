@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // The home's first screen (the UX review's Y9 — F6, F8): the page starts 24 px under the fixed bar (no void above the hero), and
 // at 390 × 844 the product's visual is inside the first screen, and no two blocks of the top chrome (the notice, the fixed bar) overlap
-// at 390, 1280 and 1600 px (yomizaka#449) — both languages, both themes, in a real browser.
+// at 390, 1280 and 1600 px (verikora#449) — both languages, both themes, in a real browser.
 //
 //   node scripts/check-home-first-screen.mjs --base http://localhost:3000
 //
@@ -37,7 +37,7 @@ export function problemsOf(m) {
   if (m.barBottom === null || m.contentTop === null) return [`${where}: no bar or no hero frame`];
   const out = [];
   // The bar clears the top chrome (the notice of a non-production deployment): it stands below it, so the 24 px are counted from the
-  // bar's bottom, never loosened — and an overlap of the two is its own problem below (yomizaka#449).
+  // bar's bottom, never loosened — and an overlap of the two is its own problem below (verikora#449).
   const gap = m.contentTop - m.barBottom;
   if (Math.abs(gap - GAP_PX) > TOLERANCE_PX)
     out.push(`${where}: the page starts ${Math.round(gap)} px under the bar, not ${GAP_PX}`);

@@ -1,11 +1,11 @@
-import type { Jurisdiction, Studio } from "@yomizaka/core";
+import type { Jurisdiction, Studio } from "@verikora/core";
 
 import { CONSOLE_ROUTES } from "./console-nav";
 import type { CreditsFigure } from "./home-b2";
 import { CATALOGUE_GROUPS, type CheckKind, ROUTE_STATES } from "./route-state";
 
 /*
- * « Vérifier un document », B2 (yomizaka#333, design § 5.4/5.6): the catalogue of the checks Yomizaka runs, its chips with their
+ * « Vérifier un document », B2 (verikora#333, design § 5.4/5.6): the catalogue of the checks Verikora runs, its chips with their
  * counts, the action that names the kind and leads to the drop, and the plan strip. Pure. The catalogue is **the registry**: the
  * rulesets and Studios the flows offer (`offerOf`) — a ruleset the registry does not run is not listed, and one that has no
  * words here yet is left out until it has (never a raw id on screen).
@@ -14,7 +14,7 @@ import { CATALOGUE_GROUPS, type CheckKind, ROUTE_STATES } from "./route-state";
 export const GROUPS = CATALOGUE_GROUPS;
 export type Group = (typeof GROUPS)[number];
 
-/** What each ruleset the pack carries is: its group, its jurisdiction and the kind its action names (a kind Yomizaka recognises from the file otherwise). */
+/** What each ruleset the pack carries is: its group, its jurisdiction and the kind its action names (a kind Verikora recognises from the file otherwise). */
 const RULESETS: Record<string, { group: Exclude<Group, "authenticity">; jurisdiction: Jurisdiction; kind: CheckKind }> =
   {
     "qc-residential-lease": { group: "lease", jurisdiction: "QC", kind: "lease" },

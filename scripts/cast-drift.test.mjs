@@ -67,9 +67,9 @@ describe("the cast is the only source of the personas", () => {
     const local = castAccounts({ DATABASE_URL: "postgres://u:p@localhost:5432/x" });
     expect(local.map((a) => a.password)).toEqual([LOCAL_PASSWORD, LOCAL_PASSWORD, LOCAL_PASSWORD]);
     expect(local.map((a) => a.email)).toEqual([
-      "eric@demo.yomizaka.test",
-      "mira@demo.yomizaka.test",
-      "camille@demo.yomizaka.test",
+      "eric@demo.verikora.test",
+      "mira@demo.verikora.test",
+      "camille@demo.verikora.test",
     ]);
   });
 

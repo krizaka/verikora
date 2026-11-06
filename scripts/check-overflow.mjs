@@ -44,7 +44,7 @@ export const check = ({ base, shots }) =>
     widths: WIDTHS,
     themes: THEMES,
     shots,
-    a11y: { app: "yomizaka", baseline: A11Y_BASELINE, widths: A11Y_WIDTHS },
+    a11y: { app: "verikora", baseline: A11Y_BASELINE, widths: A11Y_WIDTHS },
   });
 
 if (import.meta.url === `file://${process.argv[1]}`) {

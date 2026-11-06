@@ -1,7 +1,7 @@
 import crypto from "node:crypto";
 import { inflateRawSync } from "node:zlib";
 
-import { ODT_MIME } from "@yomizaka/core";
+import { ODT_MIME } from "@verikora/core";
 import { EncryptedPDFError, PDFArray, PDFDict, PDFDocument, PDFName, type PDFPage } from "pdf-lib";
 
 import { imageSize, isHeif } from "./image-size";

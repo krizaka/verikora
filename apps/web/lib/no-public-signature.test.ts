@@ -9,7 +9,7 @@ import { reportLabels } from "./report-labels";
 import { signingKey } from "./report-signer";
 
 /**
- * ADR-0002 §Specimens: a report signed with Yomizaka's key is an attestation. No public route may serve one, and nothing
+ * ADR-0002 §Specimens: a report signed with Verikora's key is an attestation. No public route may serve one, and nothing
  * public may carry the key material or the fingerprint of one. A sample is a visual specimen, never a signed file.
  */
 const ROOT = join(__dirname, "..");
@@ -20,13 +20,13 @@ const routes = (dir: string): string[] =>
 const API = join(ROOT, "app/api");
 const isPrivate = (src: string) => /requireSession|requireAdmin|apiCaller/.test(src);
 /**
- * The one public check there is: a sealed contract, asked by the SHA-256 of its file (yomizaka#71). It serves no signed artifact — only whether
- * Yomizaka sealed that hash, when and under which key — and never a report: it may read the seal's key, nothing of the reports' signing.
+ * The one public check there is: a sealed contract, asked by the SHA-256 of its file (verikora#71). It serves no signed artifact — only whether
+ * Verikora sealed that hash, when and under which key — and never a report: it may read the seal's key, nothing of the reports' signing.
  */
 const CONTRACT_CHECK = join(API, "verify/contract/[sha256]/route.ts");
 
 /**
- * The owner link's PDF (yomizaka#481): not public — the token of a live, unrevoked link the manager created is the credential, each download is logged,
+ * The owner link's PDF (verikora#481): not public — the token of a live, unrevoked link the manager created is the credential, each download is logged,
  * and what it signs is the redacted owner report of that one file. It is the only route outside a session that may sign; no specimen of it exists.
  */
 const OWNER_PDF = join(API, "rapport/[token]/pdf/route.ts");

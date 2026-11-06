@@ -19,12 +19,12 @@ export const CLOSED_ROBOTS = "User-agent: *\nDisallow: /\n";
 const bare = (host: string | null | undefined) => (host ?? "").trim().toLowerCase().replace(/:\d+$/, "");
 export const publicHost = (env: Record<string, string | undefined> = process.env): string => {
   try {
-    return bare(new URL(env.APP_PUBLIC_URL ?? "https://www.yomizaka.com").host);
+    return bare(new URL(env.APP_PUBLIC_URL ?? "https://www.verikora.com").host);
   } catch {
     return "";
   }
 };
-/** A `dev.*` address is never indexed (krizaka/yomizaka#239), whatever the flag and whether or not APP_DEV_HOST names it. */
+/** A `dev.*` address is never indexed (krizaka/verikora#239), whatever the flag and whether or not APP_DEV_HOST names it. */
 const isDevName = (host: string | null | undefined) => bare(host).startsWith("dev.");
 /** Whether a response to this host may be indexed. */
 export const indexableOn = (

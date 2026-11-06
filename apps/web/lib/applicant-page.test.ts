@@ -23,7 +23,7 @@ const state = (
 });
 const checked = [CONSENT_PURPOSE.DOCUMENT_CHECK];
 
-describe("the applicant's page (yomizaka#341)", () => {
+describe("the applicant's page (verikora#341)", () => {
   it("shows the types of the request, in its order, each with the documents already received of that type", () => {
     const page = applicantPageOf(
       state({ documents: [{ id: "d1", typeId: "bank-statement", filename: "releve.pdf", sizeBytes: 1200 }] }),
@@ -102,7 +102,7 @@ describe("the applicant's page (yomizaka#341)", () => {
     await expect(loadApplicantPage("t", new Date(), deps)).rejects.toThrow("db down");
   });
 
-  it("takes an explanation of a trace while the link stands or was used, with the consent to the check, and not otherwise (yomizaka#626)", () => {
+  it("takes an explanation of a trace while the link stands or was used, with the consent to the check, and not otherwise (verikora#626)", () => {
     expect(applicantPageOf(state(), checked).canAnswer).toBe(true);
     expect(applicantPageOf(state({ status: LINK.used }), checked).canAnswer).toBe(true);
     expect(applicantPageOf(state(), []).canAnswer).toBe(false);

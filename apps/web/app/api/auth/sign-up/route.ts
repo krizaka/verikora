@@ -8,7 +8,7 @@ import { signupOpenNow } from "@/lib/settings/signup";
 import { signUp, signUpBody } from "@/lib/signup";
 
 /**
- * Sign-up, for Yomizaka only. Closed unless the `signup.open` setting is on (its default is `AUTH_SIGNUP_ENABLED`) AND the verification e-mail can be sent (the refusal
+ * Sign-up, for Verikora only. Closed unless the `signup.open` setting is on (its default is `AUTH_SIGNUP_ENABLED`) AND the verification e-mail can be sent (the refusal
  * is the server's, whatever a page shows). The answer is the same whether or not the address already has an account.
  * Abuse limits: 5 sign-ups per hour per address of the client, 3 per hour per e-mail address.
  */

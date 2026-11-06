@@ -15,7 +15,7 @@ import {
   startAnalysis,
 } from "./index";
 
-// A report exactly as the compliance Studio assembles it (orazaka-packs document-validation worker, `_assemble`).
+// A report exactly as the compliance Studio assembles it (sovkora-packs document-validation worker, `_assemble`).
 const COMPLIANCE = {
   report: {
     rulesetId: "fr-residential-lease",
@@ -47,8 +47,8 @@ const COMPLIANCE = {
   },
 };
 
-describe("Orazaka runs", () => {
-  it("maps Orazaka's run statuses, an unknown one stays running (asked again)", () => {
+describe("Sovkora runs", () => {
+  it("maps Sovkora's run statuses, an unknown one stays running (asked again)", () => {
     expect(fromRunStatus("SUCCEEDED")).toBe("succeeded");
     expect(fromRunStatus("FAILED")).toBe("failed");
     expect(fromRunStatus("CANCELLED")).toBe("cancelled");

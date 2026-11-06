@@ -1,5 +1,5 @@
 import { refuse } from "../http";
-import { checksDoor } from "../orazaka";
+import { checksDoor } from "../sovkora";
 import { liveGate } from "./gate";
 import {
   CHECK_OUTCOME,
@@ -12,9 +12,9 @@ import {
 } from "./model";
 
 /**
- * A screening provider behind one port. Yomizaka never speaks to a credit bureau or a court-records vendor: it asks
- * Orazaka's external-checks connector (the engine's `ExternalCheckService`), which routes by data. The adapter is chosen by
- * the provider row's `adapter` key (data, no deploy): `demo` (fictitious) or `engine` (Orazaka's door).
+ * A screening provider behind one port. Verikora never speaks to a credit bureau or a court-records vendor: it asks
+ * Sovkora's external-checks connector (the engine's `ExternalCheckService`), which routes by data. The adapter is chosen by
+ * the provider row's `adapter` key (data, no deploy): `demo` (fictitious) or `engine` (Sovkora's door).
  */
 export interface CheckProvider {
   /** True when the data is fictitious: the pages say so. */
@@ -35,7 +35,7 @@ const result = (outcome: CheckResult["outcome"], extra: Partial<CheckResult> = {
 export { type ChecksDoor, closedDoor, NOT_CONFIGURED };
 
 /**
- * A live adapter is wrapped by the compliance gate (yomizaka#135): while the gate is closed the door is never reached and the
+ * A live adapter is wrapped by the compliance gate (verikora#135): while the gate is closed the door is never reached and the
  * answer is NOT_CONFIGURED — whatever the door is. The gate is read on every call, so closing a blocker stops live calls at once.
  */
 export const engineProvider = (

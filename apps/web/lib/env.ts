@@ -1,12 +1,12 @@
 import { allowedIps } from "@krizaka/auth";
-import { STORAGE_KIND, STORAGE_PROVIDERS } from "@yomizaka/core";
+import { STORAGE_KIND, STORAGE_PROVIDERS } from "@verikora/core";
 import { z } from "zod";
 
 import { parseSigningKey } from "./report-key";
 
 /**
  * Every environment variable of the app, declared once (named by bounded context — APP_, DATABASE_, AUTH_, ABUSE_, AI_ —
- * never by product or vendor: the vendor is a value, `AI_PROVIDER=orazaka`). A production server refuses to start
+ * never by product or vendor: the vendor is a value, `AI_PROVIDER=sovkora`). A production server refuses to start
  * without its secrets (instrumentation.ts calls `assertProductionEnv`): no demo mode, no default key.
  */
 const flag = z
@@ -34,22 +34,22 @@ export const envSchema = z.object({
   /** Dev and visual runs only: the instant the console writes as « today », so a capture never depends on the day it is taken (lib/display-now.ts). Refused in production. */
   APP_VISUAL_NOW: z.string().datetime().optional(),
   /** The public origin of the site (canonical URLs, sitemap, llms.txt). */
-  APP_PUBLIC_URL: z.string().url().default("https://www.yomizaka.com"),
+  APP_PUBLIC_URL: z.string().url().default("https://www.verikora.com"),
   /** Optional credentials for the dev/local demo persona seed. */
   APP_DEMO_ACCOUNT_EMAIL: z.string().optional(),
   APP_DEMO_ACCOUNT_PASSWORD: z.string().optional(),
-  /** The development address (`dev.yomizaka.com`): every page goes to www (308); only the API, auth callbacks, webhooks, /.well-known and /healthz keep serving there, all noindex (lib/indexing.ts). Unset: no dev host. */
+  /** The development address (`dev.verikora.com`): every page goes to www (308); only the API, auth callbacks, webhooks, /.well-known and /healthz keep serving there, all noindex (lib/indexing.ts). Unset: no dev host. */
   APP_DEV_HOST: z.string().optional(),
-  /** The Apple team that signs the iOS app: the prefix of its app id in `/.well-known/apple-app-site-association` (universal links, yomizaka#155). Unset: that file is not served. */
+  /** The Apple team that signs the iOS app: the prefix of its app id in `/.well-known/apple-app-site-association` (universal links, verikora#155). Unset: that file is not served. */
   APP_IOS_TEAM_ID: z
     .string()
     .regex(/^[A-Z0-9]{10}$/)
     .optional(),
   /** The SHA-256 fingerprint(s) of the Android app's signing certificate, comma-separated (`AB:CD:…`): `/.well-known/assetlinks.json`. Unset: that file is not served. */
   APP_ANDROID_CERT_SHA256: z.string().optional(),
-  /** PostgreSQL (the cluster krizaka-dev-pg in dev: database yomizaka_db, role yomizaka_db). */
+  /** PostgreSQL (the cluster krizaka-dev-pg in dev: database verikora_db, role verikora_db). */
   DATABASE_URL: z.string().optional(),
-  /** The same database reached directly, not through the PgBouncer pool (`pool-yomizaka`): session advisory locks (migrations, ticks) need one backend for their whole life. Unset: DATABASE_URL. */
+  /** The same database reached directly, not through the PgBouncer pool (`pool-verikora`): session advisory locks (migrations, ticks) need one backend for their whole life. Unset: DATABASE_URL. */
   DATABASE_DIRECT_URL: z.string().optional(),
   /** Connections the app keeps open on DATABASE_URL (the pool's size; the lock pool keeps its own 4). */
   DATABASE_MAX_CONNECTIONS: z.coerce.number().int().min(1).max(100).default(5),
@@ -90,7 +90,7 @@ export const envSchema = z.object({
   APP_SETTINGS_ENCRYPTION_KEY: z.string().optional(),
   /** The key-encryption key of the storage providers (ADR-005): 32 bytes in base64, a DO SECRET. The admin's providers and their credentials live in the database, sealed under it; it is the only storage variable the deployment needs. */
   MEDIA_VAULT_KEY: z.string().optional(),
-  /** The app registrations at the clouds a person may connect (yomizaka#530; each needs its redirect address `APP_PUBLIC_URL/api/me/storage/cloud/callback`). A cloud without its client id is not offered. */
+  /** The app registrations at the clouds a person may connect (verikora#530; each needs its redirect address `APP_PUBLIC_URL/api/me/storage/cloud/callback`). A cloud without its client id is not offered. */
   MEDIA_CLOUD_DROPBOX_CLIENT_ID: z.string().optional(),
   MEDIA_CLOUD_DROPBOX_CLIENT_SECRET: z.string().optional(),
   MEDIA_CLOUD_GOOGLE_CLIENT_ID: z.string().optional(),
@@ -98,7 +98,7 @@ export const envSchema = z.object({
   MEDIA_CLOUD_MICROSOFT_CLIENT_ID: z.string().optional(),
   MEDIA_CLOUD_MICROSOFT_CLIENT_SECRET: z.string().optional(),
   /** The `MEDIA_DOCUMENTS_*`, `MEDIA_STORAGE_*` and `MEDIA_S3_*` values below only bootstrap: read once to import the provider a deployment already used (`bootstrapFromEnvironment`), never to choose a store afterwards. */
-  MEDIA_DOCUMENTS_PREFIX: z.string().default("yomizaka"),
+  MEDIA_DOCUMENTS_PREFIX: z.string().default("verikora"),
   /** AES-256-GCM key (32 bytes, base64) that encrypts every kept document before it leaves; the provider only holds ciphertext. */
   MEDIA_DOCUMENTS_ENCRYPTION_KEY: z.string().optional(),
   MEDIA_STORAGE_ENDPOINT: z.string().default("storage.bunnycdn.com"),
@@ -112,11 +112,11 @@ export const envSchema = z.object({
   MEDIA_S3_BUCKET: z.string().optional(),
   MEDIA_S3_ACCESS_KEY_ID: z.string().optional(),
   MEDIA_S3_SECRET_ACCESS_KEY: z.string().optional(),
-  /** Where the analyses run: Orazaka, and only Orazaka. */
-  AI_PROVIDER: z.literal("orazaka").default("orazaka"),
-  /** Orazaka's edge (`https://dev.orazaka.com/edge`). */
-  AI_API_URL: z.string().url().default("https://dev.orazaka.com/edge"),
-  /** Yomizaka's `oz_` service key (Orazaka `dev-deploy.mjs service-account yomizaka`), a DO SECRET. */
+  /** Where the analyses run: Sovkora, and only Sovkora. */
+  AI_PROVIDER: z.literal("sovkora").default("sovkora"),
+  /** Sovkora's edge (`https://dev.sovkora.com/edge`). */
+  AI_API_URL: z.string().url().default("https://dev.sovkora.com/edge"),
+  /** Verikora's `oz_` service key (Sovkora `dev-deploy.mjs service-account verikora`), a DO SECRET. */
   AI_API_KEY: z.string().optional(),
 });
 
@@ -145,7 +145,7 @@ export function productionProblems(env: Env): string[] {
     problems.push("AUTH_SESSION_SECRET must be at least 32 characters");
   }
   if (!env.AI_API_KEY?.startsWith("oz_")) {
-    problems.push("AI_API_KEY must be an Orazaka key (oz_…)");
+    problems.push("AI_API_KEY must be an Sovkora key (oz_…)");
   }
   if (!env.APP_REPORT_SIGNING_KEY) {
     problems.push("APP_REPORT_SIGNING_KEY is not set");
@@ -171,7 +171,7 @@ export function productionProblems(env: Env): string[] {
 export function assertProductionEnv(source: Record<string, string | undefined> = process.env): void {
   const problems = productionProblems(readEnv(source));
   if (problems.length) {
-    throw new Error(`Yomizaka refuses to start: ${problems.join("; ")}`);
+    throw new Error(`Verikora refuses to start: ${problems.join("; ")}`);
   }
 }
 

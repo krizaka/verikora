@@ -1,7 +1,7 @@
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 
-import { PERSPECTIVES } from "@yomizaka/core";
+import { PERSPECTIVES } from "@verikora/core";
 import { describe, expect, it } from "vitest";
 
 import landlordFile from "@/content/recorded-runs/landlord.json";
@@ -13,7 +13,7 @@ const ROOT = join(__dirname, "..");
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/;
 
 describe("The recorded runs: one per side of the lease, or the home does not build", () => {
-  it("has one recorded run for each side, a real Orazaka run with its id and Studio version", () => {
+  it("has one recorded run for each side, a real Sovkora run with its id and Studio version", () => {
     expect(recordedRuns().map((r) => r.side)).toEqual([...PERSPECTIVES]);
     for (const r of recordedRuns()) {
       expect(r.runId).toMatch(UUID);
@@ -25,7 +25,7 @@ describe("The recorded runs: one per side of the lease, or the home does not bui
     expect(recordedRun("tenant").runId).not.toBe(recordedRun("landlord").runId);
   });
 
-  it("keeps what Orazaka returned, verbatim: the file holds the run as returned and the page reads its findings", () => {
+  it("keeps what Sovkora returned, verbatim: the file holds the run as returned and the page reads its findings", () => {
     for (const [side, file] of [
       ["tenant", tenantFile],
       ["landlord", landlordFile],

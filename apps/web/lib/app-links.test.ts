@@ -16,7 +16,7 @@ import {
   IOS_BUNDLE_ID,
 } from "./app-links";
 
-/** Universal links (yomizaka#155): the web's two files and the app's own configuration say the same thing. `pnpm check:app-links` runs this file. */
+/** Universal links (verikora#155): the web's two files and the app's own configuration say the same thing. `pnpm check:app-links` runs this file. */
 const FINGERPRINT = Array.from({ length: 32 }, (_, i) => (i * 7 + 3).toString(16).padStart(2, "0").toUpperCase()).join(
   ":",
 );

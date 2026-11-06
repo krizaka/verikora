@@ -39,7 +39,7 @@ const body = z.discriminatedUnion("action", [
   z.object({ token, action: z.literal("withdraw"), purpose }),
   z.object({ token, action: z.literal("erase") }),
   z.object({ token, action: z.literal("submit") }),
-  // ADR-0014 (yomizaka#626): the applicant's explanation of a trace found in one of their documents; an empty text removes it.
+  // ADR-0014 (verikora#626): the applicant's explanation of a trace found in one of their documents; an empty text removes it.
   z.object({
     token,
     action: z.literal("answer"),
@@ -50,7 +50,7 @@ const body = z.discriminatedUnion("action", [
 ]);
 
 /**
- * The applicant's side of yomizaka#131 and #127, reached by the link the manager handed over (the same token as a screening):
+ * The applicant's side of verikora#131 and #127, reached by the link the manager handed over (the same token as a screening):
  * read the notice and the file's state, consent or withdraw per purpose, send the file, or ask for the deletion of the
  * documents and result. No account is needed; rate-limited by address; every change is audit-logged without personal data.
  * A consent to upload or keep, and the submission, need an open link; a withdrawal and an erasure are always allowed.

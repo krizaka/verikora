@@ -1,4 +1,4 @@
-import { CHECKS_TABS, type ChecksTab, type SectionId, sectionsFor } from "@yomizaka/core";
+import { CHECKS_TABS, type ChecksTab, type SectionId, sectionsFor } from "@verikora/core";
 
 import { type Locale, routes } from "./links";
 
@@ -16,7 +16,7 @@ export interface PhoneTab {
 }
 
 /**
- * The phone's tab bar: the one section map of `@yomizaka/core` (yomizaka#319), the same as the web's rail and the Mac's
+ * The phone's tab bar: the one section map of `@verikora/core` (verikora#319), the same as the web's rail and the Mac's
  * sidebar. « Vérifier un document » is the header's « + », the account and the settings are under the avatar.
  */
 export const phoneTabs = (locale: Locale): PhoneTab[] =>

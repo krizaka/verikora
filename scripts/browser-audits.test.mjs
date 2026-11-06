@@ -7,7 +7,7 @@ import { describe, it } from "vitest";
 const ROOT = fileURLToPath(new URL("../", import.meta.url));
 
 // Scripts that RECORD (demo takes, the motion is the point), not audit. Everything else that drives a browser measures,
-// so it settles transitions first (yomizaka#354). A new browser script is an audit unless it is named here, with a reason.
+// so it settles transitions first (verikora#354). A new browser script is an audit unless it is named here, with a reason.
 const RECORDERS = new Set([
   "scripts/landing-journey.mjs",
   "scripts/landing-take.mjs",
@@ -32,7 +32,7 @@ const browserScripts = [...files("scripts"), ...files("apps/web/scripts")].filte
 );
 const audits = browserScripts.filter((f) => !RECORDERS.has(f));
 
-describe("the browser audits settle View Transitions before they measure (yomizaka#354)", () => {
+describe("the browser audits settle View Transitions before they measure (verikora#354)", () => {
   it("finds the audit scripts (the guard is not vacuous)", () => {
     assert.ok(audits.length >= 4, audits.join(", "));
     for (const f of RECORDERS)

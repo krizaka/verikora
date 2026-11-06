@@ -1,6 +1,6 @@
 # ADR-0008 — Account and profile behind a port (the future `@krizaka/auth`)
 
-Status: accepted (2026-10-22). Issue: krizaka/yomizaka#152.
+Status: accepted (2026-10-22). Issue: krizaka/verikora#152.
 
 ## Context
 Every Krizaka product needs the same account features (name, language, avatar, e-mail change with verification, password,
@@ -11,8 +11,8 @@ runtime dependency on a central service. What is shared is **code**, as with `@k
 - **`AccountService` is a port** (`lib/account/port.ts`): `profile`, `updateProfile`, `requestEmailChange` (the password is
   checked, a link goes to the NEW address, the answer is the same whether or not that address is taken), `confirmEmailChange`
   (single use, expires, verifies the address by that very act), `changePassword` (signs the other sessions out),
-  `confirmPassword`, `deleteAccount`. It has no vendor and no Yomizaka code, so it can move into `@krizaka/auth` unchanged.
-- **Yomizaka's adapter** (`lib/account/postgres.ts`) uses its own PostgreSQL, the mailer and the password hashing, passed in.
+  `confirmPassword`, `deleteAccount`. It has no vendor and no Verikora code, so it can move into `@krizaka/auth` unchanged.
+- **Verikora's adapter** (`lib/account/postgres.ts`) uses its own PostgreSQL, the mailer and the password hashing, passed in.
   The table grows only by what the port needs: `accounts.name`, `accounts.avatar_seed`, `email_changes`.
 - **Product code stays in the product** (`lib/account/data.ts`): the **export** (profile, organisation, documents with their
   kept files, reports; never the password) and the **erasure** (refused while a subscription is active, kept files removed from

@@ -101,12 +101,12 @@
     {
       "id": "engine",
       "role": "The analyses: the text of the document a person asks to check is sent to the engine; the run id is kept",
-      "provider": "Orazaka (AI_PROVIDER=orazaka), Krizaka's own engine",
-      "where": "dev.orazaka.com/edge; hosted by Orazaka's own deployment, described in its repository, not here",
+      "provider": "Sovkora (AI_PROVIDER=sovkora), Krizaka's own engine",
+      "where": "dev.sovkora.com/edge; hosted by Sovkora's own deployment, described in its repository, not here",
       "outsideQuebec": null,
       "outsideCanada": null,
       "env": ["AI_PROVIDER", "AI_API_URL", "AI_API_KEY"],
-      "hosts": ["dev.orazaka.com"]
+      "hosts": ["dev.sovkora.com"]
     }
   ]
 }

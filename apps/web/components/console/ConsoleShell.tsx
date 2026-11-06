@@ -12,18 +12,17 @@ import {
   WalletIcon,
 } from "@krizaka/icons";
 import { krizakaFetch, useMutation } from "@krizaka/query";
-import { CodeNameLine, YomizakaLogo } from "@krizaka/ui";
+import { YomizakaLogo } from "@krizaka/ui";
 import { AppFrame } from "@krizaka/ui/app-frame";
 import { Badge } from "@krizaka/ui/badge";
 import { languagesFor } from "@krizaka/ui/language-switch";
-import { type SectionId, sectionsFor } from "@yomizaka/core";
+import { type SectionId, sectionsFor } from "@verikora/core";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
 
 import { ButtonLink } from "@/components/ButtonLink";
-import { useCodeName } from "@/components/CodeName";
-import { PRODUCT_NAME } from "@/lib/brand";
+import { BRAND_ID, PRODUCT_NAME } from "@/lib/brand";
 import { activeNav, CONSOLE_ROUTES, withoutLocale } from "@/lib/console-nav";
 import { useSay } from "@/lib/i18n-client";
 import { pluralKey } from "@/lib/plural";
@@ -31,7 +30,7 @@ import { pluralKey } from "@/lib/plural";
 import { ConsoleSearch } from "./ConsoleSearch";
 
 const BUILD = process.env.NEXT_PUBLIC_APP_VERSION ?? "";
-const ADMIN_URL = "https://admin.yomizaka.com";
+const ADMIN_URL = "https://admin.verikora.com";
 const SECTION_ICONS: Record<SectionId, typeof HomeIcon> = {
   library: HomeIcon,
   files: UsersIcon,
@@ -40,9 +39,9 @@ const SECTION_ICONS: Record<SectionId, typeof HomeIcon> = {
 };
 
 /**
- * The frame of the signed-in space: Krizaka UI's `AppFrame` (krizaka/yomizaka#429) — one rail, one top bar, one account menu for the
+ * The frame of the signed-in space: Krizaka UI's `AppFrame` (krizaka/verikora#429) — one rail, one top bar, one account menu for the
  * whole family, the top chrome (the bar and the development notice) owned by the frame (#449). What is ours is the data: where you work
- * on the rail — the section map of `@yomizaka/core`, the same on the phone and the Mac (yomizaka#319): Bibliothèque ·
+ * on the rail — the section map of `@verikora/core`, the same on the phone and the Mac (verikora#319): Bibliothèque ·
  * Dossiers (offered with the applicant-file flow) · Vérifications · Recherche, the collapse control alone at its foot —; the
  * product's name in the header with the DEV chip and the one action of every screen, « Vérifier un document »;
  * who you are under the avatar: profile, settings (the settings home), billing, Administration for an administrator, then language, theme, sign out (the frame's order).
@@ -68,7 +67,6 @@ export function ConsoleShell({
   children: React.ReactNode;
 }>) {
   const { say } = useSay();
-  const codeName = useCodeName();
   const router = useRouter();
   const path = usePathname() ?? "";
   const [searching, setSearching] = useState(false);
@@ -112,7 +110,7 @@ export function ConsoleShell({
         mark={<YomizakaLogo size={28} animated={false} />}
         headerMark={<YomizakaLogo size={26} animated={false} />}
         homeHref={href(CONSOLE_ROUTES.library)}
-        accent="yomizaka"
+        accent={BRAND_ID}
         label={say("shell.sidebarLabel")}
         locale={locale}
         linkAs={Link}
@@ -120,7 +118,6 @@ export function ConsoleShell({
         currentId={active ?? undefined}
         chips={
           <>
-            {codeName ? <CodeNameLine className="hidden sm:inline">{codeName}</CodeNameLine> : null}
             {BUILD ? (
               <Badge tone="neutral" size="sm" className="hidden sm:inline-flex" data-testid="app-version">
                 {say("shell.devBuild", { version: BUILD })}
@@ -128,7 +125,7 @@ export function ConsoleShell({
             ) : null}
           </>
         }
-        // The signed-in person is always visible (yomizaka#243): the name only when there is one, never the raw e-mail address
+        // The signed-in person is always visible (verikora#243): the name only when there is one, never the raw e-mail address
         // (the review's A4); the menu's identity header carries both. No messages (the product has no messaging) and no notifications
         // until `@krizaka/notifications` gives it something to say (krizaka-ts#60): an empty slot is hidden, never invented.
         account={{
@@ -136,7 +133,7 @@ export function ConsoleShell({
           name: name ?? say("shell.account"),
           email,
           avatar: {
-            defaultAvatar: { brand: "yomizaka", seed: avatarSeed ?? email },
+            defaultAvatar: { brand: BRAND_ID, seed: avatarSeed ?? email },
             fallback: (name ?? email).charAt(0).toUpperCase(),
           },
           links: {

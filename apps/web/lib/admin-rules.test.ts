@@ -18,7 +18,7 @@ describe("who may change a role", () => {
   });
 });
 
-describe("who may put an account on a plan by hand (yomizaka#252)", () => {
+describe("who may put an account on a plan by hand (verikora#252)", () => {
   it("only a development environment: in production the plan follows the subscription", () => {
     expect(planChangeRefusal("prod")).toMatchObject({ code: "PLAN_BY_HAND_IN_PRODUCTION" });
     expect(planChangeRefusal("dev")).toBeNull();

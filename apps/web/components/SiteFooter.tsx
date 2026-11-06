@@ -3,7 +3,7 @@ import { SiteFooter as FamilyFooter, SiteFooterColumn, SiteFooterLink } from "@k
 import { orgFamilyLabels } from "@krizaka/ui/sites";
 import Link from "next/link";
 
-import { PRODUCT_NAME } from "@/lib/brand";
+import { BRAND_ID, PRODUCT_NAME } from "@/lib/brand";
 import { type Locale, translator } from "@/lib/i18n";
 import { indexable } from "@/lib/indexing";
 import { isListed } from "@/lib/listed";
@@ -18,7 +18,7 @@ export function SiteFooter({ locale }: Readonly<{ locale: Locale }>) {
   const t = translator(locale);
   return (
     <FamilyFooter
-      current="yomizaka"
+      current={BRAND_ID}
       family={false}
       labels={orgFamilyLabels(org, locale)}
       org={org}

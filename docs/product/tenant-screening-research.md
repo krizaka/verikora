@@ -1,18 +1,18 @@
-# Checking a tenant's application (« dossier ») — research, law, and what Yomizaka builds
+# Checking a tenant's application (« dossier ») — research, law, and what Verikora builds
 
 *Researched 2026-10-17. Every claim carries its source; a claim that a source did not confirm is marked **unverified**. This is
 product research, not legal advice: the Québec position below needs a lawyer's review before the feature is offered outside dev.*
 
 ## 1. The plain answer
 
-- **A criminal-record check is not justifiable for most tenancies in Québec, and Yomizaka will not offer one.** The landlord's need
+- **A criminal-record check is not justifiable for most tenancies in Québec, and Verikora will not offer one.** The landlord's need
   is to know the person is who they say and can pay the rent and respect the lease; a criminal record answers neither, collecting
   it is a personal-information collection the CAI judges against *necessity*, and a refusal that is really about a protected
   ground is unlawful under the Charter (art. 10 and 12 apply to housing). Whether a criminal record is itself covered in housing
   is **unverified** — no source found states it. A CAI complaint of 2018 concerned exactly a background check run without the form saying so
   ([CAI DSV 100475](https://www.cai.gouv.qc.ca/uploads/pdfs/CAI_DSV_100475.pdf)). Sources did not state a rule on criminal records
   specifically (Silaws' 2026 guide lists them as neither clearly allowed nor prohibited): **unverified** — hence « not offered ».
-- **What is lawful, and what Yomizaka offers:** identity confirmed by looking at an ID without keeping a copy; the previous
+- **What is lawful, and what Verikora offers:** identity confirmed by looking at an ID without keeping a copy; the previous
   landlord's contact; a **credit/payment-history check only with the tenant's consent**; proof of income **examined** (is the PDF
   edited?) rather than collected and kept. [Protégez-vous](https://www.protegez-vous.ca/nouvelles/affaires-et-societe/futurs-locataires-ce-qu-un-proprietaire-peut-vous-demander),
   citing the TAL: the information collected is limited to what verifies identity and shows the applicant is a reliable tenant; a
@@ -24,7 +24,7 @@ product research, not legal advice: the Québec position below needs a lawyer's 
   and was asked about a rejection motivated by a refused credit check (2013, 2017): a landlord may ask for financial references, but
   refusing unnecessary information must not be a reason to reject.
 - **Contested in practice:** the SIN for a credit check (the CORPIQ form asks for it, its president defends it — [Noovo](https://www.noovo.info/video/quels-renseignements-un-proprietaire-a-t-il-le-droit-de-me-demander.html)).
-  Yomizaka never collects a SIN.
+  Verikora never collects a SIN.
 
 ## 2. The Québec law that frames it
 
@@ -48,7 +48,7 @@ product research, not legal advice: the Québec position below needs a lawyer's 
 | **Openroom** | Crowdsourced court-order (rental debt) data; **does not run screenings** | — | partner data via SingleKey | A data source, not a provider to call |
 | **Triton** | not found in the sources searched | — | — | **unverified** — asked for in the brief |
 
-## 4. The flow Yomizaka builds (provider-agnostic, now)
+## 4. The flow Verikora builds (provider-agnostic, now)
 
 1. **The landlord** (who has accepted an undertaking — the lawful purpose, no discrimination, the list of what may be asked)
    creates a request: the applicant's name and e-mail, the scope (payment history only today). Nothing is collected from the

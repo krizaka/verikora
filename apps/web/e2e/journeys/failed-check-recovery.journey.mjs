@@ -14,7 +14,7 @@ const JOURNEY = JSON.parse(readFileSync(new URL("./journeys.json", import.meta.u
 );
 const FR = JSON.parse(readFileSync(new URL("../../messages/fr.json", import.meta.url), "utf8")).console;
 // Words of the engine room that a person never reads (the engine, a run id, a stack).
-const ENGINE_WORDS = /orazaka|engine|moteur|stack ?trace|exception|runId|run id|ENGINE_|seeded-/i;
+const ENGINE_WORDS = /sovkora|engine|moteur|stack ?trace|exception|runId|run id|ENGINE_|seeded-/i;
 
 test("a failed check says why in plain words and offers a way out", async ({ browser }, info) => {
   const state = await sessionsFor(browser, info.workerIndex).stateFor("eric");

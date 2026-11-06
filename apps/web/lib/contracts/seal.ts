@@ -13,7 +13,7 @@ import { SITE_URL } from "../site";
 import type { SealParty, SealRequest } from "./request";
 
 /*
- * A sealed contract (yomizaka#71): a partner platform sends a contract's content and its parties; Yomizaka renders it as a PDF —
+ * A sealed contract (verikora#71): a partner platform sends a contract's content and its parties; Verikora renders it as a PDF —
  * the content, the parties, what the seal says and does not — and signs it, with the same Ed25519 key and the same grammar as the
  * signed reports: a folio on each page, a visible signature page, the attestation embedded in the file. What is signed is the
  * canonical JSON `payload` (the content's SHA-256, the parties, the day, the zone) and the SHA-256 of the text of the pages.
@@ -21,8 +21,8 @@ import type { SealParty, SealRequest } from "./request";
  * It seals; it does not verify. Not an identity, not an age, not the validity of the contract in law, not the partner's
  * statements (`complianceRuleset` is shown as the partner's own).
  */
-export const CONTRACT_SCHEMA = "yomizaka.contract/1";
-export const CONTRACT_ATTESTATION_KEY = "YomizakaContractAttestation";
+export const CONTRACT_SCHEMA = "verikora.contract/1";
+export const CONTRACT_ATTESTATION_KEY = "VerikoraContractAttestation";
 
 export const contractPayload = z.object({
   schema: z.literal(CONTRACT_SCHEMA),
