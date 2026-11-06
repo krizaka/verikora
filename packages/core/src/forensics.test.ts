@@ -18,17 +18,17 @@ const edited = (producer: string, by: string) =>
   );
 
 describe("analysePdf", () => {
-  it("scores a clean payroll stub under 20 with no anomaly", () => {
+  it("finds nothing on a clean payroll stub, and never gives a score", () => {
     const report = analysePdf(cleanStub(), { documentKind: "payroll" });
-    expect(report.tamperScore).toBeLessThan(20);
+    expect(report).not.toHaveProperty("tamperScore");
     expect(report.anomalies).toEqual([]);
     expect(report.revisions).toBe(1);
     expect(fraudReport.parse(report)).toEqual(report);
   });
 
-  it("scores the same stub edited in a consumer editor at 60 or more", () => {
+  it("reports the same stub edited in a consumer editor as three unusual signals, none inconsistent", () => {
     const report = analysePdf(edited("ADP Payroll Services", "iLovePDF"), { documentKind: "payroll" });
-    expect(report.tamperScore).toBeGreaterThanOrEqual(60);
+    expect(report.anomalies.map((a) => a.level)).toEqual(["unusual", "unusual", "unusual"]);
     expect(report.anomalies.map((a) => a.kind).sort()).toEqual([
       "incremental-update",
       "producer-changed",
@@ -57,7 +57,7 @@ describe("analysePdf", () => {
     expect(analysePdf(bytes, { documentKind: "payroll" }).producer).toBe("Sejda");
   });
 
-  it("weighs a signed file's update lower than an unsigned one", () => {
+  it("reads a signed file's update as observed, an unsigned one as unusual", () => {
     const unsigned = analysePdf(edited("ADP", "ADP"));
     const signed = analysePdf(
       bytesOf(
@@ -66,7 +66,8 @@ describe("analysePdf", () => {
           .replace("/Type /Page ", "/ByteRange [0 10 20 30] /Type /Page "),
       ),
     );
-    expect(signed.tamperScore).toBeLessThan(unsigned.tamperScore);
+    expect(unsigned.anomalies[0]?.level).toBe("unusual");
+    expect(signed.anomalies[0]?.level).toBe("observed");
     expect(signed.anomalies[0]?.evidence).toContain("signature");
   });
 

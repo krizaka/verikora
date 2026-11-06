@@ -24,8 +24,6 @@ export const MIN_AMOUNTS_PER_PAGE = 4;
 /** The share of a page's amounts the usual face must hold to be a norm. */
 // @fixed: a majority of three in four, so a page printed in two faces by design is left alone.
 export const NORM_SHARE = 0.75;
-// @fixed: the weight of one typography finding in the score, capped by the report at 100.
-const FONT_MISMATCH_WEIGHT = 30;
 // @fixed: a size gap under half a point is rounding, not retyping.
 const SIZE_TOLERANCE = 0.5;
 
@@ -56,6 +54,7 @@ function pageAnomalies(page: number, amounts: readonly TextRun[]): Anomaly[] {
       : `« ${r.text.trim()} » is set at ${r.size} pt, the other amounts of the page at ${size.value} pt`;
     found.push({
       kind: "font-mismatch",
+      level: "unusual",
       page,
       bbox: { x: r.x, y: r.y, width: r.width, height: r.height },
       evidence: why,
@@ -83,6 +82,5 @@ export function withTextRuns(report: FraudReport, runs: readonly TextRun[]): Fra
   return {
     ...report,
     anomalies: [...report.anomalies, ...found],
-    tamperScore: Math.min(100, report.tamperScore + FONT_MISMATCH_WEIGHT * found.length),
   };
 }

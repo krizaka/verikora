@@ -2,17 +2,33 @@ import { z } from "zod";
 
 /**
  * Document forensics, slice 1 (krizaka-internal#6): what the bytes of a PDF say about how it was made. Pure functions, no I/O,
- * no model. Everything here is a signal read from the file, never a verdict: a report says « inconsistency found », it does not
+ * no model. Everything here is a signal read from the file, never a verdict and never a score (ADR-0014): a report says « inconsistency found », it does not
  * say the document is false. Font, typography and payroll maths are the next slices; nothing of them is claimed here.
  */
-export const ANOMALY_KINDS = ["incremental-update", "producer-changed", "producer-mismatch", "font-mismatch"] as const;
+export const ANOMALY_KINDS = [
+  "incremental-update",
+  "producer-changed",
+  "producer-mismatch",
+  "font-mismatch",
+  "payroll-sum",
+  "payroll-ytd",
+] as const;
 export const anomalyKind = z.enum(ANOMALY_KINDS);
 export type AnomalyKind = z.infer<typeof anomalyKind>;
+
+/**
+ * The three levels of ADR-0014, in words, never a number: what was seen, what is unusual, what two facts of the file contradict.
+ * No score, no total, no sort across documents. Only a contradiction between two facts of the file may be `inconsistent`.
+ */
+export const SIGNAL_LEVELS = ["observed", "unusual", "inconsistent"] as const;
+export const signalLevel = z.enum(SIGNAL_LEVELS);
+export type SignalLevel = z.infer<typeof signalLevel>;
 
 export const boundingBox = z.object({ x: z.number(), y: z.number(), width: z.number(), height: z.number() });
 
 export const anomaly = z.object({
   kind: anomalyKind,
+  level: signalLevel,
   /** 1-based page, or null when the finding is about the whole file. */
   page: z.number().int().positive().nullable(),
   /** Where it is on the page, null when it is about the whole file (the font slice fills it). */
@@ -22,8 +38,6 @@ export const anomaly = z.object({
 export type Anomaly = z.infer<typeof anomaly>;
 
 export const fraudReport = z.object({
-  /** 0 (nothing found) to 100. A signal for a person to look, not a probability of fraud. */
-  tamperScore: z.number().int().min(0).max(100),
   anomalies: z.array(anomaly),
   revisions: z.number().int().min(1),
   producer: z.string().nullable(),
@@ -71,13 +85,13 @@ export const PAYROLL_PROCESSORS = [
   "paycor",
 ] as const;
 
-// @fixed: weights of the score, one per kind of signal; they sum above 100 on purpose (capped).
-const WEIGHTS = {
-  "incremental-update": 35,
-  "incremental-update-signed": 10,
-  "producer-changed": 25,
-  "producer-mismatch": 45,
-} as const;
+/** The level of each kind of signal. None contradicts two facts of the file on its own, so none is above `unusual`. */
+const LEVEL_OF = {
+  "incremental-update": "unusual",
+  "incremental-update-signed": "observed",
+  "producer-changed": "unusual",
+  "producer-mismatch": "unusual",
+} as const satisfies Record<string, SignalLevel>;
 
 const latin1 = (bytes: Uint8Array): string => new TextDecoder("latin1").decode(bytes);
 
@@ -133,10 +147,8 @@ export function analysePdf(bytes: Uint8Array, options: ForensicsOptions = {}): F
   const first = producers[0] ?? null;
   const producer = producers.at(-1) ?? null;
   const anomalies: Anomaly[] = [];
-  let score = 0;
-  const add = (kind: AnomalyKind, weight: number, evidence: string) => {
-    anomalies.push({ kind, page: null, bbox: null, evidence });
-    score += weight;
+  const add = (kind: AnomalyKind, level: SignalLevel, evidence: string) => {
+    anomalies.push({ kind, level, page: null, bbox: null, evidence });
   };
 
   if (revisions > 1) {
@@ -144,14 +156,14 @@ export function analysePdf(bytes: Uint8Array, options: ForensicsOptions = {}): F
     const signed = /\/ByteRange\s*\[/.test(text);
     add(
       "incremental-update",
-      signed ? WEIGHTS["incremental-update-signed"] : WEIGHTS["incremental-update"],
+      signed ? LEVEL_OF["incremental-update-signed"] : LEVEL_OF["incremental-update"],
       `The file was saved ${revisions} times: ${revisions - 1} change(s) were appended after the original.${signed ? " It carries a digital signature, which is saved that way too." : ""}`,
     );
   }
   if (first && producer && first !== producer)
     add(
       "producer-changed",
-      WEIGHTS["producer-changed"],
+      LEVEL_OF["producer-changed"],
       `The producing software changed between saves: "${first}" then "${producer}".`,
     );
   if (options.documentKind === "payroll") {
@@ -159,9 +171,9 @@ export function analysePdf(bytes: Uint8Array, options: ForensicsOptions = {}): F
     if (editor && !includesAny(producer, PAYROLL_PROCESSORS))
       add(
         "producer-mismatch",
-        WEIGHTS["producer-mismatch"],
+        LEVEL_OF["producer-mismatch"],
         `A pay stub is expected from a payroll system; this file was produced by "${producer}", a general PDF editor.`,
       );
   }
-  return { tamperScore: Math.min(100, score), anomalies, revisions, producer };
+  return { anomalies, revisions, producer };
 }
