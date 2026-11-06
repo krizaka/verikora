@@ -4,7 +4,8 @@
 FROM node:22-alpine@sha256:0a7108bf6c7bf5de370ffb1a3ed6be93d405b43ff159f681a8d18c0e2bc2e402
 WORKDIR /repo
 # The client must be at least the server's major version: bin/backup.mjs refuses to run otherwise (plan.mjs, assertDumpClient).
-RUN apk add --no-cache postgresql-client age && corepack enable
+# The distribution's security fixes land between two digest bumps of the base image (CVE-2026-85091, zlib, krizaka-internal#2773).
+RUN apk upgrade --no-cache && apk add --no-cache postgresql-client age && corepack enable
 COPY pnpm-lock.yaml pnpm-workspace.yaml package.json ./
 COPY apps/web/package.json apps/web/package.json
 COPY packages/core/package.json packages/core/package.json
