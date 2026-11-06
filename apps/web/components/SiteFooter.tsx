@@ -23,6 +23,16 @@ export function SiteFooter({ locale }: Readonly<{ locale: Locale }>) {
       family={false}
       labels={orgFamilyLabels(org, locale)}
       org={org}
+      legal={
+        <>
+          <SiteFooterLink asChild>
+            <Link href={pagePath(locale, "privacy")}>{t("chrome.legal")}</Link>
+          </SiteFooterLink>
+          <SiteFooterLink asChild>
+            <Link href={pagePath(locale, "terms")}>{t("chrome.terms")}</Link>
+          </SiteFooterLink>
+        </>
+      }
       version={APP_VERSION}
       aria-label={t("chrome.footerLabel")}
       env={indexable() ? undefined : "DEV"}
