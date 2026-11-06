@@ -28,7 +28,7 @@ for (const screen of SCREENS) {
 
     // The commercial name is what the tab and the bar show; the code name never is (krizaka-internal#2038).
     await expect(page, "the tab shows the commercial name").toHaveTitle(/Verikora/);
-    await expect(page, "the tab never shows the code name").not.toHaveTitle(/verikora/i);
+    await expect(page, "the tab never shows the former code name").not.toHaveTitle(/yomizaka/i);
     await expect(
       page.getByRole("banner").getByText("Verikora").first(),
       "the bar shows the commercial name",
