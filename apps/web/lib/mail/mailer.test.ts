@@ -65,11 +65,11 @@ describe("the sender", () => {
 });
 
 describe("sending the three links", () => {
-  // The subject names the product as `@krizaka/email` 0.x knows it (« Yomizaka ») until its major release with the commercial names (krizaka-internal#2659).
+  // The subject names the product: `@krizaka/email` writes the commercial name (« Verikora »).
   it.each([
-    [confirm, /Confirmez votre adresse Yomizaka/, "verify-email?token=yv1.abc"],
-    [reset, /Reset your Yomizaka password/, "reset-password?token=ye1.abc"],
-    [change, /Confirmez votre nouvelle adresse Yomizaka/, "confirm-email?token=ye1.def"],
+    [confirm, /Confirmez votre adresse Verikora/, "verify-email?token=yv1.abc"],
+    [reset, /Reset your Verikora password/, "reset-password?token=ye1.abc"],
+    [change, /Confirmez votre nouvelle adresse Verikora/, "confirm-email?token=ye1.def"],
   ])("%#: a branded e-mail with its link, to the address, from Verikora", async (mail, subject, link) => {
     const { sent, mail: send } = world();
     await send(mail);

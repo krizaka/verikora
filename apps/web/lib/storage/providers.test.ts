@@ -10,9 +10,9 @@ const bunnyEnv: ProviderEnv = {
   MEDIA_DOCUMENTS_PROVIDER: "bunny",
   MEDIA_DOCUMENTS_PREFIX: "verikora",
   MEDIA_STORAGE_ENDPOINT: "storage.bunnycdn.com",
-  MEDIA_STORAGE_ZONE: "yomizaka-docs-dev",
+  MEDIA_STORAGE_ZONE: "verikora-docs-dev",
   MEDIA_STORAGE_API_KEY: "zone-password",
-  MEDIA_DOCUMENTS_PULL_HOSTNAME: "yomizaka-docs-dev.b-cdn.net",
+  MEDIA_DOCUMENTS_PULL_HOSTNAME: "verikora-docs-dev.b-cdn.net",
   MEDIA_DOCUMENTS_TOKEN_KEY: "token-key",
   MEDIA_DOCUMENTS_ENCRYPTION_KEY: KEY_B,
 };
@@ -34,10 +34,10 @@ describe("the environment's old coordinates", () => {
     const imported = envProvider(bunnyEnv)!;
     expect(imported.kind).toBe("bunny");
     expect(imported.coordinates).toMatchObject({
-      zone: "yomizaka-docs-dev",
+      zone: "verikora-docs-dev",
       endpoint: "storage.bunnycdn.com",
       prefix: "verikora",
-      pullHostname: "yomizaka-docs-dev.b-cdn.net",
+      pullHostname: "verikora-docs-dev.b-cdn.net",
     });
     expect(imported.credentials).toEqual({ accessKey: "zone-password", tokenKey: "token-key", encryptionKey: KEY_B });
     expect(imported.dataKinds).toEqual(["documents", "avatars"]);

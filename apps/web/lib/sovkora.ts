@@ -1,4 +1,4 @@
-import { createOrazakaClient as createSharedClient } from "@krizaka/orazaka-client";
+import { createSovkoraClient as createSharedClient } from "@krizaka/sovkora-client";
 import { type SovkoraRun, sovkoraRun, type Studio } from "@verikora/core";
 import { z } from "zod";
 

@@ -14,7 +14,7 @@ const bootstrapEnv: ProviderEnv = {
   MEDIA_DOCUMENTS_PROVIDER: "bunny",
   MEDIA_DOCUMENTS_PREFIX: "verikora",
   MEDIA_STORAGE_ENDPOINT: "storage.bunnycdn.com",
-  MEDIA_STORAGE_ZONE: "yomizaka-docs-dev",
+  MEDIA_STORAGE_ZONE: "verikora-docs-dev",
   MEDIA_STORAGE_API_KEY: "zone-password",
   MEDIA_DOCUMENTS_ENCRYPTION_KEY: Buffer.alloc(32, 9).toString("base64"),
 };

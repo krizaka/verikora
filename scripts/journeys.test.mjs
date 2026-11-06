@@ -9,7 +9,7 @@ import { assertNoRetries, budgetProblem, checkCatalogue, validateJourney } from 
 const DIR = new URL("../apps/web/e2e/journeys/", import.meta.url);
 const index = JSON.parse(readFileSync(new URL("journeys.json", DIR), "utf8"));
 const files = readdirSync(DIR);
-const cast = castOf("yomizaka").map((p) => p.id);
+const cast = castOf("verikora").map((p) => p.id);
 
 describe("the journey catalogue of Verikora", () => {
   it("has a row for every journey file and a file for every row", () => {

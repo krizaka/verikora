@@ -16,8 +16,8 @@ import { currentLocale } from "./i18n";
  * build; `EXPO_PUBLIC_APP_URL` points a development build at another machine, `EXPO_PUBLIC_APP_ENV` picks the manifest entry.
  */
 export const PRODUCT = "verikora";
-/** The id `@krizaka/ui` and `@krizaka/org` still know this product by, until their major release with the commercial ids (krizaka-internal#2659). */
-export const BRAND_ID = "yomizaka";
+/** The product's id in `@krizaka/ui` and `@krizaka/org`. */
+export const BRAND_ID = "verikora";
 export const APP_VERSION = Constants.expoConfig?.version ?? "0.0.0";
 
 /** Until a verified manifest answers: the address of the dev deployment. */

@@ -19,7 +19,7 @@ const files = execFileSync("git", ["ls-files", "*.ts", "*.tsx", "*.mjs", "*.json
 
 describe("the cast is the only source of the personas", () => {
   it("spells no persona's name outside the cast (tests may use it as a fixture)", () => {
-    const names = castOf("yomizaka").map((p) => p.displayName);
+    const names = castOf("verikora").map((p) => p.displayName);
     const offenders = files.filter((f) =>
       names.some((n) => readFileSync(new URL(`../${f}`, import.meta.url), "utf8").includes(n)),
     );

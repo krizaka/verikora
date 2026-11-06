@@ -1,4 +1,4 @@
-import { createOrazakaClient } from "@krizaka/orazaka-client";
+import { createSovkoraClient } from "@krizaka/sovkora-client";
 import { describe, expect, it } from "vitest";
 
 import { engineDoor } from "./engine-door";
@@ -61,7 +61,7 @@ function door(
 ) {
   const sovkora = fakeSovkora(answers);
   const asked: CheckPurpose[] = [];
-  const client = createOrazakaClient({
+  const client = createSovkoraClient({
     baseUrl: "https://sovkora.test",
     apiKey: apiKey ?? undefined,
     clock: NOW,

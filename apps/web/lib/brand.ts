@@ -1,10 +1,7 @@
 import { brandOf, displayName, lockup } from "@krizaka/org";
 
-/**
- * The id the shared libraries (`@krizaka/org`, `@krizaka/ui`, `@krizaka/email`) still know this product by, until their major
- * release with the commercial ids (krizaka-internal#2659): then it is `verikora` and this line goes. Never rendered.
- */
-export const BRAND_ID = "yomizaka";
+/** The product's id in the shared libraries (`@krizaka/org`, `@krizaka/ui`, `@krizaka/email`). Never rendered. */
+export const BRAND_ID = "verikora";
 
 /**
  * The name customers read (krizaka-internal#2038): the administrator's `brand.displayName` setting when one is set, else the
@@ -18,8 +15,8 @@ export const productLockup = (locale: string, chosen?: string | null): string =>
 /** The default display name, for build-time and static surfaces. */
 export const PRODUCT_NAME = productName();
 
-/** The analysis engine's commercial name (code name `sovkora`). */
-export const ENGINE_NAME = brandOf("orazaka").commercialName;
+/** The analysis engine's commercial name. */
+export const ENGINE_NAME = brandOf("sovkora").commercialName;
 
 /** « by Krizaka » / « par Krizaka », for the lockup's second line. */
 export const productEndorsement = (locale: string): string => {
