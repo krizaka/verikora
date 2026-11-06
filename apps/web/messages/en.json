@@ -37,7 +37,7 @@
   },
   "landing": {
     "title": "Read before you sign.",
-    "lead": "For property managers and landlords who screen applicants in Québec: drop the lease and the applicant's papers. Verikora verifies the documents and screens the file: it reads them against extraction matrices and technical templates, and shows you the exact line behind every finding.",
+    "lead": "Verikora checks the papers of a rental file and quotes every passage. For property managers and landlords in Québec: drop the lease and the applicant's papers, and see the exact line behind every finding.",
     "status": {
       "label": "Status",
       "development": "In development: sign-up is closed while we test it on real Québec leases.",
@@ -54,7 +54,7 @@
     "what": {
       "title": "What it does",
       "lead": "Three things, with nothing hidden behind them.",
-      "who": "For property managers and landlords who screen applicants in Québec: a lease and a pay stub per file, several files a month. Tenants are welcome too: their first check is free. The registry checks (SOQUIJ, TAL, plumitif) are in preparation.",
+      "who": "For property managers and landlords who screen applicants in Québec: a lease and a pay stub per file, several files a month. Tenants are welcome too. The registry checks (SOQUIJ, TAL, plumitif) are in preparation.",
       "trust": "By default, your account and your checks are kept in a database in Toronto, Canada, and seen by your account alone; your files can go to your own storage instead, when you choose it. Nothing is sold, shared or used to train a model.",
       "privacy": "Read the privacy notice",
       "items": {
@@ -95,23 +95,12 @@
     },
     "showcase": {
       "title": "The app, as it is",
-      "lead": "Three screens of Verikora, drawn with its own components on fictitious data. Nothing here is a screenshot.",
+      "lead": "Two screens of Verikora, drawn with its own components on fictitious data. Nothing here is a screenshot.",
       "demo": "Fictitious data",
       "findings": {
         "title": "Every finding quotes its line",
         "text": "The rule, the sentence of the lease it rests on, and the article of law, in the order to read them.",
         "summary": "The report of a check: the verdict, then each finding with the quoted passage of the lease and its article."
-      },
-      "screening": {
-        "title": "A screening the tenant agrees to",
-        "text": "The applicant sees the result first; a registry check that is not ready says so instead of guessing.",
-        "summary": "A screening result with the checks asked and, for each, its outcome: nothing to report, or not available yet.",
-        "title2": "Result",
-        "items": {
-          "payment-history": "Payment history",
-          "credit": "Credit report",
-          "registry": "Court registry"
-        }
       },
       "owner": {
         "title": "A report the owner can open",

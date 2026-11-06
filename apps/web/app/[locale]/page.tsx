@@ -11,13 +11,12 @@ import { BeforeAfter } from "@/components/home/BeforeAfter";
 import { FindingsScreen } from "@/components/home/FindingsScreen";
 import { LiveScreen } from "@/components/home/LiveScreen";
 import { OwnerReportDocument } from "@/components/OwnerReportDocument";
-import { ScreeningResultCard } from "@/components/screening/ScreeningResultCard";
 import { SiteHeader } from "@/components/SiteChrome";
 import { SiteFooter } from "@/components/SiteFooter";
 import { asLocale, format, getDictionary } from "@/lib/i18n";
 import type { ConsoleMessages } from "@/lib/i18n-client";
 import { HERO_FIGURES, productStatus } from "@/lib/landing";
-import { DEMO_SCREENING, demoOwnerDocument } from "@/lib/landing-demo";
+import { demoOwnerDocument } from "@/lib/landing-demo";
 import { recordedRun } from "@/lib/recorded-runs";
 import { pageMetadata, siteJsonLd } from "@/lib/seo";
 import { pagePath } from "@/lib/site";
@@ -117,27 +116,6 @@ export default async function Home({ params }: Readonly<{ params: Promise<{ loca
                         }
                         report={run.report}
                       />
-                    </LiveScreen>
-                  </Card.Body>
-                </Card.Root>
-                <Card.Root data-testid="feature-screening">
-                  <Card.Body className="flex flex-col gap-3">
-                    <Card.Title as="h3">{d.showcase.screening.title}</Card.Title>
-                    <Card.Description>{d.showcase.screening.text}</Card.Description>
-                    <p className="sr-only">{d.showcase.screening.summary}</p>
-                    <LiveScreen testId="screen-screening">
-                      <div className="p-4">
-                        <ScreeningResultCard
-                          result={DEMO_SCREENING}
-                          words={{
-                            title: dict.screening.tenant.resultTitle,
-                            band: dict.screening.tenant.band,
-                            item: d.showcase.screening.items,
-                            outcome: dict.screening.tenant.outcome,
-                          }}
-                          demo={d.showcase.demo}
-                        />
-                      </div>
                     </LiveScreen>
                   </Card.Body>
                 </Card.Root>

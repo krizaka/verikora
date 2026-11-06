@@ -26,11 +26,23 @@ export const publicHost = (env: Record<string, string | undefined> = process.env
 };
 /** A `dev.*` address is never indexed (krizaka/yomizaka#239), whatever the flag and whether or not APP_DEV_HOST names it. */
 const isDevName = (host: string | null | undefined) => bare(host).startsWith("dev.");
+/**
+ * A code-name address (`www.yomizaka.com`, `dev.yomizaka.com`) is never indexed (meeting of 2026-11-05, wave 1): the product's public
+ * address is its commercial domain (`www.verikora.com`), the one search engines get. Same for the apex and any other `*.yomizaka.com`.
+ */
+export const isCodeNameHost = (host: string | null | undefined): boolean => /(^|\.)yomizaka\.com$/.test(bare(host));
 /** Whether a response to this host may be indexed. */
 export const indexableOn = (
   host: string | null | undefined,
   env: Record<string, string | undefined> = process.env,
-): boolean => !isDevName(host) && (indexable(env) || bare(host) === publicHost(env));
+): boolean => !isDevName(host) && !isCodeNameHost(host) && (indexable(env) || bare(host) === publicHost(env));
+
+/** `<meta name="robots">` of the pages: noindex when the site's own address is not indexable (see `indexableOn`), nothing otherwise. */
+export const metaRobots = (
+  siteUrl: string,
+  env: Record<string, string | undefined> = process.env,
+): { index: false; follow: false } | undefined =>
+  indexableOn(new URL(siteUrl).host, env) ? undefined : { index: false, follow: false };
 export const isDevHost = (
   host: string | null | undefined,
   env: Record<string, string | undefined> = process.env,

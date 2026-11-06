@@ -9,8 +9,9 @@ import { notFound } from "next/navigation";
 import { CodeNameProvider } from "@/components/CodeName";
 import { StageNotice } from "@/components/StageNotice";
 import { codeNameLine } from "@/lib/code-name";
-import { appEnvironment } from "@/lib/env";
+import { showCodeName } from "@/lib/env";
 import { getDictionary, type Locale, LOCALES } from "@/lib/i18n";
+import { metaRobots } from "@/lib/indexing";
 import { SITE_URL } from "@/lib/site";
 
 export const viewport: Viewport = { width: "device-width", initialScale: 1, viewportFit: "cover" };
@@ -30,7 +31,8 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
     description: t.meta.description,
     applicationName: t.meta.siteName,
     authors: [{ name: "Krizaka", url: "https://www.krizaka.com" }],
-    // Not indexed (dev, preview): the page says so too — the header and robots.txt say it already (lib/indexing.ts).
+    // Not indexed (the code-name address, dev, preview): the page says so too — the header and robots.txt say it already (lib/indexing.ts).
+    robots: metaRobots(SITE_URL),
   };
 }
 
@@ -49,7 +51,7 @@ export default async function LocaleLayout({
       <body className="min-h-screen bg-surface-0 text-fg antialiased selection:bg-accent selection:text-on-accent">
         <ThemeProvider defaultMode="dark">
           <StageNotice locale={locale as Locale} />
-          <CodeNameProvider line={codeNameLine(locale as Locale, appEnvironment())}>
+          <CodeNameProvider line={codeNameLine(locale as Locale, showCodeName())}>
             <PageTransition>{children}</PageTransition>
           </CodeNameProvider>
           <MotionObserver />

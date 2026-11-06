@@ -27,6 +27,8 @@ export const envSchema = z.object({
   NODE_ENV: z.enum(["development", "test", "production"]).default("development"),
   /** `off` on every dev / preview deployment: noindex everywhere, robots `Disallow: /`, no sitemap, the dev line in the footer (lib/indexing.ts). */
   APP_SEARCH_INDEXING: z.enum(["on", "off"]).default("on"),
+  /** `true` on a developer's machine only: the bar shows « code name: yomizaka » under Verikora. Unset everywhere else: the public face never names the code name (lib/code-name.ts). */
+  APP_SHOW_CODE_NAME: flag,
   /** Which environment this deployment is: a flow is enabled per environment (ADR-0003). */
   APP_ENVIRONMENT: z.enum(["dev", "prod"]).default("dev"),
   /** The backfill of ADR-0012: the bytes still in `documents.content` move to the store (`on`), are only counted (`dry-run`), or stay (`off`). */
@@ -124,6 +126,9 @@ export type Env = z.infer<typeof envSchema>;
 
 /** Which environment this deployment is: read at the edges (pages, routes) and passed to lib/flows.ts. */
 export const appEnvironment = () => readEnv().APP_ENVIRONMENT;
+
+/** The dev-only switch of the code name line (`APP_SHOW_CODE_NAME=true`). */
+export const showCodeName = () => readEnv().APP_SHOW_CODE_NAME;
 
 /** The instant a dev visual run froze as « today » (undefined: the real clock). */
 export const appVisualNow = () => readEnv().APP_VISUAL_NOW;

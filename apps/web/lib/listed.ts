@@ -1,5 +1,5 @@
 import { downloadPageOpen } from "./downloads";
-import { PRICING_PUBLISHED } from "./prices/publication";
+import { PRICING_PUBLIC } from "./prices/publication";
 import type { PageId } from "./site";
 
 /**
@@ -7,6 +7,6 @@ import type { PageId } from "./site";
  */
 export function isListed(page: PageId): boolean {
   if (page === "download") return downloadPageOpen();
-  if (page === "pricing") return PRICING_PUBLISHED;
+  if (page === "pricing") return PRICING_PUBLIC;
   return true;
 }

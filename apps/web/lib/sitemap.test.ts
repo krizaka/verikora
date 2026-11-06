@@ -4,7 +4,7 @@ import { beforeAll, describe, expect, it } from "vitest";
 import sitemap from "../app/sitemap";
 import { proxy } from "../proxy";
 import { downloadPageOpen } from "./downloads";
-import { PRICING_PUBLISHED } from "./prices/publication";
+import { PRICING_PUBLIC } from "./prices/publication";
 import { SITE_URL } from "./site";
 
 /** The sitemap lists every indexable page in both languages, each the other's hreflang alternate — and is served when indexing is on. */
@@ -23,7 +23,7 @@ describe("sitemap.xml", () => {
       "/privacy",
       "/terms",
       "/contact",
-      ...(PRICING_PUBLISHED ? ["/pricing"] : []),
+      ...(PRICING_PUBLIC ? ["/pricing"] : []),
       ...(downloadPageOpen() ? ["/download"] : []),
     ];
     for (const locale of ["en", "fr"]) for (const path of paths) expect(urls).toContain(`${SITE_URL}/${locale}${path}`);
@@ -61,10 +61,11 @@ describe("the proxy serves /sitemap.xml and /robots.txt only when the deployment
   const restore = () =>
     before === undefined ? delete process.env.APP_SEARCH_INDEXING : (process.env.APP_SEARCH_INDEXING = before);
 
-  it("on: passes the request through to the generated sitemap (no 404, no noindex)", async () => {
+  it("on: the commercial host passes the request through to the generated sitemap (no 404, no noindex); www.yomizaka.com never does", async () => {
     process.env.APP_SEARCH_INDEXING = "on";
     try {
-      const res = ask("/sitemap.xml");
+      expect(ask("/sitemap.xml", "www.yomizaka.com").status).toBe(404);
+      const res = ask("/sitemap.xml", "www.verikora.com");
       expect(res.status).toBe(200);
       expect(res.headers.get("x-robots-tag")).toBeNull();
     } finally {

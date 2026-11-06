@@ -5,6 +5,7 @@ import { describe, expect, it } from "vitest";
 import { CodeNameProvider } from "@/components/CodeName";
 import { SiteHeader } from "@/components/SiteChrome";
 import { codeNameLine } from "@/lib/code-name";
+import { envSchema } from "@/lib/env";
 
 const bar = (line: string | null) =>
   renderToStaticMarkup(
@@ -16,14 +17,16 @@ const bar = (line: string | null) =>
   );
 
 describe("the code name under the commercial name (dev only)", () => {
-  it("is worded in the page's language and filled with the code name, on dev", () => {
-    expect(codeNameLine("en", "dev")).toBe("code name: yomizaka");
-    expect(codeNameLine("fr", "dev")).toBe("nom de code : yomizaka");
+  it("is worded in the page's language and filled with the code name, behind the dev-only flag", () => {
+    expect(codeNameLine("en", true)).toBe("code name: yomizaka");
+    expect(codeNameLine("fr", true)).toBe("nom de code : yomizaka");
   });
 
-  it("is never shown in production", () => {
-    expect(codeNameLine("en", "prod")).toBeNull();
-    expect(codeNameLine("fr", "prod")).toBeNull();
+  it("is never shown on the public face: without the flag, nothing", () => {
+    expect(codeNameLine("en", false)).toBeNull();
+    expect(codeNameLine("fr", false)).toBeNull();
+    expect(envSchema.parse({}).APP_SHOW_CODE_NAME).toBe(false);
+    expect(envSchema.parse({ APP_SHOW_CODE_NAME: "true" }).APP_SHOW_CODE_NAME).toBe(true);
   });
 
   it("the bar's lockup carries it under the name on dev and not otherwise", () => {

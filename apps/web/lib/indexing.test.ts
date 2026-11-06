@@ -30,12 +30,13 @@ describe("APP_SEARCH_INDEXING — one flag closes a deployment to search engines
     }
   });
 
-  it("on: the public host is open; a dev.* host is closed anyway, even without APP_DEV_HOST (krizaka/yomizaka#239)", async () => {
+  it("on: the commercial host is open; a dev.* host is closed anyway, even without APP_DEV_HOST (krizaka/yomizaka#239)", async () => {
     vi.stubEnv("APP_SEARCH_INDEXING", "on");
     vi.stubEnv("APP_DEV_HOST", "");
-    const www = await ask("https://www.yomizaka.com/en", "www.yomizaka.com");
+    vi.stubEnv("APP_PUBLIC_URL", "https://www.verikora.com");
+    const www = await ask("https://www.verikora.com/en", "www.verikora.com");
     expect(www.headers.get("x-robots-tag")).toBeNull();
-    expect(indexableOn("www.yomizaka.com")).toBe(true);
+    expect(indexableOn("www.verikora.com")).toBe(true);
     for (const host of ["dev.yomizaka.com", "dev.example.test"]) {
       expect(indexableOn(host), host).toBe(false);
       const res = await ask(`https://${host}/en`, host);
@@ -61,15 +62,18 @@ const ENV = {
 };
 
 describe("the public host is indexed, the dev host never (epic krizaka/.github#119)", () => {
-  it("a closed deployment (off) stays closed everywhere but on the host of APP_PUBLIC_URL", () => {
+  it("a closed deployment (off) stays closed everywhere but on the commercial host of APP_PUBLIC_URL; a code-name host is never open", () => {
+    const commercial = { ...ENV, APP_PUBLIC_URL: "https://www.verikora.com" };
     expect(publicHost(ENV)).toBe("www.yomizaka.com");
-    expect(indexableOn("www.yomizaka.com", ENV)).toBe(true);
-    expect(indexableOn("WWW.yomizaka.com:443", ENV)).toBe(true);
+    expect(indexableOn("www.yomizaka.com", ENV)).toBe(false);
+    expect(indexableOn("www.verikora.com", commercial)).toBe(true);
+    expect(indexableOn("WWW.verikora.com:443", commercial)).toBe(true);
     expect(indexableOn("dev.yomizaka.com", ENV)).toBe(false);
     expect(indexableOn("admin.yomizaka.com", ENV)).toBe(false);
     expect(indexableOn("anything.test", ENV)).toBe(false);
     expect(indexableOn("dev.yomizaka.com", { APP_SEARCH_INDEXING: "on" })).toBe(false);
-    expect(indexableOn("www.yomizaka.com", { APP_SEARCH_INDEXING: "on" })).toBe(true);
+    expect(indexableOn("www.yomizaka.com", { APP_SEARCH_INDEXING: "on" })).toBe(false);
+    expect(indexableOn("www.verikora.com", { APP_SEARCH_INDEXING: "on" })).toBe(true);
   });
 
   it("the dev host is the one APP_DEV_HOST names", () => {
@@ -105,17 +109,27 @@ describe("the public host is indexed, the dev host never (epic krizaka/.github#1
   });
 });
 
-describe("www is public, dev leaves search (epic krizaka/.github#119)", () => {
+describe("the commercial www is public, the code-name hosts leave search (epic krizaka/.github#119, 2026-11-05)", () => {
   const setup = () => {
     vi.stubEnv("APP_SEARCH_INDEXING", "on");
     vi.stubEnv("APP_PUBLIC_URL", "https://www.yomizaka.com");
     vi.stubEnv("APP_DEV_HOST", "dev.yomizaka.com");
   };
 
-  it("www is not closed: no noindex, robots.txt and the sitemap are the app's", async () => {
+  it("the commercial www is not closed: no noindex, the sitemap is the app's", async () => {
     setup();
-    expect((await ask("https://www.yomizaka.com/en", "www.yomizaka.com")).headers.get("x-robots-tag")).toBeNull();
-    expect((await ask("https://www.yomizaka.com/sitemap.xml", "www.yomizaka.com")).status).toBe(200);
+    vi.stubEnv("APP_PUBLIC_URL", "https://www.verikora.com");
+    expect((await ask("https://www.verikora.com/en", "www.verikora.com")).headers.get("x-robots-tag")).toBeNull();
+    expect((await ask("https://www.verikora.com/sitemap.xml", "www.verikora.com")).status).toBe(200);
+  });
+
+  it("www.yomizaka.com is closed: noindex, robots.txt Disallow, no sitemap", async () => {
+    setup();
+    expect((await ask("https://www.yomizaka.com/en", "www.yomizaka.com")).headers.get("x-robots-tag")).toBe(
+      NOINDEX_HEADER,
+    );
+    expect((await ask("https://www.yomizaka.com/sitemap.xml", "www.yomizaka.com")).status).toBe(404);
+    expect(await (await ask("https://www.yomizaka.com/robots.txt", "www.yomizaka.com")).text()).toBe(CLOSED_ROBOTS);
   });
 
   it("dev: a page answers 308 to the same path on www, noindex, even when the flag is on", async () => {

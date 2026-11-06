@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { notFound, redirect } from "next/navigation";
+import { permanentRedirect, redirect } from "next/navigation";
 
 import { PricingContent } from "@/components/pricing/PricingContent";
 import { SiteHeader } from "@/components/SiteChrome";
@@ -9,8 +9,9 @@ import { CONSOLE_ROUTES } from "@/lib/console-nav";
 import { asLocale, getDictionary } from "@/lib/i18n";
 import { productStatus } from "@/lib/landing";
 import { pricingView } from "@/lib/prices/pricing-view";
-import { PRICING_PUBLISHED } from "@/lib/prices/publication";
+import { PRICING_PUBLIC } from "@/lib/prices/publication";
 import { pageMetadata, siteJsonLd } from "@/lib/seo";
+import { pagePath } from "@/lib/site";
 
 import preview from "../../../../../dev-preview.json";
 
@@ -23,11 +24,11 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
 
 /**
  * The prices, read from the catalogue in force (`publicCatalogue`: never an internal entry, an entry in preparation without its
- * figure — ADR-009). HELD behind `PRICING_PUBLISHED` until Oussama approves the grid (yomizaka#300): a 404 until then.
+ * figure — ADR-009). HELD behind `PRICING_PUBLIC`: no price on the public pages (2026-11-05), a 308 to the contact page until the founder decides.
  */
 export default async function Pricing({ params }: Readonly<{ params: Promise<{ locale: string }> }>) {
-  if (!PRICING_PUBLISHED) notFound();
   const locale = asLocale((await params).locale);
+  if (!PRICING_PUBLIC) permanentRedirect(pagePath(locale, "contact"));
   const view = await pricingView(locale, new Date());
   const session = await pageSession();
   if (session) {

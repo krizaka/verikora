@@ -1,5 +1,6 @@
 import type { MetadataRoute } from "next";
 
+import { indexableOn } from "@/lib/indexing";
 import { CRAWLERS } from "@/lib/seo";
 import { SITE_URL } from "@/lib/site";
 
@@ -19,6 +20,8 @@ export default function robots(): MetadataRoute.Robots {
     "/en/reset-password",
     "/fr/reset-password",
   ];
+  // The code-name address is closed, with no sitemap (the public address is www.verikora.com): the proxy answers the same.
+  if (!indexableOn(new URL(SITE_URL).host)) return { rules: [{ userAgent: "*", disallow: "/" }] };
   return {
     rules: [
       { userAgent: "*", allow: "/", disallow },
