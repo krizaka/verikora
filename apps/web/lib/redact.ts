@@ -7,7 +7,24 @@
 const CREDENTIAL_URL = /\b[a-z][a-z0-9+.-]*:\/\/[^\s'"/@]*@[^\s'"]*/gi;
 /** Any connection string of a database, credentials or not. */
 const DATABASE_URL = /\b(?:postgres(?:ql)?|mysql|mongodb(?:\+srv)?|redis|rediss|amqps?):\/\/[^\s'"]*/gi;
-const KEY_VALUE_PAIR = /\b(password|passwd|pwd|secret|token|api[_-]?key)=([^\s&'"]+)/gi;
+const KEY_VALUE_PAIR =
+  /\b(password|passwd|pwd|secret|(?:access_|id_|refresh_)?token|api[_-]?key|stripe-signature|signature)=([^\s&'"]+)/gi;
+/** `Bearer <token>`, and the app's own session tokens (`ys1.…`). */
+const BEARER = /\b(Bearer )[\w.~+/=-]+/gi;
+const SESSION_TOKEN = /\bys1\.[\w-]+/g;
+
+/** Where a word ends: white space and the punctuation that surrounds an address in a sentence. */
+const WORD_BREAK = /([\s,;<>()"'[\]]+)/;
+
+/** An e-mail address: personal information, never in a log (Law 25). One `@`, something before it, a dotted domain after it. */
+function isEmailAddress(word: string): boolean {
+  const at = word.indexOf("@");
+  if (at < 1 || at !== word.lastIndexOf("@")) {
+    return false;
+  }
+  const domain = word.slice(at + 1);
+  return domain.includes(".") && !domain.startsWith(".") && !domain.endsWith(".");
+}
 
 export const REDACTED = "[redacted]";
 
@@ -16,6 +33,11 @@ export function redactSecrets(text: string): string {
   return text
     .replace(CREDENTIAL_URL, REDACTED)
     .replace(DATABASE_URL, REDACTED)
+    .replace(BEARER, (_all, prefix: string) => `${prefix}${REDACTED}`)
+    .replace(SESSION_TOKEN, REDACTED)
+    .split(WORD_BREAK)
+    .map((word) => (isEmailAddress(word) ? REDACTED : word))
+    .join("")
     .replace(KEY_VALUE_PAIR, (_all, key: string) => `${key}=${REDACTED}`);
 }
 

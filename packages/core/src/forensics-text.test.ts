@@ -63,14 +63,14 @@ describe("analyseTextRuns", () => {
 });
 
 describe("withTextRuns", () => {
-  const base: FraudReport = { tamperScore: 0, anomalies: [], revisions: 1, producer: null };
-  it("adds the anomalies and the score, capped at 100", () => {
+  const base: FraudReport = { anomalies: [], revisions: 1, producer: null };
+  it("adds the anomalies at the level `unusual`, with no score", () => {
     const runs = cleanStub();
     runs[5] = run("1 887,60", "Helvetica", 660, 300);
     const report = withTextRuns(base, runs);
     expect(report.anomalies).toHaveLength(1);
-    expect(report.tamperScore).toBeGreaterThan(0);
-    expect(withTextRuns({ ...base, tamperScore: 95 }, runs).tamperScore).toBe(100);
+    expect(report.anomalies[0]?.level).toBe("unusual");
+    expect(report).not.toHaveProperty("tamperScore");
   });
   it("leaves a clean report as it was", () => {
     expect(withTextRuns(base, cleanStub())).toEqual(base);

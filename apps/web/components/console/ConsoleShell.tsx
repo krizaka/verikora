@@ -177,22 +177,20 @@ export function ConsoleShell({
           onOpen: () => setSearching(true),
         }}
         primary={
-          // The one action of every signed-in screen — except the home, whose drop zone IS the action (one primary per page): its word from `sm`, its icon and accessible name below.
-          active === "library" && withoutLocale(path).replace(/\/$/, "") === CONSOLE_ROUTES.library ? undefined : (
-            <ButtonLink
-              href={href(CONSOLE_ROUTES.check)}
-              variant="gradient"
-              size="sm"
-              shape="cut"
-              className="min-h-11 min-w-11"
-              aria-label={say("shell.checkAction")}
-              title={say("shell.checkAction")}
-              data-testid="header-check"
-            >
-              <PlusIcon size={16} aria-hidden />
-              <span className="hidden sm:inline">{say("shell.checkAction")}</span>
-            </ButtonLink>
-          )
+          // The one primary action of every signed-in screen, the home included (krizaka-internal#2290): its word from `sm`, its icon and accessible name below.
+          <ButtonLink
+            href={href(CONSOLE_ROUTES.check)}
+            variant="gradient"
+            size="sm"
+            shape="cut"
+            className="min-h-11 min-w-11"
+            aria-label={say("shell.checkAction")}
+            title={say("shell.checkAction")}
+            data-testid="header-check"
+          >
+            <PlusIcon size={16} aria-hidden />
+            <span className="hidden sm:inline">{say("shell.checkAction")}</span>
+          </ButtonLink>
         }
       >
         <main id="content" tabIndex={-1} className="min-w-0 px-4 py-6 outline-none sm:px-6">
