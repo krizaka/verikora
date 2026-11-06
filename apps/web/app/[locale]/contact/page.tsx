@@ -7,13 +7,14 @@ import { SiteHeader } from "@/components/SiteChrome";
 import { SiteFooter } from "@/components/SiteFooter";
 import { asLocale, getDictionary } from "@/lib/i18n";
 import { pageMetadata, siteJsonLd } from "@/lib/seo";
-import { pagePath, SUPPORT_EMAIL } from "@/lib/site";
+import { ButtonLink } from "@/components/ButtonLink";
+import { contactHref, pagePath } from "@/lib/site";
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
   return pageMetadata(asLocale((await params).locale), "contact");
 }
 
-/** How to reach the team: one role mailbox (a forward to the company mailbox, krizaka-internal#2350), no promised delay. */
+/** How to reach the team: Krizaka's contact form with the kind « support » and the product (no address is public, founder 2026-11-06), no promised delay. */
 export default async function Contact({ params }: Readonly<{ params: Promise<{ locale: string }> }>) {
   const locale = asLocale((await params).locale);
   const t = getDictionary(locale);
@@ -33,8 +34,8 @@ export default async function Contact({ params }: Readonly<{ params: Promise<{ l
           <section className="max-w-3xl">
             <h2 className="text-xl font-semibold">{t.contact.supportLabel}</h2>
             <p className="mt-2 text-base leading-relaxed text-fg-secondary">{t.contact.supportText}</p>
-            <p className="mt-2 text-lg">
-              <a href={`mailto:${SUPPORT_EMAIL}`}>{SUPPORT_EMAIL}</a>
+            <p className="mt-4">
+              <ButtonLink href={contactHref("verikora-contact", locale)}>{t.contact.supportCta}</ButtonLink>
             </p>
             <p className="mt-6 text-base leading-relaxed text-fg-secondary">
               <Link href={pagePath(locale, "privacy")}>{t.contact.privacyText}</Link>

@@ -71,7 +71,7 @@ describe("the pricing page reads the catalogue (#388)", () => {
     const c = fresh();
     const volume = (html: string) => /<p data-volume[^>]*><a href="([^"]+)">([^<]+)<\/a><\/p>/.exec(html);
     const fr = volume(nb(await render(c, "fr"))!)!;
-    expect(fr[1]).toContain("/contact?topic=verikora");
+    expect(fr[1]).toContain("/contact?topic=business&amp;product=verikora&amp;source=verikora-pricing");
     expect(fr[2]).toBe("Plus de 60 dossiers par mois ? Écrivez-nous");
     expect(volume(nb(await render(c, "en"))!)![2]).toBe("More than 60 dossiers a month? Write to us");
     await c.schedule(ADMIN, PRICE.firm, { limits: { included: 600 } }, NOW, NOW);

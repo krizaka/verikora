@@ -47,14 +47,28 @@ describe("the pages render exactly one footer", () => {
     }
   });
 
-  it("reads the signature line and the legal links from @krizaka/org, none typed here", () => {
+  it("reads the signature line from @krizaka/org, none typed here", () => {
     const footer = read("components/SiteFooter.tsx");
     expect(footer).toContain('from "@krizaka/org"');
     expect(footer).toContain("org={org}");
     for (const locale of ["en", "fr"] as const) {
       const html = renderToStaticMarkup(SiteFooter({ locale })).replaceAll("&#x27;", "'");
       expect(html).toContain(footerLine(locale));
-      for (const link of org.footer.legal) expect(html).toContain(link.label[locale]);
+    }
+  });
+
+  it("shows « Privacy » and « Terms » once, in the legal line, pointing to Verikora's own pages (its policy, its Law 25 officer), never krizaka.com", () => {
+    for (const locale of ["en", "fr"] as const) {
+      const html = renderToStaticMarkup(SiteFooter({ locale }));
+      for (const link of org.footer.legal) {
+        expect(html.split(`>${link.label[locale]}<`)).toHaveLength(2);
+        expect(html).not.toContain(link.url[locale]);
+      }
+      for (const page of ["privacy", "terms"]) {
+        expect(html.split(`href="/${locale}/${page}"`)).toHaveLength(2);
+      }
+      const legal = /<div[^>]*>((?:(?!<div).)*?href="\/[a-z]{2}\/privacy".*?)<\/div>/s.exec(html)?.[1] ?? "";
+      expect(legal).toContain(`href="/${locale}/terms"`);
     }
   });
 });

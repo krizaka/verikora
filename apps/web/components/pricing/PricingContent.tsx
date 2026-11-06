@@ -44,7 +44,9 @@ export function PricingContent({
           <p>{p.plannedNote}</p>
           {largest > 0 ? (
             <p data-volume>
-              <a href={contactHref("dev-verikora-pricing-volume", locale)}>{format(p.volume, { included: largest })}</a>
+              <a href={contactHref("verikora-pricing", locale, "business")}>
+                {format(p.volume, { included: largest })}
+              </a>
             </p>
           ) : null}
           {launch ? (

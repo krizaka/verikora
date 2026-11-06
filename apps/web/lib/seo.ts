@@ -5,7 +5,7 @@ import type { Metadata } from "next";
 import { ENGINE_NAME, PRODUCT_NAME } from "./brand";
 import { getDictionary, type Locale } from "./i18n";
 import { isListed } from "./listed";
-import { KRIZAKA_URL, type PageId, pagePath, REPO_URL, SITE_URL, SUPPORT_EMAIL } from "./site";
+import { contactHref, KRIZAKA_URL, type PageId, pagePath, REPO_URL, SITE_URL } from "./site";
 
 export const ORG_ID = `${KRIZAKA_URL}/#organization`;
 const ORG = { "@type": "Organization", "@id": ORG_ID, name: "Krizaka", url: KRIZAKA_URL };
@@ -110,8 +110,8 @@ export function llmsText(): string {
 - [${getDictionary("fr").docs.title}](${SITE_URL}/fr/docs) · [${en.docs.title} (en)](${SITE_URL}/en/docs): how a check works, the API (OpenAPI at ${SITE_URL}/api/v1/openapi.json), your data
 ${isListed("pricing") ? `- [${getDictionary("fr").pricing.title}](${SITE_URL}/fr/pricing) · [${en.pricing.title} (en)](${SITE_URL}/en/pricing): the prices, read from the catalogue\n` : ""}- [${getDictionary("fr").privacy.title}](${SITE_URL}/fr/privacy) · [${en.privacy.title} (en)](${SITE_URL}/en/privacy)
 - Signed reports are verified by signed-in members the report's owner gave access to; there is no public verification.
-- [${getDictionary("fr").contact.title}](${SITE_URL}/fr/contact) · [${en.contact.title} (en)](${SITE_URL}/en/contact): support, ${SUPPORT_EMAIL}
-- [Talk to us about ${PRODUCT_NAME}](${KRIZAKA_URL}/en/contact?topic=verikora): the one way to reach the team
+- [${getDictionary("fr").contact.title}](${SITE_URL}/fr/contact) · [${en.contact.title} (en)](${SITE_URL}/en/contact): how to reach the team
+- [Support](${contactHref("verikora-llms", "en")}): Krizaka's contact form, the one way to reach the team
 ## Source
 
 - [${PRODUCT_NAME} repository](${REPO_URL}): the app, its BFF and its contracts (Apache-2.0)

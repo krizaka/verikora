@@ -20,6 +20,7 @@
     "footerLabel": "Pied de page",
     "sourceCode": "Code source",
     "contact": "Contact",
+    "support": "Soutien",
     "legal": "Confidentialité",
     "preferences": "Préférences",
     "menu": {
@@ -3846,7 +3847,8 @@
     "title": "Contact",
     "lead": "Une question sur Verikora, ou une demande d’accès ? Écrivez-nous.",
     "supportLabel": "Soutien",
-    "supportText": "Pour toute question, ou pour demander un accès pendant que les inscriptions sont fermées :",
+    "supportText": "Pour toute question, ou pour demander un accès pendant que les inscriptions sont fermées, utilisez le formulaire de contact de Krizaka : il sait que votre message concerne Verikora.",
+    "supportCta": "Ouvrir le formulaire de soutien",
     "privacyText": "Pour vos renseignements personnels, voyez la page Confidentialité."
   },
   "terms": {
