@@ -93,33 +93,45 @@ describe("the home (krizaka-internal#1898)", () => {
     expect(render({}, "en")).toMatch(/<h1[^>]*>Home</);
   });
 
-  it("offers « Vérifier un document » as a button before the drop zone (krizaka-internal#2001), in both languages", () => {
-    const html = render({});
-    expect(html).toMatch(/<a [^>]*data-testid="home-check-button"[^>]*href="\/fr\/app\/check"/);
-    expect(html.indexOf('data-testid="home-check-button"')).toBeLessThan(
-      html.indexOf('data-testid="library-dropzone"'),
-    );
-    expect(readable(html)).toContain(fr.console.shell.checkAction);
-    expect(readable(render({}, "en"))).toContain(en.console.shell.checkAction);
+  it("has one primary « Vérifier un document » (the header's): no second button, no drop zone, the drop overlay stays", () => {
+    const html = render({ files: [file()], screening: true });
+    expect(html).not.toContain('data-testid="home-check-button"');
+    expect(html).not.toContain('data-testid="library-dropzone"');
+    expect(html).not.toContain('data-testid="library-examples"');
+    expect(readable(html)).not.toContain("Choisir des fichiers");
   });
 
-  it("offers « Vérifier un document » first: the drop zone is on the home, before the dossiers", () => {
-    const html = render({});
-    expect(html.match(/data-testid="library-dropzone"/g)).toHaveLength(1);
-    expect(html.indexOf('data-testid="home-check"')).toBeLessThan(html.indexOf('data-testid="home-dossiers"'));
-    expect(readable(html)).toContain(fr.console.home.check.title);
-    expect(readable(render({}, "en"))).toContain(en.console.home.check.title);
+  it("leads with the new sentence under « Accueil », in both languages", () => {
+    expect(readable(render({}))).toContain(fr.console.home.check.lead);
+    expect(readable(render({}, "en"))).toContain(en.console.home.check.lead);
+    expect(fr.console.home.check.lead).toContain("pièce de dossier");
   });
 
-  it("lists the dossiers as one list: the collection (its last status) and the applicant file (its state), each row a link", () => {
+  it("shows the applicant files first, before « Mes documents », each row a link to its file", () => {
     const html = render({ files: [file()], screening: true });
     const text = readable(html);
-    expect(text).toContain("Mes documents");
+    expect(html.indexOf('data-testid="home-files"')).toBeGreaterThan(-1);
+    expect(html.indexOf('data-testid="home-files"')).toBeLessThan(html.indexOf('data-testid="home-dossiers"'));
+    expect(text).toContain(fr.console.home.files.title);
     expect(text).toContain("Camille Roy");
-    expect(html).toContain('href="/fr/app/library/l1/c1"');
-    expect(html).toContain('href="/fr/app/dossiers/f1"');
-    expect(text).toContain(fr.console.statuses.attention);
+    expect(text).toContain("3 sur 3 reçus");
     expect(text).toContain(fr.console.dossiers.filter.states.used);
+    expect(html).toContain('href="/fr/app/dossiers/f1"');
+    expect(text).toContain(fr.console.dossiers.request);
+  });
+
+  it("lists five applicant files at most and links to all of them", () => {
+    const many = Array.from({ length: 7 }, (_, i) => file({ id: `f${i}`, candidateName: `Candidat ${i}` }));
+    const html = render({ files: many, screening: true });
+    expect(html.match(/href="\/fr\/app\/dossiers\/f\d"/g)).toHaveLength(5);
+    expect(readable(html)).toContain(fr.console.home.files.all);
+  });
+
+  it("has no applicant section for a role not offered the flow, and keeps the collections", () => {
+    const html = render({});
+    expect(html).not.toContain('data-testid="home-files"');
+    expect(html).toContain('href="/fr/app/library/l1/c1"');
+    expect(readable(html)).toContain(fr.console.statuses.attention);
     expect(html.match(/data-testid="home-dossiers"/g)).toHaveLength(1);
   });
 
@@ -137,10 +149,8 @@ describe("the home (krizaka-internal#1898)", () => {
     expect(html).toContain('href="/fr/app/plans"');
   });
 
-  it("keeps a sticky « Vérifier un document » for a phone, and links the batch import quietly", () => {
-    const html = render({});
-    expect(html).toContain('href="/fr/app/check"');
-    expect(html).toContain('data-testid="home-import"');
+  it("links the batch import quietly", () => {
+    expect(render({})).toContain('data-testid="home-import"');
   });
 
   it("with nothing yet: the owl, one sentence, the only drop zone and the two examples", () => {

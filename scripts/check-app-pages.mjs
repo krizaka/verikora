@@ -140,7 +140,7 @@ export const revokedReportPath = (persona = "eric") => `/rapport/${demoOwnerToke
 
 /** The home's primary action as the page reads it: the `data-testid` element, its role, name and place on the first screen. */
 export const homePrimaryInfo = () => {
-  const el = document.querySelector("[data-testid='home-check-button']");
+  const el = document.querySelector("[data-testid='header-check']");
   if (!el) return null;
   const r = el.getBoundingClientRect();
   return {
@@ -173,11 +173,11 @@ async function auditAt({ page, path, width, theme, base, locale, shots, a11y, er
   await page.waitForTimeout(300);
   const result = await page.evaluate(auditPage);
   const where = `${publicPage ? "/rapport/<demo token>" : path} @${width} ${theme}`;
-  // The home (/app) has no header "+": its one primary action is the drop zone itself (journey home-check-and-dossiers).
+  // The home (/app) carries the header action too: it is the page's one primary (krizaka-internal#2290).
   const found = problemsOf(where, result, {
     errors,
     h1: true,
-    headerAction: !publicPage && path !== "/app",
+    headerAction: !publicPage,
     smallTargets: true,
   });
   if (path === "/app")

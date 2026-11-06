@@ -12,7 +12,7 @@ const JOURNEY = JSON.parse(readFileSync(new URL("./journeys.json", import.meta.u
 );
 
 for (const screen of SCREENS) {
-  test(`Eric sees « Vérifier un document » and his dossiers on one screen, then opens one (${screen.name})`, async ({
+  test(`Eric sees his applicant files first on one screen, then opens one (${screen.name})`, async ({
     browser,
   }, info) => {
     const page = await openAs({
@@ -26,21 +26,20 @@ for (const screen of SCREENS) {
     });
 
     await expect(page.getByRole("heading", { level: 1 }), "the home is titled Accueil").toHaveText("Accueil");
-    const drop = page.getByTestId("library-dropzone");
-    await expect(drop, "the drop zone is on the home").toBeVisible();
-    const list = page.getByRole("list", { name: "Vos dossiers" });
-    await expect(list.getByRole("link", { name: /Immeuble Rosemont/ }), "his dossiers are listed").toBeVisible();
+    await expect(page.getByTestId("library-dropzone"), "the home has no second drop zone").toHaveCount(0);
+    const action = page.getByTestId("header-check");
+    await expect(action, "the header's « Vérifier un document » is the one primary action").toBeVisible();
+    await expect(page.getByTestId("home-check-button"), "no second primary on the page").toHaveCount(0);
+    const list = page.getByRole("list", { name: "Vos dossiers de candidats" });
+    const first = list.getByRole("link").first();
+    await expect(first, "an applicant file leads the home").toBeVisible();
+    const row = await first.boundingBox();
+    expect(row && row.y + row.height <= screen.viewport.height, "the first applicant file is on the first screen").toBe(
+      true,
+    );
 
-    const button = page.getByTestId("home-check-button");
-    await expect(button, "the primary action is a named button").toHaveText("Vérifier un document");
-    const box = await button.boundingBox();
-    expect(box && box.y + box.height <= screen.viewport.height, "the primary button is on the first screen").toBe(true);
-    const row = await list.getByRole("link").first().boundingBox();
-    expect(row && row.y < screen.viewport.height, "the list starts on the first screen").toBe(true);
-
-    await list.getByRole("link", { name: /Immeuble Rosemont/ }).click();
-    await expect(page, "the dossier opens").toHaveURL(/\/app\/library\/[^/]+\/[^/?#]+/);
-    await expect(page.getByRole("heading", { level: 1 })).toContainText("Immeuble Rosemont");
+    await first.click();
+    await expect(page, "the applicant file opens").toHaveURL(/\/app\/dossiers\/[^/?#]+/);
     await page.context().close();
   });
 }

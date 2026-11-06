@@ -387,7 +387,7 @@
       },
       "check": {
         "title": "Check a document",
-        "lead": "Drop a lease, a contract or an invoice: Verikora reads it and tells you what to look at.",
+        "lead": "Drop a lease or an applicant's document: Verikora reads it and tells you what to look at.",
         "import": "Import a batch"
       },
       "dossiers": {
@@ -401,6 +401,16 @@
       },
       "usage": {
         "label": "Plan and usage"
+      },
+      "files": {
+        "title": "Applicant files",
+        "label": "Your applicant files",
+        "empty": "No applicant file yet. Ask for documents to open one.",
+        "all": "See all files"
+      },
+      "documents": {
+        "title": "My documents",
+        "label": "Your document collections"
       }
     },
     "sections": {
