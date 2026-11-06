@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+// MANUAL TOOL (ADR-026), run by a person; owner: verikora lane; listed in README.md « Manual tools »; the header below says how to run it.
 // « Du fichier au constat » — the landing's recorded journey as ONE smooth take, phone first (390×844 at 2×): drop the
 // lease → the check runs → the finding with its line lit → search. Recorded for real on dev.verikora.com as the QA member
 // (never the administrator, the e-mail hidden), in the language asked; the clip goes to Bunny, never into the repository.

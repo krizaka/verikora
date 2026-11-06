@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+// MANUAL TOOL (ADR-026), run by a person; owner: verikora lane; listed in README.md « Manual tools »; the header below says how to run it.
 // Records one real Sovkora run per Québec ruleset on a whole demo document (sovkora-packs `document-validation`
 // fixtures), exactly as Sovkora returns it — run id, Studio version, outputs verbatim. Output: apps/web/content/pack-proofs/.
 //
