@@ -38,7 +38,7 @@ jobs:
     if: github.event_name == 'pull_request'
     permissions:
       contents: read
-    uses: krizaka/.github/.github/workflows/tauri-macos.yml@79f6ff6292edefebc59fc968dbc2c203da81c3ea # main
+    uses: krizaka/.github/.github/workflows/tauri-macos.yml@c8426ee46246cbdd3fbfc7c9f1c6ca4b447aa368 # main
     with:
       working-directory: apps/desktop
       product-name: Verikora
@@ -74,7 +74,7 @@ jobs:
     if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/')
     permissions:
       contents: write
-    uses: krizaka/.github/.github/workflows/tauri-macos.yml@79f6ff6292edefebc59fc968dbc2c203da81c3ea # main
+    uses: krizaka/.github/.github/workflows/tauri-macos.yml@c8426ee46246cbdd3fbfc7c9f1c6ca4b447aa368 # main
     with:
       working-directory: apps/desktop
       product-name: Verikora
