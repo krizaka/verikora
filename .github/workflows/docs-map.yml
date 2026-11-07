@@ -10,7 +10,7 @@ permissions: {}
 
 jobs:
   docs-map:
-    uses: krizaka/.github/.github/workflows/docs-map.yml@77395f80967ff1a706a8aff36e78586814b7ebb7 # main
+    uses: krizaka/.github/.github/workflows/docs-map.yml@c8426ee46246cbdd3fbfc7c9f1c6ca4b447aa368 # main
     permissions:
       contents: read
       pull-requests: read
