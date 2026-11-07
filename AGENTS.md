@@ -195,7 +195,7 @@ Kept documents go through `@krizaka/storage` (`apps/web/lib/storage/adapter.ts` 
 ## 9. Anti-slop (ADR-015)
 
 What a model tends to write and the code does not need. Each line points at the rule that refuses it
-([ADR-015](https://github.com/krizaka/.github/blob/main/docs/adr/ADR-015-ai-code-audit-measured-and-enforced.md), [docs/standards/guards.md](https://github.com/krizaka/.github/blob/main/docs/standards/guards.md)).
+([ADR-015](https://github.com/krizaka/krizaka-internal/blob/main/docs/adr/.github/ADR-015-ai-code-audit-measured-and-enforced.md), [docs/standards/guards.md](https://github.com/krizaka/.github/blob/main/docs/standards/guards.md)).
 
 1. **No defensive null on `@NullMarked` code.** No `Objects.requireNonNull` or `if (x == null)` on a value the type already
    guarantees. Enforced by NullAway at compile time; a new package is `@NullMarked` (ArchUnit).

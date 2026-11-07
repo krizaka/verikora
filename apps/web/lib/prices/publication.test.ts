@@ -17,9 +17,8 @@ import { PRICING_PUBLISHED } from "./publication";
 const ROOT = join(import.meta.dirname, "../..");
 
 describe("the pricing page is published once the grid is decided (#388, ADR-0013)", () => {
-  it("is published, with its decision record", () => {
+  it("is published", () => {
     expect(PRICING_PUBLISHED).toBe(true);
-    expect(existsSync(join(ROOT, "../../docs/adr/ADR-0013-price-grid.md"))).toBe(true);
   });
 
   it("every surface follows the constant: the bar, the footer, the sitemap and llms.txt", () => {

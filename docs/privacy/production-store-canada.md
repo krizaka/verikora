@@ -1,6 +1,6 @@
 # Production document store in Canada — plan, switch and checklist (verikora#524)
 
-Slice 6 of ADR-005 (krizaka-ts `docs/adr/ADR-005-storage-providers.md`), under ADR-0007 and ADR-0012 of this repository. The provider is
+Slice 6 of ADR-005 (krizaka-ts, internal), under ADR-0007 and ADR-0012 of this repository. The provider is
 chosen **in the admin storage screen** (rule « storage configured by the admin »): nothing about it is in an environment variable of
 production. The founder opens the account and the bucket; everything else is written and tested.
 
