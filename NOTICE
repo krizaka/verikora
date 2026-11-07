@@ -13,7 +13,7 @@ LICENCE
   Version 2.0 (LICENSE-APACHE), as it was published. The last Apache-2.0-only
   commit at the time of writing is df25beda70f31e72a872f3e537d6e74249888bd4 (2026-10-26).
 
-  Why: https://github.com/krizaka/.github/blob/main/docs/adr/ADR-012-licensing-libraries-open-products-fair-source.md
+  Why: ADR-012 (internal)
 
 TRADEMARKS
   Neither licence grants any right to the names Krizaka, Sovkora, Verikora,
