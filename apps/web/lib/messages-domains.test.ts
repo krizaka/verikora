@@ -76,7 +76,9 @@ describe("messages domain split", () => {
       fs.writeFileSync(path.join(tmpDir, "site", "fr.json"), JSON.stringify(branchBSiteFr, null, 2));
 
       const screeningResult = checkMessages({ dir: path.join(tmpDir, "screening") });
-      expect(screeningResult.ok, `merged screening: ${screeningResult.problems.map((p) => p.message).join("; ")}`).toBe(true);
+      expect(screeningResult.ok, `merged screening: ${screeningResult.problems.map((p) => p.message).join("; ")}`).toBe(
+        true,
+      );
 
       const siteResult = checkMessages({ dir: path.join(tmpDir, "site") });
       expect(siteResult.ok, `merged site: ${siteResult.problems.map((p) => p.message).join("; ")}`).toBe(true);
