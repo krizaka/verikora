@@ -1,0 +1,115 @@
+{
+  "contractSeal": {
+    "eyebrow": "Verikora — sceau d’un contrat",
+    "partner": "Partenaire",
+    "contractId": "Contrat",
+    "documentType": "Type de document",
+    "ruleset": "Cadre indiqué par le partenaire",
+    "parties": "Parties",
+    "partyRole": "Rôle",
+    "partyName": "Nom",
+    "partyUser": "Compte",
+    "partyAttestation": "Attestation du partenaire",
+    "partySignedAt": "Signé le",
+    "payloadHeading": "Contenu scellé",
+    "payloadSha": "SHA-256 du contenu",
+    "sealedAt": "Scellé le",
+    "zone": "Zone des données",
+    "guaranteeHeading": "Ce que ce sceau dit",
+    "guarantees": "Ce fichier est scellé avec la clé de Verikora (Ed25519, détenue par Krizaka) : il atteste que ce contenu, ces parties et ces dates existaient sous cette forme au moment du scellement et n’ont pas été modifiés depuis.",
+    "notGuaranteed": "Il ne vérifie ni l’identité de quiconque, ni l’âge de quiconque, ni la validité du contrat en droit, ni les déclarations du partenaire : Verikora vérifie des documents, il ne décide pas. Informatif, pas un avis juridique.",
+    "verify": "Pour vérifier une copie, prenez son SHA-256 et ouvrez {url} suivi de cette valeur : la réponse dit si Verikora l’a scellée et quand, sans montrer aucun renseignement personnel."
+  },
+  "ownerReport": {
+    "title": "Rapport de vérification",
+    "lead": "Ce qui a été examiné dans le dossier d'un candidat, pour le propriétaire de l'immeuble. Des empreintes seulement : aucun document, aucun nom, aucun passage cité.",
+    "reference": "Référence du dossier {ref}",
+    "issued": "Émis le {date}",
+    "notice": "Vérification informative, ce n'est pas un avis juridique. Une personne décide ; ce rapport ne décide de rien et ne classe personne.",
+    "documents": "Documents examinés",
+    "document": "Document {n}",
+    "type": "Type",
+    "typeUnknown": "Non précisé",
+    "sha": "Empreinte SHA-256 du document",
+    "pages": "Pages",
+    "signals": "Signaux observés",
+    "noSignals": "Aucun signal n'a été observé sur ce document.",
+    "findings": "Règles vérifiées",
+    "noFindings": "Aucune règle n'a été vérifiée sur ce document.",
+    "notExamined": "Non examiné",
+    "runs": "Exécutions Sovkora",
+    "run": "{studio}, exécution {runId}, version {version}",
+    "versionNone": "non précisée",
+    "ruleset": "Jeu de règles {id} version {version} ({jurisdiction})",
+    "reviewStatus": "État de relecture du jeu de règles : {status}. Il doit être relu par un avocat avant qu'on s'y fie.",
+    "limits": "Ce que ce rapport ne montre pas : les documents eux-mêmes, le nom ou les coordonnées de la personne, toute cote ou tout classement. Les signaux sont des observations sur un fichier, jamais un jugement sur une personne.",
+    "download": "Télécharger le PDF signé",
+    "expires": "Ce lien est valable jusqu’au {date}.",
+    "guarantees": "Ce PDF est signé avec la clé de Verikora (Ed25519, détenue par Krizaka). La signature couvre chaque élément de ce rapport (documents, signaux, règles vérifiées, exécutions, versions), l’expiration du lien et le texte complet des pages. Si un seul caractère change, la vérification échoue.",
+    "notGuaranteed": "Elle ne prouve pas que les signaux ou les constats sont justes, ni qui détient le dossier : elle n’affiche aucun nom, aucune coordonnée, aucun nom de fichier ni aucun extrait cité. Informatif, pas un avis juridique ; une personne décide.",
+    "signatureNote": "L’attestation (contenu, empreinte du texte et signature) est intégrée au PDF. Toute modification du texte des pages précédentes fait échouer la vérification.",
+    "footer": "Verikora, un produit Krizaka — analyse par Sovkora.",
+    "verdict": {
+      "PASS": "Aucun problème signalé",
+      "FAIL": "Problème signalé",
+      "INSUFFICIENT_EVIDENCE": "Preuves insuffisantes",
+      "NOT_APPLICABLE": "Ne s'applique pas"
+    },
+    "language": "Langue",
+    "languageName": {
+      "en": "English",
+      "fr": "Français"
+    },
+    "languageNote": "Les règles sont rédigées en français ; les noms anglais viennent avec le jeu de règles. Les références aux articles sont données telles que citées."
+  },
+  "sectionG": {
+    "previous-blank": "La section G du bail est vide : le loyer le plus bas payé dans les douze mois précédant le bail n'y est pas indiqué (C.c.Q., art. 1896).",
+    "previous-altered": "La section G du bail semble modifiée : vérifiez le montant auprès de l'avis du locateur (C.c.Q., art. 1896).",
+    "over-rate": "Le nouveau loyer dépasse de {excess} par mois le loyer le plus élevé que donne le taux {year} du TAL à partir du loyer précédent indiqué ({max}). Source : {source}.",
+    "within-rate": "Le nouveau loyer respecte le loyer le plus élevé que donne le taux {year} du TAL à partir du loyer précédent indiqué ({max}). Source : {source}.",
+    "not-above-previous": "Le nouveau loyer ne dépasse pas le loyer précédent indiqué à la section G.",
+    "no-rate": "Aucune conclusion : le taux du TAL pour cette année n'est pas saisi, ou les montants sont inutilisables, donc l'augmentation n'est pas comparée.",
+    "recourse": "Recours : le locataire peut demander au Tribunal administratif du logement de fixer le loyer (C.c.Q., art. 1950).",
+    "disclaimer": "Information sur les montants et les dates du bail, pas un avis juridique et aucun jugement sur le locateur. Vérifiez l'article et la page du TAL, ou demandez au TAL : il vous dit le formulaire et les frais éventuels, et comment compter les jours et les mois. Verikora ne dépose rien."
+  },
+  "paymentClauses": {
+    "advance-over-one-month": "Le bail demande plus d'un mois de loyer d'avance. Le locateur ne peut exiger d'avance que le premier terme, dans la limite d'un mois (C.c.Q., art. 1904).",
+    "deposit": "Le bail demande une somme en plus du loyer (dépôt, clé ou garantie). Le locateur ne peut en exiger aucune (C.c.Q., art. 1904).",
+    "postdated-cheques": "Le bail exige des chèques postdatés. Le locateur ne peut pas les exiger (C.c.Q., art. 1904).",
+    "ok": "Les modalités de paiement lues au bail restent dans ce que permet l'art. 1904 (C.c.Q., art. 1904).",
+    "disclaimer": "Information sur les clauses du bail, pas un avis juridique ni un jugement sur le locateur. Vérifiez l'article, ou demandez au TAL."
+  },
+  "sectionGDeadline": {
+    "ten-days": "Le locateur a remis l'avis : la demande au TAL se fait dans les 10 jours de la conclusion du bail.",
+    "two-months-from-start": "Aucun avis n'a été remis : la demande au TAL se fait dans les deux mois du début du bail.",
+    "two-months-from-knowledge": "L'avis contenait une fausse déclaration : la demande au TAL se fait dans les deux mois de la connaissance de ce fait.",
+    "open": "D'après ces dates, le dernier jour pour demander est le {lastDay} ({days} jours restants). Source : {source}.",
+    "last-day": "D'après ces dates, aujourd'hui ({lastDay}) est le dernier jour pour demander. Source : {source}.",
+    "closed": "D'après ces dates, le dernier jour pour demander était le {lastDay}. Source : {source}.",
+    "no-claim": "Aucune conclusion : une date manque ou est illisible, aucun délai n'est donné."
+  },
+  "sectionGRequest": {
+    "title": "Les faits à apporter au TAL :",
+    "rentNew": "Loyer du nouveau bail : {cents}.",
+    "rentPrevious": "Plus bas loyer des douze mois précédents, tel qu'écrit à la section G : {cents}.",
+    "previousBlank": "La section G du bail n'indique pas le loyer précédent.",
+    "previousAltered": "La section G du bail semble biffée ou modifiée.",
+    "rentMax": "Loyer le plus élevé que donne le taux {year} du TAL à partir de ce loyer précédent : {cents}.",
+    "excess": "Écart avec le nouveau loyer : {cents}.",
+    "deadline": "D'après les dates données, le dernier jour pour demander au TAL de fixer le loyer est le {lastDay}."
+  },
+  "brief": {
+    "renewalNotice": {
+      "title": "Avis de reconduction du bail avec augmentation de loyer",
+      "door": "Logement : {door}",
+      "end": "Le bail se termine le {end}.",
+      "current": "Loyer actuel : {rent} par mois.",
+      "proposed": "Loyer proposé : {rent} par mois, à compter du {effective}.",
+      "proposedBlank": "Loyer proposé : ____________ par mois, à compter du {effective}.",
+      "refusal": "Vous avez un mois à compter de la réception de cet avis pour refuser l’augmentation ; le locateur peut alors demander au Tribunal administratif du logement de fixer le loyer.",
+      "window": "Avis donné entre le {opens} et le {closes} ({citation}).",
+      "signature": "Nom et signature du locateur : ____________    Date : ____________",
+      "disclaimer": "Préparé avec Verikora à titre informatif, ce n’est pas un avis juridique. Le locateur le vérifie, le signe et l’envoie lui-même : Verikora n’envoie rien au nom de quiconque."
+    }
+  }
+}
