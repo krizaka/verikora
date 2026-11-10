@@ -20,12 +20,14 @@ function trainedData(lang: string): string {
   try {
     return path.join(path.dirname(require.resolve(`@tesseract.js-data/${lang}/package.json`)), "4.0.0_best_int", file);
   } catch {
+    // Turbopack cannot scope a path read from `process.cwd()` and would trace the whole project into the image (krizaka-internal#3010): the store
+    // is read at run time only, and the Dockerfile carries the trained data into it (ADR-0010); the container smoke check refuses a traced project.
     for (const store of [
       path.join(process.cwd(), "node_modules", ".pnpm"),
       path.join(process.cwd(), "..", "..", "node_modules", ".pnpm"),
     ]) {
-      const dir = existsSync(store)
-        ? readdirSync(store).find((d) => d.startsWith(`@tesseract.js-data+${lang}@`))
+      const dir = existsSync(/*turbopackIgnore: true*/ store)
+        ? readdirSync(/*turbopackIgnore: true*/ store).find((d) => d.startsWith(`@tesseract.js-data+${lang}@`))
         : undefined;
       if (dir) return path.join(store, dir, "node_modules", "@tesseract.js-data", lang, "4.0.0_best_int", file);
     }
