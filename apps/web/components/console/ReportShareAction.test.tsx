@@ -1,11 +1,9 @@
-import { KrizakaQueryProvider } from "@krizaka/query";
-import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it, vi } from "vitest";
 
-import { I18nProvider } from "@/lib/i18n-client";
 import en from "@/messages/en.json";
 import fr from "@/messages/fr.json";
 
+import { renderInConsole } from "./render-in-console";
 import { ReportShareAction } from "./ReportShareAction";
 
 vi.mock("next/navigation", () => ({
@@ -14,15 +12,7 @@ vi.mock("next/navigation", () => ({
   useSearchParams: () => new URLSearchParams(""),
 }));
 
-const MESSAGES = { en: { console: en.console }, fr: { console: fr.console } } as const;
-const render = (locale: "en" | "fr") =>
-  renderToStaticMarkup(
-    <I18nProvider locale={locale} messages={MESSAGES[locale] as never}>
-      <KrizakaQueryProvider>
-        <ReportShareAction documentId="d1" analysisId="a1" />
-      </KrizakaQueryProvider>
-    </I18nProvider>,
-  );
+const render = (locale: "en" | "fr") => renderInConsole(locale, <ReportShareAction documentId="d1" analysisId="a1" />);
 
 describe("ReportShareAction — the share button in the report header (verikora#2293)", () => {
   it("renders the share action button in French", () => {
