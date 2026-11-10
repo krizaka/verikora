@@ -11,6 +11,39 @@ const JOURNEY = JSON.parse(readFileSync(new URL("./journeys.json", import.meta.u
   (j) => j.id === "start-a-check",
 );
 
+const PHONE = SCREENS.find((s) => s.viewport.width <= 430) ?? { name: "phone", viewport: { width: 390, height: 844 } };
+
+test(`drop zone is in the viewport at first paint and QC catalogue is first (${PHONE.name})`, async ({
+  browser,
+}, info) => {
+  const page = await openAs({
+    browser,
+    info,
+    persona: "eric",
+    screen: PHONE,
+    journey: JOURNEY,
+    videoContextOptions,
+    path: "/fr/app/check",
+  });
+
+  const drop = page.getByTestId("check-drop");
+  await drop.waitFor({ state: "visible" });
+  await expect
+    .poll(
+      async () => {
+        const box = await drop.boundingBox();
+        return Boolean(box && box.y >= 0 && box.y + box.height <= PHONE.viewport.height);
+      },
+      { message: "the drop zone is fully within the 844 px viewport without scrolling" },
+    )
+    .toBe(true);
+
+  const firstRow = page.locator('[data-testid="check-catalogue"] li').first();
+  await expect(firstRow, "the first catalogue item is a Québec check").toContainText("Québec");
+
+  await page.context().close();
+});
+
 for (const screen of SCREENS) {
   test(`Eric drops a document, answers « Quel document ? » in view and reaches the report (${screen.name})`, async ({
     browser,
@@ -26,7 +59,11 @@ for (const screen of SCREENS) {
     });
 
     const flow = page.getByTestId("check-flow");
-    await expect(flow, "the four steps are shown before the drop").toBeVisible();
+    if (screen.viewport.width >= 1024) {
+      await expect(flow, "the four steps are shown before the drop (desktop)").toBeVisible();
+    } else {
+      await expect(flow, "the flow steps are hidden on phone").toBeHidden();
+    }
     // A text the engine cannot place: it asks which document it is.
     await page
       .locator("input[type=file]")

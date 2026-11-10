@@ -1,9 +1,10 @@
-import { assertModules } from "@krizaka/db";
+import { assertModules, migrate as runMigrations } from "@krizaka/db";
 import pg from "pg";
 import { describe, expect, it } from "vitest";
 
-import { LAST_REPLACED_VERSION } from "./baseline-adoption";
-import { migrate } from "./db";
+import { BASELINE_VERSION, LAST_REPLACED_VERSION } from "./baseline-adoption";
+import { seedConfig } from "./config-seed";
+import { MIGRATION_LOCK_KEY, migrate } from "./db";
 import { MIGRATIONS } from "./migrations";
 import { MODULES } from "./modules";
 import { diffSnapshot, readSnapshot, type SchemaSnapshot } from "./schema-check";
@@ -40,15 +41,26 @@ describe.runIf(enabled)("a database made by the previous release", () => {
   it("is adopted by the baseline, twice, keeping its data", () =>
     withDatabase("upgrade", async (pool) => {
       const run = async (text: string, values?: unknown[]) => (await pool.query(text, values)).rows as never;
-      // The previous release's database: the same schema, its own history, an edited configuration row.
-      expect(await migrate(pool)).toEqual(["0001_baseline"]);
+      // The previous release's database: the baseline's schema and nothing after it, its own history, an edited configuration row.
+      const connect = async () => {
+        const client = await pool.connect();
+        return {
+          query: (text: string, values?: unknown[]) => client.query(text, values),
+          release: () => client.release(),
+        };
+      };
+      const baseline = MIGRATIONS.filter((m) => m.version === BASELINE_VERSION);
+      expect(await runMigrations(connect, baseline, { lockKey: MIGRATION_LOCK_KEY })).toEqual([BASELINE_VERSION]);
+      await seedConfig(run);
       await pool.query("DELETE FROM public.schema_migrations");
       await pool.query("INSERT INTO public.schema_migrations (version) SELECT unnest($1::text[])", [
         PREVIOUS_RELEASE_HISTORY,
       ]);
       await pool.query("UPDATE public.retention_policies SET days = 99 WHERE id = 'thirty-days'");
 
-      expect(await migrate(pool)).toEqual([]);
+      // The upgrade adopts the baseline without replaying it, then applies what came after it, once.
+      const later = MIGRATIONS.map((m) => m.version).filter((v) => v !== BASELINE_VERSION);
+      expect(await migrate(pool)).toEqual(later);
       expect(await migrate(pool)).toEqual([]);
 
       const versions = (await run("SELECT version FROM public.schema_migrations")) as Array<{ version: string }>;

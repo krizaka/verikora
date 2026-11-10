@@ -34,8 +34,15 @@ export interface CatalogueItem {
   kind: CheckKind;
 }
 
-/** The checks that run for a person: the registry's rulesets (those with words) and, when its Studio is offered, the file's authenticity. */
-export function catalogueOf(offer: { studios: readonly Studio[]; rulesets: readonly string[] }): CatalogueItem[] {
+/**
+ * The checks that run for a person: the registry's rulesets (those with words) and, when its Studio is offered, the file's
+ * authenticity. With a `territory` (the account's default jurisdiction, e.g. `"QC"`): the territory's lease leads, then
+ * authenticity, then the rest — the most relevant check first without a locale branch.
+ */
+export function catalogueOf(
+  offer: { studios: readonly Studio[]; rulesets: readonly string[] },
+  territory: string | null = null,
+): CatalogueItem[] {
   const seen = new Set<string>();
   const rulesets = offer.rulesets.flatMap((r) => {
     const id = rulesetId(r);
@@ -46,9 +53,16 @@ export function catalogueOf(offer: { studios: readonly Studio[]; rulesets: reado
   });
   // The groups' order, then the order the registry lists them in (Québec first, our market).
   const ordered = GROUPS.flatMap((g) => rulesets.filter((r) => r.group === g)) as CatalogueItem[];
-  return offer.studios.includes("document-authenticity")
-    ? [...ordered, { id: "authenticity", group: "authenticity", jurisdiction: null, kind: "auto" }]
-    : ordered;
+  const authenticity: CatalogueItem | null = offer.studios.includes("document-authenticity")
+    ? { id: "authenticity", group: "authenticity", jurisdiction: null, kind: "auto" }
+    : null;
+  if (territory) {
+    // Territory's lease first, then authenticity, then the rest.
+    const territoryLease = ordered.find((r) => r.group === "lease" && r.jurisdiction === territory);
+    const rest = ordered.filter((r) => r !== territoryLease);
+    return [...(territoryLease ? [territoryLease] : []), ...(authenticity ? [authenticity] : []), ...rest];
+  }
+  return authenticity ? [...ordered, authenticity] : ordered;
 }
 
 /** A dated ruleset (`qc-residential-lease/2026-10-24`) is its lease (the same rule as `rulesetId` of lib/flows, which reads the database: not imported into the browser). */

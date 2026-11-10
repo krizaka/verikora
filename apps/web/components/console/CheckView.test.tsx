@@ -144,33 +144,28 @@ const withCatalogue = (props: Partial<Parameters<typeof CheckView>[0]> = {}, loc
     <CheckView
       catalogue={tenant}
       credits={{ kind: "pro", used: 18, cap: 100, renewsAt: null, cancelled: false }}
-      now="2026-10-25T16:00:00.000Z"
       {...props}
     />,
     locale,
   );
 
 describe("« Vérifier un document », B2: the plan strip, the catalogue, the drop and the run (verikora#333)", () => {
-  it("shows where the account stands: its plan and its audits from the billing state, with the meter", () => {
+  it("shows where the account stands: its plan and its audits from the billing state, as a muted line at the foot", () => {
     const html = withCatalogue();
-    const strip = html.slice(html.indexOf('data-testid="plan-strip"'), html.indexOf('data-testid="check-drop"'));
-    const text = readable(strip);
-    expect(html).toContain(`aria-label="${fr.console.check.plan.label}"`);
+    const stripStart = html.indexOf('data-testid="plan-strip"');
+    const stripHtml = html.slice(stripStart, html.indexOf("</p>", stripStart) + 4);
+    const text = readable(stripHtml);
     expect(text).toContain(fr.console.check.plan.names.pro);
     expect(text).toContain("18 sur 100");
-    expect(strip).toContain('role="meter"');
-    expect(strip).toContain('href="/fr/app/settings/facturation"');
+    expect(stripHtml).toContain('href="/fr/app/settings/facturation"');
   });
 
-  it("credits: the audits left and no meter; an account an operator made says its audits are included", () => {
+  it("credits: the audits left shown in the strip; an account an operator made says its audits are included", () => {
     const credits = withCatalogue({ credits: { kind: "credits", left: 3 } });
-    const strip = credits.slice(
-      credits.indexOf('data-testid="plan-strip"'),
-      credits.indexOf('data-testid="check-drop"'),
-    );
-    expect(readable(strip)).toMatch(/\b3\b/);
-    expect(strip).not.toContain('role="meter"');
-    expect(readable(withCatalogue({ credits: { kind: "included" } }))).toContain(fr.console.check.plan.included);
+    const stripStart = credits.indexOf('data-testid="plan-strip"');
+    const stripHtml = credits.slice(stripStart, credits.indexOf("</p>", stripStart) + 4);
+    expect(readable(stripHtml)).toMatch(/\b3\b/);
+    expect(readable(withCatalogue({ credits: { kind: "included" } }))).toContain(fr.console.check.plan.names.included);
   });
 
   it("lists the checks that run, each with « Disponible » and one action that names its kind and leads to the drop", () => {
@@ -193,24 +188,20 @@ describe("« Vérifier un document », B2: the plan strip, the catalogue, the dr
     expect(readable(chips)).toMatch(/Toutes · 6\s+Baux · 3\s+Avis et états · 2\s+Authenticité · 1/);
   });
 
-  it("the drop comes before the catalogue in the page (a phone reads one column: drop first), and the plan strip before both", () => {
+  it("the drop comes before the catalogue in the page (a phone reads one column: drop first), and the plan strip at the foot", () => {
     const html = withCatalogue();
-    expect(html.indexOf('data-testid="plan-strip"')).toBeLessThan(html.indexOf('data-testid="check-drop"'));
     expect(html.indexOf('data-testid="check-drop"')).toBeLessThan(html.indexOf('data-testid="check-catalogue"'));
+    expect(html.indexOf('data-testid="check-catalogue"')).toBeLessThan(html.indexOf('data-testid="plan-strip"'));
     expect(html).toContain('id="depot"');
     expect(html.match(/<h1\b/g)).toHaveLength(1);
   });
 
-  it("lets both columns shrink to a phone's width (no horizontal scroll at 360 px): one column, minmax(0) tracks, min-w-0 children", () => {
+  it("lets both columns shrink to a phone's width (no horizontal scroll at 360 px): one column at mobile, 7/5 at 1440 px, min-w-0 children", () => {
     const html = withCatalogue();
     expect(html).toContain("grid-cols-1");
-    expect(html).toContain("lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]");
+    expect(html).toContain("min-[1440px]:grid-cols-[7fr_5fr]");
     expect(html).toMatch(/id="depot" class="[^"]*\bmin-w-0\b/);
     expect(html).toMatch(/<section class="[^"]*\bmin-w-0\b[^"]*"[^>]*aria-labelledby="catalogue-title"/);
-  });
-
-  it("puts today's date on the right of the heading", () => {
-    expect(readable(withCatalogue())).toContain("dimanche 25 octobre 2026");
   });
 
   it("without a catalogue or a billing state the page is the drop alone, as before", () => {
