@@ -11,6 +11,11 @@ describe("onboarding: the role is asked once, on its own route, never on the lib
     expect(welcomeTarget("landlord")).toBe("/app");
     expect(welcomeTarget(null)).toBeNull();
   });
+  it("every role value stops the redirect — only null triggers it (the seed must leave Camille's perspective null, krizaka-internal#2291)", () => {
+    for (const role of ["landlord", "tenant", "freelancer", "business"] as const) {
+      expect(onboardingTarget(role)).toBeNull();
+    }
+  });
 });
 
 describe("the library's first screen", () => {
