@@ -559,6 +559,10 @@ Krizaka-ts ADR-003, `@krizaka/organize` 0.4. Verikora is the pilot, on « Dossie
 - **The other checks are actions of the aside** (« Revérifier à une autre date », « Examiner le fichier (authenticité) »),
   each opening its form in a `Dialog`: the report no longer ends in forms. A refusal carried in the address opens the
   dialog at once. The aside also holds the facts (collection, file, retention); the way back leads to the collection.
+- **The share action is in the header** (#2293): « Partager le rapport » is the primary action of the report header,
+  visible without scrolling on a phone. It opens a `Dialog` with the sharing form (email, optional expiry). The header
+  shows « Pas encore partagé » / « Partagé » to reflect the current state. The dialog returns focus to the button on
+  close.
 
 ## Plain typography in the app (P5, #322)
 

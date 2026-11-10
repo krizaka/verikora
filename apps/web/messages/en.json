@@ -3302,6 +3302,13 @@
       },
       "start": "Start",
       "other": "Another use"
+    },
+    "reportShare": {
+      "action": "Share the report",
+      "title": "Share the report",
+      "notShared": "Not shared yet",
+      "shared": "Shared",
+      "close": "Close"
     }
   },
   "contractSeal": {
