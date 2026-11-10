@@ -337,11 +337,13 @@ export async function seedCast(
     now,
   });
   // The other accounts keep the name the person chose; the role and the credentials follow the environment.
+  // perspective is left NULL: Camille is a new account for the first-run journey (krizaka-internal#2291).
+  // On conflict (a re-seed), perspective is reset to NULL so each CI run starts fresh.
   const upsert = async (a) =>
     (
       await q(
-        `INSERT INTO accounts (email, locale, email_verified_at, password_hash, perspective, name, role) VALUES ($1, $2, now(), $3, 'landlord', $4, $5)
-         ON CONFLICT (email) DO UPDATE SET role = EXCLUDED.role, status = 'ACTIVE', password_hash = EXCLUDED.password_hash, name = coalesce(accounts.name, EXCLUDED.name)
+        `INSERT INTO accounts (email, locale, email_verified_at, password_hash, name, role) VALUES ($1, $2, now(), $3, $4, $5)
+         ON CONFLICT (email) DO UPDATE SET role = EXCLUDED.role, status = 'ACTIVE', password_hash = EXCLUDED.password_hash, perspective = NULL, name = coalesce(accounts.name, EXCLUDED.name)
          RETURNING id`,
         [a.email, a.persona.locale, await hashPassword(a.password), a.persona.displayName, a.role],
       )
