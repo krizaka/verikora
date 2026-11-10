@@ -95,6 +95,26 @@
     "tags": []
   },
   {
+    "id": "share-report",
+    "promise": "Eric opens the report of his lease, shares it from the header button without scrolling, sees « Partagé », then revokes to restore his data",
+    "persona": "eric",
+    "platforms": ["web"],
+    "steps": [
+      "sign in as Eric",
+      "open the library",
+      "open the report of the seeded lease",
+      "see the share button on the first screen (no scroll)",
+      "see « Pas encore partagé »",
+      "click the share button — dialog opens",
+      "fill the email field and share",
+      "close the dialog — see « Partagé »",
+      "re-open dialog, revoke the share — see « Pas encore partagé »"
+    ],
+    "video": true,
+    "budgetSeconds": 90,
+    "tags": []
+  },
+  {
     "id": "first-run",
     "promise": "A person on their first day starts as a property manager in one click on the welcome screen, then lands on a home with one action, a sample report, their plan, and no wall of empty filters; « Autre usage » sets the tenant side",
     "persona": "camille",

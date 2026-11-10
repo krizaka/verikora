@@ -7,22 +7,32 @@ import { useState } from "react";
 
 import { useSay } from "@/lib/i18n-client";
 
+import { ReportShareAction } from "./ReportShareAction";
+
 /**
- * The document's actions: « Rapport signé » as the one primary action when a real run has one, the rest in a menu (open the
- * file, the PDF, delete); a deletion asks once more, in place.
+ * The document's actions: « Partager le rapport » as the primary action when a report can be shared, « Télécharger »
+ * secondary; the rest in a menu (open the file, the PDF, delete); a deletion asks once more, in place.
  */
 export function DocumentActions({
   fileUrl,
   reportHref,
+  shareProps,
   onDelete,
   deleting,
-}: Readonly<{ fileUrl: string; reportHref: string | null; onDelete: () => void; deleting: boolean }>) {
+}: Readonly<{
+  fileUrl: string;
+  reportHref: string | null;
+  shareProps: { documentId: string; analysisId: string } | null;
+  onDelete: () => void;
+  deleting: boolean;
+}>) {
   const { say } = useSay();
   const [confirming, setConfirming] = useState(false);
   return (
     <>
+      {shareProps ? <ReportShareAction {...shareProps} /> : null}
       {reportHref ? (
-        <Button asChild variant="primary" size="sm" shape="cut">
+        <Button asChild variant={shareProps ? "secondary" : "primary"} size="sm" shape="cut">
           <a href={reportHref} download data-testid="report-download">
             {say("reportFace.downloadReport")}
           </a>

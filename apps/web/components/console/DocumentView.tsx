@@ -223,6 +223,7 @@ export function DocumentView({
         <DocumentActions
           fileUrl={fileUrl}
           reportHref={certifiable ? reportHref : null}
+          shareProps={certifiable && latestCompliance ? { documentId: doc.id, analysisId: latestCompliance.id } : null}
           onDelete={() => remove.mutate()}
           deleting={remove.isPending}
         />
