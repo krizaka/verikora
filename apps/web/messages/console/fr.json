@@ -3288,6 +3288,20 @@
         "text": "La vérification s'est arrêtée avant la fin, sans que votre fichier y soit pour rien. Réessayez.",
         "other": "La vérification s'est arrêtée avant la fin, sans que votre fichier y soit pour rien. Réessayez."
       }
+    },
+    "welcome": {
+      "title": "Vous gérez des logements ? Commencez ici.",
+      "owner": "Propriétaire ou gestionnaire",
+      "ownerHint": "Je vérifie le dossier d'un candidat et mon modèle de bail",
+      "legend": "Votre rôle",
+      "stepsLabel": "Ce que vous ferez ensuite",
+      "steps": {
+        "request": "Demandez ses documents à un candidat",
+        "lease": "Vérifiez votre modèle de bail",
+        "share": "Partagez le rapport"
+      },
+      "start": "Commencer",
+      "other": "Autre usage"
     }
   }
 }

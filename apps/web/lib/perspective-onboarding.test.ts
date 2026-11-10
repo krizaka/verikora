@@ -8,10 +8,10 @@ const read = (p: string) => readFileSync(join(ROOT, p), "utf8");
 
 describe("the side is chosen at onboarding and changeable in settings", () => {
   it("the library never asks: it sends to /welcome until a side is chosen", () => {
-    expect(read("components/console/LibraryView.tsx")).not.toContain("<PerspectiveChooser");
+    expect(read("components/console/LibraryView.tsx")).not.toContain("<WelcomeStart");
     expect(read("app/[locale]/(app)/app/page.tsx")).toContain("onboardingTarget(");
     const welcome = read("app/[locale]/(app)/app/welcome/page.tsx");
-    expect(welcome).toContain("<PerspectiveChooser");
+    expect(welcome).toContain("<WelcomeStart");
     expect(welcome).toContain("welcomeTarget(");
   });
   it("settings change it — the profile section's choice cards, saved with the rest of the profile (Y2) — and the document page follows it", () => {
