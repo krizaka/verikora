@@ -28,7 +28,8 @@ describe("the visual runs have one date", () => {
     expect(fromRoot("scripts/ci-visual-start.sh")).toMatch(/^export APP_VISUAL_NOW=2026-10-30T12:00:00Z$/m);
   });
   it("every page that writes « today » passes it through displayNow", () => {
-    for (const page of ["app/[locale]/(app)/app/check/page.tsx"]) {
+    // check/page.tsx no longer shows the date (Today removed, krizaka-internal#2292)
+    for (const page of [] as string[]) {
       expect(readFileSync(new URL(`../${page}`, import.meta.url), "utf8"), page).toContain(
         "now={displayNow(now, appEnvironment(), appVisualNow()).toISOString()}",
       );

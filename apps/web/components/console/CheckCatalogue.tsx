@@ -2,7 +2,6 @@
 
 import { Badge } from "@krizaka/ui/badge";
 import { Button } from "@krizaka/ui/button";
-import { PlanStrip } from "@krizaka/ui/catalogue-page";
 import { Chip } from "@krizaka/ui/chip";
 import { List } from "@krizaka/ui/list";
 import { SearchField } from "@krizaka/ui/search-field";
@@ -23,46 +22,26 @@ import { useRouteState } from "@/lib/use-route-state";
  * from `PlanStrip`, `Chip.Group`, `SearchField` and `List` until it has.
  */
 
-/** Where the account stands: its plan and its audits, from the billing state. */
+/** Where the account stands: plan name, figures and a link to billing — one muted line at the foot of the check page. */
 export function CheckPlanStrip({ credits }: Readonly<{ credits: CreditsFigure }>) {
   const { say, locale } = useSay();
   const plan = planStrip(credits);
+  const parts = [
+    say(`check.plan.names.${plan.plan}`),
+    ...plan.figures.map((f) => {
+      const formatted = new Intl.NumberFormat(INTL[locale]).format(f.value);
+      const label = say(`check.plan.${f.id}`);
+      return `${formatted} ${label}`;
+    }),
+    ...(plan.meter ? [say("check.plan.meterText", { used: plan.meter.value, cap: plan.meter.max })] : []),
+  ];
   return (
-    <PlanStrip
-      label={say("check.plan.label")}
-      figures={[
-        { id: "plan", label: say("check.plan.plan"), value: say(`check.plan.names.${plan.plan}`) },
-        ...plan.figures.map((f) => ({
-          id: f.id,
-          label: say(`check.plan.${f.id}`),
-          value: new Intl.NumberFormat(INTL[locale]).format(f.value),
-        })),
-        ...(plan.plan === "included" ? [{ id: "included", label: say("check.plan.included"), value: "" }] : []),
-        {
-          id: "manage",
-          label: say("check.plan.manage"),
-          value: (
-            <Link href={`/${locale}/app/settings/facturation`} className="font-semibold text-fg-accent hover:underline">
-              {say("check.plan.open")} →
-            </Link>
-          ),
-        },
-      ]}
-      {...(plan.meter
-        ? {
-            meter: {
-              label: say("check.plan.meterLabel"),
-              value: plan.meter.value,
-              min: 0,
-              max: plan.meter.max,
-              valueText: say("check.plan.meterText", { used: plan.meter.value, cap: plan.meter.max }),
-              showLabel: true,
-              thresholds: { low: 0.8, high: 0.95 },
-            },
-          }
-        : {})}
-      data-testid="plan-strip"
-    />
+    <p className="m-0 text-xs text-fg-muted" data-testid="plan-strip">
+      {parts.join(" · ")}{" "}
+      <Link href={`/${locale}/app/settings/facturation`} className="font-semibold text-fg-accent hover:underline">
+        {say("check.plan.open")} →
+      </Link>
+    </p>
   );
 }
 

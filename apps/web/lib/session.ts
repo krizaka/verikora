@@ -20,6 +20,7 @@ export interface SessionAccount {
   role: "USER" | "ADMIN";
   locale: "en" | "fr";
   perspective: Audience | null;
+  territory: string;
   name: string | null;
   avatarSeed: string | null;
 }
@@ -31,13 +32,14 @@ export interface Session {
 
 const sessions = createSessions<SessionAccount>({
   store: dbSessionStore(query, {
-    columns: ["id", "email", "role", "locale", "perspective", "name", "avatar_seed"],
+    columns: ["id", "email", "role", "locale", "perspective", "territory", "name", "avatar_seed"],
     toAccount: (row) => ({
       id: String(row.id),
       email: String(row.email),
       role: row.role as SessionAccount["role"],
       locale: row.locale as SessionAccount["locale"],
       perspective: (row.perspective as Audience | null) ?? null,
+      territory: String(row.territory),
       name: (row.name as string | null) ?? null,
       avatarSeed: (row.avatar_seed as string | null) ?? null,
     }),

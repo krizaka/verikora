@@ -158,6 +158,7 @@
       "subscription_status",
       "terms_accepted_at",
       "terms_version",
+      "territory",
       "theme"
     ],
     "public.analyses": [

@@ -617,19 +617,23 @@ Krizaka-ts ADR-003, `@krizaka/organize` 0.4. Verikora is the pilot, on « Dossie
 - The strip and the week are demo-free: they read `analyses`, `documents` and `screenings` (`activityStrip`). Trend words
   (« +12 % ») wait for krizaka-ui#651 (`StatGrid variant="strip"`): the figures are not compared with the previous period until then.
 
-## B2 check flow: the plan strip and the catalogue of checks, the drop and the run (P16, #333)
+## B2 check flow: the plan strip and the catalogue of checks, the drop and the run (P16, #333, updated krizaka-internal#2292)
 
-- « Vérifier un document » is two columns from `lg` (one on a phone: **the drop first**, then the catalogue): **Déposer** (the defaults
-  said before the drop with « Modifier », the drop zone, the run's rows) and **Les vérifications**. Today's date is on the right of the
-  heading, as on the home. Above both, the **plan strip** (`PlanStrip`): the plan and its numbers from the billing state — Pro measures
-  its audits this month against the fair-use cap (the meter says « 18 sur 100 »), credits are the audits left, an account an operator
-  made says its audits are included — and a link to « Crédits et usage ». No price here: the prices stay where they are decided.
+- « Vérifier un document » is two columns from `min-[1440px]` (7/12 + 5/12; one on a phone): **the drop zone is always first** — the
+  drop zone appears at the top of the left column; the four flow steps (`FlowSteps`) are hidden on a phone (`hidden lg:block`) and
+  shown from `lg`. The date header (`Today`) was removed from the page title (krizaka-internal#2292): it was not useful on mobile and
+  added visual noise. The catalogue follows on the right column at 1440 px, below the drop on mobile.
+- The **plan strip** is a single muted line (`<p className="text-xs text-fg-muted">`) at the **foot** of the section — not above the
+  grid. It joins the plan name, its figures and a link to « Crédits et usage » with ` · `. No price here.
 - The catalogue is **the registry** (`catalogueOf` over `offerOf` of the flows): a row for each ruleset that runs for this person (the
   three leases, the visit notice and the état des lieux of Québec, the supplier's invoice, the service contract) and, when its Studio
   is offered, the file's authenticity. A ruleset the registry does not run is not listed; one without words yet is left out, never
   shown as a raw id. Each row says « Disponible » and has **one action**, « Vérifier », which names the kind in the address
   (`?type=lease|invoice|contract`; the notices and the authenticity are recognised from the file, so the address stays clean) and
   leads to the drop (`#depot`). The kind chosen is said above the drop, with « Changer ».
+- **Territory-based ordering** (krizaka-internal#2292): `catalogueOf` accepts an optional `territory` parameter (read from the
+  session account, stored as `accounts.territory text DEFAULT 'QC' NOT NULL`). For a QC account the QC lease leads, then
+  authenticity, then the rest in GROUPS order. No locale branch: territory is a property of the account, not of the language.
 - Search narrows the rows and the counts of the chips (accents and case do not matter; it is ephemeral, not in the address). The chips
   — « Toutes · 6 », « Baux · 3 », « Avis et états · 2 », « Authenticité · 1 » — are `Chip.Group` bound to `?groupe=`: the address is the
   state, and a group the search empties keeps its chip at 0.

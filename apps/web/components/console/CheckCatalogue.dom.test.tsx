@@ -19,12 +19,14 @@ vi.mock("next/navigation", () => ({
 }));
 (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
 
-const tenant = catalogueOf(
-  offerOf(SEED_FLOWS.filter((f) => f.definition.audiences.includes("tenant")).map((f) => f.definition)),
+const tenantOffer = offerOf(
+  SEED_FLOWS.filter((f) => f.definition.audiences.includes("tenant")).map((f) => f.definition),
 );
+const tenant = catalogueOf(tenantOffer);
+const tenantQC = catalogueOf(tenantOffer, "QC");
 let root: Root | null = null;
 let host: HTMLElement;
-const mount = async (search = "") => {
+const mountWith = async (catalogue: typeof tenant, search = "") => {
   window.history.replaceState(null, "", `/fr/app/check${search}`);
   host = document.createElement("div");
   document.body.append(host);
@@ -33,12 +35,13 @@ const mount = async (search = "") => {
     root!.render(
       <I18nProvider locale="fr" messages={{ console: fr.console } as never}>
         <KrizakaQueryProvider>
-          <CheckView catalogue={tenant} credits={{ kind: "credits", left: 3 }} now="2026-10-25T16:00:00.000Z" />
+          <CheckView catalogue={catalogue} credits={{ kind: "credits", left: 3 }} />
         </KrizakaQueryProvider>
       </I18nProvider>,
     );
   });
 };
+const mount = (search = "") => mountWith(tenant, search);
 const rows = () => [...host.querySelectorAll('[data-testid="check-catalogue"] li')].map((li) => li.textContent ?? "");
 const chip = (text: string) =>
   [...host.querySelectorAll<HTMLElement>('[data-testid="catalogue-chips"] [role="radio"]')].find((c) =>
@@ -56,6 +59,17 @@ afterEach(async () => {
   await act(async () => root?.unmount());
   host?.remove();
   root = null;
+});
+
+describe("QC territory: the QC lease leads, authenticity next (krizaka-internal#2292)", () => {
+  it("the first row in the rendered list contains 'Québec' when the catalogue is QC-ordered", async () => {
+    await mountWith(tenantQC);
+    expect(rows()[0]).toContain("Québec");
+  });
+  it("the second row contains 'Authenticit' (before FR and BE leases)", async () => {
+    await mountWith(tenantQC);
+    expect(rows()[1]).toContain("Authenticit");
+  });
 });
 
 describe("the catalogue's state is the address (verikora#333)", () => {

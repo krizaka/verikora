@@ -1902,4 +1902,9 @@ INSERT INTO public.krizaka_module_versions (module, version, checksum) VALUES ('
 INSERT INTO public.krizaka_module_versions (module, version, checksum) VALUES ('storage', 1, 'ea5bff037ff78f0cffd7475b7fc034dc2f1612391e9ab4effd5cc3c74d56b126');
 `,
   },
+  {
+    version: "0002_account_territory",
+    sql: String.raw`ALTER TABLE public.accounts ADD COLUMN territory text DEFAULT 'QC' NOT NULL;
+ALTER TABLE public.accounts ADD CONSTRAINT accounts_territory_check CHECK (territory ~ '^[A-Z]{2}(-[A-Z0-9]{1,5})?$');`,
+  },
 ];
