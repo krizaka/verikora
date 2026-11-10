@@ -42,6 +42,22 @@ describe("messages domain split", () => {
     }
   });
 
+  // A running-code import of the generated flat file ships every message a second time beside the domain catalogues:
+  // the two copies are different modules to the bundler. This took the image over its size budget (verikora#757).
+  it("code that ships imports the domain catalogues, never the generated flat files", () => {
+    const WEB = path.resolve(import.meta.dirname, "..");
+    const FLAT_IMPORT = /from\s+["'][^"']*messages\/(?:en|fr)\.json["']/;
+    const isShippedSource = (name: string) => /\.tsx?$/.test(name) && !/\.test\.tsx?$/.test(name);
+    const offenders = ["app", "components", "lib"].flatMap((dir) =>
+      fs
+        .readdirSync(path.join(WEB, dir), { recursive: true, encoding: "utf8" })
+        .filter(isShippedSource)
+        .filter((file) => FLAT_IMPORT.test(fs.readFileSync(path.join(WEB, dir, file), "utf8")))
+        .map((file) => path.join(dir, file)),
+    );
+    expect(offenders).toEqual([]);
+  });
+
   it("two branches adding keys to different domains merge without conflict", () => {
     // Branch A: adds a new feature under 'screening'
     const branchAScreening = {
