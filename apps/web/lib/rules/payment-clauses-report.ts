@@ -1,7 +1,7 @@
 import type { ComplianceReport } from "@verikora/core";
 
-import en from "../../messages/en.json";
-import fr from "../../messages/fr.json";
+import en from "../../messages/documents/en.json";
+import fr from "../../messages/documents/fr.json";
 import { ruleTitle } from "../rule-text";
 import { checkPaymentClauses, PAYMENT_CLAUSES_RULE, type PaymentClausesResult } from "./payment-clauses";
 import { paymentInputFromFacts } from "./payment-clauses-facts";

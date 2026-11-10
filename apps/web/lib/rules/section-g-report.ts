@@ -1,7 +1,7 @@
 import type { ComplianceReport } from "@verikora/core";
 
-import en from "../../messages/en.json";
-import fr from "../../messages/fr.json";
+import en from "../../messages/documents/en.json";
+import fr from "../../messages/documents/fr.json";
 import { TAL } from "../brief/tal";
 import { talTableFrom } from "../brief/tal-settings";
 import { ruleTitle } from "../rule-text";

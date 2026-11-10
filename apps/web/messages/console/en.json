@@ -1,0 +1,3293 @@
+{
+  "console": {
+    "meta": {
+      "signIn": "Sign in",
+      "library": "Home",
+      "search": "Search",
+      "users": "People",
+      "admin": "Administration",
+      "documents": "Documents"
+    },
+    "signIn": {
+      "promise": "Your documents, read and checked by Verikora.",
+      "asideFooter": "Every finding quotes its rule and the line it rests on.",
+      "title": "Sign in",
+      "description": "With the account our team gave you.",
+      "email": "E-mail",
+      "password": "Password",
+      "submit": "Sign in",
+      "closedTitle": "Sign-up is closed.",
+      "closed": "Verikora is in development; accounts are created by our team.",
+      "contact": "Talk to us",
+      "legalPrefix": "By signing in you accept the",
+      "privacy": "privacy notice",
+      "signUpLink": "Create an account",
+      "verifiedNotice": "Your address is confirmed. You can sign in.",
+      "invalidNotice": "This confirmation link is invalid or has expired.",
+      "proofOne": "Every finding cites its rule and the line it rests on.",
+      "proofTwo": "By default, a document is deleted once checked: only the report stays.",
+      "proofThree": "Reports are written in French, the language of their rules.",
+      "forgotLink": "Forgot your password?",
+      "resetNotice": "Your password is changed. Sign in with the new one."
+    },
+    "check": {
+      "defaults": {
+        "label": "Before the drop",
+        "erased": "Erased after the check",
+        "kept": "Kept in your library",
+        "rules": "Québec's rules in force today",
+        "place": "in « My documents »",
+        "modify": "Change"
+      },
+      "flow": {
+        "label": "Your steps",
+        "drop": "Drop",
+        "kind": "Kind",
+        "running": "Check",
+        "result": "Report"
+      },
+      "queueLabel": "The files dropped",
+      "stages": {
+        "reading": "Reading the document…",
+        "starting": "Starting the check…",
+        "asking": "Which document? Answer just above.",
+        "started": "Check started",
+        "refused": "Not started: {reason}"
+      },
+      "openReport": "Open the report",
+      "catalogue": {
+        "title": "The checks",
+        "searchLabel": "Search a check",
+        "searchPlaceholder": "Search a check",
+        "groupsLabel": "Kind of check",
+        "all": "All",
+        "groups": {
+          "lease": "Leases",
+          "invoice": "Invoices",
+          "contract": "Contracts",
+          "notice": "Notices and condition",
+          "authenticity": "Authenticity"
+        },
+        "available": "Available",
+        "action": "Check",
+        "actionFor": "Check: {title}",
+        "none": "No check matches this search.",
+        "chosen": "Check chosen: {kind}",
+        "change": "Change",
+        "listLabel": "The checks Verikora runs",
+        "items": {
+          "qc-residential-lease": {
+            "title": "Residential lease, Québec",
+            "line": "Your lease against Québec’s rules, line by line."
+          },
+          "fr-residential-lease": {
+            "title": "Residential lease, France",
+            "line": "France · residential lease"
+          },
+          "be-residential-lease": {
+            "title": "Residential lease, Wallonia",
+            "line": "Wallonia · residential lease"
+          },
+          "qc-invoice": {
+            "title": "Supplier’s invoice, Québec",
+            "line": "Québec · GST and QST numbers, mandatory mentions"
+          },
+          "qc-service-contract": {
+            "title": "Service contract, Québec",
+            "line": "Québec · late-payment interest, copyright and moral rights"
+          },
+          "qc-visit-notice": {
+            "title": "Notice of a visit, Québec",
+            "line": "Québec · 24-hour notice"
+          },
+          "qc-premises-condition": {
+            "title": "Condition report, Québec",
+            "line": "Québec · the state of the premises at move-in"
+          },
+          "authenticity": {
+            "title": "Authenticity of the file",
+            "line": "The PDF file itself: producer, dates, successive saves."
+          }
+        }
+      },
+      "dropTitle": "Drop",
+      "plan": {
+        "label": "Your plan",
+        "plan": "Plan",
+        "names": {
+          "pro": "Pro",
+          "credits": "Credits",
+          "included": "Included"
+        },
+        "used": "This month",
+        "cap": "Fair-use cap",
+        "left": "Audits left",
+        "meterLabel": "Audits this month",
+        "meterText": "{used} of {cap}",
+        "included": "Your audits are included.",
+        "manage": "Credits and usage",
+        "open": "Open"
+      }
+    },
+    "home": {
+      "todo": {
+        "title": "To do",
+        "toReview": "Checks to look at",
+        "toDecide": "Files to decide",
+        "openLinks": "Open upload links",
+        "expires": "expires on {date}",
+        "nothing": "Nothing to do."
+      },
+      "activity": {
+        "title": "Activity",
+        "label": "Activity",
+        "periodsLabel": "Period",
+        "periods": {
+          "7d": "7 d",
+          "30d": "30 d",
+          "90d": "90 d"
+        },
+        "checks": "Checks",
+        "toReview": "To look at",
+        "documents": "Documents added",
+        "files": "Files received"
+      },
+      "lead": {
+        "intro": "You have {items}.",
+        "toReviewOne": "{count} check to look at",
+        "toReviewMany": "{count} checks to look at",
+        "toDecideOne": "{count} file to decide",
+        "toDecideMany": "{count} files to decide",
+        "openLinksOne": "{count} open upload link",
+        "openLinksMany": "{count} open upload links"
+      },
+      "binder": {
+        "title": "The binder",
+        "label": "Collections",
+        "open": "Open this collection",
+        "empty": "No file in this collection yet.",
+        "add": "Add a document"
+      },
+      "quick": {
+        "label": "Quick access",
+        "request": {
+          "title": "Ask for documents",
+          "hint": "Send a link"
+        },
+        "documents": {
+          "title": "My documents",
+          "hint": "Browse by collection"
+        },
+        "checks": {
+          "title": "Checks",
+          "hint": "Results and reports"
+        },
+        "search": {
+          "title": "Search",
+          "hint": "A title, a passage"
+        }
+      },
+      "week": {
+        "title": "This week",
+        "summary": "Checks per day, the last 7 days",
+        "day": "Day",
+        "checks": "Checks",
+        "chart": {
+          "showData": "View the data",
+          "hideData": "Hide the data",
+          "tableCaption": "{title}",
+          "keyboardHint": "Use the arrow keys to move between bars.",
+          "roleDescription": "chart",
+          "empty": "No check yet.",
+          "kind": "Bar chart"
+        }
+      },
+      "credits": {
+        "title": "Credits and usage",
+        "included": "Your audits are included.",
+        "leftOne": "{count} audit left",
+        "leftMany": "{count} audits left",
+        "pro": "{used} of {cap} audits this month",
+        "renews": "Renews on {date}",
+        "ends": "Ends on {date}",
+        "manage": "Plans and usage"
+      },
+      "check": {
+        "title": "Check a document",
+        "lead": "Drop a lease or an applicant's document: Verikora reads it and tells you what to look at.",
+        "import": "Import a batch"
+      },
+      "dossiers": {
+        "title": "My dossiers",
+        "label": "Your dossiers",
+        "empty": "No dossier yet.",
+        "never": "Not checked yet",
+        "moved": "Last activity {date}",
+        "kindFile": "Applicant file",
+        "kindCollection": "Collection"
+      },
+      "usage": {
+        "label": "Plan and usage"
+      },
+      "files": {
+        "title": "Applicant files",
+        "label": "Your applicant files",
+        "empty": "No applicant file yet. Ask for documents to open one.",
+        "all": "See all files"
+      },
+      "documents": {
+        "title": "My documents",
+        "label": "Your document collections"
+      }
+    },
+    "sections": {
+      "library": "Home",
+      "files": "Applicant files",
+      "documents": "Documents",
+      "checks": "Checks"
+    },
+    "shell": {
+      "skip": "Skip to content",
+      "sidebarLabel": "Verikora",
+      "closeMenu": "Close the menu",
+      "openMenu": "Open the menu",
+      "collapse": "Fold the menu",
+      "expand": "Unfold the menu",
+      "groupDocuments": "Documents",
+      "groupAdmin": "Administration",
+      "library": "Library",
+      "search": "Search",
+      "users": "People",
+      "document": "Document",
+      "signedInAs": "Signed in as {email}",
+      "devBuild": "DEV · v{version}",
+      "language": "Language",
+      "theme": "Theme",
+      "signOut": "Sign out",
+      "check": "Check",
+      "account": "Account",
+      "admin": "Administration",
+      "checks": "Checks",
+      "checkAction": "Check a document",
+      "profile": "Profile",
+      "settings": "Settings",
+      "billing": "Credits and usage",
+      "titles": {
+        "library": "Home",
+        "checks": "Checks",
+        "check": "Check a document",
+        "search": "Search",
+        "document": "Document",
+        "account": "Account",
+        "screening": "Screening",
+        "welcome": "Welcome"
+      },
+      "palette": {
+        "label": "Search your documents",
+        "placeholder": "A title, a passage, a finding…",
+        "none": "No result for “{q}”.",
+        "type": "Type at least two letters.",
+        "all": "All results",
+        "hits": "Documents and findings"
+      },
+      "toDecideOne": "{count} file to decide",
+      "toDecideMany": "{count} files to decide"
+    },
+    "library": {
+      "title": "Library",
+      "dropTitle": "Drop your documents here",
+      "browse": "Choose files",
+      "inputLabel": "Choose files to check",
+      "hint": "PDF, Word (.docx), OpenDocument (.odt), text or photo (PNG, JPEG, HEIC), up to 10 MB each. A lease, a contract, an invoice.",
+      "refusedSize": "{name}: larger than 10 MB",
+      "refusedType": "{name}: only PDF, text files and photos",
+      "refusedCount": "{name}: too many files at once",
+      "kindPick": "Which document?",
+      "kindUnsure": "Verikora did not recognise « {name} » for sure: say which document it is, and the check starts.",
+      "options": "Options",
+      "informative": "An informative check, not legal advice.",
+      "kindHints": {
+        "auto": "Verikora recognises it",
+        "lease": "Rent, term, tenant's rights",
+        "contract": "Clauses, duties, penalties",
+        "invoice": "Amounts, taxes, payee",
+        "other": "Any other document"
+      },
+      "kindLabel": "Kind of the next documents",
+      "lead": "Your documents, by collection — and every report.",
+      "emptyPitch": "Drop a lease, a pay stub or an invoice: Verikora reads it against Québec's rules and quotes the line behind every finding.",
+      "tryExamples": "Or try:",
+      "dropAnywhere": "Drop to check",
+      "dropAnywhereHint": "PDF, Word, text or photo — 10 MB",
+      "tray": {
+        "title": "Checks in progress",
+        "workingOne": "{count} in progress",
+        "workingMany": "{count} in progress",
+        "doneOne": "{count} done",
+        "doneMany": "{count} done",
+        "failedOne": "{count} failed",
+        "failedMany": "{count} failed",
+        "collapse": "Collapse",
+        "show": "Show",
+        "photos": "{name} and {count} more photos, one document"
+      },
+      "checkLead": "One file at a time; many at once? Import a batch.",
+      "caption": "Your documents",
+      "columns": {
+        "title": "Document",
+        "kind": "Kind",
+        "status": "State",
+        "size": "Size",
+        "added": "Added"
+      },
+      "emptyTitle": "Drop your first document",
+      "emptyText": "Drag a file here or choose one. A lease to check against the law, a supplier PDF to review.",
+      "duplicate": "{name} is already in your library.",
+      "uploaded": "{name} is in your library.",
+      "open": "Open {title}",
+      "noText": "no text layer",
+      "pages": "{count} p.",
+      "screening": "Check a tenant's application (with their consent)",
+      "checkCta": "Check a document",
+      "screeningCta": "Check a tenant's file",
+      "examplesTitle": "Or try an example",
+      "examplesNote": "Fictitious documents, checked like yours.",
+      "sampleReport": "See a sample report (demo data)",
+      "emptyDossiers": "Your dossiers appear here: a collection per building or topic, and the applicant files you open. Your first check creates the first one.",
+      "tryExample": "Try this example",
+      "exampleTenant": "A lease offered to a tenant",
+      "exampleLandlord": "A landlord's lease template",
+      "exampleTenantHint": "Rue Saint-Denis, 4½",
+      "exampleLandlordHint": "Avenue du Parc, 3½",
+      "dropAgain": "Add documents",
+      "keep": "Keep my documents",
+      "keepOn": "The document stays in your library, where the info panel says.",
+      "keepOff": "By default the document is deleted after its check: only the report stays.",
+      "keepNext": "This applies to the documents you add next: the ones already sent follow what was set when you dropped them.",
+      "keepDisabled": "Keeping is switched off in your settings: the document is deleted after its check.",
+      "groupPhotos": "These photos are the pages of one document",
+      "groupPhotosOn": "Dropped together, they make one document, in the order you choose them.",
+      "groupPhotosOff": "Each photo becomes its own document.",
+      "groupedUploaded": "{count} photos make one document in your library.",
+      "photoNotice": "Photos are straightened and cropped, then read on the spot. The photo's own data (position, device) is removed.",
+      "table": {
+        "empty": "No document matches.",
+        "results": "{count} documents",
+        "filters": "Filter the documents",
+        "clear": "Clear filters",
+        "remove": "Remove the {label} filter",
+        "search": "Filter by title",
+        "pagination": "Document pages",
+        "previous": "Previous page",
+        "next": "Next page",
+        "page": "Page {page}",
+        "compact": "Page {page} of {count}",
+        "pageSize": "Documents per page"
+      }
+    },
+    "upload": {
+      "queued": "Waiting",
+      "uploading": "Sending",
+      "paused": "Paused",
+      "done": "Kept",
+      "error": "Not sent",
+      "pause": "Pause",
+      "resume": "Resume",
+      "retry": "Try again",
+      "cancel": "Cancel",
+      "remove": "Remove"
+    },
+    "kinds": {
+      "auto": "Automatic",
+      "lease": "Lease",
+      "contract": "Contract",
+      "invoice": "Invoice",
+      "other": "Other"
+    },
+    "statuses": {
+      "stored": "Kept",
+      "analysing": "Being read",
+      "checked": "Checked",
+      "attention": "To look at",
+      "failed": "Check failed"
+    },
+    "document": {
+      "reading": "Verikora is reading the document…",
+      "back": "Library",
+      "details": "Details",
+      "file": "File",
+      "pages": "Pages",
+      "size": "Size",
+      "added": "Added",
+      "fingerprint": "SHA-256",
+      "viewer": "The document",
+      "viewerRegion": "Pages of the document",
+      "text": "Its text",
+      "noText": "This PDF has no text layer: the check against the law could not read its clauses. The file itself is still examined.",
+      "openFile": "Open the file",
+      "delete": "Delete",
+      "deleteConfirm": "Delete for good",
+      "deleted": "Deleted.",
+      "checks": "Checks",
+      "checksLead": "Each check is a run of Verikora's engine (Sovkora); its id is the trace of what ran.",
+      "passageOf": "Passage quoted by {rule}",
+      "loadingPdf": "Loading the document…",
+      "pdfFailed": "The file could not be displayed. Open it with the button above.",
+      "pageLabel": "Page {page} of {total}",
+      "onPage": "Passage on page {page}:",
+      "notFound": "This passage is not in the PDF's text layer:",
+      "checksLeadBy": {
+        "neutral": "Choose what Verikora reads: the text against the law, or the PDF file itself.",
+        "tenant": "Before signing: your lease's text against Québec's rules, then, if a paper looks doubtful, the file itself.",
+        "landlord": "Before sending: your lease template against Québec's rules; for a tenant's PDF paper, the examination of the file itself.",
+        "freelancer": "Choose what Verikora reads: your invoice against Québec's mandatory mentions and the GST/QST number formats, your service contract against the federal rules on interest and copyright, or the PDF file itself. Civil Code rules are coming soon.",
+        "business": "Choose what Verikora reads: a supplier's invoice against Québec's mandatory mentions and the GST/QST number formats, or the PDF file itself. Contract rules are coming soon."
+      },
+      "tabs": {
+        "rapport": "Report",
+        "document": "Document",
+        "historique": "History"
+      },
+      "where": {
+        "title": "Where this document lives",
+        "none": "Not kept",
+        "krizakaCanadaEncrypted": "Kept: Krizaka (Canada, encrypted)",
+        "krizakaCanada": "Kept: Krizaka (Canada)",
+        "krizakaElsewhere": "Kept: Krizaka ({region})",
+        "workspace": "Kept: your storage ({endpoint}, region {region})",
+        "devOnly": "Kept: development storage, fictional data only",
+        "device": "On this device",
+        "retentionUntil": "Kept until {date}.",
+        "retentionNone": "Kept until you delete it.",
+        "retentionNotKept": "Only the report stays.",
+        "deleteNow": "Delete now",
+        "deleteNowConfirm": "Delete for good",
+        "deleteNowHint": "The document and its checks are deleted at once. This cannot be undone.",
+        "pendingPurge": "Not kept: deleted once its check has run (at the latest {date}). Only the report stays.",
+        "notKeptText": "This document is not kept: its text and file were deleted after the check. Only the report stays."
+      },
+      "facts": {
+        "title": "The document",
+        "collection": "Collection"
+      },
+      "technical": "Technical details (fingerprint)"
+    },
+    "analysis": {
+      "complianceTitle": "Against the law",
+      "complianceText": "The text, rule by rule, against the rules of a jurisdiction on a date.",
+      "rulesLine": "Checked against Québec's rules for {kind}.",
+      "mismatch": "You declared « {declared} », but the document reads as {detected}. Confirm the kind below before the check runs: nothing is checked until you do.",
+      "notVerified": "This kind of document is not checked against the law yet.",
+      "kindWords": {
+        "invoice": "a supplier invoice",
+        "contract": "a service contract",
+        "lease": "a residential lease",
+        "visit-notice": "a notice of a visit to the dwelling",
+        "premises-condition": "a condition report (état des lieux)"
+      },
+      "authenticityTitle": "Signs of editing",
+      "authenticityText": "The PDF file itself: producer, dates, successive saves.",
+      "jurisdiction": "Jurisdiction",
+      "documentType": "What the document is",
+      "documentTypes": {
+        "lease": "A residential lease",
+        "invoice": "A supplier's invoice (Québec: GST and QST numbers, mandatory mentions)",
+        "contract": "A service contract (Québec: late-payment interest, copyright and moral rights)",
+        "visit-notice": "A notice of a visit to the dwelling (Québec: 24-hour notice)",
+        "premises-condition": "A condition report, état des lieux (Québec: the state of the premises at move-in)"
+      },
+      "jurisdictionNames": {
+        "QC": "Québec",
+        "FR": "France",
+        "BE-WAL": "Wallonia"
+      },
+      "jurisdictions": {
+        "QC": "Québec — residential lease (Civil Code, art. 1851 ff.)",
+        "FR": "France — residential lease",
+        "BE-WAL": "Wallonia — residential lease"
+      },
+      "asOf": "Rules in force on",
+      "expectedIssuer": "Expected issuer (optional)",
+      "expectedIssuerHint": "Who should have produced it, e.g. the agency's name.",
+      "run": "Run the check",
+      "running": "Verikora is reading…",
+      "runId": "Sovkora run",
+      "blueprint": "Studio version",
+      "ruleset": "Rules",
+      "started": "Started",
+      "finished": "Finished",
+      "statuses": {
+        "running": "Running",
+        "succeeded": "Done",
+        "failed": "Failed",
+        "cancelled": "Cancelled"
+      },
+      "summary": "{failures} blocking failure(s) out of {rules} rules",
+      "verdicts": {
+        "PASS": "Requirement met",
+        "FAIL": "Requirement not met",
+        "INSUFFICIENT_EVIDENCE": "Insufficient evidence",
+        "NOT_APPLICABLE": "Does not apply"
+      },
+      "severity": "Severity",
+      "severities": {
+        "blocking": "Blocking",
+        "major": "Important",
+        "advice": "To consider"
+      },
+      "citation": "Source",
+      "passage": "Passage",
+      "noPassage": "No passage: the document says nothing on this point.",
+      "levels": {
+        "observé": "Observed",
+        "inhabituel": "Unusual",
+        "incohérent": "Inconsistent"
+      },
+      "where": "Where",
+      "mayIndicate": "May indicate",
+      "language": "Reports are written in French, the language of their rules.",
+      "history": "Earlier runs",
+      "noPdf": "Only PDF, Word (.docx) and OpenDocument (.odt) files are examined as files.",
+      "tooLarge": "Verikora examines files up to 5 MB.",
+      "toReview": "Québec rules still to be reviewed by a lawyer: a demonstration screen, not legal advice.",
+      "showInFile": "Show in the file",
+      "findingPage": "Page {page}",
+      "findingPageOnly": "Page {page} (exact place not found)",
+      "findingNotFound": "Not found in the file's text layer",
+      "sovkoraRun": "Sovkora run",
+      "exportReport": "Audit report",
+      "exportHint": "A signed report as an HTML file and as a PDF (the report's pages, then a visible signature page; the attestation is embedded in the file): document SHA-256, rules version, date, every finding with its passage and article, the Sovkora run id.",
+      "exportDownload": "Download the report",
+      "exportVerify": "Verify a report",
+      "exportSha": "Report SHA-256",
+      "exportKey": "Signing key",
+      "seededNote": "A demo check from the seeded data set: nothing ran on the engine, so no signed report is issued for it.",
+      "exportUnavailable": "This report cannot be issued yet.",
+      "exportPdf": "Download the PDF",
+      "reused": "Result reused: this exact document was already checked against the same rules, so no new check was run.",
+      "traces": {
+        "title": "Traces of editing",
+        "notTitle": "What this check is not",
+        "notItems": {
+          "alteration": "It is not a finding that a document was altered dishonestly, and it says nothing about the person.",
+          "ordinary": "Many ordinary steps leave the same traces: signing, filling in a form, merging pages, compressing, converting from an e-mail, printing again.",
+          "absence": "A document with no trace is not declared genuine: a file made again from scratch leaves none.",
+          "person": "A person decides. Verikora decides nothing."
+        },
+        "notExamined": "Not examined: {list}.",
+        "families": {
+          "history": "File history",
+          "layout": "Layout and fonts",
+          "images": "Images",
+          "figures": "Figures",
+          "across": "Across the file"
+        },
+        "observed": "What we observed",
+        "page": "Page {page}",
+        "revision": "Saved again: revision {revision}",
+        "field": "Field: {field}",
+        "ordinaryLabel": "Ordinary explanations",
+        "askForLabel": "What to ask for",
+        "run": "Sovkora run {runId}",
+        "answerLabel": "Applicant's explanation, {date}",
+        "ordinary": {
+          "history": "Signing, filling in a form, merging pages, compressing the file or converting it from an e-mail leave the same traces as an edit.",
+          "layout": "A different font on one line can come from a template, a form field, a stamp, or a page the issuer added later.",
+          "images": "A photo saved again, cropped, rotated or sent through a messaging app changes the same data.",
+          "figures": "Rounding, a bonus, retroactive pay, a second employer or a correction by the payroll office can make figures differ.",
+          "across": "Two jobs, a split deposit, another bank account or a raise can explain two documents that do not match."
+        },
+        "askFor": {
+          "history": "Ask for the document downloaded from the issuer's portal (the payroll portal for a pay stub), or the original file as the issuer sent it.",
+          "layout": "Ask for the original file as the issuer produced it, not a copy that was opened and saved again.",
+          "images": "Ask for the original file, or a new photo with the whole document flat and well lit.",
+          "figures": "Call the issuer on a number you found yourself, and ask for a copy from their records.",
+          "across": "Call the employer on a number you found yourself, and ask the applicant to explain the difference."
+        }
+      },
+      "photoOrigin": {
+        "header": "Read on your photos at upload, before their metadata was removed: facts about the files, not an expert examination. They do not say whether the document is authentic.",
+        "where": "The photos' metadata, read at upload",
+        "declared": {
+          "observation": "The photos declare the device “{device}” and the software “{software}”.",
+          "mayIndicate": "Nothing in itself: it is what the device or the software wrote when it saved the photo."
+        },
+        "absent": {
+          "observation": "The photos declare no device, no software and no capture date.",
+          "mayIndicate": "Metadata removed. Messaging apps, screenshots and social networks also remove it by default."
+        },
+        "noDevice": {
+          "observation": "The photos declare no capture device: most likely a screenshot or an export.",
+          "mayIndicate": "Nothing about authenticity. Noted because a photo of a paper document usually carries the device's name."
+        },
+        "modifiedAfter": {
+          "observation": "A photo declares it was modified after it was taken: taken {taken}, modified {modified}.",
+          "mayIndicate": "A later save. A rotation, a crop or an export from the photo library leave the same trace."
+        },
+        "modifiedBefore": {
+          "observation": "A photo declares a modification date ({modified}) earlier than its capture ({taken}).",
+          "mayIndicate": "Dates rewritten, or a device clock set wrong — which also happens after a time-zone change."
+        },
+        "gpsRemoved": {
+          "observation": "A photo carried a GPS position. It was removed at upload and never kept.",
+          "mayIndicate": "Nothing about authenticity: most phones write it by default."
+        }
+      },
+      "registry": {
+        "title": "Business registers",
+        "lead": "The numbers printed on the document, read against public registers. A question to ask the issuer, never a verdict on the document.",
+        "qst": "QST number {number}",
+        "gstHst": "GST/HST number",
+        "neq": "NEQ (Québec enterprise number)",
+        "source": "Source: {source}, consulted {date}.",
+        "nothingToAsk": "The register holds this number: nothing to ask.",
+        "notLookedUp": {
+          "bad-format": "Not looked up: the number is not in the expected format.",
+          "unavailable": "Not looked up: the register did not answer.",
+          "not-authorised": "Not looked up: this register is not consulted yet.",
+          "not-covered": "Not looked up: this register is not consulted."
+        },
+        "signals": {
+          "REG-001": {
+            "observation": "The QST number printed on the document was not found in the {source} register.",
+            "mayIndicate": "A typing error, a number not yet registered, or a number that belongs to another business.",
+            "askFor": "Ask the issuer to confirm the QST number."
+          },
+          "REG-002": {
+            "observation": "The name printed on the document differs from the name in the register.",
+            "mayIndicate": "A trade name, a recent change of name, or an abbreviation.",
+            "where": "Document: {document} · Register: {register}",
+            "askFor": "Ask the issuer how the two names relate."
+          },
+          "REG-003": {
+            "observation": "The {source} register shows this registration revoked or cancelled as of {date}, on or before the date of the document.",
+            "mayIndicate": "A registration closed and reopened under the same number, or a late filing.",
+            "askFor": "Ask the issuer for the current registration."
+          }
+        }
+      }
+    },
+    "search": {
+      "lead": "One word, and every document and every finding comes back.",
+      "title": "Search",
+      "label": "Search your documents and their findings",
+      "placeholder": "dépôt de garantie, invoice 2026, “solidarité”…",
+      "hint": "Two characters at least. Quotes for an exact phrase, a minus sign to leave a word out.",
+      "none": "Nothing matches “{q}”.",
+      "sources": {
+        "title": "Title",
+        "text": "Text",
+        "finding": "Finding"
+      },
+      "resultsOne": "{count} result",
+      "resultsMany": "{count} results"
+    },
+    "admin": {
+      "title": "People",
+      "caption": "Accounts",
+      "columns": {
+        "email": "E-mail",
+        "role": "Role",
+        "status": "State",
+        "documents": "Documents",
+        "lastSeen": "Last seen"
+      },
+      "roles": {
+        "USER": "Member",
+        "ADMIN": "Administrator"
+      },
+      "states": {
+        "ACTIVE": "Active",
+        "SUSPENDED": "Suspended"
+      },
+      "never": "Never",
+      "note": "Visible only to an administrator, from an allowed address."
+    },
+    "errors": {
+      "INVALID_CREDENTIALS": "Wrong e-mail or password.",
+      "SUSPENDED": "This account is suspended.",
+      "SIGNUP_CLOSED": "Sign-up is closed.",
+      "RATE_LIMITED": "Too many attempts. Try again in a moment.",
+      "UNAUTHENTICATED": "Your session has ended. Sign in again.",
+      "FORBIDDEN": "Not allowed.",
+      "INCIDENT_BAD_INPUT": "The incident is incomplete or invalid.",
+      "INCIDENT_UNKNOWN": "This incident does not exist.",
+      "INCIDENT_CLOSED": "This incident is closed and can no longer change.",
+      "INCIDENT_NOT_ASSESSED": "Assess the risk first.",
+      "INCIDENT_NO_NOTICE_DUE": "No notice is due: the risk of serious injury was not retained.",
+      "INCIDENT_NOTICES_MISSING": "Both notices must be recorded before closing.",
+      "IP_NOT_ALLOWED": "Not from this address.",
+      "NOT_FOUND": "Not found.",
+      "FILE_TOO_LARGE": "The file is larger than 10 MB.",
+      "UNSUPPORTED_TYPE": "Only PDF, text files and photos (PNG, JPEG, HEIC) are accepted.",
+      "EMPTY_FILE": "The file is empty.",
+      "UNREADABLE_FILE": "This file cannot be opened: it is damaged or not a valid document.",
+      "NO_TEXT": "This document has no text layer to check.",
+      "TEXT_TOO_LONG": "This document is longer than the check reads (60 000 characters).",
+      "NOT_A_PDF": "Verikora examines PDF, Word (.docx) and OpenDocument (.odt) files.",
+      "PDF_TOO_LARGE": "Verikora examines files up to 5 MB.",
+      "ALREADY_RUNNING": "This check is already running.",
+      "EXTRACTING": "Verikora is still reading this document. Try again in a moment.",
+      "SOVKORA_NOT_CONFIGURED": "The connection to Sovkora is not configured.",
+      "SOVKORA_UNAVAILABLE": "Sovkora did not answer. Try again in a moment.",
+      "SOVKORA_KEY": "Sovkora refused Verikora's key.",
+      "SOVKORA_LOCKED": "This Studio is not open to Verikora on Sovkora.",
+      "SOVKORA_CREDITS": "Sovkora has no credits left for this check.",
+      "SOVKORA_INPUT": "Sovkora refused the document as sent.",
+      "SOVKORA_STUDIO_OLD": "Sovkora does not read this kind of document yet on Verikora's account.",
+      "SOVKORA_NOT_FOUND": "Sovkora does not know this run.",
+      "SOVKORA_SHAPE": "Sovkora's answer could not be read.",
+      "BAD_REQUEST": "The request is not valid.",
+      "INTERNAL": "Something went wrong.",
+      "NETWORK": "The network did not answer.",
+      "UNKNOWN": "Something went wrong.",
+      "SELF_SUSPEND": "You cannot suspend your own account.",
+      "NOT_A_SAMPLE": "Only a check on a document marked as a sample can be shown publicly.",
+      "NOT_SHOWABLE": "Only a finished compliance check can be shown publicly.",
+      "SELF_ROLE": "You cannot change your own role.",
+      "PLAN_BY_HAND_IN_PRODUCTION": "A plan is set by hand in a development environment only.",
+      "LAST_ADMIN": "The last administrator keeps the role.",
+      "SELF_DELETE": "You cannot delete your own account.",
+      "CONFIRM_MISMATCH": "The e-mail typed does not match the account.",
+      "NO_ACCESS": "You do not have access to this report.",
+      "OWN_ADDRESS": "You already own this report.",
+      "EXPIRY_IN_THE_PAST": "The end date must be in the future.",
+      "EMAIL_NOT_VERIFIED": "Confirm your e-mail address first: the link was sent when you signed up.",
+      "PAYWALL": "Your free audit is used: pay for this audit or go Pro.",
+      "KIND_NOT_VERIFIED": "This kind of document is not checked against the law yet.",
+      "FAIR_USE": "Monthly fair-use limit reached.",
+      "PAYMENTS_OFF": "Payment is not available yet.",
+      "NO_CUSTOMER": "Nothing has been bought yet.",
+      "FILE_TYPE_MISMATCH": "The file is not what its name says. Check that you chose the right file.",
+      "FILE_EXECUTABLE": "This is a program, not a document. It was not kept.",
+      "FILE_TRUNCATED": "This file looks cut short (incomplete download or upload). Send it again.",
+      "FILE_ENCRYPTED": "This PDF is password-protected. Remove the protection and send it again.",
+      "FILE_TOO_MANY_PAGES": "This PDF has too many pages to check.",
+      "FILE_TOO_COMPLEX": "This PDF is too complex to be read within the limits. Export it again as a simpler PDF, or send photos.",
+      "FILE_ACTIVE_CONTENT": "This PDF contains active content (scripts, launched programs or attachments) and is refused for your safety.",
+      "FILE_ARCHIVE_BOMB": "This archive is refused: it expands far beyond a reasonable size.",
+      "NAME_TAKEN": "That name is already used here.",
+      "STALE": "This file was decided by someone else while you looked. Reload to see its decision.",
+      "MOVE_NOT_ALLOWED": "This decision cannot be changed: a decision is final.",
+      "ALREADY": "It is already there.",
+      "TOO_MANY": "Choose at most 200 at a time.",
+      "TAG_LIMIT": "You have as many tags as this list allows.",
+      "CONFLICT": "This was changed by someone else. Reload and try again.",
+      "STATUS_DERIVED": "This status is computed, it cannot be moved by hand.",
+      "STATE_IN_USE": "Files still hold this state: move them first.",
+      "NOT_EMPTY": "Move or delete its collections first.",
+      "LAST_LIBRARY": "The last library cannot be deleted.",
+      "NOT_KEPT": "This document is not kept: only its report stays. Upload it again with “Keep my documents” to check it again.",
+      "STORAGE_UNAVAILABLE": "The storage that keeps documents did not answer.",
+      "WRONG_PASSWORD": "The password is not right.",
+      "PASSWORD_TOO_SHORT": "The password must be at least 12 characters.",
+      "PASSWORD_TOO_LONG": "The password is too long.",
+      "RESET_INVALID": "This link is invalid or has expired. Ask for a new one.",
+      "MAIL_OFF": "E-mail sending is not available yet.",
+      "CANCEL_SUBSCRIPTION_FIRST": "Cancel your subscription in the billing portal first.",
+      "EMAIL_MISMATCH": "The address you typed is not the account's.",
+      "ENDPOINT_INVALID": "This address is not valid: it must be an https address that answers.",
+      "ENDPOINT_NOT_ALLOWED": "This address is not allowed.",
+      "CONNECTION_FAILED": "The connection test failed.",
+      "STORAGE_IN_USE": "Documents are kept on this storage: export or delete them first.",
+      "SETTINGS_KEY_MISSING": "This installation cannot store credentials.",
+      "KEEP_DISABLED": "Keeping is switched off for this account.",
+      "MAINTENANCE": "The app is in maintenance. Please come back in a few minutes.",
+      "FEATURE_OFF": "This feature is switched off.",
+      "DAILY_LIMIT": "Daily limit reached. Come back tomorrow.",
+      "UNKNOWN_SETTING": "No such setting.",
+      "BAD_VALUE": "That value is not valid.",
+      "BAD_SCOPE": "That setting cannot be set at this scope.",
+      "IMAGE_TOO_LARGE": "This photo is too large. Lower its resolution and try again.",
+      "TOO_MANY_PHOTOS": "A document can have 12 photos at most.",
+      "UNREADABLE_IMAGE": "This photo cannot be read. Take it again or choose another file.",
+      "PHOTO_BLURRY": "This photo is blurred: the text cannot be read. Hold the phone steady, let it focus, and take it again.",
+      "PHOTO_GLARE": "A glare hides part of this page. Move away from the light or the window, tilt the page a little, and take it again.",
+      "PHOTO_CUT_OFF": "The page is cut off by the edge of the photo. Take it again with the whole page in view.",
+      "OCR_FAILED": "The text of this photo could not be read. Take it again, well lit and flat.",
+      "PHOTO_AUTHENTICITY": "This document comes from photos: its authenticity cannot be judged from a file.",
+      "DEFAULT_COLLECTION": "The default collection cannot be deleted. Make another collection the default first.",
+      "API_PLAN": "Your plan does not include API keys.",
+      "API_KEY_LIMIT": "You have reached your plan's number of keys. Revoke one.",
+      "API_KEY_NAME": "Give the key a name (80 characters at most).",
+      "API_KEY_SCOPE_UNKNOWN": "Choose at least one valid permission.",
+      "API_KEY_EXPIRY": "A key must end: choose a length of 1 to 365 days.",
+      "API_KEY_NOT_FOUND": "This key does not exist.",
+      "API_KEY_REVOKED": "This key is revoked.",
+      "API_KEY_SUPERSEDED": "This key has already been replaced.",
+      "API_KEY_MISSING": "No API key was sent.",
+      "API_KEY_INVALID": "This API key is not valid.",
+      "API_KEY_EXPIRED": "This API key has expired.",
+      "API_KEY_SCOPE": "This key does not have the permission for this action.",
+      "AVATAR_NOT_ALLOWED": "That avatar is not in the offered set.",
+      "AVATAR_TOO_LARGE": "This image is too heavy for an avatar.",
+      "AVATAR_STORAGE_UNAVAILABLE": "The avatar storage did not answer.",
+      "AVATAR_STORAGE_OFF": "Avatar images are not available here: pick one from the set.",
+      "BATCH_TOO_LARGE": "This batch is over {limit} rows: split it in two.",
+      "MISSING_FILE": "No file is named on this row.",
+      "UNKNOWN_CHECK": "Unknown check: write « compliance » or « authenticity ».",
+      "INVALID_OPTIONS": "This check's options are not valid (jurisdiction, rules).",
+      "UNKNOWN_DOCUMENT_TYPE": "Unknown document type: lease, contract, invoice or other.",
+      "DUPLICATE_ROW": "This document and check are already asked for above.",
+      "FILE_NOT_SENT": "This file was not dropped with the CSV.",
+      "BATCH_EMPTY": "The CSV has no row.",
+      "FAILED": "The check did not complete.",
+      "CANCELLED": "The check was cancelled.",
+      "REFUSED": "Row refused.",
+      "SOVKORA_BUSY": "Sovkora is busy right now. The batch goes on by itself as soon as it has room.",
+      "EXPORT_TOO_LARGE": "The reports of this batch are too heavy for one archive: export fewer rows.",
+      "NOT_ON_SALE": "This offer is not on sale.",
+      "PRICE_MISMATCH": "This price is being updated. Try again in a moment.",
+      "UNKNOWN_PRICE": "No such price.",
+      "BAD_DATE": "A price changes from today or later, never in the past.",
+      "COUPON_UNKNOWN": "This code doesn't exist. Check the spelling.",
+      "COUPON_NOT_STARTED": "This code is not valid yet.",
+      "COUPON_EXPIRED": "This code has ended.",
+      "COUPON_PAUSED": "This code is not available right now.",
+      "COUPON_EXHAUSTED": "This code has been used as many times as it can.",
+      "COUPON_ACCOUNT_LIMIT": "You have already used this code.",
+      "COUPON_NEW_CUSTOMERS_ONLY": "This code is for new customers.",
+      "COUPON_NOT_FOR_PLAN": "This code doesn't apply to this offer.",
+      "COUPON_MINIMUM": "This code needs a bigger purchase.",
+      "COUPON_CURRENCY": "This code can't be used here.",
+      "COUPON_TOO_LARGE": "This code can't be used here.",
+      "COUPON_KIND": "This code can't be used here.",
+      "COUPON_PROVIDER": "This code can't be used here.",
+      "COUPON_RATE_LIMITED": "Too many tries. Try again in a while.",
+      "COUPON_DISABLED": "Promo codes are not available yet.",
+      "COUPON_BAD_INPUT": "That coupon is not valid: check its terms.",
+      "COUPON_CODE_TAKEN": "This code already exists.",
+      "COUPON_TERMS_LOCKED": "This code has been used: its terms can no longer change. Create a new one.",
+      "COUPON_NOT_FOUND": "No such coupon.",
+      "COUPON_REDEMPTION_NOT_FOUND": "No such redemption.",
+      "COUPON_PARTNER_NOT_FOUND": "No such partner.",
+      "COUPON_KEY_REUSED": "Try again.",
+      "COUPON_NOT_REVOCABLE": "This redemption can't be revoked.",
+      "COUPON_BAD_SETTINGS": "The coupon settings are not valid.",
+      "STORAGE_NOT_IN_CANADA": "In production the documents are kept in Canada: test this provider and check that its region is Canadian first.",
+      "STORAGE_VAULT_MISSING": "Storing credentials is not available: the vault key is not deployed.",
+      "STORAGE_PROVIDER_NOT_FOUND": "This provider no longer exists.",
+      "STORAGE_PROVIDER_IN_USE": "The provider is a default, or documents still reach it.",
+      "STORAGE_PROVIDER_NOT_VERIFIED": "Test the provider first: only a verified one can be used.",
+      "STORAGE_BAD_CONFIG": "The provider is not configured correctly for this kind or this environment.",
+      "STORAGE_BAD_ENDPOINT": "The address is refused: use a public https address.",
+      "STORAGE_BAD_SECRET_KEY": "The key is not valid.",
+      "STORAGE_TEST_FAILED": "The connection test failed: nothing was saved.",
+      "STORAGE_MOVE_NOT_ALLOWED": "This move is not allowed: move from a retiring provider to the default of the documents.",
+      "STORAGE_MOVE_OPEN": "A move is already open: finish or pause it first.",
+      "STORAGE_MOVE_NONE": "There is no move to pause or resume.",
+      "FLOW_NOT_OFFERED": "This check is not offered on your account.",
+      "CLOUD_NOT_OFFERED": "This cloud is not offered here.",
+      "CLOUD_STATE_EXPIRED": "The connection took too long. Start again.",
+      "CLOUD_STATE_INVALID": "The connection could not be confirmed. Start again.",
+      "STORAGE_DISCONNECTED": "This storage is disconnected. Connect it again.",
+      "CONSENT_REQUIRED": "No document is checked without your consent for this purpose.",
+      "APPLICATION_ERASED": "This application was erased.",
+      "BAD_NOTIFICATION": "The notification was not accepted.",
+      "BAD_RUN": "This check run is not valid.",
+      "BAD_ZONE": "This storage zone is not valid.",
+      "BILLING_NOT_CONFIGURED": "Billing is not set up yet.",
+      "DUPLICATE_DOCUMENT": "This document is already in your library.",
+      "FILE_CLOSED": "This file is closed.",
+      "FILE_NOT_ACCEPTED": "This file type is not accepted.",
+      "FLOW_EXISTS": "This check already exists.",
+      "HAS_ANNEXES": "This document still has annexes.",
+      "ANSWER_CLOSED": "This file no longer takes explanations.",
+      "ANSWER_TOO_LONG": "This explanation is too long.",
+      "SIGNAL_NOT_FOUND": "This trace is no longer in the file.",
+      "LINK_USED": "This link was already used.",
+      "LIVE_PRICES_ARE_THE_OWNERS": "Live prices are changed by the owner only.",
+      "NOTICE_CHANGED": "The notice changed since you read it. Read it again.",
+      "NOT_A_DRAFT": "Only a draft can be changed.",
+      "NOT_A_LEASE": "This document does not look like a lease.",
+      "NOT_CONTESTABLE": "This result cannot be contested.",
+      "NOT_PENDING": "Nothing is waiting here.",
+      "NOT_SHAREABLE": "This report cannot be shared.",
+      "NO_DOCUMENT": "There is no document to check.",
+      "PAYER_NOT_ALLOWED": "This payer is not allowed.",
+      "PROVIDER_UNAVAILABLE": "The provider did not answer. Try again in a moment.",
+      "PURPOSE_NOT_IN_FILE": "This purpose is not in the file.",
+      "REPORT_NOT_READY": "The report is not ready yet.",
+      "TOO_MANY_ANNEXES": "Too many annexes.",
+      "TOO_MANY_DOCUMENTS": "Too many documents.",
+      "TYPE_NOT_NECESSARY": "This document type is not needed.",
+      "TYPE_NOT_REQUESTED": "This document type was not requested.",
+      "TYPE_UNKNOWN": "This document type is unknown.",
+      "UNKNOWN_SCHEMA": "This format is unknown.",
+      "UNKNOWN_SEAL": "This seal is unknown.",
+      "WEBHOOK_PLAN": "This plan does not include webhooks.",
+      "ZONE_UNAVAILABLE": "This storage zone is not available."
+    },
+    "adminConsole": {
+      "shell": {
+        "title": "Administration",
+        "overview": "Overview",
+        "users": "People",
+        "documents": "Documents",
+        "runs": "Sovkora runs",
+        "audit": "Audit log",
+        "dev": "DEV",
+        "signOut": "Sign out",
+        "openSite": "Open dev.verikora.com",
+        "operations": "Operations",
+        "incidents": "Incidents",
+        "flows": "Flows",
+        "groups": {
+          "people": "People and files",
+          "engine": "Flows and engine",
+          "operations": "Operations",
+          "app": "App"
+        },
+        "config": "Configuration",
+        "storage": "Storage"
+      },
+      "overview": {
+        "health": "Health",
+        "version": "Version",
+        "database": "Database",
+        "sovkora": "Sovkora edge",
+        "up": "Up",
+        "down": "Unreachable",
+        "accounts": "Accounts",
+        "admins": "administrators",
+        "suspended": "suspended",
+        "documents": "Documents",
+        "stored": "stored",
+        "runs": "Sovkora runs",
+        "lastRun": "Last run",
+        "none": "None yet"
+      },
+      "runs": {
+        "caption": "Sovkora runs",
+        "studio": "Studio",
+        "status": "Status",
+        "runId": "Run id",
+        "document": "Document",
+        "owner": "Owner",
+        "duration": "Duration",
+        "error": "Error",
+        "started": "Started",
+        "showcase": "Public showcase",
+        "public": "Public",
+        "private": "Private",
+        "promote": "Show on the public page",
+        "withdraw": "Withdraw"
+      },
+      "documents": {
+        "caption": "All documents (metadata only — never their content)",
+        "title": "Document",
+        "owner": "Owner",
+        "kind": "Kind",
+        "type": "Type",
+        "size": "Size",
+        "analyses": "Checks",
+        "added": "Added",
+        "sample": "Sample",
+        "isSample": "Sample",
+        "isPersonal": "Personal",
+        "markSample": "Mark as a sample",
+        "unmarkSample": "Unmark"
+      },
+      "audit": {
+        "caption": "Audit log",
+        "at": "When",
+        "actor": "Who",
+        "action": "Action",
+        "target": "Target",
+        "ip": "Address"
+      },
+      "user": {
+        "back": "People",
+        "role": "Role",
+        "status": "State",
+        "created": "Created",
+        "lastSeen": "Last seen",
+        "documents": "Documents",
+        "sessions": "Open sessions",
+        "suspend": "Suspend",
+        "suspendConfirm": "Suspend this account (every session ends)",
+        "restore": "Restore",
+        "history": "Its history",
+        "self": "You cannot suspend your own account.",
+        "makeAdmin": "Make administrator",
+        "makeUser": "Withdraw administrator role",
+        "makePro": "Put on Pro without a card",
+        "makeFree": "Put back on Free",
+        "revokeSessions": "End all sessions",
+        "sessionsRevoked": "Sessions ended: {count}.",
+        "exportData": "Export data (Law 25)",
+        "dangerTitle": "Delete this account",
+        "dangerLead": "Law 25 erasure: the account, its sessions, its documents and their analyses are deleted for good. The audit log keeps the fact, not the person.",
+        "confirmLabel": "Type the account's e-mail to confirm",
+        "deleteAccount": "Delete the account and its documents"
+      },
+      "signIn": {
+        "promise": "The administration of Verikora.",
+        "asideFooter": "Administrators only, from an allowed address.",
+        "title": "Administration",
+        "description": "Sign in with an administrator account."
+      },
+      "incidents": {
+        "title": "Confidentiality incidents",
+        "lead": "The register required by Law 25 (ss. 3.5 to 3.8): every incident, serious or not, kept five years. It holds facts and categories of information, never a person's data. Assess the risk of serious injury; if there is one, notify the Commission d'accès à l'information and the people concerned, then close.",
+        "exportCsv": "Export CSV",
+        "exportJson": "Export JSON",
+        "register": "Register",
+        "empty": "No incident recorded.",
+        "awareAt": "Aware on",
+        "kind": "What happened",
+        "status": "Status",
+        "risk": "Risk of serious injury",
+        "serious": "Serious",
+        "notSerious": "Not serious",
+        "drill": "Drill",
+        "drillBadge": "Drill",
+        "description": "What happened, in facts",
+        "details": "Details",
+        "hide": "Hide",
+        "kinds": {
+          "access": "Unauthorised access",
+          "use": "Unauthorised use",
+          "communication": "Unauthorised communication",
+          "loss": "Loss"
+        },
+        "statuses": {
+          "open": "Open",
+          "assessed": "Assessed",
+          "closed": "Closed"
+        },
+        "levels": {
+          "low": "Low",
+          "medium": "Medium",
+          "high": "High"
+        },
+        "open": "Open an incident",
+        "openSubmit": "Open",
+        "cancel": "Cancel",
+        "descriptionHint": "Facts only. No name, e-mail or document content.",
+        "information": "Categories of information concerned",
+        "informationHint": "Comma-separated, e.g. lease, pay stub. Never the information itself.",
+        "persons": "People concerned (if known)",
+        "drillLabel": "This is a drill",
+        "markDrill": "Mark as a drill",
+        "unmarkDrill": "Not a drill",
+        "assess": "Assess the risk",
+        "assessSubmit": "Save the assessment",
+        "sensitivity": "Sensitivity of the information",
+        "consequences": "Seriousness of the consequences",
+        "likelihood": "Likelihood of misuse",
+        "seriousInjury": "Risk of serious injury",
+        "rationale": "Reasons for the decision",
+        "measure": "Measures taken",
+        "measureText": "A measure to reduce the risk or prevent a new incident",
+        "measureSubmit": "Record the measure",
+        "notice": "Record a notice sent",
+        "target": "Sent to",
+        "targets": {
+          "cai": "Commission d'accès à l'information",
+          "persons": "People concerned"
+        },
+        "channel": "How",
+        "channels": {
+          "form": "Commission form",
+          "email": "E-mail",
+          "letter": "Letter",
+          "public": "Public notice"
+        },
+        "reference": "Acknowledgement reference (if any)",
+        "noticeSubmit": "Record the notice",
+        "caiNotice": "Notice to the Commission",
+        "personsNotice": "Notice to the people concerned",
+        "retain": "Kept in the register until {date}.",
+        "close": "Close the incident",
+        "closedNote": "This entry is closed. It stays in the register and is never edited again."
+      },
+      "operations": {
+        "database": "Database",
+        "pool": "This service's pool: {busy} busy of {max} ({open} open)",
+        "connections": "Connections on the database: {used} of {max}",
+        "poolNote": "{waiting} waiting. A waiting request means the pool is the bottleneck.",
+        "queue": "Sovkora runs",
+        "status": {
+          "running": "Running",
+          "succeeded": "Succeeded",
+          "failed": "Failed",
+          "cancelled": "Cancelled"
+        },
+        "stuck": "Running for more than {minutes} min",
+        "signing": "Report signing",
+        "keyId": "Key id",
+        "keyState": "Key",
+        "keyDevelopment": "Development key — reports prove nothing",
+        "keyProduction": "Production key",
+        "errors": "Recent errors",
+        "noErrors": "No failed run or refused sign-in.",
+        "when": "When",
+        "kind": "Kind",
+        "detail": "Detail",
+        "kinds": {
+          "run": "Run",
+          "sign-in": "Sign-in"
+        },
+        "rulesets": "Rulesets in use",
+        "noRulesets": "No compliance check has run yet.",
+        "ruleset": "Ruleset",
+        "version": "Version",
+        "jurisdiction": "Jurisdiction",
+        "checks": "Checks",
+        "lastCheck": "Last check"
+      },
+      "flows": {
+        "title": "Flows",
+        "lead": "Each flow is data: who it is offered to, the Sovkora Studio and rulesets of its steps, the consents it requires, its price. A published version never changes; enable it per environment.",
+        "caption": "The flows",
+        "columns": {
+          "key": "Flow",
+          "title": "Title",
+          "audiences": "Audiences",
+          "version": "Version",
+          "status": "Status",
+          "dev": "dev",
+          "prod": "prod"
+        },
+        "status": {
+          "available": "Available",
+          "soon": "Soon"
+        },
+        "new": "New flow",
+        "open": "Open",
+        "editor": {
+          "create": "Create the flow",
+          "save": "Save the draft",
+          "publish": "Publish this draft",
+          "saved": "Draft saved.",
+          "published": "Published.",
+          "key": "Key (letters, digits, dashes)",
+          "titleEn": "Title (English)",
+          "titleFr": "Title (French)",
+          "leadEn": "Lead (English)",
+          "leadFr": "Lead (French)",
+          "status": "Status",
+          "audiences": "Offered to",
+          "studios": "Sovkora Studios",
+          "compliance": "Compliance check (a ruleset per jurisdiction)",
+          "authenticity": "Document authenticity (the PDF examined)",
+          "jurisdictions": "Jurisdictions and their rulesets",
+          "consents": "Required consents (comma-separated keys)",
+          "providers": "External providers (comma-separated)",
+          "pricing": "Pricing",
+          "pricingModel": "Model",
+          "amount": "Amount (CAD per run or per month)",
+          "environments": "Environments",
+          "enabledIn": "Enabled in {env}",
+          "versions": "Versions",
+          "draftHint": "Saving edits the open draft, or opens a new one — a published version is never edited.",
+          "noDraft": "No open draft: save to open one.",
+          "tenant": "Tenant",
+          "landlord": "Landlord",
+          "freelancer": "Freelancer",
+          "business": "Business"
+        },
+        "models": {
+          "free": "Free",
+          "perRun": "Per run",
+          "subscription": "Subscription"
+        },
+        "versionStatus": {
+          "draft": "Draft",
+          "published": "Published",
+          "retired": "Retired"
+        }
+      },
+      "storage": {
+        "title": "Storage",
+        "lead": "Where documents and avatars are kept. The providers and their keys live in the database, sealed; the environment only holds the vault key. A provider is tested before it can be used, and every change is in the audit log.",
+        "none": "No provider is set: nothing is kept, and uploads answer that storage is not configured.",
+        "providers": "Providers",
+        "kind": "Kind",
+        "preset": "Preset",
+        "residency": "Where the files live",
+        "untested": "Not tested yet",
+        "lastTest": "Last test",
+        "testOk": "Passed",
+        "testFailed": "Failed",
+        "keySet": "set",
+        "keyNotSet": "not set",
+        "fromEnvironment": "Imported from the environment",
+        "devOnly": "development only",
+        "defaultFor": "Default for {kind}",
+        "makeDefault": "Use for {kind}",
+        "test": "Test the connection",
+        "changeKey": "Change a key",
+        "disable": "Disable",
+        "whichKey": "Which key",
+        "newKey": "New key",
+        "newKeyHint": "Typed once, sealed, never shown again. It is tested before anything is saved.",
+        "saveKey": "Test and save the key",
+        "add": "Add a provider",
+        "addLead": "The provider is saved as a draft and tested at once. It can be used only once the test passes. Files are encrypted before they leave, with a key generated here.",
+        "addSubmit": "Add and test",
+        "cancel": "Cancel",
+        "label": "Name",
+        "enteredOnce": "Entered once, sealed, never shown back.",
+        "statuses": {
+          "draft": "Draft",
+          "verified": "Verified",
+          "active": "In use",
+          "retiring": "Retiring",
+          "disabled": "Disabled"
+        },
+        "dataKinds": {
+          "documents": "documents",
+          "avatars": "avatars",
+          "backups": "the nightly backups"
+        },
+        "fields": {
+          "endpoint": "Endpoint",
+          "region": "Region",
+          "bucket": "Bucket",
+          "zone": "Zone",
+          "pullHostname": "Pull zone host",
+          "prefix": "Prefix",
+          "accessKey": "Zone password",
+          "tokenKey": "Link token key",
+          "accessKeyId": "Access key id",
+          "secretAccessKey": "Secret access key",
+          "encryptionKey": "Object encryption key",
+          "root": "Folder"
+        },
+        "move": {
+          "title": "Move the documents",
+          "lead": "Each document is copied to the new provider, read back, and its SHA-256 checked. Only then does it point to the new provider. Nothing is deleted until you retire the old one. Until then, reads try the new provider first and the old one second.",
+          "offer": "{from} is retiring. Move its documents to {to}.",
+          "start": "Move the documents",
+          "label": "Documents moved",
+          "progress": "{moved} of {total} moved",
+          "moved": "Moved",
+          "remaining": "Remaining",
+          "failed": "Failed",
+          "pause": "Pause",
+          "resume": "Resume",
+          "resumeRetry": "Resume and try the failed ones again",
+          "retire": "Retire {provider}",
+          "retireHint": "Its old copies are swept and it is disabled. Refused while a document still reaches it.",
+          "failures": "Documents that could not be moved",
+          "statuses": {
+            "running": "Moving",
+            "paused": "Paused",
+            "attention": "Needs attention",
+            "done": "Done"
+          }
+        }
+      }
+    },
+    "share": {
+      "title": "Who can verify this report",
+      "hint": "Only you and the people you share it with, signed in with a Verikora account. If the address has no account yet, the invitation waits and is honoured when the account exists.",
+      "email": "E-mail address",
+      "until": "Until (optional)",
+      "submit": "Share",
+      "none": "Not shared with anyone yet.",
+      "revoke": "Revoke",
+      "requestsTitle": "Access requests",
+      "accept": "Give access",
+      "status": {
+        "member": "Member",
+        "invited": "Invited",
+        "expired": "Expired",
+        "revoked": "Revoked"
+      }
+    },
+    "profile": {
+      "title": "Which side of the lease are you on?",
+      "lead": "Verikora adapts the checks it offers first and its words. The rules are the same for everyone. You can change this at any time in settings.",
+      "legend": "Your role",
+      "tenant": "Tenant",
+      "landlord": "Landlord",
+      "save": "Save",
+      "saved": "Saved.",
+      "settingsTitle": "Settings",
+      "settingsLead": "Your role changes the checks offered first and the app's wording.",
+      "open": "Settings",
+      "freelancer": "Freelancer",
+      "business": "Business",
+      "soon": "soon",
+      "tenantHint": "I check my lease before signing",
+      "landlordHint": "I check my lease template and the tenant's papers",
+      "freelancerHint": "Service contracts and invoices",
+      "businessHint": "Supplier contracts and received invoices",
+      "continue": "Continue"
+    },
+    "signUp": {
+      "title": "Create your account",
+      "description": "Your first audit is free.",
+      "email": "E-mail",
+      "password": "Password (12 characters or more)",
+      "acceptTerms": "I accept the terms of use ({terms}).",
+      "acceptPrivacy": "I have read the privacy notice ({privacy}) and I consent to the use of my information as it describes.",
+      "termsLink": "terms",
+      "privacyLink": "privacy notice",
+      "submit": "Create my account",
+      "sentTitle": "Check your mail",
+      "sent": "If this address can receive a message, a confirmation link is on its way (valid 24 hours). Open it to activate your account.",
+      "closedTitle": "Sign-up is not open yet.",
+      "closed": "Verikora is not accepting new accounts at the moment.",
+      "haveAccount": "Already have an account? Sign in",
+      "notice": "Informative check, not legal advice. Only a member of the Barreau du Québec can give legal advice.",
+      "promise": "One free audit, then pay per audit or subscribe."
+    },
+    "verifyEmail": {
+      "title": "Confirm your address",
+      "lead": "One click to activate your account.",
+      "button": "Confirm my address",
+      "invalid": "This link is invalid or has expired. Sign up again to get a new one.",
+      "verified": "Your address is confirmed. You can sign in.",
+      "invalidBanner": "This confirmation link is invalid or has expired."
+    },
+    "paywall": {
+      "title": "Your free dossier is used",
+      "text": "One dossier is free every month. To check another one now, pay for it or subscribe.",
+      "payOne": "Pay for this document",
+      "soon": "Payment coming soon.",
+      "notice": "{document} per dossier, or {agency} a month for small businesses ({included} dossiers included), plus taxes.",
+      "fairUseTitle": "Monthly limit reached",
+      "fairUse": "Your subscription includes {limit} verifications a month. The limit resets at the start of next month.",
+      "testMode": "Test mode: no real card is charged.",
+      "agency": "Subscribe — Agency",
+      "firm": "Subscribe — Building manager",
+      "informative": "An informative check, not legal advice."
+    },
+    "insight": {
+      "title": "This document",
+      "issuer": "Issuer",
+      "language": "Language",
+      "pages": "Pages",
+      "unknown": "This document’s nature could not be determined.",
+      "alternative": "Could also be: {nature}",
+      "noCheck": "No legal check applies to this type of document; here is what it contains.",
+      "confidence": {
+        "high": "high confidence",
+        "medium": "medium confidence",
+        "low": "low confidence",
+        "unknown": "unknown"
+      },
+      "languages": {
+        "fr": "French",
+        "en": "English"
+      },
+      "dateKinds": {
+        "issued": "Issue date",
+        "effective": "Effective date",
+        "due": "Due date",
+        "period": "Period",
+        "other": "Date"
+      },
+      "roles": {
+        "landlord": "Landlord",
+        "tenant": "Tenant",
+        "contractor": "Contractor",
+        "client": "Client",
+        "employer": "Employer",
+        "employee": "Employee",
+        "company": "Business",
+        "supplier": "Supplier",
+        "buyer": "Buyer",
+        "holder": "Account holder"
+      },
+      "refKinds": {
+        "neq": "NEQ",
+        "gst": "GST no.",
+        "qst": "QST no.",
+        "invoice-number": "Invoice no.",
+        "reference": "Reference no."
+      },
+      "amountKinds": {
+        "total": "Total",
+        "subtotal": "Subtotal",
+        "gst": "GST",
+        "qst": "QST",
+        "rent": "Rent",
+        "deposit": "Deposit",
+        "other": "Amount"
+      },
+      "piiTitle": "Personal information detected",
+      "piiKinds": {
+        "sin": "SIN",
+        "email": "E-mail",
+        "phone": "Phone",
+        "address": "Address",
+        "postal-code": "Postal code",
+        "birth-date": "Date of birth",
+        "bank-account": "Bank account"
+      },
+      "piiRetention": "This document is kept in your vault until you delete it; you can delete it at any time. This information is sent nowhere except to the check you start.",
+      "piiRedacted": "Download the redacted version (text)",
+      "informative": "Automatic reading of the text: informative, to be checked. Not legal advice.",
+      "source": "Where the text comes from",
+      "sourcePhotoOcr": "photo, text read by character recognition, reliability {confidence} %",
+      "sourcePhotoOcrPages": "{count} photos, text read by character recognition, reliability {confidence} %",
+      "sourcePhotoVision": "photo, text read by Sovkora's model (image reading), run {runId}",
+      "sourceLow": "The reading of this photo is not very reliable. Check the amounts, the dates and the names against your document.",
+      "originSoftware": "Last software (a hint, not a verdict)",
+      "originDevice": "Device",
+      "originTaken": "Photo taken on",
+      "originModified": "Modified on",
+      "originGps": "The photo's GPS position was removed on import."
+    },
+    "organisation": {
+      "title": "Organisation",
+      "recents": "Recent",
+      "collections": "Collections",
+      "noCollections": "No collection yet. Create one to group your documents.",
+      "newCollection": "New collection",
+      "newFolder": "New folder",
+      "newTag": "New tag",
+      "name": "Name",
+      "color": "Colour",
+      "create": "Create",
+      "save": "Save",
+      "cancel": "Cancel",
+      "rename": "Rename",
+      "move": "Move",
+      "delete": "Delete",
+      "actions": "Actions for {name}",
+      "editTags": "Edit tags",
+      "filterTags": "Filter by tag",
+      "noTags": "No tag yet.",
+      "clearTags": "Clear the filter",
+      "deleteTitle": "Delete “{name}”?",
+      "deleteAsk": "What happens to the files it holds?",
+      "deleteMove": "Move them",
+      "deleteDocs": "Delete them too (this cannot be undone)",
+      "moveToCollection": "Move to collection",
+      "moveUpFolder": "Up, into the collection",
+      "moveTo": "Move to",
+      "rootOfCollection": "The collection itself (no folder)",
+      "emptyCollection": "Nothing here yet. Upload a document or create a folder.",
+      "back": "Back to the library",
+      "library": "Library",
+      "addDocuments": "Add documents here",
+      "saved": "Saved.",
+      "filesIn": "Files",
+      "foldersIn": "Folders",
+      "colors": {
+        "blue": "Blue",
+        "green": "Green",
+        "amber": "Amber",
+        "red": "Red",
+        "violet": "Violet",
+        "gray": "Gray"
+      },
+      "filesOne": "{count} file",
+      "filesMany": "{count} files",
+      "foldersOne": "{count} folder",
+      "foldersMany": "{count} folders",
+      "default": "Default",
+      "defaultCollection": "Default collection",
+      "moveToDefault": "To the default collection",
+      "makeDefault": "Make the default collection",
+      "makeDefaultTitle": "Make “{name}” the default collection",
+      "makeDefaultAsk": "Documents with no destination will go here. The previous default becomes a collection like any other.",
+      "avatar": {
+        "menu": "Avatar",
+        "title": "Avatar of “{name}”",
+        "ask": "Choose an avatar from the set, or an image of your own.",
+        "none": "No avatar",
+        "set": "Avatars of the set",
+        "upload": "An image of your own",
+        "uploadHint": "PNG, JPEG or HEIC, up to {size} KB. The image is cropped square and its data (position, device) is removed.",
+        "browse": "Choose an image",
+        "tone": "Avatar {n}",
+        "off": "Avatars are switched off."
+      },
+      "defaultName": "My documents",
+      "latestChecks": "Latest checks",
+      "noChecks": "No check yet.",
+      "lastCheck": "Last check {date}",
+      "neverChecked": "Not checked yet",
+      "seeAll": "See all",
+      "report": "Report",
+      "removeTag": "Remove {label}"
+    },
+    "settings": {
+      "tabs": {
+        "profil": "Profile",
+        "apparence": "Appearance",
+        "securite": "Security",
+        "facturation": "Plan and billing",
+        "donnees": "My data",
+        "stockage": "Storage",
+        "signets": "Bookmarks"
+      },
+      "label": "Account settings",
+      "verified": "E-mail verified",
+      "unverified": "E-mail not verified",
+      "memberSince": "Member since {date}",
+      "save": {
+        "save": "Save",
+        "saving": "Saving…",
+        "saved": "Saved",
+        "error": "Could not save. Try again.",
+        "undo": "Undo",
+        "discard": "Discard changes"
+      },
+      "profile": {
+        "lead": "Your name, your picture, your language, which side of the lease you are on — saved together.",
+        "languageHint": "The language of the app and of your e-mails.",
+        "avatarOption": "Picture {n}",
+        "nameLabel": "Name",
+        "nameHint": "Shown in the account menu.",
+        "save": "Save",
+        "saved": "Saved.",
+        "avatarLabel": "Avatar",
+        "avatarHint": "One of Krizaka's default pictures.",
+        "languageLabel": "Language",
+        "languages": {
+          "fr": "Français",
+          "en": "English"
+        }
+      },
+      "security": {
+        "emailTitle": "E-mail address",
+        "emailCurrent": "Current address: {email}",
+        "emailPending": "Waiting for confirmation: {email}. Open the link sent to that address.",
+        "newEmail": "New address",
+        "password": "Current password",
+        "emailSend": "Send the confirmation link",
+        "emailSent": "A link was sent to the new address. Nothing changes until you open it.",
+        "emailChanged": "Your address was changed.",
+        "emailInvalid": "This link is invalid or has expired.",
+        "passwordTitle": "Password",
+        "current": "Current password",
+        "next": "New password (12 characters or more)",
+        "passwordSave": "Change the password",
+        "passwordChanged": "Password changed. Your other devices are signed out."
+      },
+      "billing": {
+        "title": "Plan and billing",
+        "plan": "Plan",
+        "freeAudit": "Free audit",
+        "creditsLabel": "Paid audits left",
+        "renewal": "Renewal",
+        "ends": "Ends on",
+        "planFree": "Free",
+        "credits": "Paid audits left: {count}",
+        "freeAvailable": "Your free audit is available.",
+        "freeUsed": "Your free dossier is used.",
+        "until": "Renews on {date}.",
+        "portal": "Manage the subscription and invoices",
+        "portalHint": "Payment method, invoices (with GST and QST) and cancellation: in Stripe's secure portal.",
+        "off": "Payment is not available yet.",
+        "otherOffers": "Other offers",
+        "buy": "Buy or subscribe",
+        "testMode": "Test mode: no real card is charged.",
+        "history": {
+          "title": "Payment history",
+          "empty": "No payment yet. A receipt appears here after each payment.",
+          "what": "Payment",
+          "refunded": "Refunded",
+          "paid": "Paid",
+          "receipt": "Receipt",
+          "receiptFor": "Receipt of {date}"
+        },
+        "plans": {
+          "agency": "Agency",
+          "firm": "Building manager"
+        }
+      },
+      "data": {
+        "exportTitle": "Export my data",
+        "exportText": "A JSON file with your profile, your organisation, your kept documents and their reports.",
+        "exportButton": "Download my data",
+        "deleteTitle": "Delete my account",
+        "deleteText": "Your account, your kept documents (including on their storage), your libraries and your reports are deleted at once and for good (Law 25). Invoices stay with our payment provider, as the law requires.",
+        "deleteOpen": "Delete my account…",
+        "deleteEmail": "Type your e-mail address to confirm",
+        "deletePassword": "Password",
+        "deleteButton": "Delete for good"
+      },
+      "storage": {
+        "title": "Where your kept documents live",
+        "lead": "By default nothing is kept: the document is deleted after its check and only the report stays. Choose here where the documents you decide to keep go.",
+        "modeLabel": "Storage",
+        "none": "Keep nothing",
+        "noneHint": "“Keep” is switched off: everything is deleted after the check.",
+        "krizaka": "Krizaka's storage",
+        "krizakaHint": "Kept by Krizaka, on the storage this service runs.",
+        "s3": "My own storage (S3)",
+        "s3Hint": "An S3-compatible storage you run: your kept documents go there, not to us.",
+        "endpoint": "Service address (https)",
+        "region": "Region",
+        "bucket": "Bucket",
+        "accessKeyId": "Access key ID",
+        "secretAccessKey": "Secret access key",
+        "secretSaved": "A key is saved (encrypted). Leave empty to keep it.",
+        "secretHint": "Encrypted before it is saved, never shown again.",
+        "test": "Test the connection",
+        "testing": "Testing…",
+        "steps": "The test writes a small file, reads it back, then deletes it.",
+        "stepWrite": "Write",
+        "stepRead": "Read back",
+        "stepDelete": "Delete",
+        "stepOk": "passed",
+        "stepFail": "failed",
+        "whereCanada": "Your documents would be kept at {host}, region {region} (Canada).",
+        "whereElsewhere": "Your documents would be kept at {host}, region {region} (outside Canada: yours to judge).",
+        "testRequired": "Test the connection before saving.",
+        "keepDefault": "Tick “Keep my documents” by default",
+        "save": "Save",
+        "saved": "Saved.",
+        "noKey": "This installation cannot store credentials: your own S3 storage is unavailable.",
+        "cloudTitleConnected": "Your cloud",
+        "cloudTitle": "Or connect a cloud you already have",
+        "cloudLead": "Dropbox, Google Drive or OneDrive: your kept documents go into a folder of your own cloud, not to us.",
+        "cloudConnect": "Connect {cloud}",
+        "cloudDisconnect": "Disconnect",
+        "cloudConnected": "Connected to {cloud}. Your kept documents go to a folder of the app in your cloud.",
+        "cloudWasDisconnected": "{cloud} was disconnected. The documents kept there cannot be opened until you connect it again; new ones go to Krizaka's storage.",
+        "cloudScope": "You sign in on your provider's own page. Verikora only sees the folder it creates; you can disconnect at any time, and your files stay where they are.",
+        "cloudResultConnected": "Your cloud is connected.",
+        "cloudResultDenied": "The connection was not allowed, or was cancelled. Nothing changed.",
+        "cloudResultFailed": "The connection could not be completed. Nothing changed: try again.",
+        "clouds": {
+          "dropbox": "Dropbox",
+          "google-drive": "Google Drive",
+          "onedrive": "OneDrive"
+        }
+      },
+      "appearance": {
+        "lead": "How the app looks on this device. Kept in this browser.",
+        "theme": "Theme",
+        "themeHint": "System follows your device; dark is the default.",
+        "density": "Density",
+        "densityHint": "Compact tightens the rows and the gaps.",
+        "themes": {
+          "system": "System",
+          "systemHint": "Follows your device.",
+          "light": "Light",
+          "lightHint": "Light surfaces.",
+          "dark": "Dark",
+          "darkHint": "Dark surfaces, the default."
+        },
+        "densities": {
+          "standard": "Standard",
+          "compact": "Compact"
+        }
+      }
+    },
+    "confirmEmail": {
+      "title": "Confirm the new address",
+      "lead": "One click to use this address with your account.",
+      "button": "Confirm the new address",
+      "invalid": "This link is invalid or has expired."
+    },
+    "forgotPassword": {
+      "promise": "Your documents, read and checked by Verikora.",
+      "title": "Forgot your password?",
+      "description": "Type your e-mail address. If it has an account, we send a link to choose a new password.",
+      "email": "E-mail",
+      "submit": "Send the link",
+      "sentTitle": "Check your mailbox",
+      "sent": "If this address has an account, a link is on its way. It works once, for {minutes} minutes.",
+      "back": "Back to sign in",
+      "mailOff": "E-mail sending is not available yet, so a link cannot be sent. Talk to our team."
+    },
+    "resetPassword": {
+      "promise": "Your documents, read and checked by Verikora.",
+      "title": "Choose a new password",
+      "description": "At least 12 characters. Your other sessions will be signed out.",
+      "password": "New password",
+      "confirm": "Repeat the new password",
+      "submit": "Change the password",
+      "mismatch": "The two passwords are not the same.",
+      "tooShort": "At least 12 characters.",
+      "invalidTitle": "This link no longer works",
+      "invalid": "It is invalid, already used, or has expired. Ask for a new one.",
+      "again": "Send a new link",
+      "back": "Back to sign in"
+    },
+    "maintenance": {
+      "title": "Under maintenance"
+    },
+    "adminConfig": {
+      "title": "App configuration",
+      "lead": "Every setting is data: it applies at once, with no redeploy, and every change is logged.",
+      "groups": {
+        "general": "General",
+        "features": "Features",
+        "limits": "Limits",
+        "plans": "Plans",
+        "prices": "Prices",
+        "packs": "Rules packs",
+        "sovkora": "Sovkora",
+        "organisation": "Organisation",
+        "coupons": "Coupons"
+      },
+      "scope": {
+        "label": "Scope",
+        "global": "Global",
+        "workspace": "Workspace",
+        "user": "Person",
+        "id": "Identifier",
+        "idHint": "Workspace or person identifier.",
+        "apply": "Show",
+        "workspaceNote": "Workspaces arrive with B2B: the resolution is ready.",
+        "resolution": "Effective value: person, then workspace, then global, then default."
+      },
+      "row": {
+        "modified": "modified",
+        "inherited": "inherited: {source}",
+        "reset": "Reset to default",
+        "save": "Save",
+        "saved": "Saved.",
+        "default": "Default: {value}",
+        "on": "on",
+        "off": "off",
+        "fr": "FR",
+        "en": "EN",
+        "notHere": "Cannot be set at this scope."
+      },
+      "sources": {
+        "default": "default",
+        "global": "global",
+        "workspace": "workspace",
+        "user": "person"
+      },
+      "choices": {
+        "test": "Test",
+        "live": "Live",
+        "pdf": "PDF",
+        "text": "Text"
+      },
+      "settings": {
+        "app": {
+          "maintenance": {
+            "label": "Maintenance mode",
+            "hint": "Closes the app to users and shows the message below. Administrators still get in."
+          },
+          "maintenanceMessage": {
+            "label": "Maintenance message",
+            "hint": "What users see, in each language."
+          }
+        },
+        "signup": {
+          "open": {
+            "label": "Sign-up open",
+            "hint": "Lets people create an account. E-mail sending must also be configured."
+          }
+        },
+        "auth": {
+          "passwordResetMinutes": {
+            "label": "Password reset link lifetime",
+            "hint": "Minutes a « Forgot your password? » link works, once. From 5 to 1440. The e-mail says it."
+          },
+          "sessionDays": {
+            "label": "Session length",
+            "hint": "How many days a sign-in lasts before the person must sign in again."
+          }
+        },
+        "payments": {
+          "enabled": {
+            "label": "Payments on",
+            "hint": "Turns off buying an audit and the Pro plan. The billing portal stays open."
+          },
+          "display": {
+            "label": "Payments display",
+            "hint": "Test mode: a notice says no real card is charged."
+          }
+        },
+        "tal": {
+          "rate": {
+            "year": {
+              "label": "TAL rate: year",
+              "hint": "The year the TAL percentage applies to (the lease starts in it)."
+            },
+            "basisPoints": {
+              "label": "TAL rate: percentage (basis points)",
+              "hint": "The TAL base percentage for the rent, in hundredths of a percent (310 = 3.1 %). 0: nothing entered, the Section G check makes no claim."
+            },
+            "sourceUrl": {
+              "label": "TAL rate: source page",
+              "hint": "The page the figure was read from; shown beside every figure."
+            },
+            "enteredOn": {
+              "label": "TAL rate: entered on",
+              "hint": "The day it was entered (YYYY-MM-DD)."
+            }
+          }
+        },
+        "pricing": {
+          "announcedCode": {
+            "label": "Announced promo code",
+            "hint": "The code of a coupon the pricing page announces (empty: none). Its percent, months and end date come from the coupon."
+          }
+        },
+        "audit": {
+          "freeFirst": {
+            "label": "Free monthly dossier",
+            "hint": "Switch for the free dossier each month (the number is plans.free.dossiersPerMonth)."
+          }
+        },
+        "features": {
+          "documentInsight": {
+            "label": "“This document” panel",
+            "hint": "The document's nature and facts, read from its text."
+          },
+          "personalInfo": {
+            "label": "Personal-information detection",
+            "hint": "Counts and redacts personal information."
+          },
+          "keepDocuments": {
+            "label": "“Keep my documents” option",
+            "hint": "Without it, every document is deleted after its check."
+          },
+          "ownStorage": {
+            "label": "Own S3 storage",
+            "hint": "Lets people connect their own S3-compatible storage."
+          },
+          "assistant": {
+            "label": "Assistant (later)",
+            "hint": "Ask a question to a document. Not built yet."
+          },
+          "apiKeys": {
+            "label": "API keys",
+            "hint": "Global switch: off, no key works and none can be created."
+          },
+          "collectionAvatars": {
+            "label": "Collection avatars",
+            "hint": "Lets a collection have an avatar: one from the set, or an uploaded image."
+          },
+          "avatarSet": {
+            "label": "Avatar set offered",
+            "hint": "The avatars of the set that people may choose."
+          },
+          "batches": {
+            "label": "Batches of checks",
+            "hint": "A CSV and its files create many checks at once, with a preview and the cost before the start."
+          },
+          "webhooks": {
+            "label": "Webhooks",
+            "hint": "Off: no webhook is sent and none can be registered, whatever the plan."
+          },
+          "screeningBilling": {
+            "label": "Screening checks billing",
+            "hint": "Charges each screening check (cost plus margin, with taxes). Off: nothing is charged. Test mode only until the compliance gate is open."
+          },
+          "screeningLive": {
+            "label": "Live screening checks",
+            "hint": "Real providers, real people. Refused unless every blocker of the compliance gate is done with evidence. Keep OFF."
+          }
+        },
+        "limits": {
+          "maxFileMb": {
+            "label": "Largest file",
+            "hint": "Cannot go above what the platform carries (10 MB)."
+          },
+          "maxPages": {
+            "label": "Most pages in a PDF",
+            "hint": "Pre-flight threshold."
+          },
+          "allowedTypes": {
+            "label": "Accepted file types",
+            "hint": "At least one."
+          },
+          "reuseDays": {
+            "label": "Reuse window",
+            "hint": "An identical result newer than this is reused with no new run. 0: never."
+          },
+          "purgeAfterHours": {
+            "label": "Purge of a never-checked document",
+            "hint": "Hours before a not-kept document that was never checked is deleted."
+          },
+          "bonusAuditsPerMonth": {
+            "label": "Bonus audits per month",
+            "hint": "Added to this person's monthly cap."
+          },
+          "apiRequestsPerMinute": {
+            "label": "API requests per minute per key",
+            "hint": "Beyond it the answer is 429 with the time to wait."
+          },
+          "avatarMaxKb": {
+            "label": "Largest uploaded avatar",
+            "hint": "In KB, before the image is cropped and made lighter."
+          },
+          "batchMaxRows": {
+            "label": "Rows per batch",
+            "hint": "Above it, the preview refuses the batch and says to split it."
+          },
+          "batchConcurrency": {
+            "label": "A batch's checks run at once",
+            "hint": "The others wait their turn (Sovkora runs a few checks at once for the whole product); a failed row never stops the batch."
+          },
+          "batchTickSeconds": {
+            "label": "The server looks at unfinished batches every",
+            "hint": "Seconds; 0 turns it off (a batch then advances only when someone opens it). A batch that waits for the account to pay is looked at again after ten minutes."
+          },
+          "batchTickMaxAgeHours": {
+            "label": "A batch is advanced by the server for",
+            "hint": "Hours after its creation; after that it only advances when opened."
+          },
+          "batchTickBatches": {
+            "label": "Batches advanced per look",
+            "hint": "The oldest first; the others wait for the next look."
+          },
+          "webhookMaxAttempts": {
+            "label": "Tries per webhook delivery",
+            "hint": "The first one included; after the last the delivery is given up and stays in the log. The waits grow from 30 seconds to 12 hours."
+          },
+          "batchExportMaxMb": {
+            "label": "Heaviest ZIP of a batch's reports",
+            "hint": "Above it the export is refused and says to export fewer rows; the rows are never cut silently."
+          },
+          "batchCreate": {
+            "perIp": {
+              "label": "Limit per address: Creating a batch",
+              "hint": "Beyond it the answer is 429 with the time to wait."
+            },
+            "perSubject": {
+              "label": "Limit per account: Creating a batch",
+              "hint": "Beyond it the answer is 429 with the time to wait."
+            },
+            "windowSeconds": {
+              "label": "Window: Creating a batch",
+              "hint": "Beyond it the answer is 429 with the time to wait."
+            }
+          },
+          "batchExport": {
+            "perIp": {
+              "label": "Limit per address: Exporting a batch",
+              "hint": "Beyond it the answer is 429 with the time to wait."
+            },
+            "perSubject": {
+              "label": "Limit per account: Exporting a batch",
+              "hint": "Beyond it the answer is 429 with the time to wait."
+            },
+            "windowSeconds": {
+              "label": "Window: Exporting a batch",
+              "hint": "Beyond it the answer is 429 with the time to wait."
+            }
+          },
+          "verifyRequest": {
+            "perIp": {
+              "label": "Limit per address: Asking for access to a verification",
+              "hint": "Beyond it the answer is 429 with the time to wait."
+            },
+            "perSubject": {
+              "label": "Limit per account: Asking for access to a verification",
+              "hint": "Beyond it the answer is 429 with the time to wait."
+            },
+            "windowSeconds": {
+              "label": "Window: Asking for access to a verification",
+              "hint": "Beyond it the answer is 429 with the time to wait."
+            }
+          },
+          "verifyContract": {
+            "perIp": {
+              "label": "Limit per address: Verifying a sealed contract",
+              "hint": "Beyond it the answer is 429 with the time to wait."
+            },
+            "windowSeconds": {
+              "label": "Window: Verifying a sealed contract",
+              "hint": "Beyond it the answer is 429 with the time to wait."
+            }
+          },
+          "verify": {
+            "perIp": {
+              "label": "Limit per address: Verifying a signed report",
+              "hint": "Beyond it the answer is 429 with the time to wait."
+            },
+            "windowSeconds": {
+              "label": "Window: Verifying a signed report",
+              "hint": "Beyond it the answer is 429 with the time to wait."
+            }
+          },
+          "consent": {
+            "perIp": {
+              "label": "Limit per address: Recording a consent",
+              "hint": "Beyond it the answer is 429 with the time to wait."
+            },
+            "perSubject": {
+              "label": "Limit per account: Recording a consent",
+              "hint": "Beyond it the answer is 429 with the time to wait."
+            },
+            "windowSeconds": {
+              "label": "Window: Recording a consent",
+              "hint": "Beyond it the answer is 429 with the time to wait."
+            }
+          },
+          "signUp": {
+            "perIp": {
+              "label": "Limit per address: Signing up",
+              "hint": "Beyond it the answer is 429 with the time to wait."
+            },
+            "perSubject": {
+              "label": "Limit per account: Signing up",
+              "hint": "Beyond it the answer is 429 with the time to wait."
+            },
+            "windowSeconds": {
+              "label": "Window: Signing up",
+              "hint": "Beyond it the answer is 429 with the time to wait."
+            }
+          },
+          "verifyEmail": {
+            "perIp": {
+              "label": "Limit per address: Asking for a verification e-mail",
+              "hint": "Beyond it the answer is 429 with the time to wait."
+            },
+            "windowSeconds": {
+              "label": "Window: Asking for a verification e-mail",
+              "hint": "Beyond it the answer is 429 with the time to wait."
+            }
+          },
+          "signIn": {
+            "perIp": {
+              "label": "Limit per address: Signing in",
+              "hint": "Beyond it the answer is 429 with the time to wait."
+            },
+            "perSubject": {
+              "label": "Limit per account: Signing in",
+              "hint": "Beyond it the answer is 429 with the time to wait."
+            },
+            "windowSeconds": {
+              "label": "Window: Signing in",
+              "hint": "Beyond it the answer is 429 with the time to wait."
+            }
+          },
+          "confirmEmail": {
+            "perIp": {
+              "label": "Limit per address: Confirming an e-mail address",
+              "hint": "Beyond it the answer is 429 with the time to wait."
+            },
+            "windowSeconds": {
+              "label": "Window: Confirming an e-mail address",
+              "hint": "Beyond it the answer is 429 with the time to wait."
+            }
+          },
+          "search": {
+            "perIp": {
+              "label": "Limit per address: Searching the library",
+              "hint": "Beyond it the answer is 429 with the time to wait."
+            },
+            "perSubject": {
+              "label": "Limit per account: Searching the library",
+              "hint": "Beyond it the answer is 429 with the time to wait."
+            },
+            "windowSeconds": {
+              "label": "Window: Searching the library",
+              "hint": "Beyond it the answer is 429 with the time to wait."
+            }
+          },
+          "perspective": {
+            "perIp": {
+              "label": "Limit per address: Changing the perspective",
+              "hint": "Beyond it the answer is 429 with the time to wait."
+            },
+            "perSubject": {
+              "label": "Limit per account: Changing the perspective",
+              "hint": "Beyond it the answer is 429 with the time to wait."
+            },
+            "windowSeconds": {
+              "label": "Window: Changing the perspective",
+              "hint": "Beyond it the answer is 429 with the time to wait."
+            }
+          },
+          "applicantFileRequest": {
+            "perIp": {
+              "label": "Limit per address: Asking for an applicant file",
+              "hint": "Beyond it the answer is 429 with the time to wait."
+            },
+            "perSubject": {
+              "label": "Limit per account: Asking for an applicant file",
+              "hint": "Beyond it the answer is 429 with the time to wait."
+            },
+            "windowSeconds": {
+              "label": "Window: Asking for an applicant file",
+              "hint": "Beyond it the answer is 429 with the time to wait."
+            }
+          },
+          "applicantFileAction": {
+            "perIp": {
+              "label": "Limit per address: Acting on an applicant file",
+              "hint": "Beyond it the answer is 429 with the time to wait."
+            },
+            "windowSeconds": {
+              "label": "Window: Acting on an applicant file",
+              "hint": "Beyond it the answer is 429 with the time to wait."
+            }
+          },
+          "screeningRequest": {
+            "perIp": {
+              "label": "Limit per address: Asking for a screening",
+              "hint": "Beyond it the answer is 429 with the time to wait."
+            },
+            "perSubject": {
+              "label": "Limit per account: Asking for a screening",
+              "hint": "Beyond it the answer is 429 with the time to wait."
+            },
+            "windowSeconds": {
+              "label": "Window: Asking for a screening",
+              "hint": "Beyond it the answer is 429 with the time to wait."
+            }
+          },
+          "screeningRespond": {
+            "perIp": {
+              "label": "Limit per address: Answering a screening",
+              "hint": "Beyond it the answer is 429 with the time to wait."
+            },
+            "windowSeconds": {
+              "label": "Window: Answering a screening",
+              "hint": "Beyond it the answer is 429 with the time to wait."
+            }
+          },
+          "upload": {
+            "perIp": {
+              "label": "Limit per address: Uploading a document",
+              "hint": "Beyond it the answer is 429 with the time to wait."
+            },
+            "perSubject": {
+              "label": "Limit per account: Uploading a document",
+              "hint": "Beyond it the answer is 429 with the time to wait."
+            },
+            "windowSeconds": {
+              "label": "Window: Uploading a document",
+              "hint": "Beyond it the answer is 429 with the time to wait."
+            }
+          },
+          "analysis": {
+            "perIp": {
+              "label": "Limit per address: Starting a check",
+              "hint": "Beyond it the answer is 429 with the time to wait."
+            },
+            "perSubject": {
+              "label": "Limit per account: Starting a check",
+              "hint": "Beyond it the answer is 429 with the time to wait."
+            },
+            "windowSeconds": {
+              "label": "Window: Starting a check",
+              "hint": "Beyond it the answer is 429 with the time to wait."
+            }
+          },
+          "redacted": {
+            "perIp": {
+              "label": "Limit per address: Downloading a redacted copy",
+              "hint": "Beyond it the answer is 429 with the time to wait."
+            },
+            "windowSeconds": {
+              "label": "Window: Downloading a redacted copy",
+              "hint": "Beyond it the answer is 429 with the time to wait."
+            }
+          },
+          "reportGrant": {
+            "perIp": {
+              "label": "Limit per address: Sharing a report",
+              "hint": "Beyond it the answer is 429 with the time to wait."
+            },
+            "perSubject": {
+              "label": "Limit per account: Sharing a report",
+              "hint": "Beyond it the answer is 429 with the time to wait."
+            },
+            "windowSeconds": {
+              "label": "Window: Sharing a report",
+              "hint": "Beyond it the answer is 429 with the time to wait."
+            }
+          },
+          "reportMail": {
+            "perIp": {
+              "label": "Limit per address: E-mailing a report link",
+              "hint": "Beyond it the answer is 429 with the time to wait."
+            },
+            "perSubject": {
+              "label": "Limit per account: E-mailing a report link",
+              "hint": "Beyond it the answer is 429 with the time to wait."
+            },
+            "windowSeconds": {
+              "label": "Window: E-mailing a report link",
+              "hint": "Beyond it the answer is 429 with the time to wait."
+            }
+          },
+          "report": {
+            "perIp": {
+              "label": "Limit per address: Reading a report",
+              "hint": "Beyond it the answer is 429 with the time to wait."
+            },
+            "perSubject": {
+              "label": "Limit per account: Reading a report",
+              "hint": "Beyond it the answer is 429 with the time to wait."
+            },
+            "windowSeconds": {
+              "label": "Window: Reading a report",
+              "hint": "Beyond it the answer is 429 with the time to wait."
+            }
+          },
+          "applicant": {
+            "perIp": {
+              "label": "Limit per address: The applicant's page",
+              "hint": "Beyond it the answer is 429 with the time to wait."
+            },
+            "windowSeconds": {
+              "label": "Window: The applicant's page",
+              "hint": "Beyond it the answer is 429 with the time to wait."
+            }
+          },
+          "applicantUpload": {
+            "perIp": {
+              "label": "Limit per address: The applicant's uploads",
+              "hint": "Beyond it the answer is 429 with the time to wait."
+            },
+            "windowSeconds": {
+              "label": "Window: The applicant's uploads",
+              "hint": "Beyond it the answer is 429 with the time to wait."
+            }
+          },
+          "showcaseFile": {
+            "perIp": {
+              "label": "Limit per address: A showcase file",
+              "hint": "Beyond it the answer is 429 with the time to wait."
+            },
+            "windowSeconds": {
+              "label": "Window: A showcase file",
+              "hint": "Beyond it the answer is 429 with the time to wait."
+            }
+          },
+          "showcase": {
+            "perIp": {
+              "label": "Limit per address: The showcase",
+              "hint": "Beyond it the answer is 429 with the time to wait."
+            },
+            "windowSeconds": {
+              "label": "Window: The showcase",
+              "hint": "Beyond it the answer is 429 with the time to wait."
+            }
+          },
+          "batchPreview": {
+            "perIp": {
+              "label": "Limit per address: Previewing a batch",
+              "hint": "Beyond it the answer is 429 with the time to wait."
+            },
+            "perSubject": {
+              "label": "Limit per account: Previewing a batch",
+              "hint": "Beyond it the answer is 429 with the time to wait."
+            },
+            "windowSeconds": {
+              "label": "Window: Previewing a batch",
+              "hint": "Beyond it the answer is 429 with the time to wait."
+            }
+          },
+          "avatar": {
+            "perIp": {
+              "label": "Limit per address: Changing a collection's picture",
+              "hint": "Beyond it the answer is 429 with the time to wait."
+            },
+            "perSubject": {
+              "label": "Limit per account: Changing a collection's picture",
+              "hint": "Beyond it the answer is 429 with the time to wait."
+            },
+            "windowSeconds": {
+              "label": "Window: Changing a collection's picture",
+              "hint": "Beyond it the answer is 429 with the time to wait."
+            }
+          },
+          "portal": {
+            "perIp": {
+              "label": "Limit per address: Opening the billing portal",
+              "hint": "Beyond it the answer is 429 with the time to wait."
+            },
+            "windowSeconds": {
+              "label": "Window: Opening the billing portal",
+              "hint": "Beyond it the answer is 429 with the time to wait."
+            }
+          },
+          "checkout": {
+            "perIp": {
+              "label": "Limit per address: Starting a checkout",
+              "hint": "Beyond it the answer is 429 with the time to wait."
+            },
+            "perSubject": {
+              "label": "Limit per account: Starting a checkout",
+              "hint": "Beyond it the answer is 429 with the time to wait."
+            },
+            "windowSeconds": {
+              "label": "Window: Starting a checkout",
+              "hint": "Beyond it the answer is 429 with the time to wait."
+            }
+          },
+          "apiKeyAuth": {
+            "perIp": {
+              "label": "Limit per address: Presenting an API key (before it is known)",
+              "hint": "Beyond it the answer is 429 with the time to wait."
+            },
+            "windowSeconds": {
+              "label": "Window: Presenting an API key (before it is known)",
+              "hint": "Beyond it the answer is 429 with the time to wait."
+            }
+          },
+          "forgotPassword": {
+            "perIp": {
+              "label": "Limit per address: Asking for a password reset",
+              "hint": "Beyond it the answer is 429 with the time to wait."
+            },
+            "perSubject": {
+              "label": "Limit per account: Asking for a password reset",
+              "hint": "Beyond it the answer is 429 with the time to wait."
+            },
+            "windowSeconds": {
+              "label": "Window: Asking for a password reset",
+              "hint": "Beyond it the answer is 429 with the time to wait."
+            }
+          },
+          "resetPassword": {
+            "perIp": {
+              "label": "Limit per address: Resetting a password",
+              "hint": "Beyond it the answer is 429 with the time to wait."
+            },
+            "windowSeconds": {
+              "label": "Window: Resetting a password",
+              "hint": "Beyond it the answer is 429 with the time to wait."
+            }
+          },
+          "organise": {
+            "perIp": {
+              "label": "Limit per address: Organising (tags, views, bulk actions)",
+              "hint": "Beyond it the answer is 429 with the time to wait."
+            },
+            "perSubject": {
+              "label": "Limit per account: Organising (tags, views, bulk actions)",
+              "hint": "Beyond it the answer is 429 with the time to wait."
+            },
+            "windowSeconds": {
+              "label": "Window: Organising (tags, views, bulk actions)",
+              "hint": "Beyond it the answer is 429 with the time to wait."
+            }
+          },
+          "accountRead": {
+            "perIp": {
+              "label": "Limit per address: Reading the account's pages",
+              "hint": "Beyond it the answer is 429 with the time to wait."
+            },
+            "perSubject": {
+              "label": "Limit per account: Reading the account's pages",
+              "hint": "Beyond it the answer is 429 with the time to wait."
+            },
+            "windowSeconds": {
+              "label": "Window: Reading the account's pages",
+              "hint": "Beyond it the answer is 429 with the time to wait."
+            }
+          },
+          "accountWrite": {
+            "perIp": {
+              "label": "Limit per address: Changing the account",
+              "hint": "Beyond it the answer is 429 with the time to wait."
+            },
+            "perSubject": {
+              "label": "Limit per account: Changing the account",
+              "hint": "Beyond it the answer is 429 with the time to wait."
+            },
+            "windowSeconds": {
+              "label": "Window: Changing the account",
+              "hint": "Beyond it the answer is 429 with the time to wait."
+            }
+          }
+        },
+        "plans": {
+          "free": {
+            "dossiersPerMonth": {
+              "label": "Free: dossiers per month",
+              "hint": "Verified free each calendar month, no card (0: none)."
+            },
+            "auditsPerDay": {
+              "label": "Free: audits per day",
+              "hint": "0: no cap."
+            },
+            "apiKeys": {
+              "label": "Free: API keys",
+              "hint": "Number of active keys. 0: the plan has no API."
+            },
+            "webhookEndpoints": {
+              "label": "Free: webhook endpoints",
+              "hint": "Number of endpoints. 0: the plan has no webhooks."
+            }
+          },
+          "pro": {
+            "auditsPerDay": {
+              "label": "Subscription: audits per day",
+              "hint": "0: no cap."
+            },
+            "apiKeys": {
+              "label": "Subscription: API keys",
+              "hint": "Number of active keys. 0: the plan has no API."
+            },
+            "webhookEndpoints": {
+              "label": "Subscription: webhook endpoints",
+              "hint": "Number of endpoints. 0: the plan has no webhooks."
+            }
+          }
+        },
+        "coupons": {
+          "enabled": {
+            "label": "Promo codes on",
+            "hint": "Shows the promo code field and accepts codes. Off by default; the coupons themselves are managed in the Coupons tab."
+          },
+          "reservationMinutes": {
+            "label": "Checkout hold",
+            "hint": "Minutes a code is held for a checkout in progress. From 40 to 1440 (the payment page's own window)."
+          },
+          "attemptsPerAccountPerHour": {
+            "label": "Tries per account and hour",
+            "hint": "How many codes one account may try in an hour."
+          },
+          "attemptsPerIpPerHour": {
+            "label": "Tries per address and hour",
+            "hint": "How many codes one address may try in an hour."
+          },
+          "minCodeLength": {
+            "label": "Shortest code",
+            "hint": "The fewest characters an administrator may type for a code."
+          },
+          "generatedCodeLength": {
+            "label": "Generated code length",
+            "hint": "Characters in a generated code (letters and digits without I, L, O or U)."
+          },
+          "maxPercentOff": {
+            "label": "Largest discount",
+            "hint": "The highest percentage a discount may take off. A free offer is a capped credit code, never a 100 % discount."
+          },
+          "refundRestoresUse": {
+            "label": "A full refund gives the use back",
+            "hint": "Off by default, so a refund cannot reset a single-use code."
+          }
+        },
+        "storage": {
+          "userConnectors": {
+            "label": "Cloud connections (Dropbox, Google Drive, OneDrive)",
+            "hint": "Lets people connect a cloud they already have as the home of their kept documents. Off until the app registrations are in place."
+          }
+        }
+      },
+      "history": {
+        "title": "Change log",
+        "empty": "No change yet.",
+        "who": "Who",
+        "when": "When",
+        "what": "What",
+        "before": "Before",
+        "after": "After",
+        "scope": "Scope"
+      },
+      "packs": {
+        "lead": "Each rules pack is a flow: turning it off removes it for consumers of this environment, at once.",
+        "environment": "Environment",
+        "flow": "Flow",
+        "enabled": "Enabled",
+        "manage": "Edit the flows",
+        "empty": "No flow."
+      },
+      "plans": {
+        "entitlementsTitle": "What each plan includes"
+      },
+      "sovkora": {
+        "keyTitle": "This product's API key",
+        "masked": "Key: {key}",
+        "none": "No key configured.",
+        "address": "Address: {url}",
+        "test": "Test the connection",
+        "testing": "Testing…",
+        "ok": "Connected in {ms} ms: {count} Studio(s) installed.",
+        "fail": "Connection refused ({code}).",
+        "usageTitle": "This month's usage (recorded here)",
+        "runs": "Runs started: {count}",
+        "failed": "Failed: {count}",
+        "cost": "Estimated cost: {amount}",
+        "notExposed": "Sovkora's own plan and usage figures are not exposed by its API yet: they are not shown rather than guessed.",
+        "rotate": "Rotating the key is done in Sovkora, then in the app's secret: it is not done from here."
+      },
+      "organisation": {
+        "owner": "Owner",
+        "save": "Save",
+        "saved": "Saved (version {version}).",
+        "notSeeded": "Nothing seeded yet for this kind.",
+        "kinds": {
+          "applicant_file": "Applicant files",
+          "document": "Documents"
+        },
+        "moveUp": "Move {name} up",
+        "moveDown": "Move {name} down",
+        "remove": "Remove {name}",
+        "drag": "Drag {name}",
+        "problems": "To fix before saving",
+        "tags": {
+          "presets": "Tags offered",
+          "name": "Name of tag {position}",
+          "marker": "Colour of the tag {name}",
+          "add": "New tag",
+          "addButton": "Add",
+          "duplicate": "Another tag has this name",
+          "empty": "No tag offered yet",
+          "writers": "Who can manage tags",
+          "writersHint": "The roles that create, rename, remove and assign tags.",
+          "userTags": "People can add their own tags",
+          "userTagsHint": "Beyond the tags offered here.",
+          "max": "Most tags",
+          "maxHint": "Per account and kind."
+        },
+        "status": {
+          "languages": {
+            "fr": "French",
+            "en": "English"
+          },
+          "stateLabel": "Label in {language} of state {position}",
+          "tone": "Tone of state {position}",
+          "tones": {
+            "neutral": "Neutral",
+            "accent": "Accent",
+            "success": "Success",
+            "warning": "Warning",
+            "danger": "Danger"
+          },
+          "final": "State {position} is final",
+          "finalHint": "A final state has no way out.",
+          "initial": "State {position} is the initial state",
+          "initialNotFinal": "The initial state is never final",
+          "states": "States, in the order of the column",
+          "addState": "Add a state",
+          "newState": {
+            "fr": "Nouvel état",
+            "en": "New state"
+          },
+          "moves": "Moves",
+          "movesHint": "Who may move a file from one state to another.",
+          "from": "Moves out of {name}",
+          "noWayOut": "Final: no way out",
+          "move": "From {from} to {to}: {roles}",
+          "none": "nobody",
+          "moveDetail": "Move from {from} to {to}",
+          "roles": "Roles that can make this move",
+          "confirm": "Ask for a second press",
+          "reasons": "Reasons to pick from",
+          "addReason": "Add a reason",
+          "reasonLabel": "Reason in {language}, number {position}",
+          "removeReason": "Remove reason {position}",
+          "derived": "Derived: the product computes this status; nobody moves it"
+        }
+      },
+      "prices": {
+        "lead": "The prices are data: a change applies from the day you choose (today or later), the history keeps every version, and a subscription keeps the price it was sold at. Every price is in CAD, plus taxes.",
+        "processorOff": "Payments are not configured on this installation: nothing is charged.",
+        "processorMode": "Payment processor",
+        "seed": "default price",
+        "since": "since {date}",
+        "amount": "Amount (CAD, plus taxes)",
+        "amountHint": "In dollars, e.g. 0.65. Empty: on quote (only for an entry not on sale).",
+        "availability": "Availability",
+        "availabilityHint": "Public: shown with its figure. Internal: never on a public page. In preparation: shown without a figure.",
+        "availabilities": {
+          "public": "Public",
+          "internal": "Internal",
+          "founder-limited": "Founders only",
+          "preparing": "In preparation"
+        },
+        "limits": {
+          "included": "Verifications included a month",
+          "founderCap": "Founder places",
+          "feeBps": "Fee (basis points)",
+          "feeCapCents": "Fee cap (cents)"
+        },
+        "from": "From",
+        "fromHint": "Empty or today: from now. A later day: from its start.",
+        "schedule": "Schedule the change",
+        "charged": "Charged by the processor",
+        "chargedHint": "Sales stop while it differs from the catalogue: sync the processor (test mode) below.",
+        "notFound": "Price not found at the processor.",
+        "mismatch": "Differs",
+        "match": "Equal",
+        "onQuote": "on quote",
+        "upcoming": "Scheduled",
+        "upcomingLine": "From {date}: {amount}, {availability}",
+        "historyTitle": "Price changes",
+        "units": {
+          "month": "a month",
+          "year": "a year",
+          "once": "once",
+          "document": "per document",
+          "order": "per order",
+          "pack": "per pack",
+          "hour": "per hour"
+        },
+        "entries": {
+          "document": "One document verified",
+          "agency": "Agency",
+          "firm": "Building manager",
+          "api": "Dedicated API (on quote)",
+          "fullFile": "Full applicant file",
+          "backgroundCheck": "Background checks",
+          "screening": "Screening alone"
+        },
+        "editor": {
+          "edit": "Change",
+          "plusTaxes": "plus taxes",
+          "unit": "Unit",
+          "limitsLabel": "Limits",
+          "keepsPrice": "Current subscriptions keep the price they were sold at.",
+          "cancel": "Cancel",
+          "scheduled": "Scheduled changes ({count})",
+          "history": "History",
+          "historyEmpty": "No change yet.",
+          "loading": "Loading…",
+          "historyLine": "{actor}, {at}: {before} → {after}, from {from}",
+          "scheduledLine": "from {from}",
+          "saved": "Saved."
+        },
+        "confirm": {
+          "title": "Change the price of {name}?",
+          "now": "From now: {before} → {after}. New sales use the new price at once; subscriptions already sold keep theirs.",
+          "later": "From {date}: {before} → {after}. Nothing changes before that day; subscriptions already sold keep their price.",
+          "processorTest": "The processor (test mode) gets the matching price.",
+          "processorLive": "The processor is in LIVE mode: its price is not changed from here, the owner does it.",
+          "confirm": "Yes, change it",
+          "cancel": "No, keep it",
+          "cancelled": "Cancelled, nothing was changed."
+        },
+        "sync": {
+          "title": "Processor prices",
+          "button": "Sync the processor",
+          "hint": "Creates at the processor the price of each sold entry that differs from the catalogue (test mode only). A price already sold is never edited: a new one takes its lookup key.",
+          "done": "Synced: {lines}",
+          "live": "The processor is in live mode: only the owner changes its prices.",
+          "off": "Payments are not configured here.",
+          "status": {
+            "exists": "up to date",
+            "created": "created",
+            "repriced": "new price"
+          }
+        }
+      },
+      "coupons": {
+        "title": "Coupons",
+        "lead": "Discount and credit codes for partners, promotions and demos. Our database is the source of truth: the payment page only applies the discount from our terms. A credit code always has an expiry and, usually, a daily or monthly cap.",
+        "off": "Promo codes are off: customers don't see the field. Turn them on in Plans, « Promo codes on ».",
+        "new": "New coupon",
+        "create": "Create",
+        "cancel": "Cancel",
+        "close": "Close",
+        "empty": "No coupon yet.",
+        "kind": "Kind",
+        "kinds": {
+          "discount": "Discount",
+          "credit": "Credits"
+        },
+        "code": "Code",
+        "codeHint": "Letters and digits, read without case, spaces or hyphens.",
+        "generate": "Generate",
+        "purpose": "Purpose",
+        "purposes": {
+          "promo": "Promotion",
+          "partner": "Partner",
+          "demo": "Demo",
+          "support": "Support"
+        },
+        "partner": "Partner",
+        "partnerHint": "Required for the Partner purpose.",
+        "noPartner": "None",
+        "startsAt": "Starts",
+        "endsAt": "Ends",
+        "endsAtHint": "Empty: no end date.",
+        "zone": "Days of Montréal time.",
+        "maxRedemptions": "Uses overall",
+        "maxRedemptionsHint": "Empty: no limit.",
+        "maxPerAccount": "Uses per account",
+        "newCustomersOnly": "New customers only",
+        "discountType": "Discount",
+        "types": {
+          "percent": "A percentage",
+          "amount": "A fixed amount"
+        },
+        "percent": "Percent off",
+        "percentHint": "Up to the largest discount in Plans. 100 % is never allowed.",
+        "amountOff": "Amount off",
+        "amountOffHint": "Always less than the price.",
+        "duration": "For how long",
+        "durations": {
+          "once": "This payment only",
+          "repeating": "Several months",
+          "forever": "Every month"
+        },
+        "durationMonths": "Months",
+        "minimum": "Minimum purchase",
+        "minimumHint": "Zero: no minimum.",
+        "credits": "Credits granted",
+        "creditsValidDays": "Valid for (days)",
+        "creditsValidDaysHint": "Every grant expires.",
+        "capPerDay": "Cap per day",
+        "capPerMonth": "Cap per month",
+        "capHint": "Empty: no cap of this kind.",
+        "onExhausted": "When they run out",
+        "onExhaustedHint": "Stop, or fall back to the paid plan.",
+        "exhausted": {
+          "stop": "Stop",
+          "fallback_paid": "Offer the paid plan"
+        },
+        "terms": "Terms",
+        "creditTerms": "{credits} credits, {days} days",
+        "discountTerms": {
+          "percent": "−{value} % {duration}",
+          "amount": "−{value} {duration}"
+        },
+        "window": "Window",
+        "uses": "Uses",
+        "state": "State",
+        "actions": "Actions",
+        "states": {
+          "active": "Active",
+          "paused": "Paused",
+          "archived": "Archived",
+          "notStarted": "Not started",
+          "expired": "Ended"
+        },
+        "pause": "Pause",
+        "resume": "Resume",
+        "archive": "Archive",
+        "restore": "Restore",
+        "erase": "Erase",
+        "export": "Export",
+        "revoke": "Revoke",
+        "redemptions": "Redemptions",
+        "redemptionsOf": "Redemptions of {code}",
+        "redemptionsNote": "Accounts appear by identifier only. A late payment is honoured and flagged.",
+        "noRedemptions": "No redemption yet.",
+        "redemptionStates": {
+          "reserved": "Reserved",
+          "confirmed": "Confirmed",
+          "released": "Released",
+          "revoked": "Revoked"
+        },
+        "when": "When",
+        "account": "Account",
+        "deletedAccount": "deleted",
+        "paid": "Paid",
+        "discount": "Discount",
+        "refunded": "Refunded",
+        "late": "Late",
+        "overLimit": "Over the limit",
+        "partners": "Partners",
+        "partnersLead": "The people who sell with a code. A name and an optional e-mail, seen by administrators only, used to attribute sales. Commission is not computed here.",
+        "addPartner": "Add a partner",
+        "noPartners": "No partner yet.",
+        "partnerName": "Name",
+        "partnerEmail": "E-mail (optional)",
+        "partnerStates": {
+          "active": "Active",
+          "archived": "Archived",
+          "erased": "Erased"
+        },
+        "erased": "erased",
+        "report": "Report",
+        "reportOf": "{name}: sales by code",
+        "reportNote": "Uses, discount given and revenue (paid minus refunded) per code. Never a customer. Each reading is logged.",
+        "revenue": "Revenue",
+        "creditsGranted": "Credits granted"
+      }
+    },
+    "steps": {
+      "label": "Check progress",
+      "working": "Working…",
+      "progress": "Step {step} of {total}",
+      "read": "Reading",
+      "preflight": "Pre-check",
+      "report": "Report",
+      "rules": {
+        "compliance-check": "Checking the rules",
+        "document-authenticity": "Examining the file"
+      },
+      "state": {
+        "done": "Done",
+        "current": "In progress",
+        "upcoming": "Upcoming",
+        "error": "Failed"
+      }
+    },
+    "checks": {
+      "title": "Checks",
+      "lead": "Every check, its result and its run — newest first.",
+      "tabsLabel": "Checks sections",
+      "tabs": {
+        "checks": "Checks",
+        "lots": "Batches"
+      },
+      "import": "Import a batch",
+      "empty": {
+        "title": "No check yet",
+        "text": "Drop a lease, a pay stub or an invoice: Verikora reads it against Québec's rules and the result lands here."
+      },
+      "caption": "Your checks",
+      "runCopy": "Copy run {id}",
+      "runCopied": "Copied",
+      "columns": {
+        "document": "Document",
+        "kind": "Kind",
+        "check": "Check",
+        "result": "Result",
+        "when": "When",
+        "run": "Run"
+      },
+      "filters": {
+        "label": "Filter the checks",
+        "search": "Search a document",
+        "clearSearch": "Clear the search",
+        "result": "Result",
+        "kind": "Kind",
+        "period": "Period",
+        "periods": {
+          "7d": "Last 7 days",
+          "30d": "Last 30 days",
+          "year": "This year"
+        },
+        "clear": "Clear filters",
+        "remove": "Remove {label}"
+      },
+      "resultsOne": "{count} check",
+      "resultsMany": "{count} checks",
+      "noMatch": {
+        "title": "No check matches",
+        "text": "Loosen a filter, or clear them all."
+      }
+    },
+    "reportFace": {
+      "unchecked": {
+        "UNSUPPORTED_KIND": {
+          "title": "No rules for this kind of document yet",
+          "hint": "Nothing was checked: Verikora has no rules for this kind of document yet. This is not a clean result."
+        },
+        "KIND_UNKNOWN": {
+          "title": "Could not tell what kind of document this is",
+          "hint": "Nothing was checked: pick the kind of document you are sending, then run the check again. This is not a clean result."
+        }
+      },
+      "label": "The result",
+      "attentionOne": "{count} rule of {rules} needs your attention",
+      "attentionMany": "{count} rules of {rules} need your attention",
+      "attentionNone": "No problem found on the {rules} rules checked",
+      "rulesOf": "Rules of {jurisdiction} · in force on {date}",
+      "passedOne": "{count} rule met",
+      "passedMany": "{count} rules met",
+      "notApplicableOne": "{count} rule does not apply to this document",
+      "notApplicableMany": "{count} rules do not apply to this document",
+      "unsureOne": "{count} rule could not be checked",
+      "unsureMany": "{count} rules could not be checked",
+      "technical": "Technical details (run, version, fingerprints)",
+      "whoSees": "Who can see this report",
+      "onlyYou": "You alone, unless you share it.",
+      "history": "Every run of this document, newest first.",
+      "oneRun": "One run so far.",
+      "notChecked": "Not checked yet",
+      "notCheckedText": "Start a check: the verdict comes first, then every finding with its line.",
+      "fileAndText": "The file, its text, and what Verikora read in it.",
+      "seeInFile": "See in the file",
+      "more": "Details",
+      "downloadReport": "Download the report",
+      "backToReport": "Back to the report",
+      "otherChecks": "Other checks",
+      "openRun": "Open this report",
+      "blockingOne": "of which {count} blocking",
+      "blockingMany": "of which {count} blocking",
+      "noQuote": "No passage of the document quoted",
+      "rule": "Rule {n}",
+      "rules": "Rules by finding",
+      "notes": "Notes",
+      "backToText": "Back to the text",
+      "recheck": "Check again at another date",
+      "examine": "Examine the file (authenticity)",
+      "checkLaw": "Check against the law",
+      "close": "Close"
+    },
+    "batch": {
+      "title": "Check a batch of documents",
+      "lead": "A CSV file (one row per document) and the documents it names, dropped together. Before anything starts, the preview says what will be checked, reused or refused, and what it costs.",
+      "drop": "Drop the CSV and its documents",
+      "inputLabel": "Choose the CSV and its documents",
+      "hint": "CSV + PDF, Word or text — up to 10 MB per document",
+      "template": "Download the CSV template",
+      "received": "{csv} · {count} document(s)",
+      "previewing": "Reading the batch…",
+      "previewCaption": "The batch, row by row",
+      "rowsCaption": "The batch's rows",
+      "missingColumns": "Required columns missing: {columns}.",
+      "unknownColumns": "Columns ignored: {columns}.",
+      "unnamedFiles": "Documents no row names (ignored): {files}.",
+      "summary": "{check} to check · {reuse} already checked, reused at no cost · {refused} refused",
+      "cost": {
+        "pro": "Pro: the {audits} checks are included.",
+        "covered": "This batch uses {audits} audit(s); you have {credits} credit(s).",
+        "short": "This batch needs {audits} audit(s) and you have {credits} credit(s): the rows not covered wait for your purchase."
+      },
+      "start": "Start the batch ({count})",
+      "export": "Export the results (CSV)",
+      "progressLabel": "Batch progress",
+      "progress": "{settled} of {total}",
+      "paused": "Add credits",
+      "finished": "Batch done: {done} checked, {failed} failed, {refused} refused.",
+      "fromCheck": "Several documents?",
+      "fromCheckLink": "Import a batch from a CSV",
+      "columns": {
+        "line": "Line",
+        "file": "File",
+        "check": "Check",
+        "state": "State",
+        "reason": "Reason",
+        "reference": "Reference"
+      },
+      "studios": {
+        "compliance-check": "Compliance",
+        "document-authenticity": "Authenticity"
+      },
+      "preview": {
+        "check": "To check",
+        "reuse": "Reused",
+        "refused": "Refused"
+      },
+      "states": {
+        "pending": "Waiting",
+        "reused": "Reused",
+        "running": "Running",
+        "done": "Checked",
+        "failed": "Failed",
+        "refused": "Refused"
+      },
+      "engineBusy": "Sovkora is busy with other checks: the remaining rows wait their turn and start by themselves. Nothing to do.",
+      "exportReadme": "Verikora — reports of a batch of checks.\n\nlot.csv lists every row: its state, the reason when it did not run, and its file here.\nrapports/ holds the signed PDF of each compliance check.\nsignaux/ holds the signals of each authenticity check, as Sovkora returned them.\n\nThese are informative checks, not legal advice. To verify a signed report, sign in to Verikora and open https://www.verikora.com/app/verifications/report (only the people the report's owner gave access to can).\nThe Québec rules are still to be reviewed by a lawyer.\n",
+      "exportZip": "Reports (ZIP)"
+    },
+    "notFound": {
+      "title": "This page does not exist.",
+      "text": "It may have moved, or it is not yours.",
+      "library": "Back to the library",
+      "home": "Home",
+      "console": "Back to the console"
+    },
+    "dossiers": {
+      "title": "Applicant files",
+      "lead": "The documents you asked an applicant for, as they come in, each with its checks.",
+      "request": "Ask for documents",
+      "caption": "Your applicant files, newest first",
+      "columns": {
+        "candidate": "Applicant",
+        "link": "Link",
+        "documents": "Documents",
+        "asked": "Asked on",
+        "decision": "Your decision",
+        "tags": "Tags"
+      },
+      "open": "Open the file of {name}",
+      "filter": {
+        "label": "Filter",
+        "states": {
+          "open": "Open links",
+          "used": "Documents received, to decide",
+          "closed": "Closed files",
+          "expired": "Expired links",
+          "revoked": "Revoked links",
+          "erased": "Erased files"
+        },
+        "clear": "See all",
+        "none": "No file in this state."
+      },
+      "link": {
+        "open": "Link open until {date}",
+        "used": "Documents sent on {date}",
+        "closed": "File closed on {date}",
+        "expired": "Link expired",
+        "revoked": "Link revoked",
+        "erased": "Erased at the applicant's request"
+      },
+      "documents": {
+        "none": "None of {asked} in",
+        "some": "{count} of {asked} in",
+        "all": "{count} of {asked} in"
+      },
+      "empty": {
+        "title": "No applicant file yet",
+        "text": "Ask an applicant for their documents: Verikora checks each one, and you decide."
+      },
+      "notOffered": {
+        "title": "Applicant files are for property managers",
+        "text": "Choose that role in your profile to ask for and check an applicant's documents.",
+        "action": "Change role"
+      },
+      "form": {
+        "title": "Ask for documents",
+        "lead": "The applicant gets a link to send the documents you choose, and only those. A social insurance number, a health card, a passport, a licence or bank details are never asked for.",
+        "name": "Applicant's name",
+        "email": "Applicant's e-mail",
+        "types": "Documents to ask for",
+        "submit": "Create the link",
+        "close": "Close"
+      },
+      "made": {
+        "title": "The link for {name}",
+        "text": "Valid until {date}. It is shown once: copy it and hand it to the applicant. No document travels by e-mail.",
+        "copy": "Copy the link",
+        "copied": "Copied"
+      },
+      "detail": {
+        "back": "Applicant files",
+        "asked": "Documents asked",
+        "received": "Received: {file}",
+        "notReceived": "Not received yet",
+        "kept": "Kept until your decision (the applicant agreed)",
+        "purged": "Deleted after its checks; the report stays",
+        "afterCheck": "Deleted once its checks have run",
+        "report": "Open the report",
+        "skipped": "A check could not run on this document",
+        "requestedOn": "Asked on {date}",
+        "none": "No document received yet."
+      },
+      "check": {
+        "nothing": "Nothing found on the rules checked",
+        "noSignal": "No unusual signal",
+        "running": "Running",
+        "failed": "Did not finish",
+        "attentionOne": "{count} to look at",
+        "attentionMany": "{count} to look at",
+        "signalsOne": "{count} signal",
+        "signalsMany": "{count} signals"
+      },
+      "studios": {
+        "compliance-check": "Against the law",
+        "document-authenticity": "Authenticity"
+      },
+      "views": {
+        "label": "File views",
+        "all": "All",
+        "mine": "My views",
+        "save": "Save view",
+        "saveTitle": "Save this view",
+        "name": "View name",
+        "saveHint": "The view keeps the filters of the address: the link stays the same on another device.",
+        "create": "Save",
+        "modified": "modified",
+        "delete": "Delete the view {name}",
+        "menu": "Views",
+        "empty": "No saved view.",
+        "groups": {
+          "system": "Suggested",
+          "workspace": "Shared",
+          "mine": "Mine"
+        },
+        "menuCurrent": "View: {current}",
+        "rename": "Rename",
+        "remove": "Delete",
+        "actions": "Actions for the view {label}"
+      },
+      "binder": {
+        "label": "Decisions",
+        "all": "All",
+        "tags": "Tags"
+      },
+      "filters": {
+        "bar": "Filter the files",
+        "tags": "Tag",
+        "decision": "Decision",
+        "remove": "Remove the filter {label}",
+        "clear": "Clear filters",
+        "resultsOne": "{count} file",
+        "resultsMany": "{count} files",
+        "nothing": "No file matches these filters."
+      },
+      "bulk": {
+        "label": "Actions on the selection",
+        "selectedOne": "{count} file selected",
+        "selectedMany": "{count} files selected",
+        "tag": "Tag",
+        "untag": "Remove the tag",
+        "noTags": "No tag yet: create one from a file.",
+        "clear": "Clear selection",
+        "done": "Done: {moved} decided, {skipped} left as they were.",
+        "tagged": "Tags updated: {count}.",
+        "tooMany": "At most {max} files at a time"
+      },
+      "decide": {
+        "title": "Your decision",
+        "mark": "Mark « {state} »",
+        "confirm": "Confirm « {state} »",
+        "final": "A decision is final: the file closes and its documents are erased; its reports stay.",
+        "decided": "Decision made: {state}",
+        "none": "No action possible."
+      },
+      "share": {
+        "title": "Link for the building owner",
+        "lead": "A read-only report: hashes and findings only, no name, no document. You choose how long it opens, 30 days at most.",
+        "expiry": "Opens for",
+        "days": "{count} days",
+        "create": "Create a link",
+        "creating": "Creating…",
+        "created": "Link ready. It is shown once: copy it now.",
+        "copy": "Copy the link",
+        "copied": "Link copied",
+        "linkLabel": "Link to send",
+        "none": "No link yet.",
+        "active": "Active links",
+        "views": "{count} views",
+        "viewsOne": "{count} view",
+        "expires": "until {date}",
+        "revoke": "Revoke",
+        "revoked": "Link revoked.",
+        "state": {
+          "live": "Active",
+          "expired": "Expired",
+          "revoked": "Revoked"
+        },
+        "email": {
+          "title": "Send by e-mail",
+          "address": "Owner's e-mail address",
+          "message": "A short note (optional)",
+          "language": "Language of the e-mail",
+          "hint": "The e-mail holds the link, its end date and your note: nothing from the report. The address is kept only while the link lives.",
+          "send": "Send by e-mail",
+          "sending": "Sending…",
+          "sent": "Sent to {email}.",
+          "sentTo": "Sent to {email}"
+        },
+        "loading": "Loading the links…"
+      },
+      "tagsEdit": {
+        "title": "Tags",
+        "edit": "Edit tags",
+        "none": "No tag",
+        "save": "Save",
+        "empty": "You have no tag yet.",
+        "new": "New tag",
+        "inputLabel": "Add a tag",
+        "placeholder": "Name of a tag",
+        "createLabel": "Create « {name} »",
+        "markerLabel": "Colour of the new tag",
+        "emptyLabel": "No tag of that name",
+        "count": "{count} of {max}",
+        "markers": {
+          "blue": "Blue",
+          "green": "Green",
+          "amber": "Amber",
+          "red": "Red",
+          "violet": "Violet",
+          "gray": "Grey"
+        }
+      },
+      "rentShare": {
+        "title": "Rent and income",
+        "lead": "If the applicant gave you their monthly income, type it with the monthly rent to see the share. Nothing you type here is sent or kept.",
+        "rent": "Monthly rent ($)",
+        "income": "Monthly income given ($)"
+      }
+    },
+    "states": {
+      "loading": "Loading the page…",
+      "error": {
+        "title": "This page could not be shown",
+        "text": "The server did not answer as expected. Your documents are kept; try again in a moment.",
+        "retry": "Try again"
+      }
+    },
+    "bundle": {
+      "title": "The lease and its annexes",
+      "lead": "Every finding of the lease and of each annex, by line, with the article the rule cites. A check informs: it gives no advice and no verdict.",
+      "roles": {
+        "lease": "Lease",
+        "annex": "Annex",
+        "building-rules": "Building rules"
+      },
+      "notChecked": "not checked yet",
+      "line": "line {n}",
+      "noLine": "no line",
+      "none": "No rule needs a look on the documents checked so far.",
+      "toReview": "Québec rules still to be reviewed by a lawyer: a demonstration screen, not legal advice."
+    },
+    "documentsPage": {
+      "dividers": "Bookmarks",
+      "allBookmarks": "All",
+      "bulk": {
+        "label": "Actions on the selection",
+        "selectedOne": "{count} document selected",
+        "selectedMany": "{count} documents selected",
+        "tag": "Bookmark",
+        "untag": "Remove the bookmark",
+        "noTags": "No bookmark yet: create one in Settings > Bookmarks.",
+        "tagged": "Bookmarks updated: {count}.",
+        "clear": "Clear selection",
+        "tooMany": "At most {max} documents at a time"
+      },
+      "bookmarkNamed": "Bookmark {name}",
+      "nothingWithBookmarks": "No document wears all of these bookmarks.",
+      "bookmarks": "Bookmarks",
+      "title": "All documents",
+      "lead": "All your documents, newest first, across all your collections.",
+      "caption": "All your documents, newest first",
+      "empty": "No document yet"
+    },
+    "promo": {
+      "label": "Promo code",
+      "hint": "A discount applies to your next payment. A code that gives credits is added to your account at once.",
+      "apply": "Apply",
+      "remove": "Remove",
+      "applied": "{code} applied: −{discount} {duration}",
+      "credited": "{credits} credits added, valid until {date}",
+      "duration": {
+        "once": "on this payment",
+        "repeating": "for {months} months",
+        "forever": "every month"
+      }
+    },
+    "paymentProblem": {
+      "title": "Your last payment did not go through",
+      "text": "The processor could not charge your card, so your plan is paused until it is updated. Nothing else changes: your documents and reports stay as they are.",
+      "fix": "Update my card"
+    },
+    "paymentReturn": {
+      "paidTitle": "Thank you, your payment went through",
+      "paid": {
+        "document": "Your document check is on its way to your account: the balance updates in a few seconds, once the payment processor confirms.",
+        "agency": "Your plan is being activated: it shows on your account in a few seconds, once the payment processor confirms.",
+        "firm": "Your plan is being activated: it shows on your account in a few seconds, once the payment processor confirms."
+      },
+      "receipt": "See the receipt",
+      "cancelledTitle": "Nothing was charged",
+      "cancelled": "You left the checkout before paying. You can come back to it from your account whenever you like.",
+      "close": "Close"
+    },
+    "bookmarks": {
+      "lead": "Your own coloured categories. A bookmark groups files; taking one away never deletes them.",
+      "none": "No bookmark yet.",
+      "edit": "Rename or recolour",
+      "editNamed": "Rename or recolour “{name}”",
+      "deleteNamed": "Delete “{name}”",
+      "deleteKeeps": "The bookmark is taken off its files. The files themselves are kept.",
+      "kinds": {
+        "applicant_file": "Applicant files",
+        "document": "Documents"
+      }
+    },
+    "checkFailure": {
+      "title": "This check did not finish",
+      "retry": "Try again",
+      "chooseFile": "Choose another file",
+      "retrying": "Checking again…",
+      "unreadable": {
+        "pdf": "We could not read this PDF well enough to check it. Try again, or choose another copy of the document.",
+        "scan": "This PDF is a scan or a photo: we could not read its text. Choose a version you can select text in, or try again.",
+        "office": "We could not open this document. Save it again as a PDF or a Word file and choose it again, or try again.",
+        "text": "We could not read this text file. Check that it is not empty, then try again or choose another file.",
+        "other": "We could not read this file. Choose a PDF or a Word file, or try again."
+      },
+      "refused": {
+        "pdf": "This PDF is not in a form we can check. Choose another copy of the document, or try again.",
+        "scan": "This scan is not in a form we can check. Choose a PDF you can select text in, or try again.",
+        "office": "This document is not in a form we can check. Save it as a PDF and choose it again.",
+        "text": "This text is not in a form we can check. Paste it into a document and save it as a PDF, then choose it again.",
+        "other": "This file is not in a form we can check. Choose a PDF or a Word file."
+      },
+      "interrupted": {
+        "pdf": "The check stopped before the end, through no fault of your document. Try again.",
+        "scan": "The check stopped before the end, through no fault of your document. Try again.",
+        "office": "The check stopped before the end, through no fault of your document. Try again.",
+        "text": "The check stopped before the end, through no fault of your file. Try again.",
+        "other": "The check stopped before the end, through no fault of your file. Try again."
+      }
+    }
+  }
+}

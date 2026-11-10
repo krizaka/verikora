@@ -1,14 +1,29 @@
 import { createI18n, type MessageKey as KeyOf } from "@krizaka/i18n";
 
-import en from "@/messages/en.json";
-import fr from "@/messages/fr.json";
+import consoleEn from "@/messages/console/en.json";
+import consoleFr from "@/messages/console/fr.json";
+import documentsEn from "@/messages/documents/en.json";
+import documentsFr from "@/messages/documents/fr.json";
+import legalEn from "@/messages/legal/en.json";
+import legalFr from "@/messages/legal/fr.json";
+import marketingEn from "@/messages/marketing/en.json";
+import marketingFr from "@/messages/marketing/fr.json";
+import screeningEn from "@/messages/screening/en.json";
+import screeningFr from "@/messages/screening/fr.json";
+import siteEn from "@/messages/site/en.json";
+import siteFr from "@/messages/site/fr.json";
 
 /**
- * Every user-facing string lives in messages/<locale>.json. French is the default language (Verikora is offered in Québec:
- * Charter of the French language, art. 52 and 55; verikora#366) and English stays available by choice; en.json is the
- * reference of the *shape* (fr.json type-checks against it); `krizaka-i18n check` (pnpm lint) checks the rest.
+ * Messages are split into one catalogue per domain (site, legal, marketing, screening, console, documents) so that PRs
+ * touching different areas of the product never conflict on translation files. French is the default language (Verikora
+ * is offered in Québec: Charter of the French language, art. 52 and 55; verikora#366) and English stays available by
+ * choice. `krizaka-i18n check messages/<domain>` (pnpm lint) verifies each domain independently.
  */
 export type Locale = "en" | "fr";
+
+const en = { ...siteEn, ...legalEn, ...marketingEn, ...screeningEn, ...consoleEn, ...documentsEn };
+const fr = { ...siteFr, ...legalFr, ...marketingFr, ...screeningFr, ...consoleFr, ...documentsFr };
+
 export type Messages = typeof en;
 export type MessageKey = KeyOf<Messages>;
 

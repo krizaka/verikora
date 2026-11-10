@@ -1,0 +1,149 @@
+{
+  "privacy": {
+    "title": "Confidentialité",
+    "updated": "Mis à jour le {date}",
+    "body": "Vos documents vous appartiennent : gardés seulement si vous le choisissez, vérifiés par Sovkora, jamais vendus, jamais utilisés pour entraîner un modèle. Le détail, en courtes sections.",
+    "officer": {
+      "label": "Responsable de la protection des renseignements personnels",
+      "sep": " : ",
+      "title": "Président, Technologies Krizaka Inc."
+    },
+    "sections": [
+      {
+        "h": "Qui est responsable",
+        "p": "Krizaka, une entreprise établie à Montréal, publie Verikora. La personne responsable de la protection des renseignements personnels (Loi 25) est nommée en haut de cette page, avec son adresse directe."
+      },
+      {
+        "h": "Ce que nous recueillons et pourquoi",
+        "p": "Votre adresse courriel et l’empreinte de votre mot de passe (pour faire fonctionner votre compte), la date à laquelle vous avez accepté les conditions et cet avis, les documents que vous téléversez et les résultats des vérifications (pour vous rendre le service), et les renseignements de facturation traités par Stripe. Nous ne vendons pas vos renseignements et n’utilisons pas vos documents pour entraîner un modèle."
+      },
+      {
+        "h": "Où ils sont conservés",
+        "p": "Votre compte et vos vérifications sont dans une base de données à Toronto, au Canada, hors Québec. Les documents sont envoyés à Sovkora, le moteur d’analyse de Krizaka, par HTTPS pour être vérifiés. Un document gardé est stocké là où son panneau d’information le dit : aujourd’hui, à New York (États-Unis)."
+      },
+      {
+        "h": "Qui les traite",
+        "p": "Sovkora, le moteur d’analyse de Krizaka, lit un document quand vous demandez une vérification, par HTTPS. Stripe traite le paiement. Notre fournisseur de base de données héberge votre compte à Toronto."
+      },
+      {
+        "h": "Combien de temps nous les gardons",
+        "p": "Un document est gardé jusqu’à ce que vous le supprimiez, et un document supprimé emporte son fichier, son texte et ses résultats. Votre compte et vos vérifications sont gardés jusqu’à la fermeture du compte. Les factures sont conservées comme la loi l’exige."
+      },
+      {
+        "h": "Vos droits",
+        "p": "Vous pouvez accéder à vos renseignements, les corriger ou les supprimer, retirer votre consentement et récupérer vos données en écrivant au responsable. Supprimer un document supprime son fichier, son texte et ses résultats. Fermer votre compte supprime vos documents. Nous conservons les factures comme la loi l’exige."
+      },
+      {
+        "h": "Incidents",
+        "p": "Si un incident de confidentialité présente un risque de préjudice sérieux, nous avisons la Commission d’accès à l’information et les personnes concernées, comme la loi l’exige."
+      },
+      {
+        "h": "Nous joindre",
+        "p": "Pour poser une question, exercer vos droits ou faire retirer vos données, écrivez par le formulaire de contact de krizaka.com. La personne responsable de la protection des renseignements personnels vous répond."
+      }
+    ]
+  },
+  "contact": {
+    "title": "Contact",
+    "lead": "Une question sur Verikora, ou une demande d’accès ? Écrivez-nous.",
+    "supportLabel": "Soutien",
+    "supportText": "Pour toute question, ou pour demander un accès pendant que les inscriptions sont fermées, utilisez le formulaire de contact de Krizaka : il sait que votre message concerne Verikora.",
+    "supportCta": "Ouvrir le formulaire de soutien",
+    "privacyText": "Pour vos renseignements personnels, voyez la page Confidentialité."
+  },
+  "terms": {
+    "title": "Conditions d’utilisation",
+    "status": "Version rédigée de bonne foi à partir de la loi, en attente de relecture par l’avocat avant l’ouverture publique de Verikora ; la politique de remboursement d’un audit à l’unité n’est pas définitive. En cas de doute, le français fait foi.",
+    "sections": [
+      {
+        "h": "Ce qu’est Verikora",
+        "p": "Verikora compare un document que vous lui remettez (un bail, une facture, un contrat de services) à des règles publiées et vous dit, point par point, ce qu’il a trouvé, en citant votre document. C’est une vérification informative. Ce n’est pas une opinion juridique et cela ne remplace pas un avocat : seuls les membres du Barreau du Québec peuvent donner un avis juridique au Québec. Un résultat n’est jamais une garantie qu’un document est légal ou valide."
+      },
+      {
+        "h": "Votre compte",
+        "p": "Vous devez fournir une vraie adresse courriel et la confirmer. Vous êtes responsable de votre mot de passe. Un audit gratuit est inclus par compte; créer plusieurs comptes pour en obtenir davantage n’est pas permis et les comptes en trop peuvent être fermés."
+      },
+      {
+        "h": "Prix et taxes",
+        "p": "Après l’audit gratuit, un audit coûte le prix affiché au paiement, en dollars canadiens, ou vous vous abonnez au forfait Pro. La taxe sur les produits et services (TPS) et la taxe de vente du Québec (TVQ) sont ajoutées au paiement et figurent sur votre facture avec les numéros d’inscription de Krizaka. Le paiement est traité par Stripe; Verikora ne voit jamais votre numéro de carte."
+      },
+      {
+        "h": "Remboursements et annulation",
+        "p": "Politique de remboursement (ébauche). Vous pouvez annuler le forfait Pro en tout temps depuis le portail client; il se termine alors à la fin de la période déjà payée. Les modalités de remboursement d’un audit à l’unité ne sont pas encore rédigées."
+      },
+      {
+        "h": "Vos documents",
+        "p": "Vos documents sont conservés dans votre compte seulement et sont envoyés à Sovkora, le moteur d’analyse de Krizaka, pour être vérifiés. Voyez l’avis de confidentialité pour la conservation, vos droits et la façon de joindre notre responsable."
+      },
+      {
+        "h": "Propriété intellectuelle et droit d’utilisation",
+        "p": "Verikora, ses logiciels, ses ensembles de règles de vérification, la mise en page de ses rapports, ses noms, ses oiseaux et ses marques appartiennent à Technologies Krizaka Inc. ou à ses concédants ; ces conditions ne vous cèdent aucun de ces droits (Loi sur le droit d’auteur, L.R.C. (1985), c. C-42). Pour la durée de votre abonnement seulement, vous recevez un droit personnel, non exclusif, non cessible et non sous-licenciable d’utiliser le service hébergé ; l’audit gratuit et les audits à l’unité vous donnent le même droit pour le résultat que vous obtenez. Vos documents restent les vôtres : vous nous autorisez seulement à les traiter pour fournir la vérification. Le code source de Verikora est publié sous sa propre licence, indiquée dans son dépôt : ces conditions régissent le service hébergé, cette licence régit le code, et rien ici ne retire ce que la licence vous permet."
+      },
+      {
+        "h": "Usages interdits",
+        "p": "Sans entente écrite avec Krizaka, vous ne pouvez pas : revendre, louer, sous-licencier ou offrir le service hébergé ou ses rapports à des tiers comme un service, ni le présenter sous une autre marque (marque blanche) ; l’utiliser pour construire ou améliorer un service concurrent ; en extraire de façon automatisée le contenu ou les résultats ; contourner les limites d’un compte, l’audit gratuit, la facturation ou les mesures de sécurité ; accéder aux données d’un autre compte ; ni décompiler ou désassembler les parties du service hébergé qui ne sont pas publiées, sauf dans la mesure où la loi l’autorise malgré cette clause. Une violation peut entraîner la suspension de l’accès, après un avis écrit lorsque la situation le permet."
+      },
+      {
+        "h": "Noms et marques",
+        "p": "Les noms et les logos de Verikora et de Krizaka, et leurs oiseaux, sont des marques de Technologies Krizaka Inc. (Loi sur les marques de commerce, L.R.C. (1985), c. T-13). Ces conditions, comme la licence du code, n’accordent aucun droit sur ces marques ; leur usage est encadré par la politique publiée à https://github.com/krizaka/.github/blob/main/TRADEMARKS.md."
+      },
+      {
+        "h": "Limitation de responsabilité",
+        "p": "Nous répondons de nos fautes. Verikora fournit une vérification informative : nous ne sommes pas responsables d’une décision que vous prenez ou ne prenez pas à partir d’un résultat (signer, refuser ou modifier un bail, retenir ou refuser un locataire), d’un document inexact ou incomplet que vous nous remettez, ni d’une interruption du service qui ne tient pas à notre faute. Sauf faute intentionnelle ou lourde, notre responsabilité totale envers vous pour un même fait est limitée aux sommes que vous avez payées à Verikora pendant les 12 mois précédant le fait, et nous ne répondons pas des dommages indirects (perte de profit, perte d’occasion). Aucune de ces limites ne s’applique à une faute intentionnelle ou lourde, ni à un préjudice corporel ou moral (art. 1474 C.c.Q.), ni à ce qu’un consommateur ne peut pas écarter (art. 10 de la Loi sur la protection du consommateur). Elles s’appliquent dans la mesure permise par la loi, notamment les articles 1435 à 1437 C.c.Q. sur les clauses d’un contrat d’adhésion."
+      },
+      {
+        "h": "Droit applicable et tribunaux",
+        "p": "Ces conditions sont régies par les lois du Québec et les lois fédérales qui s’y appliquent. Sous réserve de ce qui suit, les tribunaux du district judiciaire de Montréal sont seuls compétents. Un consommateur peut toujours poursuivre dans le district où il est domicilié et ne peut y renoncer d’avance (art. 3149 C.c.Q. ; art. 33 du Code de procédure civile)."
+      },
+      {
+        "h": "Langue",
+        "p": "Ces conditions sont rédigées en français, qui est la version de référence, comme le veut la Charte de la langue française (art. 55). La version anglaise est une traduction offerte par courtoisie ; en cas de différence, le français l’emporte."
+      }
+    ]
+  },
+  "download": {
+    "title": "Télécharger",
+    "lead": "Verikora sur votre téléphone et votre Mac. Vos documents restent sur votre appareil ; seul ce qu'une vérification demande est envoyé, puis effacé.",
+    "soon": "Bientôt",
+    "get": "Télécharger",
+    "platforms": {
+      "ios": {
+        "name": "iPhone et iPad",
+        "body": "Scannez ou choisissez un document, vérifiez-le, partagez le rapport signé. D'abord en test sur TestFlight."
+      },
+      "android": {
+        "name": "Android",
+        "body": "Les mêmes vérifications sur votre téléphone Android, installées depuis un fichier de version pendant que la fiche du magasin se prépare."
+      },
+      "mac": {
+        "name": "Mac",
+        "body": "Gardez une bibliothèque dans un dossier de votre Mac, glissez-y des documents depuis le Finder. Vos documents ne quittent jamais le dossier."
+      }
+    },
+    "videos": {
+      "title": "Voyez-le fonctionner",
+      "lead": "De courts enregistrements faits par nos tests automatiques, sur un personnage de démonstration fictif et des données de démonstration, dans la version en développement. Ils sont refaits à chaque changement : ils montrent l'application telle qu'elle est aujourd'hui.",
+      "play": "Lire",
+      "recorded": "Enregistré le {date}",
+      "seconds": "{seconds} s, sans son",
+      "items": {
+        "web-binder": {
+          "name": "Sur le web : le classeur",
+          "body": "Connexion, puis le classeur : vos collections et les vérifications à regarder, puis une collection et ses documents."
+        },
+        "web-report": {
+          "name": "Sur le web : le rapport",
+          "body": "Un document de la bibliothèque et son rapport : chaque constat cite la ligne sur laquelle il repose."
+        },
+        "android-documents": {
+          "name": "Sur Android : l’application",
+          "body": "Vos collections et leurs documents, puis les vérifications et leurs lots, sur le téléphone."
+        },
+        "mac-library": {
+          "name": "Sur le Mac : la bibliothèque",
+          "body": "Votre bibliothèque dans un dossier du Mac, et les documents qu’elle contient."
+        }
+      }
+    }
+  }
+}

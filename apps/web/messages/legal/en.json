@@ -1,0 +1,149 @@
+{
+  "privacy": {
+    "title": "Privacy",
+    "updated": "Updated {date}",
+    "body": "Your documents are yours: kept only if you choose, checked by Sovkora, never sold, never used to train a model. The details, in short sections.",
+    "officer": {
+      "label": "Privacy officer",
+      "sep": ": ",
+      "title": "President, Technologies Krizaka Inc."
+    },
+    "sections": [
+      {
+        "h": "Who is responsible",
+        "p": "Krizaka, a company based in Montréal, publishes Verikora. The person in charge of the protection of personal information (Loi 25) is named at the top of this page, with a direct address."
+      },
+      {
+        "h": "What we collect and why",
+        "p": "Your e-mail address and a password hash (to run your account), the date you accepted the terms and this notice, the documents you upload and the results of the checks (to give you the service), and billing information handled by Stripe. We do not sell your information and we do not use your documents to train a model."
+      },
+      {
+        "h": "Where it is kept",
+        "p": "Your account and your checks are in a database in Toronto, Canada, outside Québec. Documents are sent to Sovkora, Krizaka's analysis engine, over HTTPS to be checked. A kept document is stored where its information panel says: today, in New York (United States)."
+      },
+      {
+        "h": "Who processes it",
+        "p": "Sovkora, Krizaka's analysis engine, reads a document when you ask for a check, over HTTPS. Stripe handles payment. Our database provider hosts your account in Toronto."
+      },
+      {
+        "h": "How long we keep it",
+        "p": "A document is kept until you delete it, and a deleted document takes its file, its text and its results with it. Your account and checks are kept until you close the account. Invoices are kept as the law requires."
+      },
+      {
+        "h": "Your rights",
+        "p": "You can access, correct or delete your information, withdraw your consent and download your data by writing to the privacy officer. Deleting a document deletes its file, its text and its results. Closing your account deletes your documents. We keep invoices as the law requires."
+      },
+      {
+        "h": "Incidents",
+        "p": "If a confidentiality incident presents a risk of serious harm, we notify the Commission d'accès à l'information and the people concerned, as the law requires."
+      },
+      {
+        "h": "Contact",
+        "p": "To ask a question, use your rights or have your data removed, write through the contact form of krizaka.com. The person in charge of the protection of personal information answers."
+      }
+    ]
+  },
+  "contact": {
+    "title": "Contact",
+    "lead": "A question about Verikora, or an access request? Write to us.",
+    "supportLabel": "Support",
+    "supportText": "For any question, or to ask for access while sign-up is closed, use Krizaka's contact form: it knows your message is about Verikora.",
+    "supportCta": "Open the support form",
+    "privacyText": "For your personal information, see the Privacy page."
+  },
+  "terms": {
+    "title": "Terms of use",
+    "status": "Written in good faith from the law, awaiting review by the lawyer before Verikora opens to the public; the refund policy for a single audit is not final. If in doubt, French prevails.",
+    "sections": [
+      {
+        "h": "What Verikora is",
+        "p": "Verikora compares a document you give it (a lease, an invoice, a service contract) with published rules and tells you, point by point, what it found, quoting your document. It is an informative check. It is not a legal opinion and it does not replace a lawyer: only a member of the Barreau du Québec can give legal advice in Québec. A result is never a guarantee that a document is lawful or valid."
+      },
+      {
+        "h": "Your account",
+        "p": "You must give a real e-mail address and confirm it. You are responsible for your password. One free audit is included per account; creating several accounts to get more is not allowed and the extra accounts may be closed."
+      },
+      {
+        "h": "Prices and taxes",
+        "p": "After the free audit, an audit costs the price shown at checkout in Canadian dollars, or you subscribe to the Pro plan. Goods and services tax (GST) and Québec sales tax (QST) are added at checkout and shown on your invoice with Krizaka's registration numbers. Payment is handled by Stripe; Verikora never sees your card number."
+      },
+      {
+        "h": "Refunds and cancellation",
+        "p": "Refund policy (draft). You can cancel the Pro plan at any time from the customer portal; the plan then ends at the end of the period already paid. The refund terms of a single audit are not written yet."
+      },
+      {
+        "h": "Your documents",
+        "p": "Your documents are kept in your account only and are sent to Sovkora, Krizaka's analysis engine, to be checked. See the privacy notice for retention, your rights and how to reach our privacy officer."
+      },
+      {
+        "h": "Intellectual property and your right to use the service",
+        "p": "Verikora, its software, its sets of verification rules, the layout of its reports, its names, its birds and its marks belong to Technologies Krizaka Inc. or its licensors; these terms assign you none of those rights (Copyright Act, R.S.C. 1985, c. C-42). For the length of your subscription only, you receive a personal, non-exclusive, non-transferable, non-sublicensable right to use the hosted service; the free audit and single audits give you the same right over the result you obtain. Your documents stay yours: you only authorise us to process them to provide the check. Verikora's source code is published under its own licence, stated in its repository: these terms govern the hosted service, that licence governs the code, and nothing here removes what the licence allows you."
+      },
+      {
+        "h": "Prohibited uses",
+        "p": "Without a written agreement with Krizaka, you may not: resell, rent, sublicense or offer the hosted service or its reports to third parties as a service, or present it under another brand (white label); use it to build or improve a competing service; extract its content or results by automated means; circumvent an account's limits, the free audit, the billing or the security measures; access another account's data; or decompile or disassemble the parts of the hosted service that are not published, except to the extent the law allows despite this clause. A breach may lead to suspended access, after written notice where the situation allows."
+      },
+      {
+        "h": "Names and marks",
+        "p": "The names and logos of Verikora and Krizaka, and their birds, are marks of Technologies Krizaka Inc. (Trademarks Act, R.S.C. 1985, c. T-13). These terms, like the code licence, grant no right to those marks; their use is governed by the policy published at https://github.com/krizaka/.github/blob/main/TRADEMARKS.md."
+      },
+      {
+        "h": "Limitation of liability",
+        "p": "We answer for our faults. Verikora provides an informative check: we are not responsible for a decision you make or do not make from a result (signing, refusing or amending a lease, accepting or refusing a tenant), for an inaccurate or incomplete document you give us, or for an interruption of the service that is not our fault. Except for intentional or gross fault, our total liability to you for a single event is limited to the amounts you paid Verikora in the 12 months before the event, and we are not liable for indirect damage (loss of profit, loss of opportunity). None of these limits applies to intentional or gross fault, or to bodily or moral injury (art. 1474 C.c.Q.), or to what a consumer cannot waive (art. 10 of the Consumer Protection Act). They apply to the extent the law allows, notably arts. 1435 to 1437 C.c.Q. on the clauses of a contract of adhesion."
+      },
+      {
+        "h": "Governing law and courts",
+        "p": "These terms are governed by the laws of Québec and the federal laws that apply there. Subject to what follows, the courts of the judicial district of Montréal alone have jurisdiction. A consumer may always sue in the district where they live and cannot waive that right in advance (art. 3149 C.c.Q.; art. 33 of the Code of Civil Procedure)."
+      },
+      {
+        "h": "Language",
+        "p": "These terms are written in French, which is the reference version, as the Charter of the French language requires (art. 55). The English version is a courtesy translation; where they differ, French prevails."
+      }
+    ]
+  },
+  "download": {
+    "title": "Download",
+    "lead": "Verikora on your phone and your Mac. Your documents stay on your device; only what a check needs is sent, then erased.",
+    "soon": "Coming soon",
+    "get": "Download",
+    "platforms": {
+      "ios": {
+        "name": "iPhone and iPad",
+        "body": "Scan or pick a document, check it, share the signed report. Testing on TestFlight first."
+      },
+      "android": {
+        "name": "Android",
+        "body": "The same checks on your Android phone, installed from a release file while the store listing is prepared."
+      },
+      "mac": {
+        "name": "Mac",
+        "body": "Keep a library in a folder on your Mac, drag documents in from Finder. Your documents never leave the folder."
+      }
+    },
+    "videos": {
+      "title": "See it work",
+      "lead": "Short recordings made by our automated tests, on a fictitious demo persona and demo data, in the development build. They are re-recorded on every change, so they show the app as it is today.",
+      "play": "Play",
+      "recorded": "Recorded {date}",
+      "seconds": "{seconds} s, no sound",
+      "items": {
+        "web-binder": {
+          "name": "On the web: the binder",
+          "body": "Sign in, then the binder: your collections and the checks to look at, then a collection and its documents."
+        },
+        "web-report": {
+          "name": "On the web: the report",
+          "body": "A document of the library and its report: every finding cites the line it rests on."
+        },
+        "android-documents": {
+          "name": "On Android: the app",
+          "body": "Your collections and the documents in them, then the checks and their batches, on the phone."
+        },
+        "mac-library": {
+          "name": "On the Mac: the library",
+          "body": "Your library in a folder on the Mac, and the documents in it."
+        }
+      }
+    }
+  }
+}

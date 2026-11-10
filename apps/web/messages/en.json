@@ -1,178 +1,4 @@
 {
-  "meta": {
-    "siteName": "Verikora",
-    "titleTemplate": "{title} · Verikora",
-    "description": "For property managers and landlords in Québec: Verikora reads the lease against the Civil Code of Québec, examines the pay stub as a file, and shows the exact line behind every finding."
-  },
-  "chrome": {
-    "brandHome": "Verikora, home",
-    "navLabel": "Verikora",
-    "nav": {
-      "what": "What it does",
-      "proof": "A real run",
-      "privacy": "Privacy",
-      "docs": "Docs",
-      "pricing": "Pricing"
-    },
-    "signIn": "Sign in",
-    "themeToggle": "Theme",
-    "languageLabel": "Language",
-    "footerLabel": "Site footer",
-    "sourceCode": "Source code",
-    "contact": "Contact",
-    "support": "Support",
-    "legal": "Privacy",
-    "preferences": "Preferences",
-    "menu": {
-      "label": "Menu"
-    },
-    "terms": "Terms",
-    "download": "Download",
-    "openApp": "Open my documents",
-    "myDocuments": "My documents",
-    "tryIt": "Try Verikora",
-    "account": "Account",
-    "settings": "Settings",
-    "signOut": "Sign out",
-    "docs": "Documentation"
-  },
-  "landing": {
-    "title": "Read before you sign.",
-    "lead": "For property managers and landlords who screen applicants in Québec: drop the lease and the applicant's papers. Verikora verifies the documents and screens the file: it reads them against extraction matrices and technical templates, and shows you the exact line behind every finding.",
-    "status": {
-      "label": "Status",
-      "development": "In development: sign-up is closed while we test it on real Québec leases.",
-      "preview": "Dev preview: sign-up is closed, access by invitation."
-    },
-    "hero": {
-      "before": "The lease",
-      "after": "The finding",
-      "leaseCaption": "One clause of the lease, lit",
-      "findingCaption": "What Verikora returns, with its source"
-    },
-    "signIn": "Sign in",
-    "openApp": "Open my documents",
-    "what": {
-      "title": "What it does",
-      "lead": "Three things, with nothing hidden behind them.",
-      "who": "For property managers and landlords who screen applicants in Québec: a lease and a pay stub per file, several files a month. Tenants are welcome too: their first check is free. The registry checks (SOQUIJ, TAL, plumitif) are in preparation.",
-      "trust": "By default, your account and your checks are kept in a database in Toronto, Canada, and seen by your account alone; your files can go to your own storage instead, when you choose it. Nothing is sold, shared or used to train a model.",
-      "privacy": "Read the privacy notice",
-      "items": {
-        "line": {
-          "title": "The exact line behind every finding",
-          "text": "Each finding names the rule, quotes the article of law and lights the sentence of the lease it rests on."
-        },
-        "file": {
-          "title": "The PDF examined as a file",
-          "text": "Producer, dates, successive saves: three levels (observed, unusual, inconsistent), never a « fake » stamp."
-        },
-        "find": {
-          "title": "Find everything in a second",
-          "text": "One word, and every document and every finding comes back, the passage in bold."
-        }
-      }
-    },
-    "proof": {
-      "title": "One real check",
-      "lead": "A sample lease, checked in development and recorded as it came back. The rule, the line, the article of law, the run id and the date are the engine's answer, not typed by hand.",
-      "figures": "{rules} rules checked, {found} findings on this sample lease.",
-      "runLabel": "Run id",
-      "dateLabel": "Recorded",
-      "rulesetLabel": "Québec rules",
-      "powered": "Powered by Sovkora.",
-      "owlLabel": "What the owl promises"
-    },
-    "who": {
-      "title": "For whom"
-    },
-    "closing": {
-      "title": "One file, one answer.",
-      "body": "Sign in to check the files of your month. Visible to your account only.",
-      "bodyIn": "The files of your month are in your library, checked and seen by your account alone."
-    },
-    "visual": {
-      "caption": "A real check, recorded as it came back"
-    },
-    "showcase": {
-      "title": "The app, as it is",
-      "lead": "Three screens of Verikora, drawn with its own components on fictitious data. Nothing here is a screenshot.",
-      "demo": "Fictitious data",
-      "findings": {
-        "title": "Every finding quotes its line",
-        "text": "The rule, the sentence of the lease it rests on, and the article of law, in the order to read them.",
-        "summary": "The report of a check: the verdict, then each finding with the quoted passage of the lease and its article."
-      },
-      "screening": {
-        "title": "A screening the tenant agrees to",
-        "text": "The applicant sees the result first; a registry check that is not ready says so instead of guessing.",
-        "summary": "A screening result with the checks asked and, for each, its outcome: nothing to report, or not available yet.",
-        "title2": "Result",
-        "items": {
-          "payment-history": "Payment history",
-          "credit": "Credit report",
-          "registry": "Court registry"
-        }
-      },
-      "owner": {
-        "title": "A report the owner can open",
-        "text": "A read-only page by link, with an expiry: the file's fingerprint, the findings and the run that produced them.",
-        "summary": "The owner's page: the document fingerprint, the findings with their articles, and the run id."
-      }
-    }
-  },
-  "run": {
-    "verdicts": {
-      "PASS": "Requirement met",
-      "FAIL": "Requirement not met",
-      "INSUFFICIENT_EVIDENCE": "Insufficient evidence",
-      "NOT_APPLICABLE": "Does not apply"
-    }
-  },
-  "privacy": {
-    "title": "Privacy",
-    "updated": "Updated {date}",
-    "body": "Your documents are yours: kept only if you choose, checked by Sovkora, never sold, never used to train a model. The details, in short sections.",
-    "officer": {
-      "label": "Privacy officer",
-      "sep": ": ",
-      "title": "President, Technologies Krizaka Inc."
-    },
-    "sections": [
-      {
-        "h": "Who is responsible",
-        "p": "Krizaka, a company based in Montréal, publishes Verikora. The person in charge of the protection of personal information (Loi 25) is named at the top of this page, with a direct address."
-      },
-      {
-        "h": "What we collect and why",
-        "p": "Your e-mail address and a password hash (to run your account), the date you accepted the terms and this notice, the documents you upload and the results of the checks (to give you the service), and billing information handled by Stripe. We do not sell your information and we do not use your documents to train a model."
-      },
-      {
-        "h": "Where it is kept",
-        "p": "Your account and your checks are in a database in Toronto, Canada, outside Québec. Documents are sent to Sovkora, Krizaka's analysis engine, over HTTPS to be checked. A kept document is stored where its information panel says: today, in New York (United States)."
-      },
-      {
-        "h": "Who processes it",
-        "p": "Sovkora, Krizaka's analysis engine, reads a document when you ask for a check, over HTTPS. Stripe handles payment. Our database provider hosts your account in Toronto."
-      },
-      {
-        "h": "How long we keep it",
-        "p": "A document is kept until you delete it, and a deleted document takes its file, its text and its results with it. Your account and checks are kept until you close the account. Invoices are kept as the law requires."
-      },
-      {
-        "h": "Your rights",
-        "p": "You can access, correct or delete your information, withdraw your consent and download your data by writing to the privacy officer. Deleting a document deletes its file, its text and its results. Closing your account deletes your documents. We keep invoices as the law requires."
-      },
-      {
-        "h": "Incidents",
-        "p": "If a confidentiality incident presents a risk of serious harm, we notify the Commission d'accès à l'information and the people concerned, as the law requires."
-      },
-      {
-        "h": "Contact",
-        "p": "To ask a question, use your rights or have your data removed, write through the contact form of krizaka.com. The person in charge of the protection of personal information answers."
-      }
-    ]
-  },
   "console": {
     "meta": {
       "signIn": "Sign in",
@@ -3464,118 +3290,500 @@
       }
     }
   },
-  "report": {
-    "title": "Audit report — {name}",
-    "eyebrow": "Verikora · compliance audit report",
-    "disclaimer": "Informative check, not legal advice. Verikora verifies a document and screens a file with configurable extraction matrices and technical templates, tools validated by the client's counsel; it is not a legal opinion, and only a member of the Barreau du Québec can give legal advice. A result is never a guarantee of compliance.",
-    "summary": "{failures} blocking failure(s) out of {rules} rules checked.",
-    "toReview": "Québec rules still to be reviewed by a lawyer: a demonstration report, not legal advice.",
-    "documentHeading": "The document",
-    "checkHeading": "The check",
-    "file": "File",
-    "size": "Size",
-    "documentSha": "Document SHA-256",
-    "engine": "Analysis engine",
-    "runId": "Sovkora run",
-    "jurisdiction": "Jurisdiction",
-    "asOf": "Rules in force on",
-    "ruleset": "Rules version",
-    "model": "Model",
-    "modelValue": "Chosen by the Studio, not reported by the run: the Studio and its version above are the trace.",
-    "started": "Check started",
-    "finished": "Check finished",
-    "findingsHeading": "Findings ({count})",
-    "rule": "Rule",
-    "article": "Article cited",
-    "passage": "Passage",
-    "noPassage": "No passage: the document says nothing on this point.",
+  "contractSeal": {
+    "eyebrow": "Verikora — seal of a contract",
+    "partner": "Partner",
+    "contractId": "Contract",
+    "documentType": "Document type",
+    "ruleset": "Framework named by the partner",
+    "parties": "Parties",
+    "partyRole": "Role",
+    "partyName": "Name",
+    "partyUser": "Account",
+    "partyAttestation": "Partner's attestation",
+    "partySignedAt": "Signed on",
+    "payloadHeading": "Content sealed",
+    "payloadSha": "SHA-256 of the content",
+    "sealedAt": "Sealed on",
+    "zone": "Data zone",
+    "guaranteeHeading": "What this seal says",
+    "guarantees": "This file is sealed with Verikora's key (Ed25519, held by Krizaka): it attests that this content, these parties and these dates existed in this form at the time of sealing and have not been changed since.",
+    "notGuaranteed": "It does not verify anyone's identity, the age of anyone, the validity of the contract in law or the partner's statements: Verikora checks documents, it does not decide. Informative, not legal advice.",
+    "verify": "To check a copy, take its SHA-256 and open {url} followed by that value: the answer says whether Verikora sealed it and when, and shows no personal information."
+  },
+  "ownerReport": {
+    "title": "Verification report",
+    "lead": "What was examined on an applicant's file, for the building owner. Hashes only: no document, no name, no quoted passage.",
+    "reference": "File reference {ref}",
+    "issued": "Issued on {date}",
+    "notice": "Informative verification, not legal advice. A person decides; this report decides nothing and ranks no one.",
+    "documents": "Documents examined",
+    "document": "Document {n}",
+    "type": "Type",
+    "typeUnknown": "Not specified",
+    "sha": "SHA-256 of the document",
+    "pages": "Pages",
+    "signals": "Signals observed",
+    "noSignals": "No signal was observed on this document.",
+    "findings": "Rules checked",
+    "noFindings": "No rule was checked on this document.",
+    "notExamined": "Not examined",
+    "runs": "Sovkora runs",
+    "run": "{studio}, run {runId}, version {version}",
+    "versionNone": "unspecified",
+    "ruleset": "Ruleset {id} version {version} ({jurisdiction})",
+    "reviewStatus": "Ruleset review status: {status}. It is to be read by a lawyer before it is relied upon.",
+    "limits": "What this report does not show: the documents themselves, the person's name or contact, any grade or ranking. The signals are observations about a file, never a judgement of a person.",
+    "download": "Download the signed PDF",
+    "expires": "This link is valid until {date}.",
+    "guarantees": "This PDF is signed with Verikora's key (Ed25519, held by Krizaka). The signature covers every item of this report (documents, signals, rules checked, runs, versions), the link's expiry and the full text of the pages. If a single character changes, verification fails.",
+    "notGuaranteed": "It does not prove that the signals or findings are right, nor who holds the file: it shows no name, contact, file name or quoted passage. Informative, not legal advice; a person decides.",
+    "signatureNote": "The attestation (payload, text fingerprint and signature) is embedded in the PDF. Any change to the text of the earlier pages makes verification fail.",
+    "footer": "Verikora, a Krizaka product — analysis by Sovkora.",
+    "verdict": {
+      "PASS": "No issue reported",
+      "FAIL": "Issue reported",
+      "INSUFFICIENT_EVIDENCE": "Not enough evidence",
+      "NOT_APPLICABLE": "Does not apply"
+    },
+    "language": "Language",
+    "languageName": {
+      "en": "English",
+      "fr": "Français"
+    },
+    "languageNote": "The rules are written in French; the English names come with the ruleset. Article references are given as cited."
+  },
+  "sectionG": {
+    "previous-blank": "Section G of the lease is blank: the lowest rent paid in the twelve months before the lease is not stated (C.c.Q., art. 1896).",
+    "previous-altered": "Section G of the lease looks altered: check the figure against the landlord's notice (C.c.Q., art. 1896).",
+    "over-rate": "The new rent is {excess} a month above the highest rent the TAL's {year} rate gives from the stated previous rent ({max}). Source: {source}.",
+    "within-rate": "The new rent is within the highest rent the TAL's {year} rate gives from the stated previous rent ({max}). Source: {source}.",
+    "not-above-previous": "The new rent is not above the previous rent stated in Section G.",
+    "no-rate": "No claim: the TAL's rate for this year is not entered, or the figures are not usable, so the increase is not compared.",
+    "recourse": "Recourse: the tenant may ask the Tribunal administratif du logement to fix the rent (C.c.Q., art. 1950).",
+    "disclaimer": "Information about the figures and dates of the lease, not legal advice and no judgement on the landlord. Check the article and the TAL's page, or ask the TAL: it tells you the form and any fee, and how days and months are counted. Verikora files nothing."
+  },
+  "paymentClauses": {
+    "advance-over-one-month": "The lease asks for more than one month of rent in advance. A landlord may require only the first term, within one month (C.c.Q., art. 1904).",
+    "deposit": "The lease asks for a sum besides the rent (deposit, key money or guarantee). A landlord may not require one (C.c.Q., art. 1904).",
+    "postdated-cheques": "The lease requires postdated cheques. A landlord may not require them (C.c.Q., art. 1904).",
+    "ok": "The payment terms read in the lease stay within what art. 1904 allows (C.c.Q., art. 1904).",
+    "disclaimer": "Information about the terms of the lease, not legal advice and no judgement on the landlord. Check the article, or ask the TAL."
+  },
+  "sectionGDeadline": {
+    "ten-days": "The landlord gave the notice: the request to the TAL is made within 10 days of the day the lease was concluded.",
+    "two-months-from-start": "No notice was given: the request to the TAL is made within two months of the start of the lease.",
+    "two-months-from-knowledge": "The notice held a false statement: the request to the TAL is made within two months of learning of it.",
+    "open": "By these dates, the last day to ask is {lastDay} ({days} days left). Source: {source}.",
+    "last-day": "By these dates, today ({lastDay}) is the last day to ask. Source: {source}.",
+    "closed": "By these dates, the last day to ask was {lastDay}. Source: {source}.",
+    "no-claim": "No claim: a date is missing or unreadable, so no deadline is given."
+  },
+  "sectionGRequest": {
+    "title": "Facts to take to the TAL:",
+    "rentNew": "Rent of the new lease: {cents}.",
+    "rentPrevious": "Lowest rent in the twelve months before, as written in Section G: {cents}.",
+    "previousBlank": "Section G of the lease does not state the previous rent.",
+    "previousAltered": "Section G of the lease looks crossed out or altered.",
+    "rentMax": "Highest rent the TAL's {year} rate gives from that previous rent: {cents}.",
+    "excess": "Difference with the new rent: {cents}.",
+    "deadline": "By the dates given, the last day to ask the TAL to fix the rent is {lastDay}."
+  },
+  "brief": {
+    "renewalNotice": {
+      "title": "Notice of renewal with a rent increase",
+      "door": "Dwelling: {door}",
+      "end": "The lease ends on {end}.",
+      "current": "Current rent: {rent} a month.",
+      "proposed": "Proposed rent: {rent} a month, from {effective}.",
+      "proposedBlank": "Proposed rent: ____________ a month, from {effective}.",
+      "refusal": "You have one month from receiving this notice to refuse the increase; the landlord may then ask the Tribunal administratif du logement to set the rent.",
+      "window": "Notice given between {opens} and {closes} ({citation}).",
+      "signature": "Landlord's name and signature: ____________    Date: ____________",
+      "disclaimer": "Prepared with Verikora as information, not legal advice. The landlord checks it, signs it and sends it themselves: Verikora sends nothing on anyone's behalf."
+    }
+  },
+  "privacy": {
+    "title": "Privacy",
+    "updated": "Updated {date}",
+    "body": "Your documents are yours: kept only if you choose, checked by Sovkora, never sold, never used to train a model. The details, in short sections.",
+    "officer": {
+      "label": "Privacy officer",
+      "sep": ": ",
+      "title": "President, Technologies Krizaka Inc."
+    },
+    "sections": [
+      {
+        "h": "Who is responsible",
+        "p": "Krizaka, a company based in Montréal, publishes Verikora. The person in charge of the protection of personal information (Loi 25) is named at the top of this page, with a direct address."
+      },
+      {
+        "h": "What we collect and why",
+        "p": "Your e-mail address and a password hash (to run your account), the date you accepted the terms and this notice, the documents you upload and the results of the checks (to give you the service), and billing information handled by Stripe. We do not sell your information and we do not use your documents to train a model."
+      },
+      {
+        "h": "Where it is kept",
+        "p": "Your account and your checks are in a database in Toronto, Canada, outside Québec. Documents are sent to Sovkora, Krizaka's analysis engine, over HTTPS to be checked. A kept document is stored where its information panel says: today, in New York (United States)."
+      },
+      {
+        "h": "Who processes it",
+        "p": "Sovkora, Krizaka's analysis engine, reads a document when you ask for a check, over HTTPS. Stripe handles payment. Our database provider hosts your account in Toronto."
+      },
+      {
+        "h": "How long we keep it",
+        "p": "A document is kept until you delete it, and a deleted document takes its file, its text and its results with it. Your account and checks are kept until you close the account. Invoices are kept as the law requires."
+      },
+      {
+        "h": "Your rights",
+        "p": "You can access, correct or delete your information, withdraw your consent and download your data by writing to the privacy officer. Deleting a document deletes its file, its text and its results. Closing your account deletes your documents. We keep invoices as the law requires."
+      },
+      {
+        "h": "Incidents",
+        "p": "If a confidentiality incident presents a risk of serious harm, we notify the Commission d'accès à l'information and the people concerned, as the law requires."
+      },
+      {
+        "h": "Contact",
+        "p": "To ask a question, use your rights or have your data removed, write through the contact form of krizaka.com. The person in charge of the protection of personal information answers."
+      }
+    ]
+  },
+  "contact": {
+    "title": "Contact",
+    "lead": "A question about Verikora, or an access request? Write to us.",
+    "supportLabel": "Support",
+    "supportText": "For any question, or to ask for access while sign-up is closed, use Krizaka's contact form: it knows your message is about Verikora.",
+    "supportCta": "Open the support form",
+    "privacyText": "For your personal information, see the Privacy page."
+  },
+  "terms": {
+    "title": "Terms of use",
+    "status": "Written in good faith from the law, awaiting review by the lawyer before Verikora opens to the public; the refund policy for a single audit is not final. If in doubt, French prevails.",
+    "sections": [
+      {
+        "h": "What Verikora is",
+        "p": "Verikora compares a document you give it (a lease, an invoice, a service contract) with published rules and tells you, point by point, what it found, quoting your document. It is an informative check. It is not a legal opinion and it does not replace a lawyer: only a member of the Barreau du Québec can give legal advice in Québec. A result is never a guarantee that a document is lawful or valid."
+      },
+      {
+        "h": "Your account",
+        "p": "You must give a real e-mail address and confirm it. You are responsible for your password. One free audit is included per account; creating several accounts to get more is not allowed and the extra accounts may be closed."
+      },
+      {
+        "h": "Prices and taxes",
+        "p": "After the free audit, an audit costs the price shown at checkout in Canadian dollars, or you subscribe to the Pro plan. Goods and services tax (GST) and Québec sales tax (QST) are added at checkout and shown on your invoice with Krizaka's registration numbers. Payment is handled by Stripe; Verikora never sees your card number."
+      },
+      {
+        "h": "Refunds and cancellation",
+        "p": "Refund policy (draft). You can cancel the Pro plan at any time from the customer portal; the plan then ends at the end of the period already paid. The refund terms of a single audit are not written yet."
+      },
+      {
+        "h": "Your documents",
+        "p": "Your documents are kept in your account only and are sent to Sovkora, Krizaka's analysis engine, to be checked. See the privacy notice for retention, your rights and how to reach our privacy officer."
+      },
+      {
+        "h": "Intellectual property and your right to use the service",
+        "p": "Verikora, its software, its sets of verification rules, the layout of its reports, its names, its birds and its marks belong to Technologies Krizaka Inc. or its licensors; these terms assign you none of those rights (Copyright Act, R.S.C. 1985, c. C-42). For the length of your subscription only, you receive a personal, non-exclusive, non-transferable, non-sublicensable right to use the hosted service; the free audit and single audits give you the same right over the result you obtain. Your documents stay yours: you only authorise us to process them to provide the check. Verikora's source code is published under its own licence, stated in its repository: these terms govern the hosted service, that licence governs the code, and nothing here removes what the licence allows you."
+      },
+      {
+        "h": "Prohibited uses",
+        "p": "Without a written agreement with Krizaka, you may not: resell, rent, sublicense or offer the hosted service or its reports to third parties as a service, or present it under another brand (white label); use it to build or improve a competing service; extract its content or results by automated means; circumvent an account's limits, the free audit, the billing or the security measures; access another account's data; or decompile or disassemble the parts of the hosted service that are not published, except to the extent the law allows despite this clause. A breach may lead to suspended access, after written notice where the situation allows."
+      },
+      {
+        "h": "Names and marks",
+        "p": "The names and logos of Verikora and Krizaka, and their birds, are marks of Technologies Krizaka Inc. (Trademarks Act, R.S.C. 1985, c. T-13). These terms, like the code licence, grant no right to those marks; their use is governed by the policy published at https://github.com/krizaka/.github/blob/main/TRADEMARKS.md."
+      },
+      {
+        "h": "Limitation of liability",
+        "p": "We answer for our faults. Verikora provides an informative check: we are not responsible for a decision you make or do not make from a result (signing, refusing or amending a lease, accepting or refusing a tenant), for an inaccurate or incomplete document you give us, or for an interruption of the service that is not our fault. Except for intentional or gross fault, our total liability to you for a single event is limited to the amounts you paid Verikora in the 12 months before the event, and we are not liable for indirect damage (loss of profit, loss of opportunity). None of these limits applies to intentional or gross fault, or to bodily or moral injury (art. 1474 C.c.Q.), or to what a consumer cannot waive (art. 10 of the Consumer Protection Act). They apply to the extent the law allows, notably arts. 1435 to 1437 C.c.Q. on the clauses of a contract of adhesion."
+      },
+      {
+        "h": "Governing law and courts",
+        "p": "These terms are governed by the laws of Québec and the federal laws that apply there. Subject to what follows, the courts of the judicial district of Montréal alone have jurisdiction. A consumer may always sue in the district where they live and cannot waive that right in advance (art. 3149 C.c.Q.; art. 33 of the Code of Civil Procedure)."
+      },
+      {
+        "h": "Language",
+        "p": "These terms are written in French, which is the reference version, as the Charter of the French language requires (art. 55). The English version is a courtesy translation; where they differ, French prevails."
+      }
+    ]
+  },
+  "download": {
+    "title": "Download",
+    "lead": "Verikora on your phone and your Mac. Your documents stay on your device; only what a check needs is sent, then erased.",
+    "soon": "Coming soon",
+    "get": "Download",
+    "platforms": {
+      "ios": {
+        "name": "iPhone and iPad",
+        "body": "Scan or pick a document, check it, share the signed report. Testing on TestFlight first."
+      },
+      "android": {
+        "name": "Android",
+        "body": "The same checks on your Android phone, installed from a release file while the store listing is prepared."
+      },
+      "mac": {
+        "name": "Mac",
+        "body": "Keep a library in a folder on your Mac, drag documents in from Finder. Your documents never leave the folder."
+      }
+    },
+    "videos": {
+      "title": "See it work",
+      "lead": "Short recordings made by our automated tests, on a fictitious demo persona and demo data, in the development build. They are re-recorded on every change, so they show the app as it is today.",
+      "play": "Play",
+      "recorded": "Recorded {date}",
+      "seconds": "{seconds} s, no sound",
+      "items": {
+        "web-binder": {
+          "name": "On the web: the binder",
+          "body": "Sign in, then the binder: your collections and the checks to look at, then a collection and its documents."
+        },
+        "web-report": {
+          "name": "On the web: the report",
+          "body": "A document of the library and its report: every finding cites the line it rests on."
+        },
+        "android-documents": {
+          "name": "On Android: the app",
+          "body": "Your collections and the documents in them, then the checks and their batches, on the phone."
+        },
+        "mac-library": {
+          "name": "On the Mac: the library",
+          "body": "Your library in a folder on the Mac, and the documents in it."
+        }
+      }
+    }
+  },
+  "docs": {
+    "title": "Documentation",
+    "lead": "How a check works, the API to start one from your own tool, and what happens to your data.",
+    "navLabel": "Documentation",
+    "sidebarLabel": "Pages",
+    "tocLabel": "On this page",
+    "breadcrumbLabel": "Breadcrumb",
+    "sections": {
+      "check": "How a check works",
+      "api": "The API",
+      "data": "Your data"
+    },
+    "check": {
+      "intro": "A check reads one document and says what it found. Verikora does not judge the document itself: every check is a run of Sovkora, Krizaka's analysis engine, and the run id is kept with the report.",
+      "kindsTitle": "Two kinds of check",
+      "compliance": "Compliance reads the text of a document against the rules of a jurisdiction (Québec by default for a residential lease).",
+      "authenticity": "Authenticity examines the file itself as a file: its producer, its dates and its successive saves.",
+      "findingTitle": "What a finding cites",
+      "finding": "Each finding names the rule it applies, gives its verdict and severity, quotes the article it relies on and lights the passage of the document it rests on. When the document says nothing on a point, the finding says so.",
+      "levelsTitle": "The three levels of an authenticity signal",
+      "levels": "Signals come in three levels, from the least to the most worrying: {observed}, {unusual}, {inconsistent}. A signal says what it may indicate; it is never a « fake » stamp, and a person decides.",
+      "guaranteesLead": "A report is signed. A member the report's owner gave access to can check it against the signing key:",
+      "limitsLead": "A green result does not guarantee:",
+      "informative": "A check is informative and a triage: it is not legal advice."
+    },
+    "api": {
+      "intro": "A check can be started from your own tool (an ERP, a property-management system, a script). This reference is generated from the OpenAPI document the app serves at {openapi}: it lists every route the API has, and only those.",
+      "accessTitle": "Access",
+      "access": "Every request carries an API key: Authorization: Bearer {prefix}_… . Keys are created in your account, for plans that include the API. A key has scopes ({scopes}), a life of at most {days} days and a per-minute limit; rotating it keeps the old one working for {grace} hours. Never put a key in a repository or a log.",
+      "quickstartTitle": "Start a check, then read it",
+      "quickstartNote": "Poll until the state is done, failed or refused; the report comes with the check once it is done.",
+      "routesTitle": "Routes",
+      "route": "Route",
+      "commonAnswers": "Answers shared by several routes",
+      "scope": "Scope",
+      "noScope": "No key needed",
+      "parameters": "Parameters",
+      "answers": "Answers",
+      "errorsTitle": "Errors",
+      "errors": "Every error answers with a stable code and a message. Match on the code; the message is for your logs.",
+      "codeColumn": "Code",
+      "meaningColumn": "Meaning",
+      "statusTitle": "Status codes",
+      "statusLead": "These answers are given by several routes; the table of routes lists the rest.",
+      "errorShapeLabel": "Error body",
+      "webhooksTitle": "Webhooks",
+      "webhooks": "Instead of polling, register an https endpoint in your account and Verikora calls it when work finishes. Each request carries an event name, a stable event id (apply an event once) and a signature. A payload holds ids and states, never a document or a report.",
+      "signatureTitle": "Verify the signature",
+      "signature": "The x-krizaka-signature header has this format. HEX is the HMAC-SHA256, with your endpoint's secret, of the timestamp, a dot and the raw body. Refuse a request whose signature does not match.",
+      "signatureLabel": "Signature",
+      "event": "Event",
+      "openapiLink": "Open the OpenAPI document"
+    },
+    "data": {
+      "intro": "Your account and your checks are kept in a database in Toronto, Canada, visible to your account alone. A document is kept only if you choose it, and its information panel says where.",
+      "retention": "A kept document stays until you delete it; deleting it deletes its file, its text and its results, and closing your account deletes your documents.",
+      "sovkora": "When you ask for a check, the document is sent to Sovkora, Krizaka's analysis engine, over HTTPS. Nothing is sold, shared or used to train a model.",
+      "privacy": "Read the privacy notice"
+    }
+  },
+  "pricing": {
+    "title": "Pricing",
+    "lead": "No annual subscription. Pay per dossier, or subscribe by the month and cancel when you like. Prices in CAD, before taxes: GST and QST are added on the invoice.",
+    "offer": {
+      "headline": "Launch offer: {percent}% off the first {months} months with the code {code}",
+      "line": "{offer} a month for the first {months} months, then {regular} a month",
+      "ends": "Offer valid until {date}. The regular price applies after the offer.",
+      "always": "The regular price applies after the offer."
+    },
+    "requestAccess": "Request access",
+    "plannedNote": "Prices planned for the opening, in CAD, before taxes. Sign-up is closed.",
+    "plansLabel": "Plans",
+    "subscribe": "Subscribe — {plan}",
+    "current": "Current plan",
+    "paymentsOff": "Payment is not available yet on this environment.",
+    "inApp": "Choose your plan",
+    "perMonth": " a month, plus taxes",
+    "perDossier": " per dossier, plus taxes",
+    "beyond": "Then {rate} for each further dossier, charged to your card on file, plus taxes",
+    "included": "{included} dossiers included each month",
+    "paused": "Past the included volume, checks wait until next month",
+    "freeFirst": "One dossier verified free every month, no card",
+    "cancel": "Billed monthly, cancel any time from the billing portal",
+    "noSubscription": "No subscription: you pay for the dossiers you verify",
+    "volume": "More than {included} dossiers a month? Write to us",
+    "plans": {
+      "document": {
+        "name": "One document",
+        "features": [
+          "For a single file: document verification and file screening",
+          "A signed report that cites the article behind every finding"
+        ]
+      },
+      "agency": {
+        "name": "Agency",
+        "features": [
+          "For agencies, brokers and landlords who check several files a month",
+          "The API, with keys created in your account"
+        ]
+      },
+      "firm": {
+        "name": "Building manager",
+        "features": [
+          "For property managers and firms with a larger volume",
+          "The API, with keys created in your account"
+        ]
+      }
+    },
+    "soon": {
+      "title": "Soon",
+      "lead": "Not offered yet. No price is promised for these.",
+      "badge": "Soon",
+      "items": {
+        "fullFile": {
+          "name": "The full applicant file",
+          "text": "The documents, then the registry checks."
+        },
+        "backgroundCheck": {
+          "name": "Background checks",
+          "text": "The applicant's records, with their consent."
+        },
+        "screening": {
+          "name": "The document filter alone",
+          "text": "The first stage of a file, charged only when it runs."
+        }
+      }
+    }
+  },
+  "affordability": {
+    "share": "The rent is {share} of the income given. Information only.",
+    "no-claim": "No figure: the income or the rent is not given as a usable number, so no share is computed.",
+    "note": "This share must not be the sole criterion. In Québec, deciding on income alone can be discrimination on social condition (Charter of human rights and freedoms, s. 10 and 12). The income is a figure the applicant chose to give; it is used here and not kept.",
+    "disclaimer": "Information about two figures, not legal advice and no judgement on the applicant. Salary is not required to rent in Québec."
+  },
+  "run": {
     "verdicts": {
       "PASS": "Requirement met",
       "FAIL": "Requirement not met",
       "INSUFFICIENT_EVIDENCE": "Insufficient evidence",
       "NOT_APPLICABLE": "Does not apply"
-    },
-    "guaranteeHeading": "What this report guarantees",
-    "guarantees": "This report is signed with Verikora's key (Ed25519, held by Krizaka). The signature covers the document's SHA-256, the jurisdiction and rules version, the Studio and its version, the Sovkora run id, the date of the check, every finding with its passage and article, and the full text of this report. If a single character of this file changes, verification fails.",
-    "notGuaranteed": "It does not prove that the findings are legally right: Sovkora applies the extraction matrices, the Québec matrices are still to be reviewed by a lawyer, and this is not legal advice. It does not prove that the run exists on Sovkora's side (only its operator can say), nor when the report was made beyond the check dates above: there is no independent time-stamp and no blockchain. What you trust is Krizaka, the holder of the signing key.",
-    "howToVerify": "To verify it, sign in to Verikora and open {url} — only the people the report's owner gave access to can, with their Verikora account. Give it this file and, to confirm which document was checked, the original document.",
-    "footer": "Verikora, a Krizaka product — analysis by Sovkora.",
-    "signatureHeading": "Signature page",
-    "signatureKey": "Signing key",
-    "signatureAlgorithm": "Algorithm",
-    "signatureBody": "SHA-256 of the report's text (pages before this one)",
-    "signatureValue": "Signature (base64)",
-    "signatureNote": "The attestation — the payload, the text fingerprint and this signature — is also embedded in the PDF file. A member the owner gave access to checks it by giving this file to the verification page; any change to the text of the earlier pages makes it fail.",
-    "notCheckedServiceContract": "Not checked: the right to terminate (art. 2125 C.c.Q.) and the rest of the Civil Code of Québec on service contracts (art. 2098 and following). To be reviewed by a lawyer.",
-    "languageNote": "Original wording of the rules: French. The English text is the ruleset's own translation; quoted passages and article references are given as they stand, never translated."
+    }
   },
-  "verify": {
-    "title": "Verify a report",
-    "lead": "Check that an audit report really comes from Verikora and has not been changed. Members only, for a report you own or were given access to.",
-    "reportFile": "The report (the .html or .pdf file)",
-    "reportPaste": "Or paste its text",
-    "documentFile": "The original document (optional)",
-    "documentHint": "Add it to confirm that the report is about this very file.",
-    "submit": "Verify",
-    "checking": "Checking…",
-    "tooLarge": "This file is too large.",
-    "empty": "Give a report file or paste its text.",
-    "okTitle": "This report is authentic and unchanged.",
-    "failTitle": "This report cannot be trusted.",
-    "reasons": {
-      "NOT_A_REPORT": "This is not a Verikora audit report: it has no signature block.",
-      "UNREADABLE": "The signature block is damaged or not in a format Verikora knows.",
-      "BAD_SIGNATURE": "The signature does not match the content: the report was modified or signed by another key.",
-      "ALTERED": "The signature is valid for the original report, but the file is not that report any more: something was changed after signing.",
-      "UNKNOWN_KEY": "It was signed by a key that is not this server's.",
-      "UNKNOWN_SCHEMA": "This report uses a format Verikora does not verify.",
-      "SPECIMEN": "This report is a specimen: it proves nothing."
+  "screening": {
+    "tenant": {
+      "title": "A request to check your application",
+      "lead": "{landlord} asks your agreement to check your rental application. You decide: nothing is checked without your consent.",
+      "whatTitle": "What would be checked",
+      "provider": "Provider: {provider}",
+      "why": "Why: the landlord is assessing your application for a dwelling.",
+      "notAsked": "Never asked: social insurance number, bank details, employer, salary, criminal record.",
+      "whoSees": "Who sees the result: you first; the landlord only if you pass it on.",
+      "retention": "Duration: the result is deleted {days} days after your consent.",
+      "rights": "You may decline (it is not an admission), contest the result, or not pass it on.",
+      "consent": "I consent to this check",
+      "decline": "I decline",
+      "share": "Pass it on to the landlord",
+      "contest": "Contest the result",
+      "comment": "Your comment (optional)",
+      "send": "Send the contestation",
+      "demo": "Demonstration provider: the data is fictitious.",
+      "state": {
+        "requested": "Waiting for your answer",
+        "consented": "You consented. Here is the result: only you see it for now.",
+        "shared": "You passed this result on to the landlord.",
+        "declined": "You declined: nothing was checked, and the landlord is told so without more detail.",
+        "contested": "You contested this result: the landlord does not see it.",
+        "expired": "This request expired or its result was deleted."
+      },
+      "resultTitle": "Your result",
+      "band": {
+        "no-concern": "Nothing to report",
+        "review": "To review",
+        "incomplete": "Not complete yet"
+      },
+      "item": {},
+      "outcome": {
+        "clear": "nothing to report",
+        "review": "to review",
+        "pending": "in progress",
+        "unavailable": "not available right now",
+        "soon": "not available yet"
+      },
+      "deleteOn": "Deleted on {date}.",
+      "contested": "Your contestation: « {comment} »",
+      "incompleteNote": "Some checks have not answered. Nothing here is a result for those: they are shown as they stand.",
+      "copy": "Get a copy of my result",
+      "quoteTitle": "Price and who pays",
+      "quoteLine": "{check}: {price}",
+      "quoteFree": "no charge",
+      "quotePayer": {
+        "firm": "Paid by the property-management firm.",
+        "owner": "Paid by the building owner.",
+        "applicant": "Paid by you."
+      },
+      "quoteTaxes": "Taxes (GST/QST) are added where they apply."
     },
-    "facts": {
-      "fileSha": "This file's SHA-256",
-      "keyId": "Signing key",
-      "documentSha": "Document SHA-256",
-      "runId": "Sovkora run",
-      "ruleset": "Rules",
-      "checked": "Check finished",
-      "findings": "Findings",
-      "jurisdiction": "Jurisdiction",
-      "issued": "Issued",
-      "expires": "Link valid until"
+    "landlord": {
+      "title": "Tenant application",
+      "lead": "Ask an applicant's consent to check their payment history. They see the result first and decide whether to pass it on to you or contest it.",
+      "undertakingTitle": "Your undertaking",
+      "undertaking": "I undertake to use these checks only to assess an application for a dwelling, to ask only what is necessary, and never to refuse an applicant on a discriminatory ground (Charter of human rights and freedoms; C.c.Q., art. 1899). I know an applicant may decline or contest, and that refusing to give unnecessary information is not a ground for rejection.",
+      "accept": "I accept the undertaking",
+      "lawfulTitle": "What the law lets you ask",
+      "lawful": "The name, the current address, an identity document looked at without keeping a copy, the previous landlord's contact — and, with consent, a credit report. No social insurance number, bank details, employer or salary. Verikora offers no criminal-record check.",
+      "name": "Applicant's name",
+      "email": "Applicant's e-mail",
+      "scope": "What will be checked",
+      "request": "Ask for their consent",
+      "created": "Hand this link to the applicant (it will not be shown again):",
+      "copy": "Copy the link",
+      "listTitle": "Your requests",
+      "none": "No request yet.",
+      "status": {
+        "requested": "Waiting",
+        "consented": "Consented, not passed on",
+        "shared": "Passed on",
+        "declined": "Declined",
+        "contested": "Contested",
+        "expired": "Expired"
+      },
+      "shownTitle": "Result passed on",
+      "hidden": "The result is visible only once the applicant passes it on.",
+      "demo": "Demonstration provider: fictitious data.",
+      "reviewNote": "« To review » is not a verdict: talk to the applicant before any decision.",
+      "noneOffered": "No check is available to you yet.",
+      "payer": {
+        "label": "Who pays for the checks",
+        "firm": "The property-management firm",
+        "owner": "The building owner",
+        "applicant": "The applicant (only where allowed)"
+      }
     },
-    "documentMatch": {
-      "yes": "The document you gave is the one that was checked.",
-      "no": "The document you gave is NOT the one that was checked (its SHA-256 differs).",
-      "none": "No document given: nothing says which file was checked except its SHA-256 above."
-    },
-    "guaranteesTitle": "What a green result guarantees",
-    "guarantees": {
-      "a": "The report was produced by Verikora's signing key, and not one character of it has changed since.",
-      "b": "It binds, in one signature, the document's SHA-256, the jurisdiction and rules version, the Studio and its version, the Sovkora run id, the check dates and every finding with its passage and article.",
-      "c": "Given the original document, it is the one that was checked."
-    },
-    "limitsTitle": "What it does not guarantee",
-    "limits": {
-      "a": "That the findings are right in law: Sovkora applies extraction matrices and technical templates, and the Québec ones are still to be reviewed by a lawyer. This is not legal advice.",
-      "b": "That the run exists on Sovkora's side: only its operator can confirm a run id.",
-      "c": "When the report was made, beyond the check dates it states: there is no independent time-stamp.",
-      "d": "Anything about the key holder: you trust Krizaka to keep the key. No blockchain, no third party."
-    },
-    "keyTitle": "The public key",
-    "keyLead": "Ed25519, SPKI in base64. With it you can verify a report without this site (for instance with OpenSSL on the signed text).",
-    "devKey": "This server uses the development key: its reports prove nothing.",
-    "drop": {
-      "reportTitle": "Drop the report here",
-      "documentTitle": "Drop the original document here",
-      "browse": "Choose a file",
-      "remove": "Remove {name}",
-      "hint": "The downloaded .html or .pdf file, up to 2 MB."
-    },
-    "noAccess": {
-      "title": "You do not have access to this report",
-      "text": "Only the people the report's owner gave access to can verify it. You can ask the owner.",
-      "request": "Request access",
-      "requested": "The owner has been notified. You can verify the report once they give you access."
+    "invoice": {
+      "line": "Check: {check} — a Krizaka service"
     }
   },
   "applicant": {
@@ -3749,201 +3957,118 @@
       "howLong": "By default, a document is deleted as soon as its check is done. If you consent to keep it (\"Keep my documents until the owner decides\"), it is kept until the owner's decision, then deleted. You can ask for the deletion of your documents and of the result at any time. [TO BE REVIEWED BY THE LAWYER]"
     }
   },
-  "screening": {
-    "tenant": {
-      "title": "A request to check your application",
-      "lead": "{landlord} asks your agreement to check your rental application. You decide: nothing is checked without your consent.",
-      "whatTitle": "What would be checked",
-      "provider": "Provider: {provider}",
-      "why": "Why: the landlord is assessing your application for a dwelling.",
-      "notAsked": "Never asked: social insurance number, bank details, employer, salary, criminal record.",
-      "whoSees": "Who sees the result: you first; the landlord only if you pass it on.",
-      "retention": "Duration: the result is deleted {days} days after your consent.",
-      "rights": "You may decline (it is not an admission), contest the result, or not pass it on.",
-      "consent": "I consent to this check",
-      "decline": "I decline",
-      "share": "Pass it on to the landlord",
-      "contest": "Contest the result",
-      "comment": "Your comment (optional)",
-      "send": "Send the contestation",
-      "demo": "Demonstration provider: the data is fictitious.",
-      "state": {
-        "requested": "Waiting for your answer",
-        "consented": "You consented. Here is the result: only you see it for now.",
-        "shared": "You passed this result on to the landlord.",
-        "declined": "You declined: nothing was checked, and the landlord is told so without more detail.",
-        "contested": "You contested this result: the landlord does not see it.",
-        "expired": "This request expired or its result was deleted."
-      },
-      "resultTitle": "Your result",
-      "band": {
-        "no-concern": "Nothing to report",
-        "review": "To review",
-        "incomplete": "Not complete yet"
-      },
-      "item": {},
-      "outcome": {
-        "clear": "nothing to report",
-        "review": "to review",
-        "pending": "in progress",
-        "unavailable": "not available right now",
-        "soon": "not available yet"
-      },
-      "deleteOn": "Deleted on {date}.",
-      "contested": "Your contestation: « {comment} »",
-      "incompleteNote": "Some checks have not answered. Nothing here is a result for those: they are shown as they stand.",
-      "copy": "Get a copy of my result",
-      "quoteTitle": "Price and who pays",
-      "quoteLine": "{check}: {price}",
-      "quoteFree": "no charge",
-      "quotePayer": {
-        "firm": "Paid by the property-management firm.",
-        "owner": "Paid by the building owner.",
-        "applicant": "Paid by you."
-      },
-      "quoteTaxes": "Taxes (GST/QST) are added where they apply."
+  "report": {
+    "title": "Audit report — {name}",
+    "eyebrow": "Verikora · compliance audit report",
+    "disclaimer": "Informative check, not legal advice. Verikora verifies a document and screens a file with configurable extraction matrices and technical templates, tools validated by the client's counsel; it is not a legal opinion, and only a member of the Barreau du Québec can give legal advice. A result is never a guarantee of compliance.",
+    "summary": "{failures} blocking failure(s) out of {rules} rules checked.",
+    "toReview": "Québec rules still to be reviewed by a lawyer: a demonstration report, not legal advice.",
+    "documentHeading": "The document",
+    "checkHeading": "The check",
+    "file": "File",
+    "size": "Size",
+    "documentSha": "Document SHA-256",
+    "engine": "Analysis engine",
+    "runId": "Sovkora run",
+    "jurisdiction": "Jurisdiction",
+    "asOf": "Rules in force on",
+    "ruleset": "Rules version",
+    "model": "Model",
+    "modelValue": "Chosen by the Studio, not reported by the run: the Studio and its version above are the trace.",
+    "started": "Check started",
+    "finished": "Check finished",
+    "findingsHeading": "Findings ({count})",
+    "rule": "Rule",
+    "article": "Article cited",
+    "passage": "Passage",
+    "noPassage": "No passage: the document says nothing on this point.",
+    "verdicts": {
+      "PASS": "Requirement met",
+      "FAIL": "Requirement not met",
+      "INSUFFICIENT_EVIDENCE": "Insufficient evidence",
+      "NOT_APPLICABLE": "Does not apply"
     },
-    "landlord": {
-      "title": "Tenant application",
-      "lead": "Ask an applicant's consent to check their payment history. They see the result first and decide whether to pass it on to you or contest it.",
-      "undertakingTitle": "Your undertaking",
-      "undertaking": "I undertake to use these checks only to assess an application for a dwelling, to ask only what is necessary, and never to refuse an applicant on a discriminatory ground (Charter of human rights and freedoms; C.c.Q., art. 1899). I know an applicant may decline or contest, and that refusing to give unnecessary information is not a ground for rejection.",
-      "accept": "I accept the undertaking",
-      "lawfulTitle": "What the law lets you ask",
-      "lawful": "The name, the current address, an identity document looked at without keeping a copy, the previous landlord's contact — and, with consent, a credit report. No social insurance number, bank details, employer or salary. Verikora offers no criminal-record check.",
-      "name": "Applicant's name",
-      "email": "Applicant's e-mail",
-      "scope": "What will be checked",
-      "request": "Ask for their consent",
-      "created": "Hand this link to the applicant (it will not be shown again):",
-      "copy": "Copy the link",
-      "listTitle": "Your requests",
-      "none": "No request yet.",
-      "status": {
-        "requested": "Waiting",
-        "consented": "Consented, not passed on",
-        "shared": "Passed on",
-        "declined": "Declined",
-        "contested": "Contested",
-        "expired": "Expired"
-      },
-      "shownTitle": "Result passed on",
-      "hidden": "The result is visible only once the applicant passes it on.",
-      "demo": "Demonstration provider: fictitious data.",
-      "reviewNote": "« To review » is not a verdict: talk to the applicant before any decision.",
-      "noneOffered": "No check is available to you yet.",
-      "payer": {
-        "label": "Who pays for the checks",
-        "firm": "The property-management firm",
-        "owner": "The building owner",
-        "applicant": "The applicant (only where allowed)"
-      }
+    "guaranteeHeading": "What this report guarantees",
+    "guarantees": "This report is signed with Verikora's key (Ed25519, held by Krizaka). The signature covers the document's SHA-256, the jurisdiction and rules version, the Studio and its version, the Sovkora run id, the date of the check, every finding with its passage and article, and the full text of this report. If a single character of this file changes, verification fails.",
+    "notGuaranteed": "It does not prove that the findings are legally right: Sovkora applies the extraction matrices, the Québec matrices are still to be reviewed by a lawyer, and this is not legal advice. It does not prove that the run exists on Sovkora's side (only its operator can say), nor when the report was made beyond the check dates above: there is no independent time-stamp and no blockchain. What you trust is Krizaka, the holder of the signing key.",
+    "howToVerify": "To verify it, sign in to Verikora and open {url} — only the people the report's owner gave access to can, with their Verikora account. Give it this file and, to confirm which document was checked, the original document.",
+    "footer": "Verikora, a Krizaka product — analysis by Sovkora.",
+    "signatureHeading": "Signature page",
+    "signatureKey": "Signing key",
+    "signatureAlgorithm": "Algorithm",
+    "signatureBody": "SHA-256 of the report's text (pages before this one)",
+    "signatureValue": "Signature (base64)",
+    "signatureNote": "The attestation — the payload, the text fingerprint and this signature — is also embedded in the PDF file. A member the owner gave access to checks it by giving this file to the verification page; any change to the text of the earlier pages makes it fail.",
+    "notCheckedServiceContract": "Not checked: the right to terminate (art. 2125 C.c.Q.) and the rest of the Civil Code of Québec on service contracts (art. 2098 and following). To be reviewed by a lawyer.",
+    "languageNote": "Original wording of the rules: French. The English text is the ruleset's own translation; quoted passages and article references are given as they stand, never translated."
+  },
+  "verify": {
+    "title": "Verify a report",
+    "lead": "Check that an audit report really comes from Verikora and has not been changed. Members only, for a report you own or were given access to.",
+    "reportFile": "The report (the .html or .pdf file)",
+    "reportPaste": "Or paste its text",
+    "documentFile": "The original document (optional)",
+    "documentHint": "Add it to confirm that the report is about this very file.",
+    "submit": "Verify",
+    "checking": "Checking…",
+    "tooLarge": "This file is too large.",
+    "empty": "Give a report file or paste its text.",
+    "okTitle": "This report is authentic and unchanged.",
+    "failTitle": "This report cannot be trusted.",
+    "reasons": {
+      "NOT_A_REPORT": "This is not a Verikora audit report: it has no signature block.",
+      "UNREADABLE": "The signature block is damaged or not in a format Verikora knows.",
+      "BAD_SIGNATURE": "The signature does not match the content: the report was modified or signed by another key.",
+      "ALTERED": "The signature is valid for the original report, but the file is not that report any more: something was changed after signing.",
+      "UNKNOWN_KEY": "It was signed by a key that is not this server's.",
+      "UNKNOWN_SCHEMA": "This report uses a format Verikora does not verify.",
+      "SPECIMEN": "This report is a specimen: it proves nothing."
     },
-    "invoice": {
-      "line": "Check: {check} — a Krizaka service"
-    }
-  },
-  "contact": {
-    "title": "Contact",
-    "lead": "A question about Verikora, or an access request? Write to us.",
-    "supportLabel": "Support",
-    "supportText": "For any question, or to ask for access while sign-up is closed, use Krizaka's contact form: it knows your message is about Verikora.",
-    "supportCta": "Open the support form",
-    "privacyText": "For your personal information, see the Privacy page."
-  },
-  "terms": {
-    "title": "Terms of use",
-    "status": "Written in good faith from the law, awaiting review by the lawyer before Verikora opens to the public; the refund policy for a single audit is not final. If in doubt, French prevails.",
-    "sections": [
-      {
-        "h": "What Verikora is",
-        "p": "Verikora compares a document you give it (a lease, an invoice, a service contract) with published rules and tells you, point by point, what it found, quoting your document. It is an informative check. It is not a legal opinion and it does not replace a lawyer: only a member of the Barreau du Québec can give legal advice in Québec. A result is never a guarantee that a document is lawful or valid."
-      },
-      {
-        "h": "Your account",
-        "p": "You must give a real e-mail address and confirm it. You are responsible for your password. One free audit is included per account; creating several accounts to get more is not allowed and the extra accounts may be closed."
-      },
-      {
-        "h": "Prices and taxes",
-        "p": "After the free audit, an audit costs the price shown at checkout in Canadian dollars, or you subscribe to the Pro plan. Goods and services tax (GST) and Québec sales tax (QST) are added at checkout and shown on your invoice with Krizaka's registration numbers. Payment is handled by Stripe; Verikora never sees your card number."
-      },
-      {
-        "h": "Refunds and cancellation",
-        "p": "Refund policy (draft). You can cancel the Pro plan at any time from the customer portal; the plan then ends at the end of the period already paid. The refund terms of a single audit are not written yet."
-      },
-      {
-        "h": "Your documents",
-        "p": "Your documents are kept in your account only and are sent to Sovkora, Krizaka's analysis engine, to be checked. See the privacy notice for retention, your rights and how to reach our privacy officer."
-      },
-      {
-        "h": "Intellectual property and your right to use the service",
-        "p": "Verikora, its software, its sets of verification rules, the layout of its reports, its names, its birds and its marks belong to Technologies Krizaka Inc. or its licensors; these terms assign you none of those rights (Copyright Act, R.S.C. 1985, c. C-42). For the length of your subscription only, you receive a personal, non-exclusive, non-transferable, non-sublicensable right to use the hosted service; the free audit and single audits give you the same right over the result you obtain. Your documents stay yours: you only authorise us to process them to provide the check. Verikora's source code is published under its own licence, stated in its repository: these terms govern the hosted service, that licence governs the code, and nothing here removes what the licence allows you."
-      },
-      {
-        "h": "Prohibited uses",
-        "p": "Without a written agreement with Krizaka, you may not: resell, rent, sublicense or offer the hosted service or its reports to third parties as a service, or present it under another brand (white label); use it to build or improve a competing service; extract its content or results by automated means; circumvent an account's limits, the free audit, the billing or the security measures; access another account's data; or decompile or disassemble the parts of the hosted service that are not published, except to the extent the law allows despite this clause. A breach may lead to suspended access, after written notice where the situation allows."
-      },
-      {
-        "h": "Names and marks",
-        "p": "The names and logos of Verikora and Krizaka, and their birds, are marks of Technologies Krizaka Inc. (Trademarks Act, R.S.C. 1985, c. T-13). These terms, like the code licence, grant no right to those marks; their use is governed by the policy published at https://github.com/krizaka/.github/blob/main/TRADEMARKS.md."
-      },
-      {
-        "h": "Limitation of liability",
-        "p": "We answer for our faults. Verikora provides an informative check: we are not responsible for a decision you make or do not make from a result (signing, refusing or amending a lease, accepting or refusing a tenant), for an inaccurate or incomplete document you give us, or for an interruption of the service that is not our fault. Except for intentional or gross fault, our total liability to you for a single event is limited to the amounts you paid Verikora in the 12 months before the event, and we are not liable for indirect damage (loss of profit, loss of opportunity). None of these limits applies to intentional or gross fault, or to bodily or moral injury (art. 1474 C.c.Q.), or to what a consumer cannot waive (art. 10 of the Consumer Protection Act). They apply to the extent the law allows, notably arts. 1435 to 1437 C.c.Q. on the clauses of a contract of adhesion."
-      },
-      {
-        "h": "Governing law and courts",
-        "p": "These terms are governed by the laws of Québec and the federal laws that apply there. Subject to what follows, the courts of the judicial district of Montréal alone have jurisdiction. A consumer may always sue in the district where they live and cannot waive that right in advance (art. 3149 C.c.Q.; art. 33 of the Code of Civil Procedure)."
-      },
-      {
-        "h": "Language",
-        "p": "These terms are written in French, which is the reference version, as the Charter of the French language requires (art. 55). The English version is a courtesy translation; where they differ, French prevails."
-      }
-    ]
-  },
-  "download": {
-    "title": "Download",
-    "lead": "Verikora on your phone and your Mac. Your documents stay on your device; only what a check needs is sent, then erased.",
-    "soon": "Coming soon",
-    "get": "Download",
-    "platforms": {
-      "ios": {
-        "name": "iPhone and iPad",
-        "body": "Scan or pick a document, check it, share the signed report. Testing on TestFlight first."
-      },
-      "android": {
-        "name": "Android",
-        "body": "The same checks on your Android phone, installed from a release file while the store listing is prepared."
-      },
-      "mac": {
-        "name": "Mac",
-        "body": "Keep a library in a folder on your Mac, drag documents in from Finder. Your documents never leave the folder."
-      }
+    "facts": {
+      "fileSha": "This file's SHA-256",
+      "keyId": "Signing key",
+      "documentSha": "Document SHA-256",
+      "runId": "Sovkora run",
+      "ruleset": "Rules",
+      "checked": "Check finished",
+      "findings": "Findings",
+      "jurisdiction": "Jurisdiction",
+      "issued": "Issued",
+      "expires": "Link valid until"
     },
-    "videos": {
-      "title": "See it work",
-      "lead": "Short recordings made by our automated tests, on a fictitious demo persona and demo data, in the development build. They are re-recorded on every change, so they show the app as it is today.",
-      "play": "Play",
-      "recorded": "Recorded {date}",
-      "seconds": "{seconds} s, no sound",
-      "items": {
-        "web-binder": {
-          "name": "On the web: the binder",
-          "body": "Sign in, then the binder: your collections and the checks to look at, then a collection and its documents."
-        },
-        "web-report": {
-          "name": "On the web: the report",
-          "body": "A document of the library and its report: every finding cites the line it rests on."
-        },
-        "android-documents": {
-          "name": "On Android: the app",
-          "body": "Your collections and the documents in them, then the checks and their batches, on the phone."
-        },
-        "mac-library": {
-          "name": "On the Mac: the library",
-          "body": "Your library in a folder on the Mac, and the documents in it."
-        }
-      }
+    "documentMatch": {
+      "yes": "The document you gave is the one that was checked.",
+      "no": "The document you gave is NOT the one that was checked (its SHA-256 differs).",
+      "none": "No document given: nothing says which file was checked except its SHA-256 above."
+    },
+    "guaranteesTitle": "What a green result guarantees",
+    "guarantees": {
+      "a": "The report was produced by Verikora's signing key, and not one character of it has changed since.",
+      "b": "It binds, in one signature, the document's SHA-256, the jurisdiction and rules version, the Studio and its version, the Sovkora run id, the check dates and every finding with its passage and article.",
+      "c": "Given the original document, it is the one that was checked."
+    },
+    "limitsTitle": "What it does not guarantee",
+    "limits": {
+      "a": "That the findings are right in law: Sovkora applies extraction matrices and technical templates, and the Québec ones are still to be reviewed by a lawyer. This is not legal advice.",
+      "b": "That the run exists on Sovkora's side: only its operator can confirm a run id.",
+      "c": "When the report was made, beyond the check dates it states: there is no independent time-stamp.",
+      "d": "Anything about the key holder: you trust Krizaka to keep the key. No blockchain, no third party."
+    },
+    "keyTitle": "The public key",
+    "keyLead": "Ed25519, SPKI in base64. With it you can verify a report without this site (for instance with OpenSSL on the signed text).",
+    "devKey": "This server uses the development key: its reports prove nothing.",
+    "drop": {
+      "reportTitle": "Drop the report here",
+      "documentTitle": "Drop the original document here",
+      "browse": "Choose a file",
+      "remove": "Remove {name}",
+      "hint": "The downloaded .html or .pdf file, up to 2 MB."
+    },
+    "noAccess": {
+      "title": "You do not have access to this report",
+      "text": "Only the people the report's owner gave access to can verify it. You can ask the owner.",
+      "request": "Request access",
+      "requested": "The owner has been notified. You can verify the report once they give you access."
     }
   },
   "demo": {
@@ -3973,255 +4098,130 @@
       }
     }
   },
-  "docs": {
-    "title": "Documentation",
-    "lead": "How a check works, the API to start one from your own tool, and what happens to your data.",
-    "navLabel": "Documentation",
-    "sidebarLabel": "Pages",
-    "tocLabel": "On this page",
-    "breadcrumbLabel": "Breadcrumb",
-    "sections": {
-      "check": "How a check works",
-      "api": "The API",
-      "data": "Your data"
-    },
-    "check": {
-      "intro": "A check reads one document and says what it found. Verikora does not judge the document itself: every check is a run of Sovkora, Krizaka's analysis engine, and the run id is kept with the report.",
-      "kindsTitle": "Two kinds of check",
-      "compliance": "Compliance reads the text of a document against the rules of a jurisdiction (Québec by default for a residential lease).",
-      "authenticity": "Authenticity examines the file itself as a file: its producer, its dates and its successive saves.",
-      "findingTitle": "What a finding cites",
-      "finding": "Each finding names the rule it applies, gives its verdict and severity, quotes the article it relies on and lights the passage of the document it rests on. When the document says nothing on a point, the finding says so.",
-      "levelsTitle": "The three levels of an authenticity signal",
-      "levels": "Signals come in three levels, from the least to the most worrying: {observed}, {unusual}, {inconsistent}. A signal says what it may indicate; it is never a « fake » stamp, and a person decides.",
-      "guaranteesLead": "A report is signed. A member the report's owner gave access to can check it against the signing key:",
-      "limitsLead": "A green result does not guarantee:",
-      "informative": "A check is informative and a triage: it is not legal advice."
-    },
-    "api": {
-      "intro": "A check can be started from your own tool (an ERP, a property-management system, a script). This reference is generated from the OpenAPI document the app serves at {openapi}: it lists every route the API has, and only those.",
-      "accessTitle": "Access",
-      "access": "Every request carries an API key: Authorization: Bearer {prefix}_… . Keys are created in your account, for plans that include the API. A key has scopes ({scopes}), a life of at most {days} days and a per-minute limit; rotating it keeps the old one working for {grace} hours. Never put a key in a repository or a log.",
-      "quickstartTitle": "Start a check, then read it",
-      "quickstartNote": "Poll until the state is done, failed or refused; the report comes with the check once it is done.",
-      "routesTitle": "Routes",
-      "route": "Route",
-      "commonAnswers": "Answers shared by several routes",
-      "scope": "Scope",
-      "noScope": "No key needed",
-      "parameters": "Parameters",
-      "answers": "Answers",
-      "errorsTitle": "Errors",
-      "errors": "Every error answers with a stable code and a message. Match on the code; the message is for your logs.",
-      "codeColumn": "Code",
-      "meaningColumn": "Meaning",
-      "statusTitle": "Status codes",
-      "statusLead": "These answers are given by several routes; the table of routes lists the rest.",
-      "errorShapeLabel": "Error body",
-      "webhooksTitle": "Webhooks",
-      "webhooks": "Instead of polling, register an https endpoint in your account and Verikora calls it when work finishes. Each request carries an event name, a stable event id (apply an event once) and a signature. A payload holds ids and states, never a document or a report.",
-      "signatureTitle": "Verify the signature",
-      "signature": "The x-krizaka-signature header has this format. HEX is the HMAC-SHA256, with your endpoint's secret, of the timestamp, a dot and the raw body. Refuse a request whose signature does not match.",
-      "signatureLabel": "Signature",
-      "event": "Event",
-      "openapiLink": "Open the OpenAPI document"
-    },
-    "data": {
-      "intro": "Your account and your checks are kept in a database in Toronto, Canada, visible to your account alone. A document is kept only if you choose it, and its information panel says where.",
-      "retention": "A kept document stays until you delete it; deleting it deletes its file, its text and its results, and closing your account deletes your documents.",
-      "sovkora": "When you ask for a check, the document is sent to Sovkora, Krizaka's analysis engine, over HTTPS. Nothing is sold, shared or used to train a model.",
-      "privacy": "Read the privacy notice"
-    }
+  "meta": {
+    "siteName": "Verikora",
+    "titleTemplate": "{title} · Verikora",
+    "description": "For property managers and landlords in Québec: Verikora reads the lease against the Civil Code of Québec, examines the pay stub as a file, and shows the exact line behind every finding."
   },
-  "pricing": {
-    "title": "Pricing",
-    "lead": "No annual subscription. Pay per dossier, or subscribe by the month and cancel when you like. Prices in CAD, before taxes: GST and QST are added on the invoice.",
-    "offer": {
-      "headline": "Launch offer: {percent}% off the first {months} months with the code {code}",
-      "line": "{offer} a month for the first {months} months, then {regular} a month",
-      "ends": "Offer valid until {date}. The regular price applies after the offer.",
-      "always": "The regular price applies after the offer."
+  "chrome": {
+    "brandHome": "Verikora, home",
+    "navLabel": "Verikora",
+    "nav": {
+      "what": "What it does",
+      "proof": "A real run",
+      "privacy": "Privacy",
+      "docs": "Docs",
+      "pricing": "Pricing"
     },
-    "requestAccess": "Request access",
-    "plannedNote": "Prices planned for the opening, in CAD, before taxes. Sign-up is closed.",
-    "plansLabel": "Plans",
-    "subscribe": "Subscribe — {plan}",
-    "current": "Current plan",
-    "paymentsOff": "Payment is not available yet on this environment.",
-    "inApp": "Choose your plan",
-    "perMonth": " a month, plus taxes",
-    "perDossier": " per dossier, plus taxes",
-    "beyond": "Then {rate} for each further dossier, charged to your card on file, plus taxes",
-    "included": "{included} dossiers included each month",
-    "paused": "Past the included volume, checks wait until next month",
-    "freeFirst": "One dossier verified free every month, no card",
-    "cancel": "Billed monthly, cancel any time from the billing portal",
-    "noSubscription": "No subscription: you pay for the dossiers you verify",
-    "volume": "More than {included} dossiers a month? Write to us",
-    "plans": {
-      "document": {
-        "name": "One document",
-        "features": [
-          "For a single file: document verification and file screening",
-          "A signed report that cites the article behind every finding"
-        ]
-      },
-      "agency": {
-        "name": "Agency",
-        "features": [
-          "For agencies, brokers and landlords who check several files a month",
-          "The API, with keys created in your account"
-        ]
-      },
-      "firm": {
-        "name": "Building manager",
-        "features": [
-          "For property managers and firms with a larger volume",
-          "The API, with keys created in your account"
-        ]
-      }
+    "signIn": "Sign in",
+    "themeToggle": "Theme",
+    "languageLabel": "Language",
+    "footerLabel": "Site footer",
+    "sourceCode": "Source code",
+    "contact": "Contact",
+    "support": "Support",
+    "legal": "Privacy",
+    "preferences": "Preferences",
+    "menu": {
+      "label": "Menu"
     },
-    "soon": {
-      "title": "Soon",
-      "lead": "Not offered yet. No price is promised for these.",
-      "badge": "Soon",
+    "terms": "Terms",
+    "download": "Download",
+    "openApp": "Open my documents",
+    "myDocuments": "My documents",
+    "tryIt": "Try Verikora",
+    "account": "Account",
+    "settings": "Settings",
+    "signOut": "Sign out",
+    "docs": "Documentation"
+  },
+  "landing": {
+    "title": "Read before you sign.",
+    "lead": "For property managers and landlords who screen applicants in Québec: drop the lease and the applicant's papers. Verikora verifies the documents and screens the file: it reads them against extraction matrices and technical templates, and shows you the exact line behind every finding.",
+    "status": {
+      "label": "Status",
+      "development": "In development: sign-up is closed while we test it on real Québec leases.",
+      "preview": "Dev preview: sign-up is closed, access by invitation."
+    },
+    "hero": {
+      "before": "The lease",
+      "after": "The finding",
+      "leaseCaption": "One clause of the lease, lit",
+      "findingCaption": "What Verikora returns, with its source"
+    },
+    "signIn": "Sign in",
+    "openApp": "Open my documents",
+    "what": {
+      "title": "What it does",
+      "lead": "Three things, with nothing hidden behind them.",
+      "who": "For property managers and landlords who screen applicants in Québec: a lease and a pay stub per file, several files a month. Tenants are welcome too: their first check is free. The registry checks (SOQUIJ, TAL, plumitif) are in preparation.",
+      "trust": "By default, your account and your checks are kept in a database in Toronto, Canada, and seen by your account alone; your files can go to your own storage instead, when you choose it. Nothing is sold, shared or used to train a model.",
+      "privacy": "Read the privacy notice",
       "items": {
-        "fullFile": {
-          "name": "The full applicant file",
-          "text": "The documents, then the registry checks."
+        "line": {
+          "title": "The exact line behind every finding",
+          "text": "Each finding names the rule, quotes the article of law and lights the sentence of the lease it rests on."
         },
-        "backgroundCheck": {
-          "name": "Background checks",
-          "text": "The applicant's records, with their consent."
+        "file": {
+          "title": "The PDF examined as a file",
+          "text": "Producer, dates, successive saves: three levels (observed, unusual, inconsistent), never a « fake » stamp."
         },
-        "screening": {
-          "name": "The document filter alone",
-          "text": "The first stage of a file, charged only when it runs."
+        "find": {
+          "title": "Find everything in a second",
+          "text": "One word, and every document and every finding comes back, the passage in bold."
         }
       }
-    }
-  },
-  "affordability": {
-    "share": "The rent is {share} of the income given. Information only.",
-    "no-claim": "No figure: the income or the rent is not given as a usable number, so no share is computed.",
-    "note": "This share must not be the sole criterion. In Québec, deciding on income alone can be discrimination on social condition (Charter of human rights and freedoms, s. 10 and 12). The income is a figure the applicant chose to give; it is used here and not kept.",
-    "disclaimer": "Information about two figures, not legal advice and no judgement on the applicant. Salary is not required to rent in Québec."
-  },
-  "brief": {
-    "renewalNotice": {
-      "title": "Notice of renewal with a rent increase",
-      "door": "Dwelling: {door}",
-      "end": "The lease ends on {end}.",
-      "current": "Current rent: {rent} a month.",
-      "proposed": "Proposed rent: {rent} a month, from {effective}.",
-      "proposedBlank": "Proposed rent: ____________ a month, from {effective}.",
-      "refusal": "You have one month from receiving this notice to refuse the increase; the landlord may then ask the Tribunal administratif du logement to set the rent.",
-      "window": "Notice given between {opens} and {closes} ({citation}).",
-      "signature": "Landlord's name and signature: ____________    Date: ____________",
-      "disclaimer": "Prepared with Verikora as information, not legal advice. The landlord checks it, signs it and sends it themselves: Verikora sends nothing on anyone's behalf."
+    },
+    "proof": {
+      "title": "One real check",
+      "lead": "A sample lease, checked in development and recorded as it came back. The rule, the line, the article of law, the run id and the date are the engine's answer, not typed by hand.",
+      "figures": "{rules} rules checked, {found} findings on this sample lease.",
+      "runLabel": "Run id",
+      "dateLabel": "Recorded",
+      "rulesetLabel": "Québec rules",
+      "powered": "Powered by Sovkora.",
+      "owlLabel": "What the owl promises"
+    },
+    "who": {
+      "title": "For whom"
+    },
+    "closing": {
+      "title": "One file, one answer.",
+      "body": "Sign in to check the files of your month. Visible to your account only.",
+      "bodyIn": "The files of your month are in your library, checked and seen by your account alone."
+    },
+    "visual": {
+      "caption": "A real check, recorded as it came back"
+    },
+    "showcase": {
+      "title": "The app, as it is",
+      "lead": "Three screens of Verikora, drawn with its own components on fictitious data. Nothing here is a screenshot.",
+      "demo": "Fictitious data",
+      "findings": {
+        "title": "Every finding quotes its line",
+        "text": "The rule, the sentence of the lease it rests on, and the article of law, in the order to read them.",
+        "summary": "The report of a check: the verdict, then each finding with the quoted passage of the lease and its article."
+      },
+      "screening": {
+        "title": "A screening the tenant agrees to",
+        "text": "The applicant sees the result first; a registry check that is not ready says so instead of guessing.",
+        "summary": "A screening result with the checks asked and, for each, its outcome: nothing to report, or not available yet.",
+        "title2": "Result",
+        "items": {
+          "payment-history": "Payment history",
+          "credit": "Credit report",
+          "registry": "Court registry"
+        }
+      },
+      "owner": {
+        "title": "A report the owner can open",
+        "text": "A read-only page by link, with an expiry: the file's fingerprint, the findings and the run that produced them.",
+        "summary": "The owner's page: the document fingerprint, the findings with their articles, and the run id."
+      }
     }
   },
   "stage": {
     "title": "Development version",
     "message": "Data can be reset at any time. This is not a commercial offer yet."
-  },
-  "contractSeal": {
-    "eyebrow": "Verikora — seal of a contract",
-    "partner": "Partner",
-    "contractId": "Contract",
-    "documentType": "Document type",
-    "ruleset": "Framework named by the partner",
-    "parties": "Parties",
-    "partyRole": "Role",
-    "partyName": "Name",
-    "partyUser": "Account",
-    "partyAttestation": "Partner's attestation",
-    "partySignedAt": "Signed on",
-    "payloadHeading": "Content sealed",
-    "payloadSha": "SHA-256 of the content",
-    "sealedAt": "Sealed on",
-    "zone": "Data zone",
-    "guaranteeHeading": "What this seal says",
-    "guarantees": "This file is sealed with Verikora's key (Ed25519, held by Krizaka): it attests that this content, these parties and these dates existed in this form at the time of sealing and have not been changed since.",
-    "notGuaranteed": "It does not verify anyone's identity, the age of anyone, the validity of the contract in law or the partner's statements: Verikora checks documents, it does not decide. Informative, not legal advice.",
-    "verify": "To check a copy, take its SHA-256 and open {url} followed by that value: the answer says whether Verikora sealed it and when, and shows no personal information."
-  },
-  "ownerReport": {
-    "title": "Verification report",
-    "lead": "What was examined on an applicant's file, for the building owner. Hashes only: no document, no name, no quoted passage.",
-    "reference": "File reference {ref}",
-    "issued": "Issued on {date}",
-    "notice": "Informative verification, not legal advice. A person decides; this report decides nothing and ranks no one.",
-    "documents": "Documents examined",
-    "document": "Document {n}",
-    "type": "Type",
-    "typeUnknown": "Not specified",
-    "sha": "SHA-256 of the document",
-    "pages": "Pages",
-    "signals": "Signals observed",
-    "noSignals": "No signal was observed on this document.",
-    "findings": "Rules checked",
-    "noFindings": "No rule was checked on this document.",
-    "notExamined": "Not examined",
-    "runs": "Sovkora runs",
-    "run": "{studio}, run {runId}, version {version}",
-    "versionNone": "unspecified",
-    "ruleset": "Ruleset {id} version {version} ({jurisdiction})",
-    "reviewStatus": "Ruleset review status: {status}. It is to be read by a lawyer before it is relied upon.",
-    "limits": "What this report does not show: the documents themselves, the person's name or contact, any grade or ranking. The signals are observations about a file, never a judgement of a person.",
-    "download": "Download the signed PDF",
-    "expires": "This link is valid until {date}.",
-    "guarantees": "This PDF is signed with Verikora's key (Ed25519, held by Krizaka). The signature covers every item of this report (documents, signals, rules checked, runs, versions), the link's expiry and the full text of the pages. If a single character changes, verification fails.",
-    "notGuaranteed": "It does not prove that the signals or findings are right, nor who holds the file: it shows no name, contact, file name or quoted passage. Informative, not legal advice; a person decides.",
-    "signatureNote": "The attestation (payload, text fingerprint and signature) is embedded in the PDF. Any change to the text of the earlier pages makes verification fail.",
-    "footer": "Verikora, a Krizaka product — analysis by Sovkora.",
-    "verdict": {
-      "PASS": "No issue reported",
-      "FAIL": "Issue reported",
-      "INSUFFICIENT_EVIDENCE": "Not enough evidence",
-      "NOT_APPLICABLE": "Does not apply"
-    },
-    "language": "Language",
-    "languageName": {
-      "en": "English",
-      "fr": "Français"
-    },
-    "languageNote": "The rules are written in French; the English names come with the ruleset. Article references are given as cited."
-  },
-  "sectionG": {
-    "previous-blank": "Section G of the lease is blank: the lowest rent paid in the twelve months before the lease is not stated (C.c.Q., art. 1896).",
-    "previous-altered": "Section G of the lease looks altered: check the figure against the landlord's notice (C.c.Q., art. 1896).",
-    "over-rate": "The new rent is {excess} a month above the highest rent the TAL's {year} rate gives from the stated previous rent ({max}). Source: {source}.",
-    "within-rate": "The new rent is within the highest rent the TAL's {year} rate gives from the stated previous rent ({max}). Source: {source}.",
-    "not-above-previous": "The new rent is not above the previous rent stated in Section G.",
-    "no-rate": "No claim: the TAL's rate for this year is not entered, or the figures are not usable, so the increase is not compared.",
-    "recourse": "Recourse: the tenant may ask the Tribunal administratif du logement to fix the rent (C.c.Q., art. 1950).",
-    "disclaimer": "Information about the figures and dates of the lease, not legal advice and no judgement on the landlord. Check the article and the TAL's page, or ask the TAL: it tells you the form and any fee, and how days and months are counted. Verikora files nothing."
-  },
-  "paymentClauses": {
-    "advance-over-one-month": "The lease asks for more than one month of rent in advance. A landlord may require only the first term, within one month (C.c.Q., art. 1904).",
-    "deposit": "The lease asks for a sum besides the rent (deposit, key money or guarantee). A landlord may not require one (C.c.Q., art. 1904).",
-    "postdated-cheques": "The lease requires postdated cheques. A landlord may not require them (C.c.Q., art. 1904).",
-    "ok": "The payment terms read in the lease stay within what art. 1904 allows (C.c.Q., art. 1904).",
-    "disclaimer": "Information about the terms of the lease, not legal advice and no judgement on the landlord. Check the article, or ask the TAL."
-  },
-  "sectionGDeadline": {
-    "ten-days": "The landlord gave the notice: the request to the TAL is made within 10 days of the day the lease was concluded.",
-    "two-months-from-start": "No notice was given: the request to the TAL is made within two months of the start of the lease.",
-    "two-months-from-knowledge": "The notice held a false statement: the request to the TAL is made within two months of learning of it.",
-    "open": "By these dates, the last day to ask is {lastDay} ({days} days left). Source: {source}.",
-    "last-day": "By these dates, today ({lastDay}) is the last day to ask. Source: {source}.",
-    "closed": "By these dates, the last day to ask was {lastDay}. Source: {source}.",
-    "no-claim": "No claim: a date is missing or unreadable, so no deadline is given."
-  },
-  "sectionGRequest": {
-    "title": "Facts to take to the TAL:",
-    "rentNew": "Rent of the new lease: {cents}.",
-    "rentPrevious": "Lowest rent in the twelve months before, as written in Section G: {cents}.",
-    "previousBlank": "Section G of the lease does not state the previous rent.",
-    "previousAltered": "Section G of the lease looks crossed out or altered.",
-    "rentMax": "Highest rent the TAL's {year} rate gives from that previous rent: {cents}.",
-    "excess": "Difference with the new rent: {cents}.",
-    "deadline": "By the dates given, the last day to ask the TAL to fix the rent is {lastDay}."
   }
 }

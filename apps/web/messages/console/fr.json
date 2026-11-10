@@ -1,0 +1,3293 @@
+{
+  "console": {
+    "meta": {
+      "signIn": "Connexion",
+      "library": "Accueil",
+      "search": "Recherche",
+      "users": "Personnes",
+      "admin": "Administration",
+      "documents": "Documents"
+    },
+    "signIn": {
+      "promise": "Vos documents, lus et vérifiés par Verikora.",
+      "asideFooter": "Chaque constat cite sa règle et la ligne sur laquelle il repose.",
+      "title": "Connexion",
+      "description": "Avec le compte que notre équipe vous a remis.",
+      "email": "Courriel",
+      "password": "Mot de passe",
+      "submit": "Se connecter",
+      "closedTitle": "L'inscription est fermée.",
+      "closed": "Verikora est en développement ; les comptes sont créés par notre équipe.",
+      "contact": "Nous parler",
+      "legalPrefix": "En vous connectant, vous acceptez l'",
+      "privacy": "avis de confidentialité",
+      "signUpLink": "Créer un compte",
+      "verifiedNotice": "Votre adresse est confirmée. Vous pouvez vous connecter.",
+      "invalidNotice": "Ce lien de confirmation est invalide ou a expiré.",
+      "proofOne": "Chaque constat cite sa règle et la ligne sur laquelle il repose.",
+      "proofTwo": "Par défaut, le document est supprimé après sa vérification : seul le rapport reste.",
+      "proofThree": "Les rapports sont rédigés en français, la langue de leurs règles.",
+      "forgotLink": "Mot de passe oublié ?",
+      "resetNotice": "Votre mot de passe est changé. Connectez-vous avec le nouveau."
+    },
+    "check": {
+      "defaults": {
+        "label": "Avant le dépôt",
+        "erased": "Effacé après la vérification",
+        "kept": "Conservé dans votre bibliothèque",
+        "rules": "Règles du Québec en vigueur aujourd’hui",
+        "place": "dans « Mes documents »",
+        "modify": "Modifier"
+      },
+      "flow": {
+        "label": "Vos étapes",
+        "drop": "Dépôt",
+        "kind": "Type",
+        "running": "Vérification",
+        "result": "Rapport"
+      },
+      "queueLabel": "Les fichiers déposés",
+      "stages": {
+        "reading": "Lecture du document…",
+        "starting": "Lancement de la vérification…",
+        "asking": "Quel document ? Répondez juste au-dessus.",
+        "started": "Vérification lancée",
+        "refused": "Non lancée : {reason}"
+      },
+      "openReport": "Ouvrir le rapport",
+      "catalogue": {
+        "title": "Les vérifications",
+        "searchLabel": "Chercher une vérification",
+        "searchPlaceholder": "Chercher une vérification",
+        "groupsLabel": "Type de vérification",
+        "all": "Toutes",
+        "groups": {
+          "lease": "Baux",
+          "invoice": "Factures",
+          "contract": "Contrats",
+          "notice": "Avis et états",
+          "authenticity": "Authenticité"
+        },
+        "available": "Disponible",
+        "action": "Vérifier",
+        "actionFor": "Vérifier : {title}",
+        "none": "Aucune vérification ne correspond à cette recherche.",
+        "chosen": "Vérification choisie : {kind}",
+        "change": "Changer",
+        "listLabel": "Les vérifications que Verikora fait",
+        "items": {
+          "qc-residential-lease": {
+            "title": "Bail de logement, Québec",
+            "line": "Votre bail au regard des règles du Québec, ligne par ligne."
+          },
+          "fr-residential-lease": {
+            "title": "Bail d’habitation, France",
+            "line": "France · bail d’habitation"
+          },
+          "be-residential-lease": {
+            "title": "Bail d’habitation, Wallonie",
+            "line": "Wallonie · bail d’habitation"
+          },
+          "qc-invoice": {
+            "title": "Facture de fournisseur, Québec",
+            "line": "Québec · numéros de TPS et de TVQ, mentions obligatoires"
+          },
+          "qc-service-contract": {
+            "title": "Contrat de service, Québec",
+            "line": "Québec · intérêt de retard, droit d’auteur et droits moraux"
+          },
+          "qc-visit-notice": {
+            "title": "Avis de visite, Québec",
+            "line": "Québec · préavis de 24 heures"
+          },
+          "qc-premises-condition": {
+            "title": "État des lieux, Québec",
+            "line": "Québec · l’état du logement à l’entrée"
+          },
+          "authenticity": {
+            "title": "Authenticité du fichier",
+            "line": "Le fichier PDF lui-même : producteur, dates, enregistrements successifs."
+          }
+        }
+      },
+      "dropTitle": "Déposer",
+      "plan": {
+        "label": "Votre forfait",
+        "plan": "Forfait",
+        "names": {
+          "pro": "Pro",
+          "credits": "Crédits",
+          "included": "Inclus"
+        },
+        "used": "Ce mois-ci",
+        "cap": "Plafond d’usage équitable",
+        "left": "Vérifications restantes",
+        "meterLabel": "Vérifications ce mois-ci",
+        "meterText": "{used} sur {cap}",
+        "included": "Vos vérifications sont incluses.",
+        "manage": "Crédits et usage",
+        "open": "Ouvrir"
+      }
+    },
+    "home": {
+      "todo": {
+        "title": "À traiter",
+        "toReview": "Vérifications à regarder",
+        "toDecide": "Dossiers à décider",
+        "openLinks": "Liens de dépôt ouverts",
+        "expires": "expire le {date}",
+        "nothing": "Rien à traiter."
+      },
+      "activity": {
+        "title": "Activité",
+        "label": "Activité",
+        "periodsLabel": "Période",
+        "periods": {
+          "7d": "7 j",
+          "30d": "30 j",
+          "90d": "90 j"
+        },
+        "checks": "Vérifications",
+        "toReview": "À regarder",
+        "documents": "Documents ajoutés",
+        "files": "Dossiers reçus"
+      },
+      "lead": {
+        "intro": "Vous avez {items}.",
+        "toReviewOne": "{count} vérification à regarder",
+        "toReviewMany": "{count} vérifications à regarder",
+        "toDecideOne": "{count} dossier à décider",
+        "toDecideMany": "{count} dossiers à décider",
+        "openLinksOne": "{count} lien de dépôt ouvert",
+        "openLinksMany": "{count} liens de dépôt ouverts"
+      },
+      "binder": {
+        "title": "Le classeur",
+        "label": "Collections",
+        "open": "Ouvrir cette collection",
+        "empty": "Aucun fichier dans cette collection pour l’instant.",
+        "add": "Ajouter un document"
+      },
+      "quick": {
+        "label": "Accès rapide",
+        "request": {
+          "title": "Demander des documents",
+          "hint": "Envoyer un lien"
+        },
+        "documents": {
+          "title": "Mes documents",
+          "hint": "Par collection"
+        },
+        "checks": {
+          "title": "Vérifications",
+          "hint": "Résultats et rapports"
+        },
+        "search": {
+          "title": "Recherche",
+          "hint": "Un titre, un passage"
+        }
+      },
+      "week": {
+        "title": "Cette semaine",
+        "summary": "Vérifications par jour, les 7 derniers jours",
+        "day": "Jour",
+        "checks": "Vérifications",
+        "chart": {
+          "showData": "Voir les données",
+          "hideData": "Masquer les données",
+          "tableCaption": "{title}",
+          "keyboardHint": "Utilisez les flèches pour passer d’une barre à l’autre.",
+          "roleDescription": "graphique",
+          "empty": "Aucune vérification pour l’instant.",
+          "kind": "Graphique à barres"
+        }
+      },
+      "credits": {
+        "title": "Crédits et usage",
+        "included": "Vos vérifications sont incluses.",
+        "leftOne": "{count} vérification restante",
+        "leftMany": "{count} vérifications restantes",
+        "pro": "{used} sur {cap} vérifications ce mois-ci",
+        "renews": "Se renouvelle le {date}",
+        "ends": "Se termine le {date}",
+        "manage": "Forfaits et usage"
+      },
+      "check": {
+        "title": "Vérifier un document",
+        "lead": "Déposez un bail ou une pièce de dossier : Verikora la lit et vous dit quoi regarder.",
+        "import": "Importer un lot"
+      },
+      "dossiers": {
+        "title": "Mes dossiers",
+        "label": "Vos dossiers",
+        "empty": "Aucun dossier pour l'instant.",
+        "never": "Pas encore vérifié",
+        "moved": "Dernière activité le {date}",
+        "kindFile": "Dossier de candidat",
+        "kindCollection": "Collection"
+      },
+      "usage": {
+        "label": "Forfait et usage"
+      },
+      "files": {
+        "title": "Dossiers de candidats",
+        "label": "Vos dossiers de candidats",
+        "empty": "Aucun dossier de candidat pour l'instant. Demandez des documents pour en ouvrir un.",
+        "all": "Voir tous les dossiers"
+      },
+      "documents": {
+        "title": "Mes documents",
+        "label": "Vos collections de documents"
+      }
+    },
+    "sections": {
+      "library": "Accueil",
+      "files": "Dossiers",
+      "documents": "Documents",
+      "checks": "Vérifications"
+    },
+    "shell": {
+      "skip": "Aller au contenu",
+      "sidebarLabel": "Verikora",
+      "closeMenu": "Fermer le menu",
+      "openMenu": "Ouvrir le menu",
+      "collapse": "Replier le menu",
+      "expand": "Déplier le menu",
+      "groupDocuments": "Documents",
+      "groupAdmin": "Administration",
+      "library": "Bibliothèque",
+      "search": "Recherche",
+      "users": "Personnes",
+      "document": "Document",
+      "signedInAs": "Connecté en tant que {email}",
+      "devBuild": "DEV · v{version}",
+      "language": "Langue",
+      "theme": "Thème",
+      "signOut": "Se déconnecter",
+      "check": "Vérifier",
+      "account": "Compte",
+      "admin": "Administration",
+      "checks": "Vérifications",
+      "checkAction": "Vérifier un document",
+      "profile": "Profil",
+      "settings": "Réglages",
+      "billing": "Crédits et usage",
+      "titles": {
+        "library": "Accueil",
+        "checks": "Vérifications",
+        "check": "Vérifier un document",
+        "search": "Recherche",
+        "document": "Document",
+        "account": "Compte",
+        "screening": "Vérification de locataire",
+        "welcome": "Bienvenue"
+      },
+      "palette": {
+        "label": "Rechercher dans vos documents",
+        "placeholder": "Un titre, un passage, un constat…",
+        "none": "Aucun résultat pour « {q} ».",
+        "type": "Tapez au moins deux lettres.",
+        "all": "Tous les résultats",
+        "hits": "Documents et constats"
+      },
+      "toDecideOne": "{count} dossier à décider",
+      "toDecideMany": "{count} dossiers à décider"
+    },
+    "library": {
+      "title": "Bibliothèque",
+      "dropTitle": "Déposez vos documents ici",
+      "browse": "Choisir des fichiers",
+      "inputLabel": "Choisir les fichiers à vérifier",
+      "hint": "PDF, Word (.docx), OpenDocument (.odt), texte ou photo (PNG, JPEG, HEIC), jusqu'à 10 Mo chacun. Un bail, un contrat, une facture.",
+      "refusedSize": "{name} : plus de 10 Mo",
+      "refusedType": "{name} : seulement des PDF, des fichiers texte et des photos",
+      "refusedCount": "{name} : trop de fichiers à la fois",
+      "kindPick": "Quel document ?",
+      "kindUnsure": "Verikora n’a pas reconnu « {name} » avec certitude : dites quel document c’est, et la vérification démarre.",
+      "options": "Options",
+      "informative": "Vérification informative, pas un avis juridique.",
+      "kindHints": {
+        "auto": "Verikora le reconnaît",
+        "lease": "Loyer, durée, droits du locataire",
+        "contract": "Clauses, obligations, pénalités",
+        "invoice": "Montants, taxes, bénéficiaire",
+        "other": "Tout autre document"
+      },
+      "kindLabel": "Type des prochains documents",
+      "lead": "Vos documents, par collection — et chaque rapport.",
+      "emptyPitch": "Déposez un bail, une fiche de paie ou une facture : Verikora le lit selon les règles du Québec et cite la ligne de chaque constat.",
+      "tryExamples": "Ou essayez :",
+      "dropAnywhere": "Déposez pour vérifier",
+      "dropAnywhereHint": "PDF, Word, texte ou photo — 10 Mo",
+      "tray": {
+        "title": "Vérifications en cours",
+        "workingOne": "{count} en cours",
+        "workingMany": "{count} en cours",
+        "doneOne": "{count} terminée",
+        "doneMany": "{count} terminées",
+        "failedOne": "{count} en échec",
+        "failedMany": "{count} en échec",
+        "collapse": "Replier",
+        "show": "Afficher",
+        "photos": "{name} et {count} autres photos, un seul document"
+      },
+      "checkLead": "Un fichier à la fois ; plusieurs d’un coup ? Importez un lot.",
+      "caption": "Vos documents",
+      "columns": {
+        "title": "Document",
+        "kind": "Type",
+        "status": "État",
+        "size": "Taille",
+        "added": "Ajouté"
+      },
+      "emptyTitle": "Déposez votre premier document",
+      "emptyText": "Glissez un fichier ici ou choisissez-en un : un bail à vérifier au regard de la loi, le PDF d'un fournisseur à examiner.",
+      "duplicate": "{name} est déjà dans votre bibliothèque.",
+      "uploaded": "{name} est dans votre bibliothèque.",
+      "open": "Ouvrir {title}",
+      "noText": "sans couche texte",
+      "pages": "{count} p.",
+      "screening": "Vérifier le dossier d'un locataire (avec son consentement)",
+      "checkCta": "Vérifier un document",
+      "screeningCta": "Vérifier le dossier d'un locataire",
+      "examplesTitle": "Ou essayez un exemple",
+      "examplesNote": "Documents fictifs, vérifiés comme les vôtres.",
+      "sampleReport": "Voir un exemple de rapport (données de démonstration)",
+      "emptyDossiers": "Vos dossiers apparaissent ici : une collection par immeuble ou par sujet, et les dossiers de candidats que vous ouvrez. Votre première vérification crée le premier.",
+      "tryExample": "Essayer cet exemple",
+      "exampleTenant": "Un bail offert à un locataire",
+      "exampleLandlord": "Un modèle de bail de locateur",
+      "exampleTenantHint": "Rue Saint-Denis, 4½",
+      "exampleLandlordHint": "Avenue du Parc, 3½",
+      "dropAgain": "Ajouter des documents",
+      "keep": "Conserver mes documents",
+      "keepOn": "Le document reste dans votre bibliothèque, là où le panneau d'information l'indique.",
+      "keepOff": "Par défaut, le document est supprimé après sa vérification : seul le rapport reste.",
+      "keepNext": "Cela vaut pour les documents que vous ajoutez ensuite : ceux déjà envoyés suivent ce qui était réglé au moment du dépôt.",
+      "keepDisabled": "La conservation est désactivée dans vos réglages : le document sera supprimé après sa vérification.",
+      "groupPhotos": "Ces photos sont les pages d'un seul document",
+      "groupPhotosOn": "Déposées ensemble, elles forment un document, dans l'ordre où vous les choisissez.",
+      "groupPhotosOff": "Chaque photo devient son propre document.",
+      "groupedUploaded": "{count} photos forment un seul document dans votre bibliothèque.",
+      "photoNotice": "Les photos sont redressées et recadrées, puis leur texte est lu sur place. Les données de la photo (position, appareil) sont retirées.",
+      "table": {
+        "empty": "Aucun document ne correspond.",
+        "results": "{count} documents",
+        "filters": "Filtrer les documents",
+        "clear": "Effacer les filtres",
+        "remove": "Retirer le filtre {label}",
+        "search": "Filtrer par titre",
+        "pagination": "Pages des documents",
+        "previous": "Page précédente",
+        "next": "Page suivante",
+        "page": "Page {page}",
+        "compact": "Page {page} sur {count}",
+        "pageSize": "Documents par page"
+      }
+    },
+    "upload": {
+      "queued": "En attente",
+      "uploading": "Envoi",
+      "paused": "En pause",
+      "done": "Gardé",
+      "error": "Non envoyé",
+      "pause": "Pause",
+      "resume": "Reprendre",
+      "retry": "Réessayer",
+      "cancel": "Annuler",
+      "remove": "Retirer"
+    },
+    "kinds": {
+      "auto": "Automatique",
+      "lease": "Bail",
+      "contract": "Contrat",
+      "invoice": "Facture",
+      "other": "Autre"
+    },
+    "statuses": {
+      "stored": "Gardé",
+      "analysing": "En lecture",
+      "checked": "Vérifié",
+      "attention": "À regarder",
+      "failed": "Échec de la vérification"
+    },
+    "document": {
+      "reading": "Verikora lit le document…",
+      "back": "Bibliothèque",
+      "details": "Détails",
+      "file": "Fichier",
+      "pages": "Pages",
+      "size": "Taille",
+      "added": "Ajouté",
+      "fingerprint": "SHA-256",
+      "viewer": "Le document",
+      "viewerRegion": "Pages du document",
+      "text": "Son texte",
+      "noText": "Ce PDF n'a pas de couche texte : la vérification au regard de la loi n'a pas pu lire ses clauses. L'examen du fichier, lui, a lieu.",
+      "openFile": "Ouvrir le fichier",
+      "delete": "Supprimer",
+      "deleteConfirm": "Supprimer définitivement",
+      "deleted": "Supprimé.",
+      "checks": "Vérifications",
+      "checksLead": "Chaque vérification est un run du moteur de Verikora (Sovkora) ; son identifiant est la trace de ce qui a tourné.",
+      "passageOf": "Passage cité par {rule}",
+      "loadingPdf": "Chargement du document…",
+      "pdfFailed": "Le fichier n’a pas pu être affiché. Ouvrez-le avec le bouton ci-dessus.",
+      "pageLabel": "Page {page} sur {total}",
+      "onPage": "Passage à la page {page} :",
+      "notFound": "Ce passage n’est pas dans la couche de texte du PDF :",
+      "checksLeadBy": {
+        "neutral": "Choisissez ce que Verikora doit lire : le texte au regard de la loi, ou le fichier PDF lui-même.",
+        "tenant": "Avant de signer : le texte de votre bail au regard des règles du Québec, puis, si une pièce vous paraît douteuse, le fichier lui-même.",
+        "landlord": "Avant d'envoyer : votre modèle de bail au regard des règles du Québec ; pour une pièce du locataire en PDF, l'examen du fichier lui-même.",
+        "freelancer": "Choisissez ce que Verikora lit : votre facture au regard des mentions obligatoires du Québec et du format des numéros de TPS et de TVQ, votre contrat de services au regard des règles fédérales sur l'intérêt et le droit d'auteur, ou le fichier PDF lui-même. Les règles du Code civil arrivent bientôt.",
+        "business": "Choisissez ce que Verikora lit : une facture de fournisseur au regard des mentions obligatoires du Québec et du format des numéros de TPS et de TVQ, ou le fichier PDF lui-même. Les règles des contrats arrivent bientôt."
+      },
+      "tabs": {
+        "rapport": "Rapport",
+        "document": "Document",
+        "historique": "Historique"
+      },
+      "where": {
+        "title": "Où vit ce document",
+        "none": "Non conservé",
+        "krizakaCanadaEncrypted": "Conservé : Krizaka (Canada, chiffré)",
+        "krizakaCanada": "Conservé : Krizaka (Canada)",
+        "krizakaElsewhere": "Conservé : Krizaka ({region})",
+        "workspace": "Conservé : votre stockage ({endpoint}, région {region})",
+        "devOnly": "Conservé : stockage de développement, données fictives seulement",
+        "device": "Sur cet appareil",
+        "retentionUntil": "Conservé jusqu'au {date}.",
+        "retentionNone": "Conservé jusqu'à ce que vous le supprimiez.",
+        "retentionNotKept": "Seul le rapport reste.",
+        "deleteNow": "Supprimer maintenant",
+        "deleteNowConfirm": "Supprimer définitivement",
+        "deleteNowHint": "Le document et ses vérifications sont supprimés tout de suite. C'est irréversible.",
+        "pendingPurge": "Non conservé : supprimé dès la fin de sa vérification (au plus tard le {date}). Seul le rapport reste.",
+        "notKeptText": "Ce document n'est pas conservé : son texte et son fichier ont été supprimés après la vérification. Seul le rapport reste."
+      },
+      "facts": {
+        "title": "Le document",
+        "collection": "Collection"
+      },
+      "technical": "Détails techniques (empreinte)"
+    },
+    "analysis": {
+      "complianceTitle": "Au regard de la loi",
+      "complianceText": "Le texte, règle par règle, au regard des règles d'une juridiction à une date.",
+      "rulesLine": "Vérifiée selon les règles du Québec pour {kind}.",
+      "mismatch": "Vous avez indiqué « {declared} », mais le document se lit comme {detected}. Confirmez le type ci-dessous avant la vérification : rien n’est vérifié tant que vous ne l’avez pas fait.",
+      "notVerified": "Ce type de document n'est pas encore vérifié contre la loi.",
+      "kindWords": {
+        "invoice": "une facture de fournisseur",
+        "contract": "un contrat de service",
+        "lease": "un bail de logement",
+        "visit-notice": "un avis de visite du logement",
+        "premises-condition": "un état des lieux"
+      },
+      "authenticityTitle": "Traces de modification",
+      "authenticityText": "Le fichier PDF lui-même : producteur, dates, enregistrements successifs.",
+      "jurisdiction": "Juridiction",
+      "documentType": "Nature du document",
+      "documentTypes": {
+        "lease": "Un bail de logement",
+        "invoice": "Une facture de fournisseur (Québec : numéros de TPS et de TVQ, mentions obligatoires)",
+        "contract": "Un contrat de service (Québec : intérêt de retard, droit d'auteur et droits moraux)",
+        "visit-notice": "Un avis de visite du logement (Québec : préavis de 24 heures)",
+        "premises-condition": "Un état des lieux (Québec : l’état du logement à l’entrée)"
+      },
+      "jurisdictionNames": {
+        "QC": "du Québec",
+        "FR": "de France",
+        "BE-WAL": "de Wallonie"
+      },
+      "jurisdictions": {
+        "QC": "Québec — bail de logement (C.c.Q., art. 1851 et suiv.)",
+        "FR": "France — bail d'habitation",
+        "BE-WAL": "Wallonie — bail d'habitation"
+      },
+      "asOf": "Règles en vigueur le",
+      "expectedIssuer": "Émetteur attendu (facultatif)",
+      "expectedIssuerHint": "Qui devrait l'avoir produit, par exemple le nom de l'agence.",
+      "run": "Lancer la vérification",
+      "running": "Verikora lit…",
+      "runId": "Run Sovkora",
+      "blueprint": "Version du Studio",
+      "ruleset": "Règles",
+      "started": "Lancé",
+      "finished": "Terminé",
+      "statuses": {
+        "running": "En cours",
+        "succeeded": "Terminé",
+        "failed": "Échec",
+        "cancelled": "Annulé"
+      },
+      "summary": "{failures} manquement(s) bloquant(s) sur {rules} règles",
+      "verdicts": {
+        "PASS": "Point respecté",
+        "FAIL": "Point non respecté",
+        "INSUFFICIENT_EVIDENCE": "Éléments insuffisants",
+        "NOT_APPLICABLE": "Ne s'applique pas"
+      },
+      "severity": "Gravité",
+      "severities": {
+        "blocking": "Bloquant",
+        "major": "Important",
+        "advice": "À considérer"
+      },
+      "citation": "Source",
+      "passage": "Passage",
+      "noPassage": "Aucun passage : le document ne dit rien sur ce point.",
+      "levels": {
+        "observé": "Observé",
+        "inhabituel": "Inhabituel",
+        "incohérent": "Incohérent"
+      },
+      "where": "Où",
+      "mayIndicate": "Peut indiquer",
+      "language": "Les rapports sont rédigés en français, la langue de leurs règles.",
+      "history": "Runs précédents",
+      "noPdf": "Seuls les fichiers PDF, Word (.docx) et OpenDocument (.odt) s'examinent en tant que fichiers.",
+      "tooLarge": "Verikora examine les fichiers jusqu'à 5 Mo.",
+      "toReview": "Corpus québécois à faire relire par un avocat : un tri de démonstration, pas un avis juridique.",
+      "showInFile": "Voir dans le fichier",
+      "findingPage": "Page {page}",
+      "findingPageOnly": "Page {page} (emplacement exact introuvable)",
+      "findingNotFound": "Introuvable dans la couche de texte du fichier",
+      "sovkoraRun": "Exécution Sovkora",
+      "exportReport": "Rapport d’audit",
+      "exportHint": "Un rapport signé en fichier HTML et en PDF (les pages du rapport, puis une page de signature visible ; l'attestation est intégrée au fichier) : SHA-256 du document, version des règles, date, chaque constat avec son passage et son article, l'identifiant d'exécution Sovkora.",
+      "exportDownload": "Télécharger le rapport",
+      "exportVerify": "Vérifier un rapport",
+      "exportSha": "SHA-256 du rapport",
+      "exportKey": "Clé de signature",
+      "seededNote": "Une vérification de démonstration (jeu de données semé) : rien n’a tourné sur le moteur, aucun rapport signé n’est produit pour elle.",
+      "exportUnavailable": "Ce rapport ne peut pas être produit pour l’instant.",
+      "exportPdf": "Télécharger le PDF",
+      "reused": "Résultat réutilisé : ce document exact a déjà été vérifié avec les mêmes règles, aucune nouvelle vérification n’a été lancée.",
+      "traces": {
+        "title": "Traces de modification",
+        "notTitle": "Ce que cette vérification n'est pas",
+        "notItems": {
+          "alteration": "Ce n'est pas un constat qu'un document a été modifié de mauvaise foi, et elle ne dit rien de la personne.",
+          "ordinary": "Beaucoup d'étapes ordinaires laissent les mêmes traces : signer, remplir un formulaire, fusionner des pages, compresser, convertir depuis un courriel, réimprimer.",
+          "absence": "Un document sans trace n'est pas déclaré authentique : un fichier refait de zéro n'en laisse aucune.",
+          "person": "Une personne décide. Verikora ne décide rien."
+        },
+        "notExamined": "Non examiné : {list}.",
+        "families": {
+          "history": "Historique du fichier",
+          "layout": "Mise en page et polices",
+          "images": "Images",
+          "figures": "Montants",
+          "across": "D'un document à l'autre"
+        },
+        "observed": "Ce que nous avons observé",
+        "page": "Page {page}",
+        "revision": "Enregistré de nouveau : révision {revision}",
+        "field": "Champ : {field}",
+        "ordinaryLabel": "Explications ordinaires",
+        "askForLabel": "Quoi demander",
+        "run": "Exécution Sovkora {runId}",
+        "answerLabel": "Explication de la personne, {date}",
+        "ordinary": {
+          "history": "Signer, remplir un formulaire, fusionner des pages, compresser le fichier ou le convertir depuis un courriel laissent les mêmes traces qu'une modification.",
+          "layout": "Une autre police sur une ligne peut venir d'un gabarit, d'un champ de formulaire, d'un tampon ou d'une page ajoutée plus tard par l'émetteur.",
+          "images": "Une photo enregistrée de nouveau, recadrée, pivotée ou envoyée par une messagerie change les mêmes données.",
+          "figures": "Un arrondi, une prime, un rappel de paie, un deuxième employeur ou une correction du service de la paie peuvent expliquer des montants qui diffèrent.",
+          "across": "Deux emplois, un dépôt fractionné, un autre compte bancaire ou une augmentation peuvent expliquer deux documents qui ne concordent pas."
+        },
+        "askFor": {
+          "history": "Demandez le document téléchargé depuis le portail de l'émetteur (le portail de paie pour un talon de paie), ou le fichier d'origine tel que l'émetteur l'a envoyé.",
+          "layout": "Demandez le fichier d'origine tel que l'émetteur l'a produit, et non une copie ouverte puis enregistrée de nouveau.",
+          "images": "Demandez le fichier d'origine, ou une nouvelle photo du document entier, à plat et bien éclairé.",
+          "figures": "Appelez l'émetteur à un numéro que vous avez trouvé vous-même et demandez une copie tirée de ses dossiers.",
+          "across": "Appelez l'employeur à un numéro que vous avez trouvé vous-même et demandez au candidat d'expliquer l'écart."
+        }
+      },
+      "photoOrigin": {
+        "header": "Lu sur vos photos à l'importation, avant que leurs métadonnées soient retirées : des faits sur les fichiers, pas une expertise. Ils ne disent pas si le document est authentique.",
+        "where": "Métadonnées des photos, lues à l'importation",
+        "declared": {
+          "observation": "Les photos déclarent l'appareil « {device} » et le logiciel « {software} ».",
+          "mayIndicate": "Rien en soi : c'est ce que l'appareil ou le logiciel a inscrit en enregistrant la photo."
+        },
+        "absent": {
+          "observation": "Les photos ne déclarent ni appareil, ni logiciel, ni date de prise de vue.",
+          "mayIndicate": "Des métadonnées retirées. Les messageries, les captures d'écran et les réseaux sociaux les retirent aussi d'office."
+        },
+        "noDevice": {
+          "observation": "Les photos ne déclarent aucun appareil de prise de vue : c'est vraisemblablement une capture d'écran ou un export.",
+          "mayIndicate": "Rien quant à l'authenticité. Noté parce qu'une photo d'un document papier porte d'ordinaire la marque de l'appareil."
+        },
+        "modifiedAfter": {
+          "observation": "Une photo déclare avoir été modifiée après la prise de vue : prise le {taken}, modifiée le {modified}.",
+          "mayIndicate": "Un enregistrement postérieur. Une rotation, un recadrage ou un export depuis la photothèque laissent la même trace."
+        },
+        "modifiedBefore": {
+          "observation": "Une photo déclare une date de modification ({modified}) antérieure à sa prise de vue ({taken}).",
+          "mayIndicate": "Des dates réécrites, ou une horloge d'appareil mal réglée — ce qui arrive aussi après un changement de fuseau."
+        },
+        "gpsRemoved": {
+          "observation": "Une photo portait une position GPS. Elle a été retirée à l'importation et n'a jamais été conservée.",
+          "mayIndicate": "Rien quant à l'authenticité : la plupart des téléphones l'inscrivent d'office."
+        }
+      },
+      "registry": {
+        "title": "Registres d’entreprises",
+        "lead": "Les numéros imprimés sur le document, lus dans les registres publics. Une question à poser à l’émetteur, jamais un verdict sur le document.",
+        "qst": "Numéro de TVQ {number}",
+        "gstHst": "Numéro de TPS/TVH",
+        "neq": "NEQ (numéro d’entreprise du Québec)",
+        "source": "Source : {source}, consulté le {date}.",
+        "nothingToAsk": "Le registre contient ce numéro : rien à demander.",
+        "notLookedUp": {
+          "bad-format": "Non consulté : le numéro n’a pas le format attendu.",
+          "unavailable": "Non consulté : le registre n’a pas répondu.",
+          "not-authorised": "Non consulté : ce registre n’est pas encore consulté.",
+          "not-covered": "Non consulté : ce registre n’est pas consulté."
+        },
+        "signals": {
+          "REG-001": {
+            "observation": "Le numéro de TVQ imprimé sur le document n'a pas été trouvé dans le registre {source}.",
+            "mayIndicate": "Une erreur de frappe, un numéro pas encore inscrit, ou un numéro qui appartient à une autre entreprise.",
+            "askFor": "Demandez à l'émetteur de confirmer son numéro de TVQ."
+          },
+          "REG-002": {
+            "observation": "Le nom imprimé sur le document diffère du nom inscrit au registre.",
+            "mayIndicate": "Un nom commercial, un changement de nom récent ou une abréviation.",
+            "where": "Document : {document} · Registre : {register}",
+            "askFor": "Demandez à l'émetteur comment les deux noms se rapportent."
+          },
+          "REG-003": {
+            "observation": "Le registre {source} indique cette inscription révoquée ou annulée au {date}, à la date du document ou avant.",
+            "mayIndicate": "Une inscription fermée puis rouverte sous le même numéro, ou une production tardive.",
+            "askFor": "Demandez à l'émetteur son inscription actuelle."
+          }
+        }
+      }
+    },
+    "search": {
+      "lead": "Un mot, et chaque document et chaque constat reviennent.",
+      "title": "Recherche",
+      "label": "Chercher dans vos documents et leurs constats",
+      "placeholder": "dépôt de garantie, facture 2026, « solidarité »…",
+      "hint": "Deux caractères au moins. Des guillemets pour une expression exacte, un signe moins pour exclure un mot.",
+      "none": "Rien ne correspond à « {q} ».",
+      "sources": {
+        "title": "Titre",
+        "text": "Texte",
+        "finding": "Constat"
+      },
+      "resultsOne": "{count} résultat",
+      "resultsMany": "{count} résultats"
+    },
+    "admin": {
+      "title": "Personnes",
+      "caption": "Comptes",
+      "columns": {
+        "email": "Courriel",
+        "role": "Rôle",
+        "status": "État",
+        "documents": "Documents",
+        "lastSeen": "Vu pour la dernière fois"
+      },
+      "roles": {
+        "USER": "Membre",
+        "ADMIN": "Administrateur"
+      },
+      "states": {
+        "ACTIVE": "Actif",
+        "SUSPENDED": "Suspendu"
+      },
+      "never": "Jamais",
+      "note": "Visible seulement par un administrateur, depuis une adresse autorisée."
+    },
+    "errors": {
+      "INVALID_CREDENTIALS": "Courriel ou mot de passe incorrect.",
+      "SUSPENDED": "Ce compte est suspendu.",
+      "SIGNUP_CLOSED": "L'inscription est fermée.",
+      "RATE_LIMITED": "Trop de tentatives. Réessayez dans un instant.",
+      "UNAUTHENTICATED": "Votre session a pris fin. Reconnectez-vous.",
+      "FORBIDDEN": "Non autorisé.",
+      "INCIDENT_BAD_INPUT": "L'incident est incomplet ou invalide.",
+      "INCIDENT_UNKNOWN": "Cet incident n'existe pas.",
+      "INCIDENT_CLOSED": "Cet incident est fermé et ne peut plus changer.",
+      "INCIDENT_NOT_ASSESSED": "Évaluez d'abord le risque.",
+      "INCIDENT_NO_NOTICE_DUE": "Aucun avis n'est requis : le risque de préjudice sérieux n'a pas été retenu.",
+      "INCIDENT_NOTICES_MISSING": "Les deux avis doivent être consignés avant la fermeture.",
+      "IP_NOT_ALLOWED": "Pas depuis cette adresse.",
+      "NOT_FOUND": "Introuvable.",
+      "FILE_TOO_LARGE": "Le fichier dépasse 10 Mo.",
+      "UNSUPPORTED_TYPE": "Seuls les PDF, les fichiers texte et les photos (PNG, JPEG, HEIC) sont acceptés.",
+      "EMPTY_FILE": "Le fichier est vide.",
+      "UNREADABLE_FILE": "Ce fichier ne peut pas être ouvert : il est endommagé ou n’est pas un document valide.",
+      "NO_TEXT": "Ce document n'a pas de couche texte à vérifier.",
+      "TEXT_TOO_LONG": "Ce document dépasse ce que la vérification lit (60 000 caractères).",
+      "NOT_A_PDF": "Verikora examine les fichiers PDF, Word (.docx) et OpenDocument (.odt).",
+      "PDF_TOO_LARGE": "Verikora examine les fichiers jusqu'à 5 Mo.",
+      "ALREADY_RUNNING": "Cette vérification est déjà en cours.",
+      "EXTRACTING": "Verikora lit encore ce document. Réessayez dans un instant.",
+      "SOVKORA_NOT_CONFIGURED": "La connexion à Sovkora n'est pas configurée.",
+      "SOVKORA_UNAVAILABLE": "Sovkora n'a pas répondu. Réessayez dans un instant.",
+      "SOVKORA_KEY": "Sovkora a refusé la clé de Verikora.",
+      "SOVKORA_LOCKED": "Ce Studio n'est pas ouvert à Verikora sur Sovkora.",
+      "SOVKORA_CREDITS": "Sovkora n'a plus de crédits pour cette vérification.",
+      "SOVKORA_INPUT": "Sovkora a refusé le document tel qu'envoyé.",
+      "SOVKORA_STUDIO_OLD": "Sovkora ne lit pas encore ce type de document sur le compte de Verikora.",
+      "SOVKORA_NOT_FOUND": "Sovkora ne connaît pas ce run.",
+      "SOVKORA_SHAPE": "La réponse de Sovkora n'a pas pu être lue.",
+      "BAD_REQUEST": "La demande n'est pas valide.",
+      "INTERNAL": "Une erreur est survenue.",
+      "NETWORK": "Le réseau n'a pas répondu.",
+      "UNKNOWN": "Une erreur est survenue.",
+      "SELF_SUSPEND": "Vous ne pouvez pas suspendre votre propre compte.",
+      "NOT_A_SAMPLE": "Seul un contrôle d'un document marqué comme exemple peut être montré publiquement.",
+      "NOT_SHOWABLE": "Seul un contrôle de conformité terminé peut être montré publiquement.",
+      "SELF_ROLE": "Vous ne pouvez pas changer votre propre rôle.",
+      "PLAN_BY_HAND_IN_PRODUCTION": "Un forfait ne se règle à la main que dans un environnement de développement.",
+      "LAST_ADMIN": "Le dernier administrateur garde son rôle.",
+      "SELF_DELETE": "Vous ne pouvez pas supprimer votre propre compte.",
+      "CONFIRM_MISMATCH": "Le courriel saisi ne correspond pas au compte.",
+      "NO_ACCESS": "Vous n’avez pas accès à ce rapport.",
+      "OWN_ADDRESS": "Ce rapport est déjà à vous.",
+      "EXPIRY_IN_THE_PAST": "La date de fin doit être dans le futur.",
+      "EMAIL_NOT_VERIFIED": "Confirmez d’abord votre adresse courriel : le lien a été envoyé à l’inscription.",
+      "PAYWALL": "Votre audit gratuit est utilisé : payez cet audit ou passez à Pro.",
+      "KIND_NOT_VERIFIED": "Ce type de document n'est pas encore vérifié contre la loi.",
+      "FAIR_USE": "Limite d’utilisation mensuelle atteinte.",
+      "PAYMENTS_OFF": "Le paiement n’est pas encore disponible.",
+      "NO_CUSTOMER": "Rien n’a encore été acheté.",
+      "FILE_TYPE_MISMATCH": "Le fichier n’est pas ce que son nom annonce. Vérifiez que vous avez choisi le bon fichier.",
+      "FILE_EXECUTABLE": "Ceci est un programme, pas un document. Il n’a pas été conservé.",
+      "FILE_TRUNCATED": "Ce fichier semble coupé (envoi ou téléchargement incomplet). Envoyez-le de nouveau.",
+      "FILE_ENCRYPTED": "Ce PDF est protégé par un mot de passe. Retirez la protection et envoyez-le de nouveau.",
+      "FILE_TOO_MANY_PAGES": "Ce PDF a trop de pages pour être vérifié.",
+      "FILE_TOO_COMPLEX": "Ce PDF est trop lourd à lire dans les limites prévues. Exportez-le de nouveau en PDF plus simple, ou envoyez des photos.",
+      "FILE_ACTIVE_CONTENT": "Ce PDF contient du contenu actif (scripts, programmes lancés ou pièces jointes) et il est refusé pour votre sécurité.",
+      "FILE_ARCHIVE_BOMB": "Cette archive est refusée : elle se décompresse bien au-delà d’une taille raisonnable.",
+      "NAME_TAKEN": "Ce nom est déjà utilisé ici.",
+      "STALE": "Ce dossier a été décidé par quelqu'un d'autre pendant que vous le regardiez. Rechargez pour voir sa décision.",
+      "MOVE_NOT_ALLOWED": "Cette décision ne peut plus être changée : une décision est définitive.",
+      "ALREADY": "C'est déjà le cas.",
+      "TOO_MANY": "Choisissez 200 éléments au plus à la fois.",
+      "TAG_LIMIT": "Vous avez autant d'étiquettes que cette liste en permet.",
+      "CONFLICT": "Quelqu'un d'autre a modifié ceci. Rechargez et réessayez.",
+      "STATUS_DERIVED": "Ce statut est calculé, il ne se change pas à la main.",
+      "STATE_IN_USE": "Des dossiers sont encore dans cet état : déplacez-les d'abord.",
+      "NOT_EMPTY": "Déplacez ou supprimez d'abord ses collections.",
+      "LAST_LIBRARY": "La dernière bibliothèque ne peut pas être supprimée.",
+      "NOT_KEPT": "Ce document n'est pas conservé : seul son rapport reste. Déposez-le de nouveau avec « Conserver mes documents » pour le revérifier.",
+      "STORAGE_UNAVAILABLE": "Le stockage des documents n'a pas répondu.",
+      "WRONG_PASSWORD": "Le mot de passe n'est pas le bon.",
+      "PASSWORD_TOO_SHORT": "Le mot de passe doit faire au moins 12 caractères.",
+      "PASSWORD_TOO_LONG": "Le mot de passe est trop long.",
+      "RESET_INVALID": "Ce lien est invalide ou a expiré. Demandez-en un nouveau.",
+      "MAIL_OFF": "L'envoi de courriels n'est pas encore disponible.",
+      "CANCEL_SUBSCRIPTION_FIRST": "Annulez d'abord votre abonnement dans le portail de facturation.",
+      "EMAIL_MISMATCH": "L'adresse tapée n'est pas celle du compte.",
+      "ENDPOINT_INVALID": "Cette adresse n'est pas valable : il faut une adresse https qui répond.",
+      "ENDPOINT_NOT_ALLOWED": "Cette adresse n'est pas autorisée.",
+      "CONNECTION_FAILED": "Le test de connexion a échoué.",
+      "STORAGE_IN_USE": "Des documents sont conservés sur ce stockage : exportez-les ou supprimez-les d'abord.",
+      "SETTINGS_KEY_MISSING": "Cette installation ne peut pas enregistrer d'identifiants.",
+      "KEEP_DISABLED": "La conservation est désactivée pour ce compte.",
+      "MAINTENANCE": "L'application est en maintenance. Revenez dans quelques minutes.",
+      "FEATURE_OFF": "Cette fonction est désactivée.",
+      "DAILY_LIMIT": "Limite quotidienne atteinte. Revenez demain.",
+      "UNKNOWN_SETTING": "Ce réglage n'existe pas.",
+      "BAD_VALUE": "Cette valeur n'est pas valable.",
+      "BAD_SCOPE": "Ce réglage ne se règle pas à cette portée.",
+      "IMAGE_TOO_LARGE": "Cette photo est trop grande. Réduisez sa résolution et réessayez.",
+      "TOO_MANY_PHOTOS": "Un document peut compter 12 photos au plus.",
+      "UNREADABLE_IMAGE": "Cette photo ne peut pas être lue. Reprenez-la ou choisissez un autre fichier.",
+      "PHOTO_BLURRY": "Cette photo est floue : le texte ne peut pas être lu. Tenez le téléphone stable, laissez la mise au point se faire et reprenez-la.",
+      "PHOTO_GLARE": "Un reflet cache une partie de la page. Éloignez-vous de la lumière ou de la fenêtre, inclinez un peu la page et reprenez la photo.",
+      "PHOTO_CUT_OFF": "La page est coupée par le bord de la photo. Reprenez-la avec toute la page dans le cadre.",
+      "OCR_FAILED": "Le texte de cette photo n'a pas pu être lu. Reprenez la photo, bien éclairée et à plat.",
+      "PHOTO_AUTHENTICITY": "Ce document vient de photos : son authenticité ne peut pas se juger sur un fichier.",
+      "DEFAULT_COLLECTION": "La collection par défaut ne peut pas être supprimée. Choisissez-en une autre comme collection par défaut d'abord.",
+      "API_PLAN": "Votre forfait n'inclut pas les clés d'API.",
+      "API_KEY_LIMIT": "Vous avez atteint le nombre de clés de votre forfait. Révoquez-en une.",
+      "API_KEY_NAME": "Donnez un nom à la clé (80 caractères au plus).",
+      "API_KEY_SCOPE_UNKNOWN": "Choisissez au moins une permission valide.",
+      "API_KEY_EXPIRY": "Une clé doit se terminer : choisissez une durée de 1 à 365 jours.",
+      "API_KEY_NOT_FOUND": "Cette clé n'existe pas.",
+      "API_KEY_REVOKED": "Cette clé est révoquée.",
+      "API_KEY_SUPERSEDED": "Cette clé a déjà été remplacée.",
+      "API_KEY_MISSING": "Aucune clé d'API n'a été envoyée.",
+      "API_KEY_INVALID": "Cette clé d'API n'est pas valide.",
+      "API_KEY_EXPIRED": "Cette clé d'API est expirée.",
+      "API_KEY_SCOPE": "Cette clé n'a pas la permission pour cette action.",
+      "AVATAR_NOT_ALLOWED": "Cet avatar n'est pas dans la série proposée.",
+      "AVATAR_TOO_LARGE": "Cette image est trop lourde pour un avatar.",
+      "AVATAR_STORAGE_UNAVAILABLE": "Le stockage des avatars ne répond pas.",
+      "AVATAR_STORAGE_OFF": "Les images d'avatar ne sont pas disponibles ici : choisissez un avatar de la série.",
+      "BATCH_TOO_LARGE": "Ce lot dépasse {limit} lignes : coupez-le en deux.",
+      "MISSING_FILE": "Aucun fichier n'est nommé sur cette ligne.",
+      "UNKNOWN_CHECK": "Vérification inconnue : écrivez « compliance » ou « authenticity ».",
+      "INVALID_OPTIONS": "Les options de cette vérification ne sont pas valides (juridiction, règles).",
+      "UNKNOWN_DOCUMENT_TYPE": "Type de document inconnu : bail, contrat, facture ou autre.",
+      "DUPLICATE_ROW": "Ce document et cette vérification sont déjà demandés plus haut.",
+      "FILE_NOT_SENT": "Ce fichier n'a pas été déposé avec le CSV.",
+      "BATCH_EMPTY": "Le CSV ne contient aucune ligne.",
+      "FAILED": "La vérification n'a pas abouti.",
+      "CANCELLED": "La vérification a été annulée.",
+      "REFUSED": "Ligne refusée.",
+      "SOVKORA_BUSY": "Sovkora est occupé en ce moment. Le lot continue tout seul dès qu'il a de la place.",
+      "EXPORT_TOO_LARGE": "Les rapports de ce lot sont trop lourds pour une seule archive : exportez moins de lignes.",
+      "NOT_ON_SALE": "Cette offre n’est pas en vente.",
+      "PRICE_MISMATCH": "Ce prix est en cours de mise à jour. Réessayez dans un instant.",
+      "UNKNOWN_PRICE": "Prix inconnu.",
+      "BAD_DATE": "Un prix change à partir d’aujourd’hui ou plus tard, jamais dans le passé.",
+      "COUPON_UNKNOWN": "Ce code n'existe pas. Vérifiez l'orthographe.",
+      "COUPON_NOT_STARTED": "Ce code n'est pas encore valable.",
+      "COUPON_EXPIRED": "Ce code a pris fin.",
+      "COUPON_PAUSED": "Ce code n'est pas disponible pour le moment.",
+      "COUPON_EXHAUSTED": "Ce code a atteint son nombre d'utilisations.",
+      "COUPON_ACCOUNT_LIMIT": "Vous avez déjà utilisé ce code.",
+      "COUPON_NEW_CUSTOMERS_ONLY": "Ce code est réservé aux nouveaux clients.",
+      "COUPON_NOT_FOR_PLAN": "Ce code ne s'applique pas à cette offre.",
+      "COUPON_MINIMUM": "Ce code demande un achat plus important.",
+      "COUPON_CURRENCY": "Ce code ne peut pas être utilisé ici.",
+      "COUPON_TOO_LARGE": "Ce code ne peut pas être utilisé ici.",
+      "COUPON_KIND": "Ce code ne peut pas être utilisé ici.",
+      "COUPON_PROVIDER": "Ce code ne peut pas être utilisé ici.",
+      "COUPON_RATE_LIMITED": "Trop d'essais. Réessayez dans un moment.",
+      "COUPON_DISABLED": "Les codes promo ne sont pas encore disponibles.",
+      "COUPON_BAD_INPUT": "Ce coupon n'est pas valide : vérifiez ses conditions.",
+      "COUPON_CODE_TAKEN": "Ce code existe déjà.",
+      "COUPON_TERMS_LOCKED": "Ce code a été utilisé : ses conditions ne peuvent plus changer. Créez-en un nouveau.",
+      "COUPON_NOT_FOUND": "Ce coupon n'existe pas.",
+      "COUPON_REDEMPTION_NOT_FOUND": "Cette utilisation n'existe pas.",
+      "COUPON_PARTNER_NOT_FOUND": "Ce partenaire n'existe pas.",
+      "COUPON_KEY_REUSED": "Réessayez.",
+      "COUPON_NOT_REVOCABLE": "Cette utilisation ne peut pas être révoquée.",
+      "COUPON_BAD_SETTINGS": "Les réglages des coupons ne sont pas valides.",
+      "STORAGE_NOT_IN_CANADA": "En production, les documents restent au Canada : testez ce fournisseur et vérifiez que sa région est canadienne d'abord.",
+      "STORAGE_VAULT_MISSING": "Le stockage des clés n'est pas disponible : la clé du coffre n'est pas déployée.",
+      "STORAGE_PROVIDER_NOT_FOUND": "Ce fournisseur n'existe plus.",
+      "STORAGE_PROVIDER_IN_USE": "Le fournisseur est un défaut, ou des documents y sont encore.",
+      "STORAGE_PROVIDER_NOT_VERIFIED": "Testez d'abord le fournisseur : seul un fournisseur vérifié peut servir.",
+      "STORAGE_BAD_CONFIG": "Le fournisseur n'est pas bien configuré pour ce type ou cet environnement.",
+      "STORAGE_BAD_ENDPOINT": "L'adresse est refusée : utilisez une adresse https publique.",
+      "STORAGE_BAD_SECRET_KEY": "La clé n'est pas valide.",
+      "STORAGE_TEST_FAILED": "Le test de connexion a échoué : rien n'a été enregistré.",
+      "STORAGE_MOVE_NOT_ALLOWED": "Ce déplacement n'est pas permis : déplacez depuis un fournisseur en retrait vers le défaut des documents.",
+      "STORAGE_MOVE_OPEN": "Un déplacement est déjà ouvert : terminez-le ou mettez-le en pause.",
+      "STORAGE_MOVE_NONE": "Aucun déplacement à mettre en pause ou à reprendre.",
+      "FLOW_NOT_OFFERED": "Cette vérification n'est pas offerte sur votre compte.",
+      "CLOUD_NOT_OFFERED": "Ce nuage n'est pas offert ici.",
+      "CLOUD_STATE_EXPIRED": "La connexion a pris trop de temps. Recommencez.",
+      "CLOUD_STATE_INVALID": "La connexion n'a pas pu être confirmée. Recommencez.",
+      "STORAGE_DISCONNECTED": "Ce stockage est déconnecté. Reconnectez-le.",
+      "CONSENT_REQUIRED": "Aucun document n'est vérifié sans votre consentement pour cette finalité.",
+      "APPLICATION_ERASED": "Cette demande a été effacée.",
+      "BAD_NOTIFICATION": "La notification n'a pas été acceptée.",
+      "BAD_RUN": "Cette exécution de vérification n'est pas valide.",
+      "BAD_ZONE": "Cette zone de stockage n'est pas valide.",
+      "BILLING_NOT_CONFIGURED": "La facturation n'est pas encore configurée.",
+      "DUPLICATE_DOCUMENT": "Ce document est déjà dans votre bibliothèque.",
+      "FILE_CLOSED": "Ce dossier est fermé.",
+      "FILE_NOT_ACCEPTED": "Ce type de fichier n'est pas accepté.",
+      "FLOW_EXISTS": "Cette vérification existe déjà.",
+      "HAS_ANNEXES": "Ce document a encore des annexes.",
+      "ANSWER_CLOSED": "Ce dossier n'accepte plus d'explications.",
+      "ANSWER_TOO_LONG": "Cette explication est trop longue.",
+      "SIGNAL_NOT_FOUND": "Cette trace n'est plus dans le dossier.",
+      "LINK_USED": "Ce lien a déjà été utilisé.",
+      "LIVE_PRICES_ARE_THE_OWNERS": "Seul le propriétaire change les prix en vigueur.",
+      "NOTICE_CHANGED": "L'avis a changé depuis votre lecture. Lisez-le de nouveau.",
+      "NOT_A_DRAFT": "Seul un brouillon peut être modifié.",
+      "NOT_A_LEASE": "Ce document ne ressemble pas à un bail.",
+      "NOT_CONTESTABLE": "Ce résultat ne peut pas être contesté.",
+      "NOT_PENDING": "Rien n'est en attente ici.",
+      "NOT_SHAREABLE": "Ce rapport ne peut pas être partagé.",
+      "NO_DOCUMENT": "Il n'y a aucun document à vérifier.",
+      "PAYER_NOT_ALLOWED": "Ce payeur n'est pas autorisé.",
+      "PROVIDER_UNAVAILABLE": "Le fournisseur n'a pas répondu. Réessayez dans un instant.",
+      "PURPOSE_NOT_IN_FILE": "Cette finalité n'est pas dans le dossier.",
+      "REPORT_NOT_READY": "Le rapport n'est pas encore prêt.",
+      "TOO_MANY_ANNEXES": "Trop d'annexes.",
+      "TOO_MANY_DOCUMENTS": "Trop de documents.",
+      "TYPE_NOT_NECESSARY": "Ce type de document n'est pas nécessaire.",
+      "TYPE_NOT_REQUESTED": "Ce type de document n'a pas été demandé.",
+      "TYPE_UNKNOWN": "Ce type de document est inconnu.",
+      "UNKNOWN_SCHEMA": "Ce format est inconnu.",
+      "UNKNOWN_SEAL": "Ce sceau est inconnu.",
+      "WEBHOOK_PLAN": "Ce forfait n'inclut pas les webhooks.",
+      "ZONE_UNAVAILABLE": "Cette zone de stockage n'est pas disponible."
+    },
+    "adminConsole": {
+      "shell": {
+        "title": "Administration",
+        "overview": "Vue d'ensemble",
+        "users": "Personnes",
+        "documents": "Documents",
+        "runs": "Runs Sovkora",
+        "audit": "Journal d'audit",
+        "dev": "DEV",
+        "signOut": "Se déconnecter",
+        "openSite": "Ouvrir dev.verikora.com",
+        "operations": "Exploitation",
+        "incidents": "Incidents",
+        "flows": "Parcours",
+        "groups": {
+          "people": "Personnes et fichiers",
+          "engine": "Parcours et moteur",
+          "operations": "Exploitation",
+          "app": "Application"
+        },
+        "config": "Configuration",
+        "storage": "Stockage"
+      },
+      "overview": {
+        "health": "Santé",
+        "version": "Version",
+        "database": "Base de données",
+        "sovkora": "Edge Sovkora",
+        "up": "Disponible",
+        "down": "Injoignable",
+        "accounts": "Comptes",
+        "admins": "administrateurs",
+        "suspended": "suspendus",
+        "documents": "Documents",
+        "stored": "stockés",
+        "runs": "Runs Sovkora",
+        "lastRun": "Dernier run",
+        "none": "Aucun pour l'instant"
+      },
+      "runs": {
+        "caption": "Runs Sovkora",
+        "studio": "Studio",
+        "status": "Statut",
+        "runId": "Identifiant du run",
+        "document": "Document",
+        "owner": "Propriétaire",
+        "duration": "Durée",
+        "error": "Erreur",
+        "started": "Lancé",
+        "showcase": "Vitrine publique",
+        "public": "Publique",
+        "private": "Privée",
+        "promote": "Montrer sur la page publique",
+        "withdraw": "Retirer"
+      },
+      "documents": {
+        "caption": "Tous les documents (métadonnées seulement — jamais leur contenu)",
+        "title": "Document",
+        "owner": "Propriétaire",
+        "kind": "Type",
+        "type": "Format",
+        "size": "Taille",
+        "analyses": "Vérifications",
+        "added": "Ajouté",
+        "sample": "Exemple",
+        "isSample": "Exemple",
+        "isPersonal": "Personnel",
+        "markSample": "Marquer comme exemple",
+        "unmarkSample": "Retirer le marquage"
+      },
+      "audit": {
+        "caption": "Journal d'audit",
+        "at": "Quand",
+        "actor": "Qui",
+        "action": "Action",
+        "target": "Cible",
+        "ip": "Adresse"
+      },
+      "user": {
+        "back": "Personnes",
+        "role": "Rôle",
+        "status": "État",
+        "created": "Créé",
+        "lastSeen": "Vu pour la dernière fois",
+        "documents": "Documents",
+        "sessions": "Sessions ouvertes",
+        "suspend": "Suspendre",
+        "suspendConfirm": "Suspendre ce compte (toutes ses sessions prennent fin)",
+        "restore": "Rétablir",
+        "history": "Son historique",
+        "self": "Vous ne pouvez pas suspendre votre propre compte.",
+        "makeAdmin": "Nommer administrateur",
+        "makeUser": "Retirer le rôle d'administrateur",
+        "makePro": "Passer en Pro sans carte",
+        "makeFree": "Remettre en gratuit",
+        "revokeSessions": "Terminer toutes les sessions",
+        "sessionsRevoked": "Sessions terminées : {count}.",
+        "exportData": "Exporter les données (Loi 25)",
+        "dangerTitle": "Supprimer ce compte",
+        "dangerLead": "Effacement Loi 25 : le compte, ses sessions, ses documents et leurs analyses sont supprimés définitivement. Le journal d'audit garde le fait, pas la personne.",
+        "confirmLabel": "Saisissez le courriel du compte pour confirmer",
+        "deleteAccount": "Supprimer le compte et ses documents"
+      },
+      "signIn": {
+        "promise": "L'administration de Verikora.",
+        "asideFooter": "Administrateurs seulement, depuis une adresse autorisée.",
+        "title": "Administration",
+        "description": "Connectez-vous avec un compte administrateur."
+      },
+      "incidents": {
+        "title": "Incidents de confidentialité",
+        "lead": "Le registre exigé par la Loi 25 (art. 3.5 à 3.8) : tous les incidents, graves ou non, conservés cinq ans. Il contient des faits et des catégories de renseignements, jamais les données d'une personne. Évaluez le risque de préjudice sérieux ; s'il existe, avisez la Commission d'accès à l'information et les personnes concernées, puis fermez.",
+        "exportCsv": "Exporter en CSV",
+        "exportJson": "Exporter en JSON",
+        "register": "Registre",
+        "empty": "Aucun incident consigné.",
+        "awareAt": "Constaté le",
+        "kind": "Ce qui s'est passé",
+        "status": "Statut",
+        "risk": "Risque de préjudice sérieux",
+        "serious": "Sérieux",
+        "notSerious": "Non sérieux",
+        "drill": "Exercice",
+        "drillBadge": "Exercice",
+        "description": "Ce qui s'est passé, en faits",
+        "details": "Détails",
+        "hide": "Masquer",
+        "kinds": {
+          "access": "Accès non autorisé",
+          "use": "Utilisation non autorisée",
+          "communication": "Communication non autorisée",
+          "loss": "Perte"
+        },
+        "statuses": {
+          "open": "Ouvert",
+          "assessed": "Évalué",
+          "closed": "Fermé"
+        },
+        "levels": {
+          "low": "Faible",
+          "medium": "Moyen",
+          "high": "Élevé"
+        },
+        "open": "Ouvrir un incident",
+        "openSubmit": "Ouvrir",
+        "cancel": "Annuler",
+        "descriptionHint": "Des faits seulement. Ni nom, ni courriel, ni contenu de document.",
+        "information": "Catégories de renseignements concernés",
+        "informationHint": "Séparées par des virgules, p. ex. bail, talon de paie. Jamais le renseignement lui-même.",
+        "persons": "Personnes concernées (si connu)",
+        "drillLabel": "Il s'agit d'un exercice",
+        "markDrill": "Marquer comme exercice",
+        "unmarkDrill": "Pas un exercice",
+        "assess": "Évaluer le risque",
+        "assessSubmit": "Enregistrer l'évaluation",
+        "sensitivity": "Sensibilité des renseignements",
+        "consequences": "Gravité des conséquences",
+        "likelihood": "Probabilité d'utilisation malveillante",
+        "seriousInjury": "Risque de préjudice sérieux",
+        "rationale": "Motifs de la décision",
+        "measure": "Mesures prises",
+        "measureText": "Une mesure pour réduire le risque ou éviter un nouvel incident",
+        "measureSubmit": "Consigner la mesure",
+        "notice": "Consigner un avis envoyé",
+        "target": "Envoyé à",
+        "targets": {
+          "cai": "Commission d'accès à l'information",
+          "persons": "Personnes concernées"
+        },
+        "channel": "Comment",
+        "channels": {
+          "form": "Formulaire de la Commission",
+          "email": "Courriel",
+          "letter": "Lettre",
+          "public": "Avis public"
+        },
+        "reference": "Référence de l'accusé de réception (s'il y a lieu)",
+        "noticeSubmit": "Consigner l'avis",
+        "caiNotice": "Avis à la Commission",
+        "personsNotice": "Avis aux personnes concernées",
+        "retain": "Conservé au registre jusqu'au {date}.",
+        "close": "Fermer l'incident",
+        "closedNote": "Cette entrée est fermée. Elle reste au registre et n'est plus jamais modifiée."
+      },
+      "operations": {
+        "database": "Base de données",
+        "pool": "Réserve de ce service : {busy} occupées sur {max} ({open} ouvertes)",
+        "connections": "Connexions sur la base : {used} sur {max}",
+        "poolNote": "{waiting} en attente. Une requête en attente signifie que la réserve est le goulot.",
+        "queue": "Analyses Sovkora",
+        "status": {
+          "running": "En cours",
+          "succeeded": "Réussies",
+          "failed": "Échouées",
+          "cancelled": "Annulées"
+        },
+        "stuck": "En cours depuis plus de {minutes} min",
+        "signing": "Signature des rapports",
+        "keyId": "Identifiant de clé",
+        "keyState": "Clé",
+        "keyDevelopment": "Clé de développement — les rapports ne prouvent rien",
+        "keyProduction": "Clé de production",
+        "errors": "Erreurs récentes",
+        "noErrors": "Aucune analyse échouée ni connexion refusée.",
+        "when": "Quand",
+        "kind": "Type",
+        "detail": "Détail",
+        "kinds": {
+          "run": "Analyse",
+          "sign-in": "Connexion"
+        },
+        "rulesets": "Référentiels utilisés",
+        "noRulesets": "Aucune vérification de conformité n'a encore eu lieu.",
+        "ruleset": "Référentiel",
+        "version": "Version",
+        "jurisdiction": "Juridiction",
+        "checks": "Vérifications",
+        "lastCheck": "Dernière vérification"
+      },
+      "flows": {
+        "title": "Parcours",
+        "lead": "Chaque parcours est une donnée : à qui il est offert, le Studio Sovkora et les jeux de règles de ses étapes, les consentements exigés, son prix. Une version publiée ne change jamais ; on l'active par environnement.",
+        "caption": "Les parcours",
+        "columns": {
+          "key": "Parcours",
+          "title": "Titre",
+          "audiences": "Publics",
+          "version": "Version",
+          "status": "Statut",
+          "dev": "dev",
+          "prod": "prod"
+        },
+        "status": {
+          "available": "Disponible",
+          "soon": "Bientôt"
+        },
+        "new": "Nouveau parcours",
+        "open": "Ouvrir",
+        "editor": {
+          "create": "Créer le parcours",
+          "save": "Enregistrer le brouillon",
+          "publish": "Publier ce brouillon",
+          "saved": "Brouillon enregistré.",
+          "published": "Publié.",
+          "key": "Clé (lettres, chiffres, tirets)",
+          "titleEn": "Titre (anglais)",
+          "titleFr": "Titre (français)",
+          "leadEn": "Résumé (anglais)",
+          "leadFr": "Résumé (français)",
+          "status": "Statut",
+          "audiences": "Offert à",
+          "studios": "Studios Sovkora",
+          "compliance": "Contrôle de conformité (un jeu de règles par juridiction)",
+          "authenticity": "Authenticité du document (le PDF examiné)",
+          "jurisdictions": "Juridictions et leurs jeux de règles",
+          "consents": "Consentements exigés (clés séparées par des virgules)",
+          "providers": "Fournisseurs externes (séparés par des virgules)",
+          "pricing": "Tarification",
+          "pricingModel": "Modèle",
+          "amount": "Montant (CAD par vérification ou par mois)",
+          "environments": "Environnements",
+          "enabledIn": "Activé en {env}",
+          "versions": "Versions",
+          "draftHint": "Enregistrer modifie le brouillon ouvert, ou en ouvre un nouveau : une version publiée n'est jamais modifiée.",
+          "noDraft": "Aucun brouillon ouvert : enregistrez pour en ouvrir un.",
+          "tenant": "Locataire",
+          "landlord": "Propriétaire",
+          "freelancer": "Travailleur autonome",
+          "business": "Entreprise"
+        },
+        "models": {
+          "free": "Gratuit",
+          "perRun": "À la vérification",
+          "subscription": "Abonnement"
+        },
+        "versionStatus": {
+          "draft": "Brouillon",
+          "published": "Publié",
+          "retired": "Retiré"
+        }
+      },
+      "storage": {
+        "title": "Stockage",
+        "lead": "Où sont gardés les documents et les avatars. Les fournisseurs et leurs clés sont dans la base de données, scellés ; l'environnement ne garde que la clé du coffre. Un fournisseur est testé avant d'être utilisé, et chaque changement est dans le journal d'audit.",
+        "none": "Aucun fournisseur n'est défini : rien n'est gardé, et les dépôts répondent que le stockage n'est pas configuré.",
+        "providers": "Fournisseurs",
+        "kind": "Type",
+        "preset": "Modèle",
+        "residency": "Où sont les fichiers",
+        "untested": "Pas encore testé",
+        "lastTest": "Dernier test",
+        "testOk": "Réussi",
+        "testFailed": "Échoué",
+        "keySet": "définie",
+        "keyNotSet": "non définie",
+        "fromEnvironment": "Importé de l'environnement",
+        "devOnly": "développement seulement",
+        "defaultFor": "Par défaut pour {kind}",
+        "makeDefault": "Utiliser pour {kind}",
+        "test": "Tester la connexion",
+        "changeKey": "Changer une clé",
+        "disable": "Désactiver",
+        "whichKey": "Quelle clé",
+        "newKey": "Nouvelle clé",
+        "newKeyHint": "Saisie une fois, scellée, jamais réaffichée. Elle est testée avant tout enregistrement.",
+        "saveKey": "Tester et enregistrer la clé",
+        "add": "Ajouter un fournisseur",
+        "addLead": "Le fournisseur est enregistré en brouillon et testé aussitôt. Il ne peut servir qu'une fois le test réussi. Les fichiers sont chiffrés avant de partir, avec une clé générée ici.",
+        "addSubmit": "Ajouter et tester",
+        "cancel": "Annuler",
+        "label": "Nom",
+        "enteredOnce": "Saisie une fois, scellée, jamais réaffichée.",
+        "statuses": {
+          "draft": "Brouillon",
+          "verified": "Vérifié",
+          "active": "Utilisé",
+          "retiring": "En retrait",
+          "disabled": "Désactivé"
+        },
+        "dataKinds": {
+          "documents": "les documents",
+          "avatars": "les avatars",
+          "backups": "les sauvegardes de nuit"
+        },
+        "fields": {
+          "endpoint": "Adresse",
+          "region": "Région",
+          "bucket": "Seau",
+          "zone": "Zone",
+          "pullHostname": "Hôte de la pull zone",
+          "prefix": "Préfixe",
+          "accessKey": "Mot de passe de la zone",
+          "tokenKey": "Clé des liens",
+          "accessKeyId": "Identifiant de clé d'accès",
+          "secretAccessKey": "Clé d'accès secrète",
+          "encryptionKey": "Clé de chiffrement des objets",
+          "root": "Dossier"
+        },
+        "move": {
+          "title": "Déplacer les documents",
+          "lead": "Chaque document est copié vers le nouveau fournisseur, relu, et son SHA-256 est vérifié. Seulement alors il pointe vers le nouveau fournisseur. Rien n'est supprimé avant que vous retiriez l'ancien. D'ici là, la lecture essaie d'abord le nouveau fournisseur, puis l'ancien.",
+          "offer": "{from} est en retrait. Déplacez ses documents vers {to}.",
+          "start": "Déplacer les documents",
+          "label": "Documents déplacés",
+          "progress": "{moved} sur {total} déplacés",
+          "moved": "Déplacés",
+          "remaining": "Restants",
+          "failed": "En échec",
+          "pause": "Pause",
+          "resume": "Reprendre",
+          "resumeRetry": "Reprendre et réessayer ceux en échec",
+          "retire": "Retirer {provider}",
+          "retireHint": "Ses anciennes copies sont balayées et il est désactivé. Refusé tant qu'un document y est encore.",
+          "failures": "Documents qui n'ont pas pu être déplacés",
+          "statuses": {
+            "running": "Déplacement en cours",
+            "paused": "En pause",
+            "attention": "À vérifier",
+            "done": "Terminé"
+          }
+        }
+      }
+    },
+    "share": {
+      "title": "Qui peut vérifier ce rapport",
+      "hint": "Vous seul et les personnes avec qui vous le partagez, connectées avec un compte Verikora. Si l’adresse n’a pas encore de compte, l’invitation attend et est honorée dès que le compte existe.",
+      "email": "Adresse courriel",
+      "until": "Jusqu’au (facultatif)",
+      "submit": "Partager",
+      "none": "Pas encore partagé.",
+      "revoke": "Révoquer",
+      "requestsTitle": "Demandes d’accès",
+      "accept": "Donner l’accès",
+      "status": {
+        "member": "Membre",
+        "invited": "Invité",
+        "expired": "Expiré",
+        "revoked": "Révoqué"
+      }
+    },
+    "profile": {
+      "title": "De quel côté du bail êtes-vous ?",
+      "lead": "Verikora adapte les vérifications proposées en premier et ses mots. Les règles, elles, sont les mêmes pour tous. Vous pouvez changer à tout moment dans les réglages.",
+      "legend": "Votre rôle",
+      "tenant": "Locataire",
+      "landlord": "Propriétaire (locateur)",
+      "save": "Enregistrer",
+      "saved": "Enregistré.",
+      "settingsTitle": "Réglages",
+      "settingsLead": "Votre rôle change les vérifications proposées en premier et les mots de l'application.",
+      "open": "Réglages",
+      "freelancer": "Travailleur autonome",
+      "business": "Entreprise",
+      "soon": "bientôt",
+      "tenantHint": "Je vérifie mon bail avant de signer",
+      "landlordHint": "Je vérifie mon modèle de bail et les pièces du locataire",
+      "freelancerHint": "Contrats de service et factures",
+      "businessHint": "Contrats de fournisseurs et factures reçues",
+      "continue": "Continuer"
+    },
+    "signUp": {
+      "title": "Créer votre compte",
+      "description": "Votre premier audit est gratuit.",
+      "email": "Courriel",
+      "password": "Mot de passe (12 caractères ou plus)",
+      "acceptTerms": "J’accepte les conditions d’utilisation ({terms}).",
+      "acceptPrivacy": "J’ai lu l’avis de confidentialité ({privacy}) et je consens à l’utilisation de mes renseignements telle qu’il la décrit.",
+      "termsLink": "conditions",
+      "privacyLink": "avis de confidentialité",
+      "submit": "Créer mon compte",
+      "sentTitle": "Vérifiez vos courriels",
+      "sent": "Si cette adresse peut recevoir un message, un lien de confirmation est en route (valide 24 heures). Ouvrez-le pour activer votre compte.",
+      "closedTitle": "L’inscription n’est pas encore ouverte.",
+      "closed": "Verikora n’accepte pas de nouveaux comptes pour le moment.",
+      "haveAccount": "Vous avez déjà un compte? Connectez-vous",
+      "notice": "Vérification informative, ce n’est pas un avis juridique. Seuls les membres du Barreau du Québec peuvent donner un avis juridique.",
+      "promise": "Un audit gratuit, puis payez à l’audit ou abonnez-vous."
+    },
+    "verifyEmail": {
+      "title": "Confirmer votre adresse",
+      "lead": "Un clic pour activer votre compte.",
+      "button": "Confirmer mon adresse",
+      "invalid": "Ce lien est invalide ou a expiré. Inscrivez-vous de nouveau pour en recevoir un autre.",
+      "verified": "Votre adresse est confirmée. Vous pouvez vous connecter.",
+      "invalidBanner": "Ce lien de confirmation est invalide ou a expiré."
+    },
+    "paywall": {
+      "title": "Votre dossier gratuit est utilisé",
+      "text": "Un dossier est offert chaque mois. Pour en vérifier un autre maintenant, payez-le ou abonnez-vous.",
+      "payOne": "Payer ce document",
+      "soon": "Paiement bientôt disponible.",
+      "notice": "{document} par dossier, ou {agency} par mois pour les PME ({included} dossiers inclus), plus taxes.",
+      "fairUseTitle": "Limite mensuelle atteinte",
+      "fairUse": "Votre abonnement comprend {limit} vérifications par mois. La limite revient au début du mois prochain.",
+      "testMode": "Mode test : aucune vraie carte n'est débitée.",
+      "agency": "S’abonner — Agence",
+      "firm": "S’abonner — Gestionnaire d’immeubles",
+      "informative": "Vérification informative, ce n’est pas un avis juridique."
+    },
+    "insight": {
+      "title": "Ce document",
+      "issuer": "Émetteur",
+      "language": "Langue",
+      "pages": "Pages",
+      "unknown": "La nature de ce document n’a pas pu être déterminée.",
+      "alternative": "Pourrait aussi être : {nature}",
+      "noCheck": "Aucune vérification juridique ne s’applique à ce type de document ; voici ce qu’il contient.",
+      "confidence": {
+        "high": "confiance élevée",
+        "medium": "confiance moyenne",
+        "low": "confiance faible",
+        "unknown": "inconnue"
+      },
+      "languages": {
+        "fr": "Français",
+        "en": "Anglais"
+      },
+      "dateKinds": {
+        "issued": "Date d’émission",
+        "effective": "Date d’effet",
+        "due": "Échéance",
+        "period": "Période",
+        "other": "Date"
+      },
+      "roles": {
+        "landlord": "Locateur",
+        "tenant": "Locataire",
+        "contractor": "Prestataire",
+        "client": "Client",
+        "employer": "Employeur",
+        "employee": "Employé",
+        "company": "Entreprise",
+        "supplier": "Fournisseur",
+        "buyer": "Acheteur",
+        "holder": "Titulaire"
+      },
+      "refKinds": {
+        "neq": "NEQ",
+        "gst": "N° de TPS",
+        "qst": "N° de TVQ",
+        "invoice-number": "N° de facture",
+        "reference": "N° de référence"
+      },
+      "amountKinds": {
+        "total": "Total",
+        "subtotal": "Sous-total",
+        "gst": "TPS",
+        "qst": "TVQ",
+        "rent": "Loyer",
+        "deposit": "Dépôt",
+        "other": "Montant"
+      },
+      "piiTitle": "Renseignements personnels détectés",
+      "piiKinds": {
+        "sin": "NAS",
+        "email": "Courriel",
+        "phone": "Téléphone",
+        "address": "Adresse",
+        "postal-code": "Code postal",
+        "birth-date": "Date de naissance",
+        "bank-account": "Compte bancaire"
+      },
+      "piiRetention": "Ce document est conservé dans votre coffre jusqu’à ce que vous le supprimiez; vous pouvez le supprimer en tout temps. Ces renseignements ne sont pas envoyés ailleurs que dans la vérification que vous lancez.",
+      "piiRedacted": "Télécharger la version caviardée (texte)",
+      "informative": "Lecture automatique du texte : informative, à vérifier. Ce n’est pas un avis juridique.",
+      "source": "Source du texte",
+      "sourcePhotoOcr": "photo, texte lu par reconnaissance de caractères, fiabilité {confidence} %",
+      "sourcePhotoOcrPages": "{count} photos, texte lu par reconnaissance de caractères, fiabilité {confidence} %",
+      "sourcePhotoVision": "photo, texte lu par le modèle de Sovkora (lecture d'image), exécution {runId}",
+      "sourceLow": "La lecture de cette photo est peu fiable. Vérifiez les montants, les dates et les noms avec votre document.",
+      "originSoftware": "Dernier logiciel (indice, pas un verdict)",
+      "originDevice": "Appareil",
+      "originTaken": "Photo prise le",
+      "originModified": "Modifiée le",
+      "originGps": "La position GPS de la photo a été retirée à l'importation."
+    },
+    "organisation": {
+      "title": "Organisation",
+      "recents": "Récents",
+      "collections": "Collections",
+      "noCollections": "Aucune collection pour l'instant. Créez-en une pour regrouper vos documents.",
+      "newCollection": "Nouvelle collection",
+      "newFolder": "Nouveau dossier",
+      "newTag": "Nouvelle étiquette",
+      "name": "Nom",
+      "color": "Couleur",
+      "create": "Créer",
+      "save": "Enregistrer",
+      "cancel": "Annuler",
+      "rename": "Renommer",
+      "move": "Déplacer",
+      "delete": "Supprimer",
+      "actions": "Actions pour {name}",
+      "editTags": "Modifier les étiquettes",
+      "filterTags": "Filtrer par étiquette",
+      "noTags": "Aucune étiquette pour l'instant.",
+      "clearTags": "Effacer le filtre",
+      "deleteTitle": "Supprimer « {name} » ?",
+      "deleteAsk": "Que deviennent les fichiers qu'il contient ?",
+      "deleteMove": "Les déplacer",
+      "deleteDocs": "Les supprimer aussi (définitif)",
+      "moveToCollection": "Déplacer vers la collection",
+      "moveUpFolder": "Vers le haut, dans la collection",
+      "moveTo": "Déplacer vers",
+      "rootOfCollection": "La collection elle-même (sans dossier)",
+      "emptyCollection": "Rien ici pour l'instant. Déposez un document ou créez un dossier.",
+      "back": "Retour à la bibliothèque",
+      "library": "Bibliothèque",
+      "addDocuments": "Ajouter des documents ici",
+      "saved": "Enregistré.",
+      "filesIn": "Fichiers",
+      "foldersIn": "Dossiers",
+      "colors": {
+        "blue": "Bleu",
+        "green": "Vert",
+        "amber": "Ambre",
+        "red": "Rouge",
+        "violet": "Violet",
+        "gray": "Gris"
+      },
+      "filesOne": "{count} fichier",
+      "filesMany": "{count} fichiers",
+      "foldersOne": "{count} dossier",
+      "foldersMany": "{count} dossiers",
+      "default": "Par défaut",
+      "defaultCollection": "Collection par défaut",
+      "moveToDefault": "Vers la collection par défaut",
+      "makeDefault": "Définir comme collection par défaut",
+      "makeDefaultTitle": "Faire de « {name} » la collection par défaut",
+      "makeDefaultAsk": "Les documents sans destination iront ici. L'ancienne collection par défaut devient une collection comme les autres.",
+      "avatar": {
+        "menu": "Avatar",
+        "title": "Avatar de « {name} »",
+        "ask": "Choisissez un avatar de la série, ou une image à vous.",
+        "none": "Aucun avatar",
+        "set": "Avatars de la série",
+        "upload": "Une image à vous",
+        "uploadHint": "PNG, JPEG ou HEIC, {size} Ko au plus. L'image est recadrée en carré et ses données (position, appareil) sont retirées.",
+        "browse": "Choisir une image",
+        "tone": "Avatar {n}",
+        "off": "Les avatars sont désactivés."
+      },
+      "defaultName": "Mes documents",
+      "latestChecks": "Dernières vérifications",
+      "noChecks": "Aucune vérification pour l’instant.",
+      "lastCheck": "Dernière vérification : {date}",
+      "neverChecked": "Pas encore vérifié",
+      "seeAll": "Tout voir",
+      "report": "Rapport",
+      "removeTag": "Retirer {label}"
+    },
+    "settings": {
+      "tabs": {
+        "profil": "Profil",
+        "apparence": "Apparence",
+        "securite": "Sécurité",
+        "facturation": "Abonnement et facturation",
+        "donnees": "Mes données",
+        "stockage": "Stockage",
+        "signets": "Signets"
+      },
+      "label": "Réglages du compte",
+      "verified": "Courriel vérifié",
+      "unverified": "Courriel non vérifié",
+      "memberSince": "Membre depuis {date}",
+      "save": {
+        "save": "Enregistrer",
+        "saving": "Enregistrement…",
+        "saved": "Enregistré",
+        "error": "Impossible d’enregistrer. Réessayez.",
+        "undo": "Annuler",
+        "discard": "Abandonner les modifications"
+      },
+      "profile": {
+        "lead": "Votre nom, votre image, votre langue, votre côté du bail — enregistrés ensemble.",
+        "languageHint": "La langue de l’application et de vos courriels.",
+        "avatarOption": "Image {n}",
+        "nameLabel": "Nom",
+        "nameHint": "Affiché dans le menu du compte.",
+        "save": "Enregistrer",
+        "saved": "Enregistré.",
+        "avatarLabel": "Avatar",
+        "avatarHint": "Une des images par défaut de Krizaka.",
+        "languageLabel": "Langue",
+        "languages": {
+          "fr": "Français",
+          "en": "English"
+        }
+      },
+      "security": {
+        "emailTitle": "Adresse e-mail",
+        "emailCurrent": "Adresse actuelle : {email}",
+        "emailPending": "En attente de confirmation : {email}. Ouvrez le lien envoyé à cette adresse.",
+        "newEmail": "Nouvelle adresse",
+        "password": "Mot de passe actuel",
+        "emailSend": "Envoyer le lien de confirmation",
+        "emailSent": "Un lien a été envoyé à la nouvelle adresse. Rien ne change tant que vous ne l'avez pas ouvert.",
+        "emailChanged": "Votre adresse est changée.",
+        "emailInvalid": "Ce lien est invalide ou a expiré.",
+        "passwordTitle": "Mot de passe",
+        "current": "Mot de passe actuel",
+        "next": "Nouveau mot de passe (12 caractères ou plus)",
+        "passwordSave": "Changer le mot de passe",
+        "passwordChanged": "Mot de passe changé. Vos autres appareils sont déconnectés."
+      },
+      "billing": {
+        "title": "Abonnement et facturation",
+        "plan": "Forfait",
+        "freeAudit": "Audit gratuit",
+        "creditsLabel": "Audits payés restants",
+        "renewal": "Renouvellement",
+        "ends": "Se termine le",
+        "planFree": "Gratuit",
+        "credits": "Audits payés restants : {count}",
+        "freeAvailable": "Votre audit gratuit est disponible.",
+        "freeUsed": "Votre dossier gratuit est utilisé.",
+        "until": "Renouvelé le {date}.",
+        "portal": "Gérer l'abonnement et les factures",
+        "portalHint": "Mode de paiement, factures (avec TPS et TVQ) et annulation : dans le portail sécurisé de Stripe.",
+        "off": "Le paiement n'est pas encore disponible.",
+        "otherOffers": "Autres offres",
+        "buy": "Acheter ou s'abonner",
+        "testMode": "Mode test : aucune vraie carte n'est débitée.",
+        "history": {
+          "title": "Historique des paiements",
+          "empty": "Aucun paiement pour l'instant. Un reçu apparaît ici après chaque paiement.",
+          "what": "Paiement",
+          "refunded": "Remboursé",
+          "paid": "Payé",
+          "receipt": "Reçu",
+          "receiptFor": "Reçu du {date}"
+        },
+        "plans": {
+          "agency": "Agence",
+          "firm": "Gestionnaire d’immeubles"
+        }
+      },
+      "data": {
+        "exportTitle": "Exporter mes données",
+        "exportText": "Un fichier JSON avec votre profil, votre organisation, vos documents conservés et leurs rapports.",
+        "exportButton": "Télécharger mes données",
+        "deleteTitle": "Supprimer mon compte",
+        "deleteText": "Votre compte, vos documents conservés (y compris sur leur stockage), vos bibliothèques et vos rapports sont supprimés tout de suite et pour de bon (Loi 25). Les factures restent chez notre prestataire de paiement, comme la loi l'exige.",
+        "deleteOpen": "Supprimer mon compte…",
+        "deleteEmail": "Tapez votre adresse e-mail pour confirmer",
+        "deletePassword": "Mot de passe",
+        "deleteButton": "Supprimer définitivement"
+      },
+      "storage": {
+        "title": "Où vivent vos documents conservés",
+        "lead": "Par défaut, rien n'est conservé : le document est supprimé après sa vérification et seul le rapport reste. Choisissez ici où vont les documents que vous décidez de conserver.",
+        "modeLabel": "Stockage",
+        "none": "Ne rien conserver",
+        "noneHint": "« Conserver » est désactivé : tout est supprimé après la vérification.",
+        "krizaka": "Le stockage de Krizaka",
+        "krizakaHint": "Gardés par Krizaka, sur le stockage que ce service exploite.",
+        "s3": "Mon propre stockage (S3)",
+        "s3Hint": "Un stockage compatible S3 que vous administrez : vos documents conservés y vont, pas chez nous.",
+        "endpoint": "Adresse du service (https)",
+        "region": "Région",
+        "bucket": "Bucket",
+        "accessKeyId": "Identifiant d'accès",
+        "secretAccessKey": "Clé secrète",
+        "secretSaved": "Une clé est enregistrée (chiffrée). Laissez vide pour la garder.",
+        "secretHint": "Chiffrée avant d'être enregistrée, jamais réaffichée.",
+        "test": "Tester la connexion",
+        "testing": "Test en cours…",
+        "steps": "Le test écrit un petit fichier, le relit puis le supprime.",
+        "stepWrite": "Écrire",
+        "stepRead": "Relire",
+        "stepDelete": "Supprimer",
+        "stepOk": "réussi",
+        "stepFail": "échec",
+        "whereCanada": "Vos documents seraient conservés chez {host}, région {region} (Canada).",
+        "whereElsewhere": "Vos documents seraient conservés chez {host}, région {region} (hors Canada : à vous de juger si cela convient).",
+        "testRequired": "Testez la connexion avant d'enregistrer.",
+        "keepDefault": "Cocher « Conserver mes documents » par défaut",
+        "save": "Enregistrer",
+        "saved": "Enregistré.",
+        "noKey": "Cette installation ne peut pas enregistrer d'identifiants : le stockage S3 personnel est indisponible.",
+        "cloudTitleConnected": "Votre nuage",
+        "cloudTitle": "Ou connecter un nuage que vous avez déjà",
+        "cloudLead": "Dropbox, Google Drive ou OneDrive : vos documents gardés vont dans un dossier de votre propre nuage, pas chez nous.",
+        "cloudConnect": "Connecter {cloud}",
+        "cloudDisconnect": "Déconnecter",
+        "cloudConnected": "Connecté à {cloud}. Vos documents gardés vont dans un dossier de l'application dans votre nuage.",
+        "cloudWasDisconnected": "{cloud} a été déconnecté. Les documents gardés là ne peuvent plus être ouverts avant de le reconnecter ; les nouveaux vont au stockage de Krizaka.",
+        "cloudScope": "Vous vous connectez sur la page de votre fournisseur. Verikora ne voit que le dossier qu'il crée ; vous pouvez déconnecter à tout moment, et vos fichiers restent où ils sont.",
+        "cloudResultConnected": "Votre nuage est connecté.",
+        "cloudResultDenied": "La connexion n'a pas été autorisée, ou a été annulée. Rien n'a changé.",
+        "cloudResultFailed": "La connexion n'a pas pu aboutir. Rien n'a changé : réessayez.",
+        "clouds": {
+          "dropbox": "Dropbox",
+          "google-drive": "Google Drive",
+          "onedrive": "OneDrive"
+        }
+      },
+      "appearance": {
+        "lead": "L’allure de l’application sur cet appareil. Gardé dans ce navigateur.",
+        "theme": "Thème",
+        "themeHint": "Système suit votre appareil ; sombre est le thème par défaut.",
+        "density": "Densité",
+        "densityHint": "Compacte resserre les lignes et les espaces.",
+        "themes": {
+          "system": "Système",
+          "systemHint": "Suit votre appareil.",
+          "light": "Clair",
+          "lightHint": "Surfaces claires.",
+          "dark": "Sombre",
+          "darkHint": "Surfaces sombres, par défaut."
+        },
+        "densities": {
+          "standard": "Standard",
+          "compact": "Compacte"
+        }
+      }
+    },
+    "confirmEmail": {
+      "title": "Confirmer la nouvelle adresse",
+      "lead": "Un clic pour utiliser cette adresse avec votre compte.",
+      "button": "Confirmer la nouvelle adresse",
+      "invalid": "Ce lien est invalide ou a expiré."
+    },
+    "forgotPassword": {
+      "promise": "Vos documents, lus et vérifiés par Verikora.",
+      "title": "Mot de passe oublié ?",
+      "description": "Saisissez votre adresse courriel. Si elle a un compte, nous envoyons un lien pour choisir un nouveau mot de passe.",
+      "email": "Courriel",
+      "submit": "Envoyer le lien",
+      "sentTitle": "Vérifiez votre boîte de réception",
+      "sent": "Si cette adresse a un compte, un lien est en route. Il fonctionne une seule fois, pendant {minutes} minutes.",
+      "back": "Retour à la connexion",
+      "mailOff": "L'envoi de courriels n'est pas encore disponible : un lien ne peut pas être envoyé. Parlez à notre équipe."
+    },
+    "resetPassword": {
+      "promise": "Vos documents, lus et vérifiés par Verikora.",
+      "title": "Choisir un nouveau mot de passe",
+      "description": "Au moins 12 caractères. Vos autres sessions seront déconnectées.",
+      "password": "Nouveau mot de passe",
+      "confirm": "Répétez le nouveau mot de passe",
+      "submit": "Changer le mot de passe",
+      "mismatch": "Les deux mots de passe ne sont pas identiques.",
+      "tooShort": "Au moins 12 caractères.",
+      "invalidTitle": "Ce lien ne fonctionne plus",
+      "invalid": "Il est invalide, déjà utilisé ou expiré. Demandez-en un nouveau.",
+      "again": "Envoyer un nouveau lien",
+      "back": "Retour à la connexion"
+    },
+    "maintenance": {
+      "title": "En maintenance"
+    },
+    "adminConfig": {
+      "title": "Configuration de l'application",
+      "lead": "Chaque réglage est une donnée : il s'applique tout de suite, sans redéploiement, et chaque changement est journalisé.",
+      "groups": {
+        "general": "Général",
+        "features": "Fonctions",
+        "limits": "Limites",
+        "plans": "Forfaits",
+        "prices": "Prix",
+        "packs": "Ensembles de règles",
+        "sovkora": "Sovkora",
+        "organisation": "Organisation",
+        "coupons": "Coupons"
+      },
+      "scope": {
+        "label": "Portée",
+        "global": "Global",
+        "workspace": "Espace de travail",
+        "user": "Personne",
+        "id": "Identifiant",
+        "idHint": "Identifiant de l'espace de travail ou de la personne.",
+        "apply": "Voir",
+        "workspaceNote": "Les espaces de travail arrivent avec le B2B : la résolution est prête.",
+        "resolution": "Valeur effective : personne, puis espace de travail, puis global, puis défaut."
+      },
+      "row": {
+        "modified": "modifié",
+        "inherited": "hérité : {source}",
+        "reset": "Rétablir le défaut",
+        "save": "Enregistrer",
+        "saved": "Enregistré.",
+        "default": "Défaut : {value}",
+        "on": "activé",
+        "off": "désactivé",
+        "fr": "FR",
+        "en": "EN",
+        "notHere": "Ne se règle pas à cette portée."
+      },
+      "sources": {
+        "default": "défaut",
+        "global": "global",
+        "workspace": "espace de travail",
+        "user": "personne"
+      },
+      "choices": {
+        "test": "Test",
+        "live": "Réel",
+        "pdf": "PDF",
+        "text": "Texte"
+      },
+      "settings": {
+        "app": {
+          "maintenance": {
+            "label": "Mode maintenance",
+            "hint": "Ferme l'application aux utilisateurs et affiche le message ci-dessous. Les administrateurs entrent toujours."
+          },
+          "maintenanceMessage": {
+            "label": "Message de maintenance",
+            "hint": "Ce que voient les utilisateurs, dans chaque langue."
+          }
+        },
+        "signup": {
+          "open": {
+            "label": "Inscription ouverte",
+            "hint": "Permet de créer un compte. Il faut aussi que l'envoi de courriels soit configuré."
+          }
+        },
+        "auth": {
+          "passwordResetMinutes": {
+            "label": "Durée du lien de réinitialisation",
+            "hint": "Minutes pendant lesquelles un lien « Mot de passe oublié ? » fonctionne, une seule fois. De 5 à 1440. Le courriel l'indique."
+          },
+          "sessionDays": {
+            "label": "Durée d'une session",
+            "hint": "Nombre de jours pendant lesquels une connexion dure avant de devoir se reconnecter."
+          }
+        },
+        "payments": {
+          "enabled": {
+            "label": "Paiements activés",
+            "hint": "Coupe l'achat d'un audit et de l'abonnement Pro. Le portail de facturation reste ouvert."
+          },
+          "display": {
+            "label": "Affichage des paiements",
+            "hint": "Mode test : un avis dit qu'aucune vraie carte n'est débitée."
+          }
+        },
+        "tal": {
+          "rate": {
+            "year": {
+              "label": "Taux du TAL : année",
+              "hint": "L'année à laquelle s'applique le pourcentage du TAL (le bail y commence)."
+            },
+            "basisPoints": {
+              "label": "Taux du TAL : pourcentage (points de base)",
+              "hint": "Le pourcentage de base du TAL pour le loyer, en centièmes de pour cent (310 = 3,1 %). 0 : rien d'inscrit, la vérification de la section G ne fait aucune affirmation."
+            },
+            "sourceUrl": {
+              "label": "Taux du TAL : page source",
+              "hint": "La page où le chiffre a été lu ; affichée à côté de chaque chiffre."
+            },
+            "enteredOn": {
+              "label": "Taux du TAL : inscrit le",
+              "hint": "Le jour de l'inscription (AAAA-MM-JJ)."
+            }
+          }
+        },
+        "pricing": {
+          "announcedCode": {
+            "label": "Code promo annoncé",
+            "hint": "Le code d'un coupon que la page des tarifs annonce (vide : aucun). Son pourcentage, sa durée et sa fin viennent du coupon."
+          }
+        },
+        "audit": {
+          "freeFirst": {
+            "label": "Dossier gratuit du mois",
+            "hint": "Interrupteur du dossier gratuit chaque mois (le nombre est plans.free.dossiersPerMonth)."
+          }
+        },
+        "features": {
+          "documentInsight": {
+            "label": "Panneau « Ce document »",
+            "hint": "La nature du document et ses faits, lus dans le texte."
+          },
+          "personalInfo": {
+            "label": "Détection des renseignements personnels",
+            "hint": "Compte et caviarde les renseignements personnels."
+          },
+          "keepDocuments": {
+            "label": "Option « Conserver mes documents »",
+            "hint": "Sans elle, tout document est supprimé après sa vérification."
+          },
+          "ownStorage": {
+            "label": "Stockage S3 personnel",
+            "hint": "Permet de brancher son propre stockage compatible S3."
+          },
+          "assistant": {
+            "label": "Assistant (bientôt)",
+            "hint": "Poser une question à son document. Pas encore construit."
+          },
+          "apiKeys": {
+            "label": "Clés d'API",
+            "hint": "Interrupteur global : éteint, aucune clé ne fonctionne et aucune ne peut être créée."
+          },
+          "collectionAvatars": {
+            "label": "Avatars de collection",
+            "hint": "Permet de donner un avatar à une collection : un de la série, ou une image téléversée."
+          },
+          "avatarSet": {
+            "label": "Série d'avatars proposée",
+            "hint": "Les avatars de la série que les personnes peuvent choisir."
+          },
+          "batches": {
+            "label": "Lots de vérifications",
+            "hint": "Un CSV et ses fichiers créent plusieurs vérifications d'un coup, avec un aperçu et le coût avant le lancement."
+          },
+          "webhooks": {
+            "label": "Webhooks",
+            "hint": "Désactivé : aucun webhook n'est envoyé ni enregistré, quel que soit le forfait."
+          },
+          "screeningBilling": {
+            "label": "Facturation des vérifications de dossier",
+            "hint": "Facture chaque vérification de dossier (coût plus marge, taxes comprises). Désactivée : rien n'est facturé. Mode test seulement tant que la grille de conformité n'est pas ouverte."
+          },
+          "screeningLive": {
+            "label": "Vérifications de dossier en direct",
+            "hint": "Vrais fournisseurs, vraies personnes. Refusé tant que chaque point de la grille de conformité n'est pas fait, preuve à l'appui. À garder désactivé."
+          }
+        },
+        "limits": {
+          "maxFileMb": {
+            "label": "Taille maximale d'un fichier",
+            "hint": "Ne peut pas dépasser ce que la plateforme porte (10 Mo)."
+          },
+          "maxPages": {
+            "label": "Pages maximales d'un PDF",
+            "hint": "Seuil de la vérification préalable."
+          },
+          "allowedTypes": {
+            "label": "Types de fichiers acceptés",
+            "hint": "Au moins un."
+          },
+          "reuseDays": {
+            "label": "Fenêtre de réutilisation",
+            "hint": "Un résultat identique plus récent que cela est réutilisé sans nouvelle exécution. 0 : jamais."
+          },
+          "purgeAfterHours": {
+            "label": "Purge d'un document jamais vérifié",
+            "hint": "Heures avant la suppression d'un document non conservé et jamais vérifié."
+          },
+          "bonusAuditsPerMonth": {
+            "label": "Audits bonus par mois",
+            "hint": "S'ajoute au plafond mensuel de cette personne."
+          },
+          "apiRequestsPerMinute": {
+            "label": "Requêtes d'API par minute et par clé",
+            "hint": "Au-delà, la réponse est 429 avec le délai d'attente."
+          },
+          "avatarMaxKb": {
+            "label": "Taille maximale d'un avatar téléversé",
+            "hint": "En Ko, avant que l'image soit recadrée et allégée."
+          },
+          "batchMaxRows": {
+            "label": "Lignes par lot",
+            "hint": "Au-delà, l'aperçu refuse le lot et dit de le couper en deux."
+          },
+          "batchConcurrency": {
+            "label": "Vérifications d'un lot menées en même temps",
+            "hint": "Les autres attendent leur tour (Sovkora lance quelques vérifications à la fois pour tout le produit) ; une ligne en échec n'arrête jamais le lot."
+          },
+          "batchTickSeconds": {
+            "label": "Le serveur regarde les lots non terminés toutes les",
+            "hint": "Secondes ; 0 le désactive (un lot n'avance alors que lorsqu'on l'ouvre). Un lot qui attend le paiement du compte est revu après dix minutes."
+          },
+          "batchTickMaxAgeHours": {
+            "label": "Un lot est avancé par le serveur pendant",
+            "hint": "Heures après sa création ; ensuite il n'avance que lorsqu'on l'ouvre."
+          },
+          "batchTickBatches": {
+            "label": "Lots avancés à chaque passage",
+            "hint": "Les plus anciens d'abord ; les autres attendent le passage suivant."
+          },
+          "webhookMaxAttempts": {
+            "label": "Essais par envoi de webhook",
+            "hint": "Le premier compris ; après le dernier l'envoi est abandonné et reste dans le journal. Les attentes passent de 30 secondes à 12 heures."
+          },
+          "batchExportMaxMb": {
+            "label": "ZIP le plus lourd des rapports d'un lot",
+            "hint": "Au-delà, l'export est refusé et invite à en exporter moins ; les lignes ne sont jamais coupées en silence."
+          },
+          "batchCreate": {
+            "perIp": {
+              "label": "Limite par adresse : Création d'un lot",
+              "hint": "Au-delà, la réponse est 429 avec le temps à attendre."
+            },
+            "perSubject": {
+              "label": "Limite par compte : Création d'un lot",
+              "hint": "Au-delà, la réponse est 429 avec le temps à attendre."
+            },
+            "windowSeconds": {
+              "label": "Fenêtre : Création d'un lot",
+              "hint": "Au-delà, la réponse est 429 avec le temps à attendre."
+            }
+          },
+          "batchExport": {
+            "perIp": {
+              "label": "Limite par adresse : Export d'un lot",
+              "hint": "Au-delà, la réponse est 429 avec le temps à attendre."
+            },
+            "perSubject": {
+              "label": "Limite par compte : Export d'un lot",
+              "hint": "Au-delà, la réponse est 429 avec le temps à attendre."
+            },
+            "windowSeconds": {
+              "label": "Fenêtre : Export d'un lot",
+              "hint": "Au-delà, la réponse est 429 avec le temps à attendre."
+            }
+          },
+          "verifyRequest": {
+            "perIp": {
+              "label": "Limite par adresse : Demande d'accès à une vérification",
+              "hint": "Au-delà, la réponse est 429 avec le temps à attendre."
+            },
+            "perSubject": {
+              "label": "Limite par compte : Demande d'accès à une vérification",
+              "hint": "Au-delà, la réponse est 429 avec le temps à attendre."
+            },
+            "windowSeconds": {
+              "label": "Fenêtre : Demande d'accès à une vérification",
+              "hint": "Au-delà, la réponse est 429 avec le temps à attendre."
+            }
+          },
+          "verifyContract": {
+            "perIp": {
+              "label": "Limite par adresse : Vérification d'un contrat scellé",
+              "hint": "Au-delà, la réponse est 429 avec le temps à attendre."
+            },
+            "windowSeconds": {
+              "label": "Fenêtre : Vérification d'un contrat scellé",
+              "hint": "Au-delà, la réponse est 429 avec le temps à attendre."
+            }
+          },
+          "verify": {
+            "perIp": {
+              "label": "Limite par adresse : Vérification d'un rapport signé",
+              "hint": "Au-delà, la réponse est 429 avec le temps à attendre."
+            },
+            "windowSeconds": {
+              "label": "Fenêtre : Vérification d'un rapport signé",
+              "hint": "Au-delà, la réponse est 429 avec le temps à attendre."
+            }
+          },
+          "consent": {
+            "perIp": {
+              "label": "Limite par adresse : Enregistrement d'un consentement",
+              "hint": "Au-delà, la réponse est 429 avec le temps à attendre."
+            },
+            "perSubject": {
+              "label": "Limite par compte : Enregistrement d'un consentement",
+              "hint": "Au-delà, la réponse est 429 avec le temps à attendre."
+            },
+            "windowSeconds": {
+              "label": "Fenêtre : Enregistrement d'un consentement",
+              "hint": "Au-delà, la réponse est 429 avec le temps à attendre."
+            }
+          },
+          "signUp": {
+            "perIp": {
+              "label": "Limite par adresse : Création de compte",
+              "hint": "Au-delà, la réponse est 429 avec le temps à attendre."
+            },
+            "perSubject": {
+              "label": "Limite par compte : Création de compte",
+              "hint": "Au-delà, la réponse est 429 avec le temps à attendre."
+            },
+            "windowSeconds": {
+              "label": "Fenêtre : Création de compte",
+              "hint": "Au-delà, la réponse est 429 avec le temps à attendre."
+            }
+          },
+          "verifyEmail": {
+            "perIp": {
+              "label": "Limite par adresse : Demande de courriel de vérification",
+              "hint": "Au-delà, la réponse est 429 avec le temps à attendre."
+            },
+            "windowSeconds": {
+              "label": "Fenêtre : Demande de courriel de vérification",
+              "hint": "Au-delà, la réponse est 429 avec le temps à attendre."
+            }
+          },
+          "signIn": {
+            "perIp": {
+              "label": "Limite par adresse : Connexion",
+              "hint": "Au-delà, la réponse est 429 avec le temps à attendre."
+            },
+            "perSubject": {
+              "label": "Limite par compte : Connexion",
+              "hint": "Au-delà, la réponse est 429 avec le temps à attendre."
+            },
+            "windowSeconds": {
+              "label": "Fenêtre : Connexion",
+              "hint": "Au-delà, la réponse est 429 avec le temps à attendre."
+            }
+          },
+          "confirmEmail": {
+            "perIp": {
+              "label": "Limite par adresse : Confirmation d'une adresse courriel",
+              "hint": "Au-delà, la réponse est 429 avec le temps à attendre."
+            },
+            "windowSeconds": {
+              "label": "Fenêtre : Confirmation d'une adresse courriel",
+              "hint": "Au-delà, la réponse est 429 avec le temps à attendre."
+            }
+          },
+          "search": {
+            "perIp": {
+              "label": "Limite par adresse : Recherche dans la bibliothèque",
+              "hint": "Au-delà, la réponse est 429 avec le temps à attendre."
+            },
+            "perSubject": {
+              "label": "Limite par compte : Recherche dans la bibliothèque",
+              "hint": "Au-delà, la réponse est 429 avec le temps à attendre."
+            },
+            "windowSeconds": {
+              "label": "Fenêtre : Recherche dans la bibliothèque",
+              "hint": "Au-delà, la réponse est 429 avec le temps à attendre."
+            }
+          },
+          "perspective": {
+            "perIp": {
+              "label": "Limite par adresse : Changement de point de vue",
+              "hint": "Au-delà, la réponse est 429 avec le temps à attendre."
+            },
+            "perSubject": {
+              "label": "Limite par compte : Changement de point de vue",
+              "hint": "Au-delà, la réponse est 429 avec le temps à attendre."
+            },
+            "windowSeconds": {
+              "label": "Fenêtre : Changement de point de vue",
+              "hint": "Au-delà, la réponse est 429 avec le temps à attendre."
+            }
+          },
+          "applicantFileRequest": {
+            "perIp": {
+              "label": "Limite par adresse : Demande d'un dossier de candidat",
+              "hint": "Au-delà, la réponse est 429 avec le temps à attendre."
+            },
+            "perSubject": {
+              "label": "Limite par compte : Demande d'un dossier de candidat",
+              "hint": "Au-delà, la réponse est 429 avec le temps à attendre."
+            },
+            "windowSeconds": {
+              "label": "Fenêtre : Demande d'un dossier de candidat",
+              "hint": "Au-delà, la réponse est 429 avec le temps à attendre."
+            }
+          },
+          "applicantFileAction": {
+            "perIp": {
+              "label": "Limite par adresse : Action sur un dossier de candidat",
+              "hint": "Au-delà, la réponse est 429 avec le temps à attendre."
+            },
+            "windowSeconds": {
+              "label": "Fenêtre : Action sur un dossier de candidat",
+              "hint": "Au-delà, la réponse est 429 avec le temps à attendre."
+            }
+          },
+          "screeningRequest": {
+            "perIp": {
+              "label": "Limite par adresse : Demande de vérification de candidat",
+              "hint": "Au-delà, la réponse est 429 avec le temps à attendre."
+            },
+            "perSubject": {
+              "label": "Limite par compte : Demande de vérification de candidat",
+              "hint": "Au-delà, la réponse est 429 avec le temps à attendre."
+            },
+            "windowSeconds": {
+              "label": "Fenêtre : Demande de vérification de candidat",
+              "hint": "Au-delà, la réponse est 429 avec le temps à attendre."
+            }
+          },
+          "screeningRespond": {
+            "perIp": {
+              "label": "Limite par adresse : Réponse à une vérification de candidat",
+              "hint": "Au-delà, la réponse est 429 avec le temps à attendre."
+            },
+            "windowSeconds": {
+              "label": "Fenêtre : Réponse à une vérification de candidat",
+              "hint": "Au-delà, la réponse est 429 avec le temps à attendre."
+            }
+          },
+          "upload": {
+            "perIp": {
+              "label": "Limite par adresse : Téléversement d'un document",
+              "hint": "Au-delà, la réponse est 429 avec le temps à attendre."
+            },
+            "perSubject": {
+              "label": "Limite par compte : Téléversement d'un document",
+              "hint": "Au-delà, la réponse est 429 avec le temps à attendre."
+            },
+            "windowSeconds": {
+              "label": "Fenêtre : Téléversement d'un document",
+              "hint": "Au-delà, la réponse est 429 avec le temps à attendre."
+            }
+          },
+          "analysis": {
+            "perIp": {
+              "label": "Limite par adresse : Lancement d'une vérification",
+              "hint": "Au-delà, la réponse est 429 avec le temps à attendre."
+            },
+            "perSubject": {
+              "label": "Limite par compte : Lancement d'une vérification",
+              "hint": "Au-delà, la réponse est 429 avec le temps à attendre."
+            },
+            "windowSeconds": {
+              "label": "Fenêtre : Lancement d'une vérification",
+              "hint": "Au-delà, la réponse est 429 avec le temps à attendre."
+            }
+          },
+          "redacted": {
+            "perIp": {
+              "label": "Limite par adresse : Téléchargement d'une copie caviardée",
+              "hint": "Au-delà, la réponse est 429 avec le temps à attendre."
+            },
+            "windowSeconds": {
+              "label": "Fenêtre : Téléchargement d'une copie caviardée",
+              "hint": "Au-delà, la réponse est 429 avec le temps à attendre."
+            }
+          },
+          "reportGrant": {
+            "perIp": {
+              "label": "Limite par adresse : Partage d'un rapport",
+              "hint": "Au-delà, la réponse est 429 avec le temps à attendre."
+            },
+            "perSubject": {
+              "label": "Limite par compte : Partage d'un rapport",
+              "hint": "Au-delà, la réponse est 429 avec le temps à attendre."
+            },
+            "windowSeconds": {
+              "label": "Fenêtre : Partage d'un rapport",
+              "hint": "Au-delà, la réponse est 429 avec le temps à attendre."
+            }
+          },
+          "reportMail": {
+            "perIp": {
+              "label": "Limite par adresse : Envoi d'un lien de rapport par courriel",
+              "hint": "Au-delà, la réponse est 429 avec le temps à attendre."
+            },
+            "perSubject": {
+              "label": "Limite par compte : Envoi d'un lien de rapport par courriel",
+              "hint": "Au-delà, la réponse est 429 avec le temps à attendre."
+            },
+            "windowSeconds": {
+              "label": "Fenêtre : Envoi d'un lien de rapport par courriel",
+              "hint": "Au-delà, la réponse est 429 avec le temps à attendre."
+            }
+          },
+          "report": {
+            "perIp": {
+              "label": "Limite par adresse : Lecture d'un rapport",
+              "hint": "Au-delà, la réponse est 429 avec le temps à attendre."
+            },
+            "perSubject": {
+              "label": "Limite par compte : Lecture d'un rapport",
+              "hint": "Au-delà, la réponse est 429 avec le temps à attendre."
+            },
+            "windowSeconds": {
+              "label": "Fenêtre : Lecture d'un rapport",
+              "hint": "Au-delà, la réponse est 429 avec le temps à attendre."
+            }
+          },
+          "applicant": {
+            "perIp": {
+              "label": "Limite par adresse : Page du candidat",
+              "hint": "Au-delà, la réponse est 429 avec le temps à attendre."
+            },
+            "windowSeconds": {
+              "label": "Fenêtre : Page du candidat",
+              "hint": "Au-delà, la réponse est 429 avec le temps à attendre."
+            }
+          },
+          "applicantUpload": {
+            "perIp": {
+              "label": "Limite par adresse : Téléversements du candidat",
+              "hint": "Au-delà, la réponse est 429 avec le temps à attendre."
+            },
+            "windowSeconds": {
+              "label": "Fenêtre : Téléversements du candidat",
+              "hint": "Au-delà, la réponse est 429 avec le temps à attendre."
+            }
+          },
+          "showcaseFile": {
+            "perIp": {
+              "label": "Limite par adresse : Fichier de démonstration",
+              "hint": "Au-delà, la réponse est 429 avec le temps à attendre."
+            },
+            "windowSeconds": {
+              "label": "Fenêtre : Fichier de démonstration",
+              "hint": "Au-delà, la réponse est 429 avec le temps à attendre."
+            }
+          },
+          "showcase": {
+            "perIp": {
+              "label": "Limite par adresse : Démonstration",
+              "hint": "Au-delà, la réponse est 429 avec le temps à attendre."
+            },
+            "windowSeconds": {
+              "label": "Fenêtre : Démonstration",
+              "hint": "Au-delà, la réponse est 429 avec le temps à attendre."
+            }
+          },
+          "batchPreview": {
+            "perIp": {
+              "label": "Limite par adresse : Aperçu d'un lot",
+              "hint": "Au-delà, la réponse est 429 avec le temps à attendre."
+            },
+            "perSubject": {
+              "label": "Limite par compte : Aperçu d'un lot",
+              "hint": "Au-delà, la réponse est 429 avec le temps à attendre."
+            },
+            "windowSeconds": {
+              "label": "Fenêtre : Aperçu d'un lot",
+              "hint": "Au-delà, la réponse est 429 avec le temps à attendre."
+            }
+          },
+          "avatar": {
+            "perIp": {
+              "label": "Limite par adresse : Changement de l'image d'une collection",
+              "hint": "Au-delà, la réponse est 429 avec le temps à attendre."
+            },
+            "perSubject": {
+              "label": "Limite par compte : Changement de l'image d'une collection",
+              "hint": "Au-delà, la réponse est 429 avec le temps à attendre."
+            },
+            "windowSeconds": {
+              "label": "Fenêtre : Changement de l'image d'une collection",
+              "hint": "Au-delà, la réponse est 429 avec le temps à attendre."
+            }
+          },
+          "portal": {
+            "perIp": {
+              "label": "Limite par adresse : Ouverture du portail de facturation",
+              "hint": "Au-delà, la réponse est 429 avec le temps à attendre."
+            },
+            "windowSeconds": {
+              "label": "Fenêtre : Ouverture du portail de facturation",
+              "hint": "Au-delà, la réponse est 429 avec le temps à attendre."
+            }
+          },
+          "checkout": {
+            "perIp": {
+              "label": "Limite par adresse : Démarrage d'un paiement",
+              "hint": "Au-delà, la réponse est 429 avec le temps à attendre."
+            },
+            "perSubject": {
+              "label": "Limite par compte : Démarrage d'un paiement",
+              "hint": "Au-delà, la réponse est 429 avec le temps à attendre."
+            },
+            "windowSeconds": {
+              "label": "Fenêtre : Démarrage d'un paiement",
+              "hint": "Au-delà, la réponse est 429 avec le temps à attendre."
+            }
+          },
+          "apiKeyAuth": {
+            "perIp": {
+              "label": "Limite par adresse : Présentation d'une clé d'API (avant qu'elle soit connue)",
+              "hint": "Au-delà, la réponse est 429 avec le temps à attendre."
+            },
+            "windowSeconds": {
+              "label": "Fenêtre : Présentation d'une clé d'API (avant qu'elle soit connue)",
+              "hint": "Au-delà, la réponse est 429 avec le temps à attendre."
+            }
+          },
+          "forgotPassword": {
+            "perIp": {
+              "label": "Limite par adresse : Demande de réinitialisation du mot de passe",
+              "hint": "Au-delà, la réponse est 429 avec le temps à attendre."
+            },
+            "perSubject": {
+              "label": "Limite par compte : Demande de réinitialisation du mot de passe",
+              "hint": "Au-delà, la réponse est 429 avec le temps à attendre."
+            },
+            "windowSeconds": {
+              "label": "Fenêtre : Demande de réinitialisation du mot de passe",
+              "hint": "Au-delà, la réponse est 429 avec le temps à attendre."
+            }
+          },
+          "resetPassword": {
+            "perIp": {
+              "label": "Limite par adresse : Réinitialisation du mot de passe",
+              "hint": "Au-delà, la réponse est 429 avec le temps à attendre."
+            },
+            "windowSeconds": {
+              "label": "Fenêtre : Réinitialisation du mot de passe",
+              "hint": "Au-delà, la réponse est 429 avec le temps à attendre."
+            }
+          },
+          "organise": {
+            "perIp": {
+              "label": "Limite par adresse : Organisation (étiquettes, vues, actions groupées)",
+              "hint": "Au-delà, la réponse est 429 avec le temps à attendre."
+            },
+            "perSubject": {
+              "label": "Limite par compte : Organisation (étiquettes, vues, actions groupées)",
+              "hint": "Au-delà, la réponse est 429 avec le temps à attendre."
+            },
+            "windowSeconds": {
+              "label": "Fenêtre : Organisation (étiquettes, vues, actions groupées)",
+              "hint": "Au-delà, la réponse est 429 avec le temps à attendre."
+            }
+          },
+          "accountRead": {
+            "perIp": {
+              "label": "Limite par adresse : Lecture des pages du compte",
+              "hint": "Au-delà, la réponse est 429 avec le temps à attendre."
+            },
+            "perSubject": {
+              "label": "Limite par compte : Lecture des pages du compte",
+              "hint": "Au-delà, la réponse est 429 avec le temps à attendre."
+            },
+            "windowSeconds": {
+              "label": "Fenêtre : Lecture des pages du compte",
+              "hint": "Au-delà, la réponse est 429 avec le temps à attendre."
+            }
+          },
+          "accountWrite": {
+            "perIp": {
+              "label": "Limite par adresse : Modification du compte",
+              "hint": "Au-delà, la réponse est 429 avec le temps à attendre."
+            },
+            "perSubject": {
+              "label": "Limite par compte : Modification du compte",
+              "hint": "Au-delà, la réponse est 429 avec le temps à attendre."
+            },
+            "windowSeconds": {
+              "label": "Fenêtre : Modification du compte",
+              "hint": "Au-delà, la réponse est 429 avec le temps à attendre."
+            }
+          }
+        },
+        "plans": {
+          "free": {
+            "dossiersPerMonth": {
+              "label": "Gratuit : dossiers par mois",
+              "hint": "Vérifiés gratuitement chaque mois civil, sans carte (0 : aucun)."
+            },
+            "auditsPerDay": {
+              "label": "Gratuit : audits par jour",
+              "hint": "0 : sans plafond."
+            },
+            "apiKeys": {
+              "label": "Gratuit : clés d'API",
+              "hint": "Nombre de clés actives. 0 : le forfait n'a pas d'API."
+            },
+            "webhookEndpoints": {
+              "label": "Gratuit : points de terminaison webhook",
+              "hint": "Nombre de points de terminaison. 0 : le forfait n'a pas de webhooks."
+            }
+          },
+          "pro": {
+            "auditsPerDay": {
+              "label": "Abonnement : audits par jour",
+              "hint": "0 : sans plafond."
+            },
+            "apiKeys": {
+              "label": "Abonnement : clés d'API",
+              "hint": "Nombre de clés actives. 0 : le forfait n'a pas d'API."
+            },
+            "webhookEndpoints": {
+              "label": "Abonnement : points de terminaison webhook",
+              "hint": "Nombre de points de terminaison. 0 : le forfait n'a pas de webhooks."
+            }
+          }
+        },
+        "coupons": {
+          "enabled": {
+            "label": "Codes promo activés",
+            "hint": "Affiche le champ du code promo et accepte les codes. Désactivé par défaut ; les coupons se gèrent dans l'onglet Coupons."
+          },
+          "reservationMinutes": {
+            "label": "Réservation au paiement",
+            "hint": "Minutes pendant lesquelles un code est réservé pour un paiement en cours. De 40 à 1440 (la fenêtre de la page de paiement)."
+          },
+          "attemptsPerAccountPerHour": {
+            "label": "Essais par compte et par heure",
+            "hint": "Combien de codes un compte peut essayer en une heure."
+          },
+          "attemptsPerIpPerHour": {
+            "label": "Essais par adresse et par heure",
+            "hint": "Combien de codes une adresse peut essayer en une heure."
+          },
+          "minCodeLength": {
+            "label": "Code le plus court",
+            "hint": "Le moins de caractères qu'un administrateur peut saisir pour un code."
+          },
+          "generatedCodeLength": {
+            "label": "Longueur d'un code généré",
+            "hint": "Caractères d'un code généré (lettres et chiffres, sans I, L, O ni U)."
+          },
+          "maxPercentOff": {
+            "label": "Rabais maximal",
+            "hint": "Le pourcentage le plus élevé qu'un rabais peut retirer. Une offre gratuite est un code de crédits plafonné, jamais un rabais de 100 %."
+          },
+          "refundRestoresUse": {
+            "label": "Un remboursement complet rend l'utilisation",
+            "hint": "Désactivé par défaut, pour qu'un remboursement ne remette pas un code à usage unique en jeu."
+          }
+        },
+        "storage": {
+          "userConnectors": {
+            "label": "Connexions à un nuage (Dropbox, Google Drive, OneDrive)",
+            "hint": "Permet de connecter un nuage que la personne a déjà pour garder ses documents. Fermé tant que les inscriptions des applications ne sont pas faites."
+          }
+        }
+      },
+      "history": {
+        "title": "Journal des changements",
+        "empty": "Aucun changement pour l'instant.",
+        "who": "Qui",
+        "when": "Quand",
+        "what": "Quoi",
+        "before": "Avant",
+        "after": "Après",
+        "scope": "Portée"
+      },
+      "packs": {
+        "lead": "Chaque ensemble de règles est un parcours : le désactiver le retire pour les consommateurs de cet environnement, tout de suite.",
+        "environment": "Environnement",
+        "flow": "Parcours",
+        "enabled": "Actif",
+        "manage": "Éditer les parcours",
+        "empty": "Aucun parcours."
+      },
+      "plans": {
+        "entitlementsTitle": "Ce que chaque forfait inclut"
+      },
+      "sovkora": {
+        "keyTitle": "Clé d'API de ce produit",
+        "masked": "Clé : {key}",
+        "none": "Aucune clé configurée.",
+        "address": "Adresse : {url}",
+        "test": "Tester la connexion",
+        "testing": "Test en cours…",
+        "ok": "Connexion réussie en {ms} ms : {count} Studio(s) installé(s).",
+        "fail": "Connexion refusée ({code}).",
+        "usageTitle": "Usage de ce mois (enregistré ici)",
+        "runs": "Exécutions lancées : {count}",
+        "failed": "En échec : {count}",
+        "cost": "Coût estimé : {amount}",
+        "notExposed": "Le forfait et l'usage vus par Sovkora ne sont pas encore exposés par son API : ils ne sont pas affichés plutôt que devinés.",
+        "rotate": "La rotation de la clé se fait dans Sovkora, puis dans le secret de l'application : elle n'est pas faite d'ici."
+      },
+      "organisation": {
+        "owner": "Propriétaire",
+        "save": "Enregistrer",
+        "saved": "Enregistré (version {version}).",
+        "notSeeded": "Rien n’est encore semé pour ce type.",
+        "kinds": {
+          "applicant_file": "Dossiers de candidats",
+          "document": "Documents"
+        },
+        "moveUp": "Monter {name}",
+        "moveDown": "Descendre {name}",
+        "remove": "Retirer {name}",
+        "drag": "Glisser {name}",
+        "problems": "À corriger avant d’enregistrer",
+        "tags": {
+          "presets": "Étiquettes proposées",
+          "name": "Nom de l’étiquette {position}",
+          "marker": "Couleur de l’étiquette {name}",
+          "add": "Nouvelle étiquette",
+          "addButton": "Ajouter",
+          "duplicate": "Une autre étiquette porte ce nom",
+          "empty": "Aucune étiquette proposée pour l’instant",
+          "writers": "Qui gère les étiquettes",
+          "writersHint": "Les rôles qui créent, renomment, retirent et attribuent les étiquettes.",
+          "userTags": "Chacun peut ajouter ses étiquettes",
+          "userTagsHint": "En plus de celles proposées ici.",
+          "max": "Nombre maximal d’étiquettes",
+          "maxHint": "Par compte et par type."
+        },
+        "status": {
+          "languages": {
+            "fr": "Français",
+            "en": "Anglais"
+          },
+          "stateLabel": "Libellé en {language} de l’état {position}",
+          "tone": "Ton de l’état {position}",
+          "tones": {
+            "neutral": "Neutre",
+            "accent": "Accent",
+            "success": "Succès",
+            "warning": "Attention",
+            "danger": "Danger"
+          },
+          "final": "L’état {position} est final",
+          "finalHint": "Un état final n’a pas de sortie.",
+          "initial": "L’état {position} est l’état initial",
+          "initialNotFinal": "L’état initial n’est jamais final",
+          "states": "États, dans l’ordre de la colonne",
+          "addState": "Ajouter un état",
+          "newState": {
+            "fr": "Nouvel état",
+            "en": "New state"
+          },
+          "moves": "Transitions",
+          "movesHint": "Qui peut faire passer un dossier d’un état à un autre.",
+          "from": "Transitions depuis {name}",
+          "noWayOut": "Final : pas de sortie",
+          "move": "De {from} à {to} : {roles}",
+          "none": "personne",
+          "moveDetail": "Transition de {from} à {to}",
+          "roles": "Rôles qui peuvent faire cette transition",
+          "confirm": "Demander un second appui",
+          "reasons": "Motifs à choisir",
+          "addReason": "Ajouter un motif",
+          "reasonLabel": "Motif en {language}, numéro {position}",
+          "removeReason": "Retirer le motif {position}",
+          "derived": "Dérivé : le produit calcule ce statut ; personne ne le change"
+        }
+      },
+      "prices": {
+        "lead": "Les prix sont des données : un changement s’applique à partir du jour choisi (aujourd’hui ou plus tard), l’historique garde chaque version, et un abonnement garde le prix auquel il a été vendu. Chaque prix est en CAD, plus taxes.",
+        "processorOff": "Les paiements ne sont pas configurés sur cette installation : rien n’est facturé.",
+        "processorMode": "Processeur de paiement",
+        "seed": "prix par défaut",
+        "since": "depuis le {date}",
+        "amount": "Montant (CAD, plus taxes)",
+        "amountHint": "En dollars, p. ex. 0,65. Vide : sur soumission (seulement pour une entrée hors vente).",
+        "availability": "Disponibilité",
+        "availabilityHint": "Public : affiché avec son chiffre. Interne : jamais sur une page publique. En préparation : affiché sans chiffre.",
+        "availabilities": {
+          "public": "Public",
+          "internal": "Interne",
+          "founder-limited": "Fondateurs seulement",
+          "preparing": "En préparation"
+        },
+        "limits": {
+          "included": "Vérifications incluses par mois",
+          "founderCap": "Places fondateurs",
+          "feeBps": "Frais (points de base)",
+          "feeCapCents": "Plafond des frais (cents)"
+        },
+        "from": "À partir du",
+        "fromHint": "Vide ou aujourd’hui : dès maintenant. Un jour plus tard : dès son début.",
+        "schedule": "Planifier le changement",
+        "charged": "Facturé par le processeur",
+        "chargedHint": "La vente s’arrête tant qu’il diffère du catalogue : synchronisez le processeur (mode test) ci-dessous.",
+        "notFound": "Prix introuvable chez le processeur.",
+        "mismatch": "Différent",
+        "match": "Égal",
+        "onQuote": "sur soumission",
+        "upcoming": "Planifié",
+        "upcomingLine": "À partir du {date} : {amount}, {availability}",
+        "historyTitle": "Changements de prix",
+        "units": {
+          "month": "par mois",
+          "year": "par an",
+          "once": "une fois",
+          "document": "par document",
+          "order": "par commande",
+          "pack": "par forfait",
+          "hour": "par heure"
+        },
+        "entries": {
+          "document": "Un document vérifié",
+          "agency": "Agence",
+          "firm": "Gestionnaire d’immeubles",
+          "api": "API dédiée (sur soumission)",
+          "fullFile": "Dossier complet du locataire",
+          "backgroundCheck": "Vérification des antécédents",
+          "screening": "Filtre seul"
+        },
+        "editor": {
+          "edit": "Modifier",
+          "plusTaxes": "plus taxes",
+          "unit": "Unité",
+          "limitsLabel": "Limites",
+          "keepsPrice": "Les abonnements en cours gardent le prix auquel ils ont été vendus.",
+          "cancel": "Annuler",
+          "scheduled": "Changements planifiés ({count})",
+          "history": "Historique",
+          "historyEmpty": "Aucun changement pour l’instant.",
+          "loading": "Chargement…",
+          "historyLine": "{actor}, {at} : {before} → {after}, à partir du {from}",
+          "scheduledLine": "à partir du {from}",
+          "saved": "Enregistré."
+        },
+        "confirm": {
+          "title": "Changer le prix de {name} ?",
+          "now": "Dès maintenant : {before} → {after}. Les nouvelles ventes utilisent aussitôt le nouveau prix ; les abonnements déjà vendus gardent le leur.",
+          "later": "À partir du {date} : {before} → {after}. Rien ne change avant ce jour ; les abonnements déjà vendus gardent leur prix.",
+          "processorTest": "Le processeur (mode test) reçoit le prix correspondant.",
+          "processorLive": "Le processeur est en mode RÉEL : son prix n’est pas changé d’ici, c’est le propriétaire qui le fait.",
+          "confirm": "Oui, changer",
+          "cancel": "Non, garder",
+          "cancelled": "Annulé, rien n’a été changé."
+        },
+        "sync": {
+          "title": "Prix du processeur",
+          "button": "Synchroniser le processeur",
+          "hint": "Crée chez le processeur le prix de chaque entrée vendue qui diffère du catalogue (mode test seulement). Un prix déjà vendu n’est jamais modifié : un nouveau prend sa clé de recherche.",
+          "done": "Synchronisé : {lines}",
+          "live": "Le processeur est en mode réel : seul le propriétaire change ses prix.",
+          "off": "Les paiements ne sont pas configurés ici.",
+          "status": {
+            "exists": "à jour",
+            "created": "créé",
+            "repriced": "nouveau prix"
+          }
+        }
+      },
+      "coupons": {
+        "title": "Coupons",
+        "lead": "Des codes de rabais et de crédits pour les partenaires, les promotions et les démos. Notre base de données fait foi : la page de paiement ne fait qu'appliquer le rabais selon nos conditions. Un code de crédits a toujours une échéance et, le plus souvent, un plafond par jour ou par mois.",
+        "off": "Les codes promo sont désactivés : les clients ne voient pas le champ. Activez-les dans Forfaits, « Codes promo activés ».",
+        "new": "Nouveau coupon",
+        "create": "Créer",
+        "cancel": "Annuler",
+        "close": "Fermer",
+        "empty": "Aucun coupon pour l'instant.",
+        "kind": "Type",
+        "kinds": {
+          "discount": "Rabais",
+          "credit": "Crédits"
+        },
+        "code": "Code",
+        "codeHint": "Lettres et chiffres, lus sans tenir compte de la casse, des espaces ni des traits d'union.",
+        "generate": "Générer",
+        "purpose": "Objet",
+        "purposes": {
+          "promo": "Promotion",
+          "partner": "Partenaire",
+          "demo": "Démo",
+          "support": "Soutien"
+        },
+        "partner": "Partenaire",
+        "partnerHint": "Obligatoire pour l'objet Partenaire.",
+        "noPartner": "Aucun",
+        "startsAt": "Début",
+        "endsAt": "Fin",
+        "endsAtHint": "Vide : pas de date de fin.",
+        "zone": "Jours à l'heure de Montréal.",
+        "maxRedemptions": "Utilisations au total",
+        "maxRedemptionsHint": "Vide : sans limite.",
+        "maxPerAccount": "Utilisations par compte",
+        "newCustomersOnly": "Nouveaux clients seulement",
+        "discountType": "Rabais",
+        "types": {
+          "percent": "Un pourcentage",
+          "amount": "Un montant fixe"
+        },
+        "percent": "Pourcentage de rabais",
+        "percentHint": "Jusqu'au rabais maximal des Forfaits. 100 % n'est jamais permis.",
+        "amountOff": "Montant du rabais",
+        "amountOffHint": "Toujours inférieur au prix.",
+        "duration": "Pendant combien de temps",
+        "durations": {
+          "once": "Ce paiement seulement",
+          "repeating": "Plusieurs mois",
+          "forever": "Chaque mois"
+        },
+        "durationMonths": "Mois",
+        "minimum": "Achat minimal",
+        "minimumHint": "Zéro : aucun minimum.",
+        "credits": "Crédits accordés",
+        "creditsValidDays": "Valables (jours)",
+        "creditsValidDaysHint": "Tout octroi a une échéance.",
+        "capPerDay": "Plafond par jour",
+        "capPerMonth": "Plafond par mois",
+        "capHint": "Vide : pas de plafond de ce type.",
+        "onExhausted": "Quand ils sont épuisés",
+        "onExhaustedHint": "S'arrêter, ou passer à l'offre payante.",
+        "exhausted": {
+          "stop": "S'arrêter",
+          "fallback_paid": "Proposer l'offre payante"
+        },
+        "terms": "Conditions",
+        "creditTerms": "{credits} crédits, {days} jours",
+        "discountTerms": {
+          "percent": "−{value} % {duration}",
+          "amount": "−{value} {duration}"
+        },
+        "window": "Période",
+        "uses": "Utilisations",
+        "state": "État",
+        "actions": "Actions",
+        "states": {
+          "active": "Actif",
+          "paused": "En pause",
+          "archived": "Archivé",
+          "notStarted": "Pas commencé",
+          "expired": "Terminé"
+        },
+        "pause": "Mettre en pause",
+        "resume": "Reprendre",
+        "archive": "Archiver",
+        "restore": "Rétablir",
+        "erase": "Effacer",
+        "export": "Exporter",
+        "revoke": "Révoquer",
+        "redemptions": "Utilisations",
+        "redemptionsOf": "Utilisations de {code}",
+        "redemptionsNote": "Les comptes apparaissent par identifiant seulement. Un paiement tardif est honoré et signalé.",
+        "noRedemptions": "Aucune utilisation pour l'instant.",
+        "redemptionStates": {
+          "reserved": "Réservée",
+          "confirmed": "Confirmée",
+          "released": "Libérée",
+          "revoked": "Révoquée"
+        },
+        "when": "Quand",
+        "account": "Compte",
+        "deletedAccount": "supprimé",
+        "paid": "Payé",
+        "discount": "Rabais",
+        "refunded": "Remboursé",
+        "late": "Tardif",
+        "overLimit": "Hors limite",
+        "partners": "Partenaires",
+        "partnersLead": "Les personnes qui vendent avec un code. Un nom et un courriel facultatif, vus des administrateurs seulement, pour attribuer les ventes. La commission n'est pas calculée ici.",
+        "addPartner": "Ajouter un partenaire",
+        "noPartners": "Aucun partenaire pour l'instant.",
+        "partnerName": "Nom",
+        "partnerEmail": "Courriel (facultatif)",
+        "partnerStates": {
+          "active": "Actif",
+          "archived": "Archivé",
+          "erased": "Effacé"
+        },
+        "erased": "effacé",
+        "report": "Rapport",
+        "reportOf": "{name} : ventes par code",
+        "reportNote": "Utilisations, rabais accordé et revenu (payé moins remboursé) par code. Jamais un client. Chaque consultation est journalisée.",
+        "revenue": "Revenu",
+        "creditsGranted": "Crédits accordés"
+      }
+    },
+    "steps": {
+      "label": "Progression de la vérification",
+      "working": "En cours…",
+      "progress": "Étape {step} sur {total}",
+      "read": "Lecture",
+      "preflight": "Contrôle préalable",
+      "report": "Rapport",
+      "rules": {
+        "compliance-check": "Vérification des règles",
+        "document-authenticity": "Examen du fichier"
+      },
+      "state": {
+        "done": "Terminé",
+        "current": "En cours",
+        "upcoming": "À venir",
+        "error": "Échec"
+      }
+    },
+    "checks": {
+      "title": "Vérifications",
+      "lead": "Chaque vérification, son résultat et son exécution — la plus récente d’abord.",
+      "tabsLabel": "Sections des vérifications",
+      "tabs": {
+        "checks": "Vérifications",
+        "lots": "Lots"
+      },
+      "import": "Importer un lot",
+      "empty": {
+        "title": "Aucune vérification encore",
+        "text": "Déposez un bail, une fiche de paie ou une facture : Verikora le lit selon les règles du Québec et le résultat arrive ici."
+      },
+      "caption": "Vos vérifications",
+      "runCopy": "Copier le run {id}",
+      "runCopied": "Copié",
+      "columns": {
+        "document": "Document",
+        "kind": "Type",
+        "check": "Vérification",
+        "result": "Résultat",
+        "when": "Quand",
+        "run": "Exécution"
+      },
+      "filters": {
+        "label": "Filtrer les vérifications",
+        "search": "Chercher un document",
+        "clearSearch": "Effacer la recherche",
+        "result": "Résultat",
+        "kind": "Type",
+        "period": "Période",
+        "periods": {
+          "7d": "7 derniers jours",
+          "30d": "30 derniers jours",
+          "year": "Cette année"
+        },
+        "clear": "Effacer les filtres",
+        "remove": "Retirer {label}"
+      },
+      "resultsOne": "{count} vérification",
+      "resultsMany": "{count} vérifications",
+      "noMatch": {
+        "title": "Aucune vérification ne correspond",
+        "text": "Élargissez un filtre, ou effacez-les tous."
+      }
+    },
+    "reportFace": {
+      "unchecked": {
+        "UNSUPPORTED_KIND": {
+          "title": "Pas encore de règles pour ce type de document",
+          "hint": "Rien n'a été vérifié : Verikora n'a pas encore de règles pour ce type de document. Ce n'est pas un résultat sans problème."
+        },
+        "KIND_UNKNOWN": {
+          "title": "Impossible de dire de quel type de document il s'agit",
+          "hint": "Rien n'a été vérifié : indiquez le type de document que vous envoyez, puis relancez la vérification. Ce n'est pas un résultat sans problème."
+        }
+      },
+      "label": "Le résultat",
+      "attentionOne": "{count} règle sur {rules} demande votre attention",
+      "attentionMany": "{count} règles sur {rules} demandent votre attention",
+      "attentionNone": "Aucun problème trouvé sur les {rules} règles vérifiées",
+      "rulesOf": "Règles {jurisdiction} · en vigueur le {date}",
+      "passedOne": "{count} règle respectée",
+      "passedMany": "{count} règles respectées",
+      "notApplicableOne": "{count} règle qui ne s'applique pas à ce document",
+      "notApplicableMany": "{count} règles qui ne s'appliquent pas à ce document",
+      "unsureOne": "{count} règle n’a pu être vérifiée",
+      "unsureMany": "{count} règles n’ont pu être vérifiées",
+      "technical": "Détails techniques (exécution, version, empreintes)",
+      "whoSees": "Qui peut voir ce rapport",
+      "onlyYou": "Vous seul, sauf si vous le partagez.",
+      "history": "Chaque exécution de ce document, la plus récente d’abord.",
+      "oneRun": "Une seule exécution pour l’instant.",
+      "notChecked": "Pas encore vérifié",
+      "notCheckedText": "Lancez une vérification : le verdict d’abord, puis chaque constat avec sa ligne.",
+      "fileAndText": "Le fichier, son texte, et ce que Verikora y a lu.",
+      "seeInFile": "Voir dans le fichier",
+      "more": "Détails",
+      "downloadReport": "Télécharger le rapport",
+      "backToReport": "Retour au rapport",
+      "otherChecks": "Autres vérifications",
+      "openRun": "Ouvrir ce rapport",
+      "blockingOne": "dont {count} bloquante",
+      "blockingMany": "dont {count} bloquantes",
+      "noQuote": "Aucun passage du document cité",
+      "rule": "Règle {n}",
+      "rules": "Règles par constat",
+      "notes": "Notes",
+      "backToText": "Retour au texte",
+      "recheck": "Revérifier à une autre date",
+      "examine": "Examiner le fichier (authenticité)",
+      "checkLaw": "Vérifier au regard de la loi",
+      "close": "Fermer"
+    },
+    "batch": {
+      "title": "Vérifier un lot de documents",
+      "lead": "Un fichier CSV (une ligne par document) et les documents qu'il nomme, déposés ensemble. Avant tout lancement, l'aperçu dit ce qui sera vérifié, réutilisé ou refusé, et ce que ça coûte.",
+      "drop": "Déposez le CSV et ses documents",
+      "inputLabel": "Choisir le CSV et ses documents",
+      "hint": "CSV + PDF, Word ou texte — jusqu'à 10 Mo par document",
+      "template": "Télécharger le modèle CSV",
+      "received": "{csv} · {count} document(s)",
+      "previewing": "Lecture du lot…",
+      "previewCaption": "Aperçu du lot, ligne par ligne",
+      "rowsCaption": "Les lignes du lot",
+      "missingColumns": "Colonnes obligatoires absentes : {columns}.",
+      "unknownColumns": "Colonnes ignorées : {columns}.",
+      "unnamedFiles": "Documents qu'aucune ligne ne nomme (ignorés) : {files}.",
+      "summary": "{check} à vérifier · {reuse} déjà vérifié(s), réutilisé(s) sans frais · {refused} refusé(s)",
+      "cost": {
+        "pro": "Pro : les {audits} vérifications sont incluses.",
+        "covered": "Ce lot utilise {audits} audit(s) ; vous avez {credits} crédit(s).",
+        "short": "Ce lot demande {audits} audit(s) et vous avez {credits} crédit(s) : les lignes non couvertes attendront votre achat."
+      },
+      "start": "Lancer le lot ({count})",
+      "export": "Exporter les résultats (CSV)",
+      "progressLabel": "Avancement du lot",
+      "progress": "{settled} sur {total}",
+      "paused": "Ajouter des crédits",
+      "finished": "Lot terminé : {done} vérifié(s), {failed} en échec, {refused} refusé(s).",
+      "fromCheck": "Plusieurs documents ?",
+      "fromCheckLink": "Importer un lot depuis un CSV",
+      "columns": {
+        "line": "Ligne",
+        "file": "Fichier",
+        "check": "Vérification",
+        "state": "État",
+        "reason": "Raison",
+        "reference": "Référence"
+      },
+      "studios": {
+        "compliance-check": "Conformité",
+        "document-authenticity": "Authenticité"
+      },
+      "preview": {
+        "check": "À vérifier",
+        "reuse": "Réutilisé",
+        "refused": "Refusé"
+      },
+      "states": {
+        "pending": "En attente",
+        "reused": "Réutilisé",
+        "running": "En cours",
+        "done": "Vérifié",
+        "failed": "En échec",
+        "refused": "Refusé"
+      },
+      "engineBusy": "Sovkora est occupé par d'autres vérifications : les lignes restantes attendent leur tour et démarrent toutes seules. Rien à faire.",
+      "exportReadme": "Verikora — rapports d'un lot de vérifications.\n\nlot.csv liste chaque ligne : son état, la raison quand elle n'a pas été vérifiée, et son fichier ici.\nrapports/ contient le PDF signé de chaque vérification de conformité.\nsignaux/ contient les signaux de chaque vérification d'authenticité, tels qu'Sovkora les a rendus.\n\nCe sont des vérifications informatives, pas un avis juridique. Pour vérifier un rapport signé, connectez-vous à Verikora et ouvrez https://www.verikora.com/app/verifications/report (seules les personnes à qui le propriétaire du rapport a donné accès le peuvent).\nLes règles du Québec restent à faire relire par un avocat.\n",
+      "exportZip": "Rapports (ZIP)"
+    },
+    "notFound": {
+      "title": "Cette page n'existe pas.",
+      "text": "Elle a peut-être changé d'adresse, ou elle n'est pas à vous.",
+      "library": "Retour à la bibliothèque",
+      "home": "Accueil",
+      "console": "Retour à la console"
+    },
+    "dossiers": {
+      "title": "Dossiers de candidats",
+      "lead": "Les documents demandés à un candidat, à mesure qu'ils arrivent, chacun avec ses vérifications.",
+      "request": "Demander des documents",
+      "caption": "Vos dossiers de candidats, les plus récents d'abord",
+      "columns": {
+        "candidate": "Candidat",
+        "link": "Lien",
+        "documents": "Documents",
+        "asked": "Demandé le",
+        "decision": "Votre décision",
+        "tags": "Étiquettes"
+      },
+      "open": "Ouvrir le dossier de {name}",
+      "filter": {
+        "label": "Filtre",
+        "states": {
+          "open": "Liens ouverts",
+          "used": "Documents reçus, à décider",
+          "closed": "Dossiers fermés",
+          "expired": "Liens expirés",
+          "revoked": "Liens révoqués",
+          "erased": "Dossiers effacés"
+        },
+        "clear": "Tout voir",
+        "none": "Aucun dossier dans cet état."
+      },
+      "link": {
+        "open": "Lien ouvert jusqu'au {date}",
+        "used": "Documents envoyés le {date}",
+        "closed": "Dossier fermé le {date}",
+        "expired": "Lien expiré",
+        "revoked": "Lien révoqué",
+        "erased": "Effacé à la demande du candidat"
+      },
+      "documents": {
+        "none": "Aucun sur {asked} reçu",
+        "some": "{count} sur {asked} reçus",
+        "all": "{count} sur {asked} reçus"
+      },
+      "empty": {
+        "title": "Aucun dossier pour l'instant",
+        "text": "Demandez ses documents à un candidat : Verikora vérifie chacun, et vous décidez."
+      },
+      "notOffered": {
+        "title": "Les dossiers de candidats sont pour les gestionnaires",
+        "text": "Choisissez ce rôle dans votre profil pour demander et vérifier les documents d'un candidat.",
+        "action": "Changer de rôle"
+      },
+      "form": {
+        "title": "Demander des documents",
+        "lead": "Le candidat reçoit un lien pour envoyer les documents choisis, et seulement ceux-là. Un NAS, une carte d'assurance maladie, un passeport, un permis ou des coordonnées bancaires ne sont jamais demandés.",
+        "name": "Nom du candidat",
+        "email": "Courriel du candidat",
+        "types": "Documents à demander",
+        "submit": "Créer le lien",
+        "close": "Fermer"
+      },
+      "made": {
+        "title": "Le lien pour {name}",
+        "text": "Valable jusqu'au {date}. Il n'est montré qu'une fois : copiez-le et remettez-le au candidat. Aucun document ne passe par courriel.",
+        "copy": "Copier le lien",
+        "copied": "Copié"
+      },
+      "detail": {
+        "back": "Dossiers",
+        "asked": "Documents demandés",
+        "received": "Reçu : {file}",
+        "notReceived": "Pas encore reçu",
+        "kept": "Gardé jusqu'à votre décision (le candidat l'a accepté)",
+        "purged": "Effacé après ses vérifications ; le rapport reste",
+        "afterCheck": "Effacé dès ses vérifications faites",
+        "report": "Ouvrir le rapport",
+        "skipped": "Une vérification n'a pas pu être lancée sur ce document",
+        "requestedOn": "Demandé le {date}",
+        "none": "Aucun document reçu pour l'instant."
+      },
+      "check": {
+        "nothing": "Aucun problème trouvé sur les règles vérifiées",
+        "noSignal": "Aucun signal inhabituel",
+        "running": "En cours",
+        "failed": "N'a pas abouti",
+        "attentionOne": "{count} point à regarder",
+        "attentionMany": "{count} points à regarder",
+        "signalsOne": "{count} signal",
+        "signalsMany": "{count} signaux"
+      },
+      "studios": {
+        "compliance-check": "Au regard de la loi",
+        "document-authenticity": "Authenticité"
+      },
+      "views": {
+        "label": "Vues des dossiers",
+        "all": "Tous",
+        "mine": "Mes vues",
+        "save": "Enregistrer la vue",
+        "saveTitle": "Enregistrer cette vue",
+        "name": "Nom de la vue",
+        "saveHint": "La vue garde les filtres de l'adresse : le lien reste le même sur un autre appareil.",
+        "create": "Enregistrer",
+        "modified": "modifiée",
+        "delete": "Supprimer la vue {name}",
+        "menu": "Vues",
+        "empty": "Aucune vue enregistrée.",
+        "groups": {
+          "system": "Suggérées",
+          "workspace": "Partagées",
+          "mine": "Les miennes"
+        },
+        "menuCurrent": "Vue : {current}",
+        "rename": "Renommer",
+        "remove": "Supprimer",
+        "actions": "Actions de la vue {label}"
+      },
+      "binder": {
+        "label": "Décisions",
+        "all": "Tous",
+        "tags": "Étiquettes"
+      },
+      "filters": {
+        "bar": "Filtrer les dossiers",
+        "tags": "Étiquette",
+        "decision": "Décision",
+        "remove": "Retirer le filtre {label}",
+        "clear": "Effacer les filtres",
+        "resultsOne": "{count} dossier",
+        "resultsMany": "{count} dossiers",
+        "nothing": "Aucun dossier ne correspond à ces filtres."
+      },
+      "bulk": {
+        "label": "Actions sur la sélection",
+        "selectedOne": "{count} dossier sélectionné",
+        "selectedMany": "{count} dossiers sélectionnés",
+        "tag": "Étiqueter",
+        "untag": "Retirer l'étiquette",
+        "noTags": "Aucune étiquette : créez-en une depuis un dossier.",
+        "clear": "Tout désélectionner",
+        "done": "Fait : {moved} décidé(s), {skipped} laissé(s) tel(s) quel(s).",
+        "tagged": "Étiquettes mises à jour : {count}.",
+        "tooMany": "Au plus {max} dossiers à la fois"
+      },
+      "decide": {
+        "title": "Votre décision",
+        "mark": "Marquer « {state} »",
+        "confirm": "Confirmer « {state} »",
+        "final": "Une décision est définitive : le dossier se ferme et ses documents sont effacés ; ses rapports restent.",
+        "decided": "Décision prise : {state}",
+        "none": "Aucune action possible."
+      },
+      "share": {
+        "title": "Lien pour le propriétaire de l'immeuble",
+        "lead": "Un rapport en lecture seule : empreintes et constats seulement, ni nom ni document. Vous choisissez la durée d'ouverture, 30 jours au plus.",
+        "expiry": "Ouvert pendant",
+        "days": "{count} jours",
+        "create": "Créer un lien",
+        "creating": "Création…",
+        "created": "Lien prêt. Il n'est montré qu'une fois : copiez-le maintenant.",
+        "copy": "Copier le lien",
+        "copied": "Lien copié",
+        "linkLabel": "Lien à envoyer",
+        "none": "Aucun lien pour l'instant.",
+        "active": "Liens actifs",
+        "views": "{count} consultations",
+        "viewsOne": "{count} consultation",
+        "expires": "jusqu'au {date}",
+        "revoke": "Révoquer",
+        "revoked": "Lien révoqué.",
+        "state": {
+          "live": "Actif",
+          "expired": "Expiré",
+          "revoked": "Révoqué"
+        },
+        "email": {
+          "title": "Envoyer par courriel",
+          "address": "Adresse courriel du propriétaire",
+          "message": "Un court mot (facultatif)",
+          "language": "Langue du courriel",
+          "hint": "Le courriel contient le lien, sa date de fin et votre mot : rien du rapport. L'adresse n'est gardée que tant que le lien vit.",
+          "send": "Envoyer par courriel",
+          "sending": "Envoi…",
+          "sent": "Envoyé à {email}.",
+          "sentTo": "Envoyé à {email}"
+        },
+        "loading": "Chargement des liens…"
+      },
+      "tagsEdit": {
+        "title": "Étiquettes",
+        "edit": "Modifier les étiquettes",
+        "none": "Aucune étiquette",
+        "save": "Enregistrer",
+        "empty": "Vous n'avez pas encore d'étiquette.",
+        "new": "Nouvelle étiquette",
+        "inputLabel": "Ajouter une étiquette",
+        "placeholder": "Nom de l’étiquette",
+        "createLabel": "Créer « {name} »",
+        "markerLabel": "Couleur de la nouvelle étiquette",
+        "emptyLabel": "Aucune étiquette de ce nom",
+        "count": "{count} sur {max}",
+        "markers": {
+          "blue": "Bleu",
+          "green": "Vert",
+          "amber": "Ambre",
+          "red": "Rouge",
+          "violet": "Violet",
+          "gray": "Gris"
+        }
+      },
+      "rentShare": {
+        "title": "Loyer et revenu",
+        "lead": "Si la personne vous a donné son revenu mensuel, saisissez-le avec le loyer mensuel pour voir la part. Rien de ce que vous saisissez ici n'est envoyé ni conservé.",
+        "rent": "Loyer mensuel ($)",
+        "income": "Revenu mensuel donné ($)"
+      }
+    },
+    "states": {
+      "loading": "Chargement de la page…",
+      "error": {
+        "title": "Cette page n'a pas pu s'afficher",
+        "text": "Le serveur n'a pas répondu comme prévu. Vos documents sont gardés ; réessayez dans un instant.",
+        "retry": "Réessayer"
+      }
+    },
+    "bundle": {
+      "title": "Le bail et ses annexes",
+      "lead": "Chaque constat du bail et de chaque annexe, par ligne, avec l'article que la règle cite. Une vérification informe : elle ne donne ni conseil ni verdict.",
+      "roles": {
+        "lease": "Bail",
+        "annex": "Annexe",
+        "building-rules": "Règlement de l'immeuble"
+      },
+      "notChecked": "pas encore vérifié",
+      "line": "ligne {n}",
+      "noLine": "sans ligne",
+      "none": "Aucune règle ne demande un regard sur les documents vérifiés jusqu'ici.",
+      "toReview": "Règles québécoises encore à faire relire par un juriste : un écran de démonstration, pas un avis juridique."
+    },
+    "documentsPage": {
+      "dividers": "Signets",
+      "allBookmarks": "Tous",
+      "bulk": {
+        "label": "Actions sur la sélection",
+        "selectedOne": "{count} document sélectionné",
+        "selectedMany": "{count} documents sélectionnés",
+        "tag": "Mettre un signet",
+        "untag": "Retirer le signet",
+        "noTags": "Aucun signet pour l’instant : créez-en un dans Réglages > Signets.",
+        "tagged": "Signets mis à jour : {count}.",
+        "clear": "Effacer la sélection",
+        "tooMany": "{max} documents au plus à la fois"
+      },
+      "bookmarkNamed": "Mettre un signet sur {name}",
+      "nothingWithBookmarks": "Aucun document ne porte tous ces signets.",
+      "bookmarks": "Signets",
+      "title": "Tous les documents",
+      "lead": "Tous vos documents, du plus récent au plus ancien, dans toutes vos collections.",
+      "caption": "Tous vos documents, les plus récents d'abord",
+      "empty": "Aucun document pour l'instant"
+    },
+    "promo": {
+      "label": "Code promo",
+      "hint": "Un rabais s'applique à votre prochain paiement. Un code qui donne des crédits les ajoute aussitôt à votre compte.",
+      "apply": "Appliquer",
+      "remove": "Retirer",
+      "applied": "{code} appliqué : −{discount} {duration}",
+      "credited": "{credits} crédits ajoutés, valables jusqu'au {date}",
+      "duration": {
+        "once": "sur ce paiement",
+        "repeating": "pendant {months} mois",
+        "forever": "chaque mois"
+      }
+    },
+    "paymentProblem": {
+      "title": "Votre dernier paiement n'est pas passé",
+      "text": "Le processeur de paiement n'a pas pu débiter votre carte : votre forfait est suspendu jusqu'à sa mise à jour. Rien d'autre ne change : vos documents et vos rapports restent tels quels.",
+      "fix": "Mettre ma carte à jour"
+    },
+    "paymentReturn": {
+      "paidTitle": "Merci, votre paiement est passé",
+      "paid": {
+        "document": "Votre vérification de document arrive dans votre compte : le solde se met à jour en quelques secondes, dès que le processeur de paiement confirme.",
+        "agency": "Votre forfait est en cours d'activation : il apparaît dans votre compte en quelques secondes, dès que le processeur de paiement confirme.",
+        "firm": "Votre forfait est en cours d'activation : il apparaît dans votre compte en quelques secondes, dès que le processeur de paiement confirme."
+      },
+      "receipt": "Voir le reçu",
+      "cancelledTitle": "Rien n'a été facturé",
+      "cancelled": "Vous avez quitté le paiement avant de payer. Vous pouvez y revenir depuis votre compte quand vous voulez.",
+      "close": "Fermer"
+    },
+    "bookmarks": {
+      "lead": "Vos propres catégories colorées. Un signet regroupe des fichiers ; le retirer ne les supprime jamais.",
+      "none": "Aucun signet pour l’instant.",
+      "edit": "Renommer ou recolorer",
+      "editNamed": "Renommer ou recolorer « {name} »",
+      "deleteNamed": "Supprimer « {name} »",
+      "deleteKeeps": "Le signet est retiré de ses fichiers. Les fichiers eux-mêmes sont conservés.",
+      "kinds": {
+        "applicant_file": "Dossiers de candidature",
+        "document": "Documents"
+      }
+    },
+    "checkFailure": {
+      "title": "Cette vérification n'a pas abouti",
+      "retry": "Réessayer",
+      "chooseFile": "Choisir un autre fichier",
+      "retrying": "Nouvelle vérification…",
+      "unreadable": {
+        "pdf": "Nous n'avons pas pu lire ce PDF assez bien pour le vérifier. Réessayez, ou choisissez une autre copie du document.",
+        "scan": "Ce PDF est un scan ou une photo : nous n'avons pas pu en lire le texte. Choisissez une version dont on peut sélectionner le texte, ou réessayez.",
+        "office": "Nous n'avons pas pu ouvrir ce document. Enregistrez-le de nouveau en PDF ou en Word et choisissez-le encore, ou réessayez.",
+        "text": "Nous n'avons pas pu lire ce fichier texte. Vérifiez qu'il n'est pas vide, puis réessayez ou choisissez un autre fichier.",
+        "other": "Nous n'avons pas pu lire ce fichier. Choisissez un PDF ou un fichier Word, ou réessayez."
+      },
+      "refused": {
+        "pdf": "Ce PDF n'est pas sous une forme que nous pouvons vérifier. Choisissez une autre copie du document, ou réessayez.",
+        "scan": "Ce scan n'est pas sous une forme que nous pouvons vérifier. Choisissez un PDF dont on peut sélectionner le texte, ou réessayez.",
+        "office": "Ce document n'est pas sous une forme que nous pouvons vérifier. Enregistrez-le en PDF et choisissez-le de nouveau.",
+        "text": "Ce texte n'est pas sous une forme que nous pouvons vérifier. Collez-le dans un document, enregistrez-le en PDF, puis choisissez-le de nouveau.",
+        "other": "Ce fichier n'est pas sous une forme que nous pouvons vérifier. Choisissez un PDF ou un fichier Word."
+      },
+      "interrupted": {
+        "pdf": "La vérification s'est arrêtée avant la fin, sans que votre document y soit pour rien. Réessayez.",
+        "scan": "La vérification s'est arrêtée avant la fin, sans que votre document y soit pour rien. Réessayez.",
+        "office": "La vérification s'est arrêtée avant la fin, sans que votre document y soit pour rien. Réessayez.",
+        "text": "La vérification s'est arrêtée avant la fin, sans que votre fichier y soit pour rien. Réessayez.",
+        "other": "La vérification s'est arrêtée avant la fin, sans que votre fichier y soit pour rien. Réessayez."
+      }
+    }
+  }
+}
