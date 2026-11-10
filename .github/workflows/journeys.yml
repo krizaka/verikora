@@ -22,5 +22,6 @@ jobs:
       test-command: pnpm exec playwright test -c apps/web/e2e/journeys/playwright.config.mjs
       snapshot-paths: apps/web/e2e/journeys
       env: |
+        DATABASE_URL=postgresql://ci:ci-only-password@postgres:5432/ci
         E2E_EMAIL=eric@demo.verikora.test
         E2E_PASSWORD=ci-only-demo-password-0123

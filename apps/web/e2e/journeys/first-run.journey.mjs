@@ -7,11 +7,17 @@ import { readFileSync } from "node:fs";
 import { videoContextOptions } from "@krizaka/page-audit/journey";
 import { expect, test } from "@playwright/test";
 
-import { openAs, SCREENS } from "./session.mjs";
+import { openAs, resetToNewAccount, SCREENS } from "./session.mjs";
 
 const JOURNEY = JSON.parse(readFileSync(new URL("./journeys.json", import.meta.url), "utf8")).find(
   (j) => j.id === "first-run",
 );
+
+// Every test starts as a new account and changes its side: they share Camille, so they run one after the other.
+test.describe.configure({ mode: "serial" });
+test.beforeEach(async () => {
+  await resetToNewAccount("camille");
+});
 
 for (const screen of SCREENS) {
   test(`a new account lands on the welcome screen and starts as a property manager in one click (${screen.name})`, async ({
