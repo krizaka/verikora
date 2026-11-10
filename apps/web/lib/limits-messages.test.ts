@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 
-import en from "../messages/en.json";
-import fr from "../messages/fr.json";
+import en from "../messages/console/en.json";
+import fr from "../messages/console/fr.json";
 import { LIMIT_SETTINGS } from "./settings/limits";
 
 /** The administrator reads a label and a hint for every setting: each `limits.<action>.*` has both, in both languages. */

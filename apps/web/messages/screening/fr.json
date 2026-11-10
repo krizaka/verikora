@@ -1,0 +1,416 @@
+{
+  "run": {
+    "verdicts": {
+      "PASS": "Point respecté",
+      "FAIL": "Point non respecté",
+      "INSUFFICIENT_EVIDENCE": "Éléments insuffisants",
+      "NOT_APPLICABLE": "Ne s'applique pas"
+    }
+  },
+  "screening": {
+    "tenant": {
+      "title": "Une demande de vérification de votre dossier",
+      "lead": "{landlord} demande votre accord pour vérifier votre dossier de candidature. Vous décidez : rien n'est vérifié sans votre consentement.",
+      "whatTitle": "Ce qui serait vérifié",
+      "provider": "Fournisseur : {provider}",
+      "why": "Pourquoi : le propriétaire évalue votre candidature à un logement.",
+      "notAsked": "Ce qui n'est jamais demandé : numéro d'assurance sociale, coordonnées bancaires, employeur, salaire, casier judiciaire.",
+      "whoSees": "Qui voit le résultat : vous d'abord ; le propriétaire seulement si vous le lui transmettez.",
+      "retention": "Durée : le résultat est supprimé {days} jours après votre consentement.",
+      "rights": "Vous pouvez refuser (ce n'est pas un aveu), contester le résultat, ou ne pas le transmettre.",
+      "consent": "Je consens à cette vérification",
+      "decline": "Je refuse",
+      "share": "Transmettre au propriétaire",
+      "contest": "Contester le résultat",
+      "comment": "Votre commentaire (facultatif)",
+      "send": "Envoyer la contestation",
+      "demo": "Fournisseur de démonstration : les données sont fictives.",
+      "state": {
+        "requested": "En attente de votre réponse",
+        "consented": "Vous avez consenti. Voici le résultat : vous seul le voyez pour l'instant.",
+        "shared": "Vous avez transmis ce résultat au propriétaire.",
+        "declined": "Vous avez refusé : rien n'a été vérifié, et le propriétaire en est informé sans plus de détail.",
+        "contested": "Vous avez contesté ce résultat : le propriétaire ne le voit pas.",
+        "expired": "Cette demande a expiré ou son résultat a été supprimé."
+      },
+      "resultTitle": "Votre résultat",
+      "band": {
+        "no-concern": "Rien à signaler",
+        "review": "À examiner",
+        "incomplete": "Pas encore complet"
+      },
+      "item": {},
+      "outcome": {
+        "clear": "rien à signaler",
+        "review": "à examiner",
+        "pending": "en cours",
+        "unavailable": "indisponible pour le moment",
+        "soon": "bientôt disponible"
+      },
+      "deleteOn": "Supprimé le {date}.",
+      "contested": "Votre contestation : « {comment} »",
+      "incompleteNote": "Certaines vérifications n'ont pas répondu. Rien ici n'est un résultat pour celles-ci : elles sont montrées telles qu'elles en sont.",
+      "copy": "Obtenir une copie de mon résultat",
+      "quoteTitle": "Prix et qui paie",
+      "quoteLine": "{check} : {price}",
+      "quoteFree": "sans frais",
+      "quotePayer": {
+        "firm": "Payé par la société de gestion immobilière.",
+        "owner": "Payé par le propriétaire de l'immeuble.",
+        "applicant": "Payé par vous."
+      },
+      "quoteTaxes": "Les taxes (TPS/TVQ) s'ajoutent lorsqu'elles s'appliquent."
+    },
+    "landlord": {
+      "title": "Dossier du locataire",
+      "lead": "Demandez le consentement d'un candidat pour vérifier son historique de paiement. Il voit le résultat d'abord et décide de vous le transmettre ou de le contester.",
+      "undertakingTitle": "Votre engagement",
+      "undertaking": "Je m'engage à n'utiliser ces vérifications que pour évaluer une candidature à un logement, à ne demander que ce qui est nécessaire, et à ne jamais refuser un candidat pour un motif discriminatoire (Charte des droits et libertés de la personne ; C.c.Q., art. 1899). Je sais qu'un candidat peut refuser ou contester, et que le refus de fournir un renseignement non nécessaire n'est pas un motif de rejet.",
+      "accept": "J'accepte l'engagement",
+      "lawfulTitle": "Ce que la loi vous permet de demander",
+      "lawful": "Le nom, l'adresse actuelle, une pièce d'identité regardée sans en garder copie, les coordonnées du locateur précédent, et — avec son consentement — un rapport de crédit. Pas de numéro d'assurance sociale, de coordonnées bancaires, d'employeur ni de salaire. Verikora ne propose aucune vérification d'antécédents judiciaires.",
+      "name": "Nom du candidat",
+      "email": "Courriel du candidat",
+      "scope": "Ce qui sera vérifié",
+      "request": "Demander son consentement",
+      "created": "Remettez ce lien au candidat (il ne sera plus affiché) :",
+      "copy": "Copier le lien",
+      "listTitle": "Vos demandes",
+      "none": "Aucune demande pour l'instant.",
+      "status": {
+        "requested": "En attente",
+        "consented": "Consenti, non transmis",
+        "shared": "Transmis",
+        "declined": "Refusé",
+        "contested": "Contesté",
+        "expired": "Expiré"
+      },
+      "shownTitle": "Résultat transmis",
+      "hidden": "Le résultat n'est visible qu'une fois transmis par le candidat.",
+      "demo": "Fournisseur de démonstration : données fictives.",
+      "reviewNote": "« À examiner » n'est pas un verdict : parlez-en au candidat avant toute décision.",
+      "noneOffered": "Aucune vérification ne vous est offerte pour le moment.",
+      "payer": {
+        "label": "Who pays for the checks",
+        "firm": "La société de gestion immobilière",
+        "owner": "Le propriétaire de l'immeuble",
+        "applicant": "Le candidat (seulement là où c'est permis)"
+      }
+    },
+    "invoice": {
+      "line": "Vérification : {check} — service Krizaka"
+    }
+  },
+  "applicant": {
+    "notice": {
+      "title": "Comment vos documents et vos renseignements sont utilisés",
+      "version": "Avis {version}",
+      "intro": "Votre propriétaire demande la vérification de votre demande de logement. Rien n'est vérifié et aucun document n'est analysé sans votre consentement. Vous décidez pour chaque finalité ci-dessous, et vous pouvez retirer un consentement en tout temps.",
+      "collectedTitle": "Ce qui est recueilli",
+      "collected": "Les documents que vous transmettez (par exemple un talon de paie ou un relevé bancaire), le nom et le courriel de la demande et, seulement pour les finalités que vous acceptez, les résultats de ces vérifications.",
+      "whyTitle": "Pourquoi",
+      "why": "Pour vérifier que les documents correspondent à la demande et sont cohérents entre eux. Le rapport est seulement informatif : ce n'est pas un avis juridique, et une personne chez le propriétaire décide.",
+      "whoTitle": "Qui le voit",
+      "who": "Le propriétaire qui demande la vérification voit le rapport. Verikora et son sous-traitant pour l'analyse (Sovkora) traitent le fichier pour l'exécuter. Personne d'autre. [À RÉVISER PAR L'AVOCAT]",
+      "howLongTitle": "Combien de temps c'est conservé",
+      "howLong": "Par défaut, un document est supprimé dès que sa vérification est terminée. Si vous consentez à le garder (« Garder mes documents jusqu'à la décision du propriétaire »), il est gardé jusqu'à la décision du propriétaire, puis supprimé. Un résultat est supprimé {days} jours après avoir été donné. Vous pouvez toujours en demander la suppression. [À RÉVISER PAR L'AVOCAT]",
+      "askTitle": "Comment demander la suppression",
+      "ask": "Utilisez l'action « Supprimer mes documents » du lien que vous avez reçu. Elle supprime immédiatement vos documents et le résultat, et ne garde qu'une trace sans renseignement personnel. Vous pouvez aussi retirer un consentement ici, et demander l'accès à vos renseignements ou leur rectification.",
+      "examinedTitle": "Comment vos documents sont examinés",
+      "examined": "Chaque document est aussi examiné comme un fichier : la façon dont il a été enregistré et, pour certains, si ses chiffres concordent. Quand quelque chose est remarqué, vous le voyez ici, dans les mêmes mots que le propriétaire, et vous pouvez ajouter une explication à côté. Le rapport dit ce qui a été observé; il ne conclut rien sur un document ni sur vous, et Verikora ne décide de rien : c'est une personne chez le propriétaire.",
+      "notAsked": "Jamais demandés : votre numéro d'assurance sociale (NAS), les renseignements de votre carte ou de votre compte bancaire, vos renseignements de santé ou familiaux.",
+      "law": "Le présent avis suit la Loi sur la protection des renseignements personnels dans le secteur privé (Québec, telle que modifiée par la Loi 25). Ce n'est pas un avis juridique."
+    },
+    "purpose": {
+      "DOCUMENT_CHECK": {
+        "label": "Vérifier les documents que j'envoie",
+        "what": "Recherche des signes de modification et d'incohérence dans les documents, au regard de la demande."
+      },
+      "COURT_RECORDS": {
+        "label": "Vérifier l'historique locatif québécois",
+        "what": "Consulte, avec votre consentement, les décisions publiées du Tribunal administratif du logement et des tribunaux sur votre historique de paiement."
+      },
+      "CREDIT": {
+        "label": "Vérifier mon dossier de crédit",
+        "what": "Lit, avec votre consentement, un rapport de crédit lorsqu'il est demandé."
+      },
+      "DOCUMENT_KEEP": {
+        "label": "Garder mes documents jusqu'à la décision du propriétaire",
+        "what": "Sans cela, chaque document est supprimé dès que sa vérification est terminée. Avec cela, les documents sont gardés jusqu'à la décision du propriétaire."
+      }
+    },
+    "consent": "J'ai lu l'avis (version {version}) et je consens à cette vérification",
+    "granted": "Consenti",
+    "notGranted": "Pas consenti",
+    "withdraw": "Retirer ce consentement",
+    "erase": "Supprimer mes documents",
+    "erased": "Vos documents et le résultat ont été supprimés. Seule une trace sans renseignement personnel est conservée.",
+    "error": {
+      "CONSENT_REQUIRED": "Aucun document n'est vérifié sans votre consentement pour cette finalité.",
+      "NOTICE_CHANGED": "L'avis a changé depuis votre lecture. Relisez-le, puis consentez.",
+      "APPLICATION_ERASED": "Cette demande a été supprimée."
+    }
+  },
+  "applicantFile": {
+    "title": "Vos documents",
+    "intro": "Le propriétaire demande les documents ci-dessous. Envoyez chacun en PDF. Chaque document est vérifié pour des signes de modification et d'incohérence. Le rapport est informatif, ce n'est pas un avis juridique, et une personne décide.",
+    "upload": "Envoyer un document",
+    "uploaded": "Document reçu.",
+    "none": "Aucun document envoyé pour l'instant.",
+    "submit": "Envoyer mon dossier",
+    "submitted": "Votre dossier a été envoyé. Vous pouvez toujours retirer un consentement ou demander la suppression de vos documents.",
+    "expires": "Ce lien expire le {date}.",
+    "limits": "Ce que le rapport ne montre pas : il ne décide rien, ne note jamais la personne et ne remplace pas une vérification humaine.",
+    "refusal": "Ce document n'est pas nécessaire à la vérification et n'est pas demandé.",
+    "types": {
+      "pay-stub": {
+        "label": "Talon de paie",
+        "what": "Votre plus récent talon de paie, en PDF."
+      },
+      "bank-statement": {
+        "label": "Relevé bancaire",
+        "what": "Un relevé récent du compte où vos revenus sont déposés, en PDF."
+      },
+      "employment-letter": {
+        "label": "Lettre d'emploi",
+        "what": "Une lettre de votre employeur confirmant votre poste et votre date d'entrée, en PDF."
+      },
+      "identity-document": {
+        "label": "Pièce d'identité",
+        "what": "Un document qui montre votre nom complet, en PDF. Seul ce qui est nécessaire est lu."
+      }
+    },
+    "fields": {
+      "employer": "Employeur",
+      "pay-period": "Période de paie",
+      "statement-period": "Période du relevé",
+      "position": "Poste",
+      "start-date": "Date d'entrée",
+      "full-name": "Nom complet"
+    },
+    "checks": {
+      "document-authenticity": {
+        "label": "Authenticité du fichier",
+        "what": "Examine le fichier lui-même : son producteur, ses dates et ses enregistrements. Il décrit le fichier, pas la personne."
+      },
+      "compliance-check": {
+        "label": "Cohérence du texte",
+        "what": "Lit le texte du document et le compare aux règles du Québec."
+      }
+    },
+    "skipped": {
+      "NO_TEXT": "Aucun texte n'a pu être lu dans ce document : cette vérification n'a pas été faite.",
+      "PAYWALL": "Vérification non faite : il ne reste plus de vérification pour le propriétaire.",
+      "UNAVAILABLE": "La vérification n'a pas pu être faite pour l'instant.",
+      "REFUSED": "La vérification n'a pas été faite pour ce document."
+    },
+    "status": {
+      "open": "Ouvert",
+      "revoked": "Révoqué",
+      "expired": "Expiré",
+      "used": "Envoyé",
+      "closed": "Clos",
+      "erased": "Supprimé"
+    },
+    "answer": {
+      "title": "Ce que nous avons remarqué dans vos documents",
+      "lead": "Beaucoup d'étapes ordinaires laissent ces traces : signer, remplir un formulaire, convertir depuis un courriel, enregistrer de nouveau. Elles ne disent rien sur vous. Vous pouvez expliquer chacune ci-dessous; le propriétaire lit vos mots à côté de la trace. Si vous avez l'original de l'émetteur, envoyez-le avec la zone de dépôt de son type plus haut.",
+      "label": "Votre explication (facultatif)",
+      "placeholder": "Par exemple : téléchargé depuis le portail de paie, puis signé.",
+      "save": "Enregistrer mon explication",
+      "remove": "Retirer mon explication",
+      "saved": "Enregistrée le {date}",
+      "count": "{n} / {max}",
+      "document": "Document : {name}"
+    },
+    "error": {
+      "LINK_REVOKED": "Ce lien a été révoqué.",
+      "LINK_EXPIRED": "Ce lien a expiré.",
+      "LINK_USED": "Ce dossier a déjà été envoyé.",
+      "ANSWER_CLOSED": "Ce dossier n'accepte plus d'explications.",
+      "ANSWER_TOO_LONG": "Cette explication est trop longue.",
+      "SIGNAL_NOT_FOUND": "Cette trace n'est plus dans votre dossier.",
+      "FILE_CLOSED": "Ce dossier a été clos.",
+      "APPLICATION_ERASED": "Cette demande a été supprimée.",
+      "TYPE_NOT_REQUESTED": "Ce document n'a pas été demandé.",
+      "TOO_MANY_DOCUMENTS": "Ce dossier contient déjà le nombre maximal de documents.",
+      "FILE_NOT_ACCEPTED": "Ce document doit être envoyé en PDF.",
+      "DUPLICATE_DOCUMENT": "Ce fichier a déjà été envoyé.",
+      "NO_DOCUMENT": "Envoyez au moins un document avant de soumettre le dossier.",
+      "TYPE_NOT_NECESSARY": "Ce document n'est pas nécessaire et ne peut pas être demandé.",
+      "TYPE_UNKNOWN": "Type de document inconnu.",
+      "STORAGE_UNAVAILABLE": "Le stockage qui contient ces documents n'est pas disponible.",
+      "PURPOSE_NOT_IN_FILE": "Cette finalité ne concerne pas un dossier de documents.",
+      "CONSENT_REQUIRED": "Aucun document n'est vérifié sans votre consentement pour cette finalité.",
+      "NOT_FOUND": "Introuvable."
+    },
+    "page": {
+      "metaTitle": "Vos documents",
+      "noticeSummary": "Lire l'avis : comment vos documents et vos renseignements sont utilisés",
+      "consentTitle": "Votre consentement",
+      "consentLead": "Rien n'est lu ni vérifié avant votre consentement. Vous pouvez le retirer à tout moment.",
+      "askedTitle": "Documents demandés",
+      "consentFirst": "Consentez à la vérification ci-dessus pour envoyer vos documents.",
+      "dropTitle": "Déposez le PDF ici",
+      "browse": "Choisir un PDF",
+      "inputLabel": "Choisir le PDF à envoyer",
+      "hint": "PDF seulement, jusqu'à 10 Mo.",
+      "received": "Reçu",
+      "sending": "Envoi",
+      "sent": "Envoyé",
+      "notSent": "Non envoyé",
+      "pause": "Pause",
+      "resume": "Reprendre",
+      "retry": "Réessayer",
+      "cancel": "Annuler",
+      "remove": "Retirer",
+      "submitHint": "Vous pourrez envoyer votre dossier dès qu'un document est reçu.",
+      "eraseConfirm": "Appuyez encore pour tout supprimer",
+      "eraseLead": "Vous pouvez demander à tout moment la suppression de vos documents et du résultat.",
+      "withdrawLead": "Retirer un consentement arrête les vérifications qui en dépendent.",
+      "closedTitle": "Ce lien est fermé",
+      "howLong": "Par défaut, un document est supprimé dès que sa vérification est terminée. Si vous consentez à le garder (« Garder mes documents jusqu'à la décision du propriétaire »), il est gardé jusqu'à la décision du propriétaire, puis supprimé. Vous pouvez demander à tout moment la suppression de vos documents et du résultat. [À RÉVISER PAR L'AVOCAT]"
+    }
+  },
+  "report": {
+    "title": "Rapport d’audit — {name}",
+    "eyebrow": "Verikora · rapport d’audit de conformité",
+    "disclaimer": "Vérification informative, ce n’est pas un avis juridique. Verikora fait la vérification documentaire et le tri d’un dossier avec des matrices d’extraction documentaire et des gabarits technologiques paramétrables, des outils techniques validés par le conseiller juridique du client; ce n’est pas une opinion juridique, et seuls les membres du Barreau du Québec peuvent donner un avis juridique. Un résultat n’est jamais une garantie de conformité.",
+    "summary": "{failures} manquement(s) bloquant(s) sur {rules} règles vérifiées.",
+    "toReview": "Règles du Québec encore à faire réviser par un avocat : un rapport de démonstration, pas un avis juridique.",
+    "documentHeading": "Le document",
+    "checkHeading": "La vérification",
+    "file": "Fichier",
+    "size": "Taille",
+    "documentSha": "SHA-256 du document",
+    "engine": "Moteur d’analyse",
+    "runId": "Exécution Sovkora",
+    "jurisdiction": "Juridiction",
+    "asOf": "Règles en vigueur le",
+    "ruleset": "Version des règles",
+    "model": "Modèle",
+    "modelValue": "Choisi par le Studio, non rapporté par l’exécution : le Studio et sa version ci-dessus en sont la trace.",
+    "started": "Vérification commencée",
+    "finished": "Vérification terminée",
+    "findingsHeading": "Constats ({count})",
+    "rule": "Règle",
+    "article": "Article cité",
+    "passage": "Passage",
+    "noPassage": "Aucun passage : le document ne dit rien sur ce point.",
+    "verdicts": {
+      "PASS": "Point respecté",
+      "FAIL": "Point non respecté",
+      "INSUFFICIENT_EVIDENCE": "Preuve insuffisante",
+      "NOT_APPLICABLE": "Ne s'applique pas"
+    },
+    "guaranteeHeading": "Ce que ce rapport garantit",
+    "guarantees": "Ce rapport est signé avec la clé de Verikora (Ed25519, détenue par Krizaka). La signature couvre le SHA-256 du document, la juridiction et la version des règles, le Studio et sa version, l’identifiant d’exécution Sovkora, la date de la vérification, chaque constat avec son passage et son article, et le texte complet de ce rapport. Si un seul caractère de ce fichier change, la vérification échoue.",
+    "notGuaranteed": "Elle ne prouve pas que les constats sont justes en droit : Sovkora applique les matrices d’extraction, celles du Québec restent à faire réviser par un avocat, et ce n’est pas un avis juridique. Elle ne prouve pas que l’exécution existe chez Sovkora (seul son exploitant peut le dire), ni quand le rapport a été établi au-delà des dates de vérification ci-dessus : il n’y a ni horodatage indépendant ni chaîne de blocs. Ce à quoi vous faites confiance, c’est Krizaka, détentrice de la clé de signature.",
+    "howToVerify": "Pour le vérifier, connectez-vous à Verikora et ouvrez {url} — seules les personnes à qui le propriétaire du rapport a donné accès le peuvent, avec leur compte Verikora. Donnez-lui ce fichier et, pour confirmer quel document a été vérifié, le document d’origine.",
+    "footer": "Verikora, un produit Krizaka — analyse par Sovkora.",
+    "signatureHeading": "Page de signature",
+    "signatureKey": "Clé de signature",
+    "signatureAlgorithm": "Algorithme",
+    "signatureBody": "SHA-256 du texte du rapport (pages précédentes)",
+    "signatureValue": "Signature (base64)",
+    "signatureNote": "L'attestation — le contenu signé, l'empreinte du texte et cette signature — est aussi intégrée au fichier PDF. Un membre à qui le propriétaire a donné accès la vérifie en donnant ce fichier à la page de vérification ; tout changement au texte des pages précédentes la fait échouer.",
+    "notCheckedServiceContract": "Non vérifié : droit de résiliation, art. 2125 C.c.Q., et le reste du Code civil du Québec sur le contrat de service (art. 2098 et suiv.). À faire relire par un avocat.",
+    "languageNote": "Langue d'origine des règles : le français. Le texte anglais est la traduction fournie avec les règles ; les passages cités et les références aux articles restent tels quels, jamais traduits."
+  },
+  "verify": {
+    "title": "Vérifier un rapport",
+    "lead": "Vérifiez qu’un rapport d’audit vient bien de Verikora et n’a pas été modifié. Réservé aux membres, pour un rapport qui est à vous ou dont on vous a donné l’accès.",
+    "reportFile": "Le rapport (le fichier .html ou .pdf)",
+    "reportPaste": "Ou collez son texte",
+    "documentFile": "Le document d’origine (facultatif)",
+    "documentHint": "Ajoutez-le pour confirmer que le rapport porte bien sur ce fichier.",
+    "submit": "Vérifier",
+    "checking": "Vérification…",
+    "tooLarge": "Ce fichier est trop volumineux.",
+    "empty": "Donnez un fichier de rapport ou collez son texte.",
+    "okTitle": "Ce rapport est authentique et n’a pas été modifié.",
+    "failTitle": "On ne peut pas se fier à ce rapport.",
+    "reasons": {
+      "NOT_A_REPORT": "Ce n’est pas un rapport d’audit de Verikora : il n’a pas de bloc de signature.",
+      "UNREADABLE": "Le bloc de signature est abîmé ou dans un format que Verikora ne connaît pas.",
+      "BAD_SIGNATURE": "La signature ne correspond pas au contenu : le rapport a été modifié ou signé par une autre clé.",
+      "ALTERED": "La signature est valide pour le rapport d’origine, mais le fichier n’est plus ce rapport : quelque chose a été changé après la signature.",
+      "UNKNOWN_KEY": "Il a été signé par une clé qui n’est pas celle de ce serveur.",
+      "UNKNOWN_SCHEMA": "Ce rapport est dans un format que Verikora ne vérifie pas.",
+      "SPECIMEN": "Ce rapport est un spécimen : il ne prouve rien."
+    },
+    "facts": {
+      "fileSha": "SHA-256 de ce fichier",
+      "keyId": "Clé de signature",
+      "documentSha": "SHA-256 du document",
+      "runId": "Exécution Sovkora",
+      "ruleset": "Règles",
+      "checked": "Vérification terminée",
+      "findings": "Constats",
+      "jurisdiction": "Juridiction",
+      "issued": "Émis le",
+      "expires": "Lien valide jusqu'au"
+    },
+    "documentMatch": {
+      "yes": "Le document que vous avez donné est bien celui qui a été vérifié.",
+      "no": "Le document que vous avez donné n’est PAS celui qui a été vérifié (son SHA-256 diffère).",
+      "none": "Aucun document donné : rien n’indique quel fichier a été vérifié, hormis son SHA-256 ci-dessus."
+    },
+    "guaranteesTitle": "Ce que garantit un résultat vert",
+    "guarantees": {
+      "a": "Le rapport a été produit par la clé de signature de Verikora, et pas un caractère n’a changé depuis.",
+      "b": "Une seule signature lie le SHA-256 du document, la juridiction et la version des règles, le Studio et sa version, l’identifiant d’exécution Sovkora, les dates de vérification et chaque constat avec son passage et son article.",
+      "c": "Avec le document d’origine, on sait que c’est bien celui qui a été vérifié."
+    },
+    "limitsTitle": "Ce qu’il ne garantit pas",
+    "limits": {
+      "a": "Que les constats sont justes en droit : Sovkora applique des matrices d’extraction documentaire et des gabarits technologiques, et ceux du Québec restent à faire réviser par un avocat. Ce n’est pas un avis juridique.",
+      "b": "Que l’exécution existe chez Sovkora : seul son exploitant peut confirmer un identifiant d’exécution.",
+      "c": "Quand le rapport a été établi, au-delà des dates de vérification qu’il indique : il n’y a pas d’horodatage indépendant.",
+      "d": "Rien sur le détenteur de la clé : vous faites confiance à Krizaka pour la garder. Ni chaîne de blocs ni tiers."
+    },
+    "keyTitle": "La clé publique",
+    "keyLead": "Ed25519, SPKI en base64. Avec elle, vous pouvez vérifier un rapport sans ce site (par exemple avec OpenSSL sur le texte signé).",
+    "devKey": "Ce serveur utilise la clé de développement : ses rapports ne prouvent rien.",
+    "drop": {
+      "reportTitle": "Déposez le rapport ici",
+      "documentTitle": "Déposez le document d’origine ici",
+      "browse": "Choisir un fichier",
+      "remove": "Retirer {name}",
+      "hint": "Le fichier .html ou .pdf téléchargé, jusqu’à 2 Mo."
+    },
+    "noAccess": {
+      "title": "Vous n’avez pas accès à ce rapport",
+      "text": "Seules les personnes à qui le propriétaire du rapport a donné accès peuvent le vérifier. Vous pouvez le lui demander.",
+      "request": "Demander l’accès",
+      "requested": "Le propriétaire a été prévenu. Vous pourrez vérifier le rapport dès qu’il vous aura donné l’accès."
+    }
+  },
+  "demo": {
+    "eric": {
+      "persona": "Éric, gestionnaire d'immeubles (données de démonstration fictives)",
+      "collections": {
+        "rosemont": {
+          "name": "Immeuble Rosemont",
+          "description": "Les baux et le contrat d'entretien de l'immeuble Rosemont — documents spécimens fictifs, certains avec des défauts que les vérifications doivent trouver."
+        },
+        "villeray": {
+          "name": "Candidats — 4½ Villeray",
+          "description": "Relevés de paie, relevés bancaires et lettres d'emploi des candidats au 4½ de Villeray — documents spécimens fictifs."
+        },
+        "invoices": {
+          "name": "Factures 2026",
+          "description": "Les factures d'entretien de 2026 — documents spécimens fictifs, dont une avec un total inexact."
+        },
+        "empty-a": {
+          "name": "À classer",
+          "description": "Dossier prêt pour les prochains documents."
+        },
+        "empty-b": {
+          "name": "Archives 2025",
+          "description": "Dossier vide, pour les documents de l'an dernier."
+        }
+      }
+    }
+  }
+}

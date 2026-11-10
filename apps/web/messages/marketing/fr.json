@@ -1,0 +1,136 @@
+{
+  "docs": {
+    "title": "Documentation",
+    "lead": "Comment fonctionne une vérification, l'API pour en lancer une depuis votre outil, et ce qu'il advient de vos données.",
+    "navLabel": "Documentation",
+    "sidebarLabel": "Pages",
+    "tocLabel": "Sur cette page",
+    "breadcrumbLabel": "Fil d'Ariane",
+    "sections": {
+      "check": "Comment fonctionne une vérification",
+      "api": "L'API",
+      "data": "Vos données"
+    },
+    "check": {
+      "intro": "Une vérification lit un document et dit ce qu'elle y a trouvé. Verikora ne juge pas le document lui-même : chaque vérification est une exécution de Sovkora, le moteur d'analyse de Krizaka, et son identifiant est conservé avec le rapport.",
+      "kindsTitle": "Deux sortes de vérification",
+      "compliance": "La conformité lit le texte d'un document à la lumière des règles d'un territoire (le Québec par défaut pour un bail résidentiel).",
+      "authenticity": "L'authenticité examine le fichier lui-même, en tant que fichier : son producteur, ses dates et ses enregistrements successifs.",
+      "findingTitle": "Ce que cite un constat",
+      "finding": "Chaque constat nomme la règle appliquée, donne son verdict et sa gravité, cite l'article sur lequel il s'appuie et éclaire le passage du document dont il découle. Quand le document ne dit rien sur un point, le constat le dit.",
+      "levelsTitle": "Les trois niveaux d'un signal d'authenticité",
+      "levels": "Les signaux ont trois niveaux, du moins au plus préoccupant : {observed}, {unusual}, {inconsistent}. Un signal dit ce qu'il peut indiquer ; ce n'est jamais un tampon « faux », et une personne décide.",
+      "guaranteesLead": "Un rapport est signé. Un membre à qui le propriétaire du rapport a donné accès peut le vérifier avec la clé de signature :",
+      "limitsLead": "Un résultat vert ne garantit pas :",
+      "informative": "Une vérification est informative et sert au tri : ce n'est pas un avis juridique."
+    },
+    "api": {
+      "intro": "Une vérification peut être lancée depuis votre propre outil (un ERP, un système de gestion immobilière, un script). Cette référence est générée à partir du document OpenAPI que l'application sert à {openapi} : elle liste toutes les routes de l'API, et seulement celles-là.",
+      "accessTitle": "Accès",
+      "access": "Chaque requête porte une clé d'API : Authorization: Bearer {prefix}_… . Les clés se créent dans votre compte, pour les forfaits qui incluent l'API. Une clé a des portées ({scopes}), une durée de vie d'au plus {days} jours et une limite par minute ; la renouveler garde l'ancienne valide {grace} heures. Ne mettez jamais une clé dans un dépôt ou un journal.",
+      "quickstartTitle": "Lancer une vérification, puis la lire",
+      "quickstartNote": "Interrogez jusqu'à ce que l'état soit done, failed ou refused ; le rapport arrive avec la vérification une fois terminée.",
+      "routesTitle": "Routes",
+      "route": "Route",
+      "commonAnswers": "Réponses communes à plusieurs routes",
+      "scope": "Portée",
+      "noScope": "Aucune clé requise",
+      "parameters": "Paramètres",
+      "answers": "Réponses",
+      "errorsTitle": "Erreurs",
+      "errors": "Chaque erreur répond par un code stable et un message. Appuyez-vous sur le code ; le message sert à vos journaux.",
+      "codeColumn": "Code",
+      "meaningColumn": "Sens",
+      "statusTitle": "Codes de statut",
+      "statusLead": "Ces réponses sont données par plusieurs routes ; le tableau des routes liste les autres.",
+      "errorShapeLabel": "Corps d'une erreur",
+      "webhooksTitle": "Webhooks",
+      "webhooks": "Plutôt que d'interroger, enregistrez un point d'accès https dans votre compte et Verikora l'appelle quand le travail se termine. Chaque requête porte un nom d'événement, un identifiant d'événement stable (appliquez un événement une seule fois) et une signature. Une charge contient des identifiants et des états, jamais un document ni un rapport.",
+      "signatureTitle": "Vérifier la signature",
+      "signature": "L'en-tête x-krizaka-signature a ce format. HEX est le HMAC-SHA256, avec le secret de votre point d'accès, de l'horodatage, d'un point et du corps brut. Refusez une requête dont la signature ne correspond pas.",
+      "signatureLabel": "Signature",
+      "event": "Événement",
+      "openapiLink": "Ouvrir le document OpenAPI"
+    },
+    "data": {
+      "intro": "Votre compte et vos vérifications sont gardés dans une base de données à Toronto, au Canada, visibles par votre seul compte. Un document n'est conservé que si vous le choisissez, et son panneau d'information dit où.",
+      "retention": "Un document conservé reste jusqu'à ce que vous le supprimiez ; le supprimer efface son fichier, son texte et ses résultats, et fermer votre compte supprime vos documents.",
+      "sovkora": "Quand vous demandez une vérification, le document est envoyé à Sovkora, le moteur d'analyse de Krizaka, par HTTPS. Rien n'est vendu, partagé ni utilisé pour entraîner un modèle.",
+      "privacy": "Lire l'avis de confidentialité"
+    }
+  },
+  "pricing": {
+    "title": "Tarifs",
+    "lead": "Aucun abonnement annuel. Payez au dossier, ou abonnez-vous au mois et résiliez quand vous voulez. Prix en CAD, avant taxes : la TPS et la TVQ s'ajoutent sur la facture.",
+    "offer": {
+      "headline": "Offre de lancement : −{percent} % les {months} premiers mois avec le code {code}",
+      "line": "{offer} par mois les {months} premiers mois, puis {regular} par mois",
+      "ends": "Offre valable jusqu’au {date}. Le prix régulier s’applique après l’offre.",
+      "always": "Le prix régulier s’applique après l’offre."
+    },
+    "requestAccess": "Demander un accès",
+    "plannedNote": "Prix prévus à l’ouverture, en CAD, taxes en sus. Les inscriptions sont fermées.",
+    "plansLabel": "Forfaits",
+    "subscribe": "S’abonner — {plan}",
+    "current": "Forfait actuel",
+    "paymentsOff": "Le paiement n’est pas encore disponible sur cet environnement.",
+    "inApp": "Choisir votre forfait",
+    "perMonth": " par mois, plus taxes",
+    "perDossier": " par dossier, plus taxes",
+    "beyond": "Puis {rate} par dossier supplémentaire, prélevé sur votre carte enregistrée, plus taxes",
+    "included": "{included} dossiers inclus par mois",
+    "paused": "Au-delà du volume inclus, les vérifications attendent le mois suivant",
+    "freeFirst": "Un dossier vérifié gratuitement chaque mois, sans carte",
+    "cancel": "Facturé au mois, résiliable en tout temps depuis le portail de facturation",
+    "noSubscription": "Sans abonnement : vous payez les dossiers que vous vérifiez",
+    "volume": "Plus de {included} dossiers par mois ? Écrivez-nous",
+    "plans": {
+      "document": {
+        "name": "Un document",
+        "features": [
+          "Pour un dossier ponctuel : vérification de document et filtrage de dossier",
+          "Un rapport signé qui cite l'article derrière chaque constat"
+        ]
+      },
+      "agency": {
+        "name": "Agence",
+        "features": [
+          "Pour les agences, courtiers et propriétaires qui vérifient plusieurs dossiers par mois",
+          "L'API, avec des clés créées dans votre compte"
+        ]
+      },
+      "firm": {
+        "name": "Gestionnaire d'immeubles",
+        "features": [
+          "Pour les gestionnaires d'immeubles et les entreprises avec un plus grand volume",
+          "L'API, avec des clés créées dans votre compte"
+        ]
+      }
+    },
+    "soon": {
+      "title": "Bientôt",
+      "lead": "Pas encore offert. Aucun prix n'est promis pour ces éléments.",
+      "badge": "Bientôt",
+      "items": {
+        "fullFile": {
+          "name": "Le dossier complet du locataire",
+          "text": "Les documents, puis les vérifications aux registres."
+        },
+        "backgroundCheck": {
+          "name": "La vérification des antécédents",
+          "text": "Les dossiers du candidat, avec son consentement."
+        },
+        "screening": {
+          "name": "Le filtre des pièces seul",
+          "text": "La première étape d'un dossier, facturée seulement quand elle s'exécute."
+        }
+      }
+    }
+  },
+  "affordability": {
+    "share": "Le loyer représente {share} du revenu indiqué. À titre d'information seulement.",
+    "no-claim": "Aucun chiffre : le revenu ou le loyer n'est pas donné sous une forme utilisable, donc aucune part n'est calculée.",
+    "note": "Cette part ne doit pas être le seul critère. Au Québec, décider sur le seul revenu peut constituer de la discrimination fondée sur la condition sociale (Charte des droits et libertés de la personne, art. 10 et 12). Le revenu est un chiffre que le candidat a choisi de donner ; il est utilisé ici et n'est pas conservé.",
+    "disclaimer": "Information sur deux chiffres, pas un avis juridique ni un jugement sur le candidat. Le salaire n'est pas exigé pour louer au Québec."
+  }
+}

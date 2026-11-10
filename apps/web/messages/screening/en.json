@@ -1,0 +1,416 @@
+{
+  "run": {
+    "verdicts": {
+      "PASS": "Requirement met",
+      "FAIL": "Requirement not met",
+      "INSUFFICIENT_EVIDENCE": "Insufficient evidence",
+      "NOT_APPLICABLE": "Does not apply"
+    }
+  },
+  "screening": {
+    "tenant": {
+      "title": "A request to check your application",
+      "lead": "{landlord} asks your agreement to check your rental application. You decide: nothing is checked without your consent.",
+      "whatTitle": "What would be checked",
+      "provider": "Provider: {provider}",
+      "why": "Why: the landlord is assessing your application for a dwelling.",
+      "notAsked": "Never asked: social insurance number, bank details, employer, salary, criminal record.",
+      "whoSees": "Who sees the result: you first; the landlord only if you pass it on.",
+      "retention": "Duration: the result is deleted {days} days after your consent.",
+      "rights": "You may decline (it is not an admission), contest the result, or not pass it on.",
+      "consent": "I consent to this check",
+      "decline": "I decline",
+      "share": "Pass it on to the landlord",
+      "contest": "Contest the result",
+      "comment": "Your comment (optional)",
+      "send": "Send the contestation",
+      "demo": "Demonstration provider: the data is fictitious.",
+      "state": {
+        "requested": "Waiting for your answer",
+        "consented": "You consented. Here is the result: only you see it for now.",
+        "shared": "You passed this result on to the landlord.",
+        "declined": "You declined: nothing was checked, and the landlord is told so without more detail.",
+        "contested": "You contested this result: the landlord does not see it.",
+        "expired": "This request expired or its result was deleted."
+      },
+      "resultTitle": "Your result",
+      "band": {
+        "no-concern": "Nothing to report",
+        "review": "To review",
+        "incomplete": "Not complete yet"
+      },
+      "item": {},
+      "outcome": {
+        "clear": "nothing to report",
+        "review": "to review",
+        "pending": "in progress",
+        "unavailable": "not available right now",
+        "soon": "not available yet"
+      },
+      "deleteOn": "Deleted on {date}.",
+      "contested": "Your contestation: « {comment} »",
+      "incompleteNote": "Some checks have not answered. Nothing here is a result for those: they are shown as they stand.",
+      "copy": "Get a copy of my result",
+      "quoteTitle": "Price and who pays",
+      "quoteLine": "{check}: {price}",
+      "quoteFree": "no charge",
+      "quotePayer": {
+        "firm": "Paid by the property-management firm.",
+        "owner": "Paid by the building owner.",
+        "applicant": "Paid by you."
+      },
+      "quoteTaxes": "Taxes (GST/QST) are added where they apply."
+    },
+    "landlord": {
+      "title": "Tenant application",
+      "lead": "Ask an applicant's consent to check their payment history. They see the result first and decide whether to pass it on to you or contest it.",
+      "undertakingTitle": "Your undertaking",
+      "undertaking": "I undertake to use these checks only to assess an application for a dwelling, to ask only what is necessary, and never to refuse an applicant on a discriminatory ground (Charter of human rights and freedoms; C.c.Q., art. 1899). I know an applicant may decline or contest, and that refusing to give unnecessary information is not a ground for rejection.",
+      "accept": "I accept the undertaking",
+      "lawfulTitle": "What the law lets you ask",
+      "lawful": "The name, the current address, an identity document looked at without keeping a copy, the previous landlord's contact — and, with consent, a credit report. No social insurance number, bank details, employer or salary. Verikora offers no criminal-record check.",
+      "name": "Applicant's name",
+      "email": "Applicant's e-mail",
+      "scope": "What will be checked",
+      "request": "Ask for their consent",
+      "created": "Hand this link to the applicant (it will not be shown again):",
+      "copy": "Copy the link",
+      "listTitle": "Your requests",
+      "none": "No request yet.",
+      "status": {
+        "requested": "Waiting",
+        "consented": "Consented, not passed on",
+        "shared": "Passed on",
+        "declined": "Declined",
+        "contested": "Contested",
+        "expired": "Expired"
+      },
+      "shownTitle": "Result passed on",
+      "hidden": "The result is visible only once the applicant passes it on.",
+      "demo": "Demonstration provider: fictitious data.",
+      "reviewNote": "« To review » is not a verdict: talk to the applicant before any decision.",
+      "noneOffered": "No check is available to you yet.",
+      "payer": {
+        "label": "Who pays for the checks",
+        "firm": "The property-management firm",
+        "owner": "The building owner",
+        "applicant": "The applicant (only where allowed)"
+      }
+    },
+    "invoice": {
+      "line": "Check: {check} — a Krizaka service"
+    }
+  },
+  "applicant": {
+    "notice": {
+      "title": "How your documents and information are used",
+      "version": "Notice {version}",
+      "intro": "Your landlord asked for your application to be checked. Nothing is checked, and no document is read, without your consent. You decide for each purpose below, and you can withdraw a consent at any time.",
+      "collectedTitle": "What is collected",
+      "collected": "The documents you send (for example a pay stub or a bank statement), the name and e-mail address in the request, and, only for the purposes you accept, the results of those checks.",
+      "whyTitle": "Why",
+      "why": "To check that the documents match the application and are consistent with each other. The report is informative only: it is not a legal opinion, and a person at the owner decides.",
+      "whoTitle": "Who sees it",
+      "who": "The owner who asked for the check sees the report. Verikora and its processor for the analysis (Sovkora) handle the file to run it. Nobody else. [TO BE REVIEWED BY THE LAWYER]",
+      "howLongTitle": "How long it is kept",
+      "howLong": "By default, a document is deleted as soon as its check is done. If you consent to keep it (\"Keep my documents until the owner decides\"), it is kept until the owner's decision, then deleted. A result is deleted {days} days after it was given. You can still ask for its deletion. [TO BE REVIEWED BY THE LAWYER]",
+      "askTitle": "How to ask for deletion",
+      "ask": "Use the « Delete my documents » action on the link you received. It deletes your documents and the result at once, and keeps only a record with no personal information. You can also withdraw any consent here, and ask for access to or correction of your information.",
+      "examinedTitle": "How your documents are examined",
+      "examined": "Each document is also examined as a file: how it was saved and, for some, whether its figures add up. When something is noticed, you see it here, in the same words as the owner, and you can add an explanation next to it. The report states what was observed; it concludes nothing about a document or about you, and Verikora decides nothing: a person at the owner does.",
+      "notAsked": "Never asked: your social insurance number (SIN), your bank card or account details, your health or family information.",
+      "law": "This notice follows the Act respecting the protection of personal information in the private sector (Quebec, as amended by the Act 25). It is not legal advice."
+    },
+    "purpose": {
+      "DOCUMENT_CHECK": {
+        "label": "Check the documents I send",
+        "what": "Looks for signs of alteration and inconsistency in the documents, against the application."
+      },
+      "COURT_RECORDS": {
+        "label": "Check the Quebec rental history",
+        "what": "Looks at published rental-tribunal and court records for your payment history, with your consent."
+      },
+      "CREDIT": {
+        "label": "Check my credit report",
+        "what": "Reads a credit report, with your consent, when one is requested."
+      },
+      "DOCUMENT_KEEP": {
+        "label": "Keep my documents until the owner decides",
+        "what": "Without it, each document is deleted once its check is done. With it, the documents are kept until the owner's decision."
+      }
+    },
+    "consent": "I have read the notice (version {version}) and I consent to this check",
+    "granted": "Consented",
+    "notGranted": "Not consented",
+    "withdraw": "Withdraw this consent",
+    "erase": "Delete my documents",
+    "erased": "Your documents and the result were deleted. Only a record with no personal information is kept.",
+    "error": {
+      "CONSENT_REQUIRED": "No document is checked without your consent for this purpose.",
+      "NOTICE_CHANGED": "The notice changed since you read it. Read it again, then consent.",
+      "APPLICATION_ERASED": "This application was erased."
+    }
+  },
+  "applicantFile": {
+    "title": "Your documents",
+    "intro": "The owner asked for the documents below. Send each one as a PDF. Each document is checked for signs of alteration and inconsistency. The report is informative, not a legal opinion, and a person decides.",
+    "upload": "Send a document",
+    "uploaded": "Document received.",
+    "none": "No document sent yet.",
+    "submit": "Send my file",
+    "submitted": "Your file was sent. You can still withdraw a consent or ask for the deletion of your documents.",
+    "expires": "This link expires on {date}.",
+    "limits": "What the report does not show: it decides nothing, never scores the person, and does not replace a human check.",
+    "refusal": "This document is not necessary for the check and is not asked for.",
+    "types": {
+      "pay-stub": {
+        "label": "Pay stub",
+        "what": "Your most recent pay stub, as a PDF."
+      },
+      "bank-statement": {
+        "label": "Bank statement",
+        "what": "A recent statement of the account where your income is paid, as a PDF."
+      },
+      "employment-letter": {
+        "label": "Employment letter",
+        "what": "A letter from your employer confirming your position and start date, as a PDF."
+      },
+      "identity-document": {
+        "label": "Identity document",
+        "what": "A document that shows your full name, as a PDF. Only what is needed is read."
+      }
+    },
+    "fields": {
+      "employer": "Employer",
+      "pay-period": "Pay period",
+      "statement-period": "Statement period",
+      "position": "Position",
+      "start-date": "Start date",
+      "full-name": "Full name"
+    },
+    "checks": {
+      "document-authenticity": {
+        "label": "Authenticity of the file",
+        "what": "Examines the file itself: its producer, its dates and its saves. It describes the file, not the person."
+      },
+      "compliance-check": {
+        "label": "Consistency of the text",
+        "what": "Reads the text of the document and compares it with the Québec rules."
+      }
+    },
+    "skipped": {
+      "NO_TEXT": "No text could be read in this document, so this check did not run.",
+      "PAYWALL": "The check did not run: the owner has no check left.",
+      "UNAVAILABLE": "The check could not run right now.",
+      "REFUSED": "The check did not run for this document."
+    },
+    "status": {
+      "open": "Open",
+      "revoked": "Revoked",
+      "expired": "Expired",
+      "used": "Sent",
+      "closed": "Closed",
+      "erased": "Erased"
+    },
+    "answer": {
+      "title": "What we noticed in your documents",
+      "lead": "Many ordinary steps leave these traces: signing, filling in a form, converting from an e-mail, saving again. They say nothing about you. You can explain any of them below; the owner reads your words next to the trace. If you have the issuer's original, send it with the drop of its type above.",
+      "label": "Your explanation (optional)",
+      "placeholder": "For example: downloaded from the payroll portal, then signed.",
+      "save": "Save my explanation",
+      "remove": "Remove my explanation",
+      "saved": "Saved on {date}",
+      "count": "{n} / {max}",
+      "document": "Document: {name}"
+    },
+    "error": {
+      "LINK_REVOKED": "This link was revoked.",
+      "LINK_EXPIRED": "This link expired.",
+      "LINK_USED": "This file was already sent.",
+      "ANSWER_CLOSED": "This file no longer takes explanations.",
+      "ANSWER_TOO_LONG": "This explanation is too long.",
+      "SIGNAL_NOT_FOUND": "This trace is no longer in your file.",
+      "FILE_CLOSED": "This file was closed.",
+      "APPLICATION_ERASED": "This application was erased.",
+      "TYPE_NOT_REQUESTED": "This document was not asked for.",
+      "TOO_MANY_DOCUMENTS": "This file already holds the most documents it can.",
+      "FILE_NOT_ACCEPTED": "This document must be sent as a PDF.",
+      "DUPLICATE_DOCUMENT": "This file was already sent.",
+      "NO_DOCUMENT": "Send at least one document before submitting.",
+      "TYPE_NOT_NECESSARY": "This document is not necessary and cannot be asked for.",
+      "TYPE_UNKNOWN": "Unknown document type.",
+      "STORAGE_UNAVAILABLE": "The storage that holds these documents is not available.",
+      "PURPOSE_NOT_IN_FILE": "This purpose does not belong to a file of documents.",
+      "CONSENT_REQUIRED": "No document is checked without your consent for this purpose.",
+      "NOT_FOUND": "Not found."
+    },
+    "page": {
+      "metaTitle": "Your documents",
+      "noticeSummary": "Read the notice: how your documents and information are used",
+      "consentTitle": "Your consent",
+      "consentLead": "Nothing is read or checked before you consent. You can withdraw at any time.",
+      "askedTitle": "Documents asked",
+      "consentFirst": "Consent to the check above to send your documents.",
+      "dropTitle": "Drop the PDF here",
+      "browse": "Choose a PDF",
+      "inputLabel": "Choose the PDF to send",
+      "hint": "PDF only, up to 10 MB.",
+      "received": "Received",
+      "sending": "Sending",
+      "sent": "Sent",
+      "notSent": "Not sent",
+      "pause": "Pause",
+      "resume": "Resume",
+      "retry": "Try again",
+      "cancel": "Cancel",
+      "remove": "Remove",
+      "submitHint": "You can send your file once at least one document is received.",
+      "eraseConfirm": "Press again to delete everything",
+      "eraseLead": "You can ask for your documents and the result to be deleted at any time.",
+      "withdrawLead": "Withdrawing a consent stops the checks that rest on it.",
+      "closedTitle": "This link is closed",
+      "howLong": "By default, a document is deleted as soon as its check is done. If you consent to keep it (\"Keep my documents until the owner decides\"), it is kept until the owner's decision, then deleted. You can ask for the deletion of your documents and of the result at any time. [TO BE REVIEWED BY THE LAWYER]"
+    }
+  },
+  "report": {
+    "title": "Audit report — {name}",
+    "eyebrow": "Verikora · compliance audit report",
+    "disclaimer": "Informative check, not legal advice. Verikora verifies a document and screens a file with configurable extraction matrices and technical templates, tools validated by the client's counsel; it is not a legal opinion, and only a member of the Barreau du Québec can give legal advice. A result is never a guarantee of compliance.",
+    "summary": "{failures} blocking failure(s) out of {rules} rules checked.",
+    "toReview": "Québec rules still to be reviewed by a lawyer: a demonstration report, not legal advice.",
+    "documentHeading": "The document",
+    "checkHeading": "The check",
+    "file": "File",
+    "size": "Size",
+    "documentSha": "Document SHA-256",
+    "engine": "Analysis engine",
+    "runId": "Sovkora run",
+    "jurisdiction": "Jurisdiction",
+    "asOf": "Rules in force on",
+    "ruleset": "Rules version",
+    "model": "Model",
+    "modelValue": "Chosen by the Studio, not reported by the run: the Studio and its version above are the trace.",
+    "started": "Check started",
+    "finished": "Check finished",
+    "findingsHeading": "Findings ({count})",
+    "rule": "Rule",
+    "article": "Article cited",
+    "passage": "Passage",
+    "noPassage": "No passage: the document says nothing on this point.",
+    "verdicts": {
+      "PASS": "Requirement met",
+      "FAIL": "Requirement not met",
+      "INSUFFICIENT_EVIDENCE": "Insufficient evidence",
+      "NOT_APPLICABLE": "Does not apply"
+    },
+    "guaranteeHeading": "What this report guarantees",
+    "guarantees": "This report is signed with Verikora's key (Ed25519, held by Krizaka). The signature covers the document's SHA-256, the jurisdiction and rules version, the Studio and its version, the Sovkora run id, the date of the check, every finding with its passage and article, and the full text of this report. If a single character of this file changes, verification fails.",
+    "notGuaranteed": "It does not prove that the findings are legally right: Sovkora applies the extraction matrices, the Québec matrices are still to be reviewed by a lawyer, and this is not legal advice. It does not prove that the run exists on Sovkora's side (only its operator can say), nor when the report was made beyond the check dates above: there is no independent time-stamp and no blockchain. What you trust is Krizaka, the holder of the signing key.",
+    "howToVerify": "To verify it, sign in to Verikora and open {url} — only the people the report's owner gave access to can, with their Verikora account. Give it this file and, to confirm which document was checked, the original document.",
+    "footer": "Verikora, a Krizaka product — analysis by Sovkora.",
+    "signatureHeading": "Signature page",
+    "signatureKey": "Signing key",
+    "signatureAlgorithm": "Algorithm",
+    "signatureBody": "SHA-256 of the report's text (pages before this one)",
+    "signatureValue": "Signature (base64)",
+    "signatureNote": "The attestation — the payload, the text fingerprint and this signature — is also embedded in the PDF file. A member the owner gave access to checks it by giving this file to the verification page; any change to the text of the earlier pages makes it fail.",
+    "notCheckedServiceContract": "Not checked: the right to terminate (art. 2125 C.c.Q.) and the rest of the Civil Code of Québec on service contracts (art. 2098 and following). To be reviewed by a lawyer.",
+    "languageNote": "Original wording of the rules: French. The English text is the ruleset's own translation; quoted passages and article references are given as they stand, never translated."
+  },
+  "verify": {
+    "title": "Verify a report",
+    "lead": "Check that an audit report really comes from Verikora and has not been changed. Members only, for a report you own or were given access to.",
+    "reportFile": "The report (the .html or .pdf file)",
+    "reportPaste": "Or paste its text",
+    "documentFile": "The original document (optional)",
+    "documentHint": "Add it to confirm that the report is about this very file.",
+    "submit": "Verify",
+    "checking": "Checking…",
+    "tooLarge": "This file is too large.",
+    "empty": "Give a report file or paste its text.",
+    "okTitle": "This report is authentic and unchanged.",
+    "failTitle": "This report cannot be trusted.",
+    "reasons": {
+      "NOT_A_REPORT": "This is not a Verikora audit report: it has no signature block.",
+      "UNREADABLE": "The signature block is damaged or not in a format Verikora knows.",
+      "BAD_SIGNATURE": "The signature does not match the content: the report was modified or signed by another key.",
+      "ALTERED": "The signature is valid for the original report, but the file is not that report any more: something was changed after signing.",
+      "UNKNOWN_KEY": "It was signed by a key that is not this server's.",
+      "UNKNOWN_SCHEMA": "This report uses a format Verikora does not verify.",
+      "SPECIMEN": "This report is a specimen: it proves nothing."
+    },
+    "facts": {
+      "fileSha": "This file's SHA-256",
+      "keyId": "Signing key",
+      "documentSha": "Document SHA-256",
+      "runId": "Sovkora run",
+      "ruleset": "Rules",
+      "checked": "Check finished",
+      "findings": "Findings",
+      "jurisdiction": "Jurisdiction",
+      "issued": "Issued",
+      "expires": "Link valid until"
+    },
+    "documentMatch": {
+      "yes": "The document you gave is the one that was checked.",
+      "no": "The document you gave is NOT the one that was checked (its SHA-256 differs).",
+      "none": "No document given: nothing says which file was checked except its SHA-256 above."
+    },
+    "guaranteesTitle": "What a green result guarantees",
+    "guarantees": {
+      "a": "The report was produced by Verikora's signing key, and not one character of it has changed since.",
+      "b": "It binds, in one signature, the document's SHA-256, the jurisdiction and rules version, the Studio and its version, the Sovkora run id, the check dates and every finding with its passage and article.",
+      "c": "Given the original document, it is the one that was checked."
+    },
+    "limitsTitle": "What it does not guarantee",
+    "limits": {
+      "a": "That the findings are right in law: Sovkora applies extraction matrices and technical templates, and the Québec ones are still to be reviewed by a lawyer. This is not legal advice.",
+      "b": "That the run exists on Sovkora's side: only its operator can confirm a run id.",
+      "c": "When the report was made, beyond the check dates it states: there is no independent time-stamp.",
+      "d": "Anything about the key holder: you trust Krizaka to keep the key. No blockchain, no third party."
+    },
+    "keyTitle": "The public key",
+    "keyLead": "Ed25519, SPKI in base64. With it you can verify a report without this site (for instance with OpenSSL on the signed text).",
+    "devKey": "This server uses the development key: its reports prove nothing.",
+    "drop": {
+      "reportTitle": "Drop the report here",
+      "documentTitle": "Drop the original document here",
+      "browse": "Choose a file",
+      "remove": "Remove {name}",
+      "hint": "The downloaded .html or .pdf file, up to 2 MB."
+    },
+    "noAccess": {
+      "title": "You do not have access to this report",
+      "text": "Only the people the report's owner gave access to can verify it. You can ask the owner.",
+      "request": "Request access",
+      "requested": "The owner has been notified. You can verify the report once they give you access."
+    }
+  },
+  "demo": {
+    "eric": {
+      "persona": "Éric, property manager (fictitious demo data)",
+      "collections": {
+        "rosemont": {
+          "name": "Rosemont building",
+          "description": "Leases and the maintenance contract of the Rosemont building — fictitious specimen documents, some with flaws for the checks to find."
+        },
+        "villeray": {
+          "name": "Candidates — 4½ Villeray",
+          "description": "Pay stubs, bank statements and employment letters of the candidates for the 4½ in Villeray — fictitious specimen documents."
+        },
+        "invoices": {
+          "name": "Invoices 2026",
+          "description": "The 2026 maintenance invoices — fictitious specimen documents, one with a wrong total."
+        },
+        "empty-a": {
+          "name": "To file",
+          "description": "A folder ready for the next documents."
+        },
+        "empty-b": {
+          "name": "Archive 2025",
+          "description": "An empty folder for last year's documents."
+        }
+      }
+    }
+  }
+}

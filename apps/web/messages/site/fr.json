@@ -1,0 +1,128 @@
+{
+  "meta": {
+    "siteName": "Verikora",
+    "titleTemplate": "{title} · Verikora",
+    "description": "Gestionnaires d'immeubles et propriétaires : Verikora lit le bail selon le Code civil du Québec, examine le talon de paie comme un fichier, et montre la ligne exacte derrière chaque constat."
+  },
+  "chrome": {
+    "brandHome": "Verikora, accueil",
+    "navLabel": "Verikora",
+    "nav": {
+      "what": "Ce que ça fait",
+      "proof": "Un cas réel",
+      "privacy": "Confidentialité",
+      "docs": "Docs",
+      "pricing": "Tarifs"
+    },
+    "signIn": "Se connecter",
+    "themeToggle": "Thème",
+    "languageLabel": "Langue",
+    "footerLabel": "Pied de page",
+    "sourceCode": "Code source",
+    "contact": "Contact",
+    "support": "Soutien",
+    "legal": "Confidentialité",
+    "preferences": "Préférences",
+    "menu": {
+      "label": "Menu"
+    },
+    "terms": "Conditions",
+    "download": "Télécharger",
+    "openApp": "Ouvrir mes documents",
+    "myDocuments": "Mes documents",
+    "tryIt": "Essayer Verikora",
+    "account": "Compte",
+    "settings": "Réglages",
+    "signOut": "Se déconnecter",
+    "docs": "Documentation"
+  },
+  "landing": {
+    "title": "Lisez avant de signer.",
+    "lead": "Pour les gestionnaires d’immeubles et les propriétaires qui évaluent des candidats au Québec : déposez le bail et les pièces du dossier. Verikora fait la vérification documentaire et le tri du dossier : il les lit selon des matrices d’extraction documentaire et des gabarits technologiques paramétrables, et vous montre la ligne exacte derrière chaque constat.",
+    "status": {
+      "label": "Statut",
+      "development": "En développement : les inscriptions sont fermées pendant nos essais sur de vrais baux québécois.",
+      "preview": "Aperçu de développement : inscriptions fermées, accès sur invitation."
+    },
+    "hero": {
+      "before": "Le bail",
+      "after": "Le constat",
+      "leaseCaption": "Une clause du bail, en évidence",
+      "findingCaption": "Ce que Verikora renvoie, avec sa source"
+    },
+    "signIn": "Se connecter",
+    "openApp": "Ouvrir mes documents",
+    "what": {
+      "title": "Ce que ça fait",
+      "lead": "Trois choses, sans rien de caché derrière.",
+      "who": "Pour les gestionnaires d'immeubles et les propriétaires qui évaluent des candidats au Québec : un bail et un talon de paie par dossier, plusieurs dossiers par mois. Les locataires sont les bienvenus : leur première vérification est offerte. Les registres (SOQUIJ, TAL, plumitif) sont en préparation.",
+      "trust": "Par défaut, votre compte et vos vérifications sont gardés dans une base de données à Toronto, au Canada, et visibles par votre seul compte ; vos fichiers peuvent aller dans votre propre stockage, si vous le choisissez. Rien n'est vendu, partagé ni utilisé pour entraîner un modèle.",
+      "privacy": "Lire l'avis de confidentialité",
+      "items": {
+        "line": {
+          "title": "La ligne exacte derrière chaque constat",
+          "text": "Chaque constat nomme la règle, cite l'article de loi et surligne la phrase du bail sur laquelle il repose."
+        },
+        "file": {
+          "title": "L'examen du PDF lui-même",
+          "text": "Producteur, dates, enregistrements successifs : trois niveaux (observé, inhabituel, incohérent), jamais un tampon « faux »."
+        },
+        "find": {
+          "title": "Tout retrouver en une seconde",
+          "text": "Un mot, et tous vos documents et tous leurs constats reviennent, le passage en gras."
+        }
+      }
+    },
+    "proof": {
+      "title": "Une vraie vérification",
+      "lead": "Un bail d'exemple, vérifié en développement et enregistré tel qu'il est revenu. La règle, la ligne, l'article de loi, le numéro d'exécution et la date sont la réponse du moteur, pas du texte tapé à la main.",
+      "figures": "{rules} règles vérifiées, {found} constats sur ce bail d'exemple.",
+      "runLabel": "Numéro d'exécution",
+      "dateLabel": "Enregistrée le",
+      "rulesetLabel": "Règles du Québec",
+      "powered": "Propulsé par Sovkora.",
+      "owlLabel": "Ce que la chouette promet"
+    },
+    "who": {
+      "title": "Pour qui"
+    },
+    "closing": {
+      "title": "Un dossier, une réponse.",
+      "body": "Connectez-vous pour vérifier les dossiers de votre mois. Visible de votre seul compte.",
+      "bodyIn": "Les dossiers de votre mois sont dans votre bibliothèque, vérifiés et visibles par votre seul compte."
+    },
+    "visual": {
+      "caption": "Une vraie vérification, enregistrée telle qu'elle est revenue"
+    },
+    "showcase": {
+      "title": "L'app, telle qu'elle est",
+      "lead": "Trois écrans de Verikora, dessinés avec ses propres composants sur des données fictives. Rien ici n'est une capture d'écran.",
+      "demo": "Données fictives",
+      "findings": {
+        "title": "Chaque constat cite sa ligne",
+        "text": "La règle, la phrase du bail sur laquelle elle repose et l'article de loi, dans l'ordre de lecture.",
+        "summary": "Le rapport d'une vérification : le verdict, puis chaque constat avec le passage cité du bail et son article."
+      },
+      "screening": {
+        "title": "Une vérification que le locataire accepte",
+        "text": "Le candidat voit le résultat en premier; une vérification de registre qui n'est pas prête le dit au lieu de deviner.",
+        "summary": "Le résultat d'une vérification avec les contrôles demandés et, pour chacun, son issue : rien à signaler, ou pas encore disponible.",
+        "title2": "Résultat",
+        "items": {
+          "payment-history": "Historique de paiement",
+          "credit": "Rapport de crédit",
+          "registry": "Registre du tribunal"
+        }
+      },
+      "owner": {
+        "title": "Un rapport que le propriétaire peut ouvrir",
+        "text": "Une page en lecture seule, par lien, avec une échéance : l'empreinte du fichier, les constats et l'exécution qui les a produits.",
+        "summary": "La page du propriétaire : l'empreinte du document, les constats avec leurs articles et l'identifiant d'exécution."
+      }
+    }
+  },
+  "stage": {
+    "title": "Version de développement",
+    "message": "Les données peuvent être réinitialisées à tout moment. Ce n'est pas encore une offre commerciale."
+  }
+}

@@ -1,0 +1,136 @@
+{
+  "docs": {
+    "title": "Documentation",
+    "lead": "How a check works, the API to start one from your own tool, and what happens to your data.",
+    "navLabel": "Documentation",
+    "sidebarLabel": "Pages",
+    "tocLabel": "On this page",
+    "breadcrumbLabel": "Breadcrumb",
+    "sections": {
+      "check": "How a check works",
+      "api": "The API",
+      "data": "Your data"
+    },
+    "check": {
+      "intro": "A check reads one document and says what it found. Verikora does not judge the document itself: every check is a run of Sovkora, Krizaka's analysis engine, and the run id is kept with the report.",
+      "kindsTitle": "Two kinds of check",
+      "compliance": "Compliance reads the text of a document against the rules of a jurisdiction (Québec by default for a residential lease).",
+      "authenticity": "Authenticity examines the file itself as a file: its producer, its dates and its successive saves.",
+      "findingTitle": "What a finding cites",
+      "finding": "Each finding names the rule it applies, gives its verdict and severity, quotes the article it relies on and lights the passage of the document it rests on. When the document says nothing on a point, the finding says so.",
+      "levelsTitle": "The three levels of an authenticity signal",
+      "levels": "Signals come in three levels, from the least to the most worrying: {observed}, {unusual}, {inconsistent}. A signal says what it may indicate; it is never a « fake » stamp, and a person decides.",
+      "guaranteesLead": "A report is signed. A member the report's owner gave access to can check it against the signing key:",
+      "limitsLead": "A green result does not guarantee:",
+      "informative": "A check is informative and a triage: it is not legal advice."
+    },
+    "api": {
+      "intro": "A check can be started from your own tool (an ERP, a property-management system, a script). This reference is generated from the OpenAPI document the app serves at {openapi}: it lists every route the API has, and only those.",
+      "accessTitle": "Access",
+      "access": "Every request carries an API key: Authorization: Bearer {prefix}_… . Keys are created in your account, for plans that include the API. A key has scopes ({scopes}), a life of at most {days} days and a per-minute limit; rotating it keeps the old one working for {grace} hours. Never put a key in a repository or a log.",
+      "quickstartTitle": "Start a check, then read it",
+      "quickstartNote": "Poll until the state is done, failed or refused; the report comes with the check once it is done.",
+      "routesTitle": "Routes",
+      "route": "Route",
+      "commonAnswers": "Answers shared by several routes",
+      "scope": "Scope",
+      "noScope": "No key needed",
+      "parameters": "Parameters",
+      "answers": "Answers",
+      "errorsTitle": "Errors",
+      "errors": "Every error answers with a stable code and a message. Match on the code; the message is for your logs.",
+      "codeColumn": "Code",
+      "meaningColumn": "Meaning",
+      "statusTitle": "Status codes",
+      "statusLead": "These answers are given by several routes; the table of routes lists the rest.",
+      "errorShapeLabel": "Error body",
+      "webhooksTitle": "Webhooks",
+      "webhooks": "Instead of polling, register an https endpoint in your account and Verikora calls it when work finishes. Each request carries an event name, a stable event id (apply an event once) and a signature. A payload holds ids and states, never a document or a report.",
+      "signatureTitle": "Verify the signature",
+      "signature": "The x-krizaka-signature header has this format. HEX is the HMAC-SHA256, with your endpoint's secret, of the timestamp, a dot and the raw body. Refuse a request whose signature does not match.",
+      "signatureLabel": "Signature",
+      "event": "Event",
+      "openapiLink": "Open the OpenAPI document"
+    },
+    "data": {
+      "intro": "Your account and your checks are kept in a database in Toronto, Canada, visible to your account alone. A document is kept only if you choose it, and its information panel says where.",
+      "retention": "A kept document stays until you delete it; deleting it deletes its file, its text and its results, and closing your account deletes your documents.",
+      "sovkora": "When you ask for a check, the document is sent to Sovkora, Krizaka's analysis engine, over HTTPS. Nothing is sold, shared or used to train a model.",
+      "privacy": "Read the privacy notice"
+    }
+  },
+  "pricing": {
+    "title": "Pricing",
+    "lead": "No annual subscription. Pay per dossier, or subscribe by the month and cancel when you like. Prices in CAD, before taxes: GST and QST are added on the invoice.",
+    "offer": {
+      "headline": "Launch offer: {percent}% off the first {months} months with the code {code}",
+      "line": "{offer} a month for the first {months} months, then {regular} a month",
+      "ends": "Offer valid until {date}. The regular price applies after the offer.",
+      "always": "The regular price applies after the offer."
+    },
+    "requestAccess": "Request access",
+    "plannedNote": "Prices planned for the opening, in CAD, before taxes. Sign-up is closed.",
+    "plansLabel": "Plans",
+    "subscribe": "Subscribe — {plan}",
+    "current": "Current plan",
+    "paymentsOff": "Payment is not available yet on this environment.",
+    "inApp": "Choose your plan",
+    "perMonth": " a month, plus taxes",
+    "perDossier": " per dossier, plus taxes",
+    "beyond": "Then {rate} for each further dossier, charged to your card on file, plus taxes",
+    "included": "{included} dossiers included each month",
+    "paused": "Past the included volume, checks wait until next month",
+    "freeFirst": "One dossier verified free every month, no card",
+    "cancel": "Billed monthly, cancel any time from the billing portal",
+    "noSubscription": "No subscription: you pay for the dossiers you verify",
+    "volume": "More than {included} dossiers a month? Write to us",
+    "plans": {
+      "document": {
+        "name": "One document",
+        "features": [
+          "For a single file: document verification and file screening",
+          "A signed report that cites the article behind every finding"
+        ]
+      },
+      "agency": {
+        "name": "Agency",
+        "features": [
+          "For agencies, brokers and landlords who check several files a month",
+          "The API, with keys created in your account"
+        ]
+      },
+      "firm": {
+        "name": "Building manager",
+        "features": [
+          "For property managers and firms with a larger volume",
+          "The API, with keys created in your account"
+        ]
+      }
+    },
+    "soon": {
+      "title": "Soon",
+      "lead": "Not offered yet. No price is promised for these.",
+      "badge": "Soon",
+      "items": {
+        "fullFile": {
+          "name": "The full applicant file",
+          "text": "The documents, then the registry checks."
+        },
+        "backgroundCheck": {
+          "name": "Background checks",
+          "text": "The applicant's records, with their consent."
+        },
+        "screening": {
+          "name": "The document filter alone",
+          "text": "The first stage of a file, charged only when it runs."
+        }
+      }
+    }
+  },
+  "affordability": {
+    "share": "The rent is {share} of the income given. Information only.",
+    "no-claim": "No figure: the income or the rent is not given as a usable number, so no share is computed.",
+    "note": "This share must not be the sole criterion. In Québec, deciding on income alone can be discrimination on social condition (Charter of human rights and freedoms, s. 10 and 12). The income is a figure the applicant chose to give; it is used here and not kept.",
+    "disclaimer": "Information about two figures, not legal advice and no judgement on the applicant. Salary is not required to rent in Québec."
+  }
+}
