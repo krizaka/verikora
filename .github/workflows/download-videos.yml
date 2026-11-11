@@ -35,7 +35,18 @@ jobs:
           node-version-file: .nvmrc
           cache: pnpm
       - run: pnpm install --frozen-lockfile --prefer-offline
-      - run: pnpm exec playwright-core install --with-deps chromium
+      # Run 43040951866 (and the days before it) died here: the Ubuntu archive did not answer for ~10 min (« Temporary failure resolving », apt exit
+      # 100). Fail each fetch fast and try the whole install again, with a pause; a real error (a bad package) still fails after 3 tries.
+      - name: Install Chromium (apt mirrors can be down for minutes)
+        run: |
+          printf 'Acquire::Retries "3";\nAcquire::http::Timeout "15";\nAcquire::https::Timeout "15";\n' | sudo tee /etc/apt/apt.conf.d/99ci-retries >/dev/null
+          for attempt in 1 2 3; do
+            pnpm exec playwright-core install --with-deps chromium && exit 0
+            echo "::warning::browser install failed (attempt $attempt of 3)"
+            sleep $((attempt * 45))
+          done
+          exit 1
+        shell: bash
       - name: The demo persona (masked, for this run only), its backend and the journeys
         run: |
           password="$(openssl rand -hex 16)"
@@ -49,9 +60,25 @@ jobs:
             E2E_EMAIL=eric@demo.verikora.test E2E_PASSWORD="$password" node scripts/showcase-web.mjs showcase-web --base http://localhost:3000 --locale "$locale" --sign-in off
           done
       # The runner has no ffmpeg/ffprobe of its own (Playwright's is a private build): run 41135654722 died in the trim for want of ffprobe.
-      - run: sudo apt-get update && sudo apt-get install -y --no-install-recommends ffmpeg
+      - name: Install ffmpeg (same mirror retries as the browser install above)
+        run: |
+          for attempt in 1 2 3; do
+            sudo apt-get update && sudo apt-get install -y --no-install-recommends ffmpeg && exit 0
+            sleep $((attempt * 30))
+          done
+          exit 1
       - name: Trim the films (they start on the first meaningful frame, idle stretches are cut)
         run: node scripts/film-trim.mjs showcase-web
+      # web-report-en has been refused for « marker 0 shows an error state » since 31 Oct, and the markers die with the runner: keep the films and
+      # their markers on a red run, so the next reader sees what the page showed.
+      - name: Keep the films and markers of a red run
+        if: failure()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: showcase-web-diagnosis
+          path: showcase-web
+          retention-days: 3
+          if-no-files-found: ignore
       - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: showcase-web

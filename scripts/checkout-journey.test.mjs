@@ -250,3 +250,9 @@ test("the journey settles the hosted page and presses submit again when a click 
   assert.match(source, /SUBMIT_ATTEMPTS = [2-9]/);
   assert.match(source, /payment-method-label-card/);
 });
+
+test("the browser install survives an apt mirror outage: retried with a reason, never silently skipped (run 43040951866)", () => {
+  assert.match(workflow, /Acquire::Retries/);
+  assert.match(workflow, /for attempt in 1 2 3; do\s+pnpm exec playwright-core install --with-deps chromium && exit 0/);
+  assert.doesNotMatch(workflow, /continue-on-error/);
+});
