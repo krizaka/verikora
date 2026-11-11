@@ -34,7 +34,9 @@ describe.runIf(enabled)("a database built from zero", () => {
     };
     const run = async (text: string, values?: unknown[]) => (await pool.query(text, values)).rows as never;
     try {
-      expect(await runMigrations(connect, MIGRATIONS, { lockKey: MIGRATION_LOCK_KEY })).toEqual(["0001_baseline"]);
+      expect(await runMigrations(connect, MIGRATIONS, { lockKey: MIGRATION_LOCK_KEY })).toEqual(
+        MIGRATIONS.map((m) => m.version),
+      );
       await seedConfig(run);
       await seedConfig(run);
       await assertModules(run, MODULES);

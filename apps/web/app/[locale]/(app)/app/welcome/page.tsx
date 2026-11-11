@@ -1,8 +1,7 @@
-import { PageHeader } from "@krizaka/ui/page-header";
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 
-import { PerspectiveChooser } from "@/components/console/PerspectiveChooser";
+import { WelcomeStart } from "@/components/console/WelcomeStart";
 import { pageSession } from "@/lib/access";
 import { appEnvironment } from "@/lib/env";
 import { audiencesOf, availableFlows } from "@/lib/flows";
@@ -13,21 +12,11 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   return { title: getDictionary(asLocale((await params).locale)).console.shell.titles.welcome };
 }
 
-/** The one-time onboarding step: which side of the lease. Saved on selection, then the library; changeable later in settings. */
+/** The one-time onboarding step (krizaka-internal#2291): a property manager starts in one click; the other sides are behind « Autre usage ». Saved on the primary, then the home; changeable later in settings. */
 export default async function WelcomePage({ params }: Readonly<{ params: Promise<{ locale: string }> }>) {
   const locale = asLocale((await params).locale);
   const session = await pageSession();
   const done = welcomeTarget(session?.account.perspective ?? null);
   if (done) redirect(`/${locale}${done}`);
-  return (
-    <div className="mx-auto flex max-w-xl flex-col gap-4">
-      <PageHeader title={getDictionary(locale).console.shell.titles.welcome} />
-      <PerspectiveChooser
-        current={null}
-        audiences={audiencesOf(await availableFlows(appEnvironment()))}
-        onboarding
-        next={`/${locale}/app`}
-      />
-    </div>
-  );
+  return <WelcomeStart audiences={audiencesOf(await availableFlows(appEnvironment()))} next={`/${locale}/app`} />;
 }

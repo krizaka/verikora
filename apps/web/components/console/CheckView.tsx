@@ -22,7 +22,6 @@ import { useRouteState } from "@/lib/use-route-state";
 import { CheckCatalogue, CheckPlanStrip } from "./CheckCatalogue";
 import { DocumentUploader } from "./DocumentUploader";
 import { startIfSure } from "./start-check";
-import { Today } from "./Today";
 
 const ICONS: Record<DocumentKind, typeof HomeIcon> = {
   lease: HomeIcon,
@@ -139,12 +138,10 @@ export function CheckView({
   jurisdictions = ["QC"],
   catalogue = [],
   credits = null,
-  now = new Date().toISOString(),
 }: Readonly<{
   jurisdictions?: readonly Jurisdiction[];
   catalogue?: readonly CatalogueItem[];
   credits?: CreditsFigure | null;
-  now?: string;
 }>) {
   const { say, locale } = useSay();
   const router = useRouter();
@@ -183,13 +180,11 @@ export function CheckView({
         }
         title={say("shell.titles.check")}
         description={say("library.checkLead")}
-        actions={<Today now={now} />}
       />
-      {credits ? <CheckPlanStrip credits={credits} /> : null}
       <div
         className={
           catalogue.length
-            ? "grid grid-cols-1 gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:items-start"
+            ? "grid grid-cols-1 gap-8 min-[1440px]:grid-cols-[7fr_5fr] min-[1440px]:items-start"
             : "flex max-w-3xl flex-col gap-5"
         }
       >
@@ -206,22 +201,25 @@ export function CheckView({
               </Link>
             </p>
           ) : null}
-          <FlowSteps rows={rows} />
-          {asking.map((r) => (
-            <div key={r.id} data-testid="check-kind-question" ref={showQuestion}>
-              <KindQuestion filename={r.filename} onPick={(kind) => pick(r, kind)} />
-            </div>
-          ))}
           <DocumentUploader
             defaultsFirst
             kindRef={kindRef}
             onDrop={(files) => (dropped.current += files.length)}
             onUploaded={landed}
           />
+          <div className="hidden lg:block">
+            <FlowSteps rows={rows} />
+          </div>
+          {asking.map((r) => (
+            <div key={r.id} data-testid="check-kind-question" ref={showQuestion}>
+              <KindQuestion filename={r.filename} onPick={(kind) => pick(r, kind)} />
+            </div>
+          ))}
           <CheckQueue rows={rows} onPick={pick} questions={false} />
         </div>
         {catalogue.length ? <CheckCatalogue items={catalogue} /> : null}
       </div>
+      {credits ? <CheckPlanStrip credits={credits} /> : null}
       {app?.features.batches ? (
         <p className="m-0 text-sm text-fg-secondary">
           {say("batch.fromCheck")}{" "}

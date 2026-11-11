@@ -32,8 +32,17 @@ describe.runIf(enabled)("the cast seed", () => {
     const second = await run();
     expect(second.fingerprint).toBe(first.fingerprint);
     expect(first.member.name).toBe(personaByRole("verikora", "member").displayName);
-    const [admin] = await q("SELECT name, role FROM accounts WHERE email = $1", ["mira@demo.verikora.test"]);
-    expect(admin).toEqual({ name: personaByRole("verikora", "admin").displayName, role: "ADMIN" });
+    const [admin] = await q("SELECT name, role, perspective FROM accounts WHERE email = $1", [
+      "mira@demo.verikora.test",
+    ]);
+    expect(admin).toEqual({
+      name: personaByRole("verikora", "admin").displayName,
+      role: "ADMIN",
+      perspective: "landlord",
+    });
+    // Camille is the first-run journey's new account: no perspective, even after a re-seed (krizaka-internal#2291).
+    const [camille] = await q("SELECT perspective FROM accounts WHERE email = $1", ["camille@demo.verikora.test"]);
+    expect(camille).toEqual({ perspective: null });
     const recorded = JSON.parse(
       readFileSync(new URL("../../../scripts/demo-seed/fingerprint.json", import.meta.url), "utf8"),
     ) as { fingerprint: string };

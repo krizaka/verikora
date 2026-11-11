@@ -95,19 +95,42 @@
     "tags": []
   },
   {
+    "id": "share-report",
+    "promise": "Eric opens the report of his lease, shares it from the header button without scrolling, sees « Partagé », then revokes to restore his data",
+    "persona": "eric",
+    "platforms": ["web"],
+    "steps": [
+      "sign in as Eric",
+      "open the library",
+      "open the report of the seeded lease",
+      "see the share button on the first screen (no scroll)",
+      "see « Pas encore partagé »",
+      "click the share button — dialog opens",
+      "fill the email field and share",
+      "close the dialog — see « Partagé »",
+      "re-open dialog, revoke the share — see « Pas encore partagé »"
+    ],
+    "video": true,
+    "budgetSeconds": 90,
+    "tags": []
+  },
+  {
     "id": "first-run",
-    "promise": "A person on their first day lands on a home with one action, a sample report, their plan, and no wall of empty filters",
+    "promise": "A person on their first day starts as a property manager in one click on the welcome screen, then lands on a home with one action, a sample report, their plan, and no wall of empty filters; « Autre usage » sets the tenant side",
     "persona": "camille",
     "platforms": ["web"],
     "steps": [
       "sign in as a new account (no document, no dossier)",
-      "land on the home",
+      "land on the welcome screen (redirected from /app)",
+      "see one preselected card (owner), the three next steps and one primary",
+      "click « Commencer » and land on the home as a landlord",
       "see the drop zone on the first screen",
       "see the sample report link and the plan line",
-      "open the dossiers: an empty state, no tabs or filters"
+      "open the dossiers: an empty state, no tabs or filters",
+      "back on welcome: open « Autre usage », pick tenant, click « Commencer », land on the home"
     ],
     "video": true,
-    "budgetSeconds": 60,
+    "budgetSeconds": 90,
     "tags": []
   }
 ]

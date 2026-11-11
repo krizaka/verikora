@@ -3,6 +3,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 
 import { personaSessions, seededPersona } from "@krizaka/page-audit/journey";
+import pg from "pg";
 
 export const BASE = process.env.VISUAL_BASE_URL ?? "http://localhost:3000";
 // CI-only credentials of the seeded cast (scripts/ci-visual-start.sh), never a real account.
@@ -17,6 +18,26 @@ const CAST = {
     password: process.env.E2E_CAMILLE_PASSWORD ?? "local-cast-password-0123",
   },
 };
+
+/**
+ * Makes the persona a new account again (no perspective), so a journey that starts from the first run does not depend on the
+ * order of its tests: each one changes the side it lands on (krizaka-internal#2291). The database is the CI one of
+ * scripts/ci-visual-start.sh; without DATABASE_URL the journey fails, it never runs on a stale state.
+ */
+export async function resetToNewAccount(id) {
+  const url = process.env.DATABASE_URL;
+  if (!url) throw new Error("DATABASE_URL is required: the first-run journey resets its account before each test");
+  const client = new pg.Client({ connectionString: url });
+  await client.connect();
+  try {
+    const { rowCount } = await client.query("UPDATE accounts SET perspective = NULL WHERE email = $1", [
+      seededPersona(CAST, id).email,
+    ]);
+    if (rowCount !== 1) throw new Error(`the seeded persona ${id} is not in the database`);
+  } finally {
+    await client.end();
+  }
+}
 
 /** Signs the persona in through the form, as a person would, and keeps the browser state in `file`. */
 export function sessionsFor(browser, workerIndex) {

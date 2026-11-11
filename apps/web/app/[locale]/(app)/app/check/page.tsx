@@ -4,8 +4,7 @@ import { CheckView } from "@/components/console/CheckView";
 import { pageSession } from "@/lib/access";
 import { catalogueOf } from "@/lib/check-catalogue";
 import { creditsOf } from "@/lib/credits";
-import { displayNow } from "@/lib/display-now";
-import { appEnvironment, appVisualNow } from "@/lib/env";
+import { appEnvironment } from "@/lib/env";
 import { availableFlows, offerFor } from "@/lib/flows";
 import { asLocale, getDictionary } from "@/lib/i18n";
 
@@ -21,9 +20,8 @@ export default async function CheckPage() {
   return (
     <CheckView
       jurisdictions={offer.jurisdictions}
-      catalogue={catalogueOf(offer)}
+      catalogue={catalogueOf(offer, session?.account.territory ?? null)}
       credits={session ? await creditsOf(session.account.id, now) : null}
-      now={displayNow(now, appEnvironment(), appVisualNow()).toISOString()}
     />
   );
 }

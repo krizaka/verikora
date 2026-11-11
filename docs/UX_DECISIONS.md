@@ -8,7 +8,7 @@ signal that would tell us we are wrong. Feedback: the pinned Discussion of the r
 - **Decision**: every compliance finding shows its quoted passage; clicking it scrolls the document's text to the same
   passage, highlighted.
 - **Problem**: a verdict without its evidence is taken on faith — or ignored.
-- **Principle**: recognition over recall; evidence near the claim (Nielsen, *10 usability heuristics*, #6; Sweller,
+- **Principle**: recognition over recall; evidence near the claim (Nielsen, _10 usability heuristics_, #6; Sweller,
   split-attention effect in cognitive load theory).
 - **Refused**: a score, a summary paragraph written by a model.
 - **Cost**: long reports; the text pane must stay readable at phone width (it scrolls in its own box).
@@ -18,7 +18,7 @@ signal that would tell us we are wrong. Feedback: the pinned Discussion of the r
 
 - **Decision**: observed · unusual · inconsistent, with what each may indicate; the report's own disclaimer on top.
 - **Problem**: a percentage reads as a probability of fraud and gets quoted in a dispute.
-- **Principle**: calibrated communication of uncertainty (Spiegelhalter, *Risk communication*, 2017).
+- **Principle**: calibrated communication of uncertainty (Spiegelhalter, _Risk communication_, 2017).
 - **Refused**: a red/green "authentic" stamp.
 - **Cost**: no single number to sort by.
 - **Signal we are wrong**: people ask "so is it fake?" after reading a report.
@@ -27,7 +27,7 @@ signal that would tell us we are wrong. Feedback: the pinned Discussion of the r
 
 - **Decision**: each check shows the Sovkora run id and the Studio version.
 - **Problem**: "who decided this, on which rules?" must have an answer.
-- **Principle**: traceability builds trust in automated advice (Lee & See, *Trust in automation*, 2004).
+- **Principle**: traceability builds trust in automated advice (Lee & See, _Trust in automation_, 2004).
 - **Refused**: hiding the engine behind a generic "AI".
 - **Cost**: a technical detail on a business screen (kept in a small monospace line).
 - **Signal we are wrong**: nobody ever copies a run id when reporting a problem.
@@ -99,6 +99,11 @@ signal that would tell us we are wrong. Feedback: the pinned Discussion of the r
 
 ## 8. Both sides of the lease: a landing per side, a role in the app
 
+> **Amended (krizaka-internal#2291, 2026-11-04): the first run starts a property manager in one click.** `/app/welcome` is « Vous gérez
+> des logements ? Commencez ici. »: one card, « Propriétaire ou gestionnaire », preselected, the three next steps (ask an applicant
+> for documents, check your lease template, share the report) and one primary « Commencer »; « Autre usage » (a disclosure with
+> `aria-expanded`) unfolds the other sides. The decision below is kept: the app asks and never blocks, and the side changes in settings.
+
 - **Decision**: the service is offered to the tenant (« locataire ») and the landlord (« locateur » in the legal sense,
   « propriétaire » in everyday copy). The home carries « Je suis locataire / Je suis propriétaire »: two links to two
   static, indexable addresses (`/fr/locataire`, `/fr/proprietaire`, `/en/tenant`, `/en/landlord`) whose hero, steps and
@@ -130,7 +135,6 @@ signal that would tell us we are wrong. Feedback: the pinned Discussion of the r
 - **Cost**: standard fonts only (WinAnsi): French thin spaces, arrows, ≥ ≤ and check marks are folded to their plain equivalent, any other character prints as « ? » — in the signed text too; the file is not signed
   at the PDF-reader level, so a reader shows no « signed » badge.
 - **Signal we are wrong**: people ask why their PDF reader does not show a signature, or re-save PDFs and expect them to verify.
-
 
 ## 10. Three small navigations: the bar, the library, the administration
 
@@ -219,6 +223,7 @@ signal that would tell us we are wrong. Feedback: the pinned Discussion of the r
   photos as pages) are the owner's defaults when a file is dropped on the page — Y4 asks them once the files are known.
 - **Signal we are wrong**: people open a collection to find the report instead of the latest checks; files dropped on the
   page land in the default collection when a collection was meant.
+
 ## 13. The settings on SettingsLayout: routes as sections, flat rows, one save per section, who is signed in on top
 
 - **Decision** (2026-10-23, the UX review's Y2, #281): the five sections stay routes (`/app/settings/<section>`) and are
@@ -237,6 +242,7 @@ signal that would tell us we are wrong. Feedback: the pinned Discussion of the r
 - **Cost**: the address and the password keep their own forms (two sections on the Security route: each needs the
   password, a different act from the profile's save).
 - **Signal we are wrong**: people change the language and do not expect the page to move to it; the undo is never used.
+
 ## 14. Checking a document: drop first, the kind as a choice, the options once the files are known, the run on the drop
 
 - **Decision** (2026-10-23, the UX review's Y4, #281; the CTO's answer to question 2): on « Vérifier un document » the
@@ -359,6 +365,7 @@ Krizaka-ts ADR-003, `@krizaka/organize` 0.4. Verikora is the pilot, on « Dossie
 - **Cost**: 38 small files (two per page); a new page must bring its two, or `states.test.tsx` fails.
 - **Signal we are wrong**: people retry a page that keeps failing (the cause is not theirs: the error needs a status
   link), or a skeleton shows on most visits (the pages are too slow, not the states too visible).
+
 ## 24. The public site, plain: no eyebrow, no figures row, no mono captions, a bento without an orphan (P10, #327)
 
 - **Decision**: the home is the product's site, not a Cahier site (design § 3.2, finding 10). `LandingPage` gets no
@@ -415,7 +422,6 @@ Krizaka-ts ADR-003, `@krizaka/organize` 0.4. Verikora is the pilot, on « Dossie
 - **Cost**: the phone no longer opens a « Réglages » tab (the avatar does); the Mac's « Rapports » is now « Vérifications ».
 - **Signal we are wrong**: people look for the settings in the phone's tab bar.
 
-
 ## 20. « Quel document ? » only when the kind is uncertain (verikora#318, P1 of the design direction)
 
 - **Problem**: `/app/verifier` asked the kind of every file before the drop, as a five-tile story grid (`ChoiceGrid`)
@@ -452,6 +458,7 @@ Krizaka-ts ADR-003, `@krizaka/organize` 0.4. Verikora is the pilot, on « Dossie
   clips its text; the recording is a follow-up once the design is final.
 - **Signal we are wrong**: the frame is scrolled past without a pause; people look for the figures' source and do not find
   the run's facts under them.
+
 ## 18. The 404: the owl's page, in the language of the address
 
 - **Decision** (2026-10-23, the UX review's Y10, #281): a page that does not exist (or is not this person's) is `ErrorPage` —
@@ -467,6 +474,7 @@ Krizaka-ts ADR-003, `@krizaka/organize` 0.4. Verikora is the pilot, on « Dossie
   address, even one with a dot in a segment; a catch-all route (`[...rest]`) under the language, since a segment's own
   `not-found` answers only `notFound()` from a matched route; on the admin host the way back is the console.
 - **Signal we are wrong**: people land on the 404 from an old address we could have redirected (then the redirect, not the page).
+
 ## 17. The collection: the header says what is here, folders as a row, the drop on the whole page, the tags as a filter bar
 
 - **Decision** (2026-10-23, the UX review's Y7, #281): a collection (or a folder) is `PageHeader` — the breadcrumb whose
@@ -487,6 +495,7 @@ Krizaka-ts ADR-003, `@krizaka/organize` 0.4. Verikora is the pilot, on « Dossie
   names without their colour (the chips and the table keep it); photos dropped together are one document (the task
   page's default), said in the tray.
 - **Signal we are wrong**: people look for the folder's menu on the chip; the folder row wraps on three lines.
+
 ## 16. Vérifications: the filters in the address, their counts on the menus, a « nothing matches » that clears itself
 
 - **Decision** (2026-10-23, the UX review's Y6, #281): above the list of checks, `FilterBar` — a search on the title, the
@@ -505,6 +514,7 @@ Krizaka-ts ADR-003, `@krizaka/organize` 0.4. Verikora is the pilot, on « Dossie
 - **Cost**: the filters apply to the rows the page loaded; the search field keeps what is typed until the address
   carries it.
 - **Signal we are wrong**: people type a date in the search; the chips wrap on three lines at 360 px.
+
 ## 15. The document on DetailLayout: the verdict first, the tabs as routes, the engine's facts folded
 
 - **Decision** (2026-10-23, the UX review's Y5, #281): the document page is `DetailLayout` — back to the library, the kind
@@ -549,6 +559,10 @@ Krizaka-ts ADR-003, `@krizaka/organize` 0.4. Verikora is the pilot, on « Dossie
 - **The other checks are actions of the aside** (« Revérifier à une autre date », « Examiner le fichier (authenticité) »),
   each opening its form in a `Dialog`: the report no longer ends in forms. A refusal carried in the address opens the
   dialog at once. The aside also holds the facts (collection, file, retention); the way back leads to the collection.
+- **The share action is in the header** (#2293): « Partager le rapport » is the primary action of the report header,
+  visible without scrolling on a phone. It opens a `Dialog` with the sharing form (email, optional expiry). The header
+  shows « Pas encore partagé » / « Partagé » to reflect the current state. The dialog returns focus to the button on
+  close.
 
 ## Plain typography in the app (P5, #322)
 
@@ -617,19 +631,23 @@ Krizaka-ts ADR-003, `@krizaka/organize` 0.4. Verikora is the pilot, on « Dossie
 - The strip and the week are demo-free: they read `analyses`, `documents` and `screenings` (`activityStrip`). Trend words
   (« +12 % ») wait for krizaka-ui#651 (`StatGrid variant="strip"`): the figures are not compared with the previous period until then.
 
-## B2 check flow: the plan strip and the catalogue of checks, the drop and the run (P16, #333)
+## B2 check flow: the plan strip and the catalogue of checks, the drop and the run (P16, #333, updated krizaka-internal#2292)
 
-- « Vérifier un document » is two columns from `lg` (one on a phone: **the drop first**, then the catalogue): **Déposer** (the defaults
-  said before the drop with « Modifier », the drop zone, the run's rows) and **Les vérifications**. Today's date is on the right of the
-  heading, as on the home. Above both, the **plan strip** (`PlanStrip`): the plan and its numbers from the billing state — Pro measures
-  its audits this month against the fair-use cap (the meter says « 18 sur 100 »), credits are the audits left, an account an operator
-  made says its audits are included — and a link to « Crédits et usage ». No price here: the prices stay where they are decided.
+- « Vérifier un document » is two columns from `min-[1440px]` (7/12 + 5/12; one on a phone): **the drop zone is always first** — the
+  drop zone appears at the top of the left column; the four flow steps (`FlowSteps`) are hidden on a phone (`hidden lg:block`) and
+  shown from `lg`. The date header (`Today`) was removed from the page title (krizaka-internal#2292): it was not useful on mobile and
+  added visual noise. The catalogue follows on the right column at 1440 px, below the drop on mobile.
+- The **plan strip** is a single muted line (`<p className="text-xs text-fg-muted">`) at the **foot** of the section — not above the
+  grid. It joins the plan name, its figures and a link to « Crédits et usage » with `·`. No price here.
 - The catalogue is **the registry** (`catalogueOf` over `offerOf` of the flows): a row for each ruleset that runs for this person (the
   three leases, the visit notice and the état des lieux of Québec, the supplier's invoice, the service contract) and, when its Studio
   is offered, the file's authenticity. A ruleset the registry does not run is not listed; one without words yet is left out, never
   shown as a raw id. Each row says « Disponible » and has **one action**, « Vérifier », which names the kind in the address
   (`?type=lease|invoice|contract`; the notices and the authenticity are recognised from the file, so the address stays clean) and
   leads to the drop (`#depot`). The kind chosen is said above the drop, with « Changer ».
+- **Territory-based ordering** (krizaka-internal#2292): `catalogueOf` accepts an optional `territory` parameter (read from the
+  session account, stored as `accounts.territory text DEFAULT 'QC' NOT NULL`). For a QC account the QC lease leads, then
+  authenticity, then the rest in GROUPS order. No locale branch: territory is a property of the account, not of the language.
 - Search narrows the rows and the counts of the chips (accents and case do not matter; it is ephemeral, not in the address). The chips
   — « Toutes · 6 », « Baux · 3 », « Avis et états · 2 », « Authenticité · 1 » — are `Chip.Group` bound to `?groupe=`: the address is the
   state, and a group the search empties keeps its chip at 0.

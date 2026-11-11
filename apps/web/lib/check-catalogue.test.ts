@@ -87,6 +87,40 @@ describe("the chips: a group each, its count; the search narrows both", () => {
   });
 });
 
+describe("territory-based catalogue ordering (krizaka-internal#2292)", () => {
+  it("for a QC territory: the QC lease leads, then authenticity, then the rest", () => {
+    expect(ids(catalogueOf(offerFor("tenant"), "QC"))).toEqual([
+      "qc-residential-lease",
+      "authenticity",
+      "fr-residential-lease",
+      "be-residential-lease",
+      "qc-visit-notice",
+      "qc-premises-condition",
+    ]);
+  });
+  it("for a territory with no matching lease (FR has a lease but freelancer does not): authenticity first if offered, then the rest", () => {
+    expect(ids(catalogueOf(offerFor("freelancer"), "QC"))).toEqual([
+      "authenticity",
+      "qc-invoice",
+      "qc-service-contract",
+    ]);
+  });
+  it("for null territory: no reordering, authenticity last (unchanged)", () => {
+    expect(ids(catalogueOf(offerFor("tenant"), null))).toEqual([
+      "qc-residential-lease",
+      "fr-residential-lease",
+      "be-residential-lease",
+      "qc-visit-notice",
+      "qc-premises-condition",
+      "authenticity",
+    ]);
+  });
+  it("for a non-QC territory (FR): the FR lease leads", () => {
+    expect(ids(catalogueOf(offerFor("tenant"), "FR"))[0]).toBe("fr-residential-lease");
+    expect(ids(catalogueOf(offerFor("tenant"), "FR"))[1]).toBe("authenticity");
+  });
+});
+
 describe("the action names the kind in the address and leads to the drop", () => {
   it("uses the app's own `type` key; « auto » leaves the address clean", () => {
     expect(ROUTE_STATES.checkKind.state.key).toBe("type");
