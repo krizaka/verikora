@@ -34,7 +34,18 @@ jobs:
           node-version-file: .nvmrc
           cache: pnpm
       - run: pnpm install --frozen-lockfile --prefer-offline --ignore-scripts
-      - run: pnpm exec playwright-core install --with-deps chromium
+      # Run 43040951866 (and the days before it) died here: the Ubuntu archive did not answer for ~10 min (« Temporary failure resolving », apt exit
+      # 100). Fail each fetch fast and try the whole install again, with a pause; a real error (a bad package) still fails after 3 tries.
+      - name: Install Chromium (apt mirrors can be down for minutes)
+        run: |
+          printf 'Acquire::Retries "3";\nAcquire::http::Timeout "15";\nAcquire::https::Timeout "15";\n' | sudo tee /etc/apt/apt.conf.d/99ci-retries >/dev/null
+          for attempt in 1 2 3; do
+            pnpm exec playwright-core install --with-deps chromium && exit 0
+            echo "::warning::browser install failed (attempt $attempt of 3)"
+            sleep $((attempt * 45))
+          done
+          exit 1
+        shell: bash
       - name: The persona buys a plan with the TEST card
         env:
           SMOKE_EMAIL: ${{ secrets.SMOKE_EMAIL }}
