@@ -9,7 +9,7 @@ docker run --rm --memory=512m -v "$PWD/deploy/docker/smoke:/smoke:ro" --entrypoi
 # The image carries the built server, never the app's sources (krizaka-internal#3010). A filesystem call Turbopack cannot scope (a path built from
 # `process.cwd()`) traces the whole project: every .ts file, test and e2e screenshot then ships, and any file added to the repository grows the image.
 sources=$(docker run --rm --entrypoint sh "$CI_IMAGE" -c 'find /app -path /app/node_modules -prune -o -path "*/.next" -prune -o -type f \( -name "*.ts" -o -name "*.tsx" \) -print' | wc -l | tr -d ' ')
-if [ "$sources" -gt 0 ]; then
+if [[ "$sources" -gt 0 ]]; then
   echo "The image carries ${sources} TypeScript source files: the build traced the whole project. Read the build's « Dynamic filesystem access causes tracing of the whole project » warning and scope that path (or mark it /*turbopackIgnore: true*/)." >&2
   exit 1
 fi
@@ -19,7 +19,7 @@ fi
 budget_mb=$(tr -d '[:space:]' < deploy/docker/image-size-budget-mb)
 size_mb=$(( $(docker image inspect "$CI_IMAGE" --format '{{.Size}}') / 1048576 ))
 echo "image size: ${size_mb} MB (budget ${budget_mb} MB)"
-if [ "$size_mb" -gt "$budget_mb" ]; then
+if [[ "$size_mb" -gt "$budget_mb" ]]; then
   echo "The image is ${size_mb} MB, above its budget of ${budget_mb} MB (deploy/docker/image-size-budget-mb). Remove what grew it, or raise the budget in the PR with the reason." >&2
   exit 1
 fi
