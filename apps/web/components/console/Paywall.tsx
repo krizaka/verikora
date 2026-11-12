@@ -62,9 +62,6 @@ export function Paywall({ reason }: Readonly<{ reason: "PAYWALL" | "FAIR_USE" }>
           <Button size="md" disabled={go.isPending} onClick={() => go.mutate("document")}>
             {say("paywall.payOne")}
           </Button>
-          <Button size="md" variant="secondary" disabled={go.isPending} onClick={() => go.mutate("agency")}>
-            {say("paywall.agency")}
-          </Button>
         </div>
       ) : null}
       {info.data && !info.data.paymentsOn ? (

@@ -61,7 +61,7 @@
   },
   "pricing": {
     "title": "Tarifs",
-    "lead": "Aucun abonnement annuel. Payez au dossier, ou abonnez-vous au mois et résiliez quand vous voulez. Prix en CAD, avant taxes : la TPS et la TVQ s'ajoutent sur la facture.",
+    "lead": "Aucun abonnement annuel. Payez chaque dossier que vous vérifiez. Les abonnements arrivent bientôt. Prix en CAD, avant taxes : la TPS et la TVQ s'ajoutent sur la facture.",
     "offer": {
       "headline": "Offre de lancement : −{percent} % les {months} premiers mois avec le code {code}",
       "line": "{offer} par mois les {months} premiers mois, puis {regular} par mois",
@@ -112,6 +112,14 @@
       "lead": "Pas encore offert. Aucun prix n'est promis pour ces éléments.",
       "badge": "Bientôt",
       "items": {
+        "agency": {
+          "name": "Abonnement Agence",
+          "text": "Pour les agences et les propriétaires qui vérifient plusieurs dossiers par mois."
+        },
+        "firm": {
+          "name": "Abonnement Gestionnaire d’immeubles",
+          "text": "Pour les gestionnaires et les sociétés qui ont un plus grand volume."
+        },
         "fullFile": {
           "name": "Le dossier complet du locataire",
           "text": "Les documents, puis les vérifications aux registres."

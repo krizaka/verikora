@@ -1346,15 +1346,13 @@
     },
     "paywall": {
       "title": "Your free dossier is used",
-      "text": "One dossier is free every month. To check another one now, pay for it or subscribe.",
+      "text": "One dossier is free every month. To check another one now, pay for it.",
       "payOne": "Pay for this document",
       "soon": "Payment coming soon.",
-      "notice": "{document} per dossier, or {agency} a month for small businesses ({included} dossiers included), plus taxes.",
+      "notice": "{document} per dossier, plus taxes. Subscriptions are coming soon.",
       "fairUseTitle": "Monthly limit reached",
       "fairUse": "Your subscription includes {limit} verifications a month. The limit resets at the start of next month.",
       "testMode": "Test mode: no real card is charged.",
-      "agency": "Subscribe — Agency",
-      "firm": "Subscribe — Building manager",
       "informative": "An informative check, not legal advice."
     },
     "insight": {
@@ -1586,7 +1584,6 @@
         "portal": "Manage the subscription and invoices",
         "portalHint": "Payment method, invoices (with GST and QST) and cancellation: in Stripe's secure portal.",
         "off": "Payment is not available yet.",
-        "otherOffers": "Other offers",
         "buy": "Buy or subscribe",
         "testMode": "Test mode: no real card is charged.",
         "history": {

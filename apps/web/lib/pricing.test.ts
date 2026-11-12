@@ -35,13 +35,13 @@ describe("the seed is the grid of ADR-0013 (verikora#367, #388)", () => {
     expect(byKey[PRICE.agency]).toMatchObject({
       unit: "month",
       amountCents: 4900,
-      availability: AVAILABILITY.public,
+      availability: AVAILABILITY.preparing,
       limits: { included: 15, overageCents: 300 },
     });
     expect(byKey[PRICE.firm]).toMatchObject({
       unit: "month",
       amountCents: 14900,
-      availability: AVAILABILITY.public,
+      availability: AVAILABILITY.preparing,
       limits: { included: 60, overageCents: 200 },
     });
     expect(byKey[PRICE.api]).toMatchObject({ unit: "document", amountCents: 22, availability: AVAILABILITY.internal });
@@ -82,8 +82,13 @@ describe("the grid keeps the rules of ADR-0013", () => {
   });
 });
 
+/** The kinds the seed puts on sale: the subscriptions are « soon » (founder, 2026-11-12), so the processor holds no price for them. */
+const ON_SALE = SOLD_KINDS.filter((k) => PRICES.defaultOf(SOLD[k].key).availability === AVAILABILITY.public);
+
 describe("the processor charges what the catalogue says", () => {
-  it.each(SOLD_KINDS)("%s: same lookup key, same amount, same interval as deploy/payments-catalogue.json", (kind) => {
+  it("one file is on sale, the two subscriptions are not", () => expect(ON_SALE).toEqual(["document"]));
+
+  it.each(ON_SALE)("%s: same lookup key, same amount, same interval as deploy/payments-catalogue.json", (kind) => {
     const sold = SOLD[kind];
     const plan = processor.plans.find((p) => p.lookupKey === sold.lookupKey);
     const seed = PRICES.defaultOf(sold.key);
@@ -94,7 +99,7 @@ describe("the processor charges what the catalogue says", () => {
   });
 
   it("sells nothing else (no stale processor price left in the file)", () =>
-    expect(processor.plans.map((p) => p.lookupKey).sort()).toEqual(SOLD_KINDS.map((k) => SOLD[k].lookupKey).sort()));
+    expect(processor.plans.map((p) => p.lookupKey).sort()).toEqual(ON_SALE.map((k) => SOLD[k].lookupKey).sort()));
 });
 
 describe("every price shown comes from the catalogue", () => {
@@ -137,8 +142,15 @@ describe("the included volume is the catalogue's, for the version a subscription
 
 describe("a checkout charges the catalogue's amount, or nothing", () => {
   it("sells an entry whose processor price equals it", async () => {
-    const entry = await soldEntry(catalogue(), "firm", NOW);
-    expect(onSale(entry, { amount: 14900, currency: "cad" }).versionId).toBe(seedVersionId(PRICE.firm));
+    const entry = await soldEntry(catalogue(), "document", NOW);
+    expect(onSale(entry, { amount: 999, currency: "cad" }).versionId).toBe(seedVersionId(PRICE.document));
+  });
+
+  it.each(["agency", "firm"] as const)("refuses the %s subscription: « soon », not on sale (409)", async (kind) => {
+    const entry = await soldEntry(catalogue(), kind, NOW);
+    expect(() => onSale(entry, { amount: entry.amountCents!, currency: "cad" })).toThrow(
+      expect.objectContaining({ status: 409 }),
+    );
   });
 
   it("refuses while the processor's price differs (a change scheduled without its new processor price)", async () => {
@@ -150,9 +162,9 @@ describe("a checkout charges the catalogue's amount, or nothing", () => {
 
   it("refuses an entry that is not on sale", async () => {
     const c = catalogue();
-    await c.schedule(ADMIN, PRICE.agency, { availability: AVAILABILITY.preparing }, NOW, NOW);
-    const entry = await c.entry(PRICE.agency, NOW);
-    expect(() => onSale(entry, { amount: 4900, currency: "cad" })).toThrow(expect.objectContaining({ status: 409 }));
+    await c.schedule(ADMIN, PRICE.document, { availability: AVAILABILITY.preparing }, NOW, NOW);
+    const entry = await c.entry(PRICE.document, NOW);
+    expect(() => onSale(entry, { amount: 999, currency: "cad" })).toThrow(expect.objectContaining({ status: 409 }));
   });
 });
 

@@ -1346,15 +1346,13 @@
     },
     "paywall": {
       "title": "Votre dossier gratuit est utilisé",
-      "text": "Un dossier est offert chaque mois. Pour en vérifier un autre maintenant, payez-le ou abonnez-vous.",
+      "text": "Un dossier est offert chaque mois. Pour en vérifier un autre maintenant, payez-le.",
       "payOne": "Payer ce document",
       "soon": "Paiement bientôt disponible.",
-      "notice": "{document} par dossier, ou {agency} par mois pour les PME ({included} dossiers inclus), plus taxes.",
+      "notice": "{document} par dossier, plus taxes. Les abonnements arrivent bientôt.",
       "fairUseTitle": "Limite mensuelle atteinte",
       "fairUse": "Votre abonnement comprend {limit} vérifications par mois. La limite revient au début du mois prochain.",
       "testMode": "Mode test : aucune vraie carte n'est débitée.",
-      "agency": "S’abonner — Agence",
-      "firm": "S’abonner — Gestionnaire d’immeubles",
       "informative": "Vérification informative, ce n’est pas un avis juridique."
     },
     "insight": {
@@ -1586,7 +1584,6 @@
         "portal": "Gérer l'abonnement et les factures",
         "portalHint": "Mode de paiement, factures (avec TPS et TVQ) et annulation : dans le portail sécurisé de Stripe.",
         "off": "Le paiement n'est pas encore disponible.",
-        "otherOffers": "Autres offres",
         "buy": "Acheter ou s'abonner",
         "testMode": "Mode test : aucune vraie carte n'est débitée.",
         "history": {

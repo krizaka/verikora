@@ -7,22 +7,28 @@ import { PRICE } from "../pricing";
 import { LiveRefused, PORTAL, PROCESSOR_PLANS, processorCatalogue, syncProcessorPrices } from "./price-sync";
 
 const ENTRIES = [
-  { key: PRICE.document, amountCents: 999, currency: "CAD" },
-  { key: PRICE.agency, amountCents: 4900, currency: "CAD" },
-  { key: PRICE.firm, amountCents: 14900, currency: "CAD" },
-  { key: PRICE.api, amountCents: null, currency: "CAD" },
+  { key: PRICE.document, amountCents: 999, availability: "public", currency: "CAD" },
+  { key: PRICE.agency, amountCents: 4900, availability: "preparing", currency: "CAD" },
+  { key: PRICE.firm, amountCents: 14900, availability: "preparing", currency: "CAD" },
+  { key: PRICE.api, amountCents: null, availability: "internal", currency: "CAD" },
 ];
+/** The subscriptions put on sale (a scheduled change): the processor then gets their price. */
+const ON_SALE = ENTRIES.map((e) => (e.key === PRICE.document ? e : { ...e, availability: "public" }));
 
 describe("the processor follows the catalogue (verikora#548)", () => {
-  it("builds the sold plans from the entries in force: integer cents, monthly for subscriptions, nothing for an entry on quote", () => {
-    const { plans } = processorCatalogue(ENTRIES);
+  it("creates no processor price for the subscriptions while they are « soon » (founder, 2026-11-12)", () => {
+    expect(processorCatalogue(ENTRIES).plans.map((p) => p.lookupKey)).toEqual(["verikora_dossier_grid_cad"]);
+  });
+
+  it("builds the sold plans from the entries on sale: integer cents, monthly for subscriptions, nothing for an entry on quote", () => {
+    const { plans } = processorCatalogue(ON_SALE);
     expect(plans.map((p) => [p.lookupKey, p.amount, p.currency, p.interval])).toEqual([
       ["verikora_dossier_grid_cad", 999, "cad", undefined],
       ["verikora_agency_monthly_pilot_cad", 4900, "cad", "month"],
       ["verikora_firm_monthly_pilot_cad", 14900, "cad", "month"],
     ]);
     expect(
-      processorCatalogue(ENTRIES.map((e) => (e.key === PRICE.firm ? { ...e, amountCents: null } : e))).plans,
+      processorCatalogue(ON_SALE.map((e) => (e.key === PRICE.firm ? { ...e, amountCents: null } : e))).plans,
     ).toHaveLength(2);
   });
 
@@ -31,11 +37,13 @@ describe("the processor follows the catalogue (verikora#548)", () => {
       readFileSync(new URL("../../../../deploy/payments-catalogue.json", import.meta.url), "utf8"),
     ) as { plans: { lookupKey: string; name: string; taxCode: string }[]; portal: unknown };
     const built = processorCatalogue(ENTRIES).plans;
+    const all = processorCatalogue(ON_SALE).plans;
+    expect(built.map((p) => p.lookupKey)).toEqual(file.plans.map((p) => p.lookupKey));
     expect(file.plans.map((p) => [p.lookupKey, p.name, p.taxCode])).toEqual(
       built.map((p) => [p.lookupKey, p.name, p.taxCode]),
     );
     expect(file.portal).toEqual(PORTAL);
-    expect(Object.keys(PROCESSOR_PLANS)).toHaveLength(file.plans.length);
+    expect(all.map((p) => p.name)).toEqual(Object.values(PROCESSOR_PLANS).map((p) => p.name));
   });
 
   it("refuses a live key before writing anything", async () => {
@@ -70,12 +78,12 @@ describe("the processor follows the catalogue (verikora#548)", () => {
         return { data: [{ active: true, metadata: { product: "verikora" } }] };
       return { id: "x", data: [] };
     };
-    const same = await syncProcessorPrices({ call, mode: "test" }, ENTRIES);
+    const same = await syncProcessorPrices({ call, mode: "test" }, ON_SALE);
     expect(same.prices.map((p) => p.status)).toEqual(["exists", "exists", "exists"]);
     expect(posts).toEqual([]);
     const changed = await syncProcessorPrices(
       { call, mode: "test" },
-      ENTRIES.map((e) => (e.key === PRICE.agency ? { ...e, amountCents: 5900 } : e)),
+      ON_SALE.map((e) => (e.key === PRICE.agency ? { ...e, amountCents: 5900 } : e)),
     );
     expect(changed.prices.find((p) => p.lookupKey === "verikora_agency_monthly_pilot_cad")?.status).toBe("repriced");
     expect(posts).toEqual(["/v1/prices"]);

@@ -85,17 +85,17 @@ describe("the billing buttons (extracted from BillingSection, behaviour unchange
       "&#x27;",
       "'",
     );
-  it("a free account is offered the three purchases and no portal until it is a customer", () => {
+  it("a free account is offered one file and no subscription (« soon », 2026-11-12), and no portal until it is a customer", () => {
     const out = html(FREE);
-    expect(out).toContain(fr.console.paywall.agency);
-    expect(out).toContain(fr.console.paywall.firm);
     expect(out).toContain(fr.console.paywall.payOne);
+    expect(out).not.toContain("Abonnez");
+    expect(out).not.toContain("<details");
     expect(out).not.toContain(fr.console.settings.billing.portal);
   });
   it("a subscriber with a customer sees only the portal; nothing before the entitlement loads", () => {
     const out = html({ ...FREE, pro: true, hasCustomer: true });
     expect(out).toContain(fr.console.settings.billing.portal);
-    expect(out).not.toContain(fr.console.paywall.agency);
+    expect(out).not.toContain(fr.console.paywall.payOne);
     expect(html(undefined)).not.toContain("<button");
   });
 });
