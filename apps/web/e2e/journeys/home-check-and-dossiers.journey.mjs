@@ -38,6 +38,27 @@ for (const screen of SCREENS) {
       true,
     );
 
+    const todo = page.getByTestId("home-todo");
+    await expect(todo.getByRole("heading", { name: "À traiter" }), "« À traiter » is on the home").toBeVisible();
+    const latest = page.getByTestId("home-latest-checks");
+    await expect(
+      latest.getByRole("heading", { name: "Dernières vérifications" }),
+      "« Dernières vérifications » is on the home",
+    ).toHaveCount(1);
+    const files = await page.getByTestId("home-files").boundingBox();
+    const treat = await todo.boundingBox();
+    if (screen.name === "desktop") {
+      expect(
+        files && treat && treat.x > files.x + files.width - 1,
+        "on a wide screen « À traiter » is the right column",
+      ).toBe(true);
+    } else {
+      expect(
+        files && treat && treat.y >= files.y + files.height - 1,
+        "on a phone « À traiter » comes after the applicant files",
+      ).toBe(true);
+    }
+
     await first.click();
     await expect(page, "the applicant file opens").toHaveURL(/\/app\/dossiers\/[^/?#]+/);
     await page.context().close();

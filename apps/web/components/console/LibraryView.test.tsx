@@ -85,6 +85,18 @@ const file = (patch: Record<string, unknown> = {}) => ({
   ...patch,
 });
 
+const check = (patch: Record<string, unknown> = {}) => ({
+  id: "a1",
+  documentId: "d1",
+  title: "Bail Laurier",
+  kind: "lease",
+  studio: "compliance-check",
+  result: "attention",
+  runId: "run1",
+  at: "2026-10-26T10:00:00.000Z",
+  ...patch,
+});
+
 describe("the home (krizaka-internal#1898)", () => {
   it("is titled « Accueil » / « Home », with one h1", () => {
     const html = render({});
@@ -123,7 +135,11 @@ describe("the home (krizaka-internal#1898)", () => {
   it("lists five applicant files at most and links to all of them", () => {
     const many = Array.from({ length: 7 }, (_, i) => file({ id: `f${i}`, candidateName: `Candidat ${i}` }));
     const html = render({ files: many, screening: true });
-    expect(html.match(/href="\/fr\/app\/dossiers\/f\d"/g)).toHaveLength(5);
+    const section = html.slice(html.indexOf('data-testid="home-files"'), html.indexOf('data-testid="home-todo"'));
+    expect(section.match(/href="\/fr\/app\/dossiers\/f\d"/g)).toHaveLength(5);
+    expect(html.slice(html.indexOf('data-testid="home-todo"')).match(/href="\/fr\/app\/dossiers\/f\d"/g)).toHaveLength(
+      5,
+    );
     expect(readable(html)).toContain(fr.console.home.files.all);
   });
 
@@ -135,11 +151,42 @@ describe("the home (krizaka-internal#1898)", () => {
     expect(html.match(/data-testid="home-dossiers"/g)).toHaveLength(1);
   });
 
-  it("has no activity wall, no binder tabs, no latest-checks block", () => {
+  it("has no activity wall and no binder tabs", () => {
     const html = render({});
-    for (const gone of ["activity", "binder", "latest-checks", "collection-card"]) {
+    for (const gone of ["activity", "binder", "collection-card"]) {
       expect(html).not.toContain(`data-testid="${gone}"`);
     }
+  });
+
+  it("lists « À traiter » (files to decide, checks to look at) and « Dernières vérifications », in both languages", () => {
+    const html = render({
+      files: [file()],
+      checks: [check(), check({ id: "a2", title: "Bail OK", result: "checked" })],
+      screening: true,
+    });
+    const text = readable(html);
+    expect(text).toContain(fr.console.home.treat.title);
+    expect(text).toContain(fr.console.home.latest.title);
+    expect(html).toContain('data-testid="home-todo"');
+    expect(html.match(/href="\/fr\/app\/documents\/d1\/rapport"/g)).toHaveLength(3);
+    expect(html.indexOf('data-testid="home-files"')).toBeLessThan(html.indexOf('data-testid="home-todo"'));
+    expect(html.indexOf('data-testid="home-todo"')).toBeLessThan(html.indexOf('data-testid="home-dossiers"'));
+    expect(html.indexOf('data-testid="home-dossiers"')).toBeLessThan(html.indexOf('data-testid="home-latest-checks"'));
+    expect(html).toContain("lg:grid-cols-3");
+    expect(readable(render({ files: [file()], checks: [check()] }, "en"))).toContain(en.console.home.latest.title);
+    expect(readable(render({}, "en"))).toContain(en.console.home.treat.title);
+  });
+
+  it("says so, honestly, when nothing waits and no check ran", () => {
+    const text = readable(render({ files: [file({ status: "closed" })], screening: true }));
+    expect(text).toContain(fr.console.home.treat.empty);
+    expect(text).toContain(fr.console.home.latest.empty);
+  });
+
+  it("lists five latest checks at most", () => {
+    const many = Array.from({ length: 8 }, (_, i) => check({ id: `a${i}`, documentId: `d${i}`, result: "checked" }));
+    const html = render({ checks: many });
+    expect(html.match(/href="\/fr\/app\/documents\/d\d\/rapport"/g)).toHaveLength(5);
   });
 
   it("says the plan and usage as one line leading to the plans", () => {

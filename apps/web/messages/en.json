@@ -238,6 +238,19 @@
       "documents": {
         "title": "My documents",
         "label": "Your document collections"
+      },
+      "treat": {
+        "title": "To review",
+        "label": "Waiting for your decision",
+        "empty": "Nothing waiting for you.",
+        "file": "File received on {date}",
+        "toDecide": "To decide"
+      },
+      "latest": {
+        "title": "Latest checks",
+        "label": "Your latest checks",
+        "empty": "No check yet.",
+        "all": "See all checks"
       }
     },
     "sections": {
