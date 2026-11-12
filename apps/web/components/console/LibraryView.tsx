@@ -83,17 +83,20 @@ export function LibraryView({
     <div className="flex flex-col gap-8">
       {header}
       {/* 2:1 on a wide screen (« À traiter » is the right column, spanning the rows); one column on a phone, in this order: the files, « À traiter », the documents, the last checks. */}
-      <div className="grid gap-8 lg:grid-cols-3">
+      <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
         {screen.secondary ? (
-          <div className="lg:col-span-2 lg:col-start-1">
+          <div className="min-w-0 lg:col-span-2 lg:col-start-1">
             <ApplicantFiles rows={applicants} total={files.length} />
           </div>
         ) : null}
-        <ToTreat rows={toTreatOf(files, checks, locale)} className="lg:col-start-3 lg:row-start-1 lg:row-span-3" />
-        <div className="lg:col-span-2 lg:col-start-1">
+        <ToTreat
+          rows={toTreatOf(files, checks, locale)}
+          className="min-w-0 lg:col-start-3 lg:row-start-1 lg:row-span-3"
+        />
+        <div className="min-w-0 lg:col-span-2 lg:col-start-1">
           <DocumentsList rows={documentRows} firstId={libraries[0]?.id} />
         </div>
-        <div className="lg:col-span-2 lg:col-start-1">
+        <div className="min-w-0 lg:col-span-2 lg:col-start-1">
           <LatestChecks checks={checks} />
         </div>
       </div>

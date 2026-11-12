@@ -173,6 +173,9 @@ describe("the home (krizaka-internal#1898)", () => {
     expect(html.indexOf('data-testid="home-todo"')).toBeLessThan(html.indexOf('data-testid="home-dossiers"'));
     expect(html.indexOf('data-testid="home-dossiers"')).toBeLessThan(html.indexOf('data-testid="home-latest-checks"'));
     expect(html).toContain("lg:grid-cols-3");
+    // One shrinkable column on a phone (krizaka-internal#2290): a long name wraps inside 360 px, the page never scrolls sideways.
+    expect(html).toContain("grid grid-cols-1");
+    expect(html.match(/class="min-w-0 lg:col-span-2/g)).toHaveLength(3);
     expect(readable(render({ files: [file()], checks: [check()] }, "en"))).toContain(en.console.home.latest.title);
     expect(readable(render({}, "en"))).toContain(en.console.home.treat.title);
   });

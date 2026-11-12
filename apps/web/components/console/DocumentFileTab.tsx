@@ -98,7 +98,9 @@ function FileTechnicalDetails({ sha256 }: Readonly<{ sha256: string }>) {
   const { say } = useSay();
   return (
     <details className="rounded-lg border border-border-default p-3" data-testid="file-technical-details">
-      <summary className="cursor-pointer text-sm font-semibold text-fg">{say("document.technical")}</summary>
+      <summary className="flex min-h-11 cursor-pointer items-center text-sm font-semibold text-fg">
+        {say("document.technical")}
+      </summary>
       <div className="mt-3">
         <DescriptionList
           items={[

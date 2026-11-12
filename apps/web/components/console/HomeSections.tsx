@@ -92,7 +92,11 @@ export function LatestChecks({ checks }: Readonly<{ checks: readonly CheckSummar
   const { say, locale } = useSay();
   const rows = latestChecksOf(checks);
   return (
-    <section className="flex flex-col gap-3" aria-labelledby="home-latest-title" data-testid="home-latest-checks">
+    <section
+      className="flex min-w-0 flex-col gap-3"
+      aria-labelledby="home-latest-title"
+      data-testid="home-latest-checks"
+    >
       <div className="flex flex-wrap items-center justify-between gap-3">
         <h2 id="home-latest-title" className={SECTION_TITLE}>
           {say("home.latest.title")}
