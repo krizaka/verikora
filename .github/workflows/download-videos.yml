@@ -93,7 +93,7 @@ jobs:
     if: github.ref == 'refs/heads/main'
     permissions:
       contents: read
-    uses: krizaka/.github/.github/workflows/mobile-e2e.yml@31d45bcdde30a7dfc66ddb15bcb280f11b16faac # main (krizaka/.github#318)
+    uses: krizaka/.github/.github/workflows/mobile-e2e.yml@ef3449fd9bf0e6dd2b37e27dc12bf7da1653feb9 # main (krizaka/.github#318)
     with:
       app-id: com.krizaka.verikora
       app-directory: apps/mobile
@@ -156,7 +156,7 @@ jobs:
     permissions:
       contents: write
       pull-requests: write
-    uses: krizaka/.github/.github/workflows/app-videos.yml@31d45bcdde30a7dfc66ddb15bcb280f11b16faac # main (krizaka/.github#374: sites/<product>/download)
+    uses: krizaka/.github/.github/workflows/app-videos.yml@ef3449fd9bf0e6dd2b37e27dc12bf7da1653feb9 # main (krizaka/.github#374: sites/<product>/download)
     with:
       product: verikora
       manifest: apps/web/content/app-videos.json
