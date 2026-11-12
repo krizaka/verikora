@@ -1,4 +1,5 @@
 import { PageHeader } from "@krizaka/ui/page-header";
+import { asTerritory } from "@verikora/core";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import type { ReactNode } from "react";
@@ -64,6 +65,7 @@ export default async function SettingsSectionPage({
           avatarSeed: profile.avatarSeed ?? "",
           locale: profile.locale,
           perspective: session.account.perspective,
+          territory: asTerritory(session.account.territory),
         }}
         audiences={audiences}
       />

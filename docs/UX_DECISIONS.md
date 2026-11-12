@@ -645,9 +645,12 @@ Krizaka-ts ADR-003, `@krizaka/organize` 0.4. Verikora is the pilot, on « Dossie
   shown as a raw id. Each row says « Disponible » and has **one action**, « Vérifier », which names the kind in the address
   (`?type=lease|invoice|contract`; the notices and the authenticity are recognised from the file, so the address stays clean) and
   leads to the drop (`#depot`). The kind chosen is said above the drop, with « Changer ».
-- **Territory-based ordering** (krizaka-internal#2292): `catalogueOf` accepts an optional `territory` parameter (read from the
-  session account, stored as `accounts.territory text DEFAULT 'QC' NOT NULL`). For a QC account the QC lease leads, then
-  authenticity, then the rest in GROUPS order. No locale branch: territory is a property of the account, not of the language.
+- **Territory filters the catalogue** (krizaka-internal#2292): `catalogueOf` takes the account's `territory` (`accounts.territory`,
+  default `QC`; closed set `TERRITORIES` = the jurisdictions that have a ruleset + `ZZ`, « Autre territoire »). A jurisdiction keeps
+  **only its own checks** and the file's authenticity: for Québec, the Québec lease, authenticity, the visit notice, the état des
+  lieux — no France, no Wallonie (an invoice or a service contract only reaches the sides whose flows offer them). `ZZ` or no
+  territory lists every check, authenticity last. The person changes it in Settings › Profile (`ChoiceCards`, saved with the profile
+  through `PUT /api/me/territory`, audited `profile.territory_set`). No locale branch.
 - Search narrows the rows and the counts of the chips (accents and case do not matter; it is ephemeral, not in the address). The chips
   — « Toutes · 6 », « Baux · 3 », « Avis et états · 2 », « Authenticité · 1 » — are `Chip.Group` bound to `?groupe=`: the address is the
   state, and a group the search empties keeps its chip at 0.

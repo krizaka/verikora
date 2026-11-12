@@ -38,8 +38,12 @@ test(`drop zone is in the viewport at first paint and QC catalogue is first (${P
     )
     .toBe(true);
 
-  const firstRow = page.locator('[data-testid="check-catalogue"] li').first();
-  await expect(firstRow, "the first catalogue item is a Québec check").toContainText("Québec");
+  const rows = page.locator('[data-testid="check-catalogue"] li');
+  await expect(rows.first(), "the first catalogue item is a Québec check").toContainText("Québec");
+  await expect(rows, "a Québec account is offered Québec checks and the file's authenticity, nothing else").toHaveCount(
+    4,
+  );
+  await expect(page.getByTestId("check-catalogue")).not.toContainText(/France|Wallonie/);
 
   await page.context().close();
 });
@@ -57,6 +61,12 @@ for (const screen of SCREENS) {
       videoContextOptions,
       path: "/fr/app/check",
     });
+
+    const catalogue = page.getByTestId("check-catalogue");
+    await expect(catalogue.locator("li").first(), "Québec first").toContainText("Québec");
+    await expect(catalogue, "filtered to the account's territory").not.toContainText(
+      /France|Wallonie|Facture|Contrat de service/,
+    );
 
     const flow = page.getByTestId("check-flow");
     if (screen.viewport.width >= 1024) {

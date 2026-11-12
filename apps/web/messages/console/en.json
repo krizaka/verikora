@@ -1543,6 +1543,14 @@
         "languages": {
           "fr": "Français",
           "en": "English"
+        },
+        "territoryLabel": "Territory",
+        "territoryHint": "The checks listed on the check page are those of this territory. Another territory lists every check.",
+        "territories": {
+          "QC": "Québec",
+          "FR": "France",
+          "BE-WAL": "Wallonia (Belgium)",
+          "ZZ": "Another territory"
         }
       },
       "security": {

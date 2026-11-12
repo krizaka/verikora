@@ -87,37 +87,47 @@ describe("the chips: a group each, its count; the search narrows both", () => {
   });
 });
 
-describe("territory-based catalogue ordering (krizaka-internal#2292)", () => {
-  it("for a QC territory: the QC lease leads, then authenticity, then the rest", () => {
+describe("the catalogue is filtered by the account's territory (krizaka-internal#2292)", () => {
+  it("a Québec tenant: the Québec lease, authenticity, then the Québec notices — no France, no Wallonie", () => {
     expect(ids(catalogueOf(offerFor("tenant"), "QC"))).toEqual([
       "qc-residential-lease",
       "authenticity",
-      "fr-residential-lease",
-      "be-residential-lease",
       "qc-visit-notice",
       "qc-premises-condition",
     ]);
   });
-  it("for a territory with no matching lease (FR has a lease but freelancer does not): authenticity first if offered, then the rest", () => {
+  it("a Québec landlord sees the same four, in the ticket's order", () => {
+    expect(ids(catalogueOf(offerFor("landlord"), "QC"))).toEqual([
+      "qc-residential-lease",
+      "authenticity",
+      "qc-visit-notice",
+      "qc-premises-condition",
+    ]);
+  });
+  it("a Québec freelancer keeps the Québec invoice and service contract, authenticity first (no lease)", () => {
     expect(ids(catalogueOf(offerFor("freelancer"), "QC"))).toEqual([
       "authenticity",
       "qc-invoice",
       "qc-service-contract",
     ]);
   });
-  it("for null territory: no reordering, authenticity last (unchanged)", () => {
-    expect(ids(catalogueOf(offerFor("tenant"), null))).toEqual([
+  it("a French account: the French lease and authenticity only", () => {
+    expect(ids(catalogueOf(offerFor("tenant"), "FR"))).toEqual(["fr-residential-lease", "authenticity"]);
+  });
+  it("another territory (ZZ) and no territory list every check, authenticity last", () => {
+    const all = [
       "qc-residential-lease",
       "fr-residential-lease",
       "be-residential-lease",
       "qc-visit-notice",
       "qc-premises-condition",
       "authenticity",
-    ]);
+    ];
+    expect(ids(catalogueOf(offerFor("tenant"), "ZZ"))).toEqual(all);
+    expect(ids(catalogueOf(offerFor("tenant"), null))).toEqual(all);
   });
-  it("for a non-QC territory (FR): the FR lease leads", () => {
-    expect(ids(catalogueOf(offerFor("tenant"), "FR"))[0]).toBe("fr-residential-lease");
-    expect(ids(catalogueOf(offerFor("tenant"), "FR"))[1]).toBe("authenticity");
+  it("a territory with no check of its own still offers the file's authenticity", () => {
+    expect(ids(catalogueOf(offerFor("freelancer"), "FR"))).toEqual(["authenticity"]);
   });
 });
 

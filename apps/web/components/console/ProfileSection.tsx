@@ -4,7 +4,7 @@ import { krizakaFetch } from "@krizaka/query";
 import { AvatarPicker, ChoiceCards, LanguagePicker } from "@krizaka/ui/account-settings";
 import { Input } from "@krizaka/ui/field";
 import { SettingsRow, SettingsSection, useSaveStatus } from "@krizaka/ui/settings-layout";
-import { type Audience, AVATAR_SEEDS } from "@verikora/core";
+import { type Audience, AVATAR_SEEDS, TERRITORIES, type Territory } from "@verikora/core";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
@@ -18,6 +18,7 @@ export interface ProfileValues {
   avatarSeed: string;
   locale: "en" | "fr";
   perspective: Audience | null;
+  territory: Territory;
 }
 
 /** The fields of `/api/me/profile`'s patch: only the ones that changed travel (another session's edit of the others is never overwritten). */
@@ -28,13 +29,14 @@ export const profileDirty = (saved: ProfileValues, current: ProfileValues): bool
   saved.name.trim() !== current.name.trim() ||
   saved.avatarSeed !== current.avatarSeed ||
   saved.locale !== current.locale ||
-  saved.perspective !== current.perspective;
+  saved.perspective !== current.perspective ||
+  saved.territory !== current.territory;
 
 /** What the account API receives for the change: a field-level profile patch, and the perspective when it moved — each only when it changed. */
 export function profilePatch(
   saved: ProfileValues,
   current: ProfileValues,
-): { profile: ProfileFields | null; perspective: Audience | null } {
+): { profile: ProfileFields | null; perspective: Audience | null; territory: Territory | null } {
   const name = current.name.trim();
   const profile: ProfileFields = {};
   if (saved.name.trim() !== name) profile.name = name === "" ? null : name;
@@ -42,7 +44,8 @@ export function profilePatch(
     profile.avatarSeed = current.avatarSeed === "" ? null : current.avatarSeed;
   if (saved.locale !== current.locale) profile.locale = current.locale;
   const perspective = current.perspective && saved.perspective !== current.perspective ? current.perspective : null;
-  return { profile: Object.keys(profile).length ? profile : null, perspective };
+  const territory = saved.territory !== current.territory ? current.territory : null;
+  return { profile: Object.keys(profile).length ? profile : null, perspective, territory };
 }
 
 /** Undo puts the previous values back — except a first perspective, which the server cannot unset (the onboarding needs one). */
@@ -55,7 +58,7 @@ const LANGUAGES = ["fr", "en"] as const;
 /**
  * The profile as one section with one save (the review's E2): name, picture (`AvatarPicker`), language (`LanguagePicker`),
  * which side of the lease (`ChoiceCards`) — dirty → saving → saved, with an undo; a changed language moves the page to it.
- * The save sends only what changed and commits each call as it succeeds (the profile, then the perspective), so a refusal of
+ * The save sends only what changed and commits each call as it succeeds (the profile, then the perspective, then the territory), so a refusal of
  * the second never hides that the first is stored; edits typed while it saves stay in the draft.
  */
 export function ProfileSection({
@@ -76,7 +79,7 @@ export function ProfileSection({
   const save = useSaveStatus();
   const run = async (next: ProfileValues, from: ProfileValues) => {
     setProblem(null);
-    const { profile, perspective } = profilePatch(from, next);
+    const { profile, perspective, territory } = profilePatch(from, next);
     let committed = from;
     const ok = await save.track(async () => {
       try {
@@ -88,6 +91,11 @@ export function ProfileSection({
         if (perspective) {
           await krizakaFetch("/api/me/perspective", { method: "PUT", json: { perspective } });
           committed = { ...committed, perspective };
+          setSaved(committed);
+        }
+        if (territory) {
+          await krizakaFetch("/api/me/territory", { method: "PUT", json: { territory } });
+          committed = { ...committed, territory };
           setSaved(committed);
         }
       } catch (error) {
@@ -173,6 +181,14 @@ export function ProfileSection({
           }))}
           value={values.perspective ?? undefined}
           onValueChange={(id) => setValues({ ...values, perspective: id as Audience })}
+        />
+      </SettingsRow>
+      <SettingsRow label={say("settings.profile.territoryLabel")} description={say("settings.profile.territoryHint")}>
+        <ChoiceCards
+          label={say("settings.profile.territoryLabel")}
+          options={TERRITORIES.map((code) => ({ id: code, title: say(`settings.profile.territories.${code}`) }))}
+          value={values.territory}
+          onValueChange={(id) => setValues({ ...values, territory: id as Territory })}
         />
       </SettingsRow>
     </SettingsSection>

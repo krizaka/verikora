@@ -1543,6 +1543,14 @@
         "languages": {
           "fr": "Français",
           "en": "English"
+        },
+        "territoryLabel": "Territoire",
+        "territoryHint": "Les vérifications proposées sur la page de vérification sont celles de ce territoire. Un autre territoire les propose toutes.",
+        "territories": {
+          "QC": "Québec",
+          "FR": "France",
+          "BE-WAL": "Wallonie (Belgique)",
+          "ZZ": "Autre territoire"
         }
       },
       "security": {
