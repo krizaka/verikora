@@ -723,3 +723,18 @@ Krizaka-ts ADR-003, `@krizaka/organize` 0.4. Verikora is the pilot, on « Dossie
   confirmed (an unconfirmed address never uses up the pilot). If the pot ran out in between, the account is confirmed all the same and the refusal is on the trail.
   The code does not open sign-up: it is read only when the `signup.open` setting is on.
 - **Signal we are wrong**: pilot users write that they typed a valid code and were refused, or `billing.pilot_refused` lines rise at verification.
+
+## A pilot gets in by the admin's invitation (krizaka-internal#3230, founder decision 2026-11-12)
+
+- **Decision**: sign-up stays closed; the admin invites a property manager from `/config/invitations` (« Inviter un gestionnaire » / « Invite a property manager »): an
+  address, an optional pilot code **chosen in a list** of the live pilot coupons that still have uses left (never typed), and the language of the mail. The list below
+  shows the open invitations with « Send again » (a new link; the old one opens nothing) and « Revoke ». An address that already has a confirmed account is not invited.
+- **The link**: `/<locale>/sign-up?invite=<token>`, valid 7 days. The page reads it on the server: a valid link shows « You are invited » and the form with the invited
+  address **locked** (disabled, with a hint saying it is the invited address) and no pilot code field: the pilot comes with the invitation. Any other link (unknown,
+  expired, used, revoked, replaced) shows one message, « This invitation cannot be used », whichever the reason, and no form.
+- **After the form**: the account is ready at once (« Your account is ready », a link to sign in): following the link proved the mailbox, so no second confirmation
+  mail. The pilot's files are on the account; if the pot ran out between the invitation and the sign-up, the account is created all the same and the refusal is on the
+  trail (`billing.pilot_refused`).
+- **The mail**: `@krizaka/email` 1.0 has no invitation template yet, so the invitation uses the « Confirm your address » template (its button opens the invitation's
+  sign-up; its lifetime is said in hours). A dedicated template in the package is the follow-up.
+- **Signal we are wrong**: invitees write that the link « does nothing » (a link resent or replaced without them knowing), or invitations stay open past their week.
