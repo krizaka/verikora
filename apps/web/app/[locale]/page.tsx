@@ -1,11 +1,11 @@
-import { CheckIcon, EyeIcon, SearchIcon } from "@krizaka/icons";
+import { CheckIcon, EyeIcon, LinkIcon } from "@krizaka/icons";
 import { Button } from "@krizaka/ui/button";
 import { Card } from "@krizaka/ui/card";
 import { CardGrid } from "@krizaka/ui/card-grid";
 import { LandingPage } from "@krizaka/ui/landing-page";
+import { Mascot } from "@krizaka/ui/mascots";
 import { Section } from "@krizaka/ui/page";
 import type { Metadata } from "next";
-import Link from "next/link";
 
 import { BarQueryRoot } from "@/components/BarSession";
 import { HeroFinding } from "@/components/home/HeroFinding";
@@ -21,7 +21,6 @@ import { HERO_FIGURES, productStatus } from "@/lib/landing";
 import { DEMO_SCREENING, demoOwnerDocument } from "@/lib/landing-demo";
 import { recordedRun } from "@/lib/recorded-runs";
 import { pageMetadata, siteJsonLd } from "@/lib/seo";
-import { signInPath } from "@/lib/nav";
 import { contactHref } from "@/lib/site";
 
 import preview from "../../../../dev-preview.json";
@@ -31,7 +30,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
 }
 
 const DATE = { en: "en-CA", fr: "fr-CA" } as const;
-const ICONS = { line: CheckIcon, file: EyeIcon, find: SearchIcon } as const;
+const ICONS = { documents: EyeIcon, template: CheckIcon, report: LinkIcon } as const;
 
 /**
  * The home is the whole public site (Simplify Verikora, krizaka/verikora#120), on `LandingPage` since the UX review's Y9: the
@@ -92,7 +91,7 @@ export default async function Home({ params }: Readonly<{ params: Promise<{ loca
               lead: d.what.lead,
             }}
             /* Three things of the same weight: one row of the bento, no orphan card (P10). */
-            features={(["line", "file", "find"] as const).map((id) => {
+            features={(["documents", "template", "report"] as const).map((id) => {
               const Icon = ICONS[id];
               return {
                 id,
@@ -178,7 +177,18 @@ export default async function Home({ params }: Readonly<{ params: Promise<{ loca
                 {d.proof.powered}
               </p>
             </Section>
-            <Section id="who" title={d.who.title} lead={d.what.who} spacing="sm" divider></Section>
+            <Section id="applicant" title={d.applicant.title} lead={d.applicant.lead} spacing="sm" divider>
+              <div className="flex flex-wrap items-start gap-4" data-testid="applicant-agrees">
+                <span aria-hidden className="shrink-0">
+                  <Mascot bird="owl" mood="welcome" size={64} />
+                </span>
+                <ul className="m-0 flex min-w-0 flex-1 basis-64 list-disc flex-col gap-2 pl-5 text-fg-secondary">
+                  {d.applicant.points.map((point) => (
+                    <li key={point}>{point}</li>
+                  ))}
+                </ul>
+              </div>
+            </Section>
             <Section id="closing" title={d.closing.title} spacing="sm" divider>
               <div className="flex flex-wrap items-center gap-x-6 gap-y-3" data-testid="closing-actions">
                 <Button asChild variant="primary" size="lg" shape="cut">
@@ -186,13 +196,13 @@ export default async function Home({ params }: Readonly<{ params: Promise<{ loca
                     {d.hero.primary}
                   </a>
                 </Button>
-                <Link
-                  href={signInPath(locale)}
+                <a
+                  href="#applicant"
                   className="text-fg-accent underline underline-offset-4"
                   data-testid="closing-tenant"
                 >
                   {d.closing.tenant}
-                </Link>
+                </a>
               </div>
             </Section>
           </LandingPage>

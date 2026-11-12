@@ -4234,21 +4234,20 @@
       "findingCaption": "What Verikora returns, with its source"
     },
     "what": {
-      "title": "What it does",
-      "lead": "Three things, with nothing hidden behind them.",
-      "who": "For property managers and landlords who screen applicants in Québec: a lease and a pay stub per file, several files a month. Tenants are welcome too: their first check is free. The registry checks (SOQUIJ, TAL, plumitif) are in preparation.",
+      "title": "What Verikora checks",
+      "lead": "Three things, in the order of your work.",
       "items": {
-        "line": {
-          "title": "The exact line behind every finding",
-          "text": "Each finding names the rule, quotes the article of law and lights the sentence of the lease it rests on."
+        "documents": {
+          "title": "The applicant's documents",
+          "text": "Pay stub, bank statement, ID: each document is read, and the PDF is examined as a file (producer, dates, successive saves). An edit is reported at three levels: observed, unusual, inconsistent."
         },
-        "file": {
-          "title": "The PDF examined as a file",
-          "text": "Producer, dates, successive saves: three levels (observed, unusual, inconsistent), never a « fake » stamp."
+        "template": {
+          "title": "Your lease template",
+          "text": "Your lease is checked before you send it, against Québec's rules: each finding names the rule, quotes the Civil Code article and lights the sentence of the lease."
         },
-        "find": {
-          "title": "Find everything in a second",
-          "text": "One word, and every document and every finding comes back, the passage in bold."
+        "report": {
+          "title": "A report to share",
+          "text": "A read-only page by link, with an expiry: the document's fingerprint, the findings with their articles and the run that produced them."
         }
       }
     },
@@ -4262,12 +4261,19 @@
       "powered": "Powered by Sovkora.",
       "owlLabel": "What the owl promises"
     },
-    "who": {
-      "title": "For whom"
+    "applicant": {
+      "title": "The applicant agrees first",
+      "lead": "No check goes ahead without the applicant's agreement, check by check. They see the result first, before you do.",
+      "points": [
+        "Each check asked for has its own consent.",
+        "The applicant sees the result before it is passed to you.",
+        "Verikora asks for neither a social insurance number nor a criminal history.",
+        "A finding the applicant disputes, they raise with the person who asked for their documents: Verikora does not decide on the unit."
+      ]
     },
     "closing": {
       "title": "This week's files, checked.",
-      "tenant": "Are you a tenant?"
+      "tenant": "Asked for your documents through Verikora?"
     },
     "visual": {
       "caption": "A real check, recorded as it came back"

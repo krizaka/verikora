@@ -21,7 +21,7 @@
     "@krizaka/icons": "^0.9.2",
     "@krizaka/query": "^0.2.2",
     "@krizaka/tokens": "^4.0.0",
-    "@krizaka/ui": "^4.2.0",
+    "@krizaka/ui": "^4.2.1",
     "@shopify/flash-list": "2.3.2",
     "@verikora/client": "workspace:*",
     "@verikora/core": "workspace:*",
