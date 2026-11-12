@@ -7,23 +7,10 @@
       "amount": 999,
       "currency": "cad",
       "taxCode": "txcd_10103001"
-    },
-    {
-      "lookupKey": "verikora_agency_monthly_pilot_cad",
-      "name": "Verikora Agency — monthly",
-      "amount": 4900,
-      "currency": "cad",
-      "interval": "month",
-      "taxCode": "txcd_10103001"
-    },
-    {
-      "lookupKey": "verikora_firm_monthly_pilot_cad",
-      "name": "Verikora Building manager — monthly",
-      "amount": 14900,
-      "currency": "cad",
-      "interval": "month",
-      "taxCode": "txcd_10103001"
     }
   ],
-  "portal": { "headline": "Manage your Verikora subscription and invoices", "cancel": "at_period_end" }
+  "portal": {
+    "headline": "Manage your Verikora subscription and invoices",
+    "cancel": "at_period_end"
+  }
 }

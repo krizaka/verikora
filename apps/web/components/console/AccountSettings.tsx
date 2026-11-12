@@ -209,33 +209,10 @@ export function BillingActions({
             variant="primary"
             shape="cut"
             loading={buy.pending}
-            onClick={() => buy.go("agency", () => undefined)}
+            onClick={() => buy.go("document", () => undefined)}
           >
-            {say("paywall.agency")}
+            {say("paywall.payOne")}
           </Button>
-          <details className="group" data-testid="other-offers">
-            <summary className="cursor-pointer list-none text-sm font-semibold text-fg-accent hover:underline">
-              {say("settings.billing.otherOffers")}
-            </summary>
-            <div className="mt-3 flex flex-wrap items-center gap-3">
-              <Button
-                size="md"
-                variant="secondary"
-                loading={buy.pending}
-                onClick={() => buy.go("firm", () => undefined)}
-              >
-                {say("paywall.firm")}
-              </Button>
-              <Button
-                size="md"
-                variant="secondary"
-                loading={buy.pending}
-                onClick={() => buy.go("document", () => undefined)}
-              >
-                {say("paywall.payOne")}
-              </Button>
-            </div>
-          </details>
         </>
       ) : null}
       {e?.hasCustomer ? (

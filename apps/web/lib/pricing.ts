@@ -9,9 +9,9 @@ import { AVAILABILITY, definePrices, UNIT } from "@krizaka/settings";
 export const PRICE = {
   /** One dossier verified, paid per dossier (the applicant's documents of the month are one dossier, ADR-0015). */
   document: "verikora.document",
-  /** Agencies and landlords with several files: a month, with verifications included (past them, the account waits until next month). */
+  /** Agencies and landlords with several files: a month, with verifications included. NOT on sale (founder, 2026-11-12): « soon », no amount shown; the figures stay for the accounts already on it. */
   agency: "verikora.agency",
-  /** Building managers and firms: a month, with more verifications included. */
+  /** Building managers and firms: a month, with more verifications included. NOT on sale, like `agency`. */
   firm: "verikora.firm",
   /** A dedicated API over 5 000 verifications a month: on quote; its internal target per document, never on a public page. */
   api: "verikora.api",
@@ -37,7 +37,7 @@ export const PRICES = definePrices([
     plan: "agency",
     unit: UNIT.month,
     amountCents: 4900,
-    availability: AVAILABILITY.public,
+    availability: AVAILABILITY.preparing,
     limits: { [LIMIT.included]: 15, [LIMIT.overage]: 300 },
   },
   {
@@ -45,7 +45,7 @@ export const PRICES = definePrices([
     plan: "firm",
     unit: UNIT.month,
     amountCents: 14900,
-    availability: AVAILABILITY.public,
+    availability: AVAILABILITY.preparing,
     limits: { [LIMIT.included]: 60, [LIMIT.overage]: 200 },
   },
   { product: "verikora", plan: "api", unit: UNIT.document, amountCents: 22, availability: AVAILABILITY.internal },

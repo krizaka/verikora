@@ -1,3 +1,4 @@
+import { AVAILABILITY } from "@krizaka/settings";
 import { type Catalogue, ensureCatalogue, type SetupResult, type StripeCall } from "@krizaka/payments";
 
 import { PRODUCT_NAME } from "@/lib/brand";
@@ -25,14 +26,16 @@ export const PORTAL = {
 export interface SyncEntry {
   key: string;
   amountCents: number | null;
+  availability: string;
   currency: string;
 }
 
-/** The processor catalogue for the entries in force: every sold plan that has a figure (an « on quote » entry is not sold, so it has no price). */
+/** The processor catalogue for the entries in force: every plan on sale that has a figure (an entry « soon » or on quote is not sold, so it has no price). */
 export function processorCatalogue(entries: readonly SyncEntry[]): Catalogue {
   const plans = SOLD_KINDS.flatMap((kind) => {
     const entry = entries.find((e) => e.key === SOLD[kind].key);
-    if (entry?.amountCents == null) {
+    const onSale = entry?.availability === AVAILABILITY.public || entry?.availability === AVAILABILITY.founderLimited;
+    if (entry?.amountCents == null || !onSale) {
       return [];
     }
     const { name, taxCode } = PROCESSOR_PLANS[kind];
