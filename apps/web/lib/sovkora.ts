@@ -65,6 +65,33 @@ function within<T>(work: Promise<T>, signal: AbortSignal): Promise<T> {
   });
 }
 
+/** Sovkora's answer read against its schema, or its refusal as a stable code. */
+async function read<T>(res: Response, schema: z.ZodType<T>, what: string): Promise<T> {
+  if (!res.ok) {
+    const { status, code } = sovkoraRefusal(res.status);
+    if (res.status === 429) {
+      const wait = Math.min(
+        300,
+        Math.max(
+          1,
+          Number(((await res.json().catch(() => null)) as { retryAfterSeconds?: unknown } | null)?.retryAfterSeconds) ||
+            15,
+        ),
+      );
+      throw new HttpError(
+        status,
+        `Sovkora is busy on ${what}`,
+        { code, retryAfter: wait },
+        { "Retry-After": String(wait) },
+      );
+    }
+    throw refuse(status, code, `Sovkora answered ${res.status} on ${what}`);
+  }
+  const parsed = schema.safeParse(await res.json().catch(() => undefined));
+  if (!parsed.success) throw refuse(502, "SOVKORA_SHAPE", `Sovkora's answer to ${what} has an unexpected shape`);
+  return parsed.data;
+}
+
 export function createSovkoraClient(options: {
   baseUrl: string;
   apiKey: string | undefined;
@@ -126,34 +153,6 @@ export function createSovkoraClient(options: {
       line(status, "no answer");
       throw refuse(502, "SOVKORA_UNAVAILABLE", `Sovkora did not answer ${method} ${route} in time`);
     }
-  }
-
-  /** Sovkora's answer read against its schema, or its refusal as a stable code. */
-  async function read<T>(res: Response, schema: z.ZodType<T>, what: string): Promise<T> {
-    if (!res.ok) {
-      const { status, code } = sovkoraRefusal(res.status);
-      if (res.status === 429) {
-        const wait = Math.min(
-          300,
-          Math.max(
-            1,
-            Number(
-              ((await res.json().catch(() => null)) as { retryAfterSeconds?: unknown } | null)?.retryAfterSeconds,
-            ) || 15,
-          ),
-        );
-        throw new HttpError(
-          status,
-          `Sovkora is busy on ${what}`,
-          { code, retryAfter: wait },
-          { "Retry-After": String(wait) },
-        );
-      }
-      throw refuse(status, code, `Sovkora answered ${res.status} on ${what}`);
-    }
-    const parsed = schema.safeParse(await res.json().catch(() => undefined));
-    if (!parsed.success) throw refuse(502, "SOVKORA_SHAPE", `Sovkora's answer to ${what} has an unexpected shape`);
-    return parsed.data;
   }
 
   /** The version this account's installation is pinned on (undefined: not told). Installs the Studio once when it is not. */

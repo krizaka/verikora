@@ -47,7 +47,8 @@ export function describeFailure(step, status, body, headers = new Headers()) {
   const code =
     [body?.code, body?.error?.code, headers.get("x-error-code")].find((c) => typeof c === "string" && c) ?? "no code";
   const origin = headers.get("x-do-orig-status");
-  return `${step}: HTTP ${status}${origin && origin !== String(status) ? ` (origin ${origin})` : ""}, ${code}`;
+  const replaced = origin && origin !== String(status) ? ` (origin ${origin})` : "";
+  return `${step}: HTTP ${status}${replaced}, ${code}`;
 }
 
 /** Waits until the document's text is read (the extraction leaves queued/running), or fails with a stable sentence. */
