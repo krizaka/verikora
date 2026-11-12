@@ -4329,14 +4329,16 @@
       }
     },
     "proof": {
-      "title": "Une vraie vérification",
-      "lead": "Un bail d'exemple, vérifié en développement et enregistré tel qu'il est revenu. La règle, la ligne, l'article de loi, le numéro d'exécution et la date sont la réponse du moteur, pas du texte tapé à la main.",
-      "figures": "{rules} règles vérifiées, {found} constats sur ce bail d'exemple.",
+      "title": "Un vrai rapport",
+      "lead": "Un bail d'exemple, vérifié en développement et enregistré tel qu'il est revenu : le rapport ci-dessous est la réponse du moteur, avec la règle, la ligne et l'article de loi de chaque constat. Rien n'est tapé à la main ; les nombres sont lus dans l'exécution.",
       "runLabel": "Numéro d'exécution",
       "dateLabel": "Enregistrée le",
       "rulesetLabel": "Règles du Québec",
       "powered": "Propulsé par Sovkora.",
-      "owlLabel": "Ce que la chouette promet"
+      "owlLabel": "Ce que la chouette promet",
+      "details": "Détails de l'exécution",
+      "excerptOne": "{count} règle n'est pas affichée sur cette page ; l'exécution la contient.",
+      "excerptMany": "{count} règles ne sont pas affichées sur cette page ; l'exécution les contient."
     },
     "applicant": {
       "title": "Le candidat accepte d'abord",
@@ -4354,32 +4356,6 @@
     },
     "visual": {
       "caption": "Une vraie vérification, enregistrée telle qu'elle est revenue"
-    },
-    "showcase": {
-      "title": "L'app, telle qu'elle est",
-      "lead": "Trois écrans de Verikora, dessinés avec ses propres composants sur des données fictives. Rien ici n'est une capture d'écran.",
-      "demo": "Données fictives",
-      "findings": {
-        "title": "Chaque constat cite sa ligne",
-        "text": "La règle, la phrase du bail sur laquelle elle repose et l'article de loi, dans l'ordre de lecture.",
-        "summary": "Le rapport d'une vérification : le verdict, puis chaque constat avec le passage cité du bail et son article."
-      },
-      "screening": {
-        "title": "Une vérification que le locataire accepte",
-        "text": "Le candidat voit le résultat en premier; une vérification de registre qui n'est pas prête le dit au lieu de deviner.",
-        "summary": "Le résultat d'une vérification avec les contrôles demandés et, pour chacun, son issue : rien à signaler, ou pas encore disponible.",
-        "title2": "Résultat",
-        "items": {
-          "payment-history": "Historique de paiement",
-          "credit": "Rapport de crédit",
-          "registry": "Registre du tribunal"
-        }
-      },
-      "owner": {
-        "title": "Un rapport que le propriétaire peut ouvrir",
-        "text": "Une page en lecture seule, par lien, avec une échéance : l'empreinte du fichier, les constats et l'exécution qui les a produits.",
-        "summary": "La page du propriétaire : l'empreinte du document, les constats avec leurs articles et l'identifiant d'exécution."
-      }
     }
   },
   "stage": {

@@ -1,4 +1,6 @@
-import { HERO } from "@/content/recorded-runs/samples.mjs";
+import type { ComplianceReport } from "@verikora/core";
+
+import { HERO, HOME_HIDDEN } from "@/content/recorded-runs/samples.mjs";
 
 import { recordedRun } from "./recorded-runs";
 
@@ -41,5 +43,29 @@ export function HERO_FIGURES(report: {
     rules: report.summary?.rulesEvaluated ?? report.findings.length,
     articles: articles.size,
     found: report.findings.length,
+  };
+}
+
+/**
+ * The report the home shows (krizaka-internal#2562, slice C): the recorded run of the hero's side, minus the rules `HOME_HIDDEN` names, with
+ * its counts read again from the findings that are left (never typed, never the run's totals for rules the page does not show).
+ */
+export function homeReport(report: ComplianceReport, hidden: readonly string[] = HOME_HIDDEN) {
+  const findings = report.findings.filter((f) => !hidden.includes(f.ruleId));
+  const byVerdict: Record<string, number> = {};
+  for (const f of findings) {
+    byVerdict[f.verdict] = (byVerdict[f.verdict] ?? 0) + 1;
+  }
+  return {
+    report: {
+      ...report,
+      findings,
+      summary: {
+        byVerdict,
+        blockingFailures: findings.filter((f) => f.verdict === "FAIL" && f.severity === "BLOCKING").length,
+        rulesEvaluated: findings.length,
+      },
+    } satisfies ComplianceReport,
+    hidden: report.findings.length - findings.length,
   };
 }

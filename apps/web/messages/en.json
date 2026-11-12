@@ -4329,14 +4329,16 @@
       }
     },
     "proof": {
-      "title": "One real check",
-      "lead": "A sample lease, checked in development and recorded as it came back. The rule, the line, the article of law, the run id and the date are the engine's answer, not typed by hand.",
-      "figures": "{rules} rules checked, {found} findings on this sample lease.",
+      "title": "A real report",
+      "lead": "A sample lease, checked in development and recorded as it came back: the report below is the engine's answer, with each finding's rule, line and article of law. Nothing is typed by hand; the counts are read from the run.",
       "runLabel": "Run id",
       "dateLabel": "Recorded",
       "rulesetLabel": "Québec rules",
       "powered": "Powered by Sovkora.",
-      "owlLabel": "What the owl promises"
+      "owlLabel": "What the owl promises",
+      "details": "Run details",
+      "excerptOne": "{count} rule left out of this page; the run holds it.",
+      "excerptMany": "{count} rules left out of this page; the run holds them."
     },
     "applicant": {
       "title": "The applicant agrees first",
@@ -4354,32 +4356,6 @@
     },
     "visual": {
       "caption": "A real check, recorded as it came back"
-    },
-    "showcase": {
-      "title": "The app, as it is",
-      "lead": "Three screens of Verikora, drawn with its own components on fictitious data. Nothing here is a screenshot.",
-      "demo": "Fictitious data",
-      "findings": {
-        "title": "Every finding quotes its line",
-        "text": "The rule, the sentence of the lease it rests on, and the article of law, in the order to read them.",
-        "summary": "The report of a check: the verdict, then each finding with the quoted passage of the lease and its article."
-      },
-      "screening": {
-        "title": "A screening the tenant agrees to",
-        "text": "The applicant sees the result first; a registry check that is not ready says so instead of guessing.",
-        "summary": "A screening result with the checks asked and, for each, its outcome: nothing to report, or not available yet.",
-        "title2": "Result",
-        "items": {
-          "payment-history": "Payment history",
-          "credit": "Credit report",
-          "registry": "Court registry"
-        }
-      },
-      "owner": {
-        "title": "A report the owner can open",
-        "text": "A read-only page by link, with an expiry: the file's fingerprint, the findings and the run that produced them.",
-        "summary": "The owner's page: the document fingerprint, the findings with their articles, and the run id."
-      }
     }
   },
   "stage": {

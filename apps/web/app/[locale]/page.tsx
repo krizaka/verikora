@@ -1,7 +1,5 @@
 import { CheckIcon, EyeIcon, LinkIcon } from "@krizaka/icons";
 import { Button } from "@krizaka/ui/button";
-import { Card } from "@krizaka/ui/card";
-import { CardGrid } from "@krizaka/ui/card-grid";
 import { LandingPage } from "@krizaka/ui/landing-page";
 import { Mascot } from "@krizaka/ui/mascots";
 import { Section } from "@krizaka/ui/page";
@@ -9,16 +7,14 @@ import type { Metadata } from "next";
 
 import { BarQueryRoot } from "@/components/BarSession";
 import { HeroFinding } from "@/components/home/HeroFinding";
-import { FindingsScreen } from "@/components/home/FindingsScreen";
-import { LiveScreen } from "@/components/home/LiveScreen";
-import { OwnerReportDocument } from "@/components/OwnerReportDocument";
-import { ScreeningResultCard } from "@/components/screening/ScreeningResultCard";
+import { RealReport } from "@/components/home/RealReport";
 import { SiteHeader } from "@/components/SiteChrome";
 import { SiteFooter } from "@/components/SiteFooter";
-import { asLocale, format, getDictionary } from "@/lib/i18n";
+import { HERO } from "@/content/recorded-runs/samples.mjs";
+import { asLocale, getDictionary } from "@/lib/i18n";
 import type { ConsoleMessages } from "@/lib/i18n-client";
-import { HERO_FIGURES, productStatus } from "@/lib/landing";
-import { DEMO_SCREENING, demoOwnerDocument } from "@/lib/landing-demo";
+import { homeReport, productStatus } from "@/lib/landing";
+import { countLabel } from "@/lib/plural";
 import { recordedRun } from "@/lib/recorded-runs";
 import { pageMetadata, siteJsonLd } from "@/lib/seo";
 import { contactHref } from "@/lib/site";
@@ -43,8 +39,8 @@ export default async function Home({ params }: Readonly<{ params: Promise<{ loca
   const locale = asLocale((await params).locale);
   const dict = getDictionary(locale);
   const d = dict.landing;
-  const run = recordedRun("tenant");
-  const figures = HERO_FIGURES(run.report);
+  const run = recordedRun(HERO.run);
+  const { report, hidden } = homeReport(run.report);
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(siteJsonLd(locale)) }} />
@@ -101,81 +97,46 @@ export default async function Home({ params }: Readonly<{ params: Promise<{ loca
               };
             })}
           >
-            <Section id="app" title={d.showcase.title} lead={d.showcase.lead} spacing="sm" divider>
-              <CardGrid min={340} align="start" reveal={false}>
-                <Card.Root data-testid="feature-findings">
-                  <Card.Body className="flex flex-col gap-3">
-                    <Card.Title as="h3">{d.showcase.findings.title}</Card.Title>
-                    <Card.Description>{d.showcase.findings.text}</Card.Description>
-                    <p className="sr-only">{d.showcase.findings.summary}</p>
-                    <LiveScreen testId="screen-findings">
-                      <FindingsScreen
-                        locale={locale}
-                        messages={
-                          {
-                            console: { reportFace: dict.console.reportFace, analysis: dict.console.analysis },
-                          } as unknown as ConsoleMessages
-                        }
-                        report={run.report}
-                      />
-                    </LiveScreen>
-                  </Card.Body>
-                </Card.Root>
-                <Card.Root data-testid="feature-screening">
-                  <Card.Body className="flex flex-col gap-3">
-                    <Card.Title as="h3">{d.showcase.screening.title}</Card.Title>
-                    <Card.Description>{d.showcase.screening.text}</Card.Description>
-                    <p className="sr-only">{d.showcase.screening.summary}</p>
-                    <LiveScreen testId="screen-screening">
-                      <div className="p-4">
-                        <ScreeningResultCard
-                          result={DEMO_SCREENING}
-                          words={{
-                            title: dict.screening.tenant.resultTitle,
-                            band: dict.screening.tenant.band,
-                            item: d.showcase.screening.items,
-                            outcome: dict.screening.tenant.outcome,
-                          }}
-                          demo={d.showcase.demo}
-                        />
-                      </div>
-                    </LiveScreen>
-                  </Card.Body>
-                </Card.Root>
-                <Card.Root data-testid="feature-owner">
-                  <Card.Body className="flex flex-col gap-3">
-                    <Card.Title as="h3">{d.showcase.owner.title}</Card.Title>
-                    <Card.Description>{d.showcase.owner.text}</Card.Description>
-                    <p className="sr-only">{d.showcase.owner.summary}</p>
-                    <LiveScreen testId="screen-owner">
-                      <ol className="m-0 list-none p-4">
-                        <OwnerReportDocument
-                          doc={demoOwnerDocument(run)}
-                          n={1}
-                          words={dict.ownerReport}
-                          lang={locale}
-                        />
-                      </ol>
-                    </LiveScreen>
-                  </Card.Body>
-                </Card.Root>
-              </CardGrid>
-            </Section>
             <Section id="proof" title={d.proof.title} lead={d.proof.lead} spacing="sm" divider>
-              <p className="text-sm text-fg-secondary">
-                {format(d.proof.figures, { rules: figures.rules, found: figures.found })}
-              </p>
-              <p className="mt-1 text-xs text-fg-muted" data-testid="proof-meta">
-                {d.proof.runLabel} {run.runId} · {d.proof.dateLabel}{" "}
-                {new Date(run.recordedAt).toLocaleDateString(DATE[locale], {
-                  dateStyle: "long",
-                  timeZone: "America/Toronto",
-                })}{" "}
-                · {d.proof.rulesetLabel} {run.report.rulesetId} {run.report.rulesetVersion}
-              </p>
-              <p className="mt-6 text-xs text-fg-muted" data-testid="powered-by">
-                {d.proof.powered}
-              </p>
+              <div data-testid="real-report">
+                <RealReport
+                  locale={locale}
+                  messages={
+                    {
+                      console: { reportFace: dict.console.reportFace, analysis: dict.console.analysis },
+                    } as unknown as ConsoleMessages
+                  }
+                  report={report}
+                />
+              </div>
+              <details className="mt-4 rounded-lg border border-border-default bg-surface-1" data-testid="run-details">
+                <summary className="flex min-h-11 cursor-pointer items-center px-4 text-sm font-semibold text-fg">
+                  {d.proof.details}
+                </summary>
+                <div className="flex flex-col gap-1 px-4 pb-4 text-sm text-fg-secondary" data-testid="proof-meta">
+                  <p className="m-0 [overflow-wrap:anywhere]">
+                    {d.proof.runLabel} <code>{run.runId}</code>
+                  </p>
+                  <p className="m-0">
+                    {d.proof.dateLabel}{" "}
+                    {new Date(run.recordedAt).toLocaleDateString(DATE[locale], {
+                      dateStyle: "long",
+                      timeZone: "America/Toronto",
+                    })}
+                  </p>
+                  <p className="m-0">
+                    {d.proof.rulesetLabel} {run.report.rulesetId} {run.report.rulesetVersion}
+                  </p>
+                  {hidden > 0 ? (
+                    <p className="m-0" data-testid="proof-excerpt">
+                      {countLabel(d.proof, "excerpt", hidden)}
+                    </p>
+                  ) : null}
+                  <p className="m-0 mt-2 text-fg-muted" data-testid="powered-by">
+                    {d.proof.powered}
+                  </p>
+                </div>
+              </details>
             </Section>
             <Section id="applicant" title={d.applicant.title} lead={d.applicant.lead} spacing="sm" divider>
               <div className="flex flex-wrap items-start gap-4" data-testid="applicant-agrees">

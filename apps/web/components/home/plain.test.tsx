@@ -130,8 +130,9 @@ describe("the public site, plain (P10)", () => {
 
     it("uses a mono only on code in its content (the bar is the family's NavBar, its language code is @krizaka/ui's)", () => {
       const whole = html.slice(html.indexOf('<main id="content"'), html.indexOf("</main>"));
-      // The feature cards hold the app's own screens (inert, drawn with its components, verikora#478): the app's mono (a fingerprint, a run id) is its own, not the page's.
-      const main = whole.slice(0, whole.indexOf('id="app"')) + whole.slice(whole.indexOf('id="proof"'));
+      // The report is the app's own view (krizaka-internal#2562): the app's mono (a fingerprint, a run id) is its own, not the page's.
+      const main =
+        whole.slice(0, whole.indexOf('data-testid="real-report"')) + whole.slice(whole.indexOf('id="applicant"'));
       expect(main.length).toBeGreaterThan(0);
       expect(monoTags(main).filter((tag) => tag !== "code" && tag !== "pre")).toEqual([]);
       // `Facts` are « a few mono words on one line » in the blocks: the lead already says who it is for, in the sans.
