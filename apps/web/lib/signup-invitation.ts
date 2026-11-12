@@ -138,16 +138,30 @@ async function pilotCodeOf(run: Query, couponId: string | undefined, now: Date):
   return pilot.code;
 }
 
+/** The files a pilot grant carries, read from its coupon, for the invitation mail's line; none when the grant is not a pilot or its coupon is gone. */
+async function pilotOf(run: Query, grant: SignupInvitation["grant"]): Promise<{ credits: number } | null> {
+  if (grant?.kind !== PILOT_GRANT) {
+    return null;
+  }
+  const [row] = await run<{ credits: number }>("SELECT credits FROM coupons.coupon WHERE code = $1 AND purpose = $2", [
+    grant.ref,
+    PILOT_PURPOSE,
+  ]);
+  return row ? { credits: row.credits } : null;
+}
+
 type Sent = { invitation: SignupInvitation; token: string };
 
 /** Mails the link and writes the trail line, inside the invitation's transaction: a mail that fails leaves no invitation. The token is in the mail only. */
 async function deliver(tx: Query, deps: InviteDeps, sent: Sent, locale: "en" | "fr", action: string, actor: Actor) {
+  const pilot = await pilotOf(tx, sent.invitation.grant);
   await deps.mail({
     kind: "signupInvitation",
     to: sent.invitation.email,
     locale,
     url: inviteUrl(deps.baseUrl, locale, sent.token),
     days: INVITE_TTL_DAYS,
+    ...(pilot ? { pilot } : {}),
   });
   await auditIn(tx, {
     action,
