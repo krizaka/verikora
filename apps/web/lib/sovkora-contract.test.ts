@@ -1,4 +1,8 @@
-import { JURISDICTIONS } from "@verikora/core";
+import { createHash } from "node:crypto";
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
+
+import { JURISDICTIONS, reportOf, sovkoraRun } from "@verikora/core";
 import { describe, expect, it } from "vitest";
 
 import { LEASE_REFS, leaseRefOn } from "../../../scripts/smoke-lease-check.mjs";
@@ -6,6 +10,9 @@ import { runInputs } from "./analyses";
 import { rulesFor } from "./check-flow";
 import { CHECK_KINDS, rulesetFor } from "./rulesets";
 import contract from "./sovkora-contract/compliance-check-inputs.json";
+import runSchema from "./sovkora-contract/compliance-check-run.schema.json";
+import landlordRecording from "../content/recorded-runs/landlord.json";
+import tenantRecording from "../content/recorded-runs/tenant.json";
 
 /* The contract test of the Verikora -> Sovkora call (the 10-29 refusal « Sovkora refused the document as sent »): every run the UI can
  * start is turned into the Studio's inputs and checked against the Studio's own input schema, the one the engine enforces. */
@@ -85,5 +92,93 @@ describe("the post-deploy smoke asks for the lease the way the UI does", () => {
       "qc-residential-lease/2024-02-21",
       "qc-residential-lease/2026-10-24",
     ]);
+  });
+});
+
+/* The run Sovkora answers (compliance-check report 2.x). The schema is Sovkora's (krizaka/sovkora contracts/openapi/), vendored byte for
+ * byte; a change starts there. The pin below is the content of Sovkora's `.sha256` file: change one side alone and this fails. */
+const RUN_SCHEMA_SHA256 = "bbf2e407916207eacc8903e8d7e6131337f2cdb0fb6f4de85ea151683e801ee6";
+const CONTRACT_DIR = join(__dirname, "sovkora-contract");
+
+type Node = {
+  type?: string;
+  required?: string[];
+  properties?: Record<string, Node>;
+  items?: Node;
+  minItems?: number;
+  minimum?: number;
+};
+
+/** The subset of JSON Schema Sovkora's schema is written in (type, required, properties, items, minItems, minimum). */
+function schemaViolations(value: unknown, schema: Node, path = "$"): string[] {
+  const found: string[] = [];
+  const kind = Array.isArray(value) ? "array" : value === null ? "null" : typeof value;
+  const ok =
+    !schema.type ||
+    schema.type === kind ||
+    (schema.type === "integer" && Number.isInteger(value)) ||
+    (schema.type === "number" && kind === "number");
+  if (!ok) {
+    return [`${path}: expected ${schema.type}, got ${kind}`];
+  }
+  if (schema.type === "object" || schema.properties || schema.required) {
+    const object = (value ?? {}) as Record<string, unknown>;
+    for (const key of schema.required ?? []) {
+      if (!(key in object)) {
+        found.push(`${path}.${key} is required`);
+      }
+    }
+    for (const [key, child] of Object.entries(schema.properties ?? {})) {
+      if (key in object) {
+        found.push(...schemaViolations(object[key], child, `${path}.${key}`));
+      }
+    }
+  }
+  if (Array.isArray(value)) {
+    if (schema.minItems !== undefined && value.length < schema.minItems) {
+      found.push(`${path}: fewer than ${schema.minItems} items`);
+    }
+    const { items } = schema;
+    if (items) {
+      value.forEach((item, i) => found.push(...schemaViolations(item, items, `${path}[${i}]`)));
+    }
+  }
+  if (typeof value === "number" && schema.minimum !== undefined && value < schema.minimum) {
+    found.push(`${path}: below ${schema.minimum}`);
+  }
+  return found;
+}
+
+describe("the run schema is Sovkora's, byte for byte", () => {
+  it("is the file Sovkora pins", () => {
+    const bytes = readFileSync(join(CONTRACT_DIR, "compliance-check-run.schema.json"));
+    const sovkoraPin = readFileSync(join(CONTRACT_DIR, "compliance-check-run.schema.sha256"), "utf8")
+      .trim()
+      .split(/\s+/)[0];
+    expect(createHash("sha256").update(bytes).digest("hex")).toBe(RUN_SCHEMA_SHA256);
+    expect(sovkoraPin).toBe(RUN_SCHEMA_SHA256);
+  });
+});
+
+describe.each([
+  ["tenant", tenantRecording],
+  ["landlord", landlordRecording],
+])("the recorded %s run is what Sovkora's run schema describes", (_side, recording) => {
+  const { run } = recording as unknown as {
+    run: { blueprintVersion: string; outputs: { key: string; value: string }[] };
+  };
+  it("is a 2.x run that matches the schema", () => {
+    expect(schemaViolations(run, runSchema as Node)).toEqual([]);
+    expect(run.blueprintVersion).toMatch(/^2\./);
+  });
+  it("carries a report that matches the report schema", () => {
+    const output = run.outputs.find((o) => o.key === "report")!;
+    expect(schemaViolations(JSON.parse(output.value), runSchema.$defs.report as Node)).toEqual([]);
+  });
+  it("is read by reportOf, which shows what the schema promises", () => {
+    expect(sovkoraRun.safeParse(run).success).toBe(true);
+    const report = reportOf("compliance-check", run.outputs as never);
+    expect(report).not.toBeNull();
+    expect(report).toHaveProperty("findings");
   });
 });
