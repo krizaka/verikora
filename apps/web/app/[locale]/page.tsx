@@ -1,4 +1,5 @@
 import { CheckIcon, EyeIcon, SearchIcon } from "@krizaka/icons";
+import { Button } from "@krizaka/ui/button";
 import { Card } from "@krizaka/ui/card";
 import { CardGrid } from "@krizaka/ui/card-grid";
 import { LandingPage } from "@krizaka/ui/landing-page";
@@ -6,8 +7,8 @@ import { Section } from "@krizaka/ui/page";
 import type { Metadata } from "next";
 import Link from "next/link";
 
-import { BarQueryRoot, ClosingBody, HeroActions } from "@/components/BarSession";
-import { BeforeAfter } from "@/components/home/BeforeAfter";
+import { BarQueryRoot } from "@/components/BarSession";
+import { HeroFinding } from "@/components/home/HeroFinding";
 import { FindingsScreen } from "@/components/home/FindingsScreen";
 import { LiveScreen } from "@/components/home/LiveScreen";
 import { OwnerReportDocument } from "@/components/OwnerReportDocument";
@@ -20,7 +21,8 @@ import { HERO_FIGURES, productStatus } from "@/lib/landing";
 import { DEMO_SCREENING, demoOwnerDocument } from "@/lib/landing-demo";
 import { recordedRun } from "@/lib/recorded-runs";
 import { pageMetadata, siteJsonLd } from "@/lib/seo";
-import { pagePath } from "@/lib/site";
+import { signInPath } from "@/lib/nav";
+import { contactHref } from "@/lib/site";
 
 import preview from "../../../../dev-preview.json";
 
@@ -35,7 +37,7 @@ const ICONS = { line: CheckIcon, file: EyeIcon, find: SearchIcon } as const;
  * The home is the whole public site (Simplify Verikora, krizaka/verikora#120), on `LandingPage` since the UX review's Y9: the
  * promise beside the product's answer itself — the recorded check in a browser frame (the lease line, the finding, its article:
  * nothing drawn by hand, no screenshot until the final design is captured), the figures of that run under it —, the three
- * things as a bento, the run's facts and the owl once, who it is for, one way in (sign-in). Sovkora, the engine, is named
+ * things as a bento, the run's facts and the owl once, who it is for, one way in (the contact form, hero and closing). Sovkora, the engine, is named
  * once, in a quiet line under the proof. Static: built from the recording.
  */
 export default async function Home({ params }: Readonly<{ params: Promise<{ locale: string }> }>) {
@@ -54,21 +56,35 @@ export default async function Home({ params }: Readonly<{ params: Promise<{ loca
           <LandingPage
             title={d.title}
             lead={d.lead}
+            visualLabel={d.hero.visualLabel}
             actions={
-              /* Signed in, « Ouvrir mes documents »; otherwise « Se connecter » and the status line — the same answer as the bar (F0). */
-              <HeroActions locale={locale} status={d.status[productStatus(preview)]} />
+              <>
+                <div className="flex flex-wrap items-center gap-3" data-testid="hero-actions">
+                  <Button asChild variant="primary" size="lg" shape="cut">
+                    <a href={contactHref("verikora-home-hero", locale, "business")} data-testid="hero-primary">
+                      {d.hero.primary}
+                    </a>
+                  </Button>
+                  <Button asChild variant="ghost" size="lg">
+                    <a href="#proof" data-testid="hero-see-report">
+                      {d.hero.seeReport}
+                    </a>
+                  </Button>
+                </div>
+                <p className="mt-4 max-w-[60ch] text-sm text-fg-secondary" data-testid="hero-status">
+                  {d.status[productStatus(preview)]}
+                </p>
+              </>
             }
             visual={
-              /* The product's answer, real (the recorded run), in a panel that grows with its text — the recorded steps take this place once the final design is captured. */
+              /* One finding of the recorded run (title, quote, article): read, never typed. */
               <div
                 className="rounded-lg border border-border-default bg-surface-1"
                 data-testid="home-visual"
                 role="group"
                 aria-label={d.visual.caption}
               >
-                <div data-testid="proof-run">
-                  <BeforeAfter locale={locale} />
-                </div>
+                <HeroFinding locale={locale} />
               </div>
             }
             featuresHeading={{
@@ -85,20 +101,6 @@ export default async function Home({ params }: Readonly<{ params: Promise<{ loca
                 icon: <Icon size={24} aria-hidden />,
               };
             })}
-            closing={{
-              title: d.closing.title,
-              /* The closing call follows the same session answer as the hero (F0): signed in, the way to the documents; signed out, the way in. */
-              body: <ClosingBody signedOut={d.closing.body} signedIn={d.closing.bodyIn} />,
-              /* One way in on the page (the hero's); the closing says what happens to the documents and links the notice. */
-              actions: (
-                <span className="flex max-w-[70ch] flex-col gap-2 text-sm text-fg-secondary" data-testid="closing-data">
-                  <span>{d.what.trust}</span>
-                  <Link href={pagePath(locale, "privacy")} className="text-fg-accent underline underline-offset-4">
-                    {d.what.privacy}
-                  </Link>
-                </span>
-              ),
-            }}
           >
             <Section id="app" title={d.showcase.title} lead={d.showcase.lead} spacing="sm" divider>
               <CardGrid min={340} align="start" reveal={false}>
@@ -177,6 +179,22 @@ export default async function Home({ params }: Readonly<{ params: Promise<{ loca
               </p>
             </Section>
             <Section id="who" title={d.who.title} lead={d.what.who} spacing="sm" divider></Section>
+            <Section id="closing" title={d.closing.title} spacing="sm" divider>
+              <div className="flex flex-wrap items-center gap-x-6 gap-y-3" data-testid="closing-actions">
+                <Button asChild variant="primary" size="lg" shape="cut">
+                  <a href={contactHref("verikora-home-closing", locale, "business")} data-testid="closing-primary">
+                    {d.hero.primary}
+                  </a>
+                </Button>
+                <Link
+                  href={signInPath(locale)}
+                  className="text-fg-accent underline underline-offset-4"
+                  data-testid="closing-tenant"
+                >
+                  {d.closing.tenant}
+                </Link>
+              </div>
+            </Section>
           </LandingPage>
         </main>
       </BarQueryRoot>

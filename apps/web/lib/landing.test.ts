@@ -17,26 +17,24 @@ const words = (o: unknown): string[] =>
 describe("the home is one short page: who it is for, one real check, one way in", () => {
   const home = read("app/[locale]/page.tsx");
 
-  it("has the two sections the menu points to, in this order, and one primary action — the hero's island, which follows the session (F0)", () => {
+  it("has the two sections the menu points to, in this order; the hero's one primary and the closing's are the contact form of krizaka.com (the org's builder, never a typed address), « Se connecter » is not the hero's action", () => {
     expect(home.indexOf('id="what"')).toBeGreaterThan(0);
     expect(home.indexOf('id="proof"')).toBeGreaterThan(home.indexOf('id="what"'));
-    expect(home.match(/<HeroActions\b/g) ?? []).toHaveLength(1);
-    expect(home).not.toContain('variant="primary"');
-    // The island draws the one primary action per state: « Se connecter » signed out, « Ouvrir mes documents » signed in.
-    const island = read("components/BarSession.tsx");
-    expect(island).toContain("signInPath(locale)");
-    expect(island).toContain('t("landing.openApp")');
+    expect(home.match(/variant="primary"/g) ?? []).toHaveLength(2);
+    expect(home).toContain('contactHref("verikora-home-hero", locale, "business")');
+    expect(home).toContain('contactHref("verikora-home-closing", locale, "business")');
+    expect(home).not.toMatch(/https?:\/\//);
+    expect(home).toContain('href="#proof"');
+    expect(home).not.toMatch(/HeroActions|signIn\b/);
   });
 
   it("is the landing block with the product's answer beside the words (Y9): the recorded check in a browser frame, the three things as a bento, no repeated owl quote; no figures row under the hero (P10); no counter, no glow, no grid, no void above the hero", () => {
     expect(home).toMatch(/<LandingPage\b/);
     expect(home).toContain('data-testid="home-visual"');
     expect(home).not.toMatch(/DeviceFrame/);
-    expect(home.match(/<BeforeAfter\b/g) ?? []).toHaveLength(1);
-    // One way in (the hero's island, which follows the session, F0): the closing repeats none (verikora#457).
-    expect(home).not.toContain("<ClosingActions");
-    expect(home).toContain("<ClosingBody signedOut=");
-    expect(home).not.toContain("/sign-in`");
+    expect(home.match(/<HeroFinding\b/g) ?? []).toHaveLength(1);
+    // A plain closing (a section), not the landing's coloured panel.
+    expect(home).not.toMatch(/closing=\{/);
     expect(home).not.toContain("proofs=");
     expect(home.match(/<MascotQuote\b/g) ?? []).toHaveLength(0);
     // No decorative grid, counter or glow; the `CardGrid` block (card-grid) is the card layout itself, not a backdrop.
@@ -96,7 +94,7 @@ describe("plain words, in both languages", () => {
 describe("the proof is read from the recording, never typed", () => {
   it("the finding and the figures are counted from the recorded run", () => {
     const run = recordedRun("tenant");
-    expect(read("components/home/BeforeAfter.tsx")).toContain('recordedRun("tenant")');
+    expect(read("components/home/HeroFinding.tsx")).toContain('recordedRun("tenant")');
     expect(run.report.findings.find((f) => f.ruleId === "QC-LEASE-004")?.citation).toMatch(/art\. 1904/);
     const figures = HERO_FIGURES(run.report);
     expect(figures.rules).toBe(run.report.summary?.rulesEvaluated);

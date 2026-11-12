@@ -28,7 +28,8 @@ export const MEASURE = `(() => {
   const frame = document.querySelector("main .kz-hero > .kz-frame") ?? document.querySelector("main");
   const contentTop = frame ? frame.getBoundingClientRect().top + parseFloat(getComputedStyle(frame).paddingTop) : null;
   const visual = document.querySelector('[data-testid="home-visual"]');
-  return { barBottom: bar ? bar.bottom : null, contentTop, showcaseTop: visual ? visual.getBoundingClientRect().top : null, visualClipped: visual ? visual.scrollHeight > visual.clientHeight + 1 : null };
+  const bottom = (sel) => { const el = document.querySelector(sel); return el ? el.getBoundingClientRect().bottom : null; };
+  return { h1Bottom: bottom("main h1"), primaryBottom: bottom('[data-testid="hero-primary"]'), articleBottom: bottom('[data-testid="hero-article"]'), barBottom: bar ? bar.bottom : null, contentTop, showcaseTop: visual ? visual.getBoundingClientRect().top : null, visualClipped: visual ? visual.scrollHeight > visual.clientHeight + 1 : null };
 })()`;
 
 /** The problems of one measure, in words. */
@@ -45,6 +46,17 @@ export function problemsOf(m) {
     out.push(
       `${where}: the product's visual is not on the first screen (top ${m.showcaseTop === null ? "none" : Math.round(m.showcaseTop)} of ${m.height})`,
     );
+  // The five-second assertion (krizaka-internal#2562): on a phone the promise, the one action and the finding's article are all on the first screen.
+  if (m.width < 600)
+    for (const [name, bottom] of [
+      ["the H1", m.h1Bottom],
+      ["the primary action", m.primaryBottom],
+      ["the finding's article", m.articleBottom],
+    ])
+      if (bottom === null || bottom === undefined || bottom > m.height)
+        out.push(
+          `${where}: ${name} is not within the first ${m.height} px (bottom ${bottom == null ? "none" : Math.round(bottom)})`,
+        );
   if ((m.chromeOverlaps ?? []).length)
     out.push(`${where}: the top chrome chromeOverlaps (${m.chromeOverlaps.slice(0, 2).join(", ")})`);
   if (m.visualClipped)

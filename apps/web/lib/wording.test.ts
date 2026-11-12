@@ -35,7 +35,6 @@ describe.each(["en", "fr"])("public wording (%s)", (lang) => {
       lang === "fr"
         ? /matrices d.extraction documentaire et des gabarits technologiques param[ée]trables/
         : /extraction matrices and technical templates/;
-    expect(get("landing.lead")).toMatch(matrices);
     expect(get("report.disclaimer")).toMatch(matrices);
     expect(get("report.disclaimer")).toMatch(
       lang === "fr" ? /valid[ée]s par le conseiller juridique du client/ : /validated by the client's counsel/,

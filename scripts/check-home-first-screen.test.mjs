@@ -11,6 +11,9 @@ const measure = (patch = {}) => ({
   barBottom: 68,
   contentTop: 68 + GAP_PX,
   showcaseTop: 620,
+  h1Bottom: 300,
+  primaryBottom: 520,
+  articleBottom: 800,
   visualClipped: false,
   ...patch,
 });
@@ -36,6 +39,16 @@ describe("the home's first screen (the UX review's Y9)", () => {
     assert.match(problemsOf(measure({ showcaseTop: null }))[0], /top none/);
     assert.match(problemsOf(measure({ barBottom: null }))[0], /no bar or no hero frame/);
     assert.match(problemsOf(measure({ visualClipped: true }))[0], /clips its text/);
+  });
+  it("holds the five-second assertion on a phone: the H1, the primary action and the finding's article within the first screen", () => {
+    assert.deepEqual(problemsOf(measure({ articleBottom: 844 })), []);
+    assert.match(
+      problemsOf(measure({ articleBottom: 900 }))[0],
+      /the finding's article is not within the first 844 px \(bottom 900\)/,
+    );
+    assert.match(problemsOf(measure({ primaryBottom: 1000 }))[0], /the primary action is not within/);
+    assert.match(problemsOf(measure({ h1Bottom: null }))[0], /the H1 is not within .*bottom none/);
+    assert.deepEqual(problemsOf(measure({ width: 1440, height: 900, showcaseTop: 100, articleBottom: 5000 })), []);
   });
   it("names a fixed bar that covers the notice (verikora#449)", () => {
     assert.match(
