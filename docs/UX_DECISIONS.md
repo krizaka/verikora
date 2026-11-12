@@ -579,6 +579,9 @@ Krizaka-ts ADR-003, `@krizaka/organize` 0.4. Verikora is the pilot, on « Dossie
   of the lease report, and open their traces in a fold.
 - **The title says what was filed and when**: « Bail déposé le 23 oct. 2026 » (lease, contract, invoice); another kind keeps what the
   insight reads in it. The component does not break a long address in its paragraphs: the wrapper does (`overflow-wrap:anywhere`).
+- **The overall status reads once, in words** (« À corriger » / « À regarder » / « Rien à signaler », from the counts): it opens the summary line;
+  the component's own status chip repeats the gravity of the counts beside it, so the wrapper hides it until `@krizaka/ui` takes a separate overall label.
+  A file with no text says its real type (PDF, texte, Word, « ce fichier »), never « Ce PDF » for a `.txt`.
 
 ## Plain typography in the app (P5, #322)
 

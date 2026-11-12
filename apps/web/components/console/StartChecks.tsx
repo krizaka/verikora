@@ -21,6 +21,7 @@ import { useState } from "react";
 import { z } from "zod";
 
 import { Paywall } from "@/components/console/Paywall";
+import { noTextKeyOf } from "@/lib/check-failure";
 import { planCheck, rulesFor } from "@/lib/check-flow";
 import { errorKey } from "@/lib/client";
 import { useSay } from "@/lib/i18n-client";
@@ -226,7 +227,7 @@ function ComplianceBody({ doc, offer, running }: Readonly<Pick<StartProps, "doc"
   const options = complianceOptions(compliancePlan.mismatch, offeredKinds(offer.rulesets), doc.kind);
   if (doc.insight?.understanding.nature && !doc.insight.understanding.check)
     return <Alert tone="info">{say("insight.noCheck")}</Alert>;
-  if (!doc.hasText) return <Alert tone="info">{say("document.noText")}</Alert>;
+  if (!doc.hasText) return <Alert tone="info">{say(noTextKeyOf(doc.mimeType))}</Alert>;
   if (compliancePlan.unsupported) return <Alert tone="info">{say("analysis.notVerified")}</Alert>;
   return (
     <>

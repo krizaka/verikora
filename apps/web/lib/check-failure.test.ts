@@ -3,7 +3,16 @@ import { readFileSync } from "node:fs";
 import { DOCX_MIME } from "@verikora/core";
 import { describe, expect, it } from "vitest";
 
-import { causeOf, FAILURE_CAUSES, failureOf, familyOf, FILE_FAMILIES, RECOVERY, retryRequest } from "./check-failure";
+import {
+  causeOf,
+  FAILURE_CAUSES,
+  failureOf,
+  familyOf,
+  FILE_FAMILIES,
+  noTextKeyOf,
+  RECOVERY,
+  retryRequest,
+} from "./check-failure";
 
 const messages = (name: string) =>
   JSON.parse(readFileSync(new URL(`../messages/${name}.json`, import.meta.url), "utf8")).console.checkFailure as Record<
@@ -73,5 +82,28 @@ describe("the retry runs the same check again", () => {
       ruleset: "qc-invoice",
     });
     expect(retryRequest({ studio: "compliance-check", inputs: {} }, "2026-10-31")).not.toHaveProperty("ruleset");
+  });
+});
+
+describe("the « no text » message names the file's real type", () => {
+  it("maps a media type to the message of its family, a closed set, « this file » for the rest", () => {
+    expect(noTextKeyOf("application/pdf")).toBe("document.noText.pdf");
+    expect(noTextKeyOf("text/plain")).toBe("document.noText.text");
+    expect(noTextKeyOf("application/vnd.openxmlformats-officedocument.wordprocessingml.document")).toBe(
+      "document.noText.office",
+    );
+    expect(noTextKeyOf("application/vnd.oasis.opendocument.text")).toBe("document.noText.office");
+    expect(noTextKeyOf("image/png")).toBe("document.noText.other");
+  });
+
+  it("says PDF only for a PDF, in both languages", () => {
+    for (const name of ["fr", "en"]) {
+      const file = JSON.parse(readFileSync(new URL(`../messages/${name}.json`, import.meta.url), "utf8"));
+      const t = file.console.document.noText as Record<"pdf" | "text" | "office" | "other", string>;
+      expect(t.pdf).toMatch(/PDF/);
+      for (const k of ["text", "office", "other"] as const) {
+        expect(t[k]).not.toMatch(/PDF/);
+      }
+    }
   });
 });

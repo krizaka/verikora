@@ -436,7 +436,12 @@
       "viewer": "The document",
       "viewerRegion": "Pages of the document",
       "text": "Its text",
-      "noText": "This PDF has no text layer: the check against the law could not read its clauses. The file itself is still examined.",
+      "noText": {
+        "pdf": "This PDF has no text layer: the check against the law could not read its clauses. The file itself is still examined.",
+        "text": "This text file is empty: the check against the law could not read its clauses.",
+        "office": "This Word or ODT document has no readable text: the check against the law could not read its clauses.",
+        "other": "This file has no text layer: the check against the law could not read its clauses."
+      },
       "openFile": "Open the file",
       "delete": "Delete",
       "deleteConfirm": "Delete for good",
@@ -2894,6 +2899,11 @@
           "title": "Could not tell what kind of document this is",
           "hint": "Nothing was checked: pick the kind of document you are sending, then run the check again. This is not a clean result."
         }
+      },
+      "overall": {
+        "toFix": "To fix",
+        "toReview": "To review",
+        "nothing": "Nothing to report"
       },
       "label": "The result",
       "attentionOne": "{count} rule of {rules} needs your attention",

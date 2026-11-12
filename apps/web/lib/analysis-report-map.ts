@@ -25,6 +25,17 @@ export function analysisStatusOfTone(tone: VerdictTone): AnalysisStatus {
   return tone === "warning" ? "attention" : "consistent";
 }
 
+/** The words of the report's overall status (`reportFace.overall.*`), from the tone of its verdict: the header says it once, the counts beside it keep the gravity. */
+const OVERALL_KEY: Record<VerdictTone, string> = {
+  danger: "reportFace.overall.toFix",
+  warning: "reportFace.overall.toReview",
+  success: "reportFace.overall.nothing",
+};
+
+export function overallKeyOfTone(tone: VerdictTone): string {
+  return OVERALL_KEY[tone];
+}
+
 /**
  * The run's findings as the component's: the passage and the article come from the Sovkora report (`evidenceSpan.quote`,
  * `citation`), never typed here; the order is the reading order of `numberFindings`, the id the finding's anchor.

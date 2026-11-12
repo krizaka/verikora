@@ -48,6 +48,20 @@ export function familyOf({ mimeType, hasText }: Readonly<{ mimeType: string; has
   return "other";
 }
 
+/** The « no text » message of each family (`console.document.noText.*`): it names the file's real type, « this file » when it is none of ours. */
+const NO_TEXT_KEY: Record<FileFamily, string> = {
+  pdf: "pdf",
+  scan: "pdf",
+  office: "office",
+  text: "text",
+  other: "other",
+};
+
+/** The key of the message that says a file has no text to check, from its media type. */
+export function noTextKeyOf(mimeType: string): string {
+  return `document.noText.${NO_TEXT_KEY[familyOf({ mimeType, hasText: true })]}`;
+}
+
 /** The message key (under `console.checkFailure`) and the actions for a failure: the cause says why, the family says it for this file. */
 export function failureOf(
   error: string | null | undefined,
