@@ -1,5 +1,16 @@
-/** The finding the home's proof shows: the forbidden deposit (QC-LEASE-004) of the recorded tenant run — a real answer, never typed. */
-export const HERO_RULE = "QC-LEASE-004";
+import { HERO } from "@/content/recorded-runs/samples.mjs";
+
+import { recordedRun } from "./recorded-runs";
+
+/** The finding the home's hero shows: named as data next to the recorded runs (`HERO`), read from the run — never typed here. */
+export function heroFinding() {
+  const run = recordedRun(HERO.run);
+  const finding = run.report.findings.find((f) => f.ruleId === HERO.rule);
+  if (!finding) {
+    throw new Error(`the hero's finding ${HERO.rule} is not in the recorded ${HERO.run} run`);
+  }
+  return finding;
+}
 
 /** An entry is evidence (an https URL), `evidence: null` with a gap, or `na` — the reason it does not apply (a string, per the standard's schema). */
 export type DevPreview = { criteria: Record<string, { evidence?: string | null; na?: string | boolean }> };

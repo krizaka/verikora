@@ -6,8 +6,11 @@ import { describe, expect, it } from "vitest";
 import en from "@/messages/en.json";
 import fr from "@/messages/fr.json";
 
-import { type DevPreview, HERO_FIGURES, productStatus } from "./landing";
+import { HERO } from "@/content/recorded-runs/samples.mjs";
+
+import { type DevPreview, HERO_FIGURES, heroFinding, productStatus } from "./landing";
 import { recordedRun } from "./recorded-runs";
+import { ruleTitle } from "./rule-text";
 
 const ROOT = join(__dirname, "..");
 const read = (path: string) => readFileSync(join(ROOT, path), "utf8");
@@ -94,8 +97,7 @@ describe("plain words, in both languages", () => {
 describe("the proof is read from the recording, never typed", () => {
   it("the finding and the figures are counted from the recorded run", () => {
     const run = recordedRun("tenant");
-    expect(read("components/home/HeroFinding.tsx")).toContain('recordedRun("tenant")');
-    expect(run.report.findings.find((f) => f.ruleId === "QC-LEASE-004")?.citation).toMatch(/art\. 1904/);
+    expect(read("components/home/HeroFinding.tsx")).toContain("heroFinding()");
     const figures = HERO_FIGURES(run.report);
     expect(figures.rules).toBe(run.report.summary?.rulesEvaluated);
     expect(figures.found).toBe(run.report.findings.length);
@@ -113,5 +115,56 @@ describe("the proof is read from the recording, never typed", () => {
         ],
       }),
     ).toEqual({ rules: 4, articles: 3, found: 4 });
+  });
+});
+
+/** What the recording says about a rule, raw: the schema the app reads drops `checks`, the engine's proof the quote was found in the file. */
+function rawFinding(side: "tenant" | "landlord", ruleId: string) {
+  const file = JSON.parse(read(`content/recorded-runs/${side}.json`)) as {
+    run: { outputs: Record<string, { value?: unknown }> };
+  };
+  for (const out of Object.values(file.run.outputs)) {
+    if (typeof out.value !== "string") {
+      continue;
+    }
+    const report = JSON.parse(out.value) as { findings?: { ruleId: string; checks?: { passage?: string } }[] };
+    const found = report.findings?.find((f) => f.ruleId === ruleId);
+    if (found) {
+      return found;
+    }
+  }
+  return undefined;
+}
+
+describe("the hero's finding is chosen by data, and by a rule", () => {
+  const finding = heroFinding();
+
+  it("is a finding of the recorded run the data names, failed, with a verified quote and an article", () => {
+    expect(recordedRun(HERO.run).report.findings).toContain(finding);
+    expect(finding.verdict).toBe("FAIL");
+    expect(finding.evidenceSpan?.quote).toBeTruthy();
+    expect(rawFinding(HERO.run, HERO.rule)?.checks?.passage).toBe("VERIFIED");
+    expect(finding.citation).toMatch(/art\. \d+/);
+  });
+
+  it("is never the worn security-deposit example (QC-LEASE-004)", () => {
+    expect(HERO.rule).not.toBe("QC-LEASE-004");
+    expect(finding.ruleId).not.toBe("QC-LEASE-004");
+  });
+
+  it("is typed nowhere in the home's components", () => {
+    expect(read("components/home/HeroFinding.tsx")).not.toMatch(/QC-[A-Z]+-\d+/);
+    expect(read("app/[locale]/page.tsx")).not.toMatch(/QC-[A-Z]+-\d+/);
+  });
+
+  it("shows its title in the page's language, from the rule catalogue: an /en render never shows the French one", () => {
+    expect(finding.title).toBeTruthy();
+    const en = ruleTitle(finding.ruleId, "en", finding.title);
+    const fr = ruleTitle(finding.ruleId, "fr", finding.title);
+    expect(en).not.toBe(finding.title);
+    expect(en).not.toBe(fr);
+    expect(fr).toBe(finding.title);
+    expect(read("components/home/HeroFinding.tsx")).toContain("ruleTitle(finding.ruleId, locale, finding.title)");
+    expect(read("components/home/HeroFinding.tsx")).not.toMatch(/\{finding\.title/);
   });
 });

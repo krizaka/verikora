@@ -27,3 +27,12 @@ Le locataire verse un dépôt de garantie équivalant à un mois de loyer à la 
 Le locataire renonce à son droit au maintien dans les lieux à la fin du bail.`,
   },
 };
+
+/**
+ * The finding the home's hero shows (krizaka-internal#2562): the recorded run and the rule, chosen as DATA. The rule is one a
+ * property manager meets every day and is not the worn security-deposit example (QC-LEASE-004, the founder's content rule).
+ * QC-LEASE-008 (the lowest-rent notice) was the first pick but its run has no quoted passage (the notice is absent), so the hero
+ * takes QC-LEASE-007 of the owner's lease template: a quoted waiver of the right to remain in the premises.
+ * `lib/landing.test.ts` holds the rule: the finding exists in that run, is FAIL, quotes the lease and names an article.
+ */
+export const HERO = { run: "landlord", rule: "QC-LEASE-007" };

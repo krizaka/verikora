@@ -51,21 +51,20 @@
       "findingCaption": "Ce que Verikora renvoie, avec sa source"
     },
     "what": {
-      "title": "Ce que ça fait",
-      "lead": "Trois choses, sans rien de caché derrière.",
-      "who": "Pour les gestionnaires d'immeubles et les propriétaires qui évaluent des candidats au Québec : un bail et un talon de paie par dossier, plusieurs dossiers par mois. Les locataires sont les bienvenus : leur première vérification est offerte. Les registres (SOQUIJ, TAL, plumitif) sont en préparation.",
+      "title": "Ce que Verikora vérifie",
+      "lead": "Trois choses, dans l'ordre de votre travail.",
       "items": {
-        "line": {
-          "title": "La ligne exacte derrière chaque constat",
-          "text": "Chaque constat nomme la règle, cite l'article de loi et surligne la phrase du bail sur laquelle il repose."
+        "documents": {
+          "title": "Les pièces du candidat",
+          "text": "Talon de paie, relevé bancaire, pièce d'identité : chaque pièce est lue, et le PDF est examiné comme un fichier (producteur, dates, enregistrements successifs). Une modification est signalée sur trois niveaux : observée, inhabituelle, incohérente."
         },
-        "file": {
-          "title": "L'examen du PDF lui-même",
-          "text": "Producteur, dates, enregistrements successifs : trois niveaux (observé, inhabituel, incohérent), jamais un tampon « faux »."
+        "template": {
+          "title": "Votre modèle de bail",
+          "text": "Votre bail est vérifié avant l'envoi, selon les règles du Québec : chaque constat nomme la règle, cite l'article du Code civil et surligne la phrase du bail."
         },
-        "find": {
-          "title": "Tout retrouver en une seconde",
-          "text": "Un mot, et tous vos documents et tous leurs constats reviennent, le passage en gras."
+        "report": {
+          "title": "Un rapport à partager",
+          "text": "Une page en lecture seule, par lien et avec une échéance : l'empreinte du document, les constats avec leurs articles et l'exécution qui les a produits."
         }
       }
     },
@@ -79,12 +78,19 @@
       "powered": "Propulsé par Sovkora.",
       "owlLabel": "Ce que la chouette promet"
     },
-    "who": {
-      "title": "Pour qui"
+    "applicant": {
+      "title": "Le candidat accepte d'abord",
+      "lead": "Aucune vérification ne part sans l'accord du candidat, vérification par vérification. Il voit le résultat en premier, avant vous.",
+      "points": [
+        "Chaque vérification demandée a son propre consentement.",
+        "Le candidat voit le résultat avant qu'il ne vous soit transmis.",
+        "Verikora ne demande ni numéro d'assurance sociale ni casier judiciaire.",
+        "Un constat que le candidat conteste, il le dit à la personne qui lui a demandé ses pièces : Verikora ne décide pas du logement."
+      ]
     },
     "closing": {
       "title": "Vos dossiers de cette semaine, vérifiés.",
-      "tenant": "Vous êtes locataire ?"
+      "tenant": "On vous a demandé vos pièces par Verikora ?"
     },
     "visual": {
       "caption": "Une vraie vérification, enregistrée telle qu'elle est revenue"

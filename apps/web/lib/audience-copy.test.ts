@@ -3,30 +3,24 @@ import { describe, expect, it } from "vitest";
 import en from "@/messages/en.json";
 import fr from "@/messages/fr.json";
 
-/** The public copy speaks first to property managers and landlords; tenants stay welcome; the registries are « in preparation » (verikora#359). */
+/** The public copy speaks first to property managers and landlords; the registries are « in preparation » (verikora#359). */
 const COPIES = [
   {
     name: "fr",
     m: fr,
     managers: /gestionnaires d['’]immeubles/i,
-    tenants: /locataires/i,
     preparing: /en préparation/i,
   },
   {
     name: "en",
     m: en,
     managers: /property managers/i,
-    tenants: /tenants/i,
     preparing: /in preparation/i,
   },
 ];
 
-describe.each(COPIES)("the $name home copy", ({ m, managers, tenants, preparing }) => {
-  it("addresses property managers and landlords first in « who » and in the lead, then welcomes tenants", () => {
-    const who = m.landing.what.who;
-    expect(who).toMatch(managers);
-    expect(who).toMatch(tenants);
-    expect(who.search(managers)).toBeLessThan(who.search(tenants));
+describe.each(COPIES)("the $name home copy", ({ m, managers, preparing }) => {
+  it("addresses property managers and landlords first, in the description and in the lead", () => {
     expect(m.meta.description).toMatch(managers);
     expect(m.landing.lead).toMatch(managers);
   });
@@ -38,7 +32,11 @@ describe.each(COPIES)("the $name home copy", ({ m, managers, tenants, preparing 
 
   it("names the registries only as « in preparation », and the soon list stays without a price", () => {
     const registries = /SOQUIJ|TAL|plumitif/;
-    for (const line of [m.landing.what.who, m.landing.lead]) {
+    for (const line of [
+      m.landing.lead,
+      ...Object.values(m.landing.what.items).map((i) => i.text),
+      ...m.landing.applicant.points,
+    ]) {
       if (registries.test(line)) expect(line).toMatch(preparing);
     }
     for (const item of Object.values(m.pricing.soon.items))

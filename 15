@@ -1,0 +1,227 @@
+[heavy-lock] verikora-2562b got a slot 09:06:47
+▲ Next.js 16.4.1 (Turbopack)
+✓ Running next.config.mjs took 11ms
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 6.8s
+  Running TypeScript ...
+  Finished TypeScript in 7.3s ...
+  Collecting page data using 9 workers ...
+  Generating static pages using 9 workers (0/92) ...
+  Generating static pages using 9 workers (23/92) 
+  Generating static pages using 9 workers (46/92) 
+  Generating static pages using 9 workers (69/92) 
+✓ Generating static pages using 9 workers (92/92) in 488ms
+  Finalizing page optimization ...
+
+Route (app)
+┌ ○ /_not-found
+├ ƒ /.well-known/apple-app-site-association
+├ ƒ /.well-known/assetlinks.json
+├ ƒ /[locale]
+├ ƒ /[locale]/[...rest]
+├ ƒ /[locale]/app
+├ ƒ /[locale]/app/check
+├ ƒ /[locale]/app/check/batches
+├ ƒ /[locale]/app/check/batches/[id]
+├ ƒ /[locale]/app/documents
+├ ƒ /[locale]/app/documents/[id]
+├ ƒ /[locale]/app/documents/[id]/[tab]
+├ ƒ /[locale]/app/dossiers
+├ ƒ /[locale]/app/dossiers/[id]
+├ ƒ /[locale]/app/library/[library]
+├ ƒ /[locale]/app/library/[library]/[collection]
+├ ƒ /[locale]/app/library/[library]/[collection]/[folder]
+├ ƒ /[locale]/app/plans
+├ ƒ /[locale]/app/screening
+├ ƒ /[locale]/app/search
+├ ƒ /[locale]/app/settings
+├ ƒ /[locale]/app/settings/[section]
+├ ƒ /[locale]/app/verifications
+├ ƒ /[locale]/app/verifications/report
+├ ƒ /[locale]/app/welcome
+├ ƒ /[locale]/confirm-email
+├ ƒ /[locale]/console
+├ ƒ /[locale]/console/audit
+├ ƒ /[locale]/console/config
+├ ƒ /[locale]/console/config/[group]
+├ ƒ /[locale]/console/documents
+├ ƒ /[locale]/console/flows
+├ ƒ /[locale]/console/flows/[id]
+├ ƒ /[locale]/console/flows/new
+├ ƒ /[locale]/console/incidents
+├ ƒ /[locale]/console/operations
+├ ƒ /[locale]/console/runs
+├ ƒ /[locale]/console/sign-in
+├ ƒ /[locale]/console/storage
+├ ƒ /[locale]/console/users
+├ ƒ /[locale]/console/users/[id]
+├ ƒ /[locale]/contact
+├ ƒ /[locale]/docs
+├ ƒ /[locale]/dossier/[token]
+├ ƒ /[locale]/download
+├ ƒ /[locale]/forgot-password
+├ ƒ /[locale]/pricing
+├ ƒ /[locale]/privacy
+├ ƒ /[locale]/rapport/[token]
+├ ƒ /[locale]/reset-password
+├ ƒ /[locale]/screening/[token]
+├ ƒ /[locale]/sign-in
+├ ƒ /[locale]/sign-up
+├ ƒ /[locale]/terms
+├ ƒ /[locale]/verify-email
+├ ƒ /api/admin/analyses/[id]/showcase
+├ ƒ /api/admin/compliance-gate
+├ ƒ /api/admin/coupons
+├ ƒ /api/admin/coupons/[id]
+├ ƒ /api/admin/coupons/code
+├ ƒ /api/admin/coupons/partners
+├ ƒ /api/admin/coupons/partners/[id]
+├ ƒ /api/admin/documents/[id]/sample
+├ ƒ /api/admin/flows
+├ ƒ /api/admin/flows/[id]/draft
+├ ƒ /api/admin/flows/[id]/environments
+├ ƒ /api/admin/flows/[id]/publish
+├ ƒ /api/admin/incidents
+├ ƒ /api/admin/incidents/[id]
+├ ƒ /api/admin/incidents/export
+├ ƒ /api/admin/organize/[kind]/config
+├ ƒ /api/admin/preflight
+├ ƒ /api/admin/prices
+├ ƒ /api/admin/prices/sync
+├ ƒ /api/admin/settings
+├ ƒ /api/admin/settings/audit
+├ ƒ /api/admin/sovkora
+├ ƒ /api/admin/sovkora/test
+├ ƒ /api/admin/storage
+├ ƒ /api/admin/storage/[id]
+├ ƒ /api/admin/storage/[id]/default
+├ ƒ /api/admin/storage/[id]/key
+├ ƒ /api/admin/storage/[id]/retire
+├ ƒ /api/admin/storage/[id]/test
+├ ƒ /api/admin/storage/move
+├ ƒ /api/admin/storage/move/pause
+├ ƒ /api/admin/storage/move/resume
+├ ƒ /api/admin/users
+├ ƒ /api/admin/users/[id]
+├ ƒ /api/admin/users/[id]/export
+├ ƒ /api/admin/users/[id]/plan
+├ ƒ /api/admin/users/[id]/restore
+├ ƒ /api/admin/users/[id]/role
+├ ƒ /api/admin/users/[id]/sessions
+├ ƒ /api/admin/users/[id]/suspend
+├ ƒ /api/app-config
+├ ƒ /api/applicant
+├ ƒ /api/applicant/documents
+├ ƒ /api/applications
+├ ƒ /api/applications/[id]
+├ ƒ /api/applications/[id]/report-shares
+├ ƒ /api/applications/[id]/report-shares/send
+├ ƒ /api/auth/confirm-email
+├ ƒ /api/auth/forgot-password
+├ ƒ /api/auth/reset-password
+├ ƒ /api/auth/sign-in
+├ ƒ /api/auth/sign-out
+├ ƒ /api/auth/sign-up
+├ ƒ /api/auth/sign-up/status
+├ ƒ /api/auth/verify-email
+├ ƒ /api/batches
+├ ƒ /api/batches/[id]
+├ ƒ /api/batches/[id]/export
+├ ƒ /api/batches/preview
+├ ○ /api/batches/template
+├ ƒ /api/billing
+├ ƒ /api/billing/checkout
+├ ƒ /api/billing/coupon
+├ ƒ /api/billing/coupon/redeem
+├ ƒ /api/billing/payments
+├ ƒ /api/billing/portal
+├ ƒ /api/collections
+├ ƒ /api/collections/[id]
+├ ƒ /api/collections/[id]/avatar
+├ ƒ /api/consents
+├ ƒ /api/documents
+├ ƒ /api/documents/[id]
+├ ƒ /api/documents/[id]/analyses/[analysisId]
+├ ƒ /api/documents/[id]/analyses/[analysisId]/grants
+├ ƒ /api/documents/[id]/analyses/[analysisId]/grants/[grantId]
+├ ƒ /api/documents/[id]/analyses/[analysisId]/report
+├ ƒ /api/documents/[id]/bundle
+├ ƒ /api/documents/[id]/file
+├ ƒ /api/documents/[id]/placement
+├ ƒ /api/documents/[id]/redacted
+├ ƒ /api/flows
+├ ƒ /api/folders
+├ ƒ /api/folders/[id]
+├ ƒ /api/healthz
+├ ƒ /api/libraries
+├ ƒ /api/libraries/[id]
+├ ƒ /api/me
+├ ƒ /api/me/api-keys
+├ ƒ /api/me/api-keys/[id]
+├ ƒ /api/me/api-keys/[id]/rotate
+├ ƒ /api/me/app
+├ ƒ /api/me/delete
+├ ƒ /api/me/email
+├ ƒ /api/me/export
+├ ƒ /api/me/password
+├ ƒ /api/me/perspective
+├ ƒ /api/me/profile
+├ ƒ /api/me/storage
+├ ƒ /api/me/storage/cloud/[cloud]
+├ ƒ /api/me/storage/cloud/callback
+├ ƒ /api/me/storage/cloud/disconnect
+├ ƒ /api/me/storage/test
+├ ƒ /api/me/territory
+├ ƒ /api/me/webhooks
+├ ƒ /api/me/webhooks/[id]
+├ ƒ /api/me/webhooks/[id]/deliveries
+├ ƒ /api/me/webhooks/[id]/rotate
+├ ƒ /api/organize/[kind]/config
+├ ƒ /api/organize/[kind]/status
+├ ƒ /api/organize/[kind]/tags
+├ ƒ /api/organize/[kind]/tags/[id]
+├ ƒ /api/organize/[kind]/tags/apply
+├ ƒ /api/organize/[kind]/tags/set
+├ ƒ /api/organize/[kind]/views
+├ ƒ /api/organize/[kind]/views/[id]
+├ ƒ /api/rapport/[token]/pdf
+├ ƒ /api/screenings
+├ ƒ /api/screenings/respond
+├ ƒ /api/search
+├ ƒ /api/showcase
+├ ƒ /api/showcase/file
+├ ƒ /api/tags
+├ ƒ /api/tags/[id]
+├ ƒ /api/tags/assign
+├ ƒ /api/v1/batches
+├ ƒ /api/v1/batches/[id]
+├ ƒ /api/v1/batches/[id]/export
+├ ƒ /api/v1/checks
+├ ƒ /api/v1/checks/[id]
+├ ƒ /api/v1/contracts/[id]/file
+├ ƒ /api/v1/contracts/seal
+├ ƒ /api/v1/openapi.json
+├ ƒ /api/verify
+├ ƒ /api/verify/contract/[sha256]
+├ ƒ /api/verify/request-access
+├ ƒ /api/webhooks/mail
+├ ƒ /api/webhooks/payments
+├ ○ /apple-icon.png
+├ ○ /icon.svg
+├ ○ /icon1.png
+├ ○ /icon2.png
+├ ○ /icon3.png
+├ ○ /llms.txt
+├ ○ /manifest.webmanifest
+├ ○ /og.png
+├ ○ /robots.txt
+└ ○ /sitemap.xml
+
+
+ƒ Proxy (Middleware)
+
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
+
+[heavy-lock] verikora-2562b done rc=0 09:07:06
