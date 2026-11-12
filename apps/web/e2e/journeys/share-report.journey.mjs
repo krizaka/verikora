@@ -6,11 +6,16 @@ import { readFileSync } from "node:fs";
 import { videoContextOptions } from "@krizaka/page-audit/journey";
 import { expect, test } from "@playwright/test";
 
-import { BASE, beat, openAs, SCREENS } from "./session.mjs";
+import { BASE, beat, markSeededCheck, openAs, SCREENS } from "./session.mjs";
 
 const JOURNEY = JSON.parse(readFileSync(new URL("./journeys.json", import.meta.url), "utf8")).find(
   (j) => j.id === "share-report",
 );
+
+// The seeded lease's check is a demo one, never shared: it is a recorded run for this journey, and a demo check again after it.
+test.describe.configure({ mode: "serial" });
+test.beforeAll(() => markSeededCheck("avis du TAL absent", false));
+test.afterAll(() => markSeededCheck("avis du TAL absent", true));
 
 for (const screen of SCREENS) {
   test(`Eric shares the report from the header without scrolling and revokes to restore data (${screen.name})`, async ({
@@ -68,7 +73,10 @@ for (const screen of SCREENS) {
     await beat(page, 2000);
 
     // After sharing the grant appears in the dialog list.
-    await expect(dialog.locator("text=owner-test@example.test"), "the new share appears in the list").toBeVisible();
+    await expect(
+      dialog.locator("text=owner-test@example.test").first(),
+      "the new share appears in the list",
+    ).toBeVisible();
 
     // Close the dialog — focus must return to the trigger.
     const closeBtn = dialog.getByRole("button", { name: /fermer/i });

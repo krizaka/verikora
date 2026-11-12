@@ -17,8 +17,9 @@ import type { Answer } from "@/lib/signal-answers";
 import { AuthenticitySignals } from "./AuthenticitySignals";
 import type { DocumentFacts } from "./document-view-model";
 import { LeaseBundleSection } from "./LeaseBundleSection";
+import { OtherChecks } from "./OtherChecks";
 import { RegistryChecks } from "./RegistryChecks";
-import { FindingList, type FindingSelection, TechnicalDetails, VerdictBand } from "./ReportFace";
+import { ComplianceReportView, type FindingSelection, TechnicalDetails } from "./ReportFace";
 
 /**
  * The report tab: where a running check stands, the runs that failed, then the verdict and the numbered findings (what failed
@@ -60,17 +61,14 @@ export function DocumentReportTab({
     if (latestCompliance && latestReport) {
       return (
         <>
-          <VerdictBand report={latestReport} />
-          <FindingList report={latestReport} selection={selection} />
-          {latestAuthenticity?.report && "signals" in latestAuthenticity.report ? (
-            <AuthenticitySignals
-              report={latestAuthenticity.report}
-              runId={latestAuthenticity.runId}
-              answers={answers}
-            />
-          ) : null}
-          {registry ? <RegistryChecks report={registry} /> : null}
-          <TechnicalDetails documentId={doc.id} analysis={latestCompliance} />
+          <ComplianceReportView report={latestReport} analysis={latestCompliance} selection={selection} />
+          <OtherChecks
+            authenticity={latestAuthenticity}
+            authenticityRunning={runningStudio === "document-authenticity"}
+            authenticityFailed={failures.some((a) => a.studio === "document-authenticity")}
+            registry={registry}
+            answers={answers}
+          />
           <details className="rounded-lg border border-border-default p-3">
             <summary className="cursor-pointer text-sm font-semibold text-fg">{say("document.details")}</summary>
             <div className="mt-3">

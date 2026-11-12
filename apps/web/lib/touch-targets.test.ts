@@ -17,7 +17,8 @@ describe("touch targets of the document and report pages", () => {
     ["components/console/DocumentActions.tsx", 3],
     ["components/console/StorageNotice.tsx", 2],
     ["components/console/StartChecks.tsx", 1],
-    ["components/console/ReportFace.tsx", 4],
+    ["components/console/ReportFace.tsx", 3],
+    ["components/console/OtherChecks.tsx", 2],
     ["components/console/DocumentFileTab.tsx", 1],
     ["components/console/DocumentView.tsx", 3],
   ])("%s: its controls carry min-h-11", (file, count) => {

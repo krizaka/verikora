@@ -1,5 +1,5 @@
 // Journey « lease-report-section-g » (journeys.json): a tenant opens the report of a lease with no TAL notice and sees
-// Section G with its citation. The result the customer reads is asserted, not « the page loaded ».
+// Section G, one quoted passage and one article. The result the customer reads is asserted, not « the page loaded ».
 import { readFileSync } from "node:fs";
 
 import { videoContextOptions } from "@krizaka/page-audit/journey";
@@ -27,8 +27,26 @@ test("a tenant opens the report of a lease with no TAL notice and sees Section G
   expect(id, "the library links the lease by its id").toBeTruthy();
 
   await page.goto(new URL(`/fr/app/documents/${id}/rapport`, BASE).toString());
-  const finding = page.locator("#finding-TS-G-001");
+  // The report is AnalysisReport's (krizaka-internal#2293): each finding quotes the passage it rests on and cites its article.
+  const report = page.getByTestId("compliance-report");
+  await expect(report, "the compliance report is on the page").toBeVisible();
+  const finding = report.getByRole("listitem").filter({ has: page.getByRole("heading", { name: /avis du TAL/i }) });
   await expect(finding, "the Section G finding is in the report").toBeVisible();
-  await expect(finding.locator('[data-testid="finding-citation"]'), "the finding cites its source").toBeVisible();
+  await expect(finding, "the finding cites its source").toContainText(/art\.|TAL|C\.c\.Q\./);
+
+  // The recorded Sovkora run the home shows (content/recorded-runs): a finding quotes the passage of the lease and cites its article, as the run returned them.
+  const visitor = await browser.newContext({ viewport: { width: 1280, height: 900 } });
+  const home = await visitor.newPage();
+  await home.goto(new URL("/fr", BASE).toString());
+  // The proof is drawn inert (the app's own component, aria-hidden): found by its test id, not by role.
+  const recorded = home.locator('[data-testid="compliance-report"]').first();
+  await recorded.scrollIntoViewIfNeeded({ timeout: 30_000 });
+  const quoted = recorded.locator("li", { has: home.locator("p", { hasText: /^«.+»$/ }) });
+  await expect(quoted.first(), "a finding of the recorded run quotes the passage it rests on").toBeVisible();
+  await expect(
+    quoted.first().locator("p.font-semibold"),
+    "the same finding names its article or its source",
+  ).toBeVisible();
+  await visitor.close();
   await context.close();
 });

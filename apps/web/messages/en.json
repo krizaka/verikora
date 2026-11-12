@@ -483,7 +483,12 @@
         "title": "The document",
         "collection": "Collection"
       },
-      "technical": "Technical details (fingerprint)"
+      "technical": "Technical details (fingerprint)",
+      "uploadedTitle": {
+        "lease": "Lease uploaded on {date}",
+        "contract": "Contract uploaded on {date}",
+        "invoice": "Invoice uploaded on {date}"
+      }
     },
     "analysis": {
       "complianceTitle": "Against the law",
@@ -2922,7 +2927,42 @@
       "recheck": "Check again at another date",
       "examine": "Examine the file (authenticity)",
       "checkLaw": "Check against the law",
-      "close": "Close"
+      "close": "Close",
+      "reviewPending": "Rules still to be reviewed by a lawyer",
+      "analysis": {
+        "findings": "Findings",
+        "mayIndicate": "What it may mean",
+        "evidence": "Evidence",
+        "details": "Details",
+        "limits": "What this report did not examine",
+        "nextSteps": "Next steps",
+        "provenance": "Technical details (run, version, rules)",
+        "model": "Rules",
+        "runId": "Run",
+        "duration": "Duration",
+        "version": "Engine version",
+        "copyJson": "Copy as JSON",
+        "copyMarkdown": "Copy as Markdown",
+        "copied": "Copied",
+        "streaming": "The check is running",
+        "noFindings": "No rule was checked",
+        "status": {
+          "inconsistent": "Blocking",
+          "attention": "To look at",
+          "unverified": "Not applicable",
+          "consistent": "Met"
+        }
+      },
+      "peer": {
+        "authenticity": "Authenticity of the file",
+        "registry": "Business registers",
+        "doneOne": "Done on {date} · {count} trace to look at",
+        "doneMany": "Done on {date} · {count} traces to look at",
+        "running": "Running",
+        "failed": "Did not finish",
+        "notYet": "Not done yet",
+        "consulted": "Consulted on {date}"
+      }
     },
     "batch": {
       "title": "Check a batch of documents",
