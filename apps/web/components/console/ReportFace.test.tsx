@@ -7,7 +7,7 @@ import { I18nProvider } from "@/lib/i18n-client";
 import en from "@/messages/en.json";
 import fr from "@/messages/fr.json";
 
-import { FindingList, TechnicalDetails, VerdictBand } from "./ReportFace";
+import { ComplianceReportView, TechnicalDetails } from "./ReportFace";
 
 const MESSAGES = { en: { console: en.console }, fr: { console: fr.console } } as const;
 const readable = (html: string) =>
@@ -65,13 +65,15 @@ const analysis = (inputs: Record<string, string>) => ({
   finishedAt: "2026-10-23T12:00:04.000Z",
 });
 
-describe("the report's face (the UX review's Y5, the report of #321)", () => {
+const view = (report: object, extra: object = {}, locale: "en" | "fr" = "fr") =>
+  wrap(<ComplianceReportView report={report as never} {...(extra as object)} />, locale);
+
+describe("the report's face, drawn by AnalysisReport (the UX review's Y5, #321, krizaka-internal#2293)", () => {
   it("never calls a document the engine did not check a clean one (compliance-check 2.0: unsupported or unknown kind)", () => {
     for (const outcome of ["UNSUPPORTED_KIND", "KIND_UNKNOWN"]) {
-      const html = wrap(
-        <VerdictBand
-          report={{ ...REPORT, rulesetId: "", rulesetVersion: "", findings: [], summary: undefined, outcome } as never}
-        />,
+      const html = view(
+        { ...REPORT, rulesetId: "", rulesetVersion: "", findings: [], summary: undefined, outcome },
+        {},
         "en",
       );
       const text = readable(html);
@@ -83,13 +85,13 @@ describe("the report's face (the UX review's Y5, the report of #321)", () => {
           : "Could not tell what kind of document this is",
       );
     }
-    expect(
-      readable(wrap(<VerdictBand report={{ ...REPORT, findings: [], outcome: "KIND_UNKNOWN" } as never} />, "fr")),
-    ).toContain("Impossible de dire de quel type de document il s'agit");
+    expect(readable(view({ ...REPORT, findings: [], outcome: "KIND_UNKNOWN" }))).toContain(
+      "Impossible de dire de quel type de document il s'agit",
+    );
   });
 
   it("says the verdict first — how many rules of how many need a look, how many of them block — with the law's context and no code", () => {
-    const html = wrap(<VerdictBand report={REPORT as never} />);
+    const html = view(REPORT);
     expect(html).toContain('data-tone="danger"');
     const text = readable(html);
     expect(text).toContain("2 règles sur 10 demandent votre attention");
@@ -98,43 +100,40 @@ describe("the report's face (the UX review's Y5, the report of #321)", () => {
     expect(text).not.toContain("qc-residential-lease");
     expect(
       readable(
-        wrap(
-          <VerdictBand
-            report={
-              {
-                ...REPORT,
-                findings: REPORT.findings.filter((f) => f.verdict === "PASS"),
-                summary: { blockingFailures: 0, rulesEvaluated: 8 },
-              } as never
-            }
-          />,
-        ),
+        view({
+          ...REPORT,
+          findings: REPORT.findings.filter((f) => f.verdict === "PASS"),
+          summary: { blockingFailures: 0, rulesEvaluated: 8 },
+        }),
       ),
     ).toContain("Aucun problème trouvé sur les 8 règles vérifiées");
-    expect(readable(wrap(<VerdictBand report={REPORT as never} />, "en"))).toContain(
-      "2 rules of 10 need your attention",
-    );
+    expect(readable(view(REPORT, {}, "en"))).toContain("2 rules of 10 need your attention");
+  });
+
+  it("draws no coloured bar and no accent colour of its own: the component carries the report", () => {
+    const html = view(REPORT);
+    expect(html).not.toContain("border-l-4");
+    expect(html).not.toContain("text-accent");
   });
 
   it("points the review note to the foot of the report (a footnote), never a line in the band", () => {
-    const html = wrap(<VerdictBand report={REPORT as never} />);
+    const html = view(REPORT);
     expect(html).toContain('href="#fn-1"');
     expect(readable(html)).not.toContain(fr.console.analysis.toReview);
-    expect(wrap(<VerdictBand report={{ ...REPORT, reviewStatus: null } as never} />)).not.toContain('href="#fn-1"');
+    expect(view({ ...REPORT, reviewStatus: null })).not.toContain('href="#fn-1"');
   });
 
-  it("numbers the findings in reading order — what failed first, blocking before important — and folds what passed, numbered on", () => {
-    const html = wrap(<FindingList report={REPORT as never} />);
+  it("groups the findings by gravity — blocking, then what to look at — and folds what was met, with its count", () => {
+    const html = view(REPORT);
     const text = readable(html);
-    expect(text).toMatch(/1 Dépôt de garantie interdit .*2 Frais de retard/);
+    expect(text.indexOf("Dépôt de garantie interdit")).toBeLessThan(text.indexOf("Frais de retard"));
     expect(text.indexOf("Frais de retard")).toBeLessThan(text.indexOf("Durée du bail"));
-    expect(html).toMatch(/<ol[^>]*start="3"/);
-    expect(text).toMatch(/3 Durée du bail/);
-    expect(html).toContain('data-testid="passed-findings"');
-    expect(text).toContain("8 règles respectées");
+    expect(html).toMatch(/<details[^>]*aria-label="Constats: Respecté"/);
+    expect(text).toContain("Respecté · 8");
+    expect(html).not.toMatch(/<details[^>]*aria-label="Constats: Bloquant"/);
   });
 
-  it("rules that do not apply are folded apart, with no severity chip and not counted as things to look at", () => {
+  it("rules that do not apply are folded apart, in a group of their own, not counted as things to look at", () => {
     const report = {
       ...REPORT,
       findings: [
@@ -143,65 +142,58 @@ describe("the report's face (the UX review's Y5, the report of #321)", () => {
         finding("R3", "Chèques", "NOT_APPLICABLE", "BLOCKING"),
       ],
     };
-    const html = wrap(<FindingList report={report as never} />);
-    expect(html).toContain('data-testid="not-applicable-findings"');
-    expect(readable(html)).toContain("2 règles qui ne s'appliquent pas");
-    expect(html).not.toContain('data-testid="finding-list"><ol');
-    expect(readable(html)).not.toContain("Bloquant");
+    const html = view(report);
+    expect(html).toMatch(/<details[^>]*aria-label="Constats: Sans objet"/);
+    expect(readable(html)).toContain("Sans objet · 2");
+    expect(readable(html)).not.toContain("Bloquant ·");
   });
 
-  it("a report never renders the same id twice, even when a rule is listed twice", () => {
+  it("a report never renders the same finding twice, even when a rule is listed twice", () => {
     const dup = finding("TS-P-001", "Clauses de paiement", "FAIL", "MAJOR");
     const report = { ...REPORT, findings: [...REPORT.findings, dup, dup, { ...dup, explanation: "autre" }] };
-    const ids = [...wrap(<FindingList report={report as never} />).matchAll(/ id="([^"]+)"/g)].map((m) => m[1]);
-    expect(ids.length).toBeGreaterThan(3);
-    expect(new Set(ids).size).toBe(ids.length);
+    const html = view(report);
+    expect(html.match(/>Clauses de paiement<\/h4>/g)).toHaveLength(2);
   });
 
-  it("says each severity as a word — Bloquant · Important · À considérer — and the passage or that none is quoted; no code and no run id on the face", () => {
-    const text = readable(
-      wrap(
-        <FindingList
-          report={{ ...REPORT, findings: [...REPORT.findings, finding("R11", "Avis", "FAIL", "INFO")] } as never}
-        />,
-      ),
-    );
-    expect(text).toContain("Bloquant");
-    expect(text).toContain("Important");
-    expect(text).toContain("À considérer");
-    expect(text).not.toContain(fr.console.analysis.verdicts.FAIL);
+  it("each finding carries the passage quoted and the article cited, as the run returned them — and says when no passage is quoted; no code and no run id on the face", () => {
+    const html = view({ ...REPORT, findings: [...REPORT.findings, finding("R11", "Avis", "FAIL", "INFO")] });
+    const text = readable(html);
     expect(text).toContain("« dépôt de sécurité de 1 450 $ »");
+    expect(text).toContain("C.c.Q., art. 2");
     expect(text).toContain(fr.console.reportFace.noQuote);
+    expect(text).not.toContain(fr.console.analysis.verdicts.FAIL);
     expect(text).not.toMatch(/\bR\d+\b/);
     expect(text).not.toContain("BLOCKING");
     expect(text).not.toContain("DETERMINISTIC");
     expect(text).not.toContain("run_8f3a2c");
-    expect(
-      readable(
-        wrap(
-          <FindingList
-            report={{ ...REPORT, findings: [{ ...finding("QC-X", "", "FAIL"), title: undefined }] } as never}
-          />,
-        ),
-      ),
-    ).toContain("1 Règle 1");
-    expect(wrap(<FindingList report={REPORT as never} />)).not.toContain(fr.console.reportFace.seeInFile);
-    expect(wrap(<FindingList report={REPORT as never} selection={{ activeId: null, onSelect: () => {} }} />)).toContain(
+    expect(readable(view({ ...REPORT, findings: [{ ...finding("QC-X", "", "FAIL"), title: undefined }] }))).toContain(
+      "Règle 1",
+    );
+    expect(view(REPORT)).not.toContain(fr.console.reportFace.seeInFile);
+    expect(view(REPORT, { selection: { activeId: null, onSelect: () => {} } })).toContain(
       fr.console.reportFace.seeInFile,
     );
   });
 
-  it("keeps the engine's facts folded — the run id once, each finding's rule id and method by its number; a seeded check's note is at the report's foot, not here (P11, DocumentView.test)", () => {
+  it("keeps the run in one fold: the run id once, the engine version and the rules; a seeded check's note is at the report's foot (P11, DocumentView.test)", () => {
+    const html = view(REPORT, { analysis: analysis({ jurisdiction: "QC" }) });
+    expect(html).toMatch(/<details[^>]*>\s*<summary[^>]*>Détails techniques/);
+    expect(html.match(/run_8f3a2c/g)).toHaveLength(1);
+    const text = readable(html);
+    expect(text).toContain("compliance-check · 1.4.0");
+    expect(text).toContain("qc-residential-lease · 2026-06-20");
+    expect(readable(view(REPORT, { analysis: analysis({ ...SEEDED_INPUTS }) }))).not.toContain(
+      fr.console.analysis.seededNote,
+    );
+  });
+
+  it("keeps the technical details of a run for the history (the run id once, each finding's rule id and method by its number)", () => {
     const html = wrap(<TechnicalDetails documentId="d1" analysis={analysis({ jurisdiction: "QC" })} />);
     expect(html).toContain('data-testid="technical-details"');
     expect(html.match(/run_8f3a2c/g)).toHaveLength(1);
     const text = readable(html);
-    expect(text).toContain("compliance-check · 1.4.0");
     expect(text).toContain("1 · R2 · DETERMINISTIC");
     expect(text).toContain("3 · R1 · DETERMINISTIC");
-    expect(
-      readable(wrap(<TechnicalDetails documentId="d1" analysis={analysis({ ...SEEDED_INPUTS })} />)),
-    ).not.toContain(fr.console.analysis.seededNote);
   });
 
   it("lets a long source address break inside its card, so it never overflows a phone's width (the TAL address of Section G)", () => {
@@ -211,9 +203,9 @@ describe("the report's face (the UX review's Y5, the report of #321)", () => {
       ...REPORT,
       findings: [{ ...finding("TS-G-001", "Avis du TAL absent", "FAIL", "MAJOR"), explanation: `Voir ${url}.` }],
     };
-    const html = wrap(<FindingList report={report as never} />);
+    const html = view(report);
     expect(html).toContain(url);
-    const paragraph = html.match(/<p class="([^"]*)">Voir /)?.[1] ?? "";
-    expect(paragraph).toContain("[overflow-wrap:anywhere]");
+    // AnalysisReport's own paragraphs do not break a long address: the wrapper makes every paragraph break anywhere.
+    expect(html).toContain("[&amp;_p]:[overflow-wrap:anywhere]");
   });
 });

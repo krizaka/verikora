@@ -564,6 +564,22 @@ Krizaka-ts ADR-003, `@krizaka/organize` 0.4. Verikora is the pilot, on « Dossie
   shows « Pas encore partagé » / « Partagé » to reflect the current state. The dialog returns focus to the button on
   close.
 
+### Update — the report is `AnalysisReport` (P4, krizaka-internal#2293, `@krizaka/ui` 4.2.0)
+
+- **The findings are the library's**: `ComplianceReportView` (`ReportFace.tsx`) maps the run to `AnalysisReport` (`lib/analysis-report-map.ts`,
+  tested). The passage (`evidenceSpan.quote`) and the article (`citation`) are the report's own words, never typed here; a failed
+  finding without a passage says so in its sentence. The 4 px coloured bar, the severity chips and the accent numbers are gone: the
+  gravity is a group and a word (Bloquant · À regarder), the colour is the component's.
+- **Groups, not numbers, on the screen**: blocking, then what to look at; « Respecté » and « Sans objet » are folds with their
+  count (the component's `folded`). The signed PDF keeps its own numbering. « Voir dans le fichier » is the finding's location action.
+- **One fold for the run**: « Détails techniques » is the component's provenance fold (run, engine version, rules). The fingerprint and key
+  stay in the history tab's technical details. The closing note keeps its own fold « Détails ».
+- **« Autres vérifications »** lists the other checks of the document as peers with their state in words (« Pas encore faite »,
+  « Faite le … · 2 traces à regarder », « En cours », « N'a pas abouti »); authenticity and the business registers are peers, not sections
+  of the lease report, and open their traces in a fold.
+- **The title says what was filed and when**: « Bail déposé le 23 oct. 2026 » (lease, contract, invoice); another kind keeps what the
+  insight reads in it. The component does not break a long address in its paragraphs: the wrapper does (`overflow-wrap:anywhere`).
+
 ## Plain typography in the app (P5, #322)
 
 - The sans for everything, the mono only for codes and identifiers inside « Détails techniques »: the run id, the

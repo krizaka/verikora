@@ -1,55 +1,52 @@
 "use client";
 
 import { krizakaFetch, useQuery } from "@krizaka/query";
-import { Badge } from "@krizaka/ui/badge";
-import { Button } from "@krizaka/ui/button";
+import { AnalysisReport, type AnalysisReportLabels } from "@krizaka/ui/analysis-report";
 import { DescriptionList } from "@krizaka/ui/description-list";
 import { FootnoteRef } from "@krizaka/ui/footnote";
 import { Stat } from "@krizaka/ui/stat";
-import { type Analysis, type ComplianceReport, isSeededCheck, queryKeys } from "@verikora/core";
+import { type Analysis, type ComplianceReport, type Finding, isSeededCheck, queryKeys } from "@verikora/core";
 import { z } from "zod";
 
-import {
-  NOT_APPLICABLE,
-  type NumberedFinding,
-  numberFindings,
-  severityOf,
-  verdictOf,
-  type VerdictTone,
-} from "@/lib/document-face";
+import { analysisFindings, analysisStatusOfTone } from "@/lib/analysis-report-map";
+import { numberFindings, verdictOf } from "@/lib/document-face";
 import { useSay } from "@/lib/i18n-client";
 import { pluralKey } from "@/lib/plural";
-import { ruleExplanation, ruleTitle } from "@/lib/rule-text";
 
 import { formatDate } from "./format";
-
-const BAND: Record<VerdictTone, string> = {
-  success: "rounded-lg border border-border-default border-l-4 border-l-success bg-surface-1 p-4",
-  warning: "rounded-lg border border-border-default border-l-4 border-l-warning bg-surface-1 p-4",
-  danger: "rounded-lg border border-border-default border-l-4 border-l-danger bg-surface-1 p-4",
-};
-const CHIP: Record<VerdictTone | "neutral", "success" | "warning" | "danger" | "neutral"> = {
-  success: "success",
-  warning: "warning",
-  danger: "danger",
-  neutral: "neutral",
-};
 
 /** The note the verdict points to when the rules still await a lawyer's reading: the first footnote of the report (design § 5.3). */
 export const REVIEW_NOTE = 1;
 
+/** What the document page shares with the findings of its latest compliance check: which finding is lit, and where each sits. */
+export interface FindingSelection {
+  activeId: string | null;
+  onSelect: (id: string | null) => void;
+}
+
 /**
- * The verdict first (the review's D1, design § 5.3): how many rules of how many need a look and how many of them block, in the
- * report's tone, with the law's context in words — the ruleset's id stays in the technical details; never Verikora's own verdict.
- * The review note is a footnote at the foot of the report, pointed to from here.
+ * The compliance report, drawn by `AnalysisReport` of @krizaka/ui (krizaka-internal#2293): the verdict first (how many rules of how many
+ * need a look and how many block, with the law's context in words — never Verikora's own verdict), the findings by gravity each with the
+ * passage it rests on and its article, what was met and what does not apply folded, the run in one fold. The review note is a footnote
+ * at the foot of the report, pointed to from here. `shown` is a subset of the findings (the home's three); the verdict stays the report's.
  */
-export function VerdictBand({ report }: Readonly<{ report: ComplianceReport }>) {
+export function ComplianceReportView({
+  report,
+  analysis,
+  selection,
+  shown,
+}: Readonly<{
+  report: ComplianceReport;
+  analysis?: Analysis;
+  selection?: FindingSelection;
+  shown?: readonly Finding[];
+}>) {
   const { say, locale } = useSay();
   if (report.outcome === "UNSUPPORTED_KIND" || report.outcome === "KIND_UNKNOWN") {
     return (
       <section
         aria-label={say("reportFace.label")}
-        className="rounded-lg border border-border-default border-l-4 border-l-border-strong bg-surface-1 p-4"
+        className="rounded-lg border border-border-default bg-surface-1 p-4"
         data-testid="verdict-band"
         data-tone="neutral"
       >
@@ -69,115 +66,80 @@ export function VerdictBand({ report }: Readonly<{ report: ComplianceReport }>) 
     jurisdiction: say(`analysis.jurisdictionNames.${report.jurisdiction}`),
     date: formatDate(report.asOf, locale),
   });
-  const hint = (
-    <>
-      {v.blocking ? `${say(pluralKey("reportFace.blocking", v.blocking), { count: v.blocking })} · ` : null}
-      {context}
-      {report.reviewStatus ? <FootnoteRef n={REVIEW_NOTE} /> : null}
-    </>
-  );
+  const blocking = v.blocking ? `${say(pluralKey("reportFace.blocking", v.blocking), { count: v.blocking })} · ` : "";
+  const { findings, ruleIdOf } = analysisFindings(shown ?? report.findings, say, locale, Boolean(selection));
+  const labelKeys = [
+    "findings",
+    "mayIndicate",
+    "evidence",
+    "details",
+    "limits",
+    "nextSteps",
+    "provenance",
+    "model",
+    "runId",
+    "duration",
+    "version",
+    "copyJson",
+    "copyMarkdown",
+    "copied",
+    "streaming",
+    "noFindings",
+  ] as const;
+  const labels: AnalysisReportLabels = {
+    ...(Object.fromEntries(labelKeys.map((k) => [k, say(`reportFace.analysis.${k}`)])) as Omit<
+      AnalysisReportLabels,
+      "status" | "location"
+    >),
+    // The location is the one action « See in the file »: its words are the button's, so the label is empty.
+    location: "",
+    status: {
+      inconsistent: say("reportFace.analysis.status.inconsistent"),
+      attention: say("reportFace.analysis.status.attention"),
+      unverified: say("reportFace.analysis.status.unverified"),
+      consistent: say("reportFace.analysis.status.consistent"),
+    },
+  };
+  const ruleset = analysis?.report && "rulesetId" in analysis.report ? analysis.report : null;
+  const provenance = analysis
+    ? {
+        ...(ruleset ? { model: `${ruleset.rulesetId} · ${ruleset.rulesetVersion}` } : {}),
+        ...(analysis.runId ? { runId: analysis.runId } : {}),
+        ...(analysis.blueprintVersion ? { version: `${analysis.studio} · ${analysis.blueprintVersion}` } : {}),
+      }
+    : undefined;
   return (
-    <section
-      aria-label={say("reportFace.label")}
-      className={BAND[v.tone]}
-      data-testid="verdict-band"
+    <div
+      className="flex min-w-0 flex-col gap-2 [&_p]:[overflow-wrap:anywhere] [&_summary]:flex [&_summary]:min-h-11 [&_summary]:items-center [&_button]:min-h-11"
+      data-testid="compliance-report"
       data-tone={v.tone}
     >
-      <Stat label={say("reportFace.label")} value={value} hint={hint} />
-    </section>
-  );
-}
-
-/** What the document page shares with the findings of its latest compliance check: which finding is lit, and where each sits. */
-export interface FindingSelection {
-  activeId: string | null;
-  onSelect: (id: string | null) => void;
-}
-
-/**
- * The findings, numbered in reading order (the review's D1, D2, design § 5.3): what needs a look first, each with its number, its
- * title, its severity as a word, the quote it rests on (or that none is quoted), the explanation and the article; what passed is
- * folded and numbered on. The rule's id and the method stay in the technical details.
- */
-export function FindingList({
-  report,
-  selection,
-}: Readonly<{ report: ComplianceReport; selection?: FindingSelection }>) {
-  const { say, locale } = useSay();
-  const { attention, passed, notApplicable } = numberFindings(report.findings);
-  const item = ({ n, finding: f, anchor }: NumberedFinding) => {
-    const s = severityOf(f.severity);
-    const active = selection?.activeId === f.ruleId;
-    const failed = f.verdict !== "PASS" && f.verdict !== NOT_APPLICABLE;
-    return (
-      <li
-        key={anchor}
-        id={anchor}
-        data-active={active}
-        className="grid grid-cols-[2rem_minmax(0,1fr)] gap-x-2 rounded-lg border border-border-default bg-surface-1 p-3 text-sm data-[active=true]:border-accent data-[active=true]:bg-surface-2"
-      >
-        <span aria-hidden="true" className="text-lg font-bold tabular-nums text-accent">
-          {n}
-        </span>
-        <div className="flex min-w-0 flex-col gap-1">
-          <div className="flex flex-wrap items-center justify-between gap-2">
-            <span className="font-semibold text-fg">
-              {f.title ? ruleTitle(f.ruleId, locale, f.title) : say("reportFace.rule", { n })}
-            </span>
-            {failed ? (
-              <span className="flex items-center gap-2">
-                <Badge tone={CHIP[s.tone]}>{say(`analysis.severities.${s.word}`)}</Badge>
-                {f.verdict === "INSUFFICIENT_EVIDENCE" ? (
-                  <Badge tone="warning">{say("analysis.verdicts.INSUFFICIENT_EVIDENCE")}</Badge>
-                ) : null}
-              </span>
-            ) : null}
-          </div>
-          {f.evidenceSpan?.quote ? <p className="m-0 italic text-fg-secondary">« {f.evidenceSpan.quote} »</p> : null}
-          {!f.evidenceSpan?.quote && failed ? <p className="m-0 text-fg-muted">{say("reportFace.noQuote")}</p> : null}
-          <p className="m-0 text-fg-secondary [overflow-wrap:anywhere]">
-            {ruleExplanation(f.ruleId, locale, f.explanation, f.explanationEn)}
-          </p>
-          <div className="flex flex-wrap items-center gap-3 text-xs text-fg-muted">
-            {f.citation ? <span data-testid="finding-citation">{f.citation}</span> : null}
-            {selection && f.evidenceSpan?.quote ? (
-              <Button
-                size="sm"
-                className="min-h-11"
-                variant={active ? "primary" : "ghost"}
-                aria-pressed={active}
-                onClick={() => selection.onSelect(active ? null : f.ruleId)}
-              >
-                {say("reportFace.seeInFile")}
-              </Button>
-            ) : null}
-          </div>
-        </div>
-      </li>
-    );
-  };
-  return (
-    <div className="flex flex-col gap-3" data-testid="finding-list">
-      {attention.length ? <ol className="m-0 flex list-none flex-col gap-2 p-0">{attention.map(item)}</ol> : null}
-      {passed.length ? (
-        <details className="rounded-lg border border-border-default p-3" data-testid="passed-findings">
-          <summary className="flex min-h-11 cursor-pointer items-center text-sm font-semibold text-fg">
-            {say(pluralKey("reportFace.passed", passed.length), { count: passed.length })}
-          </summary>
-          <ol start={attention.length + 1} className="m-0 mt-3 flex list-none flex-col gap-2 p-0">
-            {passed.map(item)}
-          </ol>
-        </details>
-      ) : null}
-      {notApplicable.length ? (
-        <details className="rounded-lg border border-border-default p-3" data-testid="not-applicable-findings">
-          <summary className="flex min-h-11 cursor-pointer items-center text-sm font-semibold text-fg">
-            {say(pluralKey("reportFace.notApplicable", notApplicable.length), { count: notApplicable.length })}
-          </summary>
-          <ol start={attention.length + passed.length + 1} className="m-0 mt-3 flex list-none flex-col gap-2 p-0">
-            {notApplicable.map(item)}
-          </ol>
-        </details>
+      <AnalysisReport
+        title={say("reportFace.label")}
+        summary={`${value} · ${blocking}${context}`}
+        status={analysisStatusOfTone(v.tone)}
+        findings={findings}
+        labels={labels}
+        hideActions
+        folded={["unverified", "consistent"]}
+        provenance={provenance}
+        provenanceFolded
+        onLocate={
+          selection
+            ? (f) => {
+                const ruleId = ruleIdOf.get(f.id);
+                if (ruleId) {
+                  selection.onSelect(selection.activeId === ruleId ? null : ruleId);
+                }
+              }
+            : undefined
+        }
+      />
+      {report.reviewStatus ? (
+        <p className="m-0 text-xs text-fg-muted">
+          {say("reportFace.reviewPending")}
+          <FootnoteRef n={REVIEW_NOTE} />
+        </p>
       ) : null}
     </div>
   );

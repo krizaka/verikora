@@ -483,7 +483,12 @@
         "title": "Le document",
         "collection": "Collection"
       },
-      "technical": "Détails techniques (empreinte)"
+      "technical": "Détails techniques (empreinte)",
+      "uploadedTitle": {
+        "lease": "Bail déposé le {date}",
+        "contract": "Contrat déposé le {date}",
+        "invoice": "Facture déposée le {date}"
+      }
     },
     "analysis": {
       "complianceTitle": "Au regard de la loi",
@@ -2922,7 +2927,42 @@
       "recheck": "Revérifier à une autre date",
       "examine": "Examiner le fichier (authenticité)",
       "checkLaw": "Vérifier au regard de la loi",
-      "close": "Fermer"
+      "close": "Fermer",
+      "reviewPending": "Règles encore à faire relire par un juriste",
+      "analysis": {
+        "findings": "Constats",
+        "mayIndicate": "Ce que cela peut signifier",
+        "evidence": "Preuve",
+        "details": "Détails",
+        "limits": "Ce que ce rapport n’a pas examiné",
+        "nextSteps": "Prochaines étapes",
+        "provenance": "Détails techniques (exécution, version, règles)",
+        "model": "Règles",
+        "runId": "Exécution",
+        "duration": "Durée",
+        "version": "Version du moteur",
+        "copyJson": "Copier en JSON",
+        "copyMarkdown": "Copier en Markdown",
+        "copied": "Copié",
+        "streaming": "La vérification est en cours",
+        "noFindings": "Aucune règle vérifiée",
+        "status": {
+          "inconsistent": "Bloquant",
+          "attention": "À regarder",
+          "unverified": "Sans objet",
+          "consistent": "Respecté"
+        }
+      },
+      "peer": {
+        "authenticity": "Authenticité du fichier",
+        "registry": "Registres d’entreprises",
+        "doneOne": "Faite le {date} · {count} trace à regarder",
+        "doneMany": "Faite le {date} · {count} traces à regarder",
+        "running": "En cours",
+        "failed": "N’a pas abouti",
+        "notYet": "Pas encore faite",
+        "consulted": "Consulté le {date}"
+      }
     },
     "batch": {
       "title": "Vérifier un lot de documents",

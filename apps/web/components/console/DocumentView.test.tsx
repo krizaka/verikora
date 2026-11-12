@@ -138,31 +138,41 @@ const render = (
   );
 
 describe("the document on DetailLayout (the UX review's Y5)", () => {
-  it("names the document by what the insight knows — never the filename as the title — with one h1, its status, and the filename as the eyebrow", () => {
+  it("names the document by its kind and the day it was filed (« Bail déposé le … ) — never the filename as the title — with one h1, its status, and the filename as the eyebrow", () => {
     nav.search = "";
     const html = render(document([check({ jurisdiction: "QC" })]));
     expect(html.match(/<h1\b/g)).toHaveLength(1);
     const text = readable(html);
-    expect(text).toContain("Bail de logement — Camille Fictif-Beaulieu");
+    expect(text).toContain("Bail déposé le 23 oct. 2026");
     expect(html).not.toMatch(/<h1[^>]*>[^<]*bail-rosemont-5/);
     expect(text).toContain("bail-rosemont-5.pdf");
     expect(text).toContain("À regarder");
   });
 
-  it("the report tab says the verdict first, the findings with what failed first, the engine's facts folded — the run id once on the face", () => {
+  it("the report tab says the verdict first, the findings by gravity with what failed first, the run folded in the report's own fold — the run id once on the face", () => {
     const html = render(document([check({ jurisdiction: "QC" })]));
-    const band = html.indexOf('data-testid="verdict-band"');
-    const findings = html.indexOf('data-testid="finding-list"');
-    const technical = html.indexOf('data-testid="technical-details"');
-    expect(band).toBeGreaterThan(0);
-    expect(findings).toBeGreaterThan(band);
-    expect(technical).toBeGreaterThan(findings);
+    const report = html.indexOf('data-testid="compliance-report"');
+    const technical = html.indexOf("Détails techniques (exécution, version, règles)");
+    const others = html.indexOf('data-testid="other-checks"');
+    expect(report).toBeGreaterThan(0);
+    expect(technical).toBeGreaterThan(report);
+    expect(others).toBeGreaterThan(technical);
     const text = readable(html);
     expect(text).toContain("1 règle sur 2 demande votre attention");
     expect(text.indexOf("Dépôt de garantie interdit")).toBeLessThan(text.indexOf("Durée du bail"));
     expect(html.match(/run_8f3a2c/g)).toHaveLength(1);
     expect(html.indexOf("run_8f3a2c")).toBeGreaterThan(technical);
     expect(text).not.toContain("BLOCKING");
+  });
+
+  it("lists the other checks of the document as peers, each with its state in words — authenticity is one of them, not a section of the lease report", () => {
+    const html = render(document([check({ jurisdiction: "QC" })]));
+    const text = readable(html);
+    expect(html).toContain('data-testid="peer-authenticity"');
+    expect(text).toContain("Autres vérifications");
+    expect(text).toContain("Authenticité du fichier");
+    expect(text).toContain("Pas encore faite");
+    expect(html).not.toContain('data-testid="traces"');
   });
 
   it("leads back to the document's collection (its name), or to the library when it has none", () => {
@@ -193,7 +203,7 @@ describe("the document on DetailLayout (the UX review's Y5)", () => {
     const noted = render(document([reviewed]));
     expect(noted).toContain('href="#fn-1"');
     expect(noted.indexOf(fr.console.analysis.toReview.slice(0, 20))).toBeGreaterThan(
-      noted.indexOf('data-testid="technical-details"'),
+      noted.indexOf("Détails techniques (exécution, version, règles)"),
     );
     expect(html).not.toContain('href="#fn-1"');
   });
@@ -210,15 +220,13 @@ describe("the document on DetailLayout (the UX review's Y5)", () => {
 
   it("says a demo check at the foot, as a note under the report, never inside the technical details or as a box above it (P11)", () => {
     const seeded = render(document([check({ ...SEEDED_INPUTS })]));
-    const details = seeded.slice(
-      seeded.indexOf('data-testid="technical-details"'),
-      seeded.indexOf("</details>", seeded.indexOf('data-testid="technical-details"')),
-    );
+    const start = seeded.indexOf("Détails techniques (exécution, version, règles)");
+    const details = seeded.slice(start, seeded.indexOf("</details>", start));
     expect(readable(details)).not.toContain(fr.console.analysis.seededNote);
     const text = readable(seeded);
     expect(text.indexOf(fr.console.analysis.seededNote)).toBeGreaterThan(text.indexOf(fr.console.library.informative));
     expect(seeded.indexOf(fr.console.analysis.seededNote.slice(0, 20))).toBeGreaterThan(
-      seeded.indexOf('data-testid="verdict-band"'),
+      seeded.indexOf('data-testid="compliance-report"'),
     );
     expect(readable(render(document([check({ jurisdiction: "QC" })])))).not.toContain(fr.console.analysis.seededNote);
   });
@@ -300,7 +308,7 @@ describe("the document on DetailLayout (the UX review's Y5)", () => {
     nav.search = "";
     const none = render(document([]));
     expect(readable(none)).toContain(fr.console.reportFace.notChecked);
-    expect(none).not.toContain('data-testid="verdict-band"');
+    expect(none).not.toContain('data-testid="compliance-report"');
     expect(readable(none)).toContain(fr.console.analysis.complianceTitle);
     nav.search = "refused=RATE_LIMITED";
     expect(readable(render(document([])))).toContain(fr.console.errors.RATE_LIMITED ?? fr.console.errors.UNKNOWN);

@@ -181,7 +181,11 @@ export function DocumentView({
   const facts = documentFacts(doc, { run: params.get("run"), locale });
   const { latestCompliance, latestReport, certifiable, reportHref, isPdf } = facts;
   const lang = locale;
-  const title = displayTitle(doc, lang);
+  // The title says what was filed and when (« Bail déposé le … »); a document of no known kind keeps what the insight reads in it.
+  const title =
+    doc.kind === "lease" || doc.kind === "contract" || doc.kind === "invoice"
+      ? say(`document.uploadedTitle.${doc.kind}`, { date: formatDate(doc.createdAt, locale) })
+      : displayTitle(doc, lang);
   const highlights = highlightsOf(latestReport);
   const selection: FindingSelection = {
     activeId,

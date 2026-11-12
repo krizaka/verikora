@@ -39,6 +39,33 @@ export async function resetToNewAccount(id) {
   }
 }
 
+/**
+ * Makes the compliance check of a seeded document a recorded engine run (`seeded` false: it can be certified and shared) or a demo
+ * check again (`seeded` true). The seed's checks are demo ones, which are never certified: a journey that shares a report needs the other.
+ */
+export async function markSeededCheck(titlePart, seeded) {
+  const url = process.env.DATABASE_URL;
+  if (!url) throw new Error("DATABASE_URL is required: the share journey marks its document's check");
+  const client = new pg.Client({ connectionString: url });
+  await client.connect();
+  try {
+    const { rowCount } = await client.query(
+      `UPDATE analyses SET inputs = $1::jsonb
+        WHERE studio = 'compliance-check' AND document_id IN (SELECT id FROM documents WHERE title LIKE $2)`,
+      [JSON.stringify(seeded ? { seeded: "true" } : {}), `%${titlePart}%`],
+    );
+    if (rowCount === 0) throw new Error(`no compliance check on a document titled like « ${titlePart} »`);
+    // A clean slate: the shares a journey left (or an earlier run left) are not the seed's.
+    await client.query(
+      `DELETE FROM report_grants WHERE analysis_id IN
+         (SELECT a.id FROM analyses a JOIN documents d ON d.id = a.document_id WHERE d.title LIKE $1)`,
+      [`%${titlePart}%`],
+    );
+  } finally {
+    await client.end();
+  }
+}
+
 /** Signs the persona in through the form, as a person would, and keeps the browser state in `file`. */
 export function sessionsFor(browser, workerIndex) {
   return personaSessions({
