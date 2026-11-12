@@ -117,7 +117,7 @@ interface RowProps {
   onReset: () => void;
 }
 
-function SettingRow(props: Readonly<RowProps>) {
+export function SettingRow(props: Readonly<RowProps>) {
   const { def, scope, override, effective, say } = props;
   const base = `adminConfig.settings.${def.key}`;
   const modified = override !== undefined;

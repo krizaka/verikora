@@ -176,12 +176,6 @@ export function assertProductionEnv(source: Record<string, string | undefined> =
 }
 
 export const env = () => readEnv();
-export const signupEnabled = () => env().AUTH_SIGNUP_ENABLED;
-/** Sign-up opens only when it is switched on AND the verification e-mail can be sent: no mail, no accounts nobody can confirm. */
-export const signupOpen = (source: Record<string, string | undefined> = process.env) => {
-  const e = readEnv(source);
-  return e.AUTH_SIGNUP_ENABLED && !!e.MAIL_PROVIDER && !!e.MAIL_API_KEY && !!e.MAIL_DOMAIN;
-};
 /** The administration's allow-list; `null` = no restriction (development only). */
 export function consoleAllowedIps(source: Record<string, string | undefined> = process.env): readonly string[] | null {
   const e = readEnv(source);

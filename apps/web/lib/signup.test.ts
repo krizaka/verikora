@@ -3,7 +3,6 @@ import { describe, expect, it } from "vitest";
 
 import { BRAND_ID } from "@/lib/brand";
 
-import { signupOpen } from "./env";
 import type { AccountMail } from "./mailer";
 import { isVerifyToken, newVerifyToken, signUp, signUpBody, VERIFY_TTL_HOURS, verifyEmail } from "./signup";
 
@@ -135,14 +134,5 @@ describe("sign-up", () => {
       expect(mail.html + mail.text).not.toMatch(/Sovkora|Folioviv/);
     }
     expect(newVerifyToken()).not.toBe(newVerifyToken());
-  });
-
-  it("opens only when it is switched on AND the verification mail can be sent", () => {
-    const mail = { MAIL_PROVIDER: "mailgun", MAIL_DOMAIN: "mg.example.com" };
-    expect(signupOpen({})).toBe(false);
-    expect(signupOpen({ AUTH_SIGNUP_ENABLED: "true" })).toBe(false); // no mail provider: stays closed
-    expect(signupOpen({ AUTH_SIGNUP_ENABLED: "true", ...mail })).toBe(false); // no provider credential
-    expect(signupOpen({ ...mail, MAIL_API_KEY: "x" })).toBe(false); // not switched on
-    expect(signupOpen({ AUTH_SIGNUP_ENABLED: "true", ...mail, MAIL_API_KEY: "x" })).toBe(true);
   });
 });
