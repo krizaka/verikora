@@ -706,3 +706,17 @@ Krizaka-ts ADR-003, `@krizaka/organize` 0.4. Verikora is the pilot, on « Dossie
 > primary, « Vous êtes locataire ? », and no storage sentence (the privacy notice keeps it). **Proof**: at 390 px the H1, the primary action and the
 > finding's article are within 844 px (`scripts/check-home-first-screen.mjs`, in CI). **Signal we are wrong**: contact submissions with topic
 > Verikora do not rise, or visitors still read « I cannot try it ».
+
+## The free pilot is a code the person types (krizaka-internal#3230, 2026-11-12)
+
+- **Decision**: Verikora opens with a limited free pilot, entered by a **code**, never a card. The sign-up page has one optional field « Code pilote » / « Pilot code »
+  (below the password, with a hint that no card is asked); the plans page takes the same code in its existing « Promo code » field. A pilot is a **credit code** the admin
+  creates in `/config/coupons` with the purpose « Pilot » (the package's `demo`): its credits are the number of files, `creditsValidDays` the pot's expiry,
+  `maxRedemptions` the cap. Nothing about a pilot is typed in code.
+- **Why**: the allowance, the window and the cap change with each cohort; the coupons module already holds them, audited, under a row lock.
+- **Words**: a refusal is worded by its code: `COUPON_UNKNOWN`, `COUPON_EXPIRED`, `COUPON_EXHAUSTED`, `COUPON_ACCOUNT_LIMIT` (the package's) and `PILOT_ALREADY_USED`
+  (one pilot per account, whatever the code, under the account's row lock; the refusal is on the audit trail).
+- **Sign-up**: a wrong code is refused with its message **before** any account or mail; a valid one is kept with the verification link and redeemed when the address is
+  confirmed (an unconfirmed address never uses up the pilot). If the pot ran out in between, the account is confirmed all the same and the refusal is on the trail.
+  The code does not open sign-up: it is read only when the `signup.open` setting is on.
+- **Signal we are wrong**: pilot users write that they typed a valid code and were refused, or `billing.pilot_refused` lines rise at verification.

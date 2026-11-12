@@ -20,6 +20,8 @@ export const PAGES = [
   "/fr/docs",
   "/en/sign-in",
   "/fr/sign-in",
+  "/en/sign-up",
+  "/fr/sign-up",
   "/en/forgot-password",
   "/fr/forgot-password",
   `/en/reset-password?token=ye1.${"A".repeat(43)}`,

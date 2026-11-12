@@ -61,3 +61,13 @@ describe("sign-up shows the French terms first (verikora#366)", () => {
     expect(hrefs).toContain("/en/privacy");
   });
 });
+
+describe("the pilot code field (krizaka-internal#3230)", () => {
+  it.each(["fr", "en"] as const)("is an optional, labelled field in %s", async (locale) => {
+    await mount(locale);
+    const label = (locale === "fr" ? fr : en).console.signUp.pilotCode;
+    const input = [...host.querySelectorAll("input")].find((i) => i.labels?.[0]?.textContent?.includes(label));
+    expect(input).toBeTruthy();
+    expect(input?.required).toBe(false);
+  });
+});

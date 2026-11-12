@@ -93,7 +93,7 @@ const calendarOf = (now: Date) => {
   return { timeZone: "UTC", day, month: day.slice(0, 7) };
 };
 
-/** What the ledger says of an account: the paid credits left, and whether this month's free dossier was given and is gone (spent or lapsed). A month without a pot yet is not used: the pot is made when the first check asks. */
+/** What the ledger says of an account: the credits left (bought, or granted by a credit code such as the pilot's: every live pot but the monthly free audit), and whether this month's free dossier was given and is gone (spent or lapsed). A month without a pot yet is not used: the pot is made when the first check asks. */
 export async function ledgerState(
   query: Query,
   accountId: string,
@@ -104,7 +104,7 @@ export async function ledgerState(
   const free = states.filter((s) => s.grant.source === FREE_AUDIT_SOURCE);
   const thisMonth = free.some((s) => s.grant.expiresAt?.getTime() === nextMonth(now).getTime());
   return {
-    credits: live.filter((s) => s.grant.bucket === "purchased").reduce((n, s) => n + s.remaining, 0),
+    credits: live.filter((s) => s.grant.source !== FREE_AUDIT_SOURCE).reduce((n, s) => n + s.remaining, 0),
     freeAuditUsed: thisMonth && !free.some((s) => live.includes(s) && s.remaining > 0),
   };
 }

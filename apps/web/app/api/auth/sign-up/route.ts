@@ -1,3 +1,5 @@
+import { clientAddress } from "@/lib/client-address";
+import { checkPilotCode } from "@/lib/coupons/pilot";
 import { query } from "@/lib/db";
 import { env } from "@/lib/env";
 import { handle, readJson, refuse } from "@/lib/http";
@@ -18,6 +20,10 @@ export function POST(req: Request) {
     if (!(await signupOpenNow(env()))) throw refuse(403, "SIGNUP_CLOSED", "Sign-up is closed");
     const input = await readJson(req, signUpBody);
     await limit("signUp", req, input.email);
+    // A pilot code is refused here, with its code, before any account or mail; it is redeemed when the address is confirmed. It never opens sign-up by itself (the check above).
+    if (input.pilotCode) {
+      await checkPilotCode(input.pilotCode, clientAddress(req.headers));
+    }
     const e = env();
     await signUp({ query, mail: mailerFor(e), baseUrl: e.APP_PUBLIC_URL }, input, new Date());
     return Response.json({ ok: true }, { status: 202 });

@@ -277,7 +277,15 @@
       "title"
     ],
     "public.email_changes": ["account_id", "created_at", "expires_at", "id", "new_email", "token_hash", "used_at"],
-    "public.email_verifications": ["account_id", "created_at", "expires_at", "id", "token_hash", "used_at"],
+    "public.email_verifications": [
+      "account_id",
+      "created_at",
+      "expires_at",
+      "id",
+      "pilot_code",
+      "token_hash",
+      "used_at"
+    ],
     "public.file_report_shares": [
       "created_at",
       "emailed_to",
