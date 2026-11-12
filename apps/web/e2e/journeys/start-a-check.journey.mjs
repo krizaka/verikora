@@ -49,22 +49,6 @@ test(`drop zone is in the viewport at first paint and QC catalogue is first (${P
 });
 
 for (const screen of SCREENS) {
-  test(`the catalogue is filtered to the account's territory (${screen.name})`, async ({ browser }, info) => {
-    const page = await openAs({
-      browser,
-      info,
-      persona: "eric",
-      screen,
-      journey: JOURNEY,
-      videoContextOptions,
-      path: "/fr/app/check",
-    });
-    const catalogue = page.getByTestId("check-catalogue");
-    await expect(catalogue.locator("li").first()).toContainText("Québec");
-    await expect(catalogue).not.toContainText(/France|Wallonie|Facture|Contrat de service/);
-    await page.context().close();
-  });
-
   test(`Eric drops a document, answers « Quel document ? » in view and reaches the report (${screen.name})`, async ({
     browser,
   }, info) => {
@@ -77,6 +61,12 @@ for (const screen of SCREENS) {
       videoContextOptions,
       path: "/fr/app/check",
     });
+
+    const catalogue = page.getByTestId("check-catalogue");
+    await expect(catalogue.locator("li").first(), "Québec first").toContainText("Québec");
+    await expect(catalogue, "filtered to the account's territory").not.toContainText(
+      /France|Wallonie|Facture|Contrat de service/,
+    );
 
     const flow = page.getByTestId("check-flow");
     if (screen.viewport.width >= 1024) {

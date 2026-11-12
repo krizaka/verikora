@@ -3,7 +3,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import { resetRateLimits } from "./limits";
 
 const state = vi.hoisted(() => ({
-  session: null as null | { account: { id: string; email: string; perspective: string | null } },
+  session: null as null | { account: { id: string; email: string; perspective?: string | null; territory?: string } },
   saved: [] as unknown[][],
   audits: [] as Record<string, unknown>[],
 }));
@@ -21,9 +21,12 @@ vi.mock("./db", () => ({ query: async (_sql: string, values: unknown[]) => void 
 
 import { firstCheck, wordingOf } from "./perspective-defaults";
 
-const call = async (method: "GET" | "PUT", body?: unknown) => {
-  const { GET, PUT } = await import("../app/api/me/perspective/route");
-  const req = new Request("https://dev.verikora.com/api/me/perspective", {
+const call = async (method: "GET" | "PUT", body?: unknown, field: "perspective" | "territory" = "perspective") => {
+  const { GET, PUT } =
+    field === "perspective"
+      ? await import("../app/api/me/perspective/route")
+      : await import("../app/api/me/territory/route");
+  const req = new Request(`https://dev.verikora.com/api/me/${field}`, {
     method,
     body: body === undefined ? undefined : JSON.stringify(body),
     headers: { "x-forwarded-for": "203.0.113.7" },
@@ -73,6 +76,46 @@ describe("PUT /api/me/perspective — the side of the lease, chosen at onboardin
   it("reads the side back", async () => {
     state.session = { account: { id: "acc-1", email: "a@x.test", perspective: "tenant" } };
     expect(await (await call("GET")).json()).toEqual({ perspective: "tenant" });
+  });
+});
+
+describe("PUT /api/me/territory — the territory whose checks the check page lists (krizaka-internal#2292)", () => {
+  it("answers 401 to a signed-out caller", async () => {
+    expect((await call("GET", undefined, "territory")).status).toBe(401);
+    expect((await call("PUT", { territory: "FR" }, "territory")).status).toBe(401);
+  });
+
+  it("keeps the territory and writes it to the audit log", async () => {
+    state.session = { account: { id: "acc-1", email: "a@x.test", territory: "QC" } };
+    const res = await call("PUT", { territory: "FR" }, "territory");
+    expect(res.status).toBe(200);
+    expect(await res.json()).toEqual({ territory: "FR" });
+    expect(state.saved).toEqual([["acc-1", "FR"]]);
+    expect(state.audits[0]).toMatchObject({
+      action: "profile.territory_set",
+      actorId: "acc-1",
+      detail: { from: "QC", to: "FR" },
+    });
+  });
+
+  it("accepts each territory of the closed set", async () => {
+    state.session = { account: { id: "acc-1", email: "a@x.test", territory: "QC" } };
+    for (const t of ["QC", "FR", "BE-WAL", "ZZ"]) {
+      expect((await call("PUT", { territory: t }, "territory")).status).toBe(200);
+    }
+  });
+
+  it("refuses any other value with 400, and writes nothing", async () => {
+    state.session = { account: { id: "acc-1", email: "a@x.test", territory: "QC" } };
+    expect((await call("PUT", { territory: "DE" }, "territory")).status).toBe(400);
+    expect((await call("PUT", { territory: "qc" }, "territory")).status).toBe(400);
+    expect((await call("PUT", {}, "territory")).status).toBe(400);
+    expect(state.saved).toEqual([]);
+  });
+
+  it("reads the territory back", async () => {
+    state.session = { account: { id: "acc-1", email: "a@x.test", territory: "FR" } };
+    expect(await (await call("GET", undefined, "territory")).json()).toEqual({ territory: "FR" });
   });
 });
 
