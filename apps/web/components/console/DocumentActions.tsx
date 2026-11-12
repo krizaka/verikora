@@ -32,20 +32,26 @@ export function DocumentActions({
     <>
       {shareProps ? <ReportShareAction {...shareProps} /> : null}
       {reportHref ? (
-        <Button asChild variant={shareProps ? "secondary" : "primary"} size="sm" shape="cut">
+        <Button asChild variant={shareProps ? "secondary" : "primary"} size="sm" shape="cut" className="min-h-11">
           <a href={reportHref} download data-testid="report-download">
             {say("reportFace.downloadReport")}
           </a>
         </Button>
       ) : null}
       {confirming ? (
-        <Button variant="danger" size="sm" loading={deleting} onClick={onDelete}>
+        <Button variant="danger" size="sm" className="min-h-11" loading={deleting} onClick={onDelete}>
           {say("document.deleteConfirm")}
         </Button>
       ) : null}
       <DropdownMenu.Root>
         <DropdownMenu.Trigger asChild>
-          <Button variant="ghost" size="sm" aria-label={say("document.details")} data-testid="document-menu">
+          <Button
+            variant="ghost"
+            size="sm"
+            className="min-h-11 min-w-11"
+            aria-label={say("document.details")}
+            data-testid="document-menu"
+          >
             <MoreIcon size={16} aria-hidden />
           </Button>
         </DropdownMenu.Trigger>

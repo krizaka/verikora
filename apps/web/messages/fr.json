@@ -238,6 +238,19 @@
       "documents": {
         "title": "Mes documents",
         "label": "Vos collections de documents"
+      },
+      "treat": {
+        "title": "À traiter",
+        "label": "En attente de votre décision",
+        "empty": "Rien ne vous attend.",
+        "file": "Dossier reçu le {date}",
+        "toDecide": "À décider"
+      },
+      "latest": {
+        "title": "Dernières vérifications",
+        "label": "Vos dernières vérifications",
+        "empty": "Aucune vérification pour l'instant.",
+        "all": "Toutes les vérifications"
       }
     },
     "sections": {

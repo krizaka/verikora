@@ -204,9 +204,16 @@ export function DocumentView({
     <DetailLayout
       back={
         place ? (
-          <Link href={libraryPath(locale, place.libraryId, place.collectionId)}>{placeName}</Link>
+          <Link
+            className="inline-flex min-h-11 items-center"
+            href={libraryPath(locale, place.libraryId, place.collectionId)}
+          >
+            {placeName}
+          </Link>
         ) : (
-          <Link href={`/${locale}/app`}>{say("document.back")}</Link>
+          <Link className="inline-flex min-h-11 items-center" href={`/${locale}/app`}>
+            {say("document.back")}
+          </Link>
         )
       }
       eyebrow={`${kindName} · ${doc.filename}`}
@@ -231,7 +238,7 @@ export function DocumentView({
       tabs={
         <Tabs.Nav label={say("document.viewer")} current={`${path}/${tab}`}>
           {facts.tabs.map((t) => (
-            <Tabs.NavLink key={t} href={`${path}/${t}`} exact asChild>
+            <Tabs.NavLink key={t} href={`${path}/${t}`} exact asChild className="min-h-11">
               <Link href={`${path}/${t}`} scroll={false}>
                 {say(`document.tabs.${t}`)}
               </Link>
