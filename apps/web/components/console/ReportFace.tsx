@@ -8,7 +8,7 @@ import { Stat } from "@krizaka/ui/stat";
 import { type Analysis, type ComplianceReport, type Finding, isSeededCheck, queryKeys } from "@verikora/core";
 import { z } from "zod";
 
-import { analysisFindings, analysisStatusOfTone } from "@/lib/analysis-report-map";
+import { analysisFindings, analysisStatusOfTone, overallKeyOfTone } from "@/lib/analysis-report-map";
 import { numberFindings, verdictOf } from "@/lib/document-face";
 import { useSay } from "@/lib/i18n-client";
 import { pluralKey } from "@/lib/plural";
@@ -66,7 +66,6 @@ export function ComplianceReportView({
     jurisdiction: say(`analysis.jurisdictionNames.${report.jurisdiction}`),
     date: formatDate(report.asOf, locale),
   });
-  const blocking = v.blocking ? `${say(pluralKey("reportFace.blocking", v.blocking), { count: v.blocking })} · ` : "";
   const { findings, ruleIdOf } = analysisFindings(shown ?? report.findings, say, locale, Boolean(selection));
   const labelKeys = [
     "findings",
@@ -110,13 +109,13 @@ export function ComplianceReportView({
     : undefined;
   return (
     <div
-      className="flex min-w-0 flex-col gap-2 [&_p]:[overflow-wrap:anywhere] [&_summary]:flex [&_summary]:min-h-11 [&_summary]:items-center [&_button]:min-h-11"
+      className="flex min-w-0 flex-col gap-2 [&_header_.flex-wrap>:first-child]:hidden [&_p]:[overflow-wrap:anywhere] [&_summary]:flex [&_summary]:min-h-11 [&_summary]:items-center [&_button]:min-h-11"
       data-testid="compliance-report"
       data-tone={v.tone}
     >
       <AnalysisReport
         title={say("reportFace.label")}
-        summary={`${value} · ${blocking}${context}`}
+        summary={`${say(overallKeyOfTone(v.tone))} · ${value} · ${context}`}
         status={analysisStatusOfTone(v.tone)}
         findings={findings}
         labels={labels}

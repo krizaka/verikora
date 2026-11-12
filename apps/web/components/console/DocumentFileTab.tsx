@@ -8,6 +8,7 @@ import Link from "next/link";
 import { type ComponentProps, memo, type RefObject, useMemo } from "react";
 
 import { DocumentInsight } from "@/components/console/DocumentInsight";
+import { noTextKeyOf } from "@/lib/check-failure";
 import { useSay } from "@/lib/i18n-client";
 import { atOffsets } from "@/lib/text-parts";
 
@@ -153,7 +154,7 @@ function FileContent({
     );
   }
   if (doc.hasText) return <DocumentText text={doc.text} report={report} />;
-  return <Alert tone="info">{say("document.noText")}</Alert>;
+  return <Alert tone="info">{say(noTextKeyOf(doc.mimeType))}</Alert>;
 }
 
 export function DocumentFileTab({

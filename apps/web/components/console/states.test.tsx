@@ -121,10 +121,10 @@ describe("no spinner outside a button", () => {
 
 describe("the NO_TEXT partial state says why, and what still runs", () => {
   it("names the missing text layer, the law check that could not read the clauses, and the file's examination that still runs", () => {
-    expect(fr.console.document.noText).toBe(
+    expect(fr.console.document.noText.pdf).toBe(
       "Ce PDF n'a pas de couche texte : la vérification au regard de la loi n'a pas pu lire ses clauses. L'examen du fichier, lui, a lieu.",
     );
-    expect(en.console.document.noText).toBe(
+    expect(en.console.document.noText.pdf).toBe(
       "This PDF has no text layer: the check against the law could not read its clauses. The file itself is still examined.",
     );
   });

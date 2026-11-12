@@ -436,7 +436,12 @@
       "viewer": "Le document",
       "viewerRegion": "Pages du document",
       "text": "Son texte",
-      "noText": "Ce PDF n'a pas de couche texte : la vérification au regard de la loi n'a pas pu lire ses clauses. L'examen du fichier, lui, a lieu.",
+      "noText": {
+        "pdf": "Ce PDF n'a pas de couche texte : la vérification au regard de la loi n'a pas pu lire ses clauses. L'examen du fichier, lui, a lieu.",
+        "text": "Ce fichier texte est vide : la vérification au regard de la loi n'a pas pu lire ses clauses.",
+        "office": "Ce document Word ou ODT n'a pas de texte lisible : la vérification au regard de la loi n'a pas pu lire ses clauses.",
+        "other": "Ce fichier n'a pas de couche texte : la vérification au regard de la loi n'a pas pu lire ses clauses."
+      },
       "openFile": "Ouvrir le fichier",
       "delete": "Supprimer",
       "deleteConfirm": "Supprimer définitivement",
@@ -2894,6 +2899,11 @@
           "title": "Impossible de dire de quel type de document il s'agit",
           "hint": "Rien n'a été vérifié : indiquez le type de document que vous envoyez, puis relancez la vérification. Ce n'est pas un résultat sans problème."
         }
+      },
+      "overall": {
+        "toFix": "À corriger",
+        "toReview": "À regarder",
+        "nothing": "Rien à signaler"
       },
       "label": "Le résultat",
       "attentionOne": "{count} règle sur {rules} demande votre attention",

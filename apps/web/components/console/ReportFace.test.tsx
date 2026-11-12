@@ -95,7 +95,7 @@ describe("the report's face, drawn by AnalysisReport (the UX review's Y5, #321, 
     expect(html).toContain('data-tone="danger"');
     const text = readable(html);
     expect(text).toContain("2 règles sur 10 demandent votre attention");
-    expect(text).toContain("dont 1 bloquante");
+    expect(text).toContain("1 Bloquant");
     expect(text).toContain("Règles du Québec · en vigueur le");
     expect(text).not.toContain("qc-residential-lease");
     expect(
@@ -207,5 +207,47 @@ describe("the report's face, drawn by AnalysisReport (the UX review's Y5, #321, 
     expect(html).toContain(url);
     // AnalysisReport's own paragraphs do not break a long address: the wrapper makes every paragraph break anywhere.
     expect(html).toContain("[&amp;_p]:[overflow-wrap:anywhere]");
+  });
+
+  describe("the header says the overall status once, in words, and keeps the counts", () => {
+    const head = (html: string) => readable(html.slice(html.indexOf("<header"), html.indexOf("</header>")));
+    const mix = (blocking: number, minor: number, passed: number) => ({
+      ...REPORT,
+      summary: undefined,
+      findings: [
+        ...Array.from({ length: blocking }, (_, n) => finding(`B${n}`, `Bloc ${n}`, "FAIL", "BLOCKING")),
+        ...Array.from({ length: minor }, (_, n) => finding(`M${n}`, `Mineur ${n}`, "FAIL", "MINOR")),
+        ...Array.from({ length: passed }, (_, n) => finding(`P${n}`, `Passé ${n}`, "PASS")),
+      ],
+    });
+
+    it.each([
+      [1, 3, 8, fr.console.reportFace.overall.toFix, "À corriger"],
+      [0, 3, 8, fr.console.reportFace.overall.toReview, "À regarder"],
+      [0, 0, 8, fr.console.reportFace.overall.nothing, "Rien à signaler"],
+    ])("%i blocking, %i to look at, %i met: reads « %s »", (b, m, p, word, expected) => {
+      expect(word).toBe(expected);
+      const text = head(view(mix(b, m, p)));
+      expect(text).toContain(`${word} ·`);
+    });
+
+    it("says it in English too", () => {
+      expect(en.console.reportFace.overall).toEqual({
+        toFix: "To fix",
+        toReview: "To review",
+        nothing: "Nothing to report",
+      });
+    });
+
+    it("keeps the counts and shows « Bloquant » once: the package's own chip repeats it, so it is hidden", () => {
+      const html = view(mix(1, 3, 8));
+      const text = head(html);
+      expect(text).toContain("1 Bloquant");
+      expect(text).toContain("3 À regarder");
+      expect(text).toContain("8 Respecté");
+      expect(text).not.toContain("dont 1 bloquante");
+      expect(html).toContain("[&amp;_header_.flex-wrap&gt;:first-child]:hidden");
+      expect(text.match(/Bloquant/g)).toHaveLength(2); // the hidden chip, and the count
+    });
   });
 });

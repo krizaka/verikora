@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { analysisFindings, analysisStatusOf, analysisStatusOfTone } from "./analysis-report-map";
+import { analysisFindings, analysisStatusOf, analysisStatusOfTone, overallKeyOfTone } from "./analysis-report-map";
 
 const say = (key: string) => key;
 const f = (ruleId: string, verdict: string, severity = "MAJOR", extra: object = {}) => ({
@@ -42,5 +42,13 @@ describe("the run's findings as AnalysisReport's", () => {
     expect(none?.observation).toContain("reportFace.noQuote");
     const [unsure] = analysisFindings([f("R2", "INSUFFICIENT_EVIDENCE")] as never, say, "fr").findings;
     expect(unsure?.observation).toContain("analysis.verdicts.INSUFFICIENT_EVIDENCE");
+  });
+});
+
+describe("the overall status, read once in words", () => {
+  it("is to fix when something blocks, to review when something needs a look, nothing to report otherwise", () => {
+    expect(overallKeyOfTone("danger")).toBe("reportFace.overall.toFix");
+    expect(overallKeyOfTone("warning")).toBe("reportFace.overall.toReview");
+    expect(overallKeyOfTone("success")).toBe("reportFace.overall.nothing");
   });
 });
