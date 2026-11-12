@@ -13,8 +13,7 @@ import { SiteFooter } from "@/components/SiteFooter";
 import { HERO } from "@/content/recorded-runs/samples.mjs";
 import { asLocale, getDictionary } from "@/lib/i18n";
 import type { ConsoleMessages } from "@/lib/i18n-client";
-import { homeReport, productStatus } from "@/lib/landing";
-import { countLabel } from "@/lib/plural";
+import { productStatus } from "@/lib/landing";
 import { recordedRun } from "@/lib/recorded-runs";
 import { pageMetadata, siteJsonLd } from "@/lib/seo";
 import { contactHref } from "@/lib/site";
@@ -40,7 +39,6 @@ export default async function Home({ params }: Readonly<{ params: Promise<{ loca
   const dict = getDictionary(locale);
   const d = dict.landing;
   const run = recordedRun(HERO.run);
-  const { report, hidden } = homeReport(run.report);
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(siteJsonLd(locale)) }} />
@@ -106,7 +104,7 @@ export default async function Home({ params }: Readonly<{ params: Promise<{ loca
                       console: { reportFace: dict.console.reportFace, analysis: dict.console.analysis },
                     } as unknown as ConsoleMessages
                   }
-                  report={report}
+                  report={run.report}
                 />
               </div>
               <details className="mt-4 rounded-lg border border-border-default bg-surface-1" data-testid="run-details">
@@ -127,11 +125,6 @@ export default async function Home({ params }: Readonly<{ params: Promise<{ loca
                   <p className="m-0">
                     {d.proof.rulesetLabel} {run.report.rulesetId} {run.report.rulesetVersion}
                   </p>
-                  {hidden > 0 ? (
-                    <p className="m-0" data-testid="proof-excerpt">
-                      {countLabel(d.proof, "excerpt", hidden)}
-                    </p>
-                  ) : null}
                   <p className="m-0 mt-2 text-fg-muted" data-testid="powered-by">
                     {d.proof.powered}
                   </p>

@@ -23,23 +23,16 @@ Entre la locatrice Madame Hélène Roy (fictif), domiciliée à Montréal,
 et le locataire Monsieur Karim Haddad (fictif), domicilié à Laval.
 Durée : 12 mois, du 1er septembre 2026 au 31 août 2027.
 Loyer mensuel : 1 120 $, payable le premier jour du mois.
-Le locataire verse un dépôt de garantie équivalant à un mois de loyer à la signature.
-Le locataire renonce à son droit au maintien dans les lieux à la fin du bail.`,
+Le locataire s'engage à respecter le règlement de l'immeuble, que la locatrice lui remettra après la signature du bail.
+Le locataire renonce à son droit au maintien dans les lieux à la fin du bail.
+`,
   },
 };
 
 /**
- * The finding the home's hero shows (krizaka-internal#2562): the recorded run and the rule, chosen as DATA. The rule is one a
- * property manager meets every day and is not the worn security-deposit example (QC-LEASE-004, the founder's content rule).
- * QC-LEASE-008 (the lowest-rent notice) was the first pick but its run has no quoted passage (the notice is absent), so the hero
- * takes QC-LEASE-007 of the owner's lease template: a quoted waiver of the right to remain in the premises.
+ * The finding the home's hero shows (krizaka-internal#2562): the recorded run and the rule, chosen as DATA. The home's run is a lease
+ * with no deposit clause (krizaka-internal#3281), so the whole report is shown, nothing hidden. The hero takes QC-LEASE-007 of the owner's
+ * lease template: a quoted waiver of the right to remain in the premises (QC-LEASE-008, the lowest-rent notice, has no quoted passage: it is absent).
  * `lib/landing.test.ts` holds the rule: the finding exists in that run, is FAIL, quotes the lease and names an article.
  */
 export const HERO = { run: "landlord", rule: "QC-LEASE-007" };
-
-/**
- * The rules the home's report leaves out (krizaka-internal#2562, slice C): the founder's content rule is to show real problems managers meet,
- * never the worn security-deposit example. The report is the recorded run's, minus these rules; its counts are read again from what is left,
- * and the details fold says how many are not shown. `lib/landing.test.ts` holds it: no such rule anywhere on the rendered home.
- */
-export const HOME_HIDDEN = ["QC-LEASE-004"];

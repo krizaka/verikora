@@ -8,8 +8,8 @@ vi.mock("next/navigation", () => ({
 }));
 
 import Home from "@/app/[locale]/page";
-import { HERO, HOME_HIDDEN } from "@/content/recorded-runs/samples.mjs";
-import { homeReport } from "@/lib/landing";
+import { HERO } from "@/content/recorded-runs/samples.mjs";
+import { verdictOf } from "@/lib/document-face";
 import { recordedRun } from "@/lib/recorded-runs";
 import { ruleTitle } from "@/lib/rule-text";
 import en from "@/messages/en.json";
@@ -21,7 +21,7 @@ const render = async (locale: "en" | "fr") =>
 /** The recorded report on the home (krizaka-internal#2562, slice C): rendered, in both languages. */
 describe("the home's real report, rendered", async () => {
   const run = recordedRun(HERO.run);
-  const { report, hidden } = homeReport(run.report);
+  const report = run.report;
   const pages = { en: await render("en"), fr: await render("fr") };
 
   it("draws the report's findings, the quote and the article of each, from the run", () => {
@@ -40,7 +40,7 @@ describe("the home's real report, rendered", async () => {
 
   it("reads its counts from the run: the header says how many of how many rules need a look", () => {
     const rules = report.summary?.rulesEvaluated ?? 0;
-    const attention = report.findings.filter((f) => f.verdict === "FAIL").length;
+    const attention = verdictOf(report).attention;
     expect(attention).toBeGreaterThan(1);
     for (const [locale, d] of [
       ["fr", fr],
@@ -52,30 +52,26 @@ describe("the home's real report, rendered", async () => {
     }
   });
 
-  it("shows no hidden rule anywhere: not its id, not its title in either language, not its quote", () => {
-    for (const [locale, html] of Object.entries(pages)) {
-      for (const ruleId of HOME_HIDDEN) {
-        const finding = run.report.findings.find((f) => f.ruleId === ruleId)!;
-        expect(html).not.toContain(ruleId);
-        expect(html).not.toContain("QC-LEASE-004");
-        expect(html).not.toContain(finding.title);
-        expect(html).not.toContain(ruleTitle(ruleId, "en", finding.title));
-        if (finding.evidenceSpan?.quote) {
-          expect(html, locale).not.toContain(finding.evidenceSpan.quote);
-        }
+  it("shows every finding of the run it names, and puts forward no security-deposit finding (QC-LEASE-004 is not applicable to this lease)", () => {
+    expect(report.findings.length).toBe(run.report.findings.length);
+    expect(report.findings.find((f) => f.ruleId === "QC-LEASE-004")?.verdict).toBe("NOT_APPLICABLE");
+    for (const html of Object.values(pages)) {
+      expect(html).not.toContain("proof-excerpt");
+      for (const f of report.findings.filter((x) => x.verdict !== "NOT_APPLICABLE")) {
+        expect(html, f.ruleId).toContain(
+          ruleTitle(f.ruleId, html === pages.en ? "en" : "fr", f.title).replace(/'/g, "&#x27;"),
+        );
       }
     }
   });
 
-  it("says in the details fold how many rules are left out, and keeps the run id, the date, the ruleset and the engine line there", () => {
+  it("keeps the run id, the date, the ruleset and the engine line there", () => {
     for (const html of Object.values(pages)) {
       const fold = html.slice(html.indexOf('data-testid="run-details"'));
       expect(fold).toContain(run.runId);
       expect(fold).toContain(run.report.rulesetId);
       expect(fold).toContain('data-testid="powered-by"');
-      expect(fold).toContain('data-testid="proof-excerpt"');
     }
-    expect(hidden).toBe(HOME_HIDDEN.length);
     expect(pages.fr).toContain("Détails de l&#x27;exécution");
     expect(pages.en).toContain("Run details");
   });
