@@ -10,19 +10,17 @@ import { appSettings } from "@/lib/settings/instance";
 export interface PricingView {
   sold: PricingPlan[];
   soon: PricingSoon[];
-  freeFirst: boolean;
   launch?: { headline: string; ends: string; lines: { plan: string; text: string }[] };
 }
 
 /**
  * The offers as data, read from the catalogue in force (never an internal entry, an entry in preparation without its figure —
- * ADR-009), the free monthly dossier and the announced launch offer. One reader for the public page and the in-app plans page,
+ * ADR-009), the announced launch offer. One reader for the public page and the in-app plans page,
  * so a signed-in user is shown the very grid a visitor sees.
  */
 export async function pricingView(locale: Locale, now: Date): Promise<PricingView> {
-  const [prices, freeFirst, announced] = await Promise.all([
+  const [prices, announced] = await Promise.all([
     appPrices().catalogue(now),
-    appSettings().get("audit.freeFirst"),
     appSettings().get("pricing.announcedCode"),
   ]);
   const publicPrices = publicCatalogue(prices);
@@ -36,5 +34,5 @@ export async function pricingView(locale: Locale, now: Date): Promise<PricingVie
   const launch = offer
     ? offerLines(offer, offerPrices(offer, subscriptions), locale, getDictionary(locale).pricing.offer, format)
     : undefined;
-  return { sold, soon, freeFirst: freeFirst === true, launch };
+  return { sold, soon, launch };
 }

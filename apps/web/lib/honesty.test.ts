@@ -24,7 +24,6 @@ describe("the public face says only what is true (audit 2026-11-04, krizaka-inte
           locale,
           sold: [{ plan: "agency", price: "49", per: "month", included: 15, overage: null }],
           soon: [],
-          freeFirst: false,
           status: "x",
         }),
       );
@@ -32,7 +31,6 @@ describe("the public face says only what is true (audit 2026-11-04, krizaka-inte
       expect(text(html)).toContain(t.pricing.requestAccess);
       expect(html).toContain(`href="/${locale}/contact"`);
       expect(html).not.toContain(`href="/${locale}/sign-in"`);
-      expect(text(html)).toContain(t.pricing.plannedNote);
     },
   );
 

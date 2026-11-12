@@ -42,7 +42,6 @@ export default async function Pricing({ params }: Readonly<{ params: Promise<{ l
           locale={locale}
           sold={view.sold}
           soon={view.soon}
-          freeFirst={view.freeFirst}
           status={getDictionary(locale).landing.status[productStatus(preview)]}
         />
       </main>

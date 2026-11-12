@@ -61,7 +61,7 @@
   },
   "pricing": {
     "title": "Pricing",
-    "lead": "No annual subscription. Pay for each file you verify. Subscriptions are coming soon. Prices in CAD, before taxes: GST and QST are added on the invoice.",
+    "lead": "You pay for each file you verify. Prices are in CAD, and GST and QST are added on the invoice.",
     "offer": {
       "headline": "Launch offer: {percent}% off the first {months} months with the code {code}",
       "line": "{offer} a month for the first {months} months, then {regular} a month",
@@ -69,24 +69,22 @@
       "always": "The regular price applies after the offer."
     },
     "requestAccess": "Request access",
-    "plannedNote": "Prices planned for the opening, in CAD, before taxes. Sign-up is closed.",
     "plansLabel": "Plans",
     "subscribe": "Subscribe — {plan}",
     "current": "Current plan",
     "paymentsOff": "Payment is not available yet on this environment.",
     "inApp": "Choose your plan",
     "perMonth": " a month, plus taxes",
-    "perDossier": " per dossier, plus taxes",
-    "beyond": "Then {rate} for each further dossier, charged to your card on file, plus taxes",
-    "included": "{included} dossiers included each month",
+    "perDossier": " per file, plus taxes",
+    "beyond": "Then {rate} for each further file, charged to your card on file, plus taxes",
+    "included": "{included} files included each month",
     "paused": "Past the included volume, checks wait until next month",
-    "freeFirst": "One dossier verified free every month, no card",
     "cancel": "Billed monthly, cancel any time from the billing portal",
-    "noSubscription": "No subscription: you pay for the dossiers you verify",
-    "volume": "More than {included} dossiers a month? Write to us",
+    "noSubscription": "No subscription: you pay for the files you verify",
+    "volume": "More than {included} files a month? Write to us",
     "plans": {
       "document": {
-        "name": "One document",
+        "name": "One file",
         "features": [
           "For a single file: document verification and file screening",
           "A signed report that cites the article behind every finding"
@@ -119,18 +117,6 @@
         "firm": {
           "name": "Building manager subscription",
           "text": "For property managers and firms with a larger volume."
-        },
-        "fullFile": {
-          "name": "The full applicant file",
-          "text": "The documents, then the registry checks."
-        },
-        "backgroundCheck": {
-          "name": "Background checks",
-          "text": "The applicant's records, with their consent."
-        },
-        "screening": {
-          "name": "The document filter alone",
-          "text": "The first stage of a file, charged only when it runs."
         }
       }
     }

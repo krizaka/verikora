@@ -47,9 +47,10 @@ describe("no public page advertises a charge the code does not make (#373)", () 
     it(`${locale}: every amount on the pricing page is the price of something sold`, async () => {
       const catalogue = priceCatalogue(PRICES, memoryPriceStore());
       const { sold, soon } = pricingLines(publicCatalogue(await catalogue.catalogue(NOW)), locale);
-      const html = renderToStaticMarkup(
-        PricingContent({ locale, sold, soon, freeFirst: true, status: "x" }),
-      ).replaceAll(/<[^>]+>/g, " ");
+      const html = renderToStaticMarkup(PricingContent({ locale, sold, soon, status: "x" })).replaceAll(
+        /<[^>]+>/g,
+        " ",
+      );
       const billed = (await catalogue.catalogue(NOW))
         .filter((e) => Object.values(SOLD).some((s) => s.key === e.key))
         .flatMap((e) => [e.amountCents!, e.limits[LIMIT.overage] ?? 0].filter((c) => c > 0))
