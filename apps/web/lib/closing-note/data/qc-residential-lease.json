@@ -250,6 +250,22 @@
     "TS-P-001": {
       "fr": "Paiement d'avance, dépôt et chèques postdatés",
       "en": "Payment in advance, deposit and postdated cheques"
+    },
+    "QC-LANG-001": {
+      "fr": "Langue française — le document est en français, ou dit qu'une version française a été remise",
+      "en": "French language — the document is in French, or says a French version was handed over"
+    },
+    "QC-LEASE-012": {
+      "fr": "Visites et hébergement d'un tiers — clause abusive",
+      "en": "Visits and hosting of a third party — unfair clause"
+    },
+    "QC-LEASE-013": {
+      "fr": "Résiliation de plein droit pour un seul retard — sans effet",
+      "en": "Automatic termination for a single late payment — without effect"
+    },
+    "QC-LEASE-014": {
+      "fr": "Formulaire obligatoire du bail de logement",
+      "en": "Mandatory residential lease form"
     }
   }
 }

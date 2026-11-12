@@ -69,12 +69,12 @@ describe("The recorded runs: one per side of the lease, or the home does not bui
     expect(l.report.findings.filter((f) => f.verdict === "FAIL").length).toBeGreaterThan(0);
   });
 
-  it("was recorded with the corrected ruleset (revision 2, ten rules): the amountless deposit of the landlord's template is caught, the waiver rule ran", () => {
+  it("was recorded with the current ruleset (revision 5, sixteen rules): the amountless deposit of the landlord's template is caught, the waiver rule ran", () => {
     for (const side of PERSPECTIVES) {
       const r = recordedRun(side);
-      expect(r.report.rulesetRevision).toBe(2);
+      expect(r.report.rulesetRevision).toBe(5);
       expect(r.report.findings.map((f) => f.ruleId)).toContain("QC-LEASE-009");
-      expect(r.report.summary?.rulesEvaluated).toBe(10);
+      expect(r.report.summary?.rulesEvaluated).toBe(16);
     }
     expect(recordedRun("landlord").document.text).toMatch(/dépôt de garantie équivalant à un mois de loyer/);
     expect(recordedRun("landlord").report.findings.find((f) => f.ruleId === "QC-LEASE-004")?.verdict).toBe("FAIL");
