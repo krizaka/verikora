@@ -21,7 +21,13 @@ const readable = (html: string) =>
     .replace(/&#x27;|&#39;/g, "'")
     .replace(/&[a-z#0-9]+;/gi, " ")
     .replace(/\s+/g, " ");
-const SAVED: ProfileValues = { name: "Éric Tremblay", avatarSeed: "plain-2", locale: "fr", perspective: "landlord", territory: "QC" };
+const SAVED: ProfileValues = {
+  name: "Éric Tremblay",
+  avatarSeed: "plain-2",
+  locale: "fr",
+  perspective: "landlord",
+  territory: "QC",
+};
 const AUDIENCES = [
   { audience: "tenant", status: "available" },
   { audience: "landlord", status: "available" },
@@ -57,7 +63,11 @@ describe("the profile is one section with one save (the review's E2)", () => {
 
   it("sends only the fields that changed — never the others, which another session may have edited — and the perspective when it moved", () => {
     expect(profilePatch(SAVED, { ...SAVED })).toEqual({ profile: null, perspective: null, territory: null });
-    expect(profilePatch(SAVED, { ...SAVED, name: "  " })).toEqual({ profile: { name: null }, perspective: null, territory: null });
+    expect(profilePatch(SAVED, { ...SAVED, name: "  " })).toEqual({
+      profile: { name: null },
+      perspective: null,
+      territory: null,
+    });
     expect(profilePatch(SAVED, { ...SAVED, avatarSeed: "plain-4" })).toEqual({
       profile: { avatarSeed: "plain-4" },
       perspective: null,
