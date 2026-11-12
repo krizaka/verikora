@@ -75,6 +75,16 @@ test("a failure is described by its status and code, never its body", () => {
   );
 });
 
+// krizaka-internal#3214: behind DigitalOcean a coded 502 arrives as a 504 HTML page; the status it replaced and the code header remain.
+test("a failure behind the ingress names the origin's status and the code header", () => {
+  const headers = new Headers({ "x-do-orig-status": "502", "x-error-code": "SOVKORA_KEY" });
+  assert.equal(
+    describeFailure("start the lease check", 504, null, headers),
+    "start the lease check: HTTP 504 (origin 502), SOVKORA_KEY",
+  );
+  assert.equal(describeFailure("upload", 413, { code: "TOO_LARGE" }, new Headers()), "upload: HTTP 413, TOO_LARGE");
+});
+
 test("a printed line has no line break an input could forge", async () => {
   const { plain } = await import("./smoke-lease-check.mjs");
   assert.equal(plain("a\nb\r\nc"), "a b  c");

@@ -38,17 +38,24 @@ export const montrealDay = (now) =>
 
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
-/** What the smoke says for an answer that is not the expected one: the status and the stable code, never the body in full. Pure. */
-export function describeFailure(step, status, body) {
-  const code = [body?.code, body?.error?.code].find((c) => typeof c === "string") ?? "no code";
-  return `${step}: HTTP ${status}, ${code}`;
+/**
+ * What the smoke says for an answer that is not the expected one: the status and the stable code, never the body in full. Behind
+ * DigitalOcean a 5xx arrives as the ingress's own page (status 504, no JSON): the status it replaced (`x-do-orig-status`) and the code
+ * Verikora also sends as a header (`x-error-code`) still say what happened (krizaka-internal#3214). Pure.
+ */
+export function describeFailure(step, status, body, headers = new Headers()) {
+  const code =
+    [body?.code, body?.error?.code, headers.get("x-error-code")].find((c) => typeof c === "string" && c) ?? "no code";
+  const origin = headers.get("x-do-orig-status");
+  return `${step}: HTTP ${status}${origin && origin !== String(status) ? ` (origin ${origin})` : ""}, ${code}`;
 }
 
 /** Waits until the document's text is read (the extraction leaves queued/running), or fails with a stable sentence. */
 async function waitForText({ call, token, documentId, deadline, now, wait }) {
   for (;;) {
     const read = await call(`/api/documents/${documentId}`, {}, token);
-    if (!read.res.ok) throw new Error(describeFailure("read the document", read.res.status, read.body));
+    if (!read.res.ok)
+      throw new Error(describeFailure("read the document", read.res.status, read.body, read.res.headers));
     const extraction = read.body.document.extraction;
     if (extraction === "failed") throw new Error("the text of the lease could not be read");
     if (extraction !== "queued" && extraction !== "running") return;
@@ -64,7 +71,8 @@ async function waitForAnalysis({ call, token, documentId, first, deadline, now, 
     if (now().getTime() > deadline) throw new Error("the lease check did not finish in time");
     await wait(3000);
     const poll = await call(`/api/documents/${documentId}/analyses/${analysis.id}`, {}, token);
-    if (!poll.res.ok) throw new Error(describeFailure("read the lease check", poll.res.status, poll.body));
+    if (!poll.res.ok)
+      throw new Error(describeFailure("read the lease check", poll.res.status, poll.body, poll.res.headers));
     analysis = poll.body.analysis;
   }
   return analysis;
@@ -95,7 +103,7 @@ export async function smokeLeaseCheck({
     body: JSON.stringify({ email, password, client: "native" }),
   });
   if (!signIn.res.ok || typeof signIn.body?.token !== "string")
-    throw new Error(describeFailure("sign-in", signIn.res.status, signIn.body));
+    throw new Error(describeFailure("sign-in", signIn.res.status, signIn.body, signIn.res.headers));
   const token = signIn.body.token;
   let documentId = null;
   try {
@@ -104,7 +112,7 @@ export async function smokeLeaseCheck({
     form.set("file", new File([lease.bytes], "smoke-bail.pdf", { type: "application/pdf" }));
     form.set("kind", "lease");
     const upload = await call("/api/documents", { method: "POST", body: form }, token);
-    if (!upload.res.ok) throw new Error(describeFailure("upload", upload.res.status, upload.body));
+    if (!upload.res.ok) throw new Error(describeFailure("upload", upload.res.status, upload.body, upload.res.headers));
     documentId = upload.body.document.id;
     log(`uploaded ${documentId}`);
     const deadline = now().getTime() + timeoutMs;
@@ -119,7 +127,8 @@ export async function smokeLeaseCheck({
       },
       token,
     );
-    if (!start.res.ok) throw new Error(describeFailure("start the lease check", start.res.status, start.body));
+    if (!start.res.ok)
+      throw new Error(describeFailure("start the lease check", start.res.status, start.body, start.res.headers));
     const analysis = await waitForAnalysis({
       call,
       token,

@@ -145,4 +145,72 @@ describe("the Sovkora client", () => {
       createSovkoraClient({ baseUrl: "https://x/edge", apiKey: "oz_t", fetch: edge.fetch }).getRun(RUN.id),
     ).rejects.toMatchObject({ body: { code: "SOVKORA_SHAPE" } });
   });
+
+  // krizaka-internal#3214: a run start that never answered left the request to the ingress (a bare 504). One deadline is shared by
+  // every call of the start, below the ingress's, and each call says in the server log what it got and how long it took.
+  it("answers SOVKORA_UNAVAILABLE when the edge never answers, within the start's one deadline", async () => {
+    const neverAnswers = (() => new Promise<Response>(() => {})) as unknown as typeof globalThis.fetch;
+    const lines: string[] = [];
+    const client = createSovkoraClient({
+      baseUrl: "https://x/edge",
+      apiKey: "oz_t",
+      fetch: neverAnswers,
+      timeoutMs: 60_000,
+      startDeadlineMs: 50,
+      log: (line) => lines.push(line),
+    });
+    const started = performance.now();
+    await expect(client.startRun("compliance-check", {})).rejects.toMatchObject({
+      status: 502,
+      body: { code: "SOVKORA_UNAVAILABLE" },
+    });
+    expect(performance.now() - started).toBeLessThan(1_000);
+    expect(lines).toEqual([
+      expect.stringMatching(/^sovkora: GET \/api\/v1\/studios\/installations no answer in \d+ ms$/),
+    ]);
+  });
+
+  it("shares the deadline across the installation and the run (no 20 s per call that add up)", async () => {
+    const edge = fakeEdge({
+      "GET /edge/api/v1/studios/installations": () => ({ status: 200, body: [{ studioKey: "compliance-check" }] }),
+    });
+    const fetch = (async (url: string, init: RequestInit = {}) =>
+      (init.method ?? "GET") === "GET"
+        ? new Promise<Response>((resolve) => setTimeout(() => resolve(edge.fetch(url, init)), 30))
+        : new Promise<Response>(() => {})) as unknown as typeof globalThis.fetch;
+    const client = createSovkoraClient({
+      baseUrl: "https://x/edge",
+      apiKey: "oz_t",
+      fetch,
+      timeoutMs: 60_000,
+      startDeadlineMs: 80,
+      log: () => {},
+    });
+    const started = performance.now();
+    await expect(client.startRun("compliance-check", {})).rejects.toMatchObject({
+      body: { code: "SOVKORA_UNAVAILABLE" },
+    });
+    expect(performance.now() - started).toBeLessThan(1_000);
+  });
+
+  it("logs each call's method, path, status, code and elapsed time, never the key or the query", async () => {
+    const edge = fakeEdge({
+      "GET /edge/api/v1/studios/installations": () => ({ status: 200, body: [] }),
+      "POST /edge/api/v1/studios/compliance-check/installations": () => ({ status: 401 }),
+    });
+    const lines: string[] = [];
+    const client = createSovkoraClient({
+      baseUrl: "https://x/edge",
+      apiKey: "oz_secret_key",
+      fetch: edge.fetch,
+      log: (line) => lines.push(line),
+    });
+    await expect(client.startRun("compliance-check", {})).rejects.toMatchObject({ body: { code: "SOVKORA_KEY" } });
+    expect(lines).toHaveLength(2);
+    expect(lines[0]).toMatch(/^sovkora: GET \/api\/v1\/studios\/installations 200 in \d+ ms$/);
+    expect(lines[1]).toMatch(
+      /^sovkora: POST \/api\/v1\/studios\/compliance-check\/installations 401 SOVKORA_KEY in \d+ ms$/,
+    );
+    expect(lines.join("\n")).not.toMatch(/oz_secret_key|locale=/);
+  });
 });

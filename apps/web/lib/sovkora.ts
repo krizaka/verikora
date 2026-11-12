@@ -4,7 +4,8 @@ import { z } from "zod";
 
 import { systemClock } from "../app/system-clock";
 import { readEnv } from "./env";
-import { HttpError, refuse } from "./http";
+import { codeOf, HttpError, refuse } from "./http";
+import { logInfo } from "./log";
 import { engineDoor, standingConsent } from "./screening-checks/engine-door";
 import type { ChecksDoor } from "./screening-checks/model";
 
@@ -45,38 +46,90 @@ export function sovkoraRefusal(status: number): { status: number; code: string }
 export const kindIsRead = (pinnedVersion: string | undefined): boolean =>
   pinnedVersion === undefined || Number.parseInt(pinnedVersion, 10) >= 2;
 
+/**
+ * The one deadline of a run start (installation + run), shared by its calls. Below the ingress's own (DigitalOcean answers a bare 504
+ * HTML page): past it the start answers `SOVKORA_UNAVAILABLE`, a code the UI says and a batch waits on (krizaka-internal#3214).
+ */
+// @fixed: a technical bound below the ingress's timeout, not a business setting
+export const START_DEADLINE_MS = 25_000;
+
+/** Rejects when the signal aborts, whether or not the work honours it (a fetch, or a body read, that never answers). */
+function within<T>(work: Promise<T>, signal: AbortSignal): Promise<T> {
+  if (signal.aborted) {
+    return Promise.reject(signal.reason);
+  }
+  return new Promise<T>((resolve, reject) => {
+    const abort = () => reject(signal.reason);
+    signal.addEventListener("abort", abort, { once: true });
+    work.then(resolve, reject).finally(() => signal.removeEventListener("abort", abort));
+  });
+}
+
 export function createSovkoraClient(options: {
   baseUrl: string;
   apiKey: string | undefined;
   fetch?: Fetch;
+  /** One call's bound. */
   timeoutMs?: number;
+  /** The whole run start's bound (all its calls). */
+  startDeadlineMs?: number;
+  /** One line per call: method, path (no query), status and code, elapsed time; never the key. */
+  log?: (line: string) => void;
 }): SovkoraClient {
   const doFetch = options.fetch ?? fetch;
   const base = options.baseUrl.replace(/\/$/, "");
   const installed = new Map<string, string | undefined>();
+  const log = options.log ?? logInfo;
 
   async function call<T>(
     path: string,
     schema: z.ZodType<T>,
-    init: { method?: string; body?: unknown } = {},
+    init: { method?: string; body?: unknown; deadline?: AbortSignal } = {},
   ): Promise<T> {
     if (!options.apiKey) throw refuse(503, "SOVKORA_NOT_CONFIGURED", "AI_API_KEY is not set");
-    let res: Response;
+    const method = init.method ?? "GET";
+    const route = path.split("?")[0]!;
+    const perCall = AbortSignal.timeout(options.timeoutMs ?? 20_000);
+    const signal = init.deadline ? AbortSignal.any([perCall, init.deadline]) : perCall;
+    const started = performance.now();
+    const line = (...parts: (string | number | undefined)[]) =>
+      log(
+        ["sovkora:", method, route, ...parts, `in ${Math.round(performance.now() - started)} ms`]
+          .filter((p) => p !== undefined && p !== "")
+          .join(" "),
+      );
+    let status: number | undefined;
     try {
-      res = await doFetch(`${base}${path}`, {
-        method: init.method ?? "GET",
-        headers: {
-          authorization: `Bearer ${options.apiKey}`,
-          accept: "application/json",
-          ...(init.body ? { "content-type": "application/json" } : {}),
-        },
-        body: init.body ? JSON.stringify(init.body) : undefined,
-        signal: AbortSignal.timeout(options.timeoutMs ?? 20_000),
-        cache: "no-store",
-      });
-    } catch {
-      throw refuse(502, "SOVKORA_UNAVAILABLE", "Sovkora did not answer");
+      const res = await within(
+        doFetch(`${base}${path}`, {
+          method,
+          headers: {
+            authorization: `Bearer ${options.apiKey}`,
+            accept: "application/json",
+            ...(init.body ? { "content-type": "application/json" } : {}),
+          },
+          body: init.body ? JSON.stringify(init.body) : undefined,
+          signal,
+          cache: "no-store",
+        }),
+        signal,
+      );
+      status = res.status;
+      const data = await within(read(res, schema, `${method} ${route}`), signal);
+      line(status);
+      return data;
+    } catch (error) {
+      if (error instanceof HttpError) {
+        line(status, codeOf(error, ""));
+        throw error;
+      }
+      line(status, "no answer");
+      throw refuse(502, "SOVKORA_UNAVAILABLE", `Sovkora did not answer ${method} ${route} in time`);
     }
+  }
+
+  /** Sovkora's answer read against its schema, or its refusal as a stable code. */
+  async function read<T>(res: Response, schema: z.ZodType<T>, what: string): Promise<T> {
     if (!res.ok) {
       const { status, code } = sovkoraRefusal(res.status);
       if (res.status === 429) {
@@ -91,27 +144,28 @@ export function createSovkoraClient(options: {
         );
         throw new HttpError(
           status,
-          `Sovkora is busy on ${init.method ?? "GET"} ${path.split("?")[0]}`,
+          `Sovkora is busy on ${what}`,
           { code, retryAfter: wait },
           { "Retry-After": String(wait) },
         );
       }
-      throw refuse(status, code, `Sovkora answered ${res.status} on ${init.method ?? "GET"} ${path.split("?")[0]}`);
+      throw refuse(status, code, `Sovkora answered ${res.status} on ${what}`);
     }
     const parsed = schema.safeParse(await res.json().catch(() => undefined));
-    if (!parsed.success) throw refuse(502, "SOVKORA_SHAPE", `Sovkora's answer to ${path} has an unexpected shape`);
+    if (!parsed.success) throw refuse(502, "SOVKORA_SHAPE", `Sovkora's answer to ${what} has an unexpected shape`);
     return parsed.data;
   }
 
   /** The version this account's installation is pinned on (undefined: not told). Installs the Studio once when it is not. */
-  async function ensureInstalled(studio: Studio): Promise<string | undefined> {
+  async function ensureInstalled(studio: Studio, deadline: AbortSignal): Promise<string | undefined> {
     if (installed.has(studio)) return installed.get(studio);
-    const mine = await call("/api/v1/studios/installations", z.array(installation));
+    const mine = await call("/api/v1/studios/installations", z.array(installation), { deadline });
     const found =
       mine.find((i) => i.studioKey === studio) ??
       (await call(`/api/v1/studios/${studio}/installations?locale=en`, installation, {
         method: "POST",
         body: { config: {} },
+        deadline,
       }));
     installed.set(studio, found.pinnedVersion);
     return found.pinnedVersion;
@@ -119,7 +173,8 @@ export function createSovkoraClient(options: {
 
   return {
     async startRun(studio, inputs) {
-      const pinned = await ensureInstalled(studio);
+      const deadline = AbortSignal.timeout(options.startDeadlineMs ?? START_DEADLINE_MS);
+      const pinned = await ensureInstalled(studio, deadline);
       // A kind declared to the Studio (visit notice, état des lieux) is read by compliance-check 2.x only; a 1.x installation would ignore it and judge the document as a lease.
       if (inputs.declaredKind && !kindIsRead(pinned))
         throw refuse(
@@ -127,7 +182,7 @@ export function createSovkoraClient(options: {
           "SOVKORA_STUDIO_OLD",
           "This Studio's installation is on 1.x: it cannot read this kind of document yet",
         );
-      return call(`/api/v1/studios/${studio}/runs`, sovkoraRun, { method: "POST", body: { inputs } });
+      return call(`/api/v1/studios/${studio}/runs`, sovkoraRun, { method: "POST", body: { inputs }, deadline });
     },
     async studios() {
       return (await call("/api/v1/studios/installations", z.array(installation))).map((i) => i.studioKey);
