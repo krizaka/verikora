@@ -864,6 +864,7 @@
       "COUPON_PAUSED": "This code is not available right now.",
       "COUPON_EXHAUSTED": "This code has been used as many times as it can.",
       "COUPON_ACCOUNT_LIMIT": "You have already used this code.",
+      "PILOT_ALREADY_USED": "This account has already used a pilot code. Only one pilot is allowed per account.",
       "COUPON_NEW_CUSTOMERS_ONLY": "This code is for new customers.",
       "COUPON_NOT_FOR_PLAN": "This code doesn't apply to this offer.",
       "COUPON_MINIMUM": "This code needs a bigger purchase.",
@@ -1341,6 +1342,8 @@
       "description": "Your first audit is free.",
       "email": "E-mail",
       "password": "Password (12 characters or more)",
+      "pilotCode": "Pilot code (optional)",
+      "pilotCodeHint": "If you were given a code for the free pilot, type it here. No card is asked.",
       "acceptTerms": "I accept the terms of use ({terms}).",
       "acceptPrivacy": "I have read the privacy notice ({privacy}) and I consent to the use of my information as it describes.",
       "termsLink": "terms",
@@ -2712,7 +2715,7 @@
         "purposes": {
           "promo": "Promotion",
           "partner": "Partner",
-          "demo": "Demo",
+          "demo": "Pilot",
           "support": "Support"
         },
         "partner": "Partner",

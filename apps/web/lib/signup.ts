@@ -24,6 +24,8 @@ export const signUpBody = z.object({
   locale: z.enum(["en", "fr"]).default("fr"),
   acceptTerms: z.literal(true),
   acceptPrivacy: z.literal(true),
+  /** The pilot code the person typed (optional): checked by the route before any account, redeemed when the address is confirmed. */
+  pilotCode: z.string().trim().min(1).max(80).optional(),
 });
 export type SignUpInput = z.infer<typeof signUpBody>;
 
@@ -55,8 +57,8 @@ export async function signUp(deps: SignUpDeps, input: SignUpInput, now: Date): P
   }
   const token = (deps.token ?? newVerifyToken)();
   await deps.query(
-    "INSERT INTO email_verifications (account_id, token_hash, expires_at) VALUES ($1, $2, $3::timestamptz + make_interval(hours => $4))",
-    [id, tokenHash(token), now, VERIFY_TTL_HOURS],
+    "INSERT INTO email_verifications (account_id, token_hash, expires_at, pilot_code) VALUES ($1, $2, $3::timestamptz + make_interval(hours => $4), $5)",
+    [id, tokenHash(token), now, VERIFY_TTL_HOURS, input.pilotCode ?? null],
   );
   const url = `${deps.baseUrl.replace(/\/$/, "")}/${input.locale}/verify-email?token=${encodeURIComponent(token)}`;
   await deps.mail({ kind: "confirmEmail", to: input.email, locale: input.locale, url, hours: VERIFY_TTL_HOURS });
@@ -65,13 +67,16 @@ export async function signUp(deps: SignUpDeps, input: SignUpInput, now: Date): P
 
 /** Confirms an address from its link: single use, not expired. */
 export async function verifyEmail(
-  deps: Pick<SignUpDeps, "query">,
+  deps: Pick<SignUpDeps, "query"> & {
+    /** Redeems the pilot code typed at sign-up, once the address is confirmed. A refusal never undoes the confirmation: it is the caller's to record. */
+    redeemPilot?: (accountId: string, code: string) => Promise<void>;
+  },
   token: string,
   now: Date,
 ): Promise<"VERIFIED" | "INVALID"> {
   if (!isVerifyToken(token)) return "INVALID";
-  const [row] = await deps.query<{ id: string; account_id: string }>(
-    "UPDATE email_verifications SET used_at = $2 WHERE token_hash = $1 AND used_at IS NULL AND expires_at > $2 RETURNING id, account_id",
+  const [row] = await deps.query<{ id: string; account_id: string; pilot_code: string | null }>(
+    "UPDATE email_verifications SET used_at = $2 WHERE token_hash = $1 AND used_at IS NULL AND expires_at > $2 RETURNING id, account_id, pilot_code",
     [tokenHash(token), now],
   );
   if (!row) return "INVALID";
@@ -79,5 +84,8 @@ export async function verifyEmail(
     row.account_id,
     now,
   ]);
+  if (row.pilot_code) {
+    await deps.redeemPilot?.(row.account_id, row.pilot_code);
+  }
   return "VERIFIED";
 }

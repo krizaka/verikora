@@ -864,6 +864,7 @@
       "COUPON_PAUSED": "Ce code n'est pas disponible pour le moment.",
       "COUPON_EXHAUSTED": "Ce code a atteint son nombre d'utilisations.",
       "COUPON_ACCOUNT_LIMIT": "Vous avez déjà utilisé ce code.",
+      "PILOT_ALREADY_USED": "Ce compte a déjà utilisé un code pilote. Un seul pilote est permis par compte.",
       "COUPON_NEW_CUSTOMERS_ONLY": "Ce code est réservé aux nouveaux clients.",
       "COUPON_NOT_FOR_PLAN": "Ce code ne s'applique pas à cette offre.",
       "COUPON_MINIMUM": "Ce code demande un achat plus important.",
@@ -1341,6 +1342,8 @@
       "description": "Votre premier audit est gratuit.",
       "email": "Courriel",
       "password": "Mot de passe (12 caractères ou plus)",
+      "pilotCode": "Code pilote (facultatif)",
+      "pilotCodeHint": "Si l’on vous a remis un code pour le pilote gratuit, saisissez-le ici. Aucune carte n’est demandée.",
       "acceptTerms": "J’accepte les conditions d’utilisation ({terms}).",
       "acceptPrivacy": "J’ai lu l’avis de confidentialité ({privacy}) et je consens à l’utilisation de mes renseignements telle qu’il la décrit.",
       "termsLink": "conditions",
@@ -2712,7 +2715,7 @@
         "purposes": {
           "promo": "Promotion",
           "partner": "Partenaire",
-          "demo": "Démo",
+          "demo": "Pilote",
           "support": "Soutien"
         },
         "partner": "Partenaire",

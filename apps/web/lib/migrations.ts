@@ -1907,4 +1907,9 @@ INSERT INTO public.krizaka_module_versions (module, version, checksum) VALUES ('
     sql: String.raw`ALTER TABLE public.accounts ADD COLUMN territory text DEFAULT 'QC' NOT NULL;
 ALTER TABLE public.accounts ADD CONSTRAINT accounts_territory_check CHECK (territory ~ '^[A-Z]{2}(-[A-Z0-9]{1,5})?$');`,
   },
+  {
+    version: "0003_signup_pilot_code",
+    sql: String.raw`ALTER TABLE public.email_verifications ADD COLUMN pilot_code text;
+ALTER TABLE public.email_verifications ADD CONSTRAINT email_verifications_pilot_code_check CHECK (pilot_code IS NULL OR char_length(pilot_code) BETWEEN 1 AND 80);`,
+  },
 ];
