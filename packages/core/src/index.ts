@@ -147,6 +147,17 @@ export const JURISDICTIONS = ["QC", "FR", "BE-WAL"] as const;
 export const jurisdiction = z.enum(JURISDICTIONS);
 export type Jurisdiction = z.infer<typeof jurisdiction>;
 
+/** An account's territory (krizaka-internal#2292): one of the jurisdictions that have a ruleset, or `ZZ`, « another territory », which lists every check. */
+export const OTHER_TERRITORY = "ZZ";
+export const TERRITORIES = [...JURISDICTIONS, OTHER_TERRITORY] as const;
+export const territory = z.enum(TERRITORIES);
+export type Territory = z.infer<typeof territory>;
+/** A stored territory code as one of the closed set: a code the set does not know is « another territory ». */
+export const asTerritory = (code: string): Territory => {
+  const parsed = territory.safeParse(code);
+  return parsed.success ? parsed.data : OTHER_TERRITORY;
+};
+
 export const ANALYSIS_STATUSES = ["running", "succeeded", "failed", "cancelled"] as const;
 /** The same four words as a vocabulary, for comparisons (`status === ANALYSIS_STATUS.running`). */
 export const ANALYSIS_STATUS = {

@@ -70,6 +70,11 @@ describe("QC territory: the QC lease leads, authenticity next (krizaka-internal#
     await mountWith(tenantQC);
     expect(rows()[1]).toContain("Authenticit");
   });
+  it("only four rows: France and Wallonie are not offered to a Québec account", async () => {
+    await mountWith(tenantQC);
+    expect(rows()).toHaveLength(4);
+    expect(rows().join(" ")).not.toMatch(/France|Wallonie/);
+  });
 });
 
 describe("the catalogue's state is the address (verikora#333)", () => {

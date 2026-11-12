@@ -38,13 +38,31 @@ test(`drop zone is in the viewport at first paint and QC catalogue is first (${P
     )
     .toBe(true);
 
-  const firstRow = page.locator('[data-testid="check-catalogue"] li').first();
-  await expect(firstRow, "the first catalogue item is a Québec check").toContainText("Québec");
+  const rows = page.locator('[data-testid="check-catalogue"] li');
+  await expect(rows.first(), "the first catalogue item is a Québec check").toContainText("Québec");
+  await expect(rows, "a Québec account is offered Québec checks and the file's authenticity, nothing else").toHaveCount(4);
+  await expect(page.getByTestId("check-catalogue")).not.toContainText(/France|Wallonie/);
 
   await page.context().close();
 });
 
 for (const screen of SCREENS) {
+  test(`the catalogue is filtered to the account's territory (${screen.name})`, async ({ browser }, info) => {
+    const page = await openAs({
+      browser,
+      info,
+      persona: "eric",
+      screen,
+      journey: JOURNEY,
+      videoContextOptions,
+      path: "/fr/app/check",
+    });
+    const catalogue = page.getByTestId("check-catalogue");
+    await expect(catalogue.locator("li").first()).toContainText("Québec");
+    await expect(catalogue).not.toContainText(/France|Wallonie|Facture|Contrat de service/);
+    await page.context().close();
+  });
+
   test(`Eric drops a document, answers « Quel document ? » in view and reaches the report (${screen.name})`, async ({
     browser,
   }, info) => {

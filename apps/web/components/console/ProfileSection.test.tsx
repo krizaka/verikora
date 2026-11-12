@@ -21,7 +21,7 @@ const readable = (html: string) =>
     .replace(/&#x27;|&#39;/g, "'")
     .replace(/&[a-z#0-9]+;/gi, " ")
     .replace(/\s+/g, " ");
-const SAVED: ProfileValues = { name: "Éric Tremblay", avatarSeed: "plain-2", locale: "fr", perspective: "landlord" };
+const SAVED: ProfileValues = { name: "Éric Tremblay", avatarSeed: "plain-2", locale: "fr", perspective: "landlord", territory: "QC" };
 const AUDIENCES = [
   { audience: "tenant", status: "available" },
   { audience: "landlord", status: "available" },
@@ -44,26 +44,39 @@ describe("the profile is one section with one save (the review's E2)", () => {
     expect(profileDirty(SAVED, { ...SAVED, avatarSeed: "plain-4" })).toBe(true);
     expect(profileDirty(SAVED, { ...SAVED, locale: "en" })).toBe(true);
     expect(profileDirty(SAVED, { ...SAVED, perspective: "tenant" })).toBe(true);
+    expect(profileDirty(SAVED, { ...SAVED, territory: "FR" })).toBe(true);
+  });
+
+  it("sends the territory only when it moved, on its own call", () => {
+    expect(profilePatch(SAVED, { ...SAVED, territory: "ZZ" })).toEqual({
+      profile: null,
+      perspective: null,
+      territory: "ZZ",
+    });
   });
 
   it("sends only the fields that changed — never the others, which another session may have edited — and the perspective when it moved", () => {
-    expect(profilePatch(SAVED, { ...SAVED })).toEqual({ profile: null, perspective: null });
-    expect(profilePatch(SAVED, { ...SAVED, name: "  " })).toEqual({ profile: { name: null }, perspective: null });
+    expect(profilePatch(SAVED, { ...SAVED })).toEqual({ profile: null, perspective: null, territory: null });
+    expect(profilePatch(SAVED, { ...SAVED, name: "  " })).toEqual({ profile: { name: null }, perspective: null, territory: null });
     expect(profilePatch(SAVED, { ...SAVED, avatarSeed: "plain-4" })).toEqual({
       profile: { avatarSeed: "plain-4" },
       perspective: null,
+      territory: null,
     });
     expect(profilePatch(SAVED, { ...SAVED, avatarSeed: "" })).toEqual({
       profile: { avatarSeed: null },
       perspective: null,
+      territory: null,
     });
     expect(profilePatch(SAVED, { ...SAVED, locale: "en", perspective: "tenant" })).toEqual({
       profile: { locale: "en" },
       perspective: "tenant",
+      territory: null,
     });
     expect(profilePatch(SAVED, { ...SAVED, name: " Éric Tremblay ", perspective: "tenant" })).toEqual({
       profile: null,
       perspective: "tenant",
+      territory: null,
     });
   });
 
@@ -89,6 +102,9 @@ describe("the profile is one section with one save (the review's E2)", () => {
     expect(text).toContain("English");
     expect(text).toContain(fr.console.profile.landlord);
     expect(text).toContain(`${fr.console.profile.freelancer} (${fr.console.profile.soon})`);
+    for (const code of ["QC", "FR", "BE-WAL", "ZZ"] as const) {
+      expect(text).toContain(fr.console.settings.profile.territories[code]);
+    }
     expect(html.match(/<button [^>]*type="submit"/g)).toHaveLength(1);
     expect(text).toContain(fr.console.settings.save.save);
     expect(html).toContain('data-testid="settings-profil"');

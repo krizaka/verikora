@@ -1,4 +1,4 @@
-import type { Jurisdiction, Studio } from "@verikora/core";
+import { type Jurisdiction, JURISDICTIONS, type Studio } from "@verikora/core";
 
 import { CONSOLE_ROUTES } from "./console-nav";
 import type { CreditsFigure } from "./home-b2";
@@ -36,8 +36,9 @@ export interface CatalogueItem {
 
 /**
  * The checks that run for a person: the registry's rulesets (those with words) and, when its Studio is offered, the file's
- * authenticity. With a `territory` (the account's default jurisdiction, e.g. `"QC"`): the territory's lease leads, then
- * authenticity, then the rest — the most relevant check first without a locale branch.
+ * authenticity. With a `territory` (the account's, e.g. `"QC"`) the catalogue is **filtered**: only that jurisdiction's checks
+ * and the file's authenticity (which belongs to no jurisdiction), the territory's lease first, then authenticity, then the rest.
+ * No territory, or « another territory » (`ZZ`, not a jurisdiction), lists every check, authenticity last.
  */
 export function catalogueOf(
   offer: { studios: readonly Studio[]; rulesets: readonly string[] },
@@ -56,11 +57,10 @@ export function catalogueOf(
   const authenticity: CatalogueItem | null = offer.studios.includes("document-authenticity")
     ? { id: "authenticity", group: "authenticity", jurisdiction: null, kind: "auto" }
     : null;
-  if (territory) {
-    // Territory's lease first, then authenticity, then the rest.
-    const territoryLease = ordered.find((r) => r.group === "lease" && r.jurisdiction === territory);
-    const rest = ordered.filter((r) => r !== territoryLease);
-    return [...(territoryLease ? [territoryLease] : []), ...(authenticity ? [authenticity] : []), ...rest];
+  if (territory && (JURISDICTIONS as readonly string[]).includes(territory)) {
+    const here = ordered.filter((r) => r.jurisdiction === territory);
+    const lease = here.filter((r) => r.group === "lease");
+    return [...lease, ...(authenticity ? [authenticity] : []), ...here.filter((r) => r.group !== "lease")];
   }
   return authenticity ? [...ordered, authenticity] : ordered;
 }
