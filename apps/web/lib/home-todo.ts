@@ -60,7 +60,8 @@ export function toTreatOf(
         href: reportHref(locale, c),
       })),
   ];
-  return rows.sort((a, b) => b.at.localeCompare(a.at) || a.id.localeCompare(b.id)).slice(0, HOME_ROWS);
+  rows.sort((a, b) => b.at.localeCompare(a.at) || a.id.localeCompare(b.id));
+  return rows.slice(0, HOME_ROWS);
 }
 
 /** The last checks, newest first (the list is already in that order; sorted again so the section never depends on it). */
