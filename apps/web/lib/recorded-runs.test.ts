@@ -76,7 +76,7 @@ describe("The recorded runs: one per side of the lease, or the home does not bui
       expect(r.report.findings.map((f) => f.ruleId)).toContain("QC-LEASE-009");
       expect(r.report.summary?.rulesEvaluated).toBe(16);
     }
-    expect(recordedRun("landlord").document.text).toMatch(/dépôt de garantie équivalant à un mois de loyer/);
-    expect(recordedRun("landlord").report.findings.find((f) => f.ruleId === "QC-LEASE-004")?.verdict).toBe("FAIL");
+    expect(recordedRun("landlord").document.text).toMatch(/renonce à son droit au maintien dans les lieux/);
+    expect(recordedRun("landlord").report.findings.find((f) => f.ruleId === "QC-LEASE-007")?.verdict).toBe("FAIL");
   });
 });

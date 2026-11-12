@@ -3,12 +3,12 @@ import { join } from "node:path";
 
 import { describe, expect, it } from "vitest";
 
-import { HERO, HOME_HIDDEN } from "@/content/recorded-runs/samples.mjs";
+import { HERO } from "@/content/recorded-runs/samples.mjs";
 import en from "@/messages/en.json";
 import fr from "@/messages/fr.json";
 
 import { verdictOf } from "./document-face";
-import { type DevPreview, HERO_FIGURES, heroFinding, homeReport, productStatus } from "./landing";
+import { type DevPreview, HERO_FIGURES, heroFinding, productStatus } from "./landing";
 import { recordedRun } from "./recorded-runs";
 import { ruleTitle } from "./rule-text";
 
@@ -101,7 +101,7 @@ describe("the proof is read from the recording, never typed", () => {
     const figures = HERO_FIGURES(run.report);
     expect(figures.rules).toBe(run.report.summary?.rulesEvaluated);
     expect(figures.found).toBe(run.report.findings.length);
-    expect(read("app/[locale]/page.tsx")).toContain("homeReport(run.report)");
+    expect(read("app/[locale]/page.tsx")).toContain("report={run.report}");
   });
 
   it("counts the distinct articles a finding cites, however the citation lists them", () => {
@@ -171,7 +171,7 @@ describe("the hero's finding is chosen by data, and by a rule", () => {
 
 describe("« Un vrai rapport »: the recorded report itself, its figures read from the run", () => {
   const run = recordedRun(HERO.run);
-  const { report, hidden } = homeReport(run.report);
+  const report = run.report;
 
   it("draws the report with the app's own view (ComplianceReportView), never a copy of its mapping", () => {
     expect(read("components/home/RealReport.tsx")).toContain("ComplianceReportView");
@@ -179,20 +179,21 @@ describe("« Un vrai rapport »: the recorded report itself, its figures read fr
     expect(read("app/[locale]/page.tsx")).not.toMatch(/analysisFindings|AnalysisReport/);
   });
 
-  it("has the count equal the run's findings: nothing but the named rules is left out, and the counts are read again from what is shown", () => {
-    expect(report.findings.length + hidden).toBe(run.report.findings.length);
-    expect(report.findings.map((f) => f.ruleId)).not.toEqual(expect.arrayContaining(HOME_HIDDEN));
+  it("shows every finding of the run it names: nothing is filtered, and the figures are the run's own", () => {
+    expect(read("app/[locale]/page.tsx")).not.toMatch(/homeReport|HOME_HIDDEN/);
     expect(report.summary?.rulesEvaluated).toBe(report.findings.length);
     expect(Object.values(report.summary?.byVerdict ?? {}).reduce((a, b) => a + b, 0)).toBe(report.findings.length);
-    expect(verdictOf(report).attention).toBe(report.findings.filter((f) => f.verdict === "FAIL").length);
+    expect(verdictOf(report).attention).toBe(
+      report.findings.filter((f) => f.verdict === "FAIL" || f.verdict === "INSUFFICIENT_EVIDENCE").length,
+    );
     expect(verdictOf(report).blocking).toBe(
       report.findings.filter((f) => f.verdict === "FAIL" && f.severity === "BLOCKING").length,
     );
   });
 
-  it("hides a rule only by data (HOME_HIDDEN), and with no list hides nothing", () => {
-    expect(homeReport(run.report, []).hidden).toBe(0);
-    expect(hidden).toBe(run.report.findings.filter((f) => HOME_HIDDEN.includes(f.ruleId)).length);
+  it("names no run that holds a security-deposit finding: QC-LEASE-004 is neither failed nor passed in the home's run (its lease has no deposit clause)", () => {
+    expect(run.document.text).not.toMatch(/d[ée]p[ôo]t/i);
+    expect(report.findings.find((f) => f.ruleId === "QC-LEASE-004")?.verdict).toBe("NOT_APPLICABLE");
   });
 
   it("types no count in the page's messages: no digit followed by rules, findings or articles, in either language", () => {

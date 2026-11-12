@@ -4336,9 +4336,7 @@
       "rulesetLabel": "Règles du Québec",
       "powered": "Propulsé par Sovkora.",
       "owlLabel": "Ce que la chouette promet",
-      "details": "Détails de l'exécution",
-      "excerptOne": "{count} règle n'est pas affichée sur cette page ; l'exécution la contient.",
-      "excerptMany": "{count} règles ne sont pas affichées sur cette page ; l'exécution les contient."
+      "details": "Détails de l'exécution"
     },
     "applicant": {
       "title": "Le candidat accepte d'abord",

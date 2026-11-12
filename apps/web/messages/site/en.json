@@ -76,9 +76,7 @@
       "rulesetLabel": "Québec rules",
       "powered": "Powered by Sovkora.",
       "owlLabel": "What the owl promises",
-      "details": "Run details",
-      "excerptOne": "{count} rule left out of this page; the run holds it.",
-      "excerptMany": "{count} rules left out of this page; the run holds them."
+      "details": "Run details"
     },
     "applicant": {
       "title": "The applicant agrees first",
