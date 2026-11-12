@@ -8,6 +8,7 @@ import {
 import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it } from "vitest";
 
+import { getDictionary } from "@/lib/i18n";
 import { PricingContent } from "@/components/pricing/PricingContent";
 
 import { PRICE, PRICES } from "../pricing";
@@ -22,9 +23,9 @@ const textOf = (html: string) =>
 const fresh = () => priceCatalogue(PRICES, memoryPriceStore());
 const linesOf = async (c: PriceCatalogue, locale: "en" | "fr") =>
   pricingLines(publicCatalogue(await c.catalogue(NOW)), locale);
-const render = async (c: PriceCatalogue, locale: "en" | "fr", freeFirst = true) => {
+const render = async (c: PriceCatalogue, locale: "en" | "fr") => {
   const { sold, soon } = await linesOf(c, locale);
-  return renderToStaticMarkup(PricingContent({ locale, sold, soon, freeFirst, status: "In development" }));
+  return renderToStaticMarkup(PricingContent({ locale, sold, soon, status: "In development" }));
 };
 
 describe("the pricing page reads the catalogue (#388)", () => {
@@ -66,9 +67,9 @@ describe("the pricing page reads the catalogue (#388)", () => {
       ["firm", "$2.00"],
     ]);
     const html = nb(await render(c, "en"));
-    expect(html).toContain("Then $3.00 for each further dossier");
-    expect(html).toContain("15 dossiers included each month");
-    expect(html).toContain("per dossier, plus taxes");
+    expect(html).toContain("Then $3.00 for each further file");
+    expect(html).toContain("15 files included each month");
+    expect(html).toContain("per file, plus taxes");
     expect(nb(await render(c, "fr"))).toContain("Puis 3,00 $ par dossier supplémentaire");
   });
 
@@ -96,7 +97,7 @@ describe("the pricing page reads the catalogue (#388)", () => {
     const fr = volume(nb(await render(c, "fr"))!)!;
     expect(fr[1]).toContain("/contact?topic=business&amp;product=verikora&amp;source=verikora-pricing");
     expect(fr[2]).toBe("Plus de 60 dossiers par mois ? Écrivez-nous");
-    expect(volume(nb(await render(c, "en"))!)![2]).toBe("More than 60 dossiers a month? Write to us");
+    expect(volume(nb(await render(c, "en"))!)![2]).toBe("More than 60 files a month? Write to us");
     await c.schedule(ADMIN, PRICE.firm, { limits: { included: 600 } }, NOW, NOW);
     expect(volume(nb(await render(c, "en"))!)![2]).toContain("600");
   });
@@ -113,7 +114,7 @@ describe("the pricing page reads the catalogue (#388)", () => {
     for (const locale of ["en", "fr"] as const) {
       const html = await render(fresh(), locale);
       const soonLines = [...html.matchAll(/<li[^>]*data-soon="[^"]+"[^>]*>(.*?)<\/li>/g)].map((m) => textOf(m[1]!));
-      expect(soonLines).toHaveLength(5);
+      expect(soonLines).toHaveLength(2);
       for (const line of soonLines) expect(line, line).not.toMatch(/\d/);
     }
   });
@@ -136,7 +137,6 @@ describe("the pricing page reads the catalogue (#388)", () => {
         locale: "fr",
         sold,
         soon,
-        freeFirst: true,
         status: "",
         action: (plan) => {
           offered.push(plan);
@@ -148,8 +148,27 @@ describe("the pricing page reads the catalogue (#388)", () => {
     expect(html.match(/S’abonner|S&#x27;abonner/g)).toHaveLength(1);
   });
 
-  it("the free monthly dossier is shown only while the setting says so", async () => {
-    expect(await render(fresh(), "en", true)).toContain("One dossier verified free every month");
-    expect(await render(fresh(), "en", false)).not.toContain("One dossier verified free every month");
+  it("promises nothing free, names the unit the file, and lists exactly the two plans as soon (founder, 2026-11-12)", async () => {
+    const words = { en: getDictionary("en").pricing, fr: getDictionary("fr").pricing };
+    expect(words.en.plans.document.name).toBe("One file");
+    expect(words.fr.plans.document.name).toBe("Un dossier");
+    for (const locale of ["en", "fr"] as const) {
+      const html = await render(fresh(), locale);
+      expect(textOf(html)).not.toMatch(/gratuit|free/iu);
+      expect(JSON.stringify(words[locale])).not.toMatch(/gratuit|free/iu);
+      expect(Object.keys(words[locale].soon.items)).toEqual(["agency", "firm"]);
+      expect([...html.matchAll(/data-soon="([^"]+)"/g)].map((m) => m[1])).toEqual(["agency", "firm"]);
+    }
+    expect(textOf(await render(fresh(), "en"))).toContain("One file");
+    expect(textOf(await render(fresh(), "en"))).not.toMatch(/dossier/iu);
+  });
+
+  it("the lead says the pricing rule once and the status line the development state once", async () => {
+    for (const locale of ["en", "fr"] as const) {
+      const text = nb(textOf(await render(fresh(), locale)))!;
+      expect(text.match(/CAD/g)).toHaveLength(1);
+      expect(text.match(/GST|TPS/g)).toHaveLength(1);
+      expect(text.match(/sign-up is closed|inscriptions sont fermées/giu) ?? []).toHaveLength(0);
+    }
   });
 });

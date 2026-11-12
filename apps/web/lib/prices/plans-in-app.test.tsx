@@ -23,27 +23,23 @@ describe("the in-app plans page", () => {
     expect(isSoldKind("internal")).toBe(false);
   });
 
-  it("shows the action it is given on every plan, with the free monthly dossier, and no « Sign in »", () => {
+  it("shows the action it is given on every plan, and no « Sign in »", () => {
     const html = renderToStaticMarkup(
       <PricingContent
         locale="en"
         sold={SOLD}
         soon={[]}
-        freeFirst
         status="In development"
         action={(plan) => <button type="button">{`Subscribe — ${plan}`}</button>}
       />,
     );
     const dict = getDictionary("en");
     expect(html).toContain(`Subscribe — ${"agency"}`);
-    expect(html).toContain(dict.pricing.freeFirst);
     expect(html).not.toContain(dict.chrome.signIn);
   });
 
   it("keeps « Sign in » on the public page", () => {
-    const html = renderToStaticMarkup(
-      <PricingContent locale="en" sold={SOLD} soon={[]} freeFirst={false} status="In development" />,
-    );
+    const html = renderToStaticMarkup(<PricingContent locale="en" sold={SOLD} soon={[]} status="In development" />);
     expect(html).toContain(getDictionary("en").chrome.signIn);
   });
 });

@@ -16,7 +16,6 @@ export function PricingContent({
   locale,
   sold,
   soon,
-  freeFirst,
   launch,
   status,
   action,
@@ -24,7 +23,6 @@ export function PricingContent({
   locale: Locale;
   sold: PricingPlan[];
   soon: PricingSoon[];
-  freeFirst: boolean;
   launch?: { headline: string; ends: string; lines: { plan: string; text: string }[] };
   status: string;
   /** The call to action of a plan; without it, the public page's « Request access » (sign-up is closed, so nothing can be bought). The in-app plans page passes its own (subscribe / current plan). */
@@ -41,7 +39,6 @@ export function PricingContent({
       toolbar={
         <>
           <p>{status}</p>
-          <p>{p.plannedNote}</p>
           {largest > 0 ? (
             <p data-volume>
               <a href={contactHref("verikora-pricing", locale, "business")}>
@@ -69,7 +66,6 @@ export function PricingContent({
             ...(s.included === null ? [] : [format(p.included, { included: s.included })]),
             ...(s.included !== null ? [s.overage === null ? p.paused : format(p.beyond, { rate: s.overage })] : []),
             ...(launch?.lines.filter((l) => l.plan === s.plan).map((l) => l.text) ?? []),
-            ...(s.plan === "document" && freeFirst ? [p.freeFirst] : []),
             s.per === "month" ? p.cancel : p.noSubscription,
           ],
           action: action?.(s.plan) ?? (
