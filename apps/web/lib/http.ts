@@ -32,7 +32,12 @@ export async function handle(run: () => Promise<Response>): Promise<Response> {
     return await run();
   } catch (error) {
     if (error instanceof HttpError) {
-      return Response.json({ error: error.message, ...error.body }, { status: error.status, headers: error.headers });
+      // The code also rides in a header: the DigitalOcean ingress replaces a 502's body with its own page and keeps the headers (krizaka-internal#3214).
+      const code = codeOf(error, "");
+      return Response.json(
+        { error: error.message, ...error.body },
+        { status: error.status, headers: { ...error.headers, ...(code ? { "X-Error-Code": code } : {}) } },
+      );
     }
     logError("api: unexpected error", error);
     return Response.json({ error: "Something went wrong", code: "INTERNAL" }, { status: 500 });
