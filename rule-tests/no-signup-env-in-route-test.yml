@@ -1,0 +1,15 @@
+id: no-signup-env-in-route
+valid:
+  - |
+    const open = await signupOpenNow(readSettings());
+  - |
+    const seed = { signupOpen: e.AUTH_API_KEY };
+invalid:
+  - |
+    const open = process.env.AUTH_SIGNUP_ENABLED === "true";
+  - |
+    const { AUTH_SIGNUP_ENABLED } = process.env;
+  - |
+    const open = config().AUTH_SIGNUP_ENABLED;
+  - |
+    const open = process.env["AUTH_SIGNUP_ENABLED"];

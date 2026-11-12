@@ -1,0 +1,22 @@
+id: no-signup-env-in-route
+language: Tsx
+severity: error
+message: "`AUTH_SIGNUP_ENABLED` is a seed value only: `instrumentation-node.ts` reads it once to write the `signup.open` setting when nobody has set it. A route or a page reads the setting through `signupOpenNow` (`lib/settings/signup.ts`), the one function the sign-up page, the sign-up route and `GET /api/app-config` share."
+note: "krizaka-internal#2405: the administration's « Sign-up open » switch is the only authority; a read of the variable in a route would bypass it."
+rule:
+  any:
+    - kind: identifier
+    - kind: property_identifier
+    - kind: shorthand_property_identifier
+    - kind: shorthand_property_identifier_pattern
+    - kind: string_fragment
+  regex: "^AUTH_SIGNUP_ENABLED$"
+files:
+  - "**/app/**/route.ts"
+  - "**/app/**/page.tsx"
+  - "**/app/**/page.ts"
+ignores:
+  - "**/node_modules/**"
+  - "**/.next/**"
+  - "**/*.test.ts"
+  - "**/*.test.tsx"

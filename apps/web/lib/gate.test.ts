@@ -36,6 +36,8 @@ const PUBLIC: Record<string, string> = {
   "webhooks/mail": "signed by the mail vendor (bounces, complaints), refused without its signature (verikora#48)",
   "batches/template": "the CSV template: a static file",
   "v1/openapi.json": "the public contract of the API",
+  "app-config":
+    "the app-version contract of @krizaka/app-config: public, cacheable, no personal data (krizaka-internal#2405)",
   "rapport/[token]/pdf":
     "the signed PDF of the owner report (verikora#481): the token of a live owner link is the credential, 404 otherwise, each download logged",
   "verify/contract/[id]":

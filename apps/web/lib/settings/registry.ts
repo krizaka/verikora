@@ -62,6 +62,9 @@ export const SETTINGS = {
     en: `${PRODUCT_NAME} is down for maintenance. Please come back in a few minutes.`,
   }),
   "signup.open": flag(GROUP.general, false),
+  // The app-version contract (`GET /api/app-config`, @krizaka/app-config): the oldest and the newest version a client may run, for every platform. "0.0.0" = no minimum.
+  "app.minVersion": text(GROUP.general, "0.0.0", { max: 32 }),
+  "app.latestVersion": text(GROUP.general, "0.0.0", { max: 32 }),
   // How long a session lasts (`auth.sessionDays`) and how long a « Forgot your password? » link works (`auth.passwordResetMinutes`): @krizaka/auth's.
   ...inGroup(GROUP.general, authSettings),
   "payments.enabled": flag(GROUP.general, true, WORKSPACE),

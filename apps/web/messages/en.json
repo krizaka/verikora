@@ -1783,6 +1783,14 @@
             "label": "Maintenance mode",
             "hint": "Closes the app to users and shows the message below. Administrators still get in."
           },
+          "minVersion": {
+            "label": "Oldest supported app version",
+            "hint": "The apps older than this are asked to update (for example 1.4.0). 0.0.0 means no minimum."
+          },
+          "latestVersion": {
+            "label": "Latest app version",
+            "hint": "The version the apps are invited to update to. 0.0.0 means none."
+          },
           "maintenanceMessage": {
             "label": "Maintenance message",
             "hint": "What users see, in each language."
