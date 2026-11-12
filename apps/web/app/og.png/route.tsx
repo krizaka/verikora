@@ -1,6 +1,7 @@
 import { ImageResponse } from "next/og";
 
 import { PRODUCT_NAME } from "@/lib/brand";
+import { getDictionary } from "@/lib/i18n";
 import { markDataUri } from "@/lib/og-mark";
 
 export const dynamic = "force-static";
@@ -8,6 +9,7 @@ export const dynamic = "force-static";
 /** The social card, drawn at build: the name, the promise, the ink indigo of the brand. */
 export async function GET() {
   const mark = await markDataUri();
+  const en = getDictionary("en");
   return new ImageResponse(
     <div
       style={{
@@ -27,10 +29,8 @@ export async function GET() {
         <img src={mark} width={96} height={96} alt="" />
         <div style={{ fontSize: 64, fontWeight: 800 }}>{PRODUCT_NAME}</div>
       </div>
-      <div style={{ fontSize: 48, fontWeight: 700, marginTop: 40 }}>Read before you sign.</div>
-      <div style={{ fontSize: 28, marginTop: 20, color: "#a1a1aa" }}>
-        Leases, contracts and invoices — read and checked, every finding quoted.
-      </div>
+      <div style={{ fontSize: 52, fontWeight: 700, marginTop: 40 }}>{en.landing.title}</div>
+      <div style={{ fontSize: 26, marginTop: 20, color: "#a1a1aa" }}>{en.meta.description}</div>
     </div>,
     { width: 1200, height: 630 },
   );

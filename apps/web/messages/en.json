@@ -4182,7 +4182,7 @@
   "meta": {
     "siteName": "Verikora",
     "titleTemplate": "{title} · Verikora",
-    "description": "For property managers and landlords in Québec: Verikora reads the lease against the Civil Code of Québec, examines the pay stub as a file, and shows the exact line behind every finding."
+    "description": "For property managers in Québec: Verikora reads the documents an applicant sends and your lease template, and ties every finding to its line and its article of law."
   },
   "chrome": {
     "brandHome": "Verikora, home",
@@ -4217,27 +4217,23 @@
     "docs": "Documentation"
   },
   "landing": {
-    "title": "Read before you sign.",
-    "lead": "For property managers and landlords who screen applicants in Québec: drop the lease and the applicant's papers. Verikora verifies the documents and screens the file: it reads them against extraction matrices and technical templates, and shows you the exact line behind every finding.",
+    "title": "Check the file before you offer the unit.",
+    "lead": "For property managers in Québec. Verikora reads the documents an applicant sends and your lease template, and ties every finding to its line and its article of law.",
     "status": {
       "label": "Status",
       "development": "In development: sign-up is closed while we test it on real Québec leases.",
       "preview": "Dev preview: sign-up is closed, access by invitation."
     },
     "hero": {
-      "before": "The lease",
-      "after": "The finding",
-      "leaseCaption": "One clause of the lease, lit",
+      "primary": "Write to us to try it on your files",
+      "seeReport": "See a real report",
+      "visualLabel": "A lease · recorded run",
       "findingCaption": "What Verikora returns, with its source"
     },
-    "signIn": "Sign in",
-    "openApp": "Open my documents",
     "what": {
       "title": "What it does",
       "lead": "Three things, with nothing hidden behind them.",
       "who": "For property managers and landlords who screen applicants in Québec: a lease and a pay stub per file, several files a month. Tenants are welcome too: their first check is free. The registry checks (SOQUIJ, TAL, plumitif) are in preparation.",
-      "trust": "By default, your account and your checks are kept in a database in Toronto, Canada, and seen by your account alone; your files can go to your own storage instead, when you choose it. Nothing is sold, shared or used to train a model.",
-      "privacy": "Read the privacy notice",
       "items": {
         "line": {
           "title": "The exact line behind every finding",
@@ -4267,9 +4263,8 @@
       "title": "For whom"
     },
     "closing": {
-      "title": "One file, one answer.",
-      "body": "Sign in to check the files of your month. Visible to your account only.",
-      "bodyIn": "The files of your month are in your library, checked and seen by your account alone."
+      "title": "This week's files, checked.",
+      "tenant": "Are you a tenant?"
     },
     "visual": {
       "caption": "A real check, recorded as it came back"

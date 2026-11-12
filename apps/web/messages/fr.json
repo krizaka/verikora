@@ -4182,7 +4182,7 @@
   "meta": {
     "siteName": "Verikora",
     "titleTemplate": "{title} · Verikora",
-    "description": "Gestionnaires d'immeubles et propriétaires : Verikora lit le bail selon le Code civil du Québec, examine le talon de paie comme un fichier, et montre la ligne exacte derrière chaque constat."
+    "description": "Pour les gestionnaires d'immeubles au Québec : Verikora lit les pièces envoyées par le candidat et votre modèle de bail, et relie chaque constat à sa ligne et à son article de loi."
   },
   "chrome": {
     "brandHome": "Verikora, accueil",
@@ -4217,27 +4217,23 @@
     "docs": "Documentation"
   },
   "landing": {
-    "title": "Lisez avant de signer.",
-    "lead": "Pour les gestionnaires d’immeubles et les propriétaires qui évaluent des candidats au Québec : déposez le bail et les pièces du dossier. Verikora fait la vérification documentaire et le tri du dossier : il les lit selon des matrices d’extraction documentaire et des gabarits technologiques paramétrables, et vous montre la ligne exacte derrière chaque constat.",
+    "title": "Vérifiez le dossier avant d'offrir le logement.",
+    "lead": "Pour les gestionnaires d'immeubles au Québec. Verikora lit les pièces envoyées par le candidat et votre modèle de bail, et relie chaque constat à sa ligne et à son article de loi.",
     "status": {
       "label": "Statut",
       "development": "En développement : les inscriptions sont fermées pendant nos essais sur de vrais baux québécois.",
       "preview": "Aperçu de développement : inscriptions fermées, accès sur invitation."
     },
     "hero": {
-      "before": "Le bail",
-      "after": "Le constat",
-      "leaseCaption": "Une clause du bail, en évidence",
+      "primary": "Écrivez-nous pour l'essayer sur vos dossiers",
+      "seeReport": "Voir un vrai rapport",
+      "visualLabel": "Un bail · exécution enregistrée",
       "findingCaption": "Ce que Verikora renvoie, avec sa source"
     },
-    "signIn": "Se connecter",
-    "openApp": "Ouvrir mes documents",
     "what": {
       "title": "Ce que ça fait",
       "lead": "Trois choses, sans rien de caché derrière.",
       "who": "Pour les gestionnaires d'immeubles et les propriétaires qui évaluent des candidats au Québec : un bail et un talon de paie par dossier, plusieurs dossiers par mois. Les locataires sont les bienvenus : leur première vérification est offerte. Les registres (SOQUIJ, TAL, plumitif) sont en préparation.",
-      "trust": "Par défaut, votre compte et vos vérifications sont gardés dans une base de données à Toronto, au Canada, et visibles par votre seul compte ; vos fichiers peuvent aller dans votre propre stockage, si vous le choisissez. Rien n'est vendu, partagé ni utilisé pour entraîner un modèle.",
-      "privacy": "Lire l'avis de confidentialité",
       "items": {
         "line": {
           "title": "La ligne exacte derrière chaque constat",
@@ -4267,9 +4263,8 @@
       "title": "Pour qui"
     },
     "closing": {
-      "title": "Un dossier, une réponse.",
-      "body": "Connectez-vous pour vérifier les dossiers de votre mois. Visible de votre seul compte.",
-      "bodyIn": "Les dossiers de votre mois sont dans votre bibliothèque, vérifiés et visibles par votre seul compte."
+      "title": "Vos dossiers de cette semaine, vérifiés.",
+      "tenant": "Vous êtes locataire ?"
     },
     "visual": {
       "caption": "Une vraie vérification, enregistrée telle qu'elle est revenue"

@@ -697,3 +697,12 @@ Krizaka-ts ADR-003, `@krizaka/organize` 0.4. Verikora is the pilot, on « Dossie
 - **Refused**: the per-verification overage (#373: not billed, the page says "past the included volume, checks wait until next
   month"); a figure for what is soon; an annual plan; "Start now" while sign-up is closed.
 - **Signal we are wrong**: visitors read "soon" as a broken page.
+
+> **Amended (krizaka-internal#2562, slice A, 2026-11-12): the hero asks for a conversation, the closing repeats it.** The H1 is the manager's
+> job (« Vérifiez le dossier avant d'offrir le logement. »), the lead says for whom and what it reads; the hero has **one** primary (« Écrivez-nous
+> pour l'essayer sur vos dossiers », the contact form of krizaka.com with topic business and product Verikora, no public e-mail) and a ghost link
+> to the real report (`#proof`); « Se connecter » is the bar's. The visual is one finding of the recorded run (title, quoted line, article),
+> read from `content/recorded-runs`, never typed; the lease box and the arrow are gone. The closing is a plain section (no coloured panel): the same
+> primary, « Vous êtes locataire ? », and no storage sentence (the privacy notice keeps it). **Proof**: at 390 px the H1, the primary action and the
+> finding's article are within 844 px (`scripts/check-home-first-screen.mjs`, in CI). **Signal we are wrong**: contact submissions with topic
+> Verikora do not rise, or visitors still read « I cannot try it ».

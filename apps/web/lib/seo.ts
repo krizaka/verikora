@@ -106,7 +106,7 @@ export function llmsText(): string {
 > A product of Krizaka (Montréal), in development: sign-up is closed. Powered by ${ENGINE_NAME}; every analysis keeps its run id.
 
 ## Key pages
-- [${getDictionary("fr").meta.siteName}](${SITE_URL}/fr) · [${PRODUCT_NAME} (en)](${SITE_URL}/en): what it does for you, and one real check recorded as it came back
+- [${getDictionary("fr").meta.siteName}](${SITE_URL}/fr) · [${PRODUCT_NAME} (en)](${SITE_URL}/en): who it is for, what it checks, and one real report recorded as it came back
 - [${getDictionary("fr").docs.title}](${SITE_URL}/fr/docs) · [${en.docs.title} (en)](${SITE_URL}/en/docs): how a check works, the API (OpenAPI at ${SITE_URL}/api/v1/openapi.json), your data
 ${isListed("pricing") ? `- [${getDictionary("fr").pricing.title}](${SITE_URL}/fr/pricing) · [${en.pricing.title} (en)](${SITE_URL}/en/pricing): the prices, read from the catalogue\n` : ""}- [${getDictionary("fr").privacy.title}](${SITE_URL}/fr/privacy) · [${en.privacy.title} (en)](${SITE_URL}/en/privacy)
 - Signed reports are verified by signed-in members the report's owner gave access to; there is no public verification.

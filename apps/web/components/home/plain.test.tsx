@@ -73,7 +73,7 @@ describe("the public site, plain (P10)", () => {
     for (const name of [
       "app/[locale]/page.tsx",
       "app/[locale]/(app)/app/verifications/report/page.tsx",
-      "components/home/BeforeAfter.tsx",
+      "components/home/HeroFinding.tsx",
       "components/SiteChrome.tsx",
     ])
       expect(files.map((f) => f.name)).toContain(name);
@@ -104,10 +104,9 @@ describe("the public site, plain (P10)", () => {
     expect(bentoRows(["md", "md"])).toEqual([6]);
   });
 
-  it("says where the data lives as the storage choice has it (ADR-0007): Canadian by default, the customer's own storage when chosen (Y9's leftover)", () => {
+  it("keeps the storage sentence off the home: the privacy notice says where the data lives (krizaka-internal#2562)", () => {
     for (const d of [en, fr]) {
-      expect(d.landing.what.trust).toMatch(/^(By default|Par défaut)/);
-      expect(d.landing.what.trust).toMatch(/own storage|propre stockage/);
+      expect(JSON.stringify(d.landing)).not.toMatch(/Toronto/);
     }
   });
 
@@ -122,8 +121,10 @@ describe("the public site, plain (P10)", () => {
       expect(html).not.toContain("kz-tpl-band");
     });
 
-    it("writes no mono caption: the window bar says nothing, and the owl's quote is not repeated (verikora#457)", () => {
-      expect(html).toMatch(/<div class="kz-tpl-stage-bar" aria-hidden="true"><\/div>/);
+    it("writes no mono caption: the window bar says « Un bail · exécution enregistrée » in the sans, and the owl's quote is not repeated (verikora#457)", () => {
+      expect(html).toMatch(
+        /<div class="kz-tpl-stage-bar" aria-hidden="true"><span>Un bail · exécution enregistrée<\/span><\/div>/,
+      );
       expect(html).not.toMatch(/<figure class="kz-quote/);
     });
 
@@ -144,10 +145,14 @@ describe("the public site, plain (P10)", () => {
       expect(bentoRows(sizes).every((r) => r === 6)).toBe(true);
     });
 
-    it("keeps what the product has: the real report in its frame, the engine line, and one way in: the hero's", () => {
-      expect(html).toContain('data-testid="before-after"');
-      expect(html).not.toContain('data-testid="closing-action"');
-      expect(html).toContain('data-testid="closing-data"');
+    it("keeps what the product has: one finding of the recorded run, the engine line; one primary in the hero and the same in the closing, on a plain surface", () => {
+      expect(html).toContain('data-testid="hero-finding"');
+      expect(html).not.toContain('data-testid="before-after"');
+      expect(html).toContain('data-testid="hero-primary"');
+      expect(html).toContain('data-testid="closing-primary"');
+      expect(html).toContain('data-testid="closing-tenant"');
+      expect(html).not.toContain('data-testid="closing-data"');
+      expect(html).not.toMatch(/class="kz-cta\b/);
       expect(html).toContain('data-testid="powered-by"');
     });
   });
