@@ -91,7 +91,7 @@ describe("the configuration API is the administration's only", () => {
 });
 
 describe("the configuration pages", () => {
-  it("are the setting groups then the price catalogue, the packs, Sovkora and the organisation, each a route", () => {
+  it("are the setting groups then the price catalogue, the coupons, the invitations, the packs, Sovkora and the organisation, each a route", () => {
     expect(CONFIG_PAGES).toEqual([
       "general",
       "features",
@@ -99,11 +99,13 @@ describe("the configuration pages", () => {
       "plans",
       "prices",
       "coupons",
+      "invitations",
       "packs",
       "sovkora",
       "organisation",
     ]);
     expect(isSettingsGroup(CONFIG_PAGE.prices)).toBe(false);
+    expect(isSettingsGroup(CONFIG_PAGE.invitations)).toBe(false);
     expect(isConfigPage("limits")).toBe(true);
     expect(isConfigPage("secrets")).toBe(false);
     expect(isSettingsGroup(CONFIG_PAGE.general)).toBe(true);

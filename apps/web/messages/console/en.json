@@ -935,7 +935,14 @@
       "UNKNOWN_SCHEMA": "This format is unknown.",
       "UNKNOWN_SEAL": "This seal is unknown.",
       "WEBHOOK_PLAN": "This plan does not include webhooks.",
-      "ZONE_UNAVAILABLE": "This storage zone is not available."
+      "ZONE_UNAVAILABLE": "This storage zone is not available.",
+      "INVITE_INVALID": "This invitation cannot be used: it has expired, was already used or was replaced.",
+      "INVITE_WRONG_ADDRESS": "This invitation is for another address.",
+      "INVITE_BAD_ADDRESS": "This address cannot be invited.",
+      "INVITE_BAD_GRANT": "This pilot cannot be given with an invitation.",
+      "INVITE_BAD_ACTOR": "This invitation cannot be sent.",
+      "ACCOUNT_EXISTS": "This address already has an account.",
+      "PILOT_NOT_AVAILABLE": "This pilot code is no longer available: choose another one."
     },
     "adminConsole": {
       "shell": {
@@ -1355,7 +1362,15 @@
       "closed": "Verikora is not accepting new accounts at the moment.",
       "haveAccount": "Already have an account? Sign in",
       "notice": "Informative check, not legal advice. Only a member of the Barreau du Québec can give legal advice.",
-      "promise": "One free audit, then pay per audit or subscribe."
+      "promise": "One free audit, then pay per audit or subscribe.",
+      "invitedTitle": "You are invited",
+      "invited": "Create your account to start the pilot. Your address is the one the invitation was sent to.",
+      "invitedEmailHint": "The address the invitation was sent to.",
+      "inviteInvalidTitle": "This invitation cannot be used",
+      "inviteInvalid": "The link has expired, was already used or was replaced. Ask for a new invitation.",
+      "readyTitle": "Your account is ready",
+      "ready": "Your address is confirmed.",
+      "signIn": "Sign in"
     },
     "verifyEmail": {
       "title": "Confirm your address",
@@ -1747,7 +1762,8 @@
         "packs": "Rules packs",
         "sovkora": "Sovkora",
         "organisation": "Organisation",
-        "coupons": "Coupons"
+        "coupons": "Coupons",
+        "invitations": "Invitations"
       },
       "scope": {
         "label": "Scope",
@@ -2420,6 +2436,30 @@
               "label": "Window: Changing the account",
               "hint": "Beyond it the answer is 429 with the time to wait."
             }
+          },
+          "invite": {
+            "perIp": {
+              "label": "Limit per address: Inviting a property manager",
+              "hint": "Beyond it the answer is 429 with the time to wait."
+            },
+            "perSubject": {
+              "label": "Limit per account: Inviting a property manager",
+              "hint": "Beyond it the answer is 429 with the time to wait."
+            },
+            "windowSeconds": {
+              "label": "Window: Inviting a property manager",
+              "hint": "Beyond it the answer is 429 with the time to wait."
+            }
+          },
+          "invitePeek": {
+            "perIp": {
+              "label": "Limit per address: Opening an invitation link",
+              "hint": "Beyond it the answer is 429 with the time to wait."
+            },
+            "windowSeconds": {
+              "label": "Window: Opening an invitation link",
+              "hint": "Beyond it the answer is 429 with the time to wait."
+            }
           }
         },
         "plans": {
@@ -2818,6 +2858,33 @@
         "reportNote": "Uses, discount given and revenue (paid minus refunded) per code. Never a customer. Each reading is logged.",
         "revenue": "Revenue",
         "creditsGranted": "Credits granted"
+      },
+      "invitations": {
+        "lead": "Sign-up is closed: invite a property manager by address. The link opens the sign-up for that address only, for 7 days; the account is ready at once. A pilot code given here grants its files with no card.",
+        "new": "Invite a property manager",
+        "email": "E-mail address",
+        "pilot": "Pilot code",
+        "pilotHint": "Only the live pilot coupons that still have uses left. Create one under Coupons (purpose « Pilot »).",
+        "noPilots": "No live pilot coupon. Create one under Coupons (purpose « Pilot ») to give one here.",
+        "noPilot": "No pilot",
+        "pilotOption": "{code} — {credits} files, {days} days",
+        "pilotOptionLeft": "{code} — {credits} files, {days} days ({left} uses left)",
+        "locale": "Language of the e-mail",
+        "locales": {
+          "fr": "French",
+          "en": "English"
+        },
+        "send": "Send the invitation",
+        "sent": "Invitation sent to {email}.",
+        "pending": "Open invitations",
+        "empty": "No open invitation.",
+        "sentOn": "Sent",
+        "expiresOn": "Expires",
+        "actions": "Actions",
+        "resend": "Send again",
+        "resendTo": "Send the invitation to {email} again",
+        "revoke": "Revoke",
+        "revokeFor": "Revoke the invitation of {email}"
       }
     },
     "steps": {

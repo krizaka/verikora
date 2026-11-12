@@ -67,6 +67,8 @@ export interface RedeemInput {
   pilotOnly?: boolean;
   headers?: Headers;
   actorLabel?: string;
+  /** The caller's transaction (an invitation's sign-up: the account, its verified address and the pilot land together); without it the redemption is its own transaction. */
+  run?: Query;
 }
 
 /**
@@ -74,9 +76,10 @@ export interface RedeemInput {
  * serialised: the second finds the first and is refused with `PILOT_ALREADY_USED` (409), and the refusal has its audit line.
  */
 export async function redeemCreditCode(input: RedeemInput): Promise<CreditRedemption> {
+  const within = <T>(work: (tx: Query) => Promise<T>): Promise<T> => (input.run ? work(input.run) : transaction(work));
   try {
     const redeemed = await guarded(() =>
-      transaction(async (tx) => {
+      within(async (tx) => {
         const purpose = await purposeOf(tx, input.code);
         if (input.pilotOnly && purpose !== PILOT_PURPOSE) {
           throw refuse(COUPON_STATUS_CODE[COUPON_CODE.unknown], COUPON_CODE.unknown, "This code cannot be used");
