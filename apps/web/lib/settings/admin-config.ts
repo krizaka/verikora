@@ -5,6 +5,7 @@ export const CONFIG_PAGE = {
   ...GROUP,
   prices: "prices",
   coupons: "coupons",
+  invitations: "invitations",
   packs: "packs",
   sovkora: "sovkora",
   organisation: "organisation",

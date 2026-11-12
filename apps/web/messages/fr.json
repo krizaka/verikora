@@ -940,7 +940,14 @@
       "UNKNOWN_SCHEMA": "Ce format est inconnu.",
       "UNKNOWN_SEAL": "Ce sceau est inconnu.",
       "WEBHOOK_PLAN": "Ce forfait n'inclut pas les webhooks.",
-      "ZONE_UNAVAILABLE": "Cette zone de stockage n'est pas disponible."
+      "ZONE_UNAVAILABLE": "Cette zone de stockage n'est pas disponible.",
+      "INVITE_INVALID": "Cette invitation ne peut pas servir : elle a expiré, a déjà servi ou a été remplacée.",
+      "INVITE_WRONG_ADDRESS": "Cette invitation est pour une autre adresse.",
+      "INVITE_BAD_ADDRESS": "Cette adresse ne peut pas être invitée.",
+      "INVITE_BAD_GRANT": "Ce pilote ne peut pas être donné avec une invitation.",
+      "INVITE_BAD_ACTOR": "Cette invitation ne peut pas être envoyée.",
+      "ACCOUNT_EXISTS": "Cette adresse a déjà un compte.",
+      "PILOT_NOT_AVAILABLE": "Ce code pilote n'est plus disponible : choisissez-en un autre."
     },
     "adminConsole": {
       "shell": {
@@ -1360,7 +1367,15 @@
       "closed": "Verikora n’accepte pas de nouveaux comptes pour le moment.",
       "haveAccount": "Vous avez déjà un compte? Connectez-vous",
       "notice": "Vérification informative, ce n’est pas un avis juridique. Seuls les membres du Barreau du Québec peuvent donner un avis juridique.",
-      "promise": "Un audit gratuit, puis payez à l’audit ou abonnez-vous."
+      "promise": "Un audit gratuit, puis payez à l’audit ou abonnez-vous.",
+      "invitedTitle": "Vous avez une invitation",
+      "invited": "Créez votre compte pour commencer le pilote. Votre adresse est celle à laquelle l'invitation a été envoyée.",
+      "invitedEmailHint": "L'adresse à laquelle l'invitation a été envoyée.",
+      "inviteInvalidTitle": "Cette invitation ne peut pas servir",
+      "inviteInvalid": "Le lien a expiré, a déjà servi ou a été remplacé. Demandez une nouvelle invitation.",
+      "readyTitle": "Votre compte est prêt",
+      "ready": "Votre adresse est confirmée.",
+      "signIn": "Se connecter"
     },
     "verifyEmail": {
       "title": "Confirmer votre adresse",
@@ -1752,7 +1767,8 @@
         "packs": "Ensembles de règles",
         "sovkora": "Sovkora",
         "organisation": "Organisation",
-        "coupons": "Coupons"
+        "coupons": "Coupons",
+        "invitations": "Invitations"
       },
       "scope": {
         "label": "Portée",
@@ -2425,6 +2441,30 @@
               "label": "Fenêtre : Modification du compte",
               "hint": "Au-delà, la réponse est 429 avec le temps à attendre."
             }
+          },
+          "invite": {
+            "perIp": {
+              "label": "Limite par adresse : Invitation d'un gestionnaire",
+              "hint": "Au-delà, la réponse est 429 avec le temps à attendre."
+            },
+            "perSubject": {
+              "label": "Limite par compte : Invitation d'un gestionnaire",
+              "hint": "Au-delà, la réponse est 429 avec le temps à attendre."
+            },
+            "windowSeconds": {
+              "label": "Fenêtre : Invitation d'un gestionnaire",
+              "hint": "Au-delà, la réponse est 429 avec le temps à attendre."
+            }
+          },
+          "invitePeek": {
+            "perIp": {
+              "label": "Limite par adresse : Ouverture d'un lien d'invitation",
+              "hint": "Au-delà, la réponse est 429 avec le temps à attendre."
+            },
+            "windowSeconds": {
+              "label": "Fenêtre : Ouverture d'un lien d'invitation",
+              "hint": "Au-delà, la réponse est 429 avec le temps à attendre."
+            }
           }
         },
         "plans": {
@@ -2823,6 +2863,33 @@
         "reportNote": "Utilisations, rabais accordé et revenu (payé moins remboursé) par code. Jamais un client. Chaque consultation est journalisée.",
         "revenue": "Revenu",
         "creditsGranted": "Crédits accordés"
+      },
+      "invitations": {
+        "lead": "L'inscription est fermée : invitez un gestionnaire par son adresse. Le lien ouvre l'inscription pour cette adresse seulement, pendant 7 jours ; le compte est prêt aussitôt. Un code pilote donné ici accorde ses dossiers sans carte.",
+        "new": "Inviter un gestionnaire",
+        "email": "Adresse courriel",
+        "pilot": "Code pilote",
+        "pilotHint": "Seuls les coupons pilotes en vigueur qui ont encore des utilisations. Créez-en un dans Coupons (usage « Pilote »).",
+        "noPilots": "Aucun coupon pilote en vigueur. Créez-en un dans Coupons (usage « Pilote ») pour en donner un ici.",
+        "noPilot": "Sans pilote",
+        "pilotOption": "{code} — {credits} dossiers, {days} jours",
+        "pilotOptionLeft": "{code} — {credits} dossiers, {days} jours ({left} utilisations restantes)",
+        "locale": "Langue du courriel",
+        "locales": {
+          "fr": "Français",
+          "en": "Anglais"
+        },
+        "send": "Envoyer l'invitation",
+        "sent": "Invitation envoyée à {email}.",
+        "pending": "Invitations ouvertes",
+        "empty": "Aucune invitation ouverte.",
+        "sentOn": "Envoyée",
+        "expiresOn": "Expire",
+        "actions": "Actions",
+        "resend": "Renvoyer",
+        "resendTo": "Renvoyer l'invitation à {email}",
+        "revoke": "Révoquer",
+        "revokeFor": "Révoquer l'invitation de {email}"
       }
     },
     "steps": {

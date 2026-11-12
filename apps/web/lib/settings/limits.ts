@@ -14,6 +14,8 @@ export const LIMIT_DEFAULTS = {
   consent: { perIp: 60, perSubject: 30, windowSeconds: 3600 },
   signUp: { perIp: 5, perSubject: 3, windowSeconds: 3600 },
   verifyEmail: { perIp: 30, windowSeconds: 3600 },
+  invite: { perIp: 60, perSubject: 30, windowSeconds: 3600 },
+  invitePeek: { perIp: 30, windowSeconds: 600 },
   signIn: { perIp: 30, perSubject: 10, windowSeconds: 900 },
   confirmEmail: { perIp: 30, windowSeconds: 3600 },
   search: { perIp: 600, perSubject: 300, windowSeconds: 3600 },

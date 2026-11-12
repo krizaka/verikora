@@ -426,6 +426,19 @@
     "public.sessions": ["account_id", "created_at", "expires_at", "id", "ip", "token_hash", "user_agent"],
     "public.settings_audit": ["actor_id", "actor_label", "after", "at", "before", "id", "key", "scope", "scope_id"],
     "public.signal_answers": ["answered_at", "document_id", "explanation", "signal_id"],
+    "public.signup_invitations": [
+      "created_at",
+      "email",
+      "expires_at",
+      "grant_kind",
+      "grant_ref",
+      "id",
+      "invited_by",
+      "revoked_at",
+      "revoked_by",
+      "token_hash",
+      "used_at"
+    ],
     "public.storage_moves": [
       "failures",
       "finished_at",
