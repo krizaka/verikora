@@ -296,7 +296,7 @@ export function StartCheckActions({ done, ...props }: StartProps & { done: reado
       {startableStudios(props.perspective, props.doc, props.offer.studios).map((studio) => (
         <Dialog.Root key={studio} defaultOpen={studio === "compliance-check" && !!refused}>
           <Dialog.Trigger asChild>
-            <Button variant="secondary" className="justify-start">
+            <Button variant="secondary" className="min-h-11 justify-start">
               {label(studio)}
             </Button>
           </Dialog.Trigger>

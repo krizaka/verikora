@@ -612,8 +612,15 @@ Krizaka-ts ADR-003, `@krizaka/organize` 0.4. Verikora is the pilot, on « Dossie
 > row opens `/app/dossiers/[id]`; « Demander des documents » is the section's secondary action), then « Mes documents » (the
 > collections, compact), then the credits as one muted line. The binder-on-top order below no longer holds. One primary action: the
 > header's « Vérifier un document »; the dashed drop zone, its second primary and the « Ou essayez » chips are gone (the first-run
-> empty state keeps them). Dropping a file anywhere on the page still checks it. Not built yet: the « À traiter » column and
-> « Dernières vérifications ».
+> empty state keeps them). Dropping a file anywhere on the page still checks it.
+>
+> **Two sections added (krizaka-internal#2290, spec krizaka-restricted#220).** « À traiter » (« To review ») is the right third of a
+> 2:1 grid from 1024 px (on a phone one column: applicant files, « À traiter », « Mes documents », « Dernières vérifications »): the
+> files the candidate sent and nobody decided, and the checks to look at (failed, or a report asking attention), newest first, five
+> at most, each row a link to the file or the report, a badge in words; empty: « Rien ne vous attend. ». « Dernières vérifications » sits
+> under « Mes documents »: the last five checks (document, check, state in words, link to the report), « Toutes les vérifications »
+> to Vérifications; empty: « Aucune vérification pour l'instant. ». No new model: the home reads the 50 newest checks in one bounded
+> query (`listChecks`) and the files it already loads; a check to look at older than those 50 is not listed here (Vérifications has it).
 
 - The home is `DashboardLayout` (« Operate »): the `h1` « Bibliothèque » on the left and **today's date on the right** (a `time`, under the
   title on a phone), **one sentence** under it whose figures are links — « Vous avez 6 vérifications à regarder, 2 dossiers à décider

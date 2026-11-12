@@ -11,9 +11,11 @@ import { type Audience, type Jurisdiction } from "@verikora/core";
 import Link from "next/link";
 
 import type { FileSummary } from "@/lib/applicant-file";
+import type { CheckSummary } from "@/lib/checks";
 import { checksTabHref, CONSOLE_ROUTES } from "@/lib/console-nav";
 import { type CreditsFigure } from "@/lib/home-b2";
 import { type DossierRow, dossiersOf } from "@/lib/home-dossiers";
+import { toTreatOf } from "@/lib/home-todo";
 import { useSay } from "@/lib/i18n-client";
 import { libraryScreen } from "@/lib/library-screen";
 import type { LibraryOverview } from "@/lib/organisation/store";
@@ -21,7 +23,7 @@ import { pluralKey } from "@/lib/plural";
 
 import { STATUS_TONE } from "./DocumentTable";
 import { formatDate } from "./format";
-import { UsageLine } from "./HomeSections";
+import { LatestChecks, ToTreat, UsageLine } from "./HomeSections";
 import { LibraryDrop } from "./LibraryDrop";
 import { CreateButton } from "./OrganisationActions";
 
@@ -39,6 +41,7 @@ export function LibraryView({
   libraries,
   documents,
   files = [],
+  checks = [],
   perspective = null,
   screening = false,
   examples,
@@ -48,6 +51,8 @@ export function LibraryView({
   libraries: LibraryOverview[];
   documents: number;
   files?: readonly FileSummary[];
+  /** The newest checks (a bounded read): « Dernières vérifications » and the checks to look at in « À traiter ». */
+  checks?: readonly CheckSummary[];
   perspective?: Audience | null;
   screening?: boolean;
   examples?: ExampleDocuments;
@@ -77,8 +82,24 @@ export function LibraryView({
   return (
     <div className="flex flex-col gap-8">
       {header}
-      {screen.secondary ? <ApplicantFiles rows={applicants} total={files.length} /> : null}
-      <DocumentsList rows={documentRows} firstId={libraries[0]?.id} />
+      {/* 2:1 on a wide screen (« À traiter » is the right column, spanning the rows); one column on a phone, in this order: the files, « À traiter », the documents, the last checks. */}
+      <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
+        {screen.secondary ? (
+          <div className="min-w-0 lg:col-span-2 lg:col-start-1">
+            <ApplicantFiles rows={applicants} total={files.length} />
+          </div>
+        ) : null}
+        <ToTreat
+          rows={toTreatOf(files, checks, locale)}
+          className="min-w-0 lg:col-start-3 lg:row-start-1 lg:row-span-3"
+        />
+        <div className="min-w-0 lg:col-span-2 lg:col-start-1">
+          <DocumentsList rows={documentRows} firstId={libraries[0]?.id} />
+        </div>
+        <div className="min-w-0 lg:col-span-2 lg:col-start-1">
+          <LatestChecks checks={checks} />
+        </div>
+      </div>
       {credits ? <UsageLine figure={credits} /> : null}
       {/* Drop anywhere stays (the overlay); the page has no drop zone and no second primary: « Vérifier un document » is the header's. */}
       <LibraryDrop jurisdictions={jurisdictions} />

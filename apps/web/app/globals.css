@@ -48,3 +48,10 @@ main[data-landing] [id="what"] {
     opacity: 1;
   }
 }
+
+/* The signed-in header's controls (the mark, the search, the account) are drawn by @krizaka/ui at 36-40 px: held to a 44 px thumb
+   here, inside the header's own height, until the shell does it (krizaka-internal#1903, the touch-target ratchet of the page audit). */
+header.sticky :is(a, button) {
+  min-height: 2.75rem;
+  min-width: 2.75rem;
+}

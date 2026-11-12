@@ -143,6 +143,7 @@ export function FindingList({
             {selection && f.evidenceSpan?.quote ? (
               <Button
                 size="sm"
+                className="min-h-11"
                 variant={active ? "primary" : "ghost"}
                 aria-pressed={active}
                 onClick={() => selection.onSelect(active ? null : f.ruleId)}
@@ -160,7 +161,7 @@ export function FindingList({
       {attention.length ? <ol className="m-0 flex list-none flex-col gap-2 p-0">{attention.map(item)}</ol> : null}
       {passed.length ? (
         <details className="rounded-lg border border-border-default p-3" data-testid="passed-findings">
-          <summary className="cursor-pointer text-sm font-semibold text-fg">
+          <summary className="flex min-h-11 cursor-pointer items-center text-sm font-semibold text-fg">
             {say(pluralKey("reportFace.passed", passed.length), { count: passed.length })}
           </summary>
           <ol start={attention.length + 1} className="m-0 mt-3 flex list-none flex-col gap-2 p-0">
@@ -170,7 +171,7 @@ export function FindingList({
       ) : null}
       {notApplicable.length ? (
         <details className="rounded-lg border border-border-default p-3" data-testid="not-applicable-findings">
-          <summary className="cursor-pointer text-sm font-semibold text-fg">
+          <summary className="flex min-h-11 cursor-pointer items-center text-sm font-semibold text-fg">
             {say(pluralKey("reportFace.notApplicable", notApplicable.length), { count: notApplicable.length })}
           </summary>
           <ol start={attention.length + passed.length + 1} className="m-0 mt-3 flex list-none flex-col gap-2 p-0">
@@ -214,7 +215,9 @@ export function TechnicalDetails({ documentId, analysis }: Readonly<{ documentId
   const byNumber = numbered ? [...numbered.attention, ...numbered.passed, ...numbered.notApplicable] : [];
   return (
     <details className="rounded-lg border border-border-default p-3" data-testid="technical-details">
-      <summary className="cursor-pointer text-sm font-semibold text-fg">{say("reportFace.technical")}</summary>
+      <summary className="flex min-h-11 cursor-pointer items-center text-sm font-semibold text-fg">
+        {say("reportFace.technical")}
+      </summary>
       <div className="mt-3">
         <DescriptionList
           items={[

@@ -50,11 +50,11 @@ export function StorageNotice({
         <div className="flex flex-col items-start gap-2">
           {confirming ? <p className="m-0 text-sm text-fg-secondary">{say("document.where.deleteNowHint")}</p> : null}
           {confirming ? (
-            <Button variant="danger" size="sm" loading={deleting} onClick={onDelete}>
+            <Button variant="danger" size="sm" className="min-h-11" loading={deleting} onClick={onDelete}>
               {say("document.where.deleteNowConfirm")}
             </Button>
           ) : (
-            <Button variant="secondary" size="sm" onClick={() => setConfirming(true)}>
+            <Button variant="secondary" size="sm" className="min-h-11" onClick={() => setConfirming(true)}>
               {say("document.where.deleteNow")}
             </Button>
           )}

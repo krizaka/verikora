@@ -8,6 +8,7 @@ import { SAMPLES } from "@/content/recorded-runs/samples.mjs";
 import { pageSession } from "@/lib/access";
 import { listApplicantFiles } from "@/lib/applicant-file";
 import { entitlementOf } from "@/lib/billing";
+import { listChecks } from "@/lib/checks";
 import { creditsOf } from "@/lib/credits";
 import { query } from "@/lib/db";
 import { appEnvironment } from "@/lib/env";
@@ -18,6 +19,10 @@ import * as org from "@/lib/organisation/store";
 import { paymentProblemOf } from "@/lib/payment-problem";
 import { PAID_KEY, paymentReturnOf } from "@/lib/payment-return";
 import { purgeExpired } from "@/lib/retention";
+
+/** The newest checks the home reads (one bounded query): the last five are listed, and « À traiter » picks the ones to look at among them. */
+// @fixed: a bound on the home's read, not a business parameter
+const HOME_CHECKS = 50;
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
   return { title: getDictionary(asLocale((await params).locale)).console.meta.library };
@@ -49,11 +54,12 @@ export default async function LibraryPage({
   await purgeExpired(query, new Date());
   await org.ensureLibrary(query, owner, getDictionary(locale).console.organisation.library);
   const now = new Date();
-  const [libraries, files, credits, entitlement] = await Promise.all([
+  const [libraries, files, credits, entitlement, checks] = await Promise.all([
     org.overview(query, owner),
     screeningOffered ? listApplicantFiles(owner, now) : Promise.resolve([]),
     creditsOf(owner, now),
     entitlementOf(query, owner, now),
+    listChecks(query, owner, HOME_CHECKS),
   ]);
   const documents = libraries.reduce((n, l) => n + l.collections.reduce((m, c) => m + c.files, 0), 0);
   const paid = paymentReturnOf(search[PAID_KEY]);
@@ -62,6 +68,7 @@ export default async function LibraryPage({
       libraries={libraries}
       documents={documents}
       files={files}
+      checks={checks}
       perspective={perspective}
       screening={screeningOffered}
       examples={SAMPLES}
