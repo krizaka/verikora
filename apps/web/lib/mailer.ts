@@ -27,7 +27,14 @@ export type AccountMail =
   | { kind: "passwordReset"; to: string; locale: "en" | "fr"; url: string; minutes: number }
   | { kind: "emailChange"; to: string; locale: "en" | "fr"; url: string; hours: number }
   /** The administration's invitation to a closed sign-up (krizaka-internal#3230): the link opens the sign-up for this address; `days` is its lifetime. */
-  | { kind: "signupInvitation"; to: string; locale: "en" | "fr"; url: string; days: number }
+  | {
+      kind: "signupInvitation";
+      to: string;
+      locale: "en" | "fr";
+      url: string;
+      days: number;
+      pilot?: { credits: number };
+    }
   | {
       kind: "reportLink";
       to: string;
@@ -75,9 +82,11 @@ export const intentionOf = (mail: AccountMail): string =>
 
 type Options = Parameters<typeof sendEmail>[2];
 
-// @fixed: the hours of a day, to say a lifetime in days in a template that counts hours
-const HOURS_PER_DAY = 24;
-const hoursIn = (days: number) => days * HOURS_PER_DAY;
+/** The pilot line of an invitation, in the invitee's language (the template takes a ready sentence, 120 characters at most). */
+const ALLOWANCE: Record<"en" | "fr", (credits: number) => string> = {
+  en: (credits) => `${credits} files included while we are in pilot`,
+  fr: (credits) => `${credits} fichiers inclus pendant le pilote`,
+};
 
 /** The template of a link, in Verikora's brand. */
 function send(mail: AccountMail, options: Options) {
@@ -89,9 +98,17 @@ function send(mail: AccountMail, options: Options) {
       return sendEmail("passwordReset", { brand, resetUrl: mail.url, minutes: mail.minutes }, options);
     case "emailChange":
       return sendEmail("emailChange", { brand, confirmUrl: mail.url, hours: mail.hours }, options);
-    // @krizaka/email 1.0 has no invitation template yet: following the link confirms the address and activates the account, which is what this one says.
     case "signupInvitation":
-      return sendEmail("confirmEmail", { brand, confirmUrl: mail.url, hours: hoursIn(mail.days) }, options);
+      return sendEmail(
+        "signupInvitation",
+        {
+          brand,
+          inviteUrl: mail.url,
+          days: mail.days,
+          ...(mail.pilot ? { allowance: ALLOWANCE[mail.locale](mail.pilot.credits) } : {}),
+        },
+        options,
+      );
     case "reportLink":
       return sendEmail(
         "shareLink",

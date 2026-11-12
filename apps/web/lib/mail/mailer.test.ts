@@ -187,3 +187,41 @@ describe("the owner-report link (verikora#130)", () => {
     expect(w.sent).toHaveLength(1);
   });
 });
+
+describe("the invitation (krizaka-internal#3269)", () => {
+  const invite = (locale: "en" | "fr", pilot?: { credits: number }): AccountMail => ({
+    kind: "signupInvitation",
+    to: "manager@example.test",
+    locale,
+    url: "https://www.verikora.com/" + locale + "/sign-up?invite=yi1.abc",
+    days: 7,
+    ...(pilot ? { pilot } : {}),
+  });
+
+  it("says « invited », not « confirm your address »: subject, button, lifetime in days (FR)", async () => {
+    const w = world();
+    await w.mail(invite("fr"));
+    const form = w.sent[0]!.form;
+    expect(form.get("subject")).toMatch(/Verikora\s*:\s*vous êtes invité/);
+    const body = (form.get("text") ?? "") + (form.get("html") ?? "");
+    expect(body).toContain("Créer mon compte");
+    expect(body).toContain("sign-up?invite=yi1.abc");
+    expect(body).toMatch(/7\s*jours/);
+    expect(body).not.toMatch(/168/);
+    expect(body).not.toMatch(/Confirmez votre adresse/);
+  });
+
+  it("says it in English, with the pilot line only when the invitation carries a pilot", async () => {
+    const w = world();
+    await w.mail(invite("en", { credits: 10 }));
+    const form = w.sent[0]!.form;
+    expect(form.get("subject")).toMatch(/Verikora\s*: you are invited/);
+    const body = (form.get("text") ?? "") + (form.get("html") ?? "");
+    expect(body).toContain("Create my account");
+    expect(body).toMatch(/7\s*days/);
+    expect(body).toContain("10 files");
+    const plain = world();
+    await plain.mail(invite("en"));
+    expect((plain.sent[0]!.form.get("text") ?? "") + (plain.sent[0]!.form.get("html") ?? "")).not.toContain("10 files");
+  });
+});

@@ -290,8 +290,8 @@ importers:
         specifier: 0.3.0
         version: 0.3.0
       '@krizaka/email':
-        specifier: 1.0.0
-        version: 1.0.0(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(typescript@5.9.3)
+        specifier: ^1.1.0
+        version: 1.1.0(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(typescript@5.9.3)
       '@krizaka/fonts':
         specifier: 0.3.0
         version: 0.3.0
@@ -2077,8 +2077,8 @@ packages:
       react:
         optional: true
 
-  '@krizaka/email@1.0.0':
-    resolution: {integrity: sha512-tKcWcP1u6/2DN8nV1JnBHlQPVzsSFoVcHh5bjaZNHpMPhxUnjKvsxhlltWRwN595/13PemQjUVola5wYudgDEg==}
+  '@krizaka/email@1.1.0':
+    resolution: {integrity: sha512-DjsHZLx41rMhR2BnS9iK5XTBV3gq/JafUOggKG2nqCWCwTphaYXoRK1swsR/uKZoeM0jxoDQElnaUCG+yBxvPQ==}
     engines: {node: '>=22'}
     peerDependencies:
       react: '>=19'
@@ -10661,7 +10661,7 @@ snapshots:
     optionalDependencies:
       react: 19.3.1
 
-  '@krizaka/email@1.0.0(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(typescript@5.9.3)':
+  '@krizaka/email@1.1.0(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(typescript@5.9.3)':
     dependencies:
       '@krizaka/i18n': 0.2.7(react@19.3.1)(typescript@5.9.3)
       '@react-email/body': 0.3.0(react@19.3.1)
