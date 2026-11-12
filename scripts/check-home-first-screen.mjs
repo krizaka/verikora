@@ -32,35 +32,52 @@ export const MEASURE = `(() => {
   return { h1Bottom: bottom("main h1"), primaryBottom: bottom('[data-testid="hero-primary"]'), articleBottom: bottom('[data-testid="hero-article"]'), barBottom: bar ? bar.bottom : null, contentTop, showcaseTop: visual ? visual.getBoundingClientRect().top : null, visualClipped: visual ? visual.scrollHeight > visual.clientHeight + 1 : null };
 })()`;
 
+/** A pixel position in words: rounded, or « none » when the element was not found. */
+const px = (value) => (value == null ? "none" : Math.round(value));
+
+/** The phone's first screen: the product's visual, then the five-second assertion (krizaka-internal#2562): the promise, the one action
+ * and the finding's article are all within the first screen. */
+function phoneProblems(m, where) {
+  if (m.width >= 600) {
+    return [];
+  }
+  const out = [];
+  if (m.showcaseTop === null || m.showcaseTop >= m.height) {
+    out.push(`${where}: the product's visual is not on the first screen (top ${px(m.showcaseTop)} of ${m.height})`);
+  }
+  const fiveSeconds = [
+    ["the H1", m.h1Bottom],
+    ["the primary action", m.primaryBottom],
+    ["the finding's article", m.articleBottom],
+  ];
+  for (const [name, bottom] of fiveSeconds) {
+    if (bottom == null || bottom > m.height) {
+      out.push(`${where}: ${name} is not within the first ${m.height} px (bottom ${px(bottom)})`);
+    }
+  }
+  return out;
+}
+
 /** The problems of one measure, in words. */
 export function problemsOf(m) {
   const where = `${m.path} @${m.width} ${m.theme}`;
-  if (m.barBottom === null || m.contentTop === null) return [`${where}: no bar or no hero frame`];
+  if (m.barBottom === null || m.contentTop === null) {
+    return [`${where}: no bar or no hero frame`];
+  }
   const out = [];
   // The bar clears the top chrome (the notice of a non-production deployment): it stands below it, so the 24 px are counted from the
   // bar's bottom, never loosened — and an overlap of the two is its own problem below (verikora#449).
   const gap = m.contentTop - m.barBottom;
-  if (Math.abs(gap - GAP_PX) > TOLERANCE_PX)
+  if (Math.abs(gap - GAP_PX) > TOLERANCE_PX) {
     out.push(`${where}: the page starts ${Math.round(gap)} px under the bar, not ${GAP_PX}`);
-  if (m.width < 600 && (m.showcaseTop === null || m.showcaseTop >= m.height))
-    out.push(
-      `${where}: the product's visual is not on the first screen (top ${m.showcaseTop === null ? "none" : Math.round(m.showcaseTop)} of ${m.height})`,
-    );
-  // The five-second assertion (krizaka-internal#2562): on a phone the promise, the one action and the finding's article are all on the first screen.
-  if (m.width < 600)
-    for (const [name, bottom] of [
-      ["the H1", m.h1Bottom],
-      ["the primary action", m.primaryBottom],
-      ["the finding's article", m.articleBottom],
-    ])
-      if (bottom === null || bottom === undefined || bottom > m.height)
-        out.push(
-          `${where}: ${name} is not within the first ${m.height} px (bottom ${bottom == null ? "none" : Math.round(bottom)})`,
-        );
-  if ((m.chromeOverlaps ?? []).length)
+  }
+  out.push(...phoneProblems(m, where));
+  if ((m.chromeOverlaps ?? []).length) {
     out.push(`${where}: the top chrome chromeOverlaps (${m.chromeOverlaps.slice(0, 2).join(", ")})`);
-  if (m.visualClipped)
+  }
+  if (m.visualClipped) {
     out.push(`${where}: the product's visual clips its text (the finding and its article must stay readable)`);
+  }
   return out;
 }
 
