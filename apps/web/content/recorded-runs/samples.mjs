@@ -36,3 +36,10 @@ Le locataire renonce à son droit au maintien dans les lieux à la fin du bail.`
  * `lib/landing.test.ts` holds the rule: the finding exists in that run, is FAIL, quotes the lease and names an article.
  */
 export const HERO = { run: "landlord", rule: "QC-LEASE-007" };
+
+/**
+ * The rules the home's report leaves out (krizaka-internal#2562, slice C): the founder's content rule is to show real problems managers meet,
+ * never the worn security-deposit example. The report is the recorded run's, minus these rules; its counts are read again from what is left,
+ * and the details fold says how many are not shown. `lib/landing.test.ts` holds it: no such rule anywhere on the rendered home.
+ */
+export const HOME_HIDDEN = ["QC-LEASE-004"];

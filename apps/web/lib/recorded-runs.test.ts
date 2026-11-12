@@ -58,7 +58,7 @@ describe("The recorded runs: one per side of the lease, or the home does not bui
   it("the home imports the recording, so a home without one cannot be built", () => {
     const page = readFileSync(join(ROOT, "app/[locale]/page.tsx"), "utf8");
     expect(page).toContain('from "@/lib/recorded-runs"');
-    expect(page).toContain('recordedRun("tenant")');
+    expect(page).toContain("recordedRun(HERO.run)");
     expect(page).not.toContain("getShowcaseView");
   });
 
