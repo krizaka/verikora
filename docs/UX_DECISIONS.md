@@ -580,7 +580,6 @@ Krizaka-ts ADR-003, `@krizaka/organize` 0.4. Verikora is the pilot, on « Dossie
 - **The title says what was filed and when**: « Bail déposé le 23 oct. 2026 » (lease, contract, invoice); another kind keeps what the
   insight reads in it. The component does not break a long address in its paragraphs: the wrapper does (`overflow-wrap:anywhere`).
 
-
 ## Plain typography in the app (P5, #322)
 
 - The sans for everything, the mono only for codes and identifiers inside « Détails techniques »: the run id, the
