@@ -2,36 +2,10 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 
 import { startIfSure } from "@/components/console/start-check";
 
+import { storedDocument } from "./fixtures/stored-document";
 import { installIngressAwareFetch } from "./ingress-fetch";
 
-const DOC = {
-  document: {
-    id: "d1",
-    title: "t",
-    filename: "t.pdf",
-    mimeType: "application/pdf",
-    kind: "lease",
-    sizeBytes: 1,
-    pages: 1,
-    hasText: true,
-    status: "stored",
-    createdAt: "2026-10-23T00:00:00.000Z",
-    sha256: "a".repeat(64),
-    text: "",
-    analyses: [],
-    storage: {
-      kind: "database",
-      endpoint: null,
-      region: "ca",
-      residency: "canada",
-      encrypted: true,
-      owner: "krizaka",
-      devOnly: false,
-    },
-    retainUntil: null,
-    purged: false,
-  },
-};
+const DOC = storedDocument();
 
 let restore = () => {};
 afterEach(() => restore());
