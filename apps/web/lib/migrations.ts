@@ -2021,4 +2021,21 @@ ON CONFLICT DO NOTHING;`,
 );
 CREATE INDEX deletion_receipts_owner_screening ON public.deletion_receipts (owner_id, screening_id);`,
   },
+  {
+    version: "0008_retention_one_year_after_decision",
+    // Law 25, s. 11 (krizaka-internal#3382): the class « one year after the decision ». A policy row of the new purge_on; its days (at least 365,
+    // the law's floor, the admin may raise it) are data. Seeded once: an admin's edit of the row survives.
+    sql: `ALTER TABLE public.retention_policies DROP CONSTRAINT retention_policies_purge_on_check;
+ALTER TABLE public.retention_policies ADD CONSTRAINT retention_policies_purge_on_check
+  CHECK (purge_on = ANY (ARRAY['after-check'::text, 'after-decision'::text, 'after-decision-days'::text, 'days'::text]));
+ALTER TABLE public.retention_policies DROP CONSTRAINT retention_policies_days_iff_days;
+ALTER TABLE public.retention_policies ADD CONSTRAINT retention_policies_days_iff_days
+  CHECK (((purge_on = ANY (ARRAY['days'::text, 'after-decision-days'::text])) = (days IS NOT NULL)));
+ALTER TABLE public.retention_policies ADD CONSTRAINT retention_policies_decision_days_floor
+  CHECK (purge_on <> 'after-decision-days' OR days >= 365);
+ALTER TABLE public.deletion_receipts DROP CONSTRAINT deletion_receipts_rule_check;
+ALTER TABLE public.deletion_receipts ADD CONSTRAINT deletion_receipts_rule_check
+  CHECK (rule IN ('after-check', 'window', 'after-decision', 'one-year-after-decision', 'applicant-request'));
+INSERT INTO public.retention_policies (id, purge_on, days) VALUES ('one-year-after-decision', 'after-decision-days', 365) ON CONFLICT DO NOTHING;`,
+  },
 ];

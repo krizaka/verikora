@@ -1,3 +1,5 @@
+import { addHours } from "@krizaka/time";
+
 import { query } from "./db";
 
 /*
@@ -7,9 +9,23 @@ import { query } from "./db";
  */
 export const SUBJECT = { screeningResult: "screening-result" } as const;
 
+/**
+ * What the manager chooses when closing a file (Law 25, s. 11: information used to decide about a person is kept at least a year
+ * after the decision). « at-decision » is the default and does not change; the other is the policy row of that id, whose days are data.
+ */
+export const DECISION_RETENTION = { atDecision: "at-decision", oneYear: "one-year-after-decision" } as const;
+export type DecisionRetention = (typeof DECISION_RETENTION)[keyof typeof DECISION_RETENTION];
+
+/** Pure: the admin's bound. A document may be kept past the decision only where its policy keeps it past the check. */
+export const mayKeepAfterDecision = (p: Policy | null): boolean =>
+  p?.purgeOn === "after-decision" || p?.purgeOn === "after-decision-days";
+
+/** Pure: the day the sweep may purge a document kept after the decision. */
+export const retainUntilAfterDecision = (decidedAt: Date, days: number): Date => addHours(decidedAt, days * 24);
+
 export interface Policy {
   id: string;
-  purgeOn: "after-check" | "after-decision" | "days";
+  purgeOn: "after-check" | "after-decision" | "after-decision-days" | "days";
   days: number | null;
 }
 interface Candidate {
@@ -44,4 +60,10 @@ export async function policyFor(ownerId: string, subject: string): Promise<Polic
     [ownerId, subject],
   );
   return inForce(rows.map((r) => ({ policy: { id: r.id, purgeOn: r.purge_on, days: r.days }, rank: r.rank })));
+}
+
+/** The days of a policy row (the class « one year after the decision »), or null when the row is gone. */
+export async function policyDays(id: string): Promise<number | null> {
+  const [row] = await query<{ days: number | null }>("SELECT days FROM retention_policies WHERE id = $1", [id]);
+  return row?.days ?? null;
 }

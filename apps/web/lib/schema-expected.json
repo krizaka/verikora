@@ -528,7 +528,7 @@
   "config": {
     "public.screening_provider": ["demo", "engine"],
     "public.check_type": ["credit", "criminal-record", "payment-history"],
-    "public.retention_policies": ["after-check", "after-decision", "thirty-days"],
+    "public.retention_policies": ["after-check", "after-decision", "one-year-after-decision", "thirty-days"],
     "public.document_types": ["bank-statement", "employment-letter", "identity-document", "pay-stub"],
     "public.compliance_gate": [
       "adverse-action-wording",

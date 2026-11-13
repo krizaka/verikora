@@ -21,6 +21,7 @@ export const DELETION_RULE = {
   afterCheck: "after-check",
   window: "window",
   afterDecision: "after-decision",
+  oneYearAfterDecision: "one-year-after-decision",
   applicantRequest: "applicant-request",
 } as const;
 export type DeletionRule = (typeof DELETION_RULE)[keyof typeof DELETION_RULE];
@@ -45,6 +46,7 @@ export const deletionReceiptPayload = z
       DELETION_RULE.afterCheck,
       DELETION_RULE.window,
       DELETION_RULE.afterDecision,
+      DELETION_RULE.oneYearAfterDecision,
       DELETION_RULE.applicantRequest,
     ]),
     deletedAt: z.string(),

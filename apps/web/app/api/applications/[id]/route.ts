@@ -2,6 +2,7 @@ import { z } from "zod";
 
 import { storesOf } from "@/app/active-store";
 import { requireSession } from "@/lib/access";
+import { DECISION_RETENTION } from "@/lib/retention-policy";
 import { applicantFileOf, closeApplicantFile, revokeApplicantFile } from "@/lib/applicant-file";
 import { handle, readJson } from "@/lib/http";
 import { limit } from "@/lib/limits";
@@ -29,7 +30,10 @@ export function POST(req: Request, { params }: { params: Promise<{ id: string }>
       req,
       z.discriminatedUnion("action", [
         z.object({ action: z.literal("revoke") }),
-        z.object({ action: z.literal("close") }),
+        z.object({
+          action: z.literal("close"),
+          retention: z.enum([DECISION_RETENTION.atDecision, DECISION_RETENTION.oneYear]).optional(),
+        }),
       ]),
     );
     const now = new Date();
@@ -43,6 +47,7 @@ export function POST(req: Request, { params }: { params: Promise<{ id: string }>
       (await storesOf(session.account.id)).write,
       now,
       req.headers,
+      input.retention,
     );
     return Response.json(closed, { headers: { "Cache-Control": "no-store" } });
   });

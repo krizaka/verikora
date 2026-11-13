@@ -113,7 +113,7 @@
       "whoTitle": "Qui le voit",
       "who": "Le propriétaire qui demande la vérification voit le rapport. Verikora et son sous-traitant pour l'analyse (Sovkora) traitent le fichier pour l'exécuter. Personne d'autre. [À RÉVISER PAR L'AVOCAT]",
       "howLongTitle": "Combien de temps c'est conservé",
-      "howLong": "Par défaut, un document est supprimé dès que sa vérification est terminée. Si vous consentez à le garder (« Garder mes documents jusqu'à la décision du propriétaire »), il est gardé jusqu'à la décision du propriétaire, puis supprimé. Un résultat est supprimé {days} jours après avoir été donné. Vous pouvez toujours en demander la suppression. [À RÉVISER PAR L'AVOCAT]",
+      "howLong": "Par défaut, un document est supprimé dès que sa vérification est terminée. Si vous consentez à le garder (« Garder mes documents jusqu'à la décision du propriétaire »), il est gardé jusqu'à la décision du propriétaire, puis supprimé. Si le propriétaire choisit « un an après la décision », il est plutôt gardé un an après la décision, puis supprimé : selon l'article 11 de la Loi 25 du Québec, les renseignements servant à prendre une décision sur une personne sont conservés au moins un an. Un résultat est supprimé {days} jours après avoir été donné. Vous pouvez toujours en demander la suppression. [À RÉVISER PAR L'AVOCAT]",
       "askTitle": "Comment demander la suppression",
       "ask": "Utilisez l'action « Supprimer mes documents » du lien que vous avez reçu. Elle supprime immédiatement vos documents et le résultat, et ne garde qu'une trace sans renseignement personnel. Vous pouvez aussi retirer un consentement ici, et demander l'accès à vos renseignements ou leur rectification.",
       "examinedTitle": "Comment vos documents sont examinés",
@@ -269,7 +269,7 @@
       "eraseLead": "Vous pouvez demander à tout moment la suppression de vos documents et du résultat.",
       "withdrawLead": "Retirer un consentement arrête les vérifications qui en dépendent.",
       "closedTitle": "Ce lien est fermé",
-      "howLong": "Par défaut, un document est supprimé dès que sa vérification est terminée. Si vous consentez à le garder (« Garder mes documents jusqu'à la décision du propriétaire »), il est gardé jusqu'à la décision du propriétaire, puis supprimé. Vous pouvez demander à tout moment la suppression de vos documents et du résultat. [À RÉVISER PAR L'AVOCAT]"
+      "howLong": "Par défaut, un document est supprimé dès que sa vérification est terminée. Si vous consentez à le garder (« Garder mes documents jusqu'à la décision du propriétaire »), il est gardé jusqu'à la décision du propriétaire, puis supprimé. Si le propriétaire choisit « un an après la décision », il est plutôt gardé un an après la décision, puis supprimé : selon l'article 11 de la Loi 25 du Québec, les renseignements servant à prendre une décision sur une personne sont conservés au moins un an. Vous pouvez demander à tout moment la suppression de vos documents et du résultat. [À RÉVISER PAR L'AVOCAT]"
     }
   },
   "report": {
