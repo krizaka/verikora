@@ -166,7 +166,9 @@ export function productionProblems(env: Env, register?: TransferRegister): strin
   if (env.DATABASE_URL && /sslmode=(require|verify)/.test(env.DATABASE_URL) && !env.DATABASE_CA_CERT) {
     problems.push("DATABASE_CA_CERT is required for a TLS database");
   }
-  problems.push(...transferProblems(register));
+  if (env.APP_ENVIRONMENT === "prod") {
+    problems.push(...transferProblems(register));
+  }
   return problems;
 }
 

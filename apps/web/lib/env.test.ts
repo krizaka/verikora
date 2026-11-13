@@ -88,14 +88,21 @@ describe("env", () => {
         { id: "dev-only", usedInProduction: false, where: null, retention: null, agreement: null },
       ],
     };
-    expect(productionProblems(readEnv(PROD), register)).toEqual([
+    expect(productionProblems(readEnv({ ...PROD, APP_ENVIRONMENT: "prod" }), register)).toEqual([
       'transfer "mail" is used in production but its where, retention, agreement is not stated (docs/privacy/transfers.json)',
     ]);
-    expect(() => assertProductionEnv(PROD, register)).toThrow(/transfer "mail"/);
-    expect(productionProblems(readEnv({ ...PROD, NODE_ENV: "development" }), register)).toEqual([]);
+    expect(() => assertProductionEnv({ ...PROD, APP_ENVIRONMENT: "prod" }, register)).toThrow(/transfer "mail"/);
+    expect(
+      productionProblems(readEnv({ ...PROD, NODE_ENV: "development", APP_ENVIRONMENT: "prod" }), register),
+    ).toEqual([]);
+    expect(productionProblems(readEnv({ ...PROD, APP_ENVIRONMENT: "dev" }), register)).toEqual([]);
   });
 
   it("refuses a production start with the register as shipped until its open lines are filled", () => {
-    expect(productionProblems(readEnv(PROD)).some((p) => p.includes('transfer "engine-model"'))).toBe(true);
+    expect(
+      productionProblems(readEnv({ ...PROD, APP_ENVIRONMENT: "prod" })).some((p) =>
+        p.includes('transfer "engine-model"'),
+      ),
+    ).toBe(true);
   });
 });
