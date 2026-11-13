@@ -4,33 +4,36 @@
 //! one for the check that needs it, write the signed report next to it — each path through the kit's one gate.
 
 mod documents;
+mod error;
 mod store;
 
+use error::DocumentError;
 use std::path::Path;
 use tauri::{AppHandle, Manager, State};
-use tauri_plugin_krizaka::kit::files::{self, Listing};
+use tauri_plugin_krizaka::kit::files::{self, Limits, Listing};
 use tauri_plugin_krizaka::KitExt;
-
-/// The largest file read for a check; the server's own limit (read from its settings) is applied by the page first.
-// @fixed: a hard stop in the native layer, whatever the page says
-const MAX_DOCUMENT_BYTES: u64 = files::MAX_SEND;
 
 /// The documents of a granted folder: what a check reads, and the folders, folders first.
 #[tauri::command]
-fn list_documents(app: AppHandle, path: String) -> Result<Listing, String> {
+fn list_documents(app: AppHandle, path: String) -> Result<Listing, DocumentError> {
     let dir = app.kit().resolve(Path::new(&path))?;
-    let mut listing = files::list_dir(&dir)?;
+    let mut listing = files::list_dir(&dir, &Limits::default())?;
     listing
         .entries
         .retain(|e| e.is_dir || documents::is_checkable(&e.name));
     Ok(listing)
 }
 
-/// One document's bytes, for the one check that needs them.
+/// One document's bytes, for the one check that needs them. The largest file read is the limit the page passes: the
+/// server's own (`limits.maxFileMb`). The kit lowers it to its ceiling; with none, the kit's default stands.
 #[tauri::command]
-fn read_document(app: AppHandle, path: String) -> Result<documents::DocumentBytes, String> {
+fn read_document(
+    app: AppHandle,
+    path: String,
+    limits: Option<Limits>,
+) -> Result<documents::DocumentBytes, DocumentError> {
     let file = app.kit().resolve(Path::new(&path))?;
-    documents::read_checkable(&file, MAX_DOCUMENT_BYTES)
+    documents::read_checkable(&file, limits.unwrap_or_default().send())
 }
 
 /// Writes the signed report next to its document; the folder is the document's, resolved through the same gate.
@@ -40,9 +43,9 @@ fn save_report(
     document: String,
     name: String,
     data: String,
-) -> Result<String, String> {
+) -> Result<String, DocumentError> {
     let file = app.kit().resolve(Path::new(&document))?;
-    documents::save_report(&file, &name, &data).map(|p| p.display().to_string())
+    documents::save_report(file.as_path(), &name, &data).map(|p| p.display().to_string())
 }
 
 /// The Mac's DocumentStore (ADR-0007): documents kept on this Mac, in the app's own folder. Errors start with the status
