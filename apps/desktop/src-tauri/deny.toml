@@ -8,6 +8,9 @@ version = 2
 yanked = "deny"
 ignore = [
   { id = "RUSTSEC-2024-0370", reason = "proc-macro-error is unmaintained; pulled transitively by tauri, goes with its bump" },
+  { id = "RUSTSEC-2026-0370", reason = "unmaintained zbus crate on keyring's Linux secret-service path; no safe upgrade, tracked in krizaka-internal#3531" },
+  { id = "RUSTSEC-2026-0371", reason = "unmaintained zbus crate on keyring's Linux secret-service path; no safe upgrade, tracked in krizaka-internal#3531" },
+  { id = "RUSTSEC-2026-0372", reason = "unmaintained zbus crate on keyring's Linux secret-service path; no safe upgrade, tracked in krizaka-internal#3531" },
 ]
 
 [licenses]
