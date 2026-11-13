@@ -14,7 +14,9 @@ const dirs = [];
 function repoWith(ratchet, { staged = "a.ts" } = {}) {
   const dir = mkdtempSync(join(tmpdir(), "pre-commit-hook-"));
   dirs.push(dir);
-  const git = (...args) => execFileSync("git", args, { cwd: dir, stdio: "ignore" });
+  // Run from a git hook (pre-push), GIT_DIR and friends are set and would point this repository at the real one.
+  const clean = Object.fromEntries(Object.entries(process.env).filter(([k]) => !k.startsWith("GIT_")));
+  const git = (...args) => execFileSync("git", args, { cwd: dir, stdio: "ignore", env: clean });
   git("init", "-q");
   mkdirSync(join(dir, ".githooks"));
   copyFileSync(HOOK, join(dir, ".githooks", "pre-commit"));
