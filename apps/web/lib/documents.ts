@@ -1,6 +1,7 @@
 import { createHash, randomUUID } from "node:crypto";
 
 import {
+  ANALYSIS_STATUS,
   type AcceptedType,
   type Analysis,
   type AnalysisStatus,
@@ -61,6 +62,7 @@ export interface AnalysisRow {
   inputs: Record<string, string>;
   report: ComplianceReport | AuthenticityReport | null;
   error: string | null;
+  billed_via?: string | null;
   created_at: Date;
   finished_at: Date | null;
 }
@@ -122,6 +124,7 @@ export function toAnalysis(row: AnalysisRow): Analysis {
     ),
     report: row.report ? (report as unknown as Analysis["report"]) : null,
     error: row.error,
+    ...(row.status === ANALYSIS_STATUS.failed && row.billed_via?.endsWith("-refunded") ? { creditRestored: true } : {}),
     createdAt: row.created_at.toISOString(),
     finishedAt: row.finished_at?.toISOString() ?? null,
   };

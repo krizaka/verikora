@@ -209,13 +209,13 @@ async function resetDemo(q, { owner, def, persona, messagesByLocale }) {
   await q("DELETE FROM collections WHERE owner_id = $1 AND NOT is_default AND name = ANY($2)", [owner, names]);
 }
 
-/** A check that did not finish, seeded for the documents `def.failed` names, so its page can say why and offer a way out (krizaka-internal#1900). Returns the stamps it used (0 or 1). */
+/** A check that did not finish, seeded for the documents `def.failed` names, so its page can say why, that the credit is back, and offer a way out (krizaka-internal#1900, #3375: seeded as a refunded run). Returns the stamps it used (0 or 1). */
 async function seedFailedCheck(q, { def, id, documentId, now, ago }) {
   const failed = (def.failed ?? []).find((f) => f.id === id);
   if (!failed) return 0;
   await q(
-    `INSERT INTO analyses (document_id, studio, status, run_id, blueprint_version, inputs, report, error, search_text, created_at, finished_at)
-     SELECT $1, $2, 'failed', $3, NULL, $4, NULL, $5, '', $6::timestamptz, $6::timestamptz
+    `INSERT INTO analyses (document_id, studio, status, run_id, blueprint_version, inputs, report, error, search_text, billed_via, created_at, finished_at)
+     SELECT $1, $2, 'failed', $3, NULL, $4, NULL, $5, '', 'credit-refunded', $6::timestamptz, $6::timestamptz
       WHERE NOT EXISTS (SELECT 1 FROM analyses WHERE document_id = $1 AND run_id = $3)`,
     [
       documentId,

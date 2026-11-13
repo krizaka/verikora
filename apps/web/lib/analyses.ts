@@ -23,7 +23,9 @@ import { PRODUCT_NAME } from "@/lib/brand";
 import { overageBiller } from "../app/overage-biller";
 import { systemClock } from "../app/system-clock";
 import { assertAnalysisAllowed } from "./applicant-consent";
+import { audit } from "./audit";
 import { refundFailedAudit } from "./billing";
+import { causeOf } from "./check-failure";
 import { recordRealFile } from "./coupons/pilot-counters";
 import { query } from "./db";
 import { type AnalysisRow, declaredKindOf, isUuid, needsAttention, readBytes, toAnalysis } from "./documents";
@@ -205,6 +207,22 @@ export async function startAnalysis(
   return isTerminal(row!.status) ? refresh(row!, run) : toAnalysis(row!);
 }
 
+/** A run that failed gives its audit back (once: the person is not charged for a check that produced nothing) and the trail says so. True when something was given back now. */
+async function giveBackFailedRun(row: AnalysisRow, error: string | null): Promise<boolean> {
+  if (!(await refundFailedAudit(query, row.id, systemClock.now(), overageBiller()))) {
+    return false;
+  }
+  const [owner] = await query<{ owner_id: string }>("SELECT owner_id FROM documents WHERE id = $1", [row.document_id]);
+  await audit({
+    actorId: owner?.owner_id ?? null,
+    actorLabel: "system",
+    action: "billing.audit_refunded",
+    targetId: row.id,
+    detail: { cause: causeOf(error), via: row.billed_via ?? null },
+  });
+  return true;
+}
+
 /** Brings an analysis up to date with its Sovkora run (only while it runs; a finished one is kept as it was). */
 export async function refresh(row: AnalysisRow, known?: SovkoraRun): Promise<Analysis> {
   if (row.status !== "running" && !known) {
@@ -245,12 +263,10 @@ export async function refresh(row: AnalysisRow, known?: SovkoraRun): Promise<Ana
     ],
   );
   // A run that failed gives its audit back (once): the person is not charged for a check that produced nothing.
-  if (!report) {
-    await refundFailedAudit(query, row.id, systemClock.now(), overageBiller());
-  }
+  const creditRestored = report ? false : await giveBackFailedRun(row, error);
   // Not kept: once the check has run, the file and the text are purged; only the report stays.
   await purgeIfDone(query, row.document_id, documentHolder);
-  return toAnalysis(updated!);
+  return toAnalysis(creditRestored ? { ...updated!, billed_via: `${row.billed_via}-refunded` } : updated!);
 }
 
 export async function getAnalysis(ownerId: string, documentId: string, analysisId: string): Promise<Analysis> {
