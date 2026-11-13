@@ -356,6 +356,7 @@
       "id",
       "revoked_at"
     ],
+    "public.report_refused_words": ["created_at", "language", "word"],
     "public.retention_policies": ["days", "id", "purge_on"],
     "public.retention_rule": ["id", "owner_id", "policy_id", "subject"],
     "public.screening_charge": [

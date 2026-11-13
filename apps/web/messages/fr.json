@@ -947,7 +947,10 @@
       "INVITE_BAD_GRANT": "Ce pilote ne peut pas être donné avec une invitation.",
       "INVITE_BAD_ACTOR": "Cette invitation ne peut pas être envoyée.",
       "ACCOUNT_EXISTS": "Cette adresse a déjà un compte.",
-      "PILOT_NOT_AVAILABLE": "Ce code pilote n'est plus disponible : choisissez-en un autre."
+      "PILOT_NOT_AVAILABLE": "Ce code pilote n'est plus disponible : choisissez-en un autre.",
+      "INVALID_WORD": "Un mot refusé est un mot ou une courte expression (2 à 40 caractères, 4 mots au plus).",
+      "ALREADY_LISTED": "Ce mot est déjà dans la liste.",
+      "LIST_EMPTY": "La liste garde au moins un mot."
     },
     "adminConsole": {
       "shell": {
@@ -1768,7 +1771,8 @@
         "sovkora": "Sovkora",
         "organisation": "Organisation",
         "coupons": "Coupons",
-        "invitations": "Invitations"
+        "invitations": "Invitations",
+        "words": "Mots refusés"
       },
       "scope": {
         "label": "Portée",
@@ -2900,6 +2904,25 @@
         "resendTo": "Renvoyer l'invitation à {email}",
         "revoke": "Révoquer",
         "revokeFor": "Révoquer l'invitation de {email}"
+      },
+      "words": {
+        "lead": "Les mots qu'un rapport ne doit jamais employer : « des signaux, jamais un verdict ». Un résultat qui en contient un n'est pas affiché, la vérification se termine en échec et son crédit est rendu. Les deux listes s'appliquent à tout rapport, quelle que soit sa langue.",
+        "add": "Ajouter un mot",
+        "language": "Liste",
+        "word": "Mot ou courte expression",
+        "wordHint": "4 mots au plus. Majuscules et accents sans importance.",
+        "submit": "Ajouter",
+        "added": "« {word} » est dans la liste.",
+        "remove": "Retirer",
+        "removeWord": "Retirer « {word} » de la liste {language}",
+        "listTitle": {
+          "fr": "Liste française",
+          "en": "Liste anglaise"
+        },
+        "languages": {
+          "fr": "Français",
+          "en": "Anglais"
+        }
       }
     },
     "steps": {
@@ -3444,6 +3467,18 @@
         "office": "La vérification s'est arrêtée avant la fin, sans que votre document y soit pour rien. Réessayez.",
         "text": "La vérification s'est arrêtée avant la fin, sans que votre fichier y soit pour rien. Réessayez.",
         "other": "La vérification s'est arrêtée avant la fin, sans que votre fichier y soit pour rien. Réessayez."
+      },
+      "unreliable": {
+        "pdf": "La vérification s'est arrêtée avant la fin, sans faute de votre document. Réessayez.",
+        "scan": "La vérification s'est arrêtée avant la fin, sans faute de votre document. Réessayez.",
+        "office": "La vérification s'est arrêtée avant la fin, sans faute de votre document. Réessayez.",
+        "text": "La vérification s'est arrêtée avant la fin, sans faute de votre fichier. Réessayez.",
+        "other": "La vérification s'est arrêtée avant la fin, sans faute de votre fichier. Réessayez."
+      },
+      "report": {
+        "REPORT_SCHEMA": "Le résultat n'avait pas la forme exigée, nous ne l'avons donc pas affiché. Réessayez.",
+        "REPORT_CITATION": "Le résultat citait un passage absent de votre document, nous ne l'avons donc pas affiché. Réessayez.",
+        "REPORT_WORDING": "Le résultat employait un mot de verdict que nous refusons (nous donnons des signaux, jamais un verdict), nous ne l'avons donc pas affiché. Réessayez."
       }
     },
     "welcome": {

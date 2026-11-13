@@ -947,7 +947,10 @@
       "INVITE_BAD_GRANT": "This pilot cannot be given with an invitation.",
       "INVITE_BAD_ACTOR": "This invitation cannot be sent.",
       "ACCOUNT_EXISTS": "This address already has an account.",
-      "PILOT_NOT_AVAILABLE": "This pilot code is no longer available: choose another one."
+      "PILOT_NOT_AVAILABLE": "This pilot code is no longer available: choose another one.",
+      "INVALID_WORD": "A refused word is one word or a short phrase (2 to 40 characters, up to 4 words).",
+      "ALREADY_LISTED": "This word is already on the list.",
+      "LIST_EMPTY": "The list keeps at least one word."
     },
     "adminConsole": {
       "shell": {
@@ -1768,7 +1771,8 @@
         "sovkora": "Sovkora",
         "organisation": "Organisation",
         "coupons": "Coupons",
-        "invitations": "Invitations"
+        "invitations": "Invitations",
+        "words": "Refused words"
       },
       "scope": {
         "label": "Scope",
@@ -2900,6 +2904,25 @@
         "resendTo": "Send the invitation to {email} again",
         "revoke": "Revoke",
         "revokeFor": "Revoke the invitation of {email}"
+      },
+      "words": {
+        "lead": "The words a report may never use: « signals, never a verdict ». A result that contains one is not shown, the check ends as failed and its credit is given back. Both lists apply to every report, whatever its language.",
+        "add": "Add a word",
+        "language": "List",
+        "word": "Word or short phrase",
+        "wordHint": "Up to 4 words. Capitals and accents do not matter.",
+        "submit": "Add",
+        "added": "« {word} » is on the list.",
+        "remove": "Remove",
+        "removeWord": "Remove « {word} » from the {language} list",
+        "listTitle": {
+          "fr": "French list",
+          "en": "English list"
+        },
+        "languages": {
+          "fr": "French",
+          "en": "English"
+        }
       }
     },
     "steps": {
@@ -3444,6 +3467,18 @@
         "office": "The check stopped before the end, through no fault of your document. Try again.",
         "text": "The check stopped before the end, through no fault of your file. Try again.",
         "other": "The check stopped before the end, through no fault of your file. Try again."
+      },
+      "unreliable": {
+        "pdf": "The check stopped before the end, through no fault of your document. Try again.",
+        "scan": "The check stopped before the end, through no fault of your document. Try again.",
+        "office": "The check stopped before the end, through no fault of your document. Try again.",
+        "text": "The check stopped before the end, through no fault of your file. Try again.",
+        "other": "The check stopped before the end, through no fault of your file. Try again."
+      },
+      "report": {
+        "REPORT_SCHEMA": "The result did not have the shape we require, so we did not show it. Try again.",
+        "REPORT_CITATION": "The result quoted a passage that is not in your document, so we did not show it. Try again.",
+        "REPORT_WORDING": "The result used a verdict word that we do not allow (we give signals, never a verdict), so we did not show it. Try again."
       }
     },
     "welcome": {

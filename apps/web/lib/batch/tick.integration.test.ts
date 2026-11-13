@@ -1,14 +1,12 @@
-import { readFileSync } from "node:fs";
-
 import type { SovkoraRun } from "@verikora/core";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 
 import { seedAudits } from "../audit-credits.testkit";
 import { migrate, pool, query } from "../db";
 import { withAdvisoryLock } from "../db";
+import { LEASE_REPORT as REPORT, leasePdf } from "../fixtures/lease-report";
 import { seedDatabase } from "../flows";
 import { refuse } from "../http";
-import { cleanPdf } from "../preflight/fixtures";
 import { settingsFor } from "../settings/guards";
 import { appSettings, resetAppSettings } from "../settings/instance";
 import { GLOBAL } from "../settings/service";
@@ -18,7 +16,6 @@ import { dueBatches, TICK_LOCK, tickBatches } from "./tick";
 
 /** A batch that advances without anyone opening it (verikora#240), against PostgreSQL and a fake Sovkora (CI's service; locally DATABASE_IT=1 DATABASE_URL=…). */
 const enabled = process.env.DATABASE_IT === "1" && !!process.env.DATABASE_URL;
-const REPORT = readFileSync(new URL("../fixtures/sovkora-compliance-qc-1.2.0.json", import.meta.url), "utf8");
 
 describe.runIf(enabled)("the batch tick", () => {
   const stamp = `${Date.now()}-${Math.random().toString(16).slice(2, 8)}`;
@@ -27,7 +24,7 @@ describe.runIf(enabled)("the batch tick", () => {
   const actor = { id: null, label: "test" };
   let owner = { id: "", perspective: null };
   let other = { id: "", perspective: null };
-  const pdf = async (name: string, text: string) => ({ name, type: "application/pdf", bytes: await cleanPdf(text) });
+  const pdf = async (name: string, text: string) => ({ name, type: "application/pdf", bytes: await leasePdf(text) });
   const run = (id: string): SovkoraRun => ({
     id,
     studioKey: "compliance-check",

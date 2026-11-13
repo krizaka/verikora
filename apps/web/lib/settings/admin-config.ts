@@ -6,6 +6,7 @@ export const CONFIG_PAGE = {
   prices: "prices",
   coupons: "coupons",
   invitations: "invitations",
+  words: "words",
   packs: "packs",
   sovkora: "sovkora",
   organisation: "organisation",

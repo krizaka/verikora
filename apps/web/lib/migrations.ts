@@ -1960,4 +1960,48 @@ ON CONFLICT (module, version) DO NOTHING;`,
 -- the file that counted as the account's first real file, so a replay counts nothing more (a flag on the file, never a count)
 ALTER TABLE public.analyses ADD COLUMN pilot_first_file boolean NOT NULL DEFAULT false;`,
   },
+  {
+    // krizaka-internal#3378: the words a model's report may never use (« signals, never a verdict »), per language, edited by the admin (audited).
+    // The seed is written here, once: a configuration seed re-run at every start would bring back a word the admin removed.
+    version: "0006_report_refused_words",
+    sql: String.raw`CREATE TABLE public.report_refused_words (
+  language   text NOT NULL CHECK (language IN ('fr', 'en')),
+  word       text NOT NULL CHECK (word = lower(btrim(word)) AND char_length(word) BETWEEN 2 AND 40),
+  created_at timestamptz NOT NULL DEFAULT now(),
+  PRIMARY KEY (language, word)
+);
+INSERT INTO public.report_refused_words (language, word) VALUES
+  ('en', 'fraud'),
+  ('en', 'fraudulent'),
+  ('en', 'fraudster'),
+  ('en', 'fake'),
+  ('en', 'forged'),
+  ('en', 'forgery'),
+  ('en', 'liar'),
+  ('en', 'scam'),
+  ('en', 'scammer'),
+  ('en', 'criminal'),
+  ('en', 'guilty'),
+  ('en', 'reject'),
+  ('en', 'rejected'),
+  ('en', 'do not rent'),
+  ('en', 'do not accept'),
+  ('fr', 'fraude'),
+  ('fr', 'frauduleux'),
+  ('fr', 'frauduleuse'),
+  ('fr', 'fraudeur'),
+  ('fr', 'faux document'),
+  ('fr', 'falsifié'),
+  ('fr', 'falsifiée'),
+  ('fr', 'menteur'),
+  ('fr', 'menteuse'),
+  ('fr', 'arnaque'),
+  ('fr', 'arnaqueur'),
+  ('fr', 'criminel'),
+  ('fr', 'coupable'),
+  ('fr', 'rejeter'),
+  ('fr', 'rejetez'),
+  ('fr', 'refusez ce locataire')
+ON CONFLICT DO NOTHING;`,
+  },
 ];
