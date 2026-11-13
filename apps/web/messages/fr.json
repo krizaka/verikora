@@ -3422,6 +3422,7 @@
       "title": "Cette vérification n'a pas abouti",
       "retry": "Réessayer",
       "chooseFile": "Choisir un autre fichier",
+      "creditRestored": "Votre crédit vous a été rendu.",
       "retrying": "Nouvelle vérification…",
       "unreadable": {
         "pdf": "Nous n'avons pas pu lire ce PDF assez bien pour le vérifier. Réessayez, ou choisissez une autre copie du document.",

@@ -35,6 +35,10 @@ test("a failed check says why in plain words and offers a way out", async ({ bro
   const words = (await failure.innerText()).trim();
   expect(words.length, "in plain words").toBeGreaterThan(40);
   expect(words, "without an engine name").not.toMatch(ENGINE_WORDS);
+  await expect(
+    failure.getByText(FR.checkFailure.creditRestored),
+    "the credit is given back, and the page says so",
+  ).toBeVisible();
   await expect(page.getByText(FR.reportFace.notChecked), "no « not checked yet » next to a failure").toHaveCount(0);
 
   // Try again: the same check is sent again.

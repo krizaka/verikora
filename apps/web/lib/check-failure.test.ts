@@ -22,6 +22,14 @@ const messages = (name: string) =>
 // The engine room's words: a person never reads them (products first: Sovkora appears only as « Powered by »).
 const ENGINE_WORDS = /sovkora|engine|moteur|run id|stack ?trace|exception/i;
 
+describe("the credit given back is said in both languages (#3375)", () => {
+  it.each(["en", "fr"])("has the sentence, without engine words (%s)", (lang) => {
+    const text = messages(lang).creditRestored as string;
+    expect(text.length, lang).toBeGreaterThan(10);
+    expect(text, lang).not.toMatch(ENGINE_WORDS);
+  });
+});
+
 describe("a failed check: the cause, in the person's words (krizaka-internal#1900)", () => {
   it.each([
     ["Sovkora finished without a report Verikora can read", "unreadable"],

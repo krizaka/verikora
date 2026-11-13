@@ -36,6 +36,7 @@ export function CheckFailure({ doc, failed }: Readonly<{ doc: DocumentView; fail
     <div className="flex flex-col gap-3" data-testid="check-failure">
       <Alert tone="warning" title={say("checkFailure.title")}>
         {say(key)}
+        {failed.creditRestored ? ` ${say("checkFailure.creditRestored")}` : null}
       </Alert>
       {problem ? <Alert tone="danger">{problem}</Alert> : null}
       <div className="flex flex-wrap gap-2">

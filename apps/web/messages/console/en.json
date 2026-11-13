@@ -3422,6 +3422,7 @@
       "title": "This check did not finish",
       "retry": "Try again",
       "chooseFile": "Choose another file",
+      "creditRestored": "Your credit has been given back.",
       "retrying": "Checking again…",
       "unreadable": {
         "pdf": "We could not read this PDF well enough to check it. Try again, or choose another copy of the document.",

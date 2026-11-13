@@ -425,6 +425,8 @@ export const analysis = z.object({
   inputs: z.record(z.string(), z.string()),
   report: z.union([complianceReport, authenticityReport]).nullable(),
   error: z.string().nullable(),
+  /** True when the run failed and the audit it spent (free, paid or pilot credit) was given back: the failure message says so. */
+  creditRestored: z.boolean().optional(),
   createdAt: z.string(),
   finishedAt: z.string().nullable(),
 });
