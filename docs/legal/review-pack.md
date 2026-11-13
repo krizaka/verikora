@@ -17,19 +17,19 @@ Deux parcours touchent des renseignements personnels de tiers :
 
 ## Table des matières et correspondance avec le ticket #3231
 
-| Exigence du ticket (« Done when ») | Où dans ce dossier |
-| :--- | :--- |
-| Texte et parcours du consentement de la personne candidate | § 1 |
-| Liste par défaut des documents demandés (minimale ; revenu en téléversement volontaire ; guide de la CAI) | § 2 |
-| Conservation et purge (et sauvegardes) | § 3 |
-| Question de l'article 11 de la Loi 25 (modification du 2026-11-13) | § 3.4 et questions 9 à 11 |
-| Évaluation des facteurs relatifs à la vie privée (EFVP), hébergement au Canada | § 4 |
-| Ligne « moteur Sovkora » : lieu, conservation, entente intragroupe (modification) | § 4.3 |
-| Ligne « fournisseur de modèle » : région et mandat (modification) | § 4.4 |
-| Conditions d'utilisation et avis de confidentialité | § 5 |
-| Ensemble de règles `qc-residential-lease` : ce qu'il lit, comment il cite le Code civil | § 6 |
-| Les questions pour l'avocat, une par ligne | § 7 |
-| Chaque élément avec le fichier du code qu'il décrit | « Fichiers » en tête de chaque section |
+| Exigence du ticket (« Done when »)                                                                        | Où dans ce dossier                     |
+| :-------------------------------------------------------------------------------------------------------- | :------------------------------------- |
+| Texte et parcours du consentement de la personne candidate                                                | § 1                                    |
+| Liste par défaut des documents demandés (minimale ; revenu en téléversement volontaire ; guide de la CAI) | § 2                                    |
+| Conservation et purge (et sauvegardes)                                                                    | § 3                                    |
+| Question de l'article 11 de la Loi 25 (modification du 2026-11-13)                                        | § 3.4 et questions 9 à 11              |
+| Évaluation des facteurs relatifs à la vie privée (EFVP), hébergement au Canada                            | § 4                                    |
+| Ligne « moteur Sovkora » : lieu, conservation, entente intragroupe (modification)                         | § 4.3                                  |
+| Ligne « fournisseur de modèle » : région et mandat (modification)                                         | § 4.4                                  |
+| Conditions d'utilisation et avis de confidentialité                                                       | § 5                                    |
+| Ensemble de règles `qc-residential-lease` : ce qu'il lit, comment il cite le Code civil                   | § 6                                    |
+| Les questions pour l'avocat, une par ligne                                                                | § 7                                    |
+| Chaque élément avec le fichier du code qu'il décrit                                                       | « Fichiers » en tête de chaque section |
 
 ---
 
@@ -83,12 +83,12 @@ Deux parcours touchent des renseignements personnels de tiers :
 
 **Ce que le code demande par défaut aujourd'hui** (catalogue de départ, quatre types) :
 
-| Type | Champs lus | Ce que le guide de la CAI et du TAL dit |
-| :--- | :--- | :--- |
-| `pay-stub` (talon de paie) | employeur, période de paie | Le propriétaire ne peut exiger ni l'emploi, ni l'employeur, ni l'ancienneté, ni le salaire. **Notre défaut diffère.** |
-| `bank-statement` (relevé bancaire) | période du relevé | Pas dans la liste de ce qu'on peut demander ; on parle plutôt de preuves ciblées des habitudes de paiement. **Notre défaut diffère (à juger).** |
-| `employment-letter` (lettre d'emploi) | employeur, poste, date d'entrée | Même point que le talon de paie. **Notre défaut diffère.** |
-| `identity-document` (pièce d'identité téléversée) | nom complet | Le propriétaire peut la voir pour vérifier l'identité, mais ne peut ni la photocopier, ni la photographier, ni en garder une copie. **Notre défaut diffère : nous recevons et gardons un fichier.** |
+| Type                                              | Champs lus                      | Ce que le guide de la CAI et du TAL dit                                                                                                                                                             |
+| :------------------------------------------------ | :------------------------------ | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `pay-stub` (talon de paie)                        | employeur, période de paie      | Le propriétaire ne peut exiger ni l'emploi, ni l'employeur, ni l'ancienneté, ni le salaire. **Notre défaut diffère.**                                                                               |
+| `bank-statement` (relevé bancaire)                | période du relevé               | Pas dans la liste de ce qu'on peut demander ; on parle plutôt de preuves ciblées des habitudes de paiement. **Notre défaut diffère (à juger).**                                                     |
+| `employment-letter` (lettre d'emploi)             | employeur, poste, date d'entrée | Même point que le talon de paie. **Notre défaut diffère.**                                                                                                                                          |
+| `identity-document` (pièce d'identité téléversée) | nom complet                     | Le propriétaire peut la voir pour vérifier l'identité, mais ne peut ni la photocopier, ni la photographier, ni en garder une copie. **Notre défaut diffère : nous recevons et gardons un fichier.** |
 
 **Ce que le code refuse de demander, quel que soit le catalogue** (`NOT_NECESSARY_TYPES`, 422 `TYPE_NOT_NECESSARY`) : NAS,
 carte d'assurance maladie, passeport, permis de conduire, chèque annulé, coordonnées bancaires. Aucun champ de type NAS, santé,
@@ -118,13 +118,13 @@ personnels » <https://www.tal.gouv.qc.ca/fr/signature-d-un-bail/bail-et-protect
 
 ### 3.1 Par défaut : purger
 
-| Quoi | Règle par défaut | Gardé plus longtemps seulement si |
-| :--- | :--- | :--- |
-| Un document (fichier et texte extrait) | purgé **dès que sa vérification est faite** ; jamais vérifié : après 24 h (réglage) | la personne choisit « conserver » (jour noté dans `documents.keep_consent_at`) |
-| Document d'un dossier de candidature | purgé après la vérification | la personne a consenti à `DOCUMENT_KEEP` **et** le type permet « après la décision » : alors **jamais au-delà de la décision du gestionnaire** |
-| Résultat de vérification d'une candidature et ce que les vérifications ont gardé | supprimé **30 jours** après le consentement (`RETENTION_DAYS`, règle `screening-result`) | jamais ; la personne peut l'effacer avant |
-| Rapport, empreinte SHA-256 du fichier, certificat signé | **restent** après une purge (le rapport signé est la trace de la décision) | — |
-| Journal d'audit (`audit.entry`) | aucune durée dans le code | à décider (question 12) |
+| Quoi                                                                             | Règle par défaut                                                                         | Gardé plus longtemps seulement si                                                                                                              |
+| :------------------------------------------------------------------------------- | :--------------------------------------------------------------------------------------- | :--------------------------------------------------------------------------------------------------------------------------------------------- |
+| Un document (fichier et texte extrait)                                           | purgé **dès que sa vérification est faite** ; jamais vérifié : après 24 h (réglage)      | la personne choisit « conserver » (jour noté dans `documents.keep_consent_at`)                                                                 |
+| Document d'un dossier de candidature                                             | purgé après la vérification                                                              | la personne a consenti à `DOCUMENT_KEEP` **et** le type permet « après la décision » : alors **jamais au-delà de la décision du gestionnaire** |
+| Résultat de vérification d'une candidature et ce que les vérifications ont gardé | supprimé **30 jours** après le consentement (`RETENTION_DAYS`, règle `screening-result`) | jamais ; la personne peut l'effacer avant                                                                                                      |
+| Rapport, empreinte SHA-256 du fichier, certificat signé                          | **restent** après une purge (le rapport signé est la trace de la décision)               | —                                                                                                                                              |
+| Journal d'audit (`audit.entry`)                                                  | aucune durée dans le code                                                                | à décider (question 12)                                                                                                                        |
 
 Une purge écrit une ligne d'audit (`document.purged`, `screening.purged`) et un **reçu de suppression signé** : ce qui a été
 supprimé (par empreintes), quand, sous quelle règle (après la vérification, après le délai, à la décision, un an après, à la
@@ -201,15 +201,15 @@ Voir § 4.2 : base de données à Toronto ; stockage de fichiers chiffré avant 
 
 Ce que le code et la documentation de Sovkora établissent :
 
-| Point | Fait | Source |
-| :--- | :--- | :--- |
-| Ce qui part de Verikora | **le texte** du document (couche de texte ; pour une photo, le texte reconnu localement) et le type, la juridiction, la date ; le numéro d'exécution revient et est gardé | `apps/web/lib/sovkora.ts` (seul client), `AGENTS.md` § 2 |
-| Appel | HTTPS, `AI_API_URL` = `https://dev.sovkora.com/edge`, clé de service `oz_…` (secret DigitalOcean) | `apps/web/lib/env.ts`, `AGENTS.md` § 2 |
-| Lieu de traitement, développement | DigitalOcean App Platform, projet `sovkora-dev`, Toronto | Sovkora `docs/DEPLOY_DEV.md` |
-| Lieu de traitement, production | VPC de production `tor1` (Toronto), courtier de messages dans ce VPC ; hôte `api.sovkora.com` | Sovkora `docs/DEPLOY_PROD.md` |
-| Classe de données | pack `document-validation` déclaré `regulatoryClass: SENSITIVE` : durée de conservation raccourcie, audit sans détail, garde de périmètre (refuse de donner un conseil juridique) | Sovkora `packs/document-validation/pack.yaml` |
-| Conservation des exécutions | `retention.sensitive-run-days` = **30 jours** par défaut (une installation peut la baisser, jamais la monter) ; le répertoire d'un travail SENSITIVE est supprimé, puis sa ligne, à l'état terminal ; un test (Sovkora #693) vérifie qu'aucun texte de document ne reste dans une table ou un journal après la fin d'une exécution | Sovkora `infra/migrations/2026-09-06-sensitive-controls.sql`, `ProtectedJobRetentionIT` |
-| Entente intragroupe Verikora ↔ Sovkora | **n'existe pas encore** (« à écrire » dans `transfers.md`) | `docs/privacy/transfers.md` |
+| Point                                  | Fait                                                                                                                                                                                                                                                                                                                               | Source                                                                                  |
+| :------------------------------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :-------------------------------------------------------------------------------------- |
+| Ce qui part de Verikora                | **le texte** du document (couche de texte ; pour une photo, le texte reconnu localement) et le type, la juridiction, la date ; le numéro d'exécution revient et est gardé                                                                                                                                                          | `apps/web/lib/sovkora.ts` (seul client), `AGENTS.md` § 2                                |
+| Appel                                  | HTTPS, `AI_API_URL` = `https://dev.sovkora.com/edge`, clé de service `oz_…` (secret DigitalOcean)                                                                                                                                                                                                                                  | `apps/web/lib/env.ts`, `AGENTS.md` § 2                                                  |
+| Lieu de traitement, développement      | DigitalOcean App Platform, projet `sovkora-dev`, Toronto                                                                                                                                                                                                                                                                           | Sovkora `docs/DEPLOY_DEV.md`                                                            |
+| Lieu de traitement, production         | VPC de production `tor1` (Toronto), courtier de messages dans ce VPC ; hôte `api.sovkora.com`                                                                                                                                                                                                                                      | Sovkora `docs/DEPLOY_PROD.md`                                                           |
+| Classe de données                      | pack `document-validation` déclaré `regulatoryClass: SENSITIVE` : durée de conservation raccourcie, audit sans détail, garde de périmètre (refuse de donner un conseil juridique)                                                                                                                                                  | Sovkora `packs/document-validation/pack.yaml`                                           |
+| Conservation des exécutions            | `retention.sensitive-run-days` = **30 jours** par défaut (une installation peut la baisser, jamais la monter) ; le répertoire d'un travail SENSITIVE est supprimé, puis sa ligne, à l'état terminal ; un test (Sovkora #693) vérifie qu'aucun texte de document ne reste dans une table ou un journal après la fin d'une exécution | Sovkora `infra/migrations/2026-09-06-sensitive-controls.sql`, `ProtectedJobRetentionIT` |
+| Entente intragroupe Verikora ↔ Sovkora | **n'existe pas encore** (« à écrire » dans `transfers.md`)                                                                                                                                                                                                                                                                         | `docs/privacy/transfers.md`                                                             |
 
 À obtenir, avec qui répond :
 
@@ -241,15 +241,15 @@ Ce que le code et la documentation de Sovkora établissent :
 
 ### 4.5 Autres fournisseurs (registre `transfers.json`)
 
-| Id | Quoi | Fournisseur | Lieu | Hors Canada |
-| :--- | :--- | :--- | :--- | :--- |
-| `database` | comptes, enregistrements, analyses, audit, dossiers | DigitalOcean PostgreSQL | Toronto | non |
-| `documents-s3` | fichiers gardés (production) | DigitalOcean Spaces | Toronto `tor1` | non |
-| `documents-bunny` | fichiers gardés en développement, fictifs | Bunny Storage (+ CDN) | New York | oui |
-| `documents-user-cloud` | documents que la personne choisit de garder chez elle | Dropbox, Google, Microsoft | choix de la personne | oui (hors de notre contrôle) |
-| `mail` | adresse et message des courriels de confirmation | Mailgun | `api.mailgun.net` ; localisation des serveurs : **à obtenir du contrat Mailgun (le CTO)** | à confirmer |
-| `payments` | courriel du compte, forfait, événements de paiement | Stripe | **à obtenir du contrat Stripe (le CTO)** | à confirmer |
-| `engine` | texte du document, numéro d'exécution | Sovkora | Toronto (§ 4.3) | non |
+| Id                     | Quoi                                                  | Fournisseur                | Lieu                                                                                      | Hors Canada                  |
+| :--------------------- | :---------------------------------------------------- | :------------------------- | :---------------------------------------------------------------------------------------- | :--------------------------- |
+| `database`             | comptes, enregistrements, analyses, audit, dossiers   | DigitalOcean PostgreSQL    | Toronto                                                                                   | non                          |
+| `documents-s3`         | fichiers gardés (production)                          | DigitalOcean Spaces        | Toronto `tor1`                                                                            | non                          |
+| `documents-bunny`      | fichiers gardés en développement, fictifs             | Bunny Storage (+ CDN)      | New York                                                                                  | oui                          |
+| `documents-user-cloud` | documents que la personne choisit de garder chez elle | Dropbox, Google, Microsoft | choix de la personne                                                                      | oui (hors de notre contrôle) |
+| `mail`                 | adresse et message des courriels de confirmation      | Mailgun                    | `api.mailgun.net` ; localisation des serveurs : **à obtenir du contrat Mailgun (le CTO)** | à confirmer                  |
+| `payments`             | courriel du compte, forfait, événements de paiement   | Stripe                     | **à obtenir du contrat Stripe (le CTO)**                                                  | à confirmer                  |
+| `engine`               | texte du document, numéro d'exécution                 | Sovkora                    | Toronto (§ 4.3)                                                                           | non                          |
 
 Les ententes écrites (articles 17 et 18.3) avec DigitalOcean, Mailgun et Stripe sont « à lier et à relire » dans `transfers.md` ;
 les copies signées restent dans le dossier privé de l'entreprise, jamais dans git.
@@ -258,11 +258,11 @@ les copies signées restent dans le dossier privé de l'entreprise, jamais dans 
 
 **Fichiers**
 
-| Page publique | Fichier de la page | Texte |
-| :--- | :--- | :--- |
-| `/terms` (conditions) | `apps/web/app/[locale]/terms/page.tsx` ; version `TERMS_VERSION = "2026-10-27-draft"` (`apps/web/lib/signup.ts`) | `apps/web/messages/fr.json` (clé `terms`, le français fait foi) et `en.json` |
-| `/privacy` (confidentialité) | `apps/web/app/[locale]/privacy/page.tsx` ; date `PRIVACY_UPDATED = "2026-11-13"` (`apps/web/lib/site.ts`) | clé `privacy` des mêmes fichiers |
-| Avis de la personne candidate | voir § 1 | `applicant.notice` |
+| Page publique                 | Fichier de la page                                                                                               | Texte                                                                        |
+| :---------------------------- | :--------------------------------------------------------------------------------------------------------------- | :--------------------------------------------------------------------------- |
+| `/terms` (conditions)         | `apps/web/app/[locale]/terms/page.tsx` ; version `TERMS_VERSION = "2026-10-27-draft"` (`apps/web/lib/signup.ts`) | `apps/web/messages/fr.json` (clé `terms`, le français fait foi) et `en.json` |
+| `/privacy` (confidentialité)  | `apps/web/app/[locale]/privacy/page.tsx` ; date `PRIVACY_UPDATED = "2026-11-13"` (`apps/web/lib/site.ts`)        | clé `privacy` des mêmes fichiers                                             |
+| Avis de la personne candidate | voir § 1                                                                                                         | `applicant.notice`                                                           |
 
 **Conditions** : la page porte `data-lawyer-review="pending"` et un bandeau « rédigée de bonne foi, en attente de relecture par
 l'avocat ; la politique de remboursement d'un audit à l'unité n'est pas définitive ». Sections : ce qu'est Verikora (vérification
@@ -302,23 +302,23 @@ prose. Verdicts : exigence respectée, non respectée, preuve insuffisante, non 
 **Comment il cite le Code civil** : chaque règle porte son article ; le rapport montre l'article cité et le passage du
 document. Les citations renvoient par numéro d'article, sans reproduire le texte de la loi.
 
-| Règle | Article cité | Objet |
-| :--- | :--- | :--- |
-| QC-LEASE-001, 002 | C.c.Q. 1895 ; règlement T-15.01, r. 3 | identification du locateur et du locataire |
-| 003 | 1855, 1903 | montant du loyer |
-| 004 | 1904 al. 1 | dépôt de garantie interdit (premier mois seulement) |
-| 005 | 1904 al. 2 | chèques postdatés interdits |
-| 006 | 1899 | refus des enfants, sans effet |
-| 007 | 1936, 1893 | renonciation au maintien dans les lieux, sans effet |
-| 008 | 1896 ; règlement | avis du loyer le plus bas des douze derniers mois |
-| 009 | 1942, 1943, 1945, 1893 | renonciation anticipée aux règles d'augmentation, sans effet |
-| 010 | 1901 | peines et frais de retard (**question au modèle, consultative**) |
-| 011 | 1894 | règlement d'immeuble remis avant la conclusion (**question au modèle, consultative**) |
-| 012 | 1901, 1931 et s. | visites et hébergement d'un tiers |
-| 013 | 1971, 1893 | résiliation de plein droit pour un seul retard |
-| 014 | 1895 ; règlement | mention du formulaire obligatoire |
-| 020 | 1901 | clause abusive (consultative) |
-| QC-LANG-001 | Charte de la langue française, art. 55 ; C.c.Q. 1897 | langue française (informative : jamais un échec pour cette seule raison) |
+| Règle             | Article cité                                         | Objet                                                                                 |
+| :---------------- | :--------------------------------------------------- | :------------------------------------------------------------------------------------ |
+| QC-LEASE-001, 002 | C.c.Q. 1895 ; règlement T-15.01, r. 3                | identification du locateur et du locataire                                            |
+| 003               | 1855, 1903                                           | montant du loyer                                                                      |
+| 004               | 1904 al. 1                                           | dépôt de garantie interdit (premier mois seulement)                                   |
+| 005               | 1904 al. 2                                           | chèques postdatés interdits                                                           |
+| 006               | 1899                                                 | refus des enfants, sans effet                                                         |
+| 007               | 1936, 1893                                           | renonciation au maintien dans les lieux, sans effet                                   |
+| 008               | 1896 ; règlement                                     | avis du loyer le plus bas des douze derniers mois                                     |
+| 009               | 1942, 1943, 1945, 1893                               | renonciation anticipée aux règles d'augmentation, sans effet                          |
+| 010               | 1901                                                 | peines et frais de retard (**question au modèle, consultative**)                      |
+| 011               | 1894                                                 | règlement d'immeuble remis avant la conclusion (**question au modèle, consultative**) |
+| 012               | 1901, 1931 et s.                                     | visites et hébergement d'un tiers                                                     |
+| 013               | 1971, 1893                                           | résiliation de plein droit pour un seul retard                                        |
+| 014               | 1895 ; règlement                                     | mention du formulaire obligatoire                                                     |
+| 020               | 1901                                                 | clause abusive (consultative)                                                         |
+| QC-LANG-001       | Charte de la langue française, art. 55 ; C.c.Q. 1897 | langue française (informative : jamais un échec pour cette seule raison)              |
 
 (Identifiants complets : `QC-LEASE-001` à `QC-LEASE-014`, `QC-LEASE-020` et `QC-LANG-001`, soit 16 règles. Gravités : BLOCKING, MAJOR ou ADVISORY, lues dans le fichier JSON.)
 
