@@ -110,11 +110,15 @@ mod tests {
     use super::*;
 
     #[test]
-    fn a_failure_answers_a_code_and_a_fixed_sentence_never_the_systems_text() {
+    fn a_failure_answers_a_code_and_a_fixed_sentence_never_the_systems_text(
+    ) -> Result<(), serde_json::Error> {
         let io = DocumentError::Io(std::io::Error::other("/Users/someone/secret.pdf"));
-        let wire = serde_json::to_value(&io).unwrap();
-        assert_eq!(wire["code"], "io_failed");
-        assert!(!wire["message"].as_str().unwrap().contains("secret"));
+        let wire = serde_json::to_string(&io)?;
+        assert_eq!(
+            wire,
+            r#"{"code":"io_failed","message":"the file could not be read or written"}"#
+        );
+        Ok(())
     }
 
     #[test]

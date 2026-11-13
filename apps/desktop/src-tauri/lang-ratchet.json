@@ -6,5 +6,5 @@
   "clippy:clippy::needless_pass_by_value": 32,
   "clippy:clippy::semicolon_if_nothing_returned": 1,
   "clippy:clippy::unused_self": 2,
-  "clippy:clippy::unwrap_used": 63
+  "clippy:clippy::unwrap_used": 49
 }

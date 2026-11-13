@@ -135,8 +135,10 @@ pub fn save_report(
 #[cfg(test)]
 mod tests {
     use super::*;
-    use tauri_plugin_krizaka::kit::scope::ScopeStore;
+    use tauri_plugin_krizaka::kit::scope::{ScopeError, ScopeStore};
     use tempfile::tempdir;
+
+    type TestResult = Result<(), Box<dyn std::error::Error>>;
 
     /// A fake home with a granted `Documents` folder: the files of a test are resolved through the real gate.
     struct Granted {
@@ -146,27 +148,24 @@ mod tests {
         home: PathBuf,
     }
 
-    fn granted() -> Granted {
-        let tmp = tempdir().unwrap();
-        let home = tmp.path().canonicalize().unwrap();
-        fs::create_dir(home.join("Documents")).unwrap();
+    fn granted() -> Result<Granted, Box<dyn std::error::Error>> {
+        let tmp = tempdir()?;
+        let home = tmp.path().canonicalize()?;
+        fs::create_dir(home.join("Documents"))?;
         let mut scope = ScopeStore::default();
-        let folder = scope
-            .grant_with_home(&home.join("Documents"), Some(&home))
-            .unwrap();
-        Granted {
+        let folder = scope.grant_with_home(&home.join("Documents"), Some(&home))?;
+        Ok(Granted {
             _home: tmp,
             folder,
             scope,
             home,
-        }
+        })
     }
 
     impl Granted {
-        fn resolve(&mut self, name: &str) -> ScopedPath {
+        fn resolve(&mut self, name: &str) -> Result<ScopedPath, ScopeError> {
             self.scope
                 .resolve_with_home(&self.folder.join(name), Some(&self.home))
-                .unwrap()
         }
     }
 
@@ -188,70 +187,65 @@ mod tests {
     }
 
     #[test]
-    fn reads_a_document_as_base64_with_its_type() {
-        let mut g = granted();
-        fs::write(g.folder.join("bail.pdf"), "%PDF-1.4").unwrap();
-        let doc = read_checkable(&g.resolve("bail.pdf"), 1024).unwrap();
+    fn reads_a_document_as_base64_with_its_type() -> TestResult {
+        let mut g = granted()?;
+        fs::write(g.folder.join("bail.pdf"), "%PDF-1.4")?;
+        let doc = read_checkable(&g.resolve("bail.pdf")?, 1024)?;
         assert_eq!(
             (doc.name.as_str(), doc.mime.as_str(), doc.size),
             ("bail.pdf", "application/pdf", 8)
         );
-        assert_eq!(STANDARD.decode(doc.data).unwrap(), b"%PDF-1.4");
+        assert_eq!(STANDARD.decode(doc.data)?, b"%PDF-1.4");
+        Ok(())
     }
 
     #[test]
-    fn refuses_a_file_a_check_cannot_read_a_folder_and_a_file_too_large() {
-        let mut g = granted();
-        fs::write(g.folder.join("photo.heic"), "x").unwrap();
-        fs::write(g.folder.join("big.pdf"), vec![0u8; 100]).unwrap();
-        fs::create_dir(g.folder.join("dir.pdf")).unwrap();
-        let code = |r: Result<DocumentBytes, DocumentError>| r.unwrap_err().code();
-        assert_eq!(
-            code(read_checkable(&g.resolve("photo.heic"), 1024)),
-            "unsupported"
-        );
-        assert_eq!(code(read_checkable(&g.resolve("big.pdf"), 10)), "too_large");
-        assert_eq!(
-            code(read_checkable(&g.resolve("dir.pdf"), 10)),
-            "not_a_file"
-        );
+    fn refuses_a_file_a_check_cannot_read_a_folder_and_a_file_too_large() -> TestResult {
+        let mut g = granted()?;
+        fs::write(g.folder.join("photo.heic"), "x")?;
+        fs::write(g.folder.join("big.pdf"), vec![0u8; 100])?;
+        fs::create_dir(g.folder.join("dir.pdf"))?;
+        for (name, max, code) in [
+            ("photo.heic", 1024, "unsupported"),
+            ("big.pdf", 10, "too_large"),
+            ("dir.pdf", 10, "not_a_file"),
+        ] {
+            let refused = read_checkable(&g.resolve(name)?, max).err();
+            assert_eq!(refused.map(|e| e.code()), Some(code), "{name}");
+        }
+        Ok(())
     }
 
     #[test]
-    fn the_report_lands_next_to_the_document_and_never_over_a_file() {
-        let d = tempdir().unwrap();
+    fn the_report_lands_next_to_the_document_and_never_over_a_file() -> TestResult {
+        let d = tempdir()?;
         let doc = d.path().join("bail.pdf");
-        fs::write(&doc, "%PDF").unwrap();
-        let first = save_report(
-            &doc,
-            "verikora-audit-1.pdf",
-            &STANDARD.encode(b"%PDF-1.7 report"),
-        )
-        .unwrap();
-        let second = save_report(
-            &doc,
-            "verikora-audit-1.pdf",
-            &STANDARD.encode(b"%PDF-1.7 report"),
-        )
-        .unwrap();
+        fs::write(&doc, "%PDF")?;
+        let pdf = STANDARD.encode(b"%PDF-1.7 report");
+        let first = save_report(&doc, "verikora-audit-1.pdf", &pdf)?;
+        let second = save_report(&doc, "verikora-audit-1.pdf", &pdf)?;
         assert_eq!(first, d.path().join("verikora-audit-1.pdf"));
         assert_eq!(second, d.path().join("verikora-audit-1 (2).pdf"));
+        Ok(())
     }
 
     #[test]
-    fn refuses_a_report_that_is_not_a_pdf_or_names_a_path() {
-        let d = tempdir().unwrap();
+    fn refuses_a_report_that_is_not_a_pdf_or_names_a_path() -> TestResult {
+        let d = tempdir()?;
         let doc = d.path().join("bail.pdf");
-        let code = |name: &str, data: &str| save_report(&doc, name, data).unwrap_err().code();
-        assert_eq!(code("r.pdf", &STANDARD.encode(b"hello")), "report_not_pdf");
-        assert_eq!(code("r.pdf", "not base64!!"), "report_not_base64");
-        assert_eq!(code("r.txt", &STANDARD.encode(b"%PDF")), "bad_report_name");
-        assert_eq!(
-            code(".hidden.pdf", &STANDARD.encode(b"%PDF")),
-            "bad_report_name"
-        );
+        let pdf = STANDARD.encode(b"%PDF");
+        for (name, data, code) in [
+            ("r.pdf", STANDARD.encode(b"hello"), "report_not_pdf"),
+            ("r.pdf", "not base64!!".to_string(), "report_not_base64"),
+            ("r.txt", pdf.clone(), "bad_report_name"),
+            (".hidden.pdf", pdf.clone(), "bad_report_name"),
+        ] {
+            let refused = save_report(&doc, name, &data).err();
+            assert_eq!(refused.map(|e| e.code()), Some(code), "{name}");
+        }
         // A path in the name is reduced to its last part: it can never leave the document's folder.
-        let out = save_report(&doc, "../../etc/evil.pdf", &STANDARD.encode(b"%PDF")).unwrap();
+        let out = save_report(&doc, "../../etc/evil.pdf", &pdf)?;
         assert_eq!(out, d.path().join("evil.pdf"));
+        Ok(())
     }
 }
