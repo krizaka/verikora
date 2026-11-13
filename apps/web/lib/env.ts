@@ -2,6 +2,7 @@ import { allowedIps } from "@krizaka/auth";
 import { STORAGE_KIND, STORAGE_PROVIDERS } from "@verikora/core";
 import { z } from "zod";
 
+import { transferProblems, type TransferRegister } from "./privacy/transfers";
 import { parseSigningKey } from "./report-key";
 
 /**
@@ -133,7 +134,7 @@ export function readEnv(source: Record<string, string | undefined> = process.env
 }
 
 /** What a production server cannot run without — named, never shown. */
-export function productionProblems(env: Env): string[] {
+export function productionProblems(env: Env, register?: TransferRegister): string[] {
   if (env.NODE_ENV !== "production") {
     return [];
   }
@@ -165,11 +166,15 @@ export function productionProblems(env: Env): string[] {
   if (env.DATABASE_URL && /sslmode=(require|verify)/.test(env.DATABASE_URL) && !env.DATABASE_CA_CERT) {
     problems.push("DATABASE_CA_CERT is required for a TLS database");
   }
+  problems.push(...transferProblems(register));
   return problems;
 }
 
-export function assertProductionEnv(source: Record<string, string | undefined> = process.env): void {
-  const problems = productionProblems(readEnv(source));
+export function assertProductionEnv(
+  source: Record<string, string | undefined> = process.env,
+  register?: TransferRegister,
+): void {
+  const problems = productionProblems(readEnv(source), register);
   if (problems.length) {
     throw new Error(`Verikora refuses to start: ${problems.join("; ")}`);
   }

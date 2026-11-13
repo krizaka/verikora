@@ -1,6 +1,10 @@
 {
-  "$comment": "The register of every place personal information goes. Read by docs/privacy/transfers.md and by scripts/privacy-register.test.mjs, which fails when deploy/digitalocean/dev.app.yaml or lib/env.ts adds a store, a host, a provider or an environment variable of a data context that is not listed here. Facts from the code and the deployment spec only; null = not stated in the code.",
-  "app": { "platform": "DigitalOcean App Platform", "region": "tor", "spec": "deploy/digitalocean/dev.app.yaml" },
+  "$comment": "The register of every place personal information goes. Read by docs/privacy/transfers.md and by scripts/privacy-register.test.mjs, which fails when deploy/digitalocean/dev.app.yaml or lib/env.ts adds a store, a host, a provider or an environment variable of a data context that is not listed here. Facts from the code and the deployment spec only; null = not stated in the code. Each entry also carries usedInProduction, retention and agreement: a production start is refused (productionProblems) while a used entry's where, retention or agreement is null, empty or 'not stated'.",
+  "app": {
+    "platform": "DigitalOcean App Platform",
+    "region": "tor",
+    "spec": "deploy/digitalocean/dev.app.yaml"
+  },
   "entries": [
     {
       "id": "database",
@@ -10,7 +14,10 @@
       "outsideQuebec": true,
       "outsideCanada": false,
       "env": ["DATABASE_URL", "DATABASE_DIRECT_URL", "DATABASE_CA_CERT", "DATABASE_MAX_CONNECTIONS"],
-      "hosts": []
+      "hosts": [],
+      "usedInProduction": true,
+      "retention": "Per data type, by the retention policies (apps/web/lib/retention.ts, docs/privacy/retention.md)",
+      "agreement": null
     },
     {
       "id": "documents-bunny",
@@ -29,7 +36,10 @@
         "MEDIA_DOCUMENTS_PREFIX",
         "MEDIA_DOCUMENTS_ENCRYPTION_KEY"
       ],
-      "hosts": ["ny.storage.bunnycdn.com", "yomizaka-docs-dev.b-cdn.net", "storage.bunnycdn.com"]
+      "hosts": ["ny.storage.bunnycdn.com", "yomizaka-docs-dev.b-cdn.net", "storage.bunnycdn.com"],
+      "usedInProduction": false,
+      "retention": null,
+      "agreement": null
     },
     {
       "id": "documents-s3",
@@ -46,7 +56,10 @@
         "MEDIA_S3_SECRET_ACCESS_KEY",
         "MEDIA_VAULT_KEY"
       ],
-      "hosts": ["tor1.digitaloceanspaces.com"]
+      "hosts": ["tor1.digitaloceanspaces.com"],
+      "usedInProduction": true,
+      "retention": "Per data type, by the retention policies (apps/web/lib/retention.ts, docs/privacy/retention.md)",
+      "agreement": null
     },
     {
       "id": "documents-user-cloud",
@@ -70,7 +83,10 @@
         "oauth2.googleapis.com",
         "graph.microsoft.com",
         "login.microsoftonline.com"
-      ]
+      ],
+      "usedInProduction": true,
+      "retention": "The files stay in the person's own cloud; only the sealed refresh token is kept here, forgotten on disconnect (docs/privacy/transfers.md)",
+      "agreement": "The provider's own terms, accepted by the person with their own account (docs/privacy/transfers.md)"
     },
     {
       "id": "mail",
@@ -80,7 +96,10 @@
       "outsideQuebec": true,
       "outsideCanada": null,
       "env": ["MAIL_PROVIDER", "MAIL_API_KEY", "MAIL_DOMAIN", "MAIL_API_URL", "MAIL_FROM", "MAIL_WEBHOOK_SIGNING_KEY"],
-      "hosts": ["api.mailgun.net"]
+      "hosts": ["api.mailgun.net"],
+      "usedInProduction": true,
+      "retention": null,
+      "agreement": null
     },
     {
       "id": "payments",
@@ -96,17 +115,36 @@
         "PAYMENTS_PRICE_KEY_AUDIT",
         "PAYMENTS_PRICE_KEY_PRO"
       ],
-      "hosts": []
+      "hosts": [],
+      "usedInProduction": true,
+      "retention": null,
+      "agreement": null
     },
     {
       "id": "engine",
       "role": "The analyses: the text of the document a person asks to check is sent to the engine; the run id is kept",
       "provider": "Sovkora (AI_PROVIDER=sovkora), Krizaka's own engine",
-      "where": "dev.sovkora.com/edge; hosted by Sovkora's own deployment, described in its repository, not here",
+      "where": "Development: DigitalOcean App Platform, Toronto (Sovkora docs/DEPLOY_DEV.md). Production: the tor1 VPC is described (Sovkora docs/DEPLOY_PROD.md) but the production place is not stated until the Sovkora lane confirms it",
       "outsideQuebec": null,
       "outsideCanada": null,
       "env": ["AI_PROVIDER", "AI_API_URL", "AI_API_KEY"],
-      "hosts": ["dev.sovkora.com"]
+      "hosts": ["dev.sovkora.com"],
+      "usedInProduction": true,
+      "retention": "30 days for a run (Sovkora retention.sensitive-run-days default for the SENSITIVE document-validation pack; an installation may lower it, never raise it): docs/legal/review-pack.md section 4.3",
+      "agreement": null
+    },
+    {
+      "id": "engine-model",
+      "role": "The model the engine calls for judgment questions only (QC-LEASE-010, QC-LEASE-011, document type tie-break); Verikora never calls a model",
+      "provider": "DigitalOcean serverless inference (inference.do-ai.run), configured in Sovkora's development; the production provider is not stated",
+      "where": null,
+      "outsideQuebec": true,
+      "outsideCanada": null,
+      "env": [],
+      "hosts": ["inference.do-ai.run"],
+      "usedInProduction": true,
+      "retention": null,
+      "agreement": null
     }
   ]
 }
