@@ -15,7 +15,7 @@
     "test": "vitest run"
   },
   "dependencies": {
-    "@krizaka/query": "^0.2.2",
+    "@krizaka/query": "^0.3.0",
     "@verikora/core": "workspace:*",
     "zod": "^4.6.5"
   },
