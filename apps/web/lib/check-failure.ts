@@ -30,11 +30,42 @@ export function reportCodeOf(error: string | null | undefined): string | null {
   return /^(REPORT_[A-Z]+)\b/.exec(error ?? "")?.[1] ?? null;
 }
 
-/** The cause of a stored failure (`analyses.error`): the sentences `refresh` writes and the engine's own. */
+/*
+ * The codes Sovkora's workers answer a failed step with (krizaka-internal#3411): `error` is the exception type name or a
+ * reason of a closed set, never a sentence. The run carries it as `errorMessage`. A code of the input set says the file or
+ * the request was refused; a code of the document set says the file could not be read; any other code (EXECUTOR_FAULT, an
+ * exception type, a code this list does not know yet) is the engine's own fault and degrades to « interrupted ».
+ */
+const REFUSED_CODES: ReadonlySet<string> = new Set([
+  "INPUT_INVALID",
+  "NOT_CHECKABLE",
+  "UNKNOWN_JURISDICTION",
+  "UNKNOWN_RULESET",
+  "FIELD_NOT_JSON",
+  "AS_OF_NOT_ISO",
+  "NO_RULESET_FOR_DATE",
+  "TEXT_TOO_LONG",
+]);
+const UNREADABLE_CODES: ReadonlySet<string> = new Set(["DOCUMENT_UNREADABLE", "DOCUMENT_MISSING", "TEXT_MISSING"]);
+
+/** The cause a Sovkora failure code stands for, or null when the text holds none: a whole upper-case word, never a part of one. */
+function codedCauseOf(error: string): FailureCause | null {
+  for (const word of error.match(/(?<!\w)[A-Z][A-Z0-9_]*(?!\w)/g) ?? []) {
+    if (REFUSED_CODES.has(word)) return "refused";
+    if (UNREADABLE_CODES.has(word)) return "unreadable";
+  }
+  return null;
+}
+
+/** The cause of a stored failure (`analyses.error`): Sovkora's code first, then the sentences `refresh` writes and older runs kept. */
 export function causeOf(error: string | null | undefined): FailureCause {
   const text = (error ?? "").toLowerCase();
   if (isReportCode(reportCodeOf(error))) {
     return "unreliable";
+  }
+  const coded = codedCauseOf(error ?? "");
+  if (coded) {
+    return coded;
   }
   if (text.includes("without a report")) {
     return "unreadable";
