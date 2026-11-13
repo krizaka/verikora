@@ -95,9 +95,12 @@ export const renameLibrary = (q: Query, owner: string, id: string, name: string)
     ),
   );
 
-/** Only an empty library can be deleted (and never the last one). */
+/**
+ * Only an empty library can be deleted (and never the last one). The owner check comes first: another account's library is a 404
+ * like an absent one, never a 409 that says it exists and what it holds (krizaka-internal#2383).
+ */
 export async function deleteLibrary(q: Query, owner: string, id: string): Promise<void> {
-  if (!isId(id)) throw notFound("library");
+  await owned(q, "library", owner, id);
   const [lib] = await q<{ n: string; c: string }>(
     "SELECT (SELECT count(*) FROM libraries WHERE owner_id = $1) AS n, (SELECT count(*) FROM collections WHERE library_id = $2) AS c",
     [owner, id],
