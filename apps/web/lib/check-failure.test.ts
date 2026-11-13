@@ -36,6 +36,9 @@ describe("a failed check: the cause, in the person's words (krizaka-internal#190
     ["The run ended failed", "interrupted"],
     ["The run ended cancelled", "interrupted"],
     ["Sovkora refused the document as sent", "refused"],
+    ["REPORT_SCHEMA: report.summary is required", "unreliable"],
+    ["REPORT_CITATION: a cited passage is not in the document", "unreliable"],
+    ["REPORT_WORDING: a refused word appears: fraud", "unreliable"],
     [null, "interrupted"],
   ] as const)("%s is %s", (error, cause) => {
     expect(causeOf(error)).toBe(cause);
@@ -113,5 +116,22 @@ describe("the « no text » message names the file's real type", () => {
         expect(t[k]).not.toMatch(/PDF/);
       }
     }
+  });
+});
+
+describe("a report that failed the contract says which check it failed (krizaka-internal#3378)", () => {
+  it.each(["REPORT_SCHEMA", "REPORT_CITATION", "REPORT_WORDING"])("%s has a message in both languages", (code) => {
+    const file = { mimeType: "application/pdf", hasText: true };
+    expect(failureOf(`${code}: detail`, file).key).toBe(`checkFailure.report.${code}`);
+    for (const lang of ["en", "fr"]) {
+      const text = (messages(lang).report as Record<string, string>)[code];
+      expect(text, `${lang} ${code}`).toBeTruthy();
+      expect(text, `${lang} ${code}`).not.toMatch(ENGINE_WORDS);
+    }
+  });
+  it("offers to try again and to choose another file", () => {
+    expect(failureOf("REPORT_WORDING: x", { mimeType: "text/plain", hasText: true }).actions).toEqual(
+      expect.arrayContaining(["retry", "chooseFile"]),
+    );
   });
 });

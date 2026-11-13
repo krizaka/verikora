@@ -1,5 +1,7 @@
 import { DOCX_MIME, ODT_MIME, type StartAnalysis } from "@verikora/core";
 
+import { isReportCode } from "./report-contract";
+
 /*
  * A check that did not finish (krizaka-internal#1900). Pure (no database, no clock): the client reads it too.
  * The engine's own sentence is never shown (it names the engine and a run); the person reads what happened to THEIR file, in plain
@@ -7,7 +9,7 @@ import { DOCX_MIME, ODT_MIME, type StartAnalysis } from "@verikora/core";
  */
 
 /** What went wrong, from the person's side. */
-export const FAILURE_CAUSES = ["unreadable", "refused", "interrupted"] as const;
+export const FAILURE_CAUSES = ["unreadable", "refused", "interrupted", "unreliable"] as const;
 export type FailureCause = (typeof FAILURE_CAUSES)[number];
 
 /** The families of file a message is written for. */
@@ -20,11 +22,20 @@ export const RECOVERY: Record<FailureCause, readonly RecoveryAction[]> = {
   unreadable: ["chooseFile", "retry"],
   refused: ["chooseFile", "retry"],
   interrupted: ["retry", "chooseFile"],
+  unreliable: ["retry", "chooseFile"],
 };
+
+/** The code a stored failure starts with when the report failed the contract (`REPORT_SCHEMA: …`), else null. */
+export function reportCodeOf(error: string | null | undefined): string | null {
+  return /^(REPORT_[A-Z]+)\b/.exec(error ?? "")?.[1] ?? null;
+}
 
 /** The cause of a stored failure (`analyses.error`): the sentences `refresh` writes and the engine's own. */
 export function causeOf(error: string | null | undefined): FailureCause {
   const text = (error ?? "").toLowerCase();
+  if (isReportCode(reportCodeOf(error))) {
+    return "unreliable";
+  }
   if (text.includes("without a report")) {
     return "unreadable";
   }
@@ -69,7 +80,10 @@ export function failureOf(
 ): { cause: FailureCause; family: FileFamily; key: string; actions: readonly RecoveryAction[] } {
   const cause = causeOf(error);
   const family = familyOf(file);
-  return { cause, family, key: `checkFailure.${cause}.${family}`, actions: RECOVERY[cause] };
+  const code = reportCodeOf(error);
+  // A report that failed the contract says which of the three checks it failed, whatever the file's type.
+  const key = isReportCode(code) ? `checkFailure.report.${code}` : `checkFailure.${cause}.${family}`;
+  return { cause, family, key, actions: RECOVERY[cause] };
 }
 
 /** The request that runs a failed check again: the same Studio and the same ruleset it was started with, on the day of the retry. */

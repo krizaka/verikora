@@ -6,6 +6,7 @@ import { CouponsView } from "@/components/admin/CouponsView";
 import { InvitationsView } from "@/components/admin/InvitationsView";
 import { OrganisationPanel } from "@/components/admin/OrganisationPanel";
 import { PriceCatalogueView } from "@/components/admin/PriceCatalogueView";
+import { RefusedWordsView } from "@/components/admin/RefusedWordsView";
 import { RouteTabs } from "@/components/RouteTabs";
 import { appEnvironment } from "@/lib/env";
 import { listAdminFlows } from "@/lib/flows";
@@ -17,7 +18,7 @@ export const dynamic = "force-dynamic";
 
 const SCOPES = Object.values(SCOPE) as string[];
 
-/** One page of the app configuration, one route: /config/general | features | limits | plans | prices | coupons | invitations | packs | sovkora, at a scope given in the URL. */
+/** One page of the app configuration, one route: /config/general | features | limits | plans | prices | coupons | invitations | words | packs | sovkora, at a scope given in the URL. */
 export default async function ConfigPage({
   params,
   searchParams,
@@ -45,6 +46,7 @@ export default async function ConfigPage({
           {group === CONFIG_PAGE.prices ? <PriceCatalogueView /> : null}
           {group === CONFIG_PAGE.coupons ? <CouponsView /> : null}
           {group === CONFIG_PAGE.invitations ? <InvitationsView /> : null}
+          {group === CONFIG_PAGE.words ? <RefusedWordsView /> : null}
           {group === CONFIG_PAGE.packs ? (
             <PacksPanel flows={await listAdminFlows()} environment={appEnvironment()} />
           ) : null}

@@ -2,7 +2,9 @@ import { localDay } from "@krizaka/intl";
 import {
   type Analysis,
   AUTHENTICITY_MAX_BYTES,
+  type AuthenticityReport,
   COMPLIANCE_MAX_CHARS,
+  type ComplianceReport,
   DATED_LEASE_RULESET,
   DOCX_MIME,
   type ExtractionStatus,
@@ -18,7 +20,6 @@ import {
 } from "@verikora/core";
 
 import { holderOf as documentHolder } from "@/app/active-store";
-import { PRODUCT_NAME } from "@/lib/brand";
 
 import { overageBiller } from "../app/overage-biller";
 import { systemClock } from "../app/system-clock";
@@ -31,6 +32,8 @@ import { query } from "./db";
 import { type AnalysisRow, declaredKindOf, isUuid, needsAttention, readBytes, toAnalysis } from "./documents";
 import { refuse } from "./http";
 import { withLines } from "./lease-lines";
+import { refusedWords } from "./refused-words";
+import { checkReportOutput } from "./report-contract";
 import { purgeIfDone } from "./retention";
 import { withTenantShield } from "./rules/tenant-shield-report";
 import { LAW_TIME_ZONE } from "./rulesets";
@@ -223,6 +226,32 @@ async function giveBackFailedRun(row: AnalysisRow, error: string | null): Promis
   return true;
 }
 
+/**
+ * The contract (krizaka-internal#3378): a finished run's output is read here, in one place, before any page. A report that fails the
+ * schema, cites a passage the stored text does not hold, or uses a refused word is a coded failure (`REPORT_*`), never shown.
+ */
+async function readReport(
+  row: AnalysisRow,
+  run: SovkoraRun,
+): Promise<{ report: ComplianceReport | AuthenticityReport | null; noReport: string | null }> {
+  const text =
+    (await query<{ text: string }>("SELECT text FROM documents WHERE id = $1", [row.document_id]))[0]?.text ?? "";
+  const checked = checkReportOutput({
+    studio: row.studio,
+    outputs: run.outputs,
+    documentText: text,
+    refusedWords: await refusedWords(),
+  });
+  if (!checked.ok) {
+    return { report: null, noReport: `${checked.code}: ${checked.detail}` };
+  }
+  // The line of each finding is read now: the text is purged once the check has run (verikora#129).
+  const lined = "findings" in checked.report ? withLines(checked.report, text) : checked.report;
+  // Tenant shield (verikora#104): when the lease ruleset exposed its figures, Section G (#554) compares the rents with the TAL's rate, and the payment clauses (#560) are read against art. 1904.
+  const report = "findings" in lined ? await withTenantShield(lined, appSettings()) : lined;
+  return { report, noReport: null };
+}
+
 /** Brings an analysis up to date with its Sovkora run (only while it runs; a finished one is kept as it was). */
 export async function refresh(row: AnalysisRow, known?: SovkoraRun): Promise<Analysis> {
   if (row.status !== "running" && !known) {
@@ -236,18 +265,7 @@ export async function refresh(row: AnalysisRow, known?: SovkoraRun): Promise<Ana
   if (!isTerminal(status)) {
     return toAnalysis(row);
   }
-  const read = status === "succeeded" ? reportOf(row.studio, run.outputs) : null;
-  // The line of each finding is read now: the text is purged once the check has run (verikora#129).
-  const lined =
-    read && "findings" in read
-      ? withLines(
-          read,
-          (await query<{ text: string }>("SELECT text FROM documents WHERE id = $1", [row.document_id]))[0]?.text ?? "",
-        )
-      : read;
-  // Tenant shield (verikora#104): when the lease ruleset exposed its figures, Section G (#554) compares the rents with the TAL's rate, and the payment clauses (#560) are read against art. 1904.
-  const report = lined && "findings" in lined ? await withTenantShield(lined, appSettings()) : lined;
-  const noReport = report ? null : `The engine finished without a report ${PRODUCT_NAME} can read`;
+  const { report, noReport } = status === "succeeded" ? await readReport(row, run) : { report: null, noReport: null };
   const error = status === "succeeded" ? noReport : (run.errorMessage ?? `The run ended ${run.status}`);
   const [updated] = await query<AnalysisRow>(
     `UPDATE analyses SET status = $2, report = $3, error = $4, search_text = $5, blueprint_version = coalesce($6, blueprint_version), finished_at = coalesce($7::timestamptz, now())
