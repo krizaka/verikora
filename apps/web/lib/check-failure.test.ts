@@ -44,6 +44,32 @@ describe("a failed check: the cause, in the person's words (krizaka-internal#190
     expect(causeOf(error)).toBe(cause);
   });
 
+  it.each([
+    ["INPUT_INVALID", "refused"],
+    ["UNKNOWN_JURISDICTION", "refused"],
+    ["UNKNOWN_RULESET", "refused"],
+    ["NO_RULESET_FOR_DATE", "refused"],
+    ["AS_OF_NOT_ISO", "refused"],
+    ["NOT_CHECKABLE", "refused"],
+    ["FIELD_NOT_JSON", "refused"],
+    ["TEXT_TOO_LONG", "refused"],
+    ["DOCUMENT_UNREADABLE", "unreadable"],
+    ["DOCUMENT_MISSING", "unreadable"],
+    ["TEXT_MISSING", "unreadable"],
+    ["EXECUTOR_FAULT", "interrupted"],
+    ["RuntimeError", "interrupted"],
+    ["SOME_NEW_CODE", "interrupted"],
+    ["EXECUTION_TIMEOUT_EXCEEDED", "interrupted"],
+  ] as const)("Sovkora's coded failure %s is %s (krizaka-internal#3411)", (code, cause) => {
+    expect(causeOf(code)).toBe(cause);
+    expect(failureOf(code, { mimeType: "application/pdf", hasText: true }).key).toBe(`checkFailure.${cause}.pdf`);
+  });
+
+  it("reads a code only as a whole word, and never lets a word in a sentence beat a code", () => {
+    expect(causeOf("Step 'compliance' failed: DOCUMENT_UNREADABLE")).toBe("unreadable");
+    expect(causeOf("MY_INPUT_INVALID_X")).toBe("interrupted");
+  });
+
   it("writes the message for the file's type: a scan is not a text file", () => {
     expect(familyOf({ mimeType: "application/pdf", hasText: false })).toBe("scan");
     expect(familyOf({ mimeType: "application/pdf", hasText: true })).toBe("pdf");
