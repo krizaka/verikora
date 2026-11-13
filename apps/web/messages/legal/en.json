@@ -10,34 +10,62 @@
     },
     "sections": [
       {
+        "id": "who",
         "h": "Who is responsible",
         "p": "Krizaka, a company based in Montréal, publishes Verikora. The person in charge of the protection of personal information (Loi 25) is named at the top of this page, with a direct address."
       },
       {
+        "id": "collected",
         "h": "What we collect and why",
         "p": "Your e-mail address and a password hash (to run your account), the date you accepted the terms and this notice, the documents you upload and the results of the checks (to give you the service), and billing information handled by Stripe. We do not sell your information and we do not use your documents to train a model."
       },
       {
+        "id": "where",
         "h": "Where it is kept",
-        "p": "Your account and your checks are in a database in Toronto, Canada, outside Québec. Documents are sent to Sovkora, Krizaka's analysis engine, over HTTPS to be checked. A kept document is stored where its information panel says: today, in New York (United States)."
+        "p": "Your account, your checks and their reports are in a database in Toronto (Ontario, Canada). A document you choose to keep goes where its information panel says. Today Verikora is a development version: that storage is a development store, in the United States, meant for fictional data. In production, Verikora refuses to keep a document outside Canada; the planned store is in Toronto."
       },
       {
+        "id": "processors",
         "h": "Who processes it",
-        "p": "Sovkora, Krizaka's analysis engine, reads a document when you ask for a check, over HTTPS. Stripe handles payment. Our database provider hosts your account in Toronto."
+        "p": "Sovkora, Krizaka's analysis engine, reads a document over HTTPS when you ask for a check. Stripe handles payment. Mailgun sends the confirmation e-mails. DigitalOcean hosts the application and the database in Toronto."
       },
       {
+        "id": "retention",
         "h": "How long we keep it",
-        "p": "A document is kept until you delete it, and a deleted document takes its file, its text and its results with it. Your account and checks are kept until you close the account. Invoices are kept as the law requires."
+        "p": "By default a document is not kept: as soon as its check has run, its file and its text are purged, and the report stays, with the file's fingerprint. A document that is never checked is purged after a delay the administration sets, 24 hours by default. If you choose to keep it, it stays until you delete it. What is purged may remain in backups until they rotate."
       },
       {
+        "id": "applicant-files",
+        "h": "Applicant files",
+        "p": "The documents an applicant uploads are purged after their check, unless the applicant agrees to have them kept until the decision. When closing the file, the manager chooses: purge at the decision (the default), or keep one year after the decision, only for the document types the administration allows to be kept. The result of an applicant check is kept 30 days after the consent."
+      },
+      {
+        "id": "receipt",
+        "h": "The deletion receipt",
+        "p": "A purge leaves a signed receipt: what was deleted (the file and its text, by their fingerprints), when, and under which rule (after the check, after the delay, at the decision, one year after the decision, or at the applicant's request). It is written once the store has confirmed the deletion. It holds no name, no address, no file name and no title. It can be checked on the verification page."
+      },
+      {
+        "id": "outside-quebec",
+        "h": "Outside Québec",
+        "p": "Your information is processed outside Québec: the application and the database in Toronto (Ontario); the development store in the United States; Stripe and Mailgun may process it outside Canada; where Sovkora processes a document is not yet stated in our register of transfers. The assessment that section 17 of Law 25 requires before a communication outside Québec is being prepared."
+      },
+      {
+        "id": "automated-decisions",
+        "h": "No decision by a machine alone",
+        "p": "A person decides. Verikora decides nothing. A check points out signals and quotes passages of the document; you, or the manager of a file, decide. A report is shown only if every passage it quotes is in the document and it uses no refused verdict word (« fraud », « forged »…). Verikora makes no decision based exclusively on automated processing (section 12.1 of Law 25)."
+      },
+      {
+        "id": "rights",
         "h": "Your rights",
         "p": "You can access, correct or delete your information, withdraw your consent and download your data by writing to the privacy officer. Deleting a document deletes its file, its text and its results. Closing your account deletes your documents. We keep invoices as the law requires."
       },
       {
+        "id": "incidents",
         "h": "Incidents",
         "p": "If a confidentiality incident presents a risk of serious harm, we notify the Commission d'accès à l'information and the people concerned, as the law requires."
       },
       {
+        "id": "contact",
         "h": "Contact",
         "p": "To ask a question, use your rights or have your data removed, write through the contact form of krizaka.com. The person in charge of the protection of personal information answers."
       }
