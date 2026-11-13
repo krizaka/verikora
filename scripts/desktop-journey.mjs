@@ -13,10 +13,10 @@ import { spawn } from "node:child_process";
 import { mkdir, readFile, realpath, rm, writeFile } from "node:fs/promises";
 import { homedir } from "node:os";
 import { dirname, join, resolve } from "node:path";
+import { pathToFileURL } from "node:url";
 import { parseArgs } from "node:util";
 
 import { generateDocument } from "./demo-documents/index.mjs";
-import { createFilm } from "./desktop-film-lib.mjs";
 import { client, libraryHash, scopeFile, scopeJson, until } from "./desktop-journey-lib.mjs";
 
 const { values } = parseArgs({
@@ -93,7 +93,13 @@ async function signInIfAsked(driver) {
 }
 
 // The film (verikora#636): the app's window only, from the signed-in library, as WebDriver screenshots, skipping the engine's wait.
-const film = createFilm({ dir: values.film ? out : undefined, shoot: () => driver.screenshot() });
+// The recorder is the shared one (krizaka-rust film/, its action outputs the directory as KRIZAKA_FILM_DIR); a run without --film needs none.
+const filmDir = process.env.KRIZAKA_FILM_DIR;
+if (values.film && !filmDir) throw new Error("KRIZAKA_FILM_DIR is required with --film (the output `dir` of krizaka/krizaka-rust/.github/actions/film)");
+const { createFilm } = values.film
+  ? await import(pathToFileURL(join(resolve(filmDir), "film.mjs")).href)
+  : { createFilm: () => ({ start() {}, async stop() {}, finish: () => 0 }) };
+const film = createFilm({ dir: out, shoot: () => driver.screenshot() });
 // @fixed: long enough to read a screen of the app, short enough for a clip under 30 s in all
 const READ_MS = 3000;
 const hold = (ms = READ_MS) => new Promise((resolveHold) => setTimeout(resolveHold, ms));

@@ -131,17 +131,22 @@ jobs:
         with:
           persist-credentials: false
           ref: main
+      # The shared film tooling (ffmpeg and the recorder, krizaka-rust film/), pinned by SHA like the org's other actions.
+      - uses: krizaka/krizaka-rust/.github/actions/film@34a573b92a2b10d6742aa78eaf3f69891f367217 # main
+        id: film
       - uses: ./.github/actions/desktop-journey
         with:
           out: showcase-mac
           record: "true"
+          film-dir: ${{ steps.film.outputs.dir }}
       - name: The film as mp4 (the app-videos workflow names files <platform>-<flow>)
+        env:
+          FILM_DIR: ${{ steps.film.outputs.dir }}
         run: |
-          brew install ffmpeg
           # The clip is named after the language the app was filmed in (film-locale.txt); the page of that language shows it, verikora#1968.
           locale="$(cat showcase-mac/film-locale.txt)"
           case "$locale" in en|fr) ;; *) echo "the Mac film is in '$locale', not en or fr" >&2; exit 1 ;; esac
-          node scripts/desktop-film-join.mjs showcase-mac "showcase-mac/mac-library-$locale.mp4"
+          node "$FILM_DIR/join-cli.mjs" showcase-mac "showcase-mac/mac-library-$locale.mp4"
           rm -r showcase-mac/frames showcase-mac/film-frames.txt
       - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:

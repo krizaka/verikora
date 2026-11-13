@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import { describe, it } from "vitest";
 
 import { client, elementId, IDENTIFIER, libraryHash, scopeFile, scopeJson, until } from "./desktop-journey-lib.mjs";
@@ -108,9 +108,19 @@ describe("the workflows", () => {
     assert.match(videos, /artifacts: \|\s+showcase-web\s+maestro-showcase\s+showcase-mac/);
     assert.match(
       read("../.github/workflows/download-videos.yml"),
-      /desktop-film-join\.mjs showcase-mac "showcase-mac\/mac-library-\$locale\.mp4"/,
+      /join-cli\.mjs" showcase-mac "showcase-mac\/mac-library-\$locale\.mp4"/,
     );
     assert.doesNotMatch(code(read("../.github/actions/desktop-journey/action.yml")), /screencapture/);
+  });
+  it("records and joins with the shared film action of krizaka-rust, pinned by SHA; no copy of it lives here", () => {
+    assert.match(
+      read("../.github/workflows/download-videos.yml"),
+      /uses: krizaka\/krizaka-rust\/\.github\/actions\/film@[0-9a-f]{40} # main\s+id: film/,
+    );
+    assert.match(read("../.github/workflows/download-videos.yml"), /film-dir: \$\{\{ steps\.film\.outputs\.dir \}\}/);
+    assert.match(read("./desktop-journey.mjs"), /KRIZAKA_FILM_DIR/);
+    for (const copy of ["desktop-film-lib.mjs", "desktop-film-join.mjs", "desktop-film.test.mjs"])
+      assert.ok(!existsSync(new URL(copy, import.meta.url)), `${copy} is deleted: the shared tool is the one`);
   });
   it("the journey asserts what the issue asks: a folder, a lease checked, the result, the relaunch", () => {
     const journey = read("./desktop-journey.mjs");
@@ -122,5 +132,47 @@ describe("the workflows", () => {
       "the scope lost the folder",
     ])
       assert.ok(journey.includes(needle), needle);
+  });
+});
+
+describe("the journey films the window, after the sign-in, without the engine's wait", () => {
+  it("starts the frames on each screen worth reading and stops before the app quits", () => {
+    const journey = read("./desktop-journey.mjs");
+    const order = [
+      "await signInIfAsked",
+      "1-library",
+      "filmWindow()",
+      "check-document",
+      "await film.stop(); // the engine",
+      "3-result",
+      "filmWindow()",
+      "driver.quit()",
+      "4-relaunch",
+      "film.finish()",
+    ];
+    let at = -1;
+    for (const needle of order) {
+      const next = journey.indexOf(needle, at + 1);
+      assert.ok(next > at, `${needle} comes after the previous step`);
+      at = next;
+    }
+    assert.equal((journey.match(/film\.stop\(\)/g) ?? []).length >= 3, true);
+  });
+  it("accepts the --film flag the action passes (it was lost in a merge: run 41085183044, Unknown option '--film')", () => {
+    assert.match(read("./desktop-journey.mjs"), /film: \{\s*type: "boolean"/);
+    assert.match(read("../.github/actions/desktop-journey/action.yml"), /--film/);
+  });
+  it("the phone showcase finds the second collection by scrollUntilVisible alone (a bare scroll first pushed it past the screen)", () => {
+    const flow = read("../apps/mobile/.maestro-showcase/android-documents-en.yaml");
+    assert.ok(!/^- scroll$/m.test(flow));
+    assert.match(flow, /scrollUntilVisible:\s+element: "Invoices 2026"/);
+  });
+  // verikora#1968: the phone film ends on a result and is named after its language; never an empty state in it.
+  it("the phone showcase is English, ends on a collection's documents and never films the empty batches", () => {
+    const flow = read("../apps/mobile/.maestro-showcase/android-documents-en.yaml");
+    assert.match(flow, /startRecording: android-documents-en/);
+    assert.doesNotMatch(flow, /tapOn: "(Lots|Batches)"/);
+    assert.match(flow, /assertNotVisible/);
+    assert.match(flow.slice(flow.indexOf("stopRecording") - 200), /extendedWaitUntil|assertNotVisible/);
   });
 });
