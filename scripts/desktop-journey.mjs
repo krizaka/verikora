@@ -95,7 +95,10 @@ async function signInIfAsked(driver) {
 // The film (verikora#636): the app's window only, from the signed-in library, as WebDriver screenshots, skipping the engine's wait.
 // The recorder is the shared one (krizaka-rust film/, its action outputs the directory as KRIZAKA_FILM_DIR); a run without --film needs none.
 const filmDir = process.env.KRIZAKA_FILM_DIR;
-if (values.film && !filmDir) throw new Error("KRIZAKA_FILM_DIR is required with --film (the output `dir` of krizaka/krizaka-rust/.github/actions/film)");
+if (values.film && !filmDir)
+  throw new Error(
+    "KRIZAKA_FILM_DIR is required with --film (the output `dir` of krizaka/krizaka-rust/.github/actions/film)",
+  );
 const { createFilm } = values.film
   ? await import(pathToFileURL(join(resolve(filmDir), "film.mjs")).href)
   : { createFilm: () => ({ start() {}, async stop() {}, finish: () => 0 }) };
