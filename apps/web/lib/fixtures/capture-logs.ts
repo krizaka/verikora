@@ -15,8 +15,9 @@ export function captureLogs(): LogCapture {
   const lines: string[] = [];
   const originals = METHODS.map((m) => [m, target[m]] as const);
   for (const [method] of originals) {
-    target[method] = (...args: unknown[]) =>
-      void lines.push(args.map((a) => (typeof a === "string" ? a : safeJson(a))).join(" "));
+    target[method] = (...args: unknown[]) => {
+      lines.push(args.map((a) => (typeof a === "string" ? a : safeJson(a))).join(" "));
+    };
   }
   const out = process.stdout.write.bind(process.stdout);
   const err = process.stderr.write.bind(process.stderr);
