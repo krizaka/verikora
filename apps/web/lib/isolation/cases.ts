@@ -1,3 +1,5 @@
+import type { RouteKey } from "./routes";
+
 /**
  * Customer isolation, as data (krizaka-internal#2383): for every route that takes the id of a customer's row, what customer B sends
  * when B tries customer A's id. `route-coverage.test.ts` reads the route tree and fails when a route that takes an id has no entry
@@ -62,8 +64,8 @@ export interface IsolationCase {
   status?: number;
 }
 
-/** `METHOD /api/path/[param]`, the route file's path under `app/`. */
-export type RouteKey = `${"GET" | "POST" | "PUT" | "PATCH" | "DELETE"} /${string}`;
+/** `METHOD /api/path/[param]`: the one key of the route table (`routes.ts`). */
+export type { RouteKey } from "./routes";
 
 const doc = (t: TheirIds) => ({ id: t.document });
 const report = (t: TheirIds) => ({ id: t.document, analysisId: t.analysis });
