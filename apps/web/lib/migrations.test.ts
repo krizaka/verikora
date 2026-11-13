@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { type Migration,MIGRATIONS } from "./migrations";
+import { type Migration, MIGRATIONS } from "./migrations";
 
 /** The problems of a migration list: a version not shaped `NNNN_name`, a number used twice, a number not above the one before. */
 export function migrationProblems(list: readonly Pick<Migration, "version">[]): string[] {
