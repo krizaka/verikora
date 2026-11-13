@@ -18,6 +18,8 @@ permissions: {}
 
 jobs:
   bump:
+    permissions:
+      contents: read
     uses: krizaka/.github/.github/workflows/bump-krizaka.yml@ef3449fd9bf0e6dd2b37e27dc12bf7da1653feb9 # main
     with:
       packages: ${{ github.event.client_payload.packages && toJSON(github.event.client_payload.packages) || inputs.packages }}
