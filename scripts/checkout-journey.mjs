@@ -1,7 +1,7 @@
 #!/usr/bin/env node
-// The checkout journey (verikora P0, 2026-10-30): a persona BUYS a plan on the deployed dev with Stripe's TEST card, as a customer would.
-//   sign in (bearer) -> the plan is for sale (paymentsOn) -> start the checkout -> pay on Stripe's hosted page with the 4242 card ->
-//   the subscription turns active (the webhook) -> the payment history carries a receipt that opens -> one lease check ends in the signed PDF.
+// The checkout journey (verikora P0, 2026-10-30): a persona BUYS one file on the deployed dev with Stripe's TEST card, as a customer would.
+//   sign in (bearer) -> one file is on sale at the catalogue price (paymentsOn) -> start the checkout -> pay on Stripe's hosted page with the 4242 card ->
+//   the file's credit arrives (the webhook) -> the payment history carries a receipt at that price that opens -> one lease check ends in the signed PDF.
 // It runs on main and by hand against the dev environment (never on a pull request: the persona and the TEST key are that environment's), and
 // it ends by cancelling what it bought, so the next run starts clean. A red run on main files an issue in krizaka-internal (checkout-journey-report.mjs).
 //
@@ -14,12 +14,14 @@ import { auditContext, loadSettled } from "@krizaka/page-audit";
 
 import {
   assertTestKey,
+  boughtOneFile,
+  chargedForSale,
+  forSale,
   billingSteps,
   describeStuckForm,
   describeStuckPage,
   isHostedCheckout,
   isSignedPdf,
-  isSubscribed,
   paidReceipt,
   PLAN,
   returnedFromCheckout,
@@ -190,8 +192,8 @@ export async function checkoutJourney({
   const before = await billing();
   if (!before?.paymentsOn)
     throw new Error("payments are off on this environment (paymentsOn is false): nothing to buy");
-  if (!before.prices?.some((p) => p.key === PLAN.priceKey))
-    throw new Error(`the plan ${PLAN.priceKey} is not for sale`);
+  const entry = forSale(before.prices, PLAN);
+  if (!entry) throw new Error(`${PLAN.priceKey} is not on sale (no figure, or « soon »): nothing to buy`);
 
   try {
     const started = await call(
@@ -221,11 +223,11 @@ export async function checkoutJourney({
       await close();
     }
 
-    const after = await until(billing, (b) => isSubscribed(b?.entitlement), {
-      what: "the subscription did not turn active",
+    const after = await until(billing, (b) => boughtOneFile(before.entitlement, b?.entitlement), {
+      what: "the credit of the file did not arrive",
       timeoutMs: 120_000,
     });
-    log(`subscription ${after.entitlement.subscriptionStatus}, plan ${after.entitlement.planKey}`);
+    log(`one file bought, ${after.entitlement.credits} credit(s) now`);
 
     const history = await until(
       () => call("/api/billing/payments", {}, token).then((r) => r.body),
@@ -233,6 +235,8 @@ export async function checkoutJourney({
       { what: "no paid receipt in the payment history", timeoutMs: 60_000 },
     );
     const receipt = paidReceipt(history.payments);
+    if (!chargedForSale(receipt, entry))
+      throw new Error(`the receipt is not the catalogue's price (${entry.amountCents} ${entry.currency} plus taxes)`);
     const receiptPage = await fetch(receipt.receiptUrl, { redirect: "follow" });
     if (!receiptPage.ok) throw new Error(`the receipt did not open: HTTP ${receiptPage.status}`);
     log("receipt opens");
@@ -260,7 +264,7 @@ export async function checkoutJourney({
         log("signed PDF reachable");
       },
     });
-    return { plan: after.entitlement.planKey, findings: lease.findings };
+    return { plan: PLAN.priceKey, findings: lease.findings };
   } finally {
     const gone = await stripe.cancelSubscriptionsOf(email).catch(() => -1);
     log(`gave back: ${gone} subscription(s) cancelled`);
