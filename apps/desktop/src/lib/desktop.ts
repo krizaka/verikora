@@ -20,10 +20,21 @@ export interface DocumentBytes {
   data: string;
 }
 
+/** What a failed native command answers: a stable `code` and a fixed sentence. */
+export interface NativeError {
+  code: string;
+  message: string;
+}
+
+export const isNativeError = (error: unknown, code: string): boolean =>
+  typeof error === "object" && error !== null && (error as Partial<NativeError>).code === code;
+
 export const verikoraNative = {
   /** A granted folder's documents (what a check reads) and its folders. */
   listDocuments: (path: string) => invoke<Listing>("list_documents", { path }),
-  readDocument: (path: string) => invoke<DocumentBytes>("read_document", { path }),
+  /** `maxBytes` is the server's `limits.maxFileMb`: the native layer refuses a larger file (the kit lowers it to its ceiling). */
+  readDocument: (path: string, maxBytes: number) =>
+    invoke<DocumentBytes>("read_document", { path, limits: { maxSend: maxBytes } }),
   /** Writes the signed report next to its document; the path it was written to. */
   saveReport: (document: string, name: string, data: string) => invoke<string>("save_report", { document, name, data }),
 };
