@@ -38,8 +38,23 @@ export function billingSteps(billing = TEST_BILLING, name = TEST_CARD.name) {
   ];
 }
 
-/** The plan the persona buys: the cheapest subscription of the catalogue (apps/web/lib/pricing.ts, SOLD). */
-export const PLAN = { kind: "agency", priceKey: "verikora.agency" };
+/**
+ * What the persona buys: one file at the catalogue price (apps/web/lib/pricing.ts, SOLD). The subscriptions are « soon » since
+ * 2026-11-12: the checkout answers 409 NOT_ON_SALE for them (apps/web/lib/prices/plan.ts, onSale), so the journey never asks for one.
+ */
+export const PLAN = { kind: "document", priceKey: "verikora.document" };
+
+/** The availabilities `onSale` (apps/web/lib/prices/plan.ts) sells: the same two words, kept equal by checkout-journey.test.mjs. */
+export const ON_SALE = ["public", "founderLimited"];
+
+/**
+ * The entry of GET /api/billing `prices` the journey may buy: the plan's, with a figure and on sale. `prices` also lists the entries
+ * « soon », so being listed is not being for sale. Null when the plan cannot be bought. Pure.
+ */
+export function forSale(prices, plan = PLAN) {
+  const entry = (Array.isArray(prices) ? prices : []).find((p) => p?.key === plan.priceKey);
+  return entry && Number.isInteger(entry.amountCents) && ON_SALE.includes(entry.availability) ? entry : null;
+}
 
 /** A processor key is accepted only if it is a TEST key: the journey never touches live mode. Pure. */
 export function assertTestKey(key) {
@@ -109,10 +124,24 @@ export function describeStuckForm({ fields, errors }) {
   };
 }
 
-/** Whether the account's entitlement (GET /api/billing) is the subscription the persona bought. Pure. */
-export function isSubscribed(entitlement, plan = PLAN) {
+/**
+ * Whether the account bought one file: one credit more than before, and no subscription (what is sold is a file, not a plan). Pure.
+ */
+export function boughtOneFile(before, after) {
   return (
-    Boolean(entitlement?.pro) && entitlement.subscriptionStatus === "active" && entitlement.planKey === plan.priceKey
+    Number.isInteger(before?.credits) &&
+    Number.isInteger(after?.credits) &&
+    after.credits === before.credits + 1 &&
+    !after.pro
+  );
+}
+
+/** Whether a receipt row is for the price on sale: the catalogue's figure plus the taxes the processor adds, in the catalogue's currency. Pure. */
+export function chargedForSale(receipt, entry) {
+  return (
+    Number.isInteger(receipt?.amountCents) &&
+    receipt.amountCents >= entry.amountCents &&
+    String(receipt.currency).toLowerCase() === String(entry.currency).toLowerCase()
   );
 }
 
