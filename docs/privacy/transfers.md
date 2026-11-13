@@ -56,7 +56,7 @@ Canada count as a communication outside Québec?
 ## Production guard
 
 Every entry carries `usedInProduction`, `retention` and `agreement` next to its place. `productionProblems`
-(`apps/web/lib/env.ts`, reader `apps/web/lib/privacy/transfers.ts`) refuses a production start, naming the transfer, while
+(`apps/web/lib/env.ts`, reader `apps/web/lib/privacy/transfers.ts`) refuses a production start (`APP_ENVIRONMENT=prod`; a dev deployment is unaffected), naming the transfer, while
 a used entry's place, retention or agreement is empty, `null` or « not stated ». A line is filled only from the code, the
 spec or a signed agreement, never guessed; today `database`, `documents-s3`, `documents-user-cloud`, `mail`, `payments`,
 `engine` and `engine-model` still fail it, which is the point.
