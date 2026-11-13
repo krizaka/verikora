@@ -1,16 +1,20 @@
 #!/bin/sh
 # Pre-commit: the ast-grep rules (no-enum-string-compare, no-ambient-clock, ...) run BEFORE the commit, so an agent sees a
 # violation while it writes, not at push or in Sonar ("a bug means a missing guard", krizaka/.github docs/standards).
-# It is the ratchet: any increase over sg-ratchet.json refuses the commit. Skipped when no TypeScript file is staged, or
-# when dependencies are not installed yet (the pre-push hook installs them).
+# It is the ratchet: any increase over sg-ratchet.json refuses the commit. Skipped when no TypeScript file is staged.
+# The ratchet is found in the repository's own node_modules/.bin (by the repo root, never the caller's PATH). When it is
+# absent the hook says so (exit 2): a missing tool is not « a new violation » (krizaka-internal#3414).
 set -e
 git diff --cached --name-only --diff-filter=ACMR | grep -E '\.(ts|tsx|mts)$' >/dev/null || exit 0
-if [ ! -x node_modules/.bin/ast-grep ]; then
-  echo "pre-commit: ast-grep not installed, skipped (pnpm install)"
-  exit 0
+root=$(git rev-parse --show-toplevel)
+bin="$root/node_modules/.bin"
+if [ ! -x "$bin/krizaka-sg-ratchet" ]; then
+  echo "pre-commit: outil absent : krizaka-sg-ratchet — lance \`pnpm install\`" >&2
+  exit 2
 fi
 echo "pre-commit: ast-grep ratchet"
-krizaka-sg-ratchet || {
+cd "$root"
+PATH="$bin:$PATH" "$bin/krizaka-sg-ratchet" || {
   echo "pre-commit: a rule found a new violation. Fix the code (npx ast-grep scan shows it); never --no-verify."
   exit 1
 }
