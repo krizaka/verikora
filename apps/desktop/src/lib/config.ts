@@ -7,6 +7,7 @@ import {
 } from "@krizaka/app-client";
 import { fetch as tauriFetch } from "@tauri-apps/plugin-http";
 import { createQueries, createVerikoraApi } from "@verikora/client";
+import { restoreRefusal } from "@verikora/core";
 
 import { currentLocale } from "../i18n";
 import { keychain } from "./desktop";
@@ -39,7 +40,7 @@ export const discovery = createAppDiscovery({
 export const api = createApiClient({
   baseUrl: () => discovery.getService(PRODUCT).apiBase,
   session,
-  fetch: (input, init) => tauriFetch(input, init),
+  fetch: async (input, init) => restoreRefusal(await tauriFetch(input, init)),
   language: currentLocale,
   productName: "Verikora",
   timeoutMs: API_TIMEOUT_MS,

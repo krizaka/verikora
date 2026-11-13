@@ -47,3 +47,13 @@ describe("handle", () => {
     expect(bare.headers.get("x-error-code")).toBeNull();
   });
 });
+
+describe("handle: the retry hint rides in the headers too (the ingress keeps them)", () => {
+  it("answers Retry-After next to X-Error-Code", async () => {
+    const res = await handle(async () => {
+      throw new HttpError(502, "down", { code: "SOVKORA_UNAVAILABLE" }, { "Retry-After": "30" });
+    });
+    expect(res.headers.get("retry-after")).toBe("30");
+    expect(res.headers.get("x-error-code")).toBe("SOVKORA_UNAVAILABLE");
+  });
+});

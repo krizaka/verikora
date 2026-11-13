@@ -1,41 +1,18 @@
 import { describe, expect, it, vi } from "vitest";
 
+import { storedDocument } from "@/lib/fixtures/stored-document";
+
 import { startIfSure } from "./start-check";
 
-const detail = (confidence: "high" | "low", documentType: "lease" | "invoice" | null) => ({
-  document: {
-    id: "d1",
-    title: "t",
-    filename: "t.pdf",
-    mimeType: "application/pdf",
-    kind: "lease",
-    sizeBytes: 1,
-    pages: 1,
-    hasText: true,
-    status: "stored",
-    createdAt: "2026-10-23T00:00:00.000Z",
-    sha256: "a".repeat(64),
-    text: "",
-    analyses: [],
-    storage: {
-      kind: "database",
-      endpoint: null,
-      region: "ca",
-      residency: "canada",
-      encrypted: true,
-      owner: "krizaka",
-      devOnly: false,
-    },
-    retainUntil: null,
-    purged: false,
+const detail = (confidence: "high" | "low", documentType: "lease" | "invoice" | null) =>
+  storedDocument({
     insight: {
       understanding: {
         nature: documentType ? { id: documentType, label: { fr: "", en: "" }, confidence, score: 0.9 } : null,
         check: documentType ? { studio: "compliance-check", documentType, ruleset: null } : null,
       },
     },
-  },
-});
+  });
 
 const NOON = new Date("2026-10-23T12:00:00Z");
 

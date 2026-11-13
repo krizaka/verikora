@@ -129,6 +129,30 @@ describe("the Sovkora client", () => {
     });
   });
 
+  it("a down or slow backend (Sovkora's coded 503 + Retry-After) is SOVKORA_UNAVAILABLE carrying the same retry hint (krizaka-internal#3225)", async () => {
+    const down = (headers: Record<string, string>) => {
+      const edge = fakeEdge({
+        "GET /edge/api/v1/studios/installations": () => ({ status: 200, body: [{ studioKey: "compliance-check" }] }),
+      });
+      return createSovkoraClient({
+        baseUrl: "https://x/edge",
+        apiKey: "oz_t",
+        fetch: (async (url: string, init?: RequestInit) =>
+          new URL(url).pathname.endsWith("/runs")
+            ? new Response(JSON.stringify({ code: "BACKEND_DOWN" }), { status: 503, headers })
+            : edge.fetch(url, init)) as typeof fetch,
+      }).startRun("compliance-check", {});
+    };
+    expect(await down({ "Retry-After": "30" }).catch((e: unknown) => e)).toMatchObject({
+      status: 502,
+      body: { code: "SOVKORA_UNAVAILABLE", retryAfter: 30 },
+      headers: { "Retry-After": "30" },
+    });
+    // No hint from Sovkora, none invented.
+    const bare = (await down({}).catch((e: unknown) => e)) as { headers: Record<string, string> };
+    expect(bare.headers).toEqual({});
+  });
+
   it("refuses a run id that is not one before calling anyone", async () => {
     const edge = fakeEdge({});
     expect(() =>
