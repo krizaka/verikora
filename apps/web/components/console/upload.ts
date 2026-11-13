@@ -32,7 +32,7 @@ export function send(
     xhr.onload = () =>
       xhr.status < 300
         ? resolve(xhr.response)
-        : reject(Object.assign(new Error(xhr.response?.code ?? "UNKNOWN"), { body: xhr.response }));
+        : reject(refusedBy(xhr.status, xhr.response, (name) => xhr.getResponseHeader(name)));
     xhr.onerror = () => reject(Object.assign(new Error("NETWORK"), { body: { code: "NETWORK" } }));
     signal.addEventListener("abort", () => xhr.abort());
     const body = new FormData();
@@ -43,6 +43,18 @@ export function send(
     if (placement?.folderId) body.append("folderId", placement.folderId);
     xhr.send(body);
   });
+}
+
+/**
+ * The refusal of an upload: the JSON body's code, or — when the DigitalOcean ingress swapped the body for its 504 page — the
+ * `X-Error-Code` header it kept (krizaka-internal#3225).
+ */
+export function refusedBy(status: number, body: unknown, header: (name: string) => string | null): Error {
+  const record = body && typeof body === "object" ? (body as { code?: unknown }) : {};
+  const fromHeader = header("x-error-code");
+  const headerCode = fromHeader && /^[A-Z][A-Z0-9_]{1,63}$/.test(fromHeader) ? fromHeader : undefined;
+  const code = typeof record.code === "string" ? record.code : (headerCode ?? "UNKNOWN");
+  return Object.assign(new Error(code), { status, body: { ...record, code } });
 }
 
 /** The code the BFF refused with, or UNKNOWN. */

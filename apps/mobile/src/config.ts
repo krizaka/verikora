@@ -6,6 +6,7 @@ import {
   secureStorage,
 } from "@krizaka/app-client";
 import { createQueries, createVerikoraApi } from "@verikora/client";
+import { restoreRefusal } from "@verikora/core";
 import Constants from "expo-constants";
 import * as SecureStore from "expo-secure-store";
 
@@ -43,7 +44,7 @@ export const discovery = createAppDiscovery({
 export const api = createApiClient({
   baseUrl: () => discovery.getService(PRODUCT).apiBase,
   session,
-  fetch: (input, init) => fetch(input, init),
+  fetch: async (input, init) => restoreRefusal(await fetch(input, init)),
   language: currentLocale,
   productName: "Verikora",
   timeoutMs: API_TIMEOUT_MS,

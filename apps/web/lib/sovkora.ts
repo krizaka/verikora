@@ -65,6 +65,12 @@ function within<T>(work: Promise<T>, signal: AbortSignal): Promise<T> {
   });
 }
 
+/** The seconds a `Retry-After` header asks for (a number, bounded), or null when it says nothing usable. */
+function retryHint(header: string | null): number | null {
+  const seconds = Number(header);
+  return header?.trim() && Number.isFinite(seconds) && seconds > 0 ? Math.min(300, Math.ceil(seconds)) : null;
+}
+
 /** Sovkora's answer read against its schema, or its refusal as a stable code. */
 async function read<T>(res: Response, schema: z.ZodType<T>, what: string): Promise<T> {
   if (!res.ok) {
@@ -83,6 +89,16 @@ async function read<T>(res: Response, schema: z.ZodType<T>, what: string): Promi
         `Sovkora is busy on ${what}`,
         { code, retryAfter: wait },
         { "Retry-After": String(wait) },
+      );
+    }
+    // A down or slow backend: Sovkora's coded 5xx says when to come back; it is passed on (krizaka-internal#3225).
+    const hint = res.status >= 500 ? retryHint(res.headers.get("retry-after")) : null;
+    if (hint !== null) {
+      throw new HttpError(
+        status,
+        `Sovkora answered ${res.status} on ${what}`,
+        { code, retryAfter: hint },
+        { "Retry-After": String(hint) },
       );
     }
     throw refuse(status, code, `Sovkora answered ${res.status} on ${what}`);

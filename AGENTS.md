@@ -25,6 +25,7 @@
   `AI_API_URL` (`https://dev.sovkora.com/edge`) with the service key `AI_API_KEY` (`oz_…`, created by Sovkora's
   `node scripts/dev-deploy.mjs service-account verikora --studios compliance-check,document-authenticity --out …`, stored
   in DigitalOcean as a SECRET). `lib/sovkora.ts` is the only client.
+- **A refusal survives the ingress** (krizaka-internal#3225): DigitalOcean's ingress turns any origin 5xx into a bare 504 HTML page and keeps the headers, so a refusal's code also rides in `X-Error-Code` (and Sovkora's `Retry-After` in the header and the body's `retryAfter`) and the clients put the JSON back with `restoreRefusal` (`packages/core/src/ingress.ts`: web `installIngressAwareFetch`, the upload's `refusedBy`, the phone and Mac API clients). A new client reads codes through one of these, never `res.json()` alone.
 - **Every analysis keeps its Sovkora run id**, shown in the UI: the trace of what ran, on which Studio version.
 - **Photos** (ADR-0010, verikora#8): JPEG, PNG and HEIC (several make one document) are cleaned (orientation, skew, crop, EXIF dropped after reading) and
   held to a **quality gate** (`lib/images/quality.ts`, thresholds as data in `rules.ts`): a blurred, glared or cut-off photo is refused with what to do

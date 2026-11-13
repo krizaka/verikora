@@ -6,6 +6,10 @@ import { useRouter } from "next/navigation";
 import type { Locale } from "@/lib/i18n";
 import type { ConsoleMessages } from "@/lib/i18n-client";
 import { I18nProvider } from "@/lib/i18n-client";
+import { installIngressAwareFetch } from "@/lib/ingress-fetch";
+
+// Once per page load, before any call: the ingress turns a 502 into a 504 page and keeps the headers (krizaka-internal#3225).
+installIngressAwareFetch();
 
 /** The console's client roots: its language (only its own slice), and server state through @krizaka/query. */
 export function ConsoleProviders({
