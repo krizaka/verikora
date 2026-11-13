@@ -13,14 +13,16 @@ const STUDIO = "compliance-check";
 const DONE = new Set(["SUCCEEDED", "FAILED", "CANCELLED"]);
 // The engine is the one dev Studio, fixed here: the check is never sent to an address taken from the environment.
 const SOVKORA_DEV = "https://dev.sovkora.com/edge";
-const RUN_ID = /^[0-9a-f-]{36}$/;
+const RUN_ID = /^[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}$/;
 
 export async function recordSampleRun({ key = process.env.AI_API_KEY } = {}) {
   if (!key)
     throw new Error("AI_API_KEY is not set — without it, the recorded run in fixtures/sample-file is used as it is");
   const root = SOVKORA_DEV;
   const call = async (path, init = {}) => {
-    const res = await fetch(`${root}${path}`, {
+    const url = new URL(`${root}${path}`);
+    if (url.origin !== new URL(SOVKORA_DEV).origin) throw new Error("the check only goes to Sovkora's dev engine");
+    const res = await fetch(url, {
       method: init.method ?? "GET",
       headers: {
         authorization: `Bearer ${key}`,
@@ -41,8 +43,9 @@ export async function recordSampleRun({ key = process.env.AI_API_KEY } = {}) {
   let run = await call(`/api/v1/studios/${STUDIO}/runs`, { method: "POST", body: { inputs } });
   for (let i = 0; i < 90 && !DONE.has(run.status); i++) {
     await new Promise((r) => setTimeout(r, 2000));
-    if (!RUN_ID.test(run.id)) throw new Error("Sovkora returned a run id of an unexpected shape");
-    run = await call(`/api/v1/studios/runs/${run.id}`);
+    const id = RUN_ID.exec(String(run.id))?.[0];
+    if (!id) throw new Error("Sovkora returned a run id of an unexpected shape");
+    run = await call(`/api/v1/studios/runs/${id}`);
   }
   if (run.status !== "SUCCEEDED") throw new Error(`the run ended ${run.status}`);
   const recording = {
