@@ -18,7 +18,7 @@ export async function recordSampleRun({
 } = {}) {
   if (!key)
     throw new Error("AI_API_KEY is not set — without it, the recorded run in fixtures/sample-file is used as it is");
-  const root = base.replace(/\/$/, "");
+  const root = SOVKORA_DEV;
   const call = async (path, init = {}) => {
     const res = await fetch(`${root}${path}`, {
       method: init.method ?? "GET",
@@ -41,7 +41,7 @@ export async function recordSampleRun({
   let run = await call(`/api/v1/studios/${STUDIO}/runs`, { method: "POST", body: { inputs } });
   for (let i = 0; i < 90 && !DONE.includes(run.status); i++) {
     await new Promise((r) => setTimeout(r, 2000));
-    run = await call(`/api/v1/studios/runs/${run.id}`);
+    run = await call(`/api/v1/studios/runs/${encodeURIComponent(run.id)}`);
   }
   if (run.status !== "SUCCEEDED") throw new Error(`the run ${run.id} ended ${run.status}`);
   const recording = {
