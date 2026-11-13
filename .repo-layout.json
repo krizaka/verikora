@@ -15,6 +15,10 @@
     {
       "path": "osv-scanner.toml",
       "why": "osv-scanner reads its dated ignore list only from the repository root (the shared osv-scan, krizaka/.github#372)"
+    },
+    {
+      "path": "fixtures",
+      "why": "the sample applicant file (fictitious PDFs, provenance.json, the recorded Sovkora run) behind the signed sample report a manager receives (krizaka-internal#3119); data, not code"
     }
   ]
 }

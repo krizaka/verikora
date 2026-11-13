@@ -80,6 +80,9 @@ function headerBlocks(payload: ReportPayload, labels: ReportLabels): Block[] {
   ].map((note, i) => ({ ...note, footnote: i + 1 }));
   const marks = notes.map((n) => MARKS[n.footnote! - 1]).join("");
   return [
+    ...(payload.demo
+      ? [block(labels.demoFile!, 12, { bold: true, gap: 1 }), block(labels.demoVersion!, 12, { bold: true, gap: 6 })]
+      : []),
     block(labels.eyebrow!, 8, { gap: 2 }),
     block(payload.document.title, 18, { bold: true, gap: 6 }),
     block(labels.disclaimer!, 10, { bold: true, gap: 4 }),

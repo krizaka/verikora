@@ -26,6 +26,8 @@
     "sg:fix": "node scripts/sg-fix.mjs",
     "demo:documents": "node scripts/demo-documents/cli.mjs",
     "demo:seed": "node scripts/demo-seed/cli.mjs",
+    "sample:file": "node scripts/sample-file/build.mjs",
+    "sample:report": "node scripts/sample-file/report.mjs",
     "dev:seed": "node scripts/demo-seed/cli.mjs --cast",
     "dev:launch-offer": "node scripts/launch-offer.mjs",
     "check:overflow": "node scripts/check-overflow.mjs",
