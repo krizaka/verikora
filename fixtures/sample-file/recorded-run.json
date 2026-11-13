@@ -1,6 +1,6 @@
 {
   "side": "tenant",
-  "recordedAt": "2026-11-13T14:24:51.248Z",
+  "recordedAt": "2026-11-13T15:16:53.063Z",
   "source": "https://dev.sovkora.com/edge",
   "studio": "compliance-check",
   "document": {
@@ -13,7 +13,7 @@
     "asOf": "2026-11-13"
   },
   "run": {
-    "id": "57b157ec-cc08-417e-bee9-b99c9c66323e",
+    "id": "6bb8a3bf-f126-4457-b5ad-20c5493e9084",
     "installationId": "12ff541b-0494-42ba-b817-a20aad0d053a",
     "studioKey": "compliance-check",
     "blueprintVersion": "2.1.0",
@@ -41,88 +41,10 @@
       }
     ],
     "errorMessage": null,
-    "startedAt": "2026-11-13T14:24:30.348920Z",
-    "finishedAt": "2026-11-13T14:24:49.194021Z",
-    "steps": [
-      {
-        "stepId": "identify",
-        "ordinal": 0,
-        "jobId": "68733559-06f1-4e7a-8046-f62fa15de27e",
-        "status": "SUCCEEDED",
-        "attempts": 1,
-        "error": null,
-        "startedAt": "2026-11-13T14:24:30.348920Z",
-        "estimateMs": null,
-        "estimateSamples": 0
-      },
-      {
-        "stepId": "classify",
-        "ordinal": 0,
-        "jobId": null,
-        "status": "SKIPPED",
-        "attempts": 0,
-        "error": null,
-        "startedAt": "2026-11-13T14:24:33.180182Z",
-        "estimateMs": null,
-        "estimateSamples": 0
-      },
-      {
-        "stepId": "resolve",
-        "ordinal": 0,
-        "jobId": "38ad7ee4-c9ac-4528-af97-c19137e56e88",
-        "status": "SUCCEEDED",
-        "attempts": 1,
-        "error": null,
-        "startedAt": "2026-11-13T14:24:33.180182Z",
-        "estimateMs": null,
-        "estimateSamples": 0
-      },
-      {
-        "stepId": "lecture",
-        "ordinal": 0,
-        "jobId": null,
-        "status": "SKIPPED",
-        "attempts": 0,
-        "error": null,
-        "startedAt": "2026-11-13T14:24:33.495519Z",
-        "estimateMs": null,
-        "estimateSamples": 0
-      },
-      {
-        "stepId": "screen",
-        "ordinal": 0,
-        "jobId": "3708faec-44ce-43cf-a9ff-6910202252d0",
-        "status": "SUCCEEDED",
-        "attempts": 1,
-        "error": null,
-        "startedAt": "2026-11-13T14:24:33.495519Z",
-        "estimateMs": null,
-        "estimateSamples": 0
-      },
-      {
-        "stepId": "judge",
-        "ordinal": 0,
-        "jobId": "0f344461-958d-4052-9049-f0435ac3275c",
-        "status": "SUCCEEDED",
-        "attempts": 1,
-        "error": null,
-        "startedAt": "2026-11-13T14:24:34.073419Z",
-        "estimateMs": null,
-        "estimateSamples": 0
-      },
-      {
-        "stepId": "report",
-        "ordinal": 0,
-        "jobId": "5c2f186d-fdd8-47cc-ad92-b4b41a18004e",
-        "status": "SUCCEEDED",
-        "attempts": 1,
-        "error": null,
-        "startedAt": "2026-11-13T14:24:48.791648Z",
-        "estimateMs": null,
-        "estimateSamples": 0
-      }
-    ],
-    "cachedFrom": null,
+    "startedAt": "2026-11-13T15:16:52.884736Z",
+    "finishedAt": "2026-11-13T15:16:52.884736Z",
+    "steps": [],
+    "cachedFrom": "57b157ec-cc08-417e-bee9-b99c9c66323e",
     "resumedFrom": null
   }
 }
