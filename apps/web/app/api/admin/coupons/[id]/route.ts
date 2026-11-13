@@ -1,5 +1,5 @@
 import { requireAdmin } from "@/lib/access";
-import { couponAction, couponPatch, parseParams, redemptionQuery } from "@/lib/coupons/admin-api";
+import { couponAction, couponPatch, parseParams, pilotFallsBackToPaid, redemptionQuery } from "@/lib/coupons/admin-api";
 import { coupons, guarded } from "@/lib/coupons/instance";
 import { query, transaction } from "@/lib/db";
 import { handle, readJson, refuse } from "@/lib/http";
@@ -25,7 +25,9 @@ export const PATCH = (req: Request, { params }: Ctx) =>
   handle(async () => {
     const session = await requireAdmin(req);
     const { id } = await params;
-    const patch = await readJson(req, couponPatch);
+    const parsed = await readJson(req, couponPatch);
+    const current = await guarded(() => coupons.admin.get(query, id));
+    const patch = pilotFallsBackToPaid(parsed.purpose ?? current?.purpose, parsed);
     const coupon = await guarded(() =>
       transaction((tx) =>
         coupons.admin.update(tx, { id: session.account.id, label: session.account.email }, id, patch),

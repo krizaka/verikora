@@ -86,6 +86,19 @@ export const couponQuery = z.object({
 export const redemptionQuery = z.object({ status: optional(z.enum(values(REDEMPTION_STATUS))), ...page });
 export const periodQuery = z.object({ from: optional(date), to: optional(date) });
 
+/**
+ * A pilot's allowance is followed by payment: once the free files are used the account's own credits take over (`fallback_paid`). With `stop` the pot would
+ * refuse the next file even after a payment, so a pilot code (purpose « demo », credit kind) is always stored with `fallback_paid`.
+ */
+export function pilotFallsBackToPaid<T extends { onExhausted?: string | null }>(
+  purpose: string | undefined,
+  input: T,
+): T {
+  return purpose === PURPOSE.demo && input.onExhausted !== undefined
+    ? { ...input, onExhausted: ON_EXHAUSTED.fallbackPaid }
+    : input;
+}
+
 /** A search string's entries as a plain object (the first value of each key), for a schema. */
 export const paramsOf = (url: string): Record<string, string> =>
   Object.fromEntries(new URL(url).searchParams.entries());

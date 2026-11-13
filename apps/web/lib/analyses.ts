@@ -24,6 +24,7 @@ import { overageBiller } from "../app/overage-biller";
 import { systemClock } from "../app/system-clock";
 import { assertAnalysisAllowed } from "./applicant-consent";
 import { refundFailedAudit } from "./billing";
+import { recordRealFile } from "./coupons/pilot-counters";
 import { query } from "./db";
 import { type AnalysisRow, declaredKindOf, isUuid, needsAttention, readBytes, toAnalysis } from "./documents";
 import { refuse } from "./http";
@@ -200,6 +201,7 @@ export async function startAnalysis(
       billedVia,
     ],
   );
+  await recordRealFile(ownerId, row!.id);
   return isTerminal(row!.status) ? refresh(row!, run) : toAnalysis(row!);
 }
 

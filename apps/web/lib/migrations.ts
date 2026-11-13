@@ -1947,4 +1947,17 @@ INSERT INTO public.krizaka_module_versions (module, version, checksum) VALUES
   ('auth_signup_invitations', 1, 'cd06b94e45dd4f50936a3b39b888ac402f3d37b1eda779899adbce0044db6944')
 ON CONFLICT (module, version) DO NOTHING;`,
   },
+  {
+    // krizaka-internal#3230: four counters per pilot code, aggregates only (a code, a stage, an integer: no account, no e-mail, no applicant).
+    version: "0005_pilot_counters",
+    sql: String.raw`CREATE TABLE public.pilot_counter (
+  coupon_id uuid NOT NULL REFERENCES coupons.coupon(id),
+  stage     text NOT NULL CHECK (stage IN ('activated', 'first_real_file', 'first_payment', 'second_payment')),
+  n         integer NOT NULL DEFAULT 0 CHECK (n >= 0),
+  PRIMARY KEY (coupon_id, stage)
+
+);
+-- the file that counted as the account's first real file, so a replay counts nothing more (a flag on the file, never a count)
+ALTER TABLE public.analyses ADD COLUMN pilot_first_file boolean NOT NULL DEFAULT false;`,
+  },
 ];

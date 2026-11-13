@@ -2748,6 +2748,16 @@
         "cancel": "Cancel",
         "close": "Close",
         "empty": "No coupon yet.",
+        "pilotTitle": "Pilot funnel",
+        "pilotLead": "Per pilot code, how many accounts reached each stage. Counts only: no account, e-mail or applicant is kept in them. The number of free files is the code's « credits » in the list above (editable until the code is first used).",
+        "pilotEmpty": "No pilot code yet. Create a credit code with the purpose « Pilot ».",
+        "pilotCode": "Code",
+        "stages": {
+          "activated": "Pilot opened",
+          "first_real_file": "First real file",
+          "first_payment": "First payment",
+          "second_payment": "Second payment"
+        },
         "kind": "Kind",
         "kinds": {
           "discount": "Discount",

@@ -12,6 +12,7 @@ import { useMemo, useState } from "react";
 import { z } from "zod";
 
 import { errorKey } from "@/lib/client";
+import { PILOT_STAGE, type PilotCodeCounts } from "@/lib/coupons/pilot-stages";
 import {
   COUPON_CURRENCY,
   type CouponForm,
@@ -41,6 +42,7 @@ const TONE: Record<CouponState, "success" | "warning" | "neutral" | "accent"> = 
 const list = z.object({ enabled: z.boolean(), coupons: z.array(z.custom<Coupon>()) });
 const partners = z.object({ partners: z.array(z.custom<Partner>()) });
 const detail = z.object({ coupon: z.custom<Coupon>(), redemptions: z.array(z.custom<Redemption>()) });
+const pilotCounts = z.object({ codes: z.array(z.custom<PilotCodeCounts>()) });
 const report = z.object({ partner: z.custom<Partner>(), rows: z.array(z.custom<PartnerRow>()) });
 
 /** Today's day in the product's calendar (the form's first day). */
@@ -68,6 +70,10 @@ export function CouponsView() {
     queryKey: ["admin-coupon-partners"],
     queryFn: () => krizakaFetch("/api/admin/coupons/partners", { schema: partners }),
   });
+  const pilots = useQuery({
+    queryKey: ["admin-pilot-counters"],
+    queryFn: () => krizakaFetch("/api/admin/coupons/pilot-counters", { schema: pilotCounts }),
+  });
   if (!data.data) return null;
   return (
     <div className="flex flex-col gap-8" data-testid="coupons">
@@ -77,6 +83,7 @@ export function CouponsView() {
       </div>
       <NewCoupon partners={people.data?.partners ?? []} />
       <CouponTable coupons={data.data.coupons} partners={people.data?.partners ?? []} onOpen={setOpen} />
+      <PilotCounters codes={pilots.data?.codes ?? []} />
       {open ? <Redemptions id={open} onClose={() => setOpen(null)} /> : null}
       <Partners partners={people.data?.partners ?? []} onOpen={setPartnerOpen} />
       {partnerOpen ? <PartnerReport id={partnerOpen} onClose={() => setPartnerOpen(null)} /> : null}
@@ -90,6 +97,7 @@ function useRefresh() {
     Promise.all([
       client.invalidateQueries({ queryKey: ["admin-coupons"] }),
       client.invalidateQueries({ queryKey: ["admin-coupon-partners"] }),
+      client.invalidateQueries({ queryKey: ["admin-pilot-counters"] }),
     ]);
 }
 
@@ -743,6 +751,50 @@ function PartnerReport({ id, onClose }: Readonly<{ id: string; onClose: () => vo
           rowLabel={(r) => r.code}
         />
       ) : null}
+    </section>
+  );
+}
+
+const PILOT_COLUMNS = Object.values(PILOT_STAGE);
+
+/** The pilot funnel, read-only: one row per pilot code with its four counters (totals; no account, e-mail or applicant is behind them). */
+function PilotCounters({ codes }: Readonly<{ codes: PilotCodeCounts[] }>) {
+  const { say } = useSay();
+  const columns: DataTableColumn<PilotCodeCounts>[] = [
+    {
+      id: "code",
+      header: say("adminConfig.coupons.pilotCode"),
+      sortable: true,
+      value: (c) => c.code,
+      cell: (c) => c.code,
+    },
+    ...PILOT_COLUMNS.map((stage) => ({
+      id: stage,
+      header: say(`adminConfig.coupons.stages.${stage}`),
+      sortable: true,
+      value: (c: PilotCodeCounts) => String(c.counts[stage]).padStart(9, "0"),
+      cell: (c: PilotCodeCounts) => String(c.counts[stage]),
+    })),
+  ];
+  return (
+    <section
+      aria-label={say("adminConfig.coupons.pilotTitle")}
+      className="flex flex-col gap-2"
+      data-testid="pilot-counters"
+    >
+      <h2 className="m-0 font-display text-lg font-bold text-fg">{say("adminConfig.coupons.pilotTitle")}</h2>
+      <p className="m-0 max-w-[70ch] text-sm text-fg-secondary">{say("adminConfig.coupons.pilotLead")}</p>
+      {codes.length === 0 ? (
+        <p className="m-0 text-sm text-fg-secondary">{say("adminConfig.coupons.pilotEmpty")}</p>
+      ) : (
+        <DataTable
+          caption={say("adminConfig.coupons.pilotTitle")}
+          rows={codes}
+          columns={columns}
+          getRowId={(c) => c.couponId}
+          rowLabel={(c) => c.code}
+        />
+      )}
     </section>
   );
 }
