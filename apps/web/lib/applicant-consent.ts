@@ -1,6 +1,7 @@
 import { APPLICATION_ERASED, CONSENT_PURPOSE, type ConsentPurpose } from "./applicant-file-rules";
 import { audit } from "./audit";
 import { query } from "./db";
+import { DELETION_RULE, HELD_COLUMNS, type HeldRow, recordDeletionReceipt } from "./deletion-receipt";
 import { deleteDocument, isUuid } from "./documents";
 import { refuse } from "./http";
 import type { DocumentStore } from "./storage/port";
@@ -196,12 +197,14 @@ export async function eraseApplication(
   now: Date,
   headers?: Headers,
 ): Promise<{ documents: number }> {
-  const docs = await query<{ id: string }>("SELECT id FROM documents WHERE screening_id = $1 AND owner_id = $2", [
+  const docs = await query<HeldRow>(`SELECT ${HELD_COLUMNS} FROM documents WHERE screening_id = $1 AND owner_id = $2`, [
     screeningId,
     ownerId,
   ]);
   for (const d of docs) {
+    // deleteDocument deletes from the store first and throws when it does not answer: no receipt for an object still there.
     await deleteDocument(ownerId, d.id, store);
+    await recordDeletionReceipt(query, d, DELETION_RULE.applicantRequest, now);
   }
   await query("UPDATE application_consents SET withdrawn_at = $2 WHERE screening_id = $1 AND withdrawn_at IS NULL", [
     screeningId,

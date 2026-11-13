@@ -3216,7 +3216,19 @@
         "report": "Ouvrir le rapport",
         "skipped": "Une vérification n'a pas pu être lancée sur ce document",
         "requestedOn": "Demandé le {date}",
-        "none": "Aucun document reçu pour l'instant."
+        "none": "Aucun document reçu pour l'instant.",
+        "receipts": {
+          "title": "Reçus d'effacement",
+          "lead": "Preuve signée qu'un fichier a disparu : ce qui a été effacé (empreintes seulement), quand et selon quelle règle. Vérifiez-la sur la page de vérification.",
+          "download": "Télécharger le reçu",
+          "on": "Émis le {date}",
+          "rules": {
+            "after-check": "Effacé après ses vérifications",
+            "window": "Effacé à la fin de son délai",
+            "after-decision": "Effacé après votre décision",
+            "applicant-request": "Effacé à la demande du candidat"
+          }
+        }
       },
       "check": {
         "nothing": "Aucun problème trouvé sur les règles vérifiées",

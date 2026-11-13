@@ -33,6 +33,7 @@ export default async function Verify({ params }: Readonly<{ params: Promise<{ lo
     reasons: v.reasons,
     facts: v.facts,
     documentMatch: v.documentMatch,
+    receipt: v.receipt,
     noAccess: v.noAccess,
     drop: v.drop,
   };

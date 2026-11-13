@@ -146,6 +146,7 @@ describe("one file's decision (verikora#324)", () => {
     revokedAt: null,
     closedAt: null,
     consents: [],
+    receipts: [],
     documents: [],
   };
   const render = (decision: string) =>

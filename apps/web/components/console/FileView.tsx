@@ -2,6 +2,7 @@
 
 import type { StatusSet } from "@krizaka/organize/contract";
 import { Badge } from "@krizaka/ui/badge";
+import { ChipLink } from "@krizaka/ui/chip-link";
 import { DetailLayout } from "@krizaka/ui/detail-layout";
 import { List } from "@krizaka/ui/list";
 import Link from "next/link";
@@ -62,7 +63,9 @@ export function FileView({
   const facts = useFileFacts();
   const label = (type: string) => types.find((t) => t.id === type)?.label ?? type;
   const retention = (d: FileDocumentView) => {
-    if (d.purged) return say("dossiers.detail.purged");
+    if (d.purged) {
+      return say("dossiers.detail.purged");
+    }
     return d.retention === "after-decision" ? say("dossiers.detail.kept") : say("dossiers.detail.afterCheck");
   };
   const checks = (d: FileDocumentView) => (
@@ -117,6 +120,33 @@ export function FileView({
           }
         />
       </section>
+      {file.receipts.length ? (
+        <section aria-labelledby="receipts-title" className="flex flex-col gap-3" data-testid="file-receipts">
+          <h2 id="receipts-title" className="m-0 text-lg font-bold text-fg">
+            {say("dossiers.detail.receipts.title")}
+          </h2>
+          <p className="m-0 text-sm text-fg-secondary">{say("dossiers.detail.receipts.lead")}</p>
+          <List
+            aria-label={say("dossiers.detail.receipts.title")}
+            items={file.receipts}
+            getId={(r) => `${r.documentId}-${r.rule}`}
+            row={(r) => ({
+              title: say(`dossiers.detail.receipts.rules.${r.rule as "window"}`),
+              description: say("dossiers.detail.receipts.on", { date: facts.date(r.issuedAt) }),
+              meta: (
+                <ChipLink
+                  size="sm"
+                  href={`/api/documents/${r.documentId}/receipt?rule=${r.rule}`}
+                  download
+                  data-testid="receipt-download"
+                >
+                  {say("dossiers.detail.receipts.download")}
+                </ChipLink>
+              ),
+            })}
+          />
+        </section>
+      ) : null}
       {affordability ? <RentShare words={affordability} /> : null}
       <OwnerShare fileId={file.id} />
     </DetailLayout>

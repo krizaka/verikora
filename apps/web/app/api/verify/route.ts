@@ -1,6 +1,8 @@
 import { requireSession } from "@/lib/access";
 import { audit } from "@/lib/audit";
 import { PRODUCT_NAME } from "@/lib/brand";
+import { query } from "@/lib/db";
+import { receiptSchemaOf, receiptView, verifyDeletionReceipt } from "@/lib/deletion-receipt";
 import { handle, refuse } from "@/lib/http";
 import { limit } from "@/lib/limits";
 import { verifyReport } from "@/lib/report";
@@ -14,16 +16,21 @@ export const dynamic = "force-dynamic";
 
 /** True for an owner-report PDF; refuses a schema Verikora does not verify; false for a compliance PDF or a file with no attestation. */
 async function ownerKindOrRefuse(pdf: Uint8Array | null) {
-  if (!pdf) return false;
+  if (!pdf) {
+    return false;
+  }
   const kind = kindOfSchema(await pdfSchemaId(pdf));
-  if (kind === "unknown")
+  if (kind === "unknown") {
     throw refuse(422, "UNKNOWN_SCHEMA", `This report uses a format ${PRODUCT_NAME} does not verify`);
+  }
   return kind === "owner";
 }
 
 async function verifyOwner(input: Uint8Array | null, who: { id: string; email: string }, req: Request) {
   const pdf = input && (await ownerKindOrRefuse(input)) ? input : null;
-  if (!pdf) return null;
+  if (!pdf) {
+    return null;
+  }
   const result = await verifyOwnerPdfView(pdf, signingKey());
   await audit({
     action: "report.verified",
@@ -44,6 +51,54 @@ async function verifyOwner(input: Uint8Array | null, who: { id: string; email: s
 }
 
 /**
+ * A deletion receipt (krizaka-internal#3381) is checked by the same key: members only, and only a receipt this server holds for
+ * the caller's own account — anything else answers the same 403 as an unknown report, so it tells a stranger nothing.
+ */
+async function verifyReceipt(text: string, who: { id: string; email: string }, req: Request) {
+  const result = verifyDeletionReceipt(text, signingKey());
+  // A receipt that fails its signature holds nothing to protect; a valid one is shown only to the account it belongs to.
+  const owned =
+    result.ok &&
+    (await query("SELECT 1 FROM deletion_receipts WHERE id = $1 AND owner_id = $2", [result.payload.receiptId, who.id]))
+      .length > 0;
+  if (result.ok && !owned) {
+    await audit({
+      action: "report.verify_denied",
+      actorId: who.id,
+      actorLabel: who.email,
+      targetId: null,
+      detail: { schema: "deletion-receipt" },
+      headers: req.headers,
+    });
+    throw refuse(403, "NO_ACCESS", "You do not have access to this report");
+  }
+  await audit({
+    action: "report.verified",
+    actorId: who.id,
+    actorLabel: who.email,
+    targetId: null,
+    detail: {
+      runId: null,
+      schema: "deletion-receipt",
+      ok: result.ok,
+      ...(result.ok ? {} : { reason: result.reason }),
+      via: "owner",
+      fileSha256: result.fileSha256,
+    },
+    headers: req.headers,
+  });
+  return Response.json({ result: receiptView(result) }, { headers: { "Cache-Control": "no-store" } });
+}
+
+/** The two kinds that hold no analysis to look up: a deletion receipt (text) and an owner report (PDF); null for a compliance report. */
+async function verifyByKind(text: string, pdf: Uint8Array | null, who: { id: string; email: string }, req: Request) {
+  if (!pdf && receiptSchemaOf(text)) {
+    return verifyReceipt(text, who, req);
+  }
+  return verifyOwner(pdf, who, req);
+}
+
+/**
  * Checks a Verikora audit report (multipart: `report` file or `reportText`, optionally the original `document`).
  * Members only, and only for a report the caller owns or was granted (ADR-0002):
  *   no session → 401 · a report without a grant (or one this server does not hold) → 403 NO_ACCESS · a grant → 200.
@@ -55,8 +110,9 @@ export function POST(req: Request) {
     const session = await requireSession(req);
     const who = { id: session.account.id, email: session.account.email };
     await limit("verify", req, who.id);
-    if (Number(req.headers.get("content-length") ?? "0") > MAX_BODY_BYTES)
+    if (Number(req.headers.get("content-length") ?? "0") > MAX_BODY_BYTES) {
       throw refuse(413, "FILE_TOO_LARGE", "Too large");
+    }
     let form: FormData;
     try {
       form = await req.formData();
@@ -65,8 +121,10 @@ export function POST(req: Request) {
     }
     const { text, pdf, document } = await readVerifyForm(form);
     // The payload's schema id picks the verifier. An owner report holds no analysis to look up: it is checked by its signature only.
-    const ownerAnswer = await verifyOwner(pdf, who, req);
-    if (ownerAnswer) return ownerAnswer;
+    const ownerAnswer = await verifyByKind(text, pdf, who, req);
+    if (ownerAnswer) {
+      return ownerAnswer;
+    }
     // A PDF carries its attestation in its Info dictionary; an HTML report in its script block.
     const embedded = pdf ? await attestationOfPdf(pdf) : null;
     const embeddedReference = embedded

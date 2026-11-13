@@ -3216,7 +3216,19 @@
         "report": "Open the report",
         "skipped": "A check could not run on this document",
         "requestedOn": "Asked on {date}",
-        "none": "No document received yet."
+        "none": "No document received yet.",
+        "receipts": {
+          "title": "Deletion receipts",
+          "lead": "Signed proof that a file is gone: what was deleted (hashes only), when and under which rule. Check it on the verification page.",
+          "download": "Download the receipt",
+          "on": "Issued on {date}",
+          "rules": {
+            "after-check": "Deleted after its checks",
+            "window": "Deleted at the end of its window",
+            "after-decision": "Deleted after your decision",
+            "applicant-request": "Deleted at the applicant's request"
+          }
+        }
       },
       "check": {
         "nothing": "Nothing found on the rules checked",

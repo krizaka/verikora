@@ -337,7 +337,8 @@
       "ALTERED": "The signature is valid for the original report, but the file is not that report any more: something was changed after signing.",
       "UNKNOWN_KEY": "It was signed by a key that is not this server's.",
       "UNKNOWN_SCHEMA": "This report uses a format Verikora does not verify.",
-      "SPECIMEN": "This report is a specimen: it proves nothing."
+      "SPECIMEN": "This report is a specimen: it proves nothing.",
+      "NOT_A_RECEIPT": "This is not a Verikora deletion receipt."
     },
     "facts": {
       "fileSha": "This file's SHA-256",
@@ -384,6 +385,27 @@
       "text": "Only the people the report's owner gave access to can verify it. You can ask the owner.",
       "request": "Request access",
       "requested": "The owner has been notified. You can verify the report once they give you access."
+    },
+    "receipt": {
+      "okTitle": "This deletion receipt is authentic and unchanged.",
+      "deletedAt": "Deleted on",
+      "rule": "Rule",
+      "objects": "Objects deleted",
+      "none": "Nothing was left to delete.",
+      "kinds": {
+        "file": "File",
+        "text": "Extracted text"
+      },
+      "results": {
+        "deleted": "deleted from the store",
+        "cleared": "emptied from the database"
+      },
+      "rules": {
+        "after-check": "Deleted after its checks",
+        "window": "Deleted at the end of its window",
+        "after-decision": "Deleted after the manager's decision",
+        "applicant-request": "Deleted at the applicant's request"
+      }
     }
   },
   "demo": {

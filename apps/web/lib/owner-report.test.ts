@@ -33,6 +33,7 @@ const file = (checks: Analysis[]): ApplicantFileView => ({
   revokedAt: null,
   closedAt: null,
   consents: [],
+  receipts: [],
   documents: [
     {
       id: "d1",
