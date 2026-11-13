@@ -241,6 +241,16 @@
     "public.collections_tags": ["collection_id", "tag_id"],
     "public.compliance_gate": ["blocker", "evidence_on", "evidence_ref", "label", "required_live", "status"],
     "public.consents": ["account_id", "granted_at", "id", "key", "revoked_at"],
+    "public.deletion_receipts": [
+      "body",
+      "document_id",
+      "id",
+      "issued_at",
+      "owner_id",
+      "rule",
+      "screening_id",
+      "sha256"
+    ],
     "public.document_types": ["accepted_kinds", "active", "fields", "id", "position", "retention_policy", "studios"],
     "public.documents": [
       "checks_skipped",

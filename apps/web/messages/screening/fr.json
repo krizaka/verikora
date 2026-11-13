@@ -337,7 +337,8 @@
       "ALTERED": "La signature est valide pour le rapport d’origine, mais le fichier n’est plus ce rapport : quelque chose a été changé après la signature.",
       "UNKNOWN_KEY": "Il a été signé par une clé qui n’est pas celle de ce serveur.",
       "UNKNOWN_SCHEMA": "Ce rapport est dans un format que Verikora ne vérifie pas.",
-      "SPECIMEN": "Ce rapport est un spécimen : il ne prouve rien."
+      "SPECIMEN": "Ce rapport est un spécimen : il ne prouve rien.",
+      "NOT_A_RECEIPT": "Ce n'est pas un reçu d'effacement Verikora."
     },
     "facts": {
       "fileSha": "SHA-256 de ce fichier",
@@ -384,6 +385,27 @@
       "text": "Seules les personnes à qui le propriétaire du rapport a donné accès peuvent le vérifier. Vous pouvez le lui demander.",
       "request": "Demander l’accès",
       "requested": "Le propriétaire a été prévenu. Vous pourrez vérifier le rapport dès qu’il vous aura donné l’accès."
+    },
+    "receipt": {
+      "okTitle": "Ce reçu d'effacement est authentique et inchangé.",
+      "deletedAt": "Effacé le",
+      "rule": "Règle",
+      "objects": "Objets effacés",
+      "none": "Il ne restait rien à effacer.",
+      "kinds": {
+        "file": "Fichier",
+        "text": "Texte extrait"
+      },
+      "results": {
+        "deleted": "effacé du stockage",
+        "cleared": "vidé de la base de données"
+      },
+      "rules": {
+        "after-check": "Effacé après ses vérifications",
+        "window": "Effacé à la fin de son délai",
+        "after-decision": "Effacé après la décision du gestionnaire",
+        "applicant-request": "Effacé à la demande du candidat"
+      }
     }
   },
   "demo": {

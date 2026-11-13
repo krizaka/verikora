@@ -133,5 +133,21 @@
     "video": true,
     "budgetSeconds": 90,
     "tags": []
+  },
+  {
+    "id": "deletion-receipt",
+    "promise": "A property manager closes an applicant file, downloads the signed deletion receipt from its page and verifies it with the report's key",
+    "persona": "eric",
+    "platforms": ["web"],
+    "steps": [
+      "sign in as Eric",
+      "open a file whose documents are kept",
+      "close it (the decision)",
+      "find the deletion receipt on the file's page and download it",
+      "paste it on the verification page and see it verified"
+    ],
+    "video": true,
+    "budgetSeconds": 60,
+    "tags": ["critical"]
   }
 ]

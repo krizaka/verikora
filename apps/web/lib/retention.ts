@@ -3,6 +3,13 @@ import { addHours } from "date-fns";
 import type { QueryResultRow } from "pg";
 
 import { audit } from "./audit";
+import {
+  DELETION_RULE,
+  type DeletionRule,
+  HELD_COLUMNS,
+  type HeldRow,
+  recordDeletionReceipt,
+} from "./deletion-receipt";
 import { noHolder, type ObjectHolder, removeObject } from "./document-objects";
 import type { StoreDescriptor } from "./storage/port";
 
@@ -47,23 +54,20 @@ async function purgeWhere(
   values: unknown[],
   holder: ObjectHolder,
   record: (id: string) => Promise<void>,
+  receipt: { rule: DeletionRule; now?: Date },
 ): Promise<string[]> {
-  const candidates = await q<{
-    id: string;
-    owner_id: string;
-    storage: string;
-    storage_owner: string;
-    object_key: string | null;
-  }>(
-    `SELECT id, owner_id, storage, storage_owner, object_key FROM documents WHERE storage = 'none' AND ${condition} AND (${HOLDS_BYTES} OR text <> '')`,
+  const candidates = await q<HeldRow & { storage_owner: string }>(
+    `SELECT ${HELD_COLUMNS}, storage_owner FROM documents WHERE storage = 'none' AND ${condition} AND (${HOLDS_BYTES} OR text <> '')`,
     values,
   );
   const ready: string[] = [];
+  const held = new Map<string, HeldRow>();
   for (const c of candidates) {
     if (c.object_key && !(await removeObject(c, holder))) {
       continue;
     }
     ready.push(c.id);
+    held.set(c.id, c);
   }
   if (ready.length === 0) {
     return [];
@@ -75,6 +79,8 @@ async function purgeWhere(
   // The purge is verifiable: one audit row per document (the file and its text go; the hash, the report and the signed certificate stay).
   for (const r of rows) {
     await record(String(r.id));
+    // The receipt comes last: the store confirmed the object gone (above) and the row is emptied.
+    await recordDeletionReceipt(q, held.get(String(r.id))!, receipt.rule, receipt.now);
   }
   return rows.map((r) => String(r.id));
 }
@@ -85,9 +91,16 @@ export async function purgeDocument(
   documentId: string,
   reason = "after-check",
   holder: ObjectHolder = noHolder,
+  now?: Date,
 ): Promise<boolean> {
-  const purged = await purgeWhere(q, "id = $1", [documentId], holder, (id) =>
-    audit({ action: "document.purged", actorId: null, actorLabel: "retention", targetId: id, detail: { reason } }),
+  const purged = await purgeWhere(
+    q,
+    "id = $1",
+    [documentId],
+    holder,
+    (id) =>
+      audit({ action: "document.purged", actorId: null, actorLabel: "retention", targetId: id, detail: { reason } }),
+    { rule: DELETION_RULE.afterCheck, now },
   );
   return purged.length > 0;
 }
@@ -106,14 +119,20 @@ export async function purgeIfDone(q: Query, documentId: string, holder: ObjectHo
 
 /** The sweep: not-kept documents past their deadline (never checked). Returns how many were purged. */
 export async function purgeExpired(q: Query, now: Date, holder: ObjectHolder = noHolder): Promise<number> {
-  const purged = await purgeWhere(q, "retain_until IS NOT NULL AND retain_until <= $1", [now], holder, (id) =>
-    audit({
-      action: "document.purged",
-      actorId: null,
-      actorLabel: "retention",
-      targetId: id,
-      detail: { reason: "window" },
-    }),
+  const purged = await purgeWhere(
+    q,
+    "retain_until IS NOT NULL AND retain_until <= $1",
+    [now],
+    holder,
+    (id) =>
+      audit({
+        action: "document.purged",
+        actorId: null,
+        actorLabel: "retention",
+        targetId: id,
+        detail: { reason: "window" },
+      }),
+    { rule: DELETION_RULE.window, now },
   );
   return purged.length;
 }

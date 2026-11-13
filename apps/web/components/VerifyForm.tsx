@@ -10,6 +10,7 @@ import { useState } from "react";
 import { z } from "zod";
 
 import { ClosingNoteView } from "@/components/ClosingNoteView";
+import type { DeletionReceiptView } from "@/lib/deletion-receipt";
 import type { Locale } from "@/lib/i18n";
 import type { Verification } from "@/lib/report";
 import type { OwnerVerificationView } from "@/lib/verify-dispatch";
@@ -40,6 +41,16 @@ export interface VerifyLabels {
     string
   >;
   documentMatch: Record<"yes" | "no" | "none", string>;
+  receipt: {
+    okTitle: string;
+    deletedAt: string;
+    rule: string;
+    objects: string;
+    none: string;
+    kinds: Record<"file" | "text", string>;
+    results: Record<"deleted" | "cleared", string>;
+    rules: Record<string, string>;
+  };
   noAccess: { title: string; text: string; request: string; requested: string };
   drop: { reportTitle: string; documentTitle: string; browse: string; remove: string; hint: string };
 }
@@ -58,7 +69,7 @@ export function VerifyForm({ labels, locale }: Readonly<{ labels: VerifyLabels; 
   const [problem, setProblem] = useState<string | null>(null);
   const [denied, setDenied] = useState<{ runId: string; documentSha256: string } | null>(null);
   const [asked, setAsked] = useState(false);
-  const [result, setResult] = useState<Verification | OwnerVerificationView | null>(null);
+  const [result, setResult] = useState<Verification | OwnerVerificationView | DeletionReceiptView | null>(null);
   const f = form.useForm({
     i18n: { t: () => labels.empty, locale },
     onSubmit: async (values) => {
@@ -66,11 +77,18 @@ export function VerifyForm({ labels, locale }: Readonly<{ labels: VerifyLabels; 
       setResult(null);
       setDenied(null);
       setAsked(false);
-      if (values.reportFiles.length === 0 && !values.reportText.trim()) return setProblem(labels.empty);
+      if (values.reportFiles.length === 0 && !values.reportText.trim()) {
+        return setProblem(labels.empty);
+      }
       const body = new FormData();
-      if (values.reportFiles[0]) body.set("report", values.reportFiles[0]);
-      else body.set("reportText", values.reportText);
-      if (values.documentFiles[0]) body.set("document", values.documentFiles[0]);
+      if (values.reportFiles[0]) {
+        body.set("report", values.reportFiles[0]);
+      } else {
+        body.set("reportText", values.reportText);
+      }
+      if (values.documentFiles[0]) {
+        body.set("document", values.documentFiles[0]);
+      }
       try {
         const res = await fetch("/api/verify", { method: "POST", body });
         if (res.status === 403) {
@@ -79,11 +97,16 @@ export function VerifyForm({ labels, locale }: Readonly<{ labels: VerifyLabels; 
             runId?: string;
             documentSha256?: string;
           } | null;
-          if (refusal?.code === "NO_ACCESS" && refusal.runId && refusal.documentSha256)
+          if (refusal?.code === "NO_ACCESS" && refusal.runId && refusal.documentSha256) {
             return setDenied({ runId: refusal.runId, documentSha256: refusal.documentSha256 });
+          }
         }
-        if (!res.ok) return setProblem(res.status === 413 ? labels.tooLarge : labels.empty);
-        setResult(((await res.json()) as { result: Verification | OwnerVerificationView }).result);
+        if (!res.ok) {
+          return setProblem(res.status === 413 ? labels.tooLarge : labels.empty);
+        }
+        setResult(
+          ((await res.json()) as { result: Verification | OwnerVerificationView | DeletionReceiptView }).result,
+        );
       } catch {
         setProblem(labels.empty);
       }
@@ -148,8 +171,13 @@ export function VerifyForm({ labels, locale }: Readonly<{ labels: VerifyLabels; 
 function VerifyResult({
   result,
   labels,
-}: Readonly<{ result: Verification | OwnerVerificationView; labels: VerifyLabels }>) {
-  if (result.ok && "kind" in result) return <OwnerResult result={result} labels={labels} />;
+}: Readonly<{ result: Verification | OwnerVerificationView | DeletionReceiptView; labels: VerifyLabels }>) {
+  if (result.ok && "kind" in result && result.kind === "deletion-receipt") {
+    return <ReceiptResult result={result} labels={labels} />;
+  }
+  if (result.ok && "kind" in result) {
+    return <OwnerResult result={result} labels={labels} />;
+  }
   if (!result.ok) {
     return (
       <Alert tone="danger" title={labels.failTitle} data-testid="verify-failed">
@@ -163,8 +191,11 @@ function VerifyResult({
   const { payload } = result;
   const match = result.documentMatch;
   let matchWords = labels.documentMatch.no;
-  if (match === null) matchWords = labels.documentMatch.none;
-  else if (match) matchWords = labels.documentMatch.yes;
+  if (match === null) {
+    matchWords = labels.documentMatch.none;
+  } else if (match) {
+    matchWords = labels.documentMatch.yes;
+  }
   return (
     <Card.Root className="flex flex-col gap-4 p-4" data-testid="verify-ok">
       <Alert tone="success" title={labels.okTitle}>
@@ -218,6 +249,44 @@ function OwnerResult({
           { term: labels.facts.issued, details: result.issuedAt },
           { term: labels.facts.expires, details: result.expiresAt },
           { term: labels.facts.findings, details: findings },
+        ]}
+      />
+    </Card.Root>
+  );
+}
+
+function ReceiptResult({
+  result,
+  labels,
+}: Readonly<{ result: Extract<DeletionReceiptView, { ok: true }>; labels: VerifyLabels }>) {
+  const r = labels.receipt;
+  return (
+    <Card.Root className="flex flex-col gap-4 p-4" data-testid="verify-ok">
+      <Alert tone="success" title={r.okTitle} />
+      <DescriptionList
+        items={[
+          {
+            term: labels.facts.fileSha,
+            details: <code className="break-all font-mono text-xs">{result.fileSha256}</code>,
+          },
+          { term: labels.facts.keyId, details: <code className="font-mono text-xs">{result.keyId}</code> },
+          { term: r.deletedAt, details: result.deletedAt },
+          { term: r.rule, details: r.rules[result.rule] ?? result.rule },
+          {
+            term: r.objects,
+            details: result.objects.length ? (
+              <ul className="m-0 list-none space-y-1 p-0">
+                {result.objects.map((o) => (
+                  <li key={`${o.kind}-${o.sha256}`} className="text-xs">
+                    {`${r.kinds[o.kind]} · ${r.results[o.result]} · `}
+                    <code className="break-all font-mono">{o.sha256}</code>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              r.none
+            ),
+          },
         ]}
       />
     </Card.Root>

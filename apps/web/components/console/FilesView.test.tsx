@@ -93,8 +93,9 @@ describe("« Dossiers »: the list (P6, verikora#323)", () => {
       fr.console.dossiers.link.revoked,
       "Dossier fermé le 23 oct. 2026",
       fr.console.dossiers.link.erased,
-    ])
+    ]) {
       expect(text).toContain(words);
+    }
     expect(readable(wrap(<FilesView files={[summary("f1", "Camille")]} types={TYPES} origin="" />, "en"))).toContain(
       "Link open until Nov 7, 2026",
     );
@@ -124,6 +125,7 @@ const file = (documents: ApplicantFileView["documents"]): ApplicantFileView => (
   revokedAt: null,
   closedAt: null,
   consents: [],
+  receipts: [],
   documents,
 });
 const received = {
@@ -171,6 +173,21 @@ describe("« Dossiers »: one file (P6)", () => {
     expect(text).toContain(fr.console.dossiers.detail.notReceived);
     expect(html).toContain('href="/fr/app/documents/d1/rapport"');
     expect(html).toContain('href="/fr/app/dossiers"');
+  });
+
+  it("lists the deletion receipts of the file with a download link, in both languages (krizaka-internal#3381)", () => {
+    const receipts = [{ documentId: "d1", rule: "applicant-request", issuedAt: "2026-11-13T10:00:00.000Z" }];
+    const withReceipt = { ...file([received]), receipts };
+    const html = wrap(<FileView file={withReceipt} types={TYPES} />);
+    expect(html).toContain('href="/api/documents/d1/receipt?rule=applicant-request"');
+    expect(html).toContain("download");
+    expect(readable(html)).toContain(fr.console.dossiers.detail.receipts.rules["applicant-request"]);
+    expect(readable(wrap(<FileView file={withReceipt} types={TYPES} />, "en"))).toContain(
+      en.console.dossiers.detail.receipts.download,
+    );
+    expect(readable(wrap(<FileView file={file([received])} types={TYPES} />))).not.toContain(
+      fr.console.dossiers.detail.receipts.title,
+    );
   });
 
   it("decides nothing: no decision chip, no approve or refuse, no run id on the face", () => {

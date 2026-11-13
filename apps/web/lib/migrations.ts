@@ -2004,4 +2004,21 @@ INSERT INTO public.report_refused_words (language, word) VALUES
   ('fr', 'refusez ce locataire')
 ON CONFLICT DO NOTHING;`,
   },
+  {
+    // krizaka-internal#3381: the signed receipt of a deletion (ids, kinds and hashes in `body`: no name). No foreign key on the document:
+    // an erased document's row is gone, its receipt stays.
+    version: "0007_deletion_receipts",
+    sql: String.raw`CREATE TABLE public.deletion_receipts (
+  id          uuid PRIMARY KEY,
+  owner_id    uuid NOT NULL,
+  document_id uuid NOT NULL,
+  screening_id uuid,
+  rule        text NOT NULL CHECK (rule IN ('after-check', 'window', 'after-decision', 'applicant-request')),
+  body        text NOT NULL,
+  sha256      text NOT NULL CHECK (sha256 ~ '^[0-9a-f]{64}$'),
+  issued_at   timestamptz NOT NULL,
+  UNIQUE (document_id, rule)
+);
+CREATE INDEX deletion_receipts_owner_screening ON public.deletion_receipts (owner_id, screening_id);`,
+  },
 ];

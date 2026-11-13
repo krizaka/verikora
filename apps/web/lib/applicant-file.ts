@@ -25,6 +25,7 @@ import {
 import { audit } from "./audit";
 import { releaseAudit, reserveAudit } from "./billing";
 import { query, withBlockingLock } from "./db";
+import { DELETION_RULE, HELD_COLUMNS, type HeldRow, recordDeletionReceipt } from "./deletion-receipt";
 import { removeObject } from "./document-objects";
 import { type AnalysisRow, inspectUpload, isUuid, type StoragePolicy, storeDocument } from "./documents";
 import { codeOf, HttpError, refuse } from "./http";
@@ -374,15 +375,10 @@ export async function purgeApplicationFiles(
   ownerId: string,
   screeningId: string,
   store: DocumentStore | undefined,
+  now?: Date,
 ): Promise<number> {
-  const docs = await query<{
-    id: string;
-    mime_type: string;
-    storage: string;
-    storage_owner: string;
-    object_key: string | null;
-  }>(
-    `SELECT id, mime_type, storage, storage_owner, object_key FROM documents WHERE owner_id = $1 AND screening_id = $2 AND (storage <> 'none' OR ${HOLDS_BYTES} OR text <> '')`,
+  const docs = await query<HeldRow & { mime_type: string; storage_owner: string }>(
+    `SELECT ${HELD_COLUMNS}, mime_type, storage_owner FROM documents WHERE owner_id = $1 AND screening_id = $2 AND (storage <> 'none' OR ${HOLDS_BYTES} OR text <> '')`,
     [ownerId, screeningId],
   );
   for (const d of docs) {
@@ -418,6 +414,13 @@ export async function purgeApplicationFiles(
       targetId: p.id,
       detail: { reason: "after-decision", application: screeningId },
     });
+    // The receipt comes last: every store delete above was confirmed, the rows are emptied.
+    await recordDeletionReceipt(
+      query,
+      docs.find((d) => d.id === p.id)!,
+      DELETION_RULE.afterDecision,
+      now,
+    );
   }
   return purged.length;
 }
@@ -438,7 +441,7 @@ export async function closeApplicantFile(
     "UPDATE screenings SET closed_at = $3, revoked_at = coalesce(revoked_at, $3) WHERE id = $1 AND landlord_id = $2 AND closed_at IS NULL",
     [id, landlordId, now],
   );
-  const purged = await purgeApplicationFiles(landlordId, id, store);
+  const purged = await purgeApplicationFiles(landlordId, id, store, now);
   await audit({
     action: "applicant_file.closed",
     actorId: landlordId,
@@ -479,6 +482,15 @@ export interface ApplicantFileView {
   closedAt: string | null;
   consents: ConsentPurpose[];
   documents: FileDocumentView[];
+  /** The signed deletion receipts of this file's documents (krizaka-internal#3381): ids and a rule, never a name. */
+  receipts: DeletionReceiptView[];
+}
+
+export interface DeletionReceiptView {
+  /** The document the receipt is about (its download is `/api/documents/<documentId>/receipt?rule=…`). */
+  documentId: string;
+  rule: string;
+  issuedAt: string;
 }
 
 /**
@@ -517,6 +529,10 @@ export async function applicantFileOf(landlordId: string, id: string, now: Date)
        FROM documents d WHERE d.owner_id = $1 AND d.screening_id = $2 ORDER BY d.created_at`,
     [landlordId, id],
   );
+  const receipts = await query<{ document_id: string; rule: string; issued_at: Date }>(
+    "SELECT document_id, rule, issued_at FROM deletion_receipts WHERE owner_id = $1 AND screening_id = $2 ORDER BY issued_at, document_id",
+    [landlordId, id],
+  );
   return {
     id: row.id,
     candidateName: row.tenant_name,
@@ -529,6 +545,7 @@ export async function applicantFileOf(landlordId: string, id: string, now: Date)
     revokedAt: row.revoked_at?.toISOString() ?? null,
     closedAt: row.closed_at?.toISOString() ?? null,
     consents: await activeConsents(id),
+    receipts: receipts.map((r) => ({ documentId: r.document_id, rule: r.rule, issuedAt: r.issued_at.toISOString() })),
     documents: docs.map((d) => ({
       id: d.id,
       typeId: d.document_type,
