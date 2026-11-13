@@ -15,6 +15,7 @@ import {
   spendAudit,
 } from "./audit-credits";
 import { confirmCoupon, refundCoupon, releaseCoupon } from "./coupons/events";
+import { recordPayment } from "./coupons/pilot-counters";
 import { transaction } from "./db";
 import { refuse } from "./http";
 import { chargeOverage, type OverageBiller, refundOverage } from "./overage";
@@ -292,6 +293,7 @@ export async function applyPaymentEvent(
           ]);
         }
         await addPurchased(tx, e.accountId, credits, `pay-${e.id}`);
+        await recordPayment(tx, e.accountId);
         return undefined;
       },
       subscription_started: async (e, tx) => {

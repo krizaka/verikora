@@ -8,6 +8,7 @@ import { readFileSync } from "node:fs";
 import { createRequire } from "node:module";
 
 import { matchesRecorded } from "./cast.mjs";
+import { seedPilotCode } from "./pilot-code.mjs";
 import { assertNotProduction, PERSONAS, seedCast, seedPersona } from "./seed.mjs";
 
 const arg = (name) => {
@@ -35,6 +36,8 @@ async function runCast(client, url, { messagesByLocale, locale }) {
     reset: process.argv.includes("--reset"),
     now: seedClock(),
   });
+  const piloted = await seedPilotCode((sql, values) => client.query(sql, values).then((r) => r.rows), seedClock());
+  console.log(`demo:seed --cast: pilot code ${piloted ? "seeded" : "already there"} (1 file, a placeholder)`);
   console.log(`demo:seed --cast: ${run.member.name} (member), ${run.admin.name} (administrator), ${run.camille.name}`);
   console.log(`fingerprint: ${run.fingerprint}`);
   if (!process.argv.includes("--check")) return;

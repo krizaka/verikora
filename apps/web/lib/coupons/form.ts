@@ -121,7 +121,7 @@ export function couponPayload(v: CouponForm): Record<string, unknown> {
       capPerDay: count(v.capPerDay),
       capPerMonth: count(v.capPerMonth),
       creditsValidDays: count(v.creditsValidDays),
-      onExhausted: v.onExhausted,
+      onExhausted: v.purpose === PURPOSE.demo ? ON_EXHAUSTED.fallbackPaid : v.onExhausted,
     };
   }
   const amount = v.discountType === DISCOUNT_TYPE.amount;

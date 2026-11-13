@@ -6,6 +6,7 @@ import { query, transaction } from "../db";
 import { HttpError, refuse } from "../http";
 import { hasPaidBefore } from "./checkout";
 import { coupons, guarded } from "./instance";
+import { countStage, PILOT_STAGE } from "./pilot-counters";
 
 /**
  * The free pilot (krizaka-internal#3230): a **credit code** the admin creates with the purpose « demo » (shown as « Pilot » in the console), whose credits are the number of
@@ -90,13 +91,17 @@ export async function redeemCreditCode(input: RedeemInput): Promise<CreditRedemp
             throw refuse(409, PILOT_ALREADY_USED, "This account has already used a pilot code");
           }
         }
-        return coupons.redeemCredit(tx, {
+        const granted = await coupons.redeemCredit(tx, {
           code: input.code,
           accountId: input.accountId,
           idempotencyKey: input.idempotencyKey,
           ip: input.ip,
           hasPaidBefore: await hasPaidBefore(tx, input.accountId),
         });
+        if (purpose === PILOT_PURPOSE && !granted.replayed) {
+          await countStage(tx, input.accountId, PILOT_STAGE.activated);
+        }
+        return granted;
       }),
     );
     return redeemed;

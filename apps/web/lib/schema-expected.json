@@ -171,6 +171,7 @@
       "flow_version_id",
       "id",
       "inputs",
+      "pilot_first_file",
       "report",
       "run_id",
       "search_text",
@@ -326,6 +327,7 @@
       "refunded_at"
     ],
     "public.password_resets": ["account_id", "created_at", "expires_at", "id", "token_hash", "used_at"],
+    "public.pilot_counter": ["coupon_id", "n", "stage"],
     "public.preflight_events": ["account_id", "created_at", "id", "outcome", "reason"],
     "public.price_versions": [
       "actor_id",

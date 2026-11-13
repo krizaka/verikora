@@ -2748,6 +2748,16 @@
         "cancel": "Annuler",
         "close": "Fermer",
         "empty": "Aucun coupon pour l'instant.",
+        "pilotTitle": "Entonnoir du pilote",
+        "pilotLead": "Par code pilote, combien de comptes ont atteint chaque étape. Des totaux seulement : aucun compte, courriel ni candidat n'y est conservé. Le nombre de fichiers gratuits est le « crédits » du code dans la liste ci-dessus (modifiable tant que le code n'a pas servi).",
+        "pilotEmpty": "Aucun code pilote pour l'instant. Créez un code de crédits avec la finalité « Pilote ».",
+        "pilotCode": "Code",
+        "stages": {
+          "activated": "Pilote ouvert",
+          "first_real_file": "Premier vrai fichier",
+          "first_payment": "Premier paiement",
+          "second_payment": "Deuxième paiement"
+        },
         "kind": "Type",
         "kinds": {
           "discount": "Rabais",

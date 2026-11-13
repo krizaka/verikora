@@ -1,5 +1,5 @@
 import { requireAdmin } from "@/lib/access";
-import { couponQuery, newCoupon, parseParams } from "@/lib/coupons/admin-api";
+import { couponQuery, newCoupon, parseParams, pilotFallsBackToPaid } from "@/lib/coupons/admin-api";
 import { coupons, guarded } from "@/lib/coupons/instance";
 import { query, transaction } from "@/lib/db";
 import { handle, readJson } from "@/lib/http";
@@ -25,7 +25,8 @@ export const GET = (req: Request) =>
 export const POST = (req: Request) =>
   handle(async () => {
     const session = await requireAdmin(req);
-    const input = await readJson(req, newCoupon);
+    const parsed = await readJson(req, newCoupon);
+    const input = pilotFallsBackToPaid(parsed.purpose, parsed);
     const coupon = await guarded(() =>
       transaction((tx) => coupons.admin.create(tx, { id: session.account.id, label: session.account.email }, input)),
     );
