@@ -7,7 +7,11 @@ import {
   assertTestKey,
   isHostedCheckout,
   isSignedPdf,
-  isSubscribed,
+  boughtOneFile,
+  chargedForSale,
+  forSale,
+  ON_SALE,
+  PLAN,
   describeStuckForm,
   describeStuckPage,
   ISSUE_TITLE,
@@ -47,12 +51,49 @@ test("the hosted page is Stripe's own and nothing else", () => {
     assert.equal(isHostedCheckout(bad), false);
 });
 
-test("bought means pro, active and the plan that was sold", () => {
-  assert.equal(isSubscribed({ pro: true, subscriptionStatus: "active", planKey: "verikora.agency" }), true);
-  assert.equal(isSubscribed({ pro: false, subscriptionStatus: "active", planKey: "verikora.agency" }), false);
-  assert.equal(isSubscribed({ pro: true, subscriptionStatus: "past_due", planKey: "verikora.agency" }), false);
-  assert.equal(isSubscribed({ pro: true, subscriptionStatus: "active", planKey: "verikora.firm" }), false);
-  assert.equal(isSubscribed(undefined), false);
+test("bought means one credit more and no subscription", () => {
+  assert.equal(boughtOneFile({ credits: 0, pro: false }, { credits: 1, pro: false }), true);
+  assert.equal(boughtOneFile({ credits: 2, pro: false }, { credits: 2, pro: false }), false);
+  assert.equal(boughtOneFile({ credits: 0, pro: false }, { credits: 1, pro: true }), false);
+  assert.equal(boughtOneFile(undefined, { credits: 1 }), false);
+});
+
+test("the receipt is the catalogue's price plus taxes, in its currency", () => {
+  const entry = { amountCents: 999, currency: "CAD" };
+  assert.equal(chargedForSale({ amountCents: 1148, currency: "cad" }, entry), true);
+  assert.equal(chargedForSale({ amountCents: 999, currency: "cad" }, entry), true);
+  assert.equal(chargedForSale({ amountCents: 500, currency: "cad" }, entry), false);
+  assert.equal(chargedForSale({ amountCents: 1148, currency: "usd" }, entry), false);
+  assert.equal(chargedForSale(null, entry), false);
+});
+
+test("the journey asks only for what is on sale: a « soon » entry is listed but not buyable", () => {
+  const listed = [
+    { key: "verikora.agency", amountCents: 4900, availability: "preparing" },
+    { key: "verikora.document", amountCents: 999, availability: "public" },
+  ];
+  assert.equal(forSale(listed, PLAN).amountCents, 999);
+  assert.equal(forSale(listed, { kind: "agency", priceKey: "verikora.agency" }), null);
+  assert.equal(forSale([{ key: "verikora.document", amountCents: null, availability: "public" }], PLAN), null);
+  assert.equal(forSale(undefined, PLAN), null);
+});
+
+test("the plan the journey buys is on sale in the shipped catalogue, and its words are the code's", async () => {
+  const { PRICES, SOLD } = await import("../apps/web/lib/pricing");
+  const { onSale } = await import("../apps/web/lib/prices/plan");
+  assert.equal(SOLD[PLAN.kind].key, PLAN.priceKey, "the kind is the one that sells this entry");
+  const entry = PRICES.defaultOf(PLAN.priceKey);
+  assert.ok(entry, "the entry exists");
+  assert.ok(entry.amountCents !== null, "it has a figure");
+  assert.ok(
+    ON_SALE.includes(entry.availability),
+    `${PLAN.priceKey} is ${entry.availability}: the checkout would answer 409 NOT_ON_SALE`,
+  );
+  // The checkout's own gate accepts it (it throws 409 NOT_ON_SALE for a « soon » entry), and the journey's words agree with it.
+  const processor = { amount: entry.amountCents, currency: entry.currency ?? "cad" };
+  assert.equal(onSale({ ...entry, currency: processor.currency }, processor).amountCents, entry.amountCents);
+  assert.throws(() => onSale({ ...entry, availability: "preparing", currency: "cad" }, processor), /not on sale/);
+  assert.ok(!ON_SALE.includes("preparing"));
 });
 
 test("a receipt is a paid row with an https link", () => {
