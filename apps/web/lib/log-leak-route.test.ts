@@ -150,7 +150,7 @@ let logs: LogCapture;
 beforeEach(() => {
   state.fail = false;
   state.suppression = memorySuppression();
-  vi.stubEnv("MAIL_WEBHOOK_VENDOR_HMAC", VENDOR_HMAC);
+  vi.stubEnv("MAIL_WEBHOOK_SIGNING_KEY", VENDOR_HMAC);
   logs = captureLogs();
 });
 afterEach(() => logs.stop());
