@@ -55,6 +55,8 @@ and an audit log of every operator action. It answers only addresses of `AUTH_AL
 A Pro account can run checks and batches from its own tools with an API key: `POST /api/v1/checks`, `GET /api/v1/checks/{id}`,
 `POST /api/v1/batches`, `GET /api/v1/batches/{id}`, described by `GET /api/v1/openapi.json` — see [docs/API.md](docs/API.md).
 
+The lawyer review pack (consent, documents asked, retention, privacy assessment, terms, the lease ruleset, the questions): [docs/legal/review-pack.md](docs/legal/review-pack.md).
+
 ## Next
 
 Verikora will also check **identity documents** (photos and scans as well as PDFs) for other Krizaka products that need a
