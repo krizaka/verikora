@@ -1,0 +1,128 @@
+{
+  "side": "tenant",
+  "recordedAt": "2026-11-13T14:24:51.248Z",
+  "source": "https://dev.sovkora.com/edge",
+  "studio": "compliance-check",
+  "document": {
+    "title": "Bail — 4½, rue des Fictifs",
+    "filename": "bail-4-et-demi-rue-des-fictifs.pdf",
+    "text": "DOCUMENT FICTIF — bail de logement\nDossier de démonstration Verikora : personnes, adresses et montants inventés.\n\nBAIL DE LOGEMENT\nLogement : 4½, 218, rue des Fictifs, Montréal (Québec) H2D 3D4\nLocateur : Camille Exemple-Lavoie (fictif), domicilié au 77, avenue de l'Exemple, Montréal (Québec) H2D 1D5\nLocataire : Rosalie Modèle-Bergeron (fictif), domiciliée à Montréal.\nDurée : 12 mois, du 1er janvier 2027 au 31 décembre 2027.\nLoyer mensuel : 1 100,00 $, payable le premier jour du mois.\nLe loyer le plus bas payé au cours des douze derniers mois précédant le début du bail était de 1 080,00 $ par mois.\nLe loyer ne comprend ni le chauffage ni l'électricité.\nLe locataire a droit au maintien dans les lieux à la fin du bail.\nLe présent bail est établi sur le formulaire obligatoire du Tribunal administratif du logement.\nLe locateur remet au locataire l'avis « Renseignements au nouveau locataire d'un logement » du Tribunal administratif du logement.\nLe locataire verse un dépôt de sécurité de 1 100,00 $ à la signature.\nLe locataire remet douze chèques postdatés.\n\nSigné à Montréal par les parties (fictives)."
+  },
+  "inputs": {
+    "jurisdiction": "QC",
+    "asOf": "2026-11-13"
+  },
+  "run": {
+    "id": "57b157ec-cc08-417e-bee9-b99c9c66323e",
+    "installationId": "12ff541b-0494-42ba-b817-a20aad0d053a",
+    "studioKey": "compliance-check",
+    "blueprintVersion": "2.1.0",
+    "status": "SUCCEEDED",
+    "outputs": [
+      {
+        "key": "report",
+        "label": "Rapport de conformité",
+        "type": "JSON",
+        "value": "{\n  \"contract\": \"2.0\",\n  \"outcome\": \"CHECKED\",\n  \"identification\": {\n    \"declaredKind\": null,\n    \"detectedKind\": \"qc-residential-lease\",\n    \"kindUsed\": \"qc-residential-lease\",\n    \"kindLabel\": {\n      \"fr\": \"Bail de logement\",\n      \"en\": \"Residential lease\"\n    },\n    \"kindStatus\": \"PROMOTED\",\n    \"kindSource\": \"DETECTED\",\n    \"kindEvidence\": [\n      {\n        \"signal\": \"title\",\n        \"quote\": \"bail de logement\",\n        \"verified\": true\n      },\n      {\n        \"signal\": \"parties\",\n        \"quote\": \"Locateur : Camille Exemple-Lavoie (fictif), domicilié au 77, avenue de l'Exemple, Montréal (Québec) H2D 1D5\\nLocataire\",\n        \"verified\": true\n      },\n      {\n        \"signal\": \"monthly-rent\",\n        \"quote\": \"Loyer mensuel\",\n        \"verified\": true\n      },\n      {\n        \"signal\": \"term\",\n        \"quote\": \"Durée : 12 mois\",\n        \"verified\": true\n      },\n      {\n        \"signal\": \"lowest-rent\",\n        \"quote\": \"loyer le plus bas\",\n        \"verified\": true\n      },\n      {\n        \"signal\": \"tal\",\n        \"quote\": \"Tribunal administratif du logement\",\n        \"verified\": true\n      },\n      {\n        \"signal\": \"postal-code\",\n        \"quote\": \"H2D 3D4\",\n        \"verified\": true\n      },\n      {\n        \"signal\": \"place\",\n        \"quote\": \"Montréal\",\n        \"verified\": true\n      }\n    ],\n    \"kindMismatch\": false,\n    \"ruleset\": \"qc-residential-lease\",\n    \"jurisdiction\": \"QC\",\n    \"jurisdictionSource\": \"DECLARED\",\n    \"documentDate\": null,\n    \"dateEvidence\": null,\n    \"asOf\": \"2026-11-13\",\n    \"asOfSource\": \"INPUT\",\n    \"languages\": [\n      \"fr\"\n    ],\n    \"outcome\": \"CHECK\",\n    \"candidates\": [\n      {\n        \"kindId\": \"qc-condition-report\",\n        \"weight\": 3,\n        \"signals\": [],\n        \"hints\": [\n          \"tal\",\n          \"postal-code\",\n          \"place\"\n        ],\n        \"excluded\": false,\n        \"eligible\": false\n      },\n      {\n        \"kindId\": \"qc-invoice\",\n        \"weight\": 2,\n        \"signals\": [],\n        \"hints\": [\n          \"postal-code\",\n          \"place\"\n        ],\n        \"excluded\": false,\n        \"eligible\": false\n      },\n      {\n        \"kindId\": \"qc-lease-modification-notice\",\n        \"weight\": 3,\n        \"signals\": [],\n        \"hints\": [\n          \"tal\",\n          \"postal-code\",\n          \"place\"\n        ],\n        \"excluded\": false,\n        \"eligible\": false\n      },\n      {\n        \"kindId\": \"qc-residential-lease\",\n        \"weight\": 9,\n        \"signals\": [\n          \"title\",\n          \"parties\",\n          \"monthly-rent\",\n          \"term\",\n          \"lowest-rent\"\n        ],\n        \"hints\": [\n          \"tal\",\n          \"postal-code\",\n          \"place\"\n        ],\n        \"excluded\": false,\n        \"eligible\": true\n      },\n      {\n        \"kindId\": \"qc-service-contract\",\n        \"weight\": 3,\n        \"signals\": [],\n        \"hints\": [\n          \"tal\",\n          \"postal-code\",\n          \"place\"\n        ],\n        \"excluded\": true,\n        \"eligible\": false\n      },\n      {\n        \"kindId\": \"qc-visit-notice\",\n        \"weight\": 3,\n        \"signals\": [],\n        \"hints\": [\n          \"tal\",\n          \"postal-code\",\n          \"place\"\n        ],\n        \"excluded\": true,\n        \"eligible\": false\n      }\n    ],\n    \"classifyAmong\": [],\n    \"classification\": null\n  },\n  \"ruleset\": {\n    \"id\": \"qc-residential-lease\",\n    \"version\": \"2024-02-21\",\n    \"revision\": 5,\n    \"reviewStatus\": \"TO_REVIEW_BY_LAWYER\"\n  },\n  \"jurisdiction\": \"QC\",\n  \"asOf\": \"2026-11-13\",\n  \"source\": \"Code civil du Québec, art. 1851 et suiv. (bail de logement : art. 1892 à 1978), Règlement sur les formulaires de bail obligatoires et sur les mentions de l'avis au nouveau locataire (RLRQ c. T-15.01, r. 3), Tribunal administratif du logement\",\n  \"summary\": {\n    \"byVerdict\": {\n      \"PASS\": 7,\n      \"FAIL\": 2,\n      \"NOT_APPLICABLE\": 7\n    },\n    \"blockingFailures\": 2,\n    \"rulesEvaluated\": 16\n  },\n  \"findings\": [\n    {\n      \"ruleId\": \"QC-LANG-001\",\n      \"title\": \"Langue française — le document est en français, ou dit qu'une version française a été remise\",\n      \"severity\": \"ADVISORY\",\n      \"verdict\": \"PASS\",\n      \"evidenceSpan\": {\n        \"start\": 194,\n        \"end\": 202,\n        \"quote\": \"Locateur\"\n      },\n      \"explanation\": \"Le document est rédigé en français, ou dit qu'une version française a été remise.\",\n      \"method\": \"DETERMINISTIC\",\n      \"citation\": {\n        \"reference\": \"Charte de la langue française, art. 55 ; C.c.Q., art. 1897 (pour le bail)\",\n        \"pinned\": false,\n        \"notice\": {\n          \"fr\": \"Citation non épinglée : l'article est cité en toutes lettres, sans texte daté ni empreinte à vérifier.\",\n          \"en\": \"Unpinned citation: the article is cited in words, with no dated, hashed text to check.\"\n        }\n      },\n      \"checks\": {\n        \"passage\": \"VERIFIED\",\n        \"citation\": \"NOT_PINNED\"\n      }\n    },\n    {\n      \"ruleId\": \"QC-LEASE-001\",\n      \"title\": \"Identification du locateur\",\n      \"severity\": \"BLOCKING\",\n      \"verdict\": \"PASS\",\n      \"evidenceSpan\": {\n        \"start\": 194,\n        \"end\": 247,\n        \"quote\": \"Locateur : Camille Exemple-Lavoie (fictif), domicilié\"\n      },\n      \"explanation\": \"Le locateur est identifié au bail.\",\n      \"method\": \"DETERMINISTIC\",\n      \"citation\": {\n        \"reference\": \"C.c.Q., art. 1895 ; Règlement sur les formulaires de bail obligatoires, section A\",\n        \"pinned\": false,\n        \"notice\": {\n          \"fr\": \"Citation non épinglée : l'article est cité en toutes lettres, sans texte daté ni empreinte à vérifier.\",\n          \"en\": \"Unpinned citation: the article is cited in words, with no dated, hashed text to check.\"\n        }\n      },\n      \"checks\": {\n        \"passage\": \"VERIFIED\",\n        \"citation\": \"NOT_PINNED\"\n      }\n    },\n    {\n      \"ruleId\": \"QC-LEASE-002\",\n      \"title\": \"Identification du locataire\",\n      \"severity\": \"BLOCKING\",\n      \"verdict\": \"PASS\",\n      \"evidenceSpan\": {\n        \"start\": 302,\n        \"end\": 358,\n        \"quote\": \"Locataire : Rosalie Modèle-Bergeron (fictif), domiciliée\"\n      },\n      \"explanation\": \"Le locataire est identifié au bail.\",\n      \"method\": \"DETERMINISTIC\",\n      \"citation\": {\n        \"reference\": \"C.c.Q., art. 1895 ; Règlement sur les formulaires de bail obligatoires, section A\",\n        \"pinned\": false,\n        \"notice\": {\n          \"fr\": \"Citation non épinglée : l'article est cité en toutes lettres, sans texte daté ni empreinte à vérifier.\",\n          \"en\": \"Unpinned citation: the article is cited in words, with no dated, hashed text to check.\"\n        }\n      },\n      \"checks\": {\n        \"passage\": \"VERIFIED\",\n        \"citation\": \"NOT_PINNED\"\n      }\n    },\n    {\n      \"ruleId\": \"QC-LEASE-003\",\n      \"title\": \"Montant du loyer\",\n      \"severity\": \"BLOCKING\",\n      \"verdict\": \"PASS\",\n      \"evidenceSpan\": {\n        \"start\": 429,\n        \"end\": 455,\n        \"quote\": \"Loyer mensuel : 1 100,00 $\"\n      },\n      \"explanation\": \"Le loyer est chiffré au bail.\",\n      \"method\": \"DETERMINISTIC\",\n      \"citation\": {\n        \"reference\": \"C.c.Q., art. 1855 et 1903 ; Règlement sur les formulaires de bail obligatoires, section D\",\n        \"pinned\": false,\n        \"notice\": {\n          \"fr\": \"Citation non épinglée : l'article est cité en toutes lettres, sans texte daté ni empreinte à vérifier.\",\n          \"en\": \"Unpinned citation: the article is cited in words, with no dated, hashed text to check.\"\n        }\n      },\n      \"checks\": {\n        \"passage\": \"VERIFIED\",\n        \"citation\": \"NOT_PINNED\"\n      }\n    },\n    {\n      \"ruleId\": \"QC-LEASE-004\",\n      \"title\": \"Dépôt de garantie interdit — seul le premier mois peut être exigé d'avance\",\n      \"severity\": \"BLOCKING\",\n      \"verdict\": \"FAIL\",\n      \"evidenceSpan\": {\n        \"start\": 976,\n        \"end\": 1007,\n        \"quote\": \"dépôt de sécurité de 1 100,00 $\"\n      },\n      \"explanation\": \"Le bail exige une somme autre que le loyer, sous forme de dépôt ou autrement. L'article 1904 ne permet au locateur d'exiger d'avance que le premier terme de loyer.\",\n      \"method\": \"DETERMINISTIC\",\n      \"citation\": {\n        \"reference\": \"C.c.Q., art. 1904, al. 1\",\n        \"pinned\": false,\n        \"notice\": {\n          \"fr\": \"Citation non épinglée : l'article est cité en toutes lettres, sans texte daté ni empreinte à vérifier.\",\n          \"en\": \"Unpinned citation: the article is cited in words, with no dated, hashed text to check.\"\n        }\n      },\n      \"checks\": {\n        \"passage\": \"VERIFIED\",\n        \"citation\": \"NOT_PINNED\"\n      }\n    },\n    {\n      \"ruleId\": \"QC-LEASE-005\",\n      \"title\": \"Chèques postdatés interdits\",\n      \"severity\": \"BLOCKING\",\n      \"verdict\": \"FAIL\",\n      \"evidenceSpan\": {\n        \"start\": 1049,\n        \"end\": 1066,\n        \"quote\": \"chèques postdatés\"\n      },\n      \"explanation\": \"Le bail exige des chèques postdatés. L'article 1904 interdit au locateur d'exiger la remise de chèques ou d'autres effets postdatés.\",\n      \"method\": \"DETERMINISTIC\",\n      \"citation\": {\n        \"reference\": \"C.c.Q., art. 1904, al. 2\",\n        \"pinned\": false,\n        \"notice\": {\n          \"fr\": \"Citation non épinglée : l'article est cité en toutes lettres, sans texte daté ni empreinte à vérifier.\",\n          \"en\": \"Unpinned citation: the article is cited in words, with no dated, hashed text to check.\"\n        }\n      },\n      \"checks\": {\n        \"passage\": \"VERIFIED\",\n        \"citation\": \"NOT_PINNED\"\n      }\n    },\n    {\n      \"ruleId\": \"QC-LEASE-006\",\n      \"title\": \"Refus des enfants — sans effet\",\n      \"severity\": \"BLOCKING\",\n      \"verdict\": \"NOT_APPLICABLE\",\n      \"evidenceSpan\": null,\n      \"explanation\": \"Le document n'aborde pas ce sujet ; la règle ne s'applique pas.\",\n      \"method\": \"DETERMINISTIC\",\n      \"citation\": {\n        \"reference\": \"C.c.Q., art. 1899\",\n        \"pinned\": false,\n        \"notice\": {\n          \"fr\": \"Citation non épinglée : l'article est cité en toutes lettres, sans texte daté ni empreinte à vérifier.\",\n          \"en\": \"Unpinned citation: the article is cited in words, with no dated, hashed text to check.\"\n        }\n      },\n      \"checks\": {\n        \"passage\": \"ABSENT\",\n        \"citation\": \"NOT_PINNED\"\n      }\n    },\n    {\n      \"ruleId\": \"QC-LEASE-007\",\n      \"title\": \"Renonciation au droit au maintien dans les lieux — sans effet\",\n      \"severity\": \"BLOCKING\",\n      \"verdict\": \"PASS\",\n      \"evidenceSpan\": {\n        \"start\": 685,\n        \"end\": 708,\n        \"quote\": \"maintien dans les lieux\"\n      },\n      \"explanation\": \"Aucune renonciation au maintien dans les lieux.\",\n      \"method\": \"DETERMINISTIC\",\n      \"citation\": {\n        \"reference\": \"C.c.Q., art. 1936 et 1893\",\n        \"pinned\": false,\n        \"notice\": {\n          \"fr\": \"Citation non épinglée : l'article est cité en toutes lettres, sans texte daté ni empreinte à vérifier.\",\n          \"en\": \"Unpinned citation: the article is cited in words, with no dated, hashed text to check.\"\n        }\n      },\n      \"checks\": {\n        \"passage\": \"VERIFIED\",\n        \"citation\": \"NOT_PINNED\"\n      }\n    },\n    {\n      \"ruleId\": \"QC-LEASE-008\",\n      \"title\": \"Avis du loyer le plus bas des douze derniers mois\",\n      \"severity\": \"MAJOR\",\n      \"verdict\": \"PASS\",\n      \"evidenceSpan\": {\n        \"start\": 493,\n        \"end\": 510,\n        \"quote\": \"loyer le plus bas\"\n      },\n      \"explanation\": \"L'avis du loyer le plus bas payé au cours des douze derniers mois est donné.\",\n      \"method\": \"DETERMINISTIC\",\n      \"citation\": {\n        \"reference\": \"C.c.Q., art. 1896 ; Règlement sur les formulaires de bail obligatoires, section G\",\n        \"pinned\": false,\n        \"notice\": {\n          \"fr\": \"Citation non épinglée : l'article est cité en toutes lettres, sans texte daté ni empreinte à vérifier.\",\n          \"en\": \"Unpinned citation: the article is cited in words, with no dated, hashed text to check.\"\n        }\n      },\n      \"checks\": {\n        \"passage\": \"VERIFIED\",\n        \"citation\": \"NOT_PINNED\"\n      }\n    },\n    {\n      \"ruleId\": \"QC-LEASE-009\",\n      \"title\": \"Renonciation anticipée aux règles de l'augmentation de loyer — sans effet\",\n      \"severity\": \"MAJOR\",\n      \"verdict\": \"NOT_APPLICABLE\",\n      \"evidenceSpan\": null,\n      \"explanation\": \"Le document n'aborde pas ce sujet ; la règle ne s'applique pas.\",\n      \"method\": \"DETERMINISTIC\",\n      \"citation\": {\n        \"reference\": \"C.c.Q., art. 1942, 1943 et 1945 ; art. 1893\",\n        \"pinned\": false,\n        \"notice\": {\n          \"fr\": \"Citation non épinglée : l'article est cité en toutes lettres, sans texte daté ni empreinte à vérifier.\",\n          \"en\": \"Unpinned citation: the article is cited in words, with no dated, hashed text to check.\"\n        }\n      },\n      \"checks\": {\n        \"passage\": \"ABSENT\",\n        \"citation\": \"NOT_PINNED\"\n      }\n    },\n    {\n      \"ruleId\": \"QC-LEASE-010\",\n      \"title\": \"Peines et frais de retard — appréciation contextuelle\",\n      \"severity\": \"ADVISORY\",\n      \"verdict\": \"NOT_APPLICABLE\",\n      \"evidenceSpan\": null,\n      \"explanation\": \"Le document n'aborde pas ce sujet ; la règle ne s'applique pas.\",\n      \"method\": \"JUDGMENT\",\n      \"citation\": {\n        \"reference\": \"C.c.Q., art. 1901\",\n        \"pinned\": false,\n        \"notice\": {\n          \"fr\": \"Citation non épinglée : l'article est cité en toutes lettres, sans texte daté ni empreinte à vérifier.\",\n          \"en\": \"Unpinned citation: the article is cited in words, with no dated, hashed text to check.\"\n        }\n      },\n      \"checks\": {\n        \"passage\": \"ABSENT\",\n        \"citation\": \"NOT_PINNED\"\n      }\n    },\n    {\n      \"ruleId\": \"QC-LEASE-011\",\n      \"title\": \"Règlement de l'immeuble — remise avant la conclusion du bail\",\n      \"severity\": \"ADVISORY\",\n      \"verdict\": \"NOT_APPLICABLE\",\n      \"evidenceSpan\": null,\n      \"explanation\": \"Le document n'aborde pas ce sujet ; la règle ne s'applique pas.\",\n      \"method\": \"JUDGMENT\",\n      \"citation\": {\n        \"reference\": \"C.c.Q., art. 1894\",\n        \"pinned\": false,\n        \"notice\": {\n          \"fr\": \"Citation non épinglée : l'article est cité en toutes lettres, sans texte daté ni empreinte à vérifier.\",\n          \"en\": \"Unpinned citation: the article is cited in words, with no dated, hashed text to check.\"\n        }\n      },\n      \"checks\": {\n        \"passage\": \"ABSENT\",\n        \"citation\": \"NOT_PINNED\"\n      }\n    },\n    {\n      \"ruleId\": \"QC-LEASE-012\",\n      \"title\": \"Visites et hébergement d'un tiers — clause abusive\",\n      \"severity\": \"MAJOR\",\n      \"verdict\": \"NOT_APPLICABLE\",\n      \"evidenceSpan\": null,\n      \"explanation\": \"Le document n'aborde pas ce sujet ; la règle ne s'applique pas.\",\n      \"method\": \"DETERMINISTIC\",\n      \"citation\": {\n        \"reference\": \"C.c.Q., art. 1901 (clause abusive) ; art. 1931 et suiv. (accès au logement)\",\n        \"pinned\": false,\n        \"notice\": {\n          \"fr\": \"Citation non épinglée : l'article est cité en toutes lettres, sans texte daté ni empreinte à vérifier.\",\n          \"en\": \"Unpinned citation: the article is cited in words, with no dated, hashed text to check.\"\n        }\n      },\n      \"checks\": {\n        \"passage\": \"ABSENT\",\n        \"citation\": \"NOT_PINNED\"\n      }\n    },\n    {\n      \"ruleId\": \"QC-LEASE-013\",\n      \"title\": \"Résiliation de plein droit pour un seul retard — sans effet\",\n      \"severity\": \"BLOCKING\",\n      \"verdict\": \"NOT_APPLICABLE\",\n      \"evidenceSpan\": null,\n      \"explanation\": \"Le document n'aborde pas ce sujet ; la règle ne s'applique pas.\",\n      \"method\": \"DETERMINISTIC\",\n      \"citation\": {\n        \"reference\": \"C.c.Q., art. 1971 ; art. 1893\",\n        \"pinned\": false,\n        \"notice\": {\n          \"fr\": \"Citation non épinglée : l'article est cité en toutes lettres, sans texte daté ni empreinte à vérifier.\",\n          \"en\": \"Unpinned citation: the article is cited in words, with no dated, hashed text to check.\"\n        }\n      },\n      \"checks\": {\n        \"passage\": \"ABSENT\",\n        \"citation\": \"NOT_PINNED\"\n      }\n    },\n    {\n      \"ruleId\": \"QC-LEASE-014\",\n      \"title\": \"Formulaire obligatoire du bail de logement\",\n      \"severity\": \"MAJOR\",\n      \"verdict\": \"PASS\",\n      \"evidenceSpan\": {\n        \"start\": 761,\n        \"end\": 783,\n        \"quote\": \"formulaire obligatoire\"\n      },\n      \"explanation\": \"Le bail mentionne le formulaire obligatoire.\",\n      \"method\": \"DETERMINISTIC\",\n      \"citation\": {\n        \"reference\": \"C.c.Q., art. 1895 ; Règlement sur les formulaires de bail obligatoires\",\n        \"pinned\": false,\n        \"notice\": {\n          \"fr\": \"Citation non épinglée : l'article est cité en toutes lettres, sans texte daté ni empreinte à vérifier.\",\n          \"en\": \"Unpinned citation: the article is cited in words, with no dated, hashed text to check.\"\n        }\n      },\n      \"checks\": {\n        \"passage\": \"VERIFIED\",\n        \"citation\": \"NOT_PINNED\"\n      }\n    },\n    {\n      \"ruleId\": \"QC-LEASE-020\",\n      \"title\": \"Clause abusive\",\n      \"severity\": \"ADVISORY\",\n      \"verdict\": \"NOT_APPLICABLE\",\n      \"evidenceSpan\": null,\n      \"explanation\": \"Le document n'aborde pas ce sujet ; la règle ne s'applique pas.\",\n      \"method\": \"JUDGMENT\",\n      \"citation\": {\n        \"reference\": \"C.c.Q., art. 1901\",\n        \"pinned\": false,\n        \"notice\": {\n          \"fr\": \"Citation non épinglée : l'article est cité en toutes lettres, sans texte daté ni empreinte à vérifier.\",\n          \"en\": \"Unpinned citation: the article is cited in words, with no dated, hashed text to check.\"\n        }\n      },\n      \"checks\": {\n        \"passage\": \"ABSENT\",\n        \"citation\": \"NOT_PINNED\"\n      }\n    }\n  ],\n  \"facts\": {\n    \"rentCents\": {\n      \"status\": \"found\",\n      \"cents\": 110000,\n      \"evidenceSpan\": {\n        \"start\": 429,\n        \"end\": 455,\n        \"quote\": \"Loyer mensuel : 1 100,00 $\"\n      }\n    },\n    \"lowestRentCents\": {\n      \"status\": \"found\",\n      \"cents\": 108000,\n      \"evidenceSpan\": {\n        \"start\": 493,\n        \"end\": 595,\n        \"quote\": \"loyer le plus bas payé au cours des douze derniers mois précédant le début du bail était de 1 080,00 $\"\n      }\n    }\n  },\n  \"reviewNote\": \"Corpus rédigé à partir du texte public du Code civil du Québec ; chaque règle cite son article. La révision 3 ajoute QC-LEASE-010 (peines et frais de retard, art. 1901) et QC-LEASE-011 (règlement de l'immeuble et remise préalable, art. 1894), et précise QC-LEASE-004 sur toute somme autre que le loyer, sous forme de dépôt ou autrement, exigée du locataire (art. 1904). Ces règles sont informatives et requièrent une vérification humaine ; à faire relire par un avocat ou une avocate membre du Barreau du Québec avant tout usage autre que la démonstration. La révision 4 est en attente de la réponse à yomizaka#96 (relecture par l'avocat ou l'avocate du client) ; les citations renvoient aux articles par leur numéro, sans en reproduire le texte.\"\n}",
+        "labels": {
+          "en": "Compliance report",
+          "fr": "Rapport de conformité"
+        }
+      },
+      {
+        "key": "outcome",
+        "label": "Issue du contrôle",
+        "type": "TEXT",
+        "value": "CHECKED",
+        "labels": {
+          "en": "Outcome of the check",
+          "fr": "Issue du contrôle"
+        }
+      }
+    ],
+    "errorMessage": null,
+    "startedAt": "2026-11-13T14:24:30.348920Z",
+    "finishedAt": "2026-11-13T14:24:49.194021Z",
+    "steps": [
+      {
+        "stepId": "identify",
+        "ordinal": 0,
+        "jobId": "68733559-06f1-4e7a-8046-f62fa15de27e",
+        "status": "SUCCEEDED",
+        "attempts": 1,
+        "error": null,
+        "startedAt": "2026-11-13T14:24:30.348920Z",
+        "estimateMs": null,
+        "estimateSamples": 0
+      },
+      {
+        "stepId": "classify",
+        "ordinal": 0,
+        "jobId": null,
+        "status": "SKIPPED",
+        "attempts": 0,
+        "error": null,
+        "startedAt": "2026-11-13T14:24:33.180182Z",
+        "estimateMs": null,
+        "estimateSamples": 0
+      },
+      {
+        "stepId": "resolve",
+        "ordinal": 0,
+        "jobId": "38ad7ee4-c9ac-4528-af97-c19137e56e88",
+        "status": "SUCCEEDED",
+        "attempts": 1,
+        "error": null,
+        "startedAt": "2026-11-13T14:24:33.180182Z",
+        "estimateMs": null,
+        "estimateSamples": 0
+      },
+      {
+        "stepId": "lecture",
+        "ordinal": 0,
+        "jobId": null,
+        "status": "SKIPPED",
+        "attempts": 0,
+        "error": null,
+        "startedAt": "2026-11-13T14:24:33.495519Z",
+        "estimateMs": null,
+        "estimateSamples": 0
+      },
+      {
+        "stepId": "screen",
+        "ordinal": 0,
+        "jobId": "3708faec-44ce-43cf-a9ff-6910202252d0",
+        "status": "SUCCEEDED",
+        "attempts": 1,
+        "error": null,
+        "startedAt": "2026-11-13T14:24:33.495519Z",
+        "estimateMs": null,
+        "estimateSamples": 0
+      },
+      {
+        "stepId": "judge",
+        "ordinal": 0,
+        "jobId": "0f344461-958d-4052-9049-f0435ac3275c",
+        "status": "SUCCEEDED",
+        "attempts": 1,
+        "error": null,
+        "startedAt": "2026-11-13T14:24:34.073419Z",
+        "estimateMs": null,
+        "estimateSamples": 0
+      },
+      {
+        "stepId": "report",
+        "ordinal": 0,
+        "jobId": "5c2f186d-fdd8-47cc-ad92-b4b41a18004e",
+        "status": "SUCCEEDED",
+        "attempts": 1,
+        "error": null,
+        "startedAt": "2026-11-13T14:24:48.791648Z",
+        "estimateMs": null,
+        "estimateSamples": 0
+      }
+    ],
+    "cachedFrom": null,
+    "resumedFrom": null
+  }
+}

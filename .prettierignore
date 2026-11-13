@@ -13,3 +13,4 @@ pnpm-lock.yaml
 CHANGELOG.md
 # vendored byte for byte from krizaka/sovkora (pinned by sha256)
 apps/web/lib/sovkora-contract/compliance-check-run.schema.json
+fixtures/sample-file/

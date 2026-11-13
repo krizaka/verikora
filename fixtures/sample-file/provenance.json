@@ -1,0 +1,51 @@
+{
+  "fictitious": true,
+  "asOf": "2026-11-13",
+  "purpose": "Sample applicant file for the signed report a manager receives when they ask for one (krizaka-internal#3119).",
+  "persona": {
+    "applicant": "Rosalie Modèle-Bergeron",
+    "landlord": "Camille Exemple-Lavoie",
+    "employer": "Atelier Factice inc.",
+    "bank": "Banque Imaginaire du Québec (fictive)"
+  },
+  "noRealPerson": "Every person, employer, bank and address is invented. Surnames carry a marker word, postal codes use the letter D (never issued), the SIN-like number starts with 0 and is invalid.",
+  "madeBy": "node scripts/sample-file/build.mjs — the text is scripts/sample-file/documents.mjs, rendered by scripts/demo-documents/render.mjs (pdf-lib, fixed dates).",
+  "documents": [
+    {
+      "id": "bail",
+      "filename": "documents/bail-4-et-demi-rue-des-fictifs.pdf",
+      "title": "Bail — 4½, rue des Fictifs",
+      "sha256": "70c34509c7884042854893f415e2956224a8ded80e6fb570ad943c58271c58b7",
+      "pages": 1,
+      "how": "Written by hand as data, rendered to a text PDF with every page stamped « SPÉCIMEN — document fictif ».",
+      "checkedBy": "compliance-check"
+    },
+    {
+      "id": "paie",
+      "filename": "documents/releve-de-paie-octobre-2026.pdf",
+      "title": "Relevé de paie — octobre 2026",
+      "sha256": "7a48dccbc55084c175a5471584efa62490399fb1fb42b6f7f5deee1a7c3efd8a",
+      "pages": 1,
+      "how": "Written by hand as data, rendered to a text PDF with every page stamped « SPÉCIMEN — document fictif ».",
+      "checkedBy": null
+    },
+    {
+      "id": "banque",
+      "filename": "documents/releve-bancaire-octobre-2026.pdf",
+      "title": "Relevé bancaire — octobre 2026",
+      "sha256": "1a3e30251d1abd271cd29e89c149c7601080aae5747919858986142f374084df",
+      "pages": 1,
+      "how": "Written by hand as data, rendered to a text PDF with every page stamped « SPÉCIMEN — document fictif ».",
+      "checkedBy": null
+    },
+    {
+      "id": "emploi",
+      "filename": "documents/lettre-d-emploi.pdf",
+      "title": "Lettre d'emploi",
+      "sha256": "bb76a402d881199c99c78f26af804dd52249eaa8eaf66a5034e6b15272f4c76b",
+      "pages": 1,
+      "how": "Written by hand as data, rendered to a text PDF with every page stamped « SPÉCIMEN — document fictif ».",
+      "checkedBy": null
+    }
+  ]
+}

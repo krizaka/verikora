@@ -4248,6 +4248,8 @@
     "signatureBody": "SHA-256 du texte du rapport (pages précédentes)",
     "signatureValue": "Signature (base64)",
     "signatureNote": "L'attestation — le contenu signé, l'empreinte du texte et cette signature — est aussi intégrée au fichier PDF. Un membre à qui le propriétaire a donné accès la vérifie en donnant ce fichier à la page de vérification ; tout changement au texte des pages précédentes la fait échouer.",
+    "demoFile": "Dossier fictif — démonstration",
+    "demoVersion": "Version de développement",
     "notCheckedServiceContract": "Non vérifié : droit de résiliation, art. 2125 C.c.Q., et le reste du Code civil du Québec sur le contrat de service (art. 2098 et suiv.). À faire relire par un avocat.",
     "languageNote": "Langue d'origine des règles : le français. Le texte anglais est la traduction fournie avec les règles ; les passages cités et les références aux articles restent tels quels, jamais traduits."
   },

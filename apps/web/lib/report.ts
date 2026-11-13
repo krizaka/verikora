@@ -74,6 +74,11 @@ export const reportPayload = z.object({
   note: closingNote.optional(),
   /** Set only by a demo key: a specimen is never an attestation, and verification rejects it (ADR-0002). */
   specimen: z.literal(true).optional(),
+  /**
+   * Set only on the sample report sent to a prospect (krizaka-internal#3119): a real run of the real pipeline on a fictitious file, signed with the
+   * development key. Unlike a specimen it verifies — and says so on its first page, in the signed text (« Dossier fictif — démonstration »).
+   */
+  demo: z.literal(true).optional(),
 });
 export type ReportPayload = z.infer<typeof reportPayload>;
 
