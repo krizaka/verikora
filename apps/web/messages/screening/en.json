@@ -113,7 +113,7 @@
       "whoTitle": "Who sees it",
       "who": "The owner who asked for the check sees the report. Verikora and its processor for the analysis (Sovkora) handle the file to run it. Nobody else. [TO BE REVIEWED BY THE LAWYER]",
       "howLongTitle": "How long it is kept",
-      "howLong": "By default, a document is deleted as soon as its check is done. If you consent to keep it (\"Keep my documents until the owner decides\"), it is kept until the owner's decision, then deleted. A result is deleted {days} days after it was given. You can still ask for its deletion. [TO BE REVIEWED BY THE LAWYER]",
+      "howLong": "By default, a document is deleted as soon as its check is done. If you consent to keep it (\"Keep my documents until the owner decides\"), it is kept until the owner's decision, then deleted. If the owner chooses « one year after the decision », it is kept for one year after the decision instead, then deleted: under section 11 of Quebec's Law 25, information used to make a decision about a person is kept at least one year. A result is deleted {days} days after it was given. You can still ask for its deletion. [TO BE REVIEWED BY THE LAWYER]",
       "askTitle": "How to ask for deletion",
       "ask": "Use the « Delete my documents » action on the link you received. It deletes your documents and the result at once, and keeps only a record with no personal information. You can also withdraw any consent here, and ask for access to or correction of your information.",
       "examinedTitle": "How your documents are examined",
@@ -269,7 +269,7 @@
       "eraseLead": "You can ask for your documents and the result to be deleted at any time.",
       "withdrawLead": "Withdrawing a consent stops the checks that rest on it.",
       "closedTitle": "This link is closed",
-      "howLong": "By default, a document is deleted as soon as its check is done. If you consent to keep it (\"Keep my documents until the owner decides\"), it is kept until the owner's decision, then deleted. You can ask for the deletion of your documents and of the result at any time. [TO BE REVIEWED BY THE LAWYER]"
+      "howLong": "By default, a document is deleted as soon as its check is done. If you consent to keep it (\"Keep my documents until the owner decides\"), it is kept until the owner's decision, then deleted. If the owner chooses « one year after the decision », it is kept for one year after the decision instead, then deleted: under section 11 of Quebec's Law 25, information used to make a decision about a person is kept at least one year. You can ask for the deletion of your documents and of the result at any time. [TO BE REVIEWED BY THE LAWYER]"
     }
   },
   "report": {

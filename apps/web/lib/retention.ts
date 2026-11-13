@@ -55,9 +55,10 @@ async function purgeWhere(
   holder: ObjectHolder,
   record: (id: string) => Promise<void>,
   receipt: { rule: DeletionRule; now?: Date },
+  scope = "storage = 'none'",
 ): Promise<string[]> {
   const candidates = await q<HeldRow & { storage_owner: string }>(
-    `SELECT ${HELD_COLUMNS}, storage_owner FROM documents WHERE storage = 'none' AND ${condition} AND (${HOLDS_BYTES} OR text <> '')`,
+    `SELECT ${HELD_COLUMNS}, storage_owner FROM documents WHERE ${scope} AND ${condition} AND (${HOLDS_BYTES} OR text <> '')`,
     values,
   );
   const ready: string[] = [];
@@ -73,7 +74,7 @@ async function purgeWhere(
     return [];
   }
   const rows = await q<{ id: string }>(
-    "UPDATE documents SET content = ''::bytea, text = '', object_key = NULL, retain_until = NULL WHERE id = ANY($1::uuid[]) AND storage = 'none' RETURNING id",
+    `UPDATE documents SET content = ''::bytea, text = '', object_key = NULL, retain_until = NULL, storage = 'none' WHERE id = ANY($1::uuid[]) AND ${scope} RETURNING id`,
     [ready],
   );
   // The purge is verifiable: one audit row per document (the file and its text go; the hash, the report and the signed certificate stay).
@@ -117,7 +118,10 @@ export async function purgeIfDone(q: Query, documentId: string, holder: ObjectHo
   return running.length === 0 && (await purgeDocument(q, documentId, "after-check", holder));
 }
 
-/** The sweep: not-kept documents past their deadline (never checked). Returns how many were purged. */
+/** The one-year class (Law 25, s. 11): documents kept past the decision whose year has passed (the manager's choice at the close). */
+const DECISION_YEAR = "retention_policy = 'one-year-after-decision'";
+
+/** The sweep: not-kept documents past their deadline (never checked), and documents kept a year past the decision whose year is up. Returns how many were purged. */
 export async function purgeExpired(q: Query, now: Date, holder: ObjectHolder = noHolder): Promise<number> {
   const purged = await purgeWhere(
     q,
@@ -134,5 +138,21 @@ export async function purgeExpired(q: Query, now: Date, holder: ObjectHolder = n
       }),
     { rule: DELETION_RULE.window, now },
   );
-  return purged.length;
+  const afterDecision = await purgeWhere(
+    q,
+    "retain_until IS NOT NULL AND retain_until <= $1",
+    [now],
+    holder,
+    (id) =>
+      audit({
+        action: "document.purged",
+        actorId: null,
+        actorLabel: "retention",
+        targetId: id,
+        detail: { reason: "one-year-after-decision" },
+      }),
+    { rule: DELETION_RULE.oneYearAfterDecision, now },
+    DECISION_YEAR,
+  );
+  return purged.length + afterDecision.length;
 }

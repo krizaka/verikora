@@ -30,7 +30,14 @@ import { removeObject } from "./document-objects";
 import { type AnalysisRow, inspectUpload, isUuid, type StoragePolicy, storeDocument } from "./documents";
 import { codeOf, HttpError, refuse } from "./http";
 import { EXTERNAL, HOLDS_BYTES, objectKey, purgeIfDone } from "./retention";
-import { policyFor } from "./retention-policy";
+import {
+  DECISION_RETENTION,
+  type DecisionRetention,
+  mayKeepAfterDecision,
+  policyDays,
+  policyFor,
+  retainUntilAfterDecision,
+} from "./retention-policy";
 import { addDays, hash, newToken, REQUEST_VALID_DAYS } from "./screening";
 import { type Answer, answersOf, applicantSignalsOf, authenticityReportOf } from "./signal-answers";
 import type { DocumentStore } from "./storage/port";
@@ -376,10 +383,11 @@ export async function purgeApplicationFiles(
   screeningId: string,
   store: DocumentStore | undefined,
   now?: Date,
+  keepIds: readonly string[] = [],
 ): Promise<number> {
   const docs = await query<HeldRow & { mime_type: string; storage_owner: string }>(
-    `SELECT ${HELD_COLUMNS}, mime_type, storage_owner FROM documents WHERE owner_id = $1 AND screening_id = $2 AND (storage <> 'none' OR ${HOLDS_BYTES} OR text <> '')`,
-    [ownerId, screeningId],
+    `SELECT ${HELD_COLUMNS}, mime_type, storage_owner FROM documents WHERE owner_id = $1 AND screening_id = $2 AND id <> ALL($3::uuid[]) AND (storage <> 'none' OR ${HOLDS_BYTES} OR text <> '')`,
+    [ownerId, screeningId, keepIds],
   );
   for (const d of docs) {
     // A file in the store (ADR-0012) leaves it first; a store that does not answer keeps the file whole.
@@ -403,8 +411,8 @@ export async function purgeApplicationFiles(
     await store.delete(objectKey(ownerId, d.id, d.mime_type));
   }
   const purged = await query<{ id: string }>(
-    `UPDATE documents SET content = ''::bytea, text = '', object_key = NULL, storage = 'none', retain_until = NULL WHERE owner_id = $1 AND screening_id = $2 AND (storage <> 'none' OR ${HOLDS_BYTES} OR text <> '') RETURNING id`,
-    [ownerId, screeningId],
+    `UPDATE documents SET content = ''::bytea, text = '', object_key = NULL, storage = 'none', retain_until = NULL WHERE owner_id = $1 AND screening_id = $2 AND id <> ALL($3::uuid[]) AND (storage <> 'none' OR ${HOLDS_BYTES} OR text <> '') RETURNING id`,
+    [ownerId, screeningId, keepIds],
   );
   for (const p of purged) {
     await audit({
@@ -425,32 +433,75 @@ export async function purgeApplicationFiles(
   return purged.length;
 }
 
-/** The manager's decision: the file is closed (the link with it) and every document is purged; its reports stay. Idempotent. */
+/**
+ * The documents the manager may keep a year past the decision: the ones still held whose policy in force (the owner's rule, the
+ * global one, the type's) keeps a document past the check. The admin's bound; a document outside it is purged as at any decision.
+ */
+async function keptPastDecision(ownerId: string, screeningId: string): Promise<string[]> {
+  const docs = await query<{ id: string; document_type: string | null }>(
+    `SELECT id, document_type FROM documents WHERE owner_id = $1 AND screening_id = $2 AND (storage <> 'none' OR ${HOLDS_BYTES} OR text <> '')`,
+    [ownerId, screeningId],
+  );
+  const allowed: string[] = [];
+  for (const d of docs) {
+    if (d.document_type && mayKeepAfterDecision(await policyFor(ownerId, d.document_type))) {
+      allowed.push(d.id);
+    }
+  }
+  return allowed;
+}
+
+/**
+ * The manager's decision: the file is closed (the link with it) and every document is purged, its reports stay; or, when the manager
+ * chose « one year after the decision » (Law 25, s. 11), the documents the admin's policy lets be kept stay until the decision plus the
+ * class's days and the sweep purges them then. Idempotent.
+ */
 export async function closeApplicantFile(
   landlordId: string,
   id: string,
   store: DocumentStore | undefined,
   now: Date,
   headers?: Headers,
-): Promise<{ purged: number }> {
+  retention: DecisionRetention = DECISION_RETENTION.atDecision,
+): Promise<{ purged: number; kept: number }> {
+  if (retention !== DECISION_RETENTION.atDecision && retention !== DECISION_RETENTION.oneYear) {
+    throw refuse(422, "RETENTION_CLASS_UNKNOWN", "No such retention class", { retention });
+  }
   const row = await ownedFile(landlordId, id);
   if (row.closed_at) {
-    return { purged: 0 };
+    return { purged: 0, kept: 0 };
+  }
+  let keepIds: string[] = [];
+  let until: Date | null = null;
+  if (retention === DECISION_RETENTION.oneYear) {
+    const days = await policyDays(DECISION_RETENTION.oneYear);
+    if (days === null) {
+      throw refuse(409, "RETENTION_CLASS_UNAVAILABLE", "This retention class is not available");
+    }
+    keepIds = await keptPastDecision(landlordId, id);
+    until = retainUntilAfterDecision(now, days);
   }
   await query(
     "UPDATE screenings SET closed_at = $3, revoked_at = coalesce(revoked_at, $3) WHERE id = $1 AND landlord_id = $2 AND closed_at IS NULL",
     [id, landlordId, now],
   );
-  const purged = await purgeApplicationFiles(landlordId, id, store, now);
+  if (keepIds.length > 0) {
+    await query("UPDATE documents SET retention_policy = $2, retain_until = $3 WHERE id = ANY($1::uuid[])", [
+      keepIds,
+      DECISION_RETENTION.oneYear,
+      until,
+    ]);
+  }
+  const purged = await purgeApplicationFiles(landlordId, id, store, now, keepIds);
   await audit({
     action: "applicant_file.closed",
     actorId: landlordId,
     actorLabel: "manager",
     targetId: id,
-    detail: { purged },
+    detail: { purged, kept: keepIds.length, retention },
     headers,
   });
-  return { purged };
+  return { purged, kept: keepIds.length };
 }
 
 export interface FileDocumentView {

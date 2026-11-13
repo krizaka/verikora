@@ -936,6 +936,8 @@
       "TOO_MANY_DOCUMENTS": "Too many documents.",
       "TYPE_NOT_NECESSARY": "This document type is not needed.",
       "TYPE_NOT_REQUESTED": "This document type was not requested.",
+      "RETENTION_CLASS_UNAVAILABLE": "This retention class is not available.",
+      "RETENTION_CLASS_UNKNOWN": "This retention choice is not one of the two offered.",
       "TYPE_UNKNOWN": "This document type is unknown.",
       "UNKNOWN_SCHEMA": "This format is unknown.",
       "UNKNOWN_SEAL": "This seal is unknown.",

@@ -23,6 +23,8 @@ import {
 } from "./applicant-file";
 import { applicantFileState } from "./applicant-file";
 import { fileByToken } from "./applicant-file";
+import { purgeExpired as purgeDocumentsExpired } from "./retention";
+import { DECISION_RETENTION } from "./retention-policy";
 import { loadApplicantPage } from "./applicant-page";
 import { migrate, query } from "./db";
 import { cleanPdf } from "./preflight/fixtures";
@@ -257,6 +259,67 @@ describe.runIf(enabled)("the applicant file (verikora#127)", () => {
     expect(
       await query("SELECT action FROM audit_log WHERE target_id = $1 AND action = 'applicant_file.closed'", [made.id]),
     ).toHaveLength(1);
+  });
+
+  const keptFile = async (label: string) => {
+    const made = await askWithConsent(["pay-stub"], [CONSENT_PURPOSE.DOCUMENT_CHECK, CONSENT_PURPOSE.DOCUMENT_KEEP]);
+    await uploadApplicantDocument(made.token, "pay-stub", await pdf(label), ctx(), NOW);
+    return made;
+  };
+
+  it("closed « one year after the decision », a kept file stays until the decision + 1 year, then the sweep purges it", async () => {
+    const made = await keptFile("PAY ONE YEAR");
+    const closed = await closeApplicantFile(landlordA.id, made.id, store, NOW, undefined, DECISION_RETENTION.oneYear);
+    expect(closed.purged).toBe(0);
+    const [doc] = await documentsOf(made.id);
+    expect(doc).toMatchObject({ retention_policy: "one-year-after-decision" });
+    expect(doc!.storage).not.toBe("none");
+    expect((await applicantFileOf(landlordA.id, made.id, NOW)).status).toBe("closed");
+    const holder = async () => store;
+    // The day before the anniversary nothing goes; once it has passed, the existing sweep purges it.
+    await purgeDocumentsExpired(query, new Date(NOW.getTime() + 364 * DAY_MS), holder);
+    expect((await documentsOf(made.id))[0]!.storage).not.toBe("none");
+    await purgeDocumentsExpired(query, new Date(NOW.getTime() + 365 * DAY_MS + 1000), holder);
+    const [after] = await documentsOf(made.id);
+    expect(after).toMatchObject({ content_len: 0, in_store: false, text: "", storage: "none" });
+    const audits = await query<{ detail: { reason: string } }>(
+      "SELECT detail FROM audit_log WHERE target_id = $1 AND action = 'document.purged'",
+      [doc!.id],
+    );
+    expect(audits.map((a) => a.detail.reason)).toEqual(["one-year-after-decision"]);
+    const receipts = await query<{ rule: string }>("SELECT rule FROM deletion_receipts WHERE document_id = $1", [
+      doc!.id,
+    ]);
+    expect(receipts.map((r) => r.rule)).toEqual(["one-year-after-decision"]);
+  });
+
+  it("the default is unchanged: a close without a choice purges the kept file at the decision", async () => {
+    const made = await keptFile("PAY DEFAULT CLOSE");
+    expect((await closeApplicantFile(landlordA.id, made.id, store, NOW)).purged).toBe(1);
+    expect((await documentsOf(made.id))[0]).toMatchObject({ storage: "none", retention_policy: "after-decision" });
+  });
+
+  it("the manager cannot go past the admin's bounds: a type the admin keeps « after-check » is purged, not extended", async () => {
+    const made = await keptFile("PAY BOUNDS");
+    await query(
+      "INSERT INTO retention_rule (owner_id, subject, policy_id) VALUES ($1, 'pay-stub', 'after-check') ON CONFLICT DO NOTHING",
+      [landlordA.id],
+    );
+    try {
+      const closed = await closeApplicantFile(landlordA.id, made.id, store, NOW, undefined, DECISION_RETENTION.oneYear);
+      expect(closed.purged).toBe(1);
+      expect((await documentsOf(made.id))[0]).toMatchObject({ storage: "none", content_len: 0, in_store: false });
+    } finally {
+      await query("DELETE FROM retention_rule WHERE owner_id = $1 AND subject = 'pay-stub'", [landlordA.id]);
+    }
+  });
+
+  it("a class that is not one of the two is refused, and the file stays open", async () => {
+    const made = await keptFile("PAY BAD CLASS");
+    expect(await codeOf(closeApplicantFile(landlordA.id, made.id, store, NOW, undefined, "ten-years" as never))).toBe(
+      "422 RETENTION_CLASS_UNKNOWN",
+    );
+    expect((await applicantFileOf(landlordA.id, made.id, NOW)).status).not.toBe("closed");
   });
 
   it("an identity document is never kept, even with the keeping consent", async () => {
