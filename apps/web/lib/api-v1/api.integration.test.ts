@@ -1,5 +1,3 @@
-import { readFileSync } from "node:fs";
-
 import type { SovkoraRun } from "@verikora/core";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 
@@ -10,6 +8,7 @@ import { GET as checkRoute } from "@/app/api/v1/checks/[id]/route";
 import { POST as createCheckRoute } from "@/app/api/v1/checks/route";
 
 import { migrate, pool, query } from "../db";
+import { LEASE_REPORT as REPORT, leasePdf } from "../fixtures/lease-report";
 import { seedDatabase } from "../flows";
 import { resetRateLimits } from "../limits";
 import { cleanPdf } from "../preflight/fixtures";
@@ -21,8 +20,6 @@ import { useSovkoraClient } from "../sovkora";
  * DATABASE_IT=1 DATABASE_URL=…). Sovkora is a fake that records the runs and finishes them when told.
  */
 const enabled = process.env.DATABASE_IT === "1" && !!process.env.DATABASE_URL;
-
-const REPORT = readFileSync(new URL("../fixtures/sovkora-compliance-qc-1.2.0.json", import.meta.url), "utf8");
 const params = (id: string) => ({ params: Promise.resolve({ id }) });
 
 /** The secret part of `yzk_<public id>_<secret>`: the secret is base64url, so it may itself contain « _ » — never split on it. */
@@ -73,7 +70,7 @@ describe.runIf(enabled)("the public API v1 (verikora#202)", () => {
     });
   const checkForm = async (name: string, text: string, check = "compliance", reference = "R-1") => {
     const form = new FormData();
-    form.set("file", new File([new Uint8Array(await cleanPdf(text))], name, { type: "application/pdf" }));
+    form.set("file", new File([new Uint8Array(await leasePdf(text))], name, { type: "application/pdf" }));
     form.set("check", check);
     form.set("reference", reference);
     return form;
@@ -167,7 +164,7 @@ describe.runIf(enabled)("the public API v1 (verikora#202)", () => {
         { type: "text/csv" },
       ),
     );
-    form.append("files", new File([new Uint8Array(await cleanPdf("BAIL D"))], "d.pdf", { type: "application/pdf" }));
+    form.append("files", new File([new Uint8Array(await leasePdf("D"))], "d.pdf", { type: "application/pdf" }));
     const created = await createBatchRoute(call(bearer, "POST", "/api/v1/batches", form));
     expect(created.status).toBe(201);
     const { batch } = await created.json();

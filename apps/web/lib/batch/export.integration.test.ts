@@ -1,5 +1,3 @@
-import { readFileSync } from "node:fs";
-
 import type { SovkoraRun } from "@verikora/core";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 
@@ -8,6 +6,7 @@ import { POST as createKeyRoute } from "@/app/api/me/api-keys/route";
 import { GET as apiExport } from "@/app/api/v1/batches/[id]/export/route";
 
 import { migrate, pool, query } from "../db";
+import { LEASE_REPORT as REPORT, leasePdf } from "../fixtures/lease-report";
 import { seedDatabase } from "../flows";
 import { resetRateLimits } from "../limits";
 import { cleanPdf } from "../preflight/fixtures";
@@ -21,7 +20,6 @@ import { advanceBatch, createBatch } from "./run";
 
 /** A batch's reports in one archive, by the page's route and by the API with a key (verikora#242), against PostgreSQL and a fake Sovkora. CI's service; locally DATABASE_IT=1 DATABASE_URL=…. */
 const enabled = process.env.DATABASE_IT === "1" && !!process.env.DATABASE_URL;
-const REPORT = readFileSync(new URL("../fixtures/sovkora-compliance-qc-1.2.0.json", import.meta.url), "utf8");
 const params = (id: string) => ({ params: Promise.resolve({ id }) });
 
 describe.runIf(enabled)("the ZIP of a batch's reports", () => {
@@ -101,7 +99,7 @@ describe.runIf(enabled)("the ZIP of a batch's reports", () => {
       "Immeuble Laurier",
       "file,check,reference\nbail-zip.pdf,compliance,LAURIER-ÉTIENNE\ntalon-zip.pdf,authenticity,PAIE-A\nmanquant-zip.pdf,compliance,LAURIER-X",
       [
-        { name: "bail-zip.pdf", type: "application/pdf", bytes: await cleanPdf(`BAIL ZIP ${stamp}`) },
+        { name: "bail-zip.pdf", type: "application/pdf", bytes: await leasePdf(`ZIP ${stamp}`) },
         { name: "talon-zip.pdf", type: "application/pdf", bytes: await cleanPdf(`TALON ZIP ${stamp}`) },
       ],
       {

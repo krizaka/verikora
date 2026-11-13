@@ -1,14 +1,12 @@
-import { readFileSync } from "node:fs";
-
 import type { SovkoraRun } from "@verikora/core";
 import sharp from "sharp";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 
 import { migrate, query } from "../db";
+import { LEASE_REPORT as REPORT, leasePdf } from "../fixtures/lease-report";
 import { seedDatabase } from "../flows";
 import { refuse } from "../http";
 import { createCollection, createLibrary } from "../organisation/store";
-import { cleanPdf } from "../preflight/fixtures";
 import { settingsFor } from "../settings/guards";
 import { useSovkoraClient } from "../sovkora";
 import { advanceBatch, createBatch } from "./run";
@@ -20,14 +18,13 @@ import { advanceBatch, createBatch } from "./run";
  * DATABASE_IT=1 DATABASE_URL=….
  */
 const enabled = process.env.DATABASE_IT === "1" && !!process.env.DATABASE_URL;
-const REPORT = readFileSync(new URL("../fixtures/sovkora-compliance-qc-1.2.0.json", import.meta.url), "utf8");
 
 describe.runIf(enabled)("a batch against a busy engine and awkward files", () => {
   const state = { busy: false, n: 0, started: [] as string[] };
   const runs = new Map<string, { studio: string; status: string }>();
   let account = { id: "", perspective: null };
   const ctx = async () => ({ settings: await settingsFor(account.id), now: new Date(), environment: "dev" as const });
-  const pdf = async (name: string, text: string) => ({ name, type: "application/pdf", bytes: await cleanPdf(text) });
+  const pdf = async (name: string, text: string) => ({ name, type: "application/pdf", bytes: await leasePdf(text) });
   const finishAll = () => runs.forEach((r) => (r.status = "SUCCEEDED"));
 
   const run = (id: string): SovkoraRun => {

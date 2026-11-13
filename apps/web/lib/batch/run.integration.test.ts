@@ -1,12 +1,10 @@
-import { readFileSync } from "node:fs";
-
 import type { SovkoraRun } from "@verikora/core";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 
 import { seedAudits } from "../audit-credits.testkit";
 import { migrate, query } from "../db";
+import { LEASE_REPORT as REPORT, leasePdf } from "../fixtures/lease-report";
 import { seedDatabase } from "../flows";
-import { cleanPdf } from "../preflight/fixtures";
 import { settingsFor } from "../settings/guards";
 import { useSovkoraClient } from "../sovkora";
 import { advanceBatch, createBatch } from "./run";
@@ -17,8 +15,6 @@ const enabled = process.env.DATABASE_IT === "1" && !!process.env.DATABASE_URL;
 describe.runIf(enabled)("a batch of checks (verikora#232)", () => {
   const runs = new Map<string, string>();
   let n = 0;
-  // A real compliance report (a live run's, kept as a fixture): a « SUCCEEDED » without one is a hollow success, read as failed.
-  const REPORT = readFileSync(new URL("../fixtures/sovkora-compliance-qc-1.2.0.json", import.meta.url), "utf8");
   const run = (id: string, status: string): SovkoraRun => ({
     id,
     studioKey: "compliance-check",
@@ -27,7 +23,7 @@ describe.runIf(enabled)("a batch of checks (verikora#232)", () => {
     outputs: status === "SUCCEEDED" ? [{ key: "report", type: "JSON", value: REPORT }] : [],
   });
   let account = { id: "", perspective: null };
-  const pdf = async (name: string, text: string) => ({ name, type: "application/pdf", bytes: await cleanPdf(text) });
+  const pdf = async (name: string, text: string) => ({ name, type: "application/pdf", bytes: await leasePdf(text) });
 
   beforeAll(async () => {
     await migrate();
