@@ -1,7 +1,10 @@
 import { describe, expect, it } from "vitest";
 
 import { assertProductionEnv, consoleAllowedIps, envSchema, productionProblems, readEnv } from "./env";
+import type { TransferRegister } from "./privacy/transfers";
 import { generateSigningKeyBase64 } from "./report-key";
+
+const STATED: TransferRegister = { entries: [] };
 
 const PROD = {
   NODE_ENV: "production",
@@ -44,9 +47,10 @@ describe("env", () => {
   });
 
   it("refuses a production start without its secrets, naming them, never showing them", () => {
-    expect(() => assertProductionEnv(PROD)).not.toThrow();
+    expect(() => assertProductionEnv(PROD, STATED)).not.toThrow();
     const problems = productionProblems(
       readEnv({ NODE_ENV: "production", AI_API_KEY: "sk-not-sovkora", DATABASE_URL: PROD.DATABASE_URL }),
+      STATED,
     );
     expect(problems).toEqual([
       "AUTH_SESSION_SECRET must be at least 32 characters",
@@ -59,10 +63,10 @@ describe("env", () => {
   });
 
   it("refuses a production start without a usable report signing key, never showing it", () => {
-    expect(productionProblems(readEnv({ ...PROD, APP_REPORT_SIGNING_KEY: undefined }))).toEqual([
+    expect(productionProblems(readEnv({ ...PROD, APP_REPORT_SIGNING_KEY: undefined }), STATED)).toEqual([
       "APP_REPORT_SIGNING_KEY is not set",
     ]);
-    const problems = productionProblems(readEnv({ ...PROD, APP_REPORT_SIGNING_KEY: "garbage-SECRETVALUE" }));
+    const problems = productionProblems(readEnv({ ...PROD, APP_REPORT_SIGNING_KEY: "garbage-SECRETVALUE" }), STATED);
     expect(problems).toEqual(["APP_REPORT_SIGNING_KEY is not a base64 PKCS#8 private key"]);
     expect(problems.join(" ")).not.toContain("SECRETVALUE");
   });
@@ -74,5 +78,31 @@ describe("env", () => {
       "198.51.100.2",
     ]);
     expect(consoleAllowedIps({ NODE_ENV: "development" })).toBeNull();
+  });
+
+  it("refuses a production start while a transfer used in production is not stated, naming it; dev is unaffected", () => {
+    const register: TransferRegister = {
+      entries: [
+        { id: "kept", usedInProduction: true, where: "Toronto", retention: "30 days", agreement: "DPA 2026-11-01" },
+        { id: "mail", usedInProduction: true, where: "The provider's; not stated", retention: "", agreement: null },
+        { id: "dev-only", usedInProduction: false, where: null, retention: null, agreement: null },
+      ],
+    };
+    expect(productionProblems(readEnv({ ...PROD, APP_ENVIRONMENT: "prod" }), register)).toEqual([
+      'transfer "mail" is used in production but its where, retention, agreement is not stated (docs/privacy/transfers.json)',
+    ]);
+    expect(() => assertProductionEnv({ ...PROD, APP_ENVIRONMENT: "prod" }, register)).toThrow(/transfer "mail"/);
+    expect(
+      productionProblems(readEnv({ ...PROD, NODE_ENV: "development", APP_ENVIRONMENT: "prod" }), register),
+    ).toEqual([]);
+    expect(productionProblems(readEnv({ ...PROD, APP_ENVIRONMENT: "dev" }), register)).toEqual([]);
+  });
+
+  it("refuses a production start with the register as shipped until its open lines are filled", () => {
+    expect(
+      productionProblems(readEnv({ ...PROD, APP_ENVIRONMENT: "prod" })).some((p) =>
+        p.includes('transfer "engine-model"'),
+      ),
+    ).toBe(true);
   });
 });
