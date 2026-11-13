@@ -3,7 +3,7 @@ export const SITE_URL = "https://www.verikora.com";
 export const REPO_URL = "https://github.com/krizaka/verikora";
 /** Krizaka, the publisher: named only in the footer and the legal mentions (the products are independent). */
 export const KRIZAKA_URL = "https://www.krizaka.com";
-export const PRIVACY_UPDATED = "2026-11-04";
+export const PRIVACY_UPDATED = "2026-11-13";
 /** The one address kept public: the privacy officer's, which Quebec's Law 25 requires to publish (the privacy page). Support is Krizaka's form, never an address. */
 export const PRIVACY_OFFICER_EMAIL = "confidentialite@krizaka.com";
 export const APP_VERSION = process.env.NEXT_PUBLIC_APP_VERSION ?? "0.1.0";

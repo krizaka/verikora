@@ -37,7 +37,7 @@ export default async function Privacy({ params }: Readonly<{ params: Promise<{ l
             {t.privacy.officer.title} · <a href={`mailto:${PRIVACY_OFFICER_EMAIL}`}>{PRIVACY_OFFICER_EMAIL}</a>
           </p>
           {t.privacy.sections.map((s) => (
-            <section key={s.h} className="mt-8 max-w-3xl">
+            <section key={s.id} id={s.id} className="mt-8 max-w-3xl scroll-mt-(--kz-anchor-offset,6rem)">
               <h2 className="text-xl font-semibold">{s.h}</h2>
               <p className="mt-2 text-base leading-relaxed text-fg-secondary">{s.p}</p>
             </section>

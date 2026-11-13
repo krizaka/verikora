@@ -10,34 +10,62 @@
     },
     "sections": [
       {
+        "id": "who",
         "h": "Qui est responsable",
         "p": "Krizaka, une entreprise établie à Montréal, publie Verikora. La personne responsable de la protection des renseignements personnels (Loi 25) est nommée en haut de cette page, avec son adresse directe."
       },
       {
+        "id": "collected",
         "h": "Ce que nous recueillons et pourquoi",
         "p": "Votre adresse courriel et l’empreinte de votre mot de passe (pour faire fonctionner votre compte), la date à laquelle vous avez accepté les conditions et cet avis, les documents que vous téléversez et les résultats des vérifications (pour vous rendre le service), et les renseignements de facturation traités par Stripe. Nous ne vendons pas vos renseignements et n’utilisons pas vos documents pour entraîner un modèle."
       },
       {
+        "id": "where",
         "h": "Où ils sont conservés",
-        "p": "Votre compte et vos vérifications sont dans une base de données à Toronto, au Canada, hors Québec. Les documents sont envoyés à Sovkora, le moteur d’analyse de Krizaka, par HTTPS pour être vérifiés. Un document gardé est stocké là où son panneau d’information le dit : aujourd’hui, à New York (États-Unis)."
+        "p": "Votre compte, vos vérifications et leurs rapports sont dans une base de données à Toronto (Ontario, Canada). Un document conservé va là où son panneau d’information le dit. Aujourd’hui, Verikora est une version de développement : c’est un stockage de développement aux États-Unis, prévu pour des données fictives. En production, Verikora refuse de conserver un document hors du Canada ; le stockage prévu est à Toronto."
       },
       {
+        "id": "processors",
         "h": "Qui les traite",
-        "p": "Sovkora, le moteur d’analyse de Krizaka, lit un document quand vous demandez une vérification, par HTTPS. Stripe traite le paiement. Notre fournisseur de base de données héberge votre compte à Toronto."
+        "p": "Sovkora, le moteur d’analyse de Krizaka, lit un document par HTTPS quand vous demandez une vérification. Stripe traite le paiement. Mailgun envoie les courriels de confirmation. DigitalOcean héberge l’application et la base de données à Toronto."
       },
       {
+        "id": "retention",
         "h": "Combien de temps nous les gardons",
-        "p": "Un document est gardé jusqu’à ce que vous le supprimiez, et un document supprimé emporte son fichier, son texte et ses résultats. Votre compte et vos vérifications sont gardés jusqu’à la fermeture du compte. Les factures sont conservées comme la loi l’exige."
+        "p": "Par défaut, un document n’est pas conservé : dès sa vérification faite, son fichier et son texte sont purgés ; le rapport reste, avec l’empreinte du fichier. Un document jamais vérifié est purgé après un délai fixé par l’administration, 24 heures par défaut. Si vous choisissez de le conserver, il reste jusqu’à ce que vous le supprimiez. Ce qui est purgé peut rester dans les sauvegardes jusqu’à leur rotation."
       },
       {
+        "id": "applicant-files",
+        "h": "Les dossiers de candidature",
+        "p": "Les documents qu’une personne candidate dépose sont purgés après leur vérification, sauf si elle accepte qu’ils soient gardés jusqu’à la décision. En fermant le dossier, le gestionnaire choisit : purger à la décision (par défaut), ou garder un an après la décision, pour les seuls types que l’administration permet de garder. Le résultat d’une vérification de candidature est gardé 30 jours après le consentement."
+      },
+      {
+        "id": "receipt",
+        "h": "Le reçu de suppression",
+        "p": "Une purge laisse un reçu signé : ce qui a été supprimé (le fichier et son texte, par leurs empreintes), quand, et sous quelle règle (après la vérification, après le délai, à la décision, un an après, ou à la demande de la personne candidate). Il est écrit une fois la suppression confirmée. Il ne contient aucun nom, aucune adresse, aucun nom de fichier ni titre. Il se vérifie sur la page de vérification."
+      },
+      {
+        "id": "outside-quebec",
+        "h": "Hors du Québec",
+        "p": "Vos renseignements sont traités hors du Québec : l’application et la base de données à Toronto (Ontario) ; le stockage de développement aux États-Unis ; Stripe et Mailgun peuvent les traiter hors du Canada ; le lieu où Sovkora traite un document n’est pas encore indiqué dans notre registre des transferts. L’évaluation que demande l’article 17 de la Loi 25 avant une communication hors du Québec est en préparation."
+      },
+      {
+        "id": "automated-decisions",
+        "h": "Aucune décision par une machine seule",
+        "p": "Une personne décide. Verikora ne décide rien. Une vérification relève des signaux et cite des passages du document ; c’est vous, ou le gestionnaire d’un dossier, qui décidez. Un rapport n’est affiché que si chaque passage cité est dans le document et sans mot de verdict refusé (« fraude », « falsifié »…). Verikora ne prend aucune décision fondée exclusivement sur un traitement automatisé (art. 12.1 de la Loi 25)."
+      },
+      {
+        "id": "rights",
         "h": "Vos droits",
         "p": "Vous pouvez accéder à vos renseignements, les corriger ou les supprimer, retirer votre consentement et récupérer vos données en écrivant au responsable. Supprimer un document supprime son fichier, son texte et ses résultats. Fermer votre compte supprime vos documents. Nous conservons les factures comme la loi l’exige."
       },
       {
+        "id": "incidents",
         "h": "Incidents",
         "p": "Si un incident de confidentialité présente un risque de préjudice sérieux, nous avisons la Commission d’accès à l’information et les personnes concernées, comme la loi l’exige."
       },
       {
+        "id": "contact",
         "h": "Nous joindre",
         "p": "Pour poser une question, exercer vos droits ou faire retirer vos données, écrivez par le formulaire de contact de krizaka.com. La personne responsable de la protection des renseignements personnels vous répond."
       }

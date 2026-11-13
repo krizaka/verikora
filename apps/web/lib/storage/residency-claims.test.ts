@@ -58,8 +58,12 @@ function claimHolds(store: Store, env: Environment): boolean {
 /** Every public message that says « Canada » or « Toronto », by its path, and the store it describes. */
 const CLAIMS: Record<string, Store> = {
   "docs.data.intro": "database",
+  // « where »: the database is in Toronto; the kept documents are said to be in the development store in the United States, and the
+  // production sentence is the refusal of assertDefaultResidency (a store outside Canada cannot receive a document), never « kept in Canada » today
   "privacy.sections.2.p": "database",
   "privacy.sections.3.p": "database",
+  // « outside-quebec » (krizaka-internal#3308): the application and the database in Toronto; « outside Canada » for the development store and the processors
+  "privacy.sections.7.p": "database",
   "console.document.where.krizakaCanadaEncrypted": "database",
   "console.document.where.krizakaCanada": "configured",
   "console.settings.storage.whereCanada": "configured",
