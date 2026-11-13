@@ -2,7 +2,7 @@
 # `webdriver`, never a release), the persona of the dev environment, the folder pre-granted through the kit's scope.json, one
 # real lease checked, a relaunch. The caller's job passes SMOKE_EMAIL / SMOKE_PASSWORD as environment variables (the `dev`
 # environment). With `record: true` the app's window (only, from the signed-in library, as WebDriver screenshots, no screen recording) is filmed to <out>/frames/
-# (scripts/desktop-film-lib.mjs); desktop-film-join.mjs joins them for the download page.
+# (the shared recorder of krizaka-rust, film/, found through `film-dir`); the caller's job joins them for the download page.
 name: Mac journey
 description: Build Verikora for the Mac with its test driver and run the journey as the dev persona.
 inputs:
@@ -12,6 +12,9 @@ inputs:
   record:
     description: Film the screen (true or false).
     default: "false"
+  film-dir:
+    description: Directory of the shared film scripts (the `dir` output of krizaka/krizaka-rust/.github/actions/film); required with record.
+    default: ""
 runs:
   using: composite
   steps:
@@ -50,6 +53,7 @@ runs:
       env:
         JOURNEY_OUT: ${{ inputs.out }}
         JOURNEY_RECORD: ${{ inputs.record }}
+        KRIZAKA_FILM_DIR: ${{ inputs.film-dir }}
       run: |
         mkdir -p "$JOURNEY_OUT"
         film=""

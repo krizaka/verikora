@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 // Trims every film of a directory in place and checks its start: node scripts/film-trim.mjs <dir>
-// (the web clips of the download page; the Mac film is trimmed as it is joined, scripts/desktop-film-lib.mjs)
+// (the web clips of the download page; the Mac film is trimmed as it is joined, krizaka-rust's film/film.mjs)
 import { spawnSync } from "node:child_process";
 import { existsSync, readdirSync, readFileSync, renameSync, rmSync } from "node:fs";
 import { join } from "node:path";
@@ -63,7 +63,7 @@ for (const name of readdirSync(dir).filter((n) => /\.(webm|mp4)$/.test(n))) {
   }
   assertStart(analyse(file));
   // verikora#1968: the film's language, shape, banner and ending are checked against what the journey saw (<film>.markers.json).
-  // A film without markers is refused (the Mac film is joined, and checked, by desktop-film-join.mjs).
+  // A film without markers is refused (the Mac film is joined, and checked, by the shared join-cli.mjs).
   const markersFile = join(dir, name.replace(/\.(webm|mp4)$/, ".markers.json"));
   const markers = existsSync(markersFile) ? JSON.parse(readFileSync(markersFile, "utf8")) : undefined;
   assertFilm({ name, markers, size: sizeOf(file) });
