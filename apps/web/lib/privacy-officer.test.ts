@@ -4,7 +4,7 @@ import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 
 import { getDictionary } from "./i18n";
-import { PRIVACY_OFFICER_EMAIL } from "./site";
+import { PRIVACY_OFFICER_EMAIL } from "./privacy-officer";
 
 const ROOT = join(__dirname, "..");
 
@@ -31,4 +31,21 @@ describe("the privacy officer (Loi 25, art. 3.1; krizaka-internal#2365)", () => 
     expect(page).toContain("PRIVACY_OFFICER_EMAIL");
     expect(page).toContain("t.privacy.officer.title");
   });
+});
+
+describe("the complaint process (Loi 25, art. 3.2; krizaka-internal#3438)", () => {
+  it.each([
+    ["fr", "30 jours", "Commission d’accès à l’information"],
+    ["en", "30 days", "Commission d'accès à l'information"],
+  ] as const)(
+    "the privacy notice says how to complain, the delay and the Commission, in %s",
+    (locale, delay, commission) => {
+      const section = getDictionary(locale).privacy.sections.find((s) => s.id === "complaints");
+      expect(section).toBeDefined();
+      expect(section?.p).toContain("krizaka.com/contact");
+      expect(section?.p).toContain(delay);
+      expect(section?.p).toContain(commission);
+      expect(JSON.stringify(section)).not.toMatch(/@|Oussama|Abid/);
+    },
+  );
 });

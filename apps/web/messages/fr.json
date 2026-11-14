@@ -3691,6 +3691,11 @@
         "p": "Vous pouvez accéder à vos renseignements, les corriger ou les supprimer, retirer votre consentement et récupérer vos données en écrivant au responsable. Supprimer un document supprime son fichier, son texte et ses résultats. Fermer votre compte supprime vos documents. Nous conservons les factures comme la loi l’exige."
       },
       {
+        "id": "complaints",
+        "h": "Déposer une plainte",
+        "p": "Pour déposer une plainte sur vos renseignements personnels, écrivez par le formulaire de contact de krizaka.com (krizaka.com/contact). La personne responsable la lit et répond dans un délai de 30 jours. Vous pouvez aussi vous adresser à la Commission d’accès à l’information du Québec."
+      },
+      {
         "id": "incidents",
         "h": "Incidents",
         "p": "Si un incident de confidentialité présente un risque de préjudice sérieux, nous avisons la Commission d’accès à l’information et les personnes concernées, comme la loi l’exige."
@@ -4413,8 +4418,7 @@
     "lead": "Pour les gestionnaires d'immeubles au Québec. Verikora lit les pièces envoyées par le candidat et votre modèle de bail, et relie chaque constat à sa ligne et à son article de loi.",
     "status": {
       "label": "Statut",
-      "development": "En développement : les inscriptions sont fermées pendant nos essais sur de vrais baux québécois.",
-      "preview": "Aperçu de développement : inscriptions fermées, accès sur invitation."
+      "development": "En développement : les inscriptions sont fermées pendant nos essais sur de vrais baux québécois."
     },
     "hero": {
       "primary": "Écrivez-nous pour l'essayer sur vos dossiers",
