@@ -51,6 +51,7 @@ jobs:
       env: |
         DATABASE_URL=postgresql://verikora_db:ci-only-password@localhost:5432/verikora_db
         DATABASE_IT=1
+        MEDIA_DOCUMENTS_TENANT=verikora-ci
       playwright: chromium
       after-build: scripts/ci-after-build.sh
 
