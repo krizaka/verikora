@@ -3,7 +3,7 @@ import crypto from "node:crypto";
 import { bucketStore, encryptedStore, type FetchLike, remoteStore } from "@krizaka/storage";
 import { describe, expect, it } from "vitest";
 
-import { objectKey } from "../retention";
+import { legacyObjectKey } from "../retention";
 import { documentStoreOver } from "./adapter";
 import { documentStoreContract } from "./contract.testkit";
 import { fakeBucket } from "./fake-bucket.testkit";
@@ -17,7 +17,7 @@ import { asDescriptor } from "./where";
  */
 const NOW = new Date("2026-10-27T12:00:00Z");
 const clock = { now: () => NOW };
-const KEY = objectKey(
+const KEY = legacyObjectKey(
   "0f1e2d3c-aaaa-4bbb-8ccc-111122223333",
   "9a8b7c6d-dddd-4eee-8fff-444455556666",
   "application/pdf",

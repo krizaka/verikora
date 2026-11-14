@@ -80,7 +80,7 @@ services:
       - { key: MEDIA_DOCUMENTS_PROVIDER, scope: RUN_TIME, value: "bunny" }
       # The key-encryption key of the storage providers (ADR-005): the admin's providers and their credentials are sealed under it. A SECRET, the same value as the backup jobs'.
       - { key: MEDIA_VAULT_KEY, scope: RUN_TIME, type: SECRET, value: "__MEDIA_VAULT_KEY__" }
-      # The tenant prefix of this deployment's kept documents (krizaka-internal#3638, verikora#818). Read once the code of #818 lands; harmless before.
+      # The tenant id of the object keys (Kridoc space layout, ORG-039), one per installation (krizaka-internal#3638).
       - { key: MEDIA_DOCUMENTS_TENANT, scope: RUN_TIME, value: "verikora-dev" }
       - { key: MEDIA_STORAGE_ENDPOINT, scope: RUN_TIME, value: "ny.storage.bunnycdn.com" }
       - { key: MEDIA_STORAGE_ZONE, scope: RUN_TIME, value: "yomizaka-docs-dev" }

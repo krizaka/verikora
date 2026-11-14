@@ -6,7 +6,7 @@ import { workingStore } from "@/app/active-store";
 import { ledgerState } from "../billing";
 import type { ObjectHolder } from "../document-objects";
 import { refuse } from "../http";
-import { EXTERNAL, objectKey } from "../retention";
+import { EXTERNAL, legacyObjectKey } from "../retention";
 import type { DocumentStore } from "../storage/port";
 
 /** The store that holds a document: Krizaka's configured one, or the owner's own cloud. */
@@ -203,7 +203,7 @@ export async function exportData(q: Query, accountId: string, stores: StoresOf, 
     }
     const store = stores(d.storage_owner);
     if (EXTERNAL.has(d.storage) && store && store.describe().kind === d.storage) {
-      const found = await store.get(objectKey(accountId, d.id, d.mime_type));
+      const found = await store.get(legacyObjectKey(accountId, d.id, d.mime_type));
       return found ? { contentType: d.mime_type, base64: Buffer.from(found.bytes).toString("base64") } : null;
     }
     return d.content.length > 0 ? { contentType: d.mime_type, base64: d.content.toString("base64") } : null;

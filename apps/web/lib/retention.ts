@@ -12,6 +12,7 @@ import {
 } from "./deletion-receipt";
 import { noHolder, type ObjectHolder, removeObject } from "./document-objects";
 import type { DocumentStoreDescriptor } from "./storage/port";
+import { TENANT_ID } from "./tenant";
 
 /**
  * Keep or purge (ADR-0007). By default a document is NOT kept: once its check has run, its file and its text are purged and
@@ -33,8 +34,19 @@ export function storageFor(keep: boolean, active: DocumentStoreDescriptor): Stor
 
 const EXTENSION: Record<string, string> = { "application/pdf": "pdf", "text/plain": "txt" };
 
-/** The object key of a kept document on an external store. */
-export const objectKey = (owner: string, document: string, mimeType: string) =>
+/**
+ * The object key of a new document, in the Kridoc space layout: `tenants/<tenant>/users/<owner>/documents/<document>/original.<ext>`.
+ * The only function that builds a key; the tenant is the installation's setting (`documentsTenant`), never a request's value.
+ */
+export const objectKey = (tenant: string, owner: string, document: string, mimeType: string) => {
+  if (!TENANT_ID.test(tenant)) {
+    throw new Error("The documents tenant id is not valid");
+  }
+  return `tenants/${tenant}/users/${owner}/documents/${document}/original.${EXTENSION[mimeType] ?? "bin"}`.toLowerCase();
+};
+
+/** The key a document kept before the Kridoc layout has (`<owner>/<document>/original.<ext>`): for rows that hold no `object_key` only, never for a new document. */
+export const legacyObjectKey = (owner: string, document: string, mimeType: string) =>
   `${owner}/${document}/original.${EXTENSION[mimeType] ?? "bin"}`.toLowerCase();
 
 /** When a not-kept document that was never checked is purged. */

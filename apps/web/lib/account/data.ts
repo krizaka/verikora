@@ -4,7 +4,7 @@ import type { QueryResultRow } from "pg";
 import { type ObjectHolder, removeObject } from "../document-objects";
 import { refuse } from "../http";
 import { accountSubject, privacyFor, purposesOf } from "../privacy";
-import { EXTERNAL, objectKey } from "../retention";
+import { EXTERNAL, legacyObjectKey } from "../retention";
 import { holderFrom, type StoresOf } from "./export";
 
 export { type DataExport, exportData, type StoresOf } from "./export";
@@ -51,7 +51,7 @@ export async function eraseAccount(
     const store = deps.stores(d.storage_owner);
     if (!store || store.describe().kind !== d.storage)
       throw refuse(409, "STORAGE_UNAVAILABLE", "The storage that holds a document is not available");
-    await store.delete(objectKey(accountId, d.id, d.mime_type));
+    await store.delete(legacyObjectKey(accountId, d.id, d.mime_type));
   }
   // every module erases what it holds, then the identity goes, in ONE transaction; the consents are withdrawn and the request recorded (no one named)
   await privacyFor({ stores: deps.stores, purposes: await purposesOf(accountId) }).eraseSubject(

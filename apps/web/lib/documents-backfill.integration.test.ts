@@ -27,7 +27,7 @@ describe.runIf(enabled)("documents backfill (ADR-0012)", () => {
       "INSERT INTO documents (owner_id, title, filename, mime_type, kind, size_bytes, sha256, content, text, storage) VALUES ($1, 'bail', 'bail.txt', 'text/plain', 'lease', $2, $3, $4, 'Loyer', 'database') RETURNING id",
       [owner!.id, BYTES.length, sha, Buffer.from(BYTES)],
     );
-    return { owner: owner!.id, id: doc!.id, key: objectKey(owner!.id, doc!.id, "text/plain") };
+    return { owner: owner!.id, id: doc!.id, key: objectKey("verikora-dev", owner!.id, doc!.id, "text/plain") };
   };
   const row = async (id: string) =>
     (
@@ -40,7 +40,7 @@ describe.runIf(enabled)("documents backfill (ADR-0012)", () => {
   it("a dry run reports what it would move and writes nothing", async () => {
     const s = store();
     const d = await legacy();
-    const result = await backfillDocuments(query, holder(s), { dryRun: true, limit: 1000 });
+    const result = await backfillDocuments(query, holder(s), { dryRun: true, limit: 1000, tenant: "verikora-dev" });
     expect(result).toMatchObject({ dryRun: true, copied: 0 });
     expect(result.candidates).toBeGreaterThanOrEqual(1);
     expect(await row(d.id)).toMatchObject({ object_key: null, n: BYTES.length });
@@ -50,12 +50,12 @@ describe.runIf(enabled)("documents backfill (ADR-0012)", () => {
   it("copies the bytes to the store, checks them against the SHA-256, then empties the column; a second run finds nothing", async () => {
     const s = store();
     const d = await legacy();
-    const result = await backfillDocuments(query, holder(s), { limit: 1000 });
+    const result = await backfillDocuments(query, holder(s), { limit: 1000, tenant: "verikora-dev" });
     expect(result.failed).not.toContain(d.id);
     expect(result.copied).toBeGreaterThanOrEqual(1);
     expect(await row(d.id)).toEqual({ object_key: d.key, n: 0 });
     expect(new Uint8Array((await s.get(d.key))!.bytes)).toEqual(BYTES);
-    const again = await backfillDocuments(query, holder(s), { limit: 1000 });
+    const again = await backfillDocuments(query, holder(s), { limit: 1000, tenant: "verikora-dev" });
     expect(again.copied).toBe(0);
     expect(await row(d.id)).toEqual({ object_key: d.key, n: 0 });
   });
@@ -63,7 +63,7 @@ describe.runIf(enabled)("documents backfill (ADR-0012)", () => {
   it("leaves a row whose bytes do not match its SHA-256 untouched, and removes the copy it made", async () => {
     const s = store();
     const d = await legacy("0".repeat(64));
-    const result = await backfillDocuments(query, holder(s), { limit: 1000 });
+    const result = await backfillDocuments(query, holder(s), { limit: 1000, tenant: "verikora-dev" });
     expect(result.failed).toContain(d.id);
     expect(await row(d.id)).toEqual({ object_key: null, n: BYTES.length });
     expect(await s.get(d.key)).toBeNull();
@@ -79,10 +79,12 @@ describe.runIf(enabled)("documents backfill (ADR-0012)", () => {
         throw new Error("store down");
       },
     };
-    const result = await backfillDocuments(query, async () => broken, { limit: 1000 });
+    const result = await backfillDocuments(query, async () => broken, { limit: 1000, tenant: "verikora-dev" });
     expect(result.failed).toContain(d.id);
     expect(await row(d.id)).toEqual({ object_key: null, n: BYTES.length });
-    expect((await backfillDocuments(query, holder(s), { limit: 1000 })).copied).toBeGreaterThanOrEqual(1);
+    expect(
+      (await backfillDocuments(query, holder(s), { limit: 1000, tenant: "verikora-dev" })).copied,
+    ).toBeGreaterThanOrEqual(1);
     expect((await row(d.id)).object_key).toBe(d.key);
   });
 });

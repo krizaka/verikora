@@ -32,7 +32,8 @@ import { personalInfo } from "./pii";
 import { createInspector } from "./preflight/inspector";
 import { type FileKind, OUTCOME, type PreflightRules, type RejectReason } from "./preflight/port";
 import { VERIKORA_RULES } from "./preflight/rules";
-import { EXTERNAL, objectKey, purgeDeadline, storageFor } from "./retention";
+import { DEV_TENANT } from "./tenant";
+import { EXTERNAL, legacyObjectKey, objectKey, purgeDeadline, storageFor } from "./retention";
 import { localStore } from "./storage/local";
 import type { DocumentStore, DocumentStoreDescriptor } from "./storage/port";
 import { storedAs } from "./storage/where";
@@ -233,7 +234,7 @@ export async function readBytes(
   if (EXTERNAL.has(row.storage)) {
     if (!store || store.describe().kind !== row.storage)
       throw refuse(409, "STORAGE_UNAVAILABLE", "The storage that holds this document is not available");
-    const found = await store.get(objectKey(ids.ownerId, ids.id, row.mime_type));
+    const found = await store.get(legacyObjectKey(ids.ownerId, ids.id, row.mime_type));
     if (!found) throw refuse(404, "NOT_FOUND", "No such document");
     return Buffer.from(found.bytes);
   }
@@ -276,7 +277,7 @@ export async function deleteDocument(ownerId: string, id: string, store?: Docume
   } else if (EXTERNAL.has(row.storage)) {
     if (!store || store.describe().kind !== row.storage)
       throw refuse(409, "STORAGE_UNAVAILABLE", "The storage that holds this document is not available");
-    await store.delete(objectKey(ownerId, id, row.mime_type));
+    await store.delete(legacyObjectKey(ownerId, id, row.mime_type));
   }
   await query("DELETE FROM documents WHERE owner_id = $1 AND id = $2", [ownerId, id]);
 }
@@ -389,6 +390,8 @@ export interface StoragePolicy {
   working?: DocumentStore | null;
   now: Date;
   purgeAfterHours: number;
+  /** The installation's tenant id (`documentsTenant()`, read at the edge): the first segment of every new object key. */
+  tenant: string;
   /** The pre-flight rules as configured (limits an administrator set); the product's own when absent. */
   rules?: PreflightRules;
 }
@@ -577,7 +580,7 @@ export async function storeDocument(
   const kind = chooseKind(requested, deferred, read);
   // The row first, with the key its bytes will have, then the bytes: no object is ever unowned (ADR-0012). They stay until the check has run, or the person's choice ends.
   const id = existing?.id ?? randomUUID();
-  const key = objectKey(ownerId, id, mimeType);
+  const key = objectKey(policy?.tenant ?? DEV_TENANT, ownerId, id, mimeType);
   const row = await saveDocumentRow({
     ownerId,
     id,

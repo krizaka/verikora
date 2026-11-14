@@ -18,6 +18,8 @@ export interface BackfillResult {
 
 export interface BackfillOptions {
   dryRun?: boolean;
+  /** The installation's tenant id (`documentsTenant()`, read at the edge): the first segment of the key a row gets. */
+  tenant: string;
   /** Rows per run (a bound for one sweep); the rest waits for the next one. */
   limit?: number;
 }
@@ -35,8 +37,8 @@ interface LegacyRow {
 const sha256Of = (bytes: Uint8Array) => createHash("sha256").update(bytes).digest("hex");
 
 /** Copies one row's bytes to its store, reads them back, and only then empties the column. True when the row now lives in the store. */
-async function moveRow(q: Query, row: LegacyRow, holder: ObjectHolder): Promise<boolean> {
-  const key = objectKey(row.owner_id, row.id, row.mime_type);
+async function moveRow(q: Query, row: LegacyRow, holder: ObjectHolder, tenant: string): Promise<boolean> {
+  const key = objectKey(tenant, row.owner_id, row.id, row.mime_type);
   try {
     const store = await holder({
       owner_id: row.owner_id,
@@ -65,8 +67,14 @@ async function moveRow(q: Query, row: LegacyRow, holder: ObjectHolder): Promise<
 }
 
 /** Moves one row; 1 when it moved, 0 when it failed (its id joins `failed`). */
-async function moveCounted(q: Query, row: LegacyRow, holder: ObjectHolder, failed: string[]): Promise<number> {
-  if (await moveRow(q, row, holder)) {
+async function moveCounted(
+  q: Query,
+  row: LegacyRow,
+  holder: ObjectHolder,
+  tenant: string,
+  failed: string[],
+): Promise<number> {
+  if (await moveRow(q, row, holder, tenant)) {
     return 1;
   }
   failed.push(row.id);
@@ -81,7 +89,7 @@ async function moveCounted(q: Query, row: LegacyRow, holder: ObjectHolder, faile
 export async function backfillDocuments(
   q: Query,
   holder: ObjectHolder,
-  options: BackfillOptions = {},
+  options: BackfillOptions,
 ): Promise<BackfillResult> {
   const dryRun = options.dryRun === true;
   const rows = await q<LegacyRow>(
@@ -92,7 +100,7 @@ export async function backfillDocuments(
   let copied = 0;
   if (!dryRun) {
     for (const row of rows) {
-      copied += await moveCounted(q, row, holder, failed);
+      copied += await moveCounted(q, row, holder, options.tenant, failed);
     }
     if (rows.length > 0) {
       await audit({

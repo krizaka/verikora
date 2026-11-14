@@ -23,7 +23,12 @@ describe.runIf(enabled)("a batch against a busy engine and awkward files", () =>
   const state = { busy: false, n: 0, started: [] as string[] };
   const runs = new Map<string, { studio: string; status: string }>();
   let account = { id: "", perspective: null };
-  const ctx = async () => ({ settings: await settingsFor(account.id), now: new Date(), environment: "dev" as const });
+  const ctx = async () => ({
+    settings: await settingsFor(account.id),
+    now: new Date(),
+    environment: "dev" as const,
+    tenant: "verikora-dev",
+  });
   const pdf = async (name: string, text: string) => ({ name, type: "application/pdf", bytes: await leasePdf(text) });
   const finishAll = () => runs.forEach((r) => (r.status = "SUCCEEDED"));
 

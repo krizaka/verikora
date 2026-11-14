@@ -31,7 +31,7 @@ describe.runIf(enabled)("keep or purge (ADR-0007)", () => {
   const policy = (
     keep: boolean,
     store: ReturnType<typeof dev> | ReturnType<typeof noneStore> = noneStore(),
-  ): StoragePolicy => ({ keep, store, now: NOW, purgeAfterHours: 24 });
+  ): StoragePolicy => ({ keep, store, now: NOW, purgeAfterHours: 24, tenant: "verikora-dev" });
   const finish = async (documentId: string) => {
     const [a] = await query<{ id: string }>(
       "INSERT INTO analyses (document_id, studio, status, run_id, report, finished_at) VALUES ($1, 'compliance-check', 'succeeded', gen_random_uuid(), '{\"findings\":[]}', now()) RETURNING id",

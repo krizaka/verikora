@@ -1,3 +1,24 @@
+/** The bytes still in the database move to the store, a few at a time (ADR-0012): copied, read back, SHA-256 checked, then the column emptied. */
+async function backfillStep(
+  sweepQuery: Parameters<typeof import("./lib/documents-backfill").backfillDocuments>[0],
+  documentHolder: Parameters<typeof import("./lib/documents-backfill").backfillDocuments>[1],
+) {
+  const { backfillDocuments } = await import("./lib/documents-backfill");
+  const { logInfo } = await import("./lib/log");
+  const { readEnv: backfillEnv, documentsTenant } = await import("./lib/env");
+  const mode = backfillEnv().APP_DOCUMENTS_BACKFILL;
+  if (mode === "off") {
+    return;
+  }
+  const options = { dryRun: mode === "dry-run", limit: 25, tenant: documentsTenant() };
+  const moved = await backfillDocuments(sweepQuery, documentHolder, options);
+  if (moved.candidates) {
+    logInfo(
+      `[verikora] documents backfill${moved.dryRun ? " (dry run)" : ""}: ${moved.candidates} to move, ${moved.copied} moved, ${moved.failed.length} left`,
+    );
+  }
+}
+
 /**
  * At server start: refuse to run without the production secrets, then apply the database migrations (one advisory lock,
  * so a second instance waits instead of racing).
@@ -92,18 +113,7 @@ async function start() {
       const { query: sweepQuery } = await import("./lib/db");
       const { holderOf: documentHolder } = await import("./app/active-store");
       const purgedDocuments = await purgeDocuments(sweepQuery, new Date(), documentHolder);
-      // The bytes still in the database move to the store, a few at a time (ADR-0012): copied, read back, SHA-256 checked, then the column emptied.
-      const { backfillDocuments } = await import("./lib/documents-backfill");
-      const { readEnv: backfillEnv } = await import("./lib/env");
-      const mode = backfillEnv().APP_DOCUMENTS_BACKFILL;
-      if (mode !== "off") {
-        const moved = await backfillDocuments(sweepQuery, documentHolder, { dryRun: mode === "dry-run", limit: 25 });
-        if (moved.candidates) {
-          logInfo(
-            `[verikora] documents backfill${moved.dryRun ? " (dry run)" : ""}: ${moved.candidates} to move, ${moved.copied} moved, ${moved.failed.length} left`,
-          );
-        }
-      }
+      await backfillStep(sweepQuery, documentHolder);
       const purgedResults = await purgeResults(new Date());
       if (purgedDocuments || purgedResults) {
         logInfo(`[verikora] retention: ${purgedDocuments} documents, ${purgedResults} results purged`);

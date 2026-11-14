@@ -24,4 +24,5 @@ jobs:
       env: |
         DATABASE_URL=postgresql://ci:ci-only-password@postgres:5432/ci
         E2E_EMAIL=eric@demo.verikora.test
+        MEDIA_DOCUMENTS_TENANT=verikora-ci
         E2E_PASSWORD=ci-only-demo-password-0123

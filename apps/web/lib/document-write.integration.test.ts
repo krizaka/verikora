@@ -1,6 +1,7 @@
 import { beforeAll, describe, expect, it } from "vitest";
 
 import { migrate, query } from "./db";
+import { documentsTenant } from "./env";
 import { getFile, type StoragePolicy, storeDocument } from "./documents";
 import { purgeIfDone } from "./retention";
 import { memoryStore } from "./storage/memory";
@@ -30,7 +31,7 @@ describe.runIf(enabled)("the write path puts bytes in the store (ADR-0012)", () 
     keep: boolean,
     working: ReturnType<typeof mem> | null,
     store: ReturnType<typeof mem> | ReturnType<typeof noneStore> = noneStore(),
-  ): StoragePolicy => ({ keep, store, working, now: NOW, purgeAfterHours: 24 });
+  ): StoragePolicy => ({ keep, store, working, now: NOW, purgeAfterHours: 24, tenant: "verikora-dev" });
   const rowOf = async (id: string) =>
     (
       await query<{ object_key: string | null; len: number; storage: string }>(
@@ -44,7 +45,11 @@ describe.runIf(enabled)("the write path puts bytes in the store (ADR-0012)", () 
     const working = mem();
     const { summary } = await storeDocument(owner, file, bytes("a"), "lease", policy(false, working));
     const row = await rowOf(summary.id);
-    expect(row).toMatchObject({ len: 0, storage: "none", object_key: `${owner}/${summary.id}/original.txt` });
+    expect(row).toMatchObject({
+      len: 0,
+      storage: "none",
+      object_key: `tenants/${documentsTenant()}/users/${owner}/documents/${summary.id}/original.txt`,
+    });
     expect(new Uint8Array((await working.get(row.object_key!))!.bytes)).toEqual(bytes("a"));
     expect(new Uint8Array((await getFile(owner, summary.id, working)).content)).toEqual(bytes("a"));
   });
@@ -111,5 +116,24 @@ describe.runIf(enabled)("the write path puts bytes in the store (ADR-0012)", () 
     expect(
       await query("SELECT 1 FROM documents WHERE owner_id = $1 AND octet_length(content) > 0", [owner]),
     ).toHaveLength(0);
+  });
+
+  it("a document kept under the old layout still opens, and is still purged", async () => {
+    const owner = await account();
+    const store = mem("bunny");
+    const [doc] = await query<{ id: string }>(
+      "INSERT INTO documents (owner_id, title, filename, mime_type, kind, size_bytes, sha256, content, text, storage) VALUES ($1, 'bail', 'bail.txt', 'text/plain', 'lease', 10, 'x', ''::bytea, 'Loyer', 'bunny') RETURNING id",
+      [owner],
+    );
+    const old = `${owner}/${doc!.id}/original.txt`;
+    await store.put(old, bytes("old"), { contentType: "text/plain" });
+    // no object_key on the row: the dual read falls back to the old key
+    expect(new Uint8Array((await getFile(owner, doc!.id, store)).content)).toEqual(bytes("old"));
+    // with its stored key, whatever the layout
+    await query("UPDATE documents SET object_key = $2 WHERE id = $1", [doc!.id, old]);
+    expect(new Uint8Array((await getFile(owner, doc!.id, store)).content)).toEqual(bytes("old"));
+    await query("UPDATE documents SET storage = 'none' WHERE id = $1", [doc!.id]);
+    expect(await purgeIfDone(query, doc!.id, async () => store)).toBe(true);
+    expect(await store.get(old)).toBeNull();
   });
 });
