@@ -3691,6 +3691,11 @@
         "p": "You can access, correct or delete your information, withdraw your consent and download your data by writing to the privacy officer. Deleting a document deletes its file, its text and its results. Closing your account deletes your documents. We keep invoices as the law requires."
       },
       {
+        "id": "complaints",
+        "h": "How to file a complaint",
+        "p": "To file a complaint about your personal information, write through the contact form of krizaka.com (krizaka.com/contact). The person in charge reads it and answers within 30 days. You may also go to the Commission d'accès à l'information du Québec."
+      },
+      {
         "id": "incidents",
         "h": "Incidents",
         "p": "If a confidentiality incident presents a risk of serious harm, we notify the Commission d'accès à l'information and the people concerned, as the law requires."
