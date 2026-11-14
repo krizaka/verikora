@@ -16,14 +16,14 @@
     "build:app": "tauri build --bundles dmg --target aarch64-apple-darwin"
   },
   "dependencies": {
-    "@krizaka/app-client": "^0.3.1",
+    "@krizaka/app-client": "^0.3.2",
     "@krizaka/app-desktop": "^0.1.3",
     "@krizaka/i18n": "^0.2.7",
     "@krizaka/icons": "^0.10.0",
     "@krizaka/query": "^0.3.0",
-    "@krizaka/tailwind": "^4.4.0",
-    "@krizaka/tokens": "^4.4.0",
-    "@krizaka/ui": "^4.4.0",
+    "@krizaka/tailwind": "^4.4.1",
+    "@krizaka/tokens": "^4.4.1",
+    "@krizaka/ui": "^4.4.1",
     "@tailwindcss/vite": "^4.3.3",
     "@tauri-apps/api": "^2.12.3",
     "@tauri-apps/plugin-http": "^2.5.0",
