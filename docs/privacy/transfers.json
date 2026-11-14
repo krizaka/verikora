@@ -34,6 +34,7 @@
         "MEDIA_DOCUMENTS_PULL_HOSTNAME",
         "MEDIA_DOCUMENTS_TOKEN_KEY",
         "MEDIA_DOCUMENTS_PREFIX",
+        "MEDIA_DOCUMENTS_TENANT",
         "MEDIA_DOCUMENTS_ENCRYPTION_KEY"
       ],
       "hosts": ["ny.storage.bunnycdn.com", "yomizaka-docs-dev.b-cdn.net", "storage.bunnycdn.com"],
