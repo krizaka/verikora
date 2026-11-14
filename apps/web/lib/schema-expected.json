@@ -523,7 +523,9 @@
       "source",
       "status",
       "updated_at"
-    ]
+    ],
+    "storage.tenant_key": ["created_at", "root_key", "tenant_id", "version", "wrapped"],
+    "storage.tenant_keyring": ["shredded_at", "tenant_id"]
   },
   "config": {
     "public.screening_provider": ["demo", "engine"],
