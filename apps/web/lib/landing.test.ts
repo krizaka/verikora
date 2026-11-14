@@ -8,7 +8,7 @@ import en from "@/messages/en.json";
 import fr from "@/messages/fr.json";
 
 import { verdictOf } from "./document-face";
-import { type DevPreview, HERO_FIGURES, heroFinding, productStatus } from "./landing";
+import { HERO_FIGURES, heroFinding } from "./landing";
 import { recordedRun } from "./recorded-runs";
 import { ruleTitle } from "./rule-text";
 
@@ -52,18 +52,6 @@ describe("the home is one short page: who it is for, one real check, one way in"
     expect(read("app/globals.css")).toContain("--kz-hero-top: 5.75rem");
   });
 
-  it("says its honest status, read from dev-preview.json: in development while a criterion still has a gap", () => {
-    const preview = JSON.parse(read("../../dev-preview.json")) as DevPreview;
-    const gaps = Object.values(preview.criteria).some((c) => typeof c.evidence !== "string" && !c.na);
-    expect(productStatus(preview)).toBe(gaps ? "development" : "preview");
-    expect(en.landing.status[productStatus(preview)]).toBeTruthy();
-  });
-
-  it("counts a criterion that does not apply (na, with its reason) as met, and a bare null as a gap", () => {
-    const met = { a: { evidence: "https://example.com/e" }, b: { na: "No mobile app for the Dev preview." } };
-    expect(productStatus({ criteria: met })).toBe("preview");
-    expect(productStatus({ criteria: { ...met, c: { evidence: null } } })).toBe("development");
-  });
 });
 
 describe("plain words, in both languages", () => {

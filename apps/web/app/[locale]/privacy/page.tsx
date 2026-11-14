@@ -6,8 +6,9 @@ import Link from "next/link";
 import { SiteHeader } from "@/components/SiteChrome";
 import { ProductFooter } from "@/components/SiteFooter";
 import { asLocale, format, getDictionary } from "@/lib/i18n";
+import { PRIVACY_OFFICER_EMAIL } from "@/lib/privacy-officer";
 import { pageMetadata, siteJsonLd } from "@/lib/seo";
-import { pagePath, PRIVACY_OFFICER_EMAIL, PRIVACY_UPDATED } from "@/lib/site";
+import { pagePath, PRIVACY_UPDATED } from "@/lib/site";
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
   return pageMetadata(asLocale((await params).locale), "privacy");

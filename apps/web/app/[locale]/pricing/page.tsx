@@ -7,12 +7,11 @@ import { ProductFooter } from "@/components/SiteFooter";
 import { pageSession } from "@/lib/access";
 import { CONSOLE_ROUTES } from "@/lib/console-nav";
 import { asLocale, getDictionary } from "@/lib/i18n";
-import { productStatus } from "@/lib/landing";
 import { pricingView } from "@/lib/prices/pricing-view";
 import { PRICING_PUBLISHED } from "@/lib/prices/publication";
+import { statusLine } from "@/lib/product-status";
 import { pageMetadata, siteJsonLd } from "@/lib/seo";
 
-import preview from "../../../../../dev-preview.json";
 
 /** The prices are data an administrator schedules (ADR-009): the page is read at each request, never frozen at build. */
 export const dynamic = "force-dynamic";
@@ -42,7 +41,7 @@ export default async function Pricing({ params }: Readonly<{ params: Promise<{ l
           locale={locale}
           sold={view.sold}
           soon={view.soon}
-          status={getDictionary(locale).landing.status[productStatus(preview)]}
+          status={statusLine(getDictionary(locale).landing.status)}
         />
       </main>
       <ProductFooter locale={locale} />

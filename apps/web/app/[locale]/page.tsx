@@ -13,12 +13,11 @@ import { ProductFooter } from "@/components/SiteFooter";
 import { HERO } from "@/content/recorded-runs/samples.mjs";
 import { asLocale, getDictionary } from "@/lib/i18n";
 import type { ConsoleMessages } from "@/lib/i18n-client";
-import { productStatus } from "@/lib/landing";
+import { statusLine } from "@/lib/product-status";
 import { recordedRun } from "@/lib/recorded-runs";
 import { pageMetadata, siteJsonLd } from "@/lib/seo";
 import { contactHref } from "@/lib/site";
 
-import preview from "../../../../dev-preview.json";
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
   return pageMetadata(asLocale((await params).locale), "home");
@@ -65,7 +64,7 @@ export default async function Home({ params }: Readonly<{ params: Promise<{ loca
                   </Button>
                 </div>
                 <p className="mt-4 max-w-[60ch] text-sm text-fg-secondary" data-testid="hero-status">
-                  {d.status[productStatus(preview)]}
+                  {statusLine(d.status)}
                 </p>
               </>
             }

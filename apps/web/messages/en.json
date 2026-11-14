@@ -4418,8 +4418,7 @@
     "lead": "For property managers in Québec. Verikora reads the documents an applicant sends and your lease template, and ties every finding to its line and its article of law.",
     "status": {
       "label": "Status",
-      "development": "In development: sign-up is closed while we test it on real Québec leases.",
-      "preview": "Dev preview: sign-up is closed, access by invitation."
+      "development": "In development: sign-up is closed while we test it on real Québec leases."
     },
     "hero": {
       "primary": "Write to us to try it on your files",
