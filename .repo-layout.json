@@ -19,6 +19,10 @@
     {
       "path": "fixtures",
       "why": "the sample applicant file (fictitious PDFs, provenance.json, the recorded Sovkora run) behind the signed sample report a manager receives (krizaka-internal#3119); data, not code"
+    },
+    {
+      "path": "precheck.json",
+      "why": "krizaka-precheck reads the tests the CI gate runs per changed path only from the repository root, before a push (krizaka-internal#3537)"
     }
   ]
 }
