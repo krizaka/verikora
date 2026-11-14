@@ -17,8 +17,13 @@ import {
   boughtOneFile,
   chargedForSale,
   forSale,
-  billingSteps,
+  CARD_METHOD,
+  describeFrames,
   describeStuckForm,
+  formSteps,
+  isCadOption,
+  PAY_BUTTON,
+  PAYMENT_FRAME_FIELDS,
   describeStuckPage,
   isHostedCheckout,
   isSignedPdf,
@@ -73,49 +78,81 @@ function processor(key) {
   };
 }
 
-/** One billing step on the hosted page, when its field is there. */
-async function fillStep(page, step) {
-  const field = page.locator(step.selector);
-  // Stripe draws its own box over the checkbox: the input itself is hidden, so it is unticked when it exists at all.
+/** One field of the payment frame, when it is there. */
+async function fillStep(frame, step) {
+  const field = frame.locator(step.selector).first();
   if (step.action === "uncheck") {
+    // Stripe draws its own box over the checkbox: the input itself may be hidden, so it is unticked when it exists at all.
     if ((await field.count()) > 0) await field.setChecked(false, { force: true });
     return;
   }
   if (!(await field.isVisible().catch(() => false))) return;
   if (step.action === "select") await field.selectOption(step.value);
-  else await field.fill(step.value);
-  if (step.press) await field.press(step.press);
-  // Google's address suggestions stay open over the next fields (Escape does not close them): a click on the blank side of the page does.
-  if (step.blur) await page.mouse.click(20, 700);
+  else if (step.action === "fill-if-empty") {
+    if ((await field.inputValue()) === "") await field.fill(step.value);
+  } else await field.fill(step.value);
 }
 
-/** As the persona does, from Canada: the country first (it reshapes the address fields), then each field that is there. */
-async function fillBilling(page) {
-  for (const step of billingSteps()) await fillStep(page, step);
+/** The frames of the page, the page's own first. */
+const framesOf = (page) => [page.mainFrame(), ...page.frames().filter((f) => f !== page.mainFrame())];
+
+/**
+ * Stripe's hosted Checkout draws its payment form in an Elements iframe (run 43470813543): waits for the frame that holds the email or the card
+ * field. A visitor from outside Canada first gets Adaptive Pricing's currency choice: the catalogue's own currency (CAD) is taken, by role and
+ * name, whichever frame shows it.
+ */
+async function paymentFrame(page, timeoutMs, log) {
+  let chose = false;
+  const found = await until(
+    async () => {
+      for (const frame of framesOf(page)) {
+        if (
+          (await frame
+            .locator(PAYMENT_FRAME_FIELDS)
+            .count()
+            .catch(() => 0)) > 0
+        )
+          return frame;
+      }
+      if (!chose) {
+        for (const frame of framesOf(page)) {
+          const options = frame.getByRole("radio").or(frame.getByRole("button")).or(frame.getByRole("option"));
+          for (const option of await options.all().catch(() => [])) {
+            const name =
+              (await option.innerText().catch(() => "")) ||
+              (await option.getAttribute("aria-label").catch(() => "")) ||
+              "";
+            if (!isCadOption(name) || !(await option.isVisible().catch(() => false))) continue;
+            await option.click({ force: true }).catch(() => {});
+            chose = true;
+            log("currency choice: the catalogue's own currency (CAD) taken");
+            break;
+          }
+          if (chose) break;
+        }
+      }
+      return null;
+    },
+    Boolean,
+    { what: "the hosted page shows no payment form", timeoutMs, everyMs: 500 },
+  );
+  return found;
 }
 
-/** Fills the hosted page with the TEST card and pays. The page's fields change now and then: each is filled when it is there. */
-async function pay(page, hostedUrl, log = () => {}) {
+/** Fills the hosted page with the TEST card and pays. The form is in an iframe; the method, the fields and the button are found by role and name. */
+export async function pay(page, hostedUrl, email, log = () => {}) {
   await loadSettled(page, hostedUrl, { waitUntil: "domcontentloaded" });
-  await page.locator("#cardNumber, #payment-method-label-card").first().waitFor({ state: "attached", timeout: 60_000 });
-  // Card is the default method on the hosted page (from the US); from elsewhere it is a list with no method open: pick the card. The
-  // label sits under a cover button that takes the pointer, so the click is forced onto the label's place.
-  if (
-    !(await page
-      .locator("#cardNumber")
-      .isVisible()
-      .catch(() => false))
-  )
-    await page.locator("#payment-method-label-card").click({ force: true });
-  await page.locator("#cardNumber").waitFor({ timeout: 60_000 });
-  await page.locator("#cardNumber").fill(TEST_CARD.number);
-  await page.locator("#cardExpiry").fill(TEST_CARD.expiry);
-  await page.locator("#cardCvc").fill(TEST_CARD.cvc);
-  await fillBilling(page);
+  const frame = await paymentFrame(page, 60_000, log);
+  // Card is the method open by default from some countries; from others it is a list with no method open: open the card one.
+  const method = frame.getByRole("button", { name: CARD_METHOD });
+  if ((await method.count()) > 0 && (await method.first().getAttribute("aria-expanded")) !== "true")
+    await method.first().click();
+  await frame.locator("input[name=number]").waitFor({ timeout: 60_000 });
+  for (const step of formSteps(email)) await fillStep(frame, step);
   // The address recomputes the tax; a click while the page is still updating is swallowed (no error, no processing: the button just
   // stays, krizaka-internal#2316). Wait for the page to settle, then press until it leaves, a few times at most.
   await page.waitForLoadState("networkidle", { timeout: 15_000 }).catch(() => {});
-  const submit = page.locator("[data-testid=hosted-payment-submit-button], button.SubmitButton").first();
+  const submit = frame.getByRole("button", { name: PAY_BUTTON }).first();
   for (let attempt = 1; attempt <= SUBMIT_ATTEMPTS; attempt += 1) {
     await submit.click();
     const left = await page
@@ -148,6 +185,15 @@ async function recordStuckPage(page, dir, log) {
         errors: [...document.querySelectorAll("[role=alert], [class*=Error], [id*=rror]")].map((e) => e.innerText),
       }))
       .catch(() => ({ fields: [], errors: [] }));
+    const frames = [];
+    for (const frame of framesOf(page)) {
+      const tree = await frame
+        .locator("body")
+        .ariaSnapshot({ timeout: 3000 })
+        .catch(() => "");
+      if (tree) frames.push({ url: frame.url(), tree });
+    }
+    writeFileSync(`${dir}/stuck-frames.json`, `${JSON.stringify(describeFrames(frames), null, 2)}\n`);
     writeFileSync(`${dir}/stuck-form.json`, `${JSON.stringify(describeStuckForm(form), null, 2)}\n`);
     log(`stuck on ${seen.url} (${seen.title})`);
   } catch (error) {
@@ -212,7 +258,7 @@ export async function checkoutJourney({
       const context = await auditContext(browser);
       const page = await context.newPage();
       try {
-        await pay(page, started.body.url, log);
+        await pay(page, started.body.url, email, log);
         await page.waitForURL((url) => returnedFromCheckout(url.href, started.body.url), { timeout: 90_000 });
       } catch (error) {
         await recordStuckPage(page, diagnosisDir, log);

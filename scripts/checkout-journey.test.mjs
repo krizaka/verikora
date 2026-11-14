@@ -18,7 +18,12 @@ import {
   issueFor,
   paidReceipt,
   returnedFromCheckout,
-  billingSteps,
+  CARD_METHOD,
+  PAY_BUTTON,
+  PAYMENT_FRAME_FIELDS,
+  describeFrames,
+  formSteps,
+  isCadOption,
   TEST_BILLING,
 } from "./checkout-journey-lib.mjs";
 
@@ -204,48 +209,67 @@ test("the workflow keeps the diagnosis of a red run as a short-lived artifact", 
   assert.match(workflow, /if-no-files-found: ignore/);
 });
 
-test("the persona pays from Canada: a complete, fictitious Montreal address, in Canada's postal format (krizaka-internal#2316)", () => {
+test("the persona pays from Canada: its country and a postal code in Canada's format (krizaka-internal#2316)", () => {
   assert.equal(TEST_BILLING.country, "CA");
-  assert.equal(TEST_BILLING.region, "QC");
-  assert.equal(TEST_BILLING.city, "Montréal");
   assert.match(TEST_BILLING.postal, /^[A-Z]\d[A-Z] \d[A-Z]\d$/);
-  for (const field of ["line1", "city", "region", "postal"]) assert.ok(TEST_BILLING[field], `${field} is filled`);
 });
 
-test("the hosted page's billing country is chosen first, before the fields it reshapes", () => {
-  const steps = billingSteps();
-  assert.deepEqual(steps[0], { selector: "#billingCountry", action: "select", value: "CA" });
+test("the form's fields are the payment frame's `name`s, which do not change with the page's language (run 43470813543)", () => {
+  const steps = formSteps("persona@example.test");
   assert.deepEqual(
     steps.map((s) => s.selector),
     [
-      "#billingCountry",
-      "#billingName",
-      "#billingAddressLine1",
-      "#billingLocality",
-      "#billingAdministrativeArea",
-      "#billingPostalCode",
-      "#enableStripePass",
+      "input[name=email]",
+      "input[name=number]",
+      "input[name=expiry]",
+      "input[name=cvc]",
+      "input[name=name]",
+      "select[name=country]",
+      "input[name=postalCode]",
+      "input[name=linkOptIn]",
     ],
   );
-  assert.equal(steps.find((s) => s.selector === "#billingAdministrativeArea").action, "select");
-  assert.equal(steps.find((s) => s.selector === "#billingPostalCode").value, TEST_BILLING.postal);
+  for (const s of steps)
+    assert.doesNotMatch(s.selector, /#(cardNumber|billing|payment-method)/, "no id of the old page");
+  assert.equal(steps[0].value, "persona@example.test");
+  assert.equal(steps[0].action, "fill-if-empty");
+  assert.equal(steps.find((s) => s.selector === "select[name=country]").value, "CA");
+  assert.equal(steps.find((s) => s.selector === "input[name=postalCode]").value, TEST_BILLING.postal);
 });
 
-test("the address line closes Google's suggestion list before the next field, so nothing covers the city or the submit button", () => {
-  const steps = billingSteps();
-  const line = steps.find((s) => s.selector === "#billingAddressLine1");
-  assert.equal(line.press, "Escape");
-  for (const s of steps.filter((s) => s !== line)) assert.equal(s.press, undefined, s.selector);
+test("the country is chosen before the fields it reshapes, and the persona pays without Link", () => {
+  const selectors = formSteps("a@b.test").map((s) => s.selector);
+  assert.ok(selectors.indexOf("select[name=country]") < selectors.indexOf("input[name=postalCode]"));
+  assert.deepEqual(formSteps("a@b.test").at(-1), { selector: "input[name=linkOptIn]", action: "uncheck" });
 });
 
-test("the address line is followed by a click on the blank side of the page, the only way that closes the suggestions", () => {
-  const line = billingSteps().find((s) => s.selector === "#billingAddressLine1");
-  assert.equal(line.blur, true);
+test("the card method and the pay button are found by their name, in English and in French", () => {
+  for (const word of ["Card", "Carte", "card"]) assert.match(word, CARD_METHOD);
+  for (const word of ["Klarna", "Pay with Card", "Carte bancaire"]) assert.doesNotMatch(word, CARD_METHOD);
+  for (const word of ["Pay", "Payer"]) assert.match(word, PAY_BUTTON);
+  for (const word of ["Pay securely with Link", "Payez en toute sécurité avec Link", "Payer avec"])
+    assert.doesNotMatch(word, PAY_BUTTON);
+  assert.equal(PAYMENT_FRAME_FIELDS, "input[name=email], input[name=number]");
 });
 
-test("the persona pays without Link: Stripe's own « save with Link » box is unticked, after the address (krizaka-internal#2316)", () => {
-  const steps = billingSteps();
-  assert.deepEqual(steps.at(-1), { selector: "#enableStripePass", action: "uncheck" });
+test("the currency choice of Adaptive Pricing takes the catalogue's own currency, in both languages", () => {
+  for (const name of ["CA$9.99", "9,99 $CA", "CAD", "Dollar canadien", "Canadian dollar"])
+    assert.ok(isCadOption(name), name);
+  for (const name of ["US$7.29", "7,29 $US", "USD", "Card", "", null, undefined])
+    assert.ok(!isCadOption(name), String(name));
+});
+
+test("the frames of a stuck page are described without a card number, without a session id and cut", () => {
+  const out = describeFrames([
+    {
+      url: "https://checkout.stripe.com/g/pay/cs_test_abc123?x=1",
+      tree: `- textbox: 4242 4242 4242 4242\n${"x".repeat(5000)}`,
+    },
+  ]);
+  assert.equal(out[0].url, "https://checkout.stripe.com/g/pay/cs_test_[id]");
+  assert.doesNotMatch(out[0].tree, /4242/);
+  assert.ok(out[0].tree.length <= 3000);
+  assert.deepEqual(describeFrames(null), []);
 });
 
 test("a field the page marks invalid is recorded as such, even when no error text shows", () => {
@@ -289,7 +313,8 @@ test("the journey settles the hosted page and presses submit again when a click 
   const source = readFileSync(new URL("./checkout-journey.mjs", import.meta.url), "utf8");
   assert.match(source, /waitForLoadState\("networkidle"/);
   assert.match(source, /SUBMIT_ATTEMPTS = [2-9]/);
-  assert.match(source, /payment-method-label-card/);
+  assert.match(source, /getByRole\("button", \{ name: CARD_METHOD \}\)/);
+  assert.doesNotMatch(source, /#cardNumber|#payment-method-label-card/);
 });
 
 test("the browser install survives an apt mirror outage: retried with a reason, never silently skipped (run 43040951866)", () => {
