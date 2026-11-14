@@ -10,32 +10,58 @@ export const TEST_CARD = {
 };
 
 /**
- * The persona's billing address (Eric, Montréal; fictitious, docs/demo-data.md). The hosted page defaults the country to where the
- * runner geolocates (the United States on GitHub), and then asks a full address and a ZIP that turns "H2X 1Y4" into "214"
- * (krizaka-internal#2316): the journey says it is in Canada, as the persona is.
+ * The persona's billing country and postal code (Eric, Montréal; fictitious, docs/demo-data.md). The hosted page defaults the country to where
+ * the runner geolocates (the United States on GitHub), and then asks a ZIP that turns "H2X 1Y4" into "214" (krizaka-internal#2316): the journey
+ * says it is in Canada, as the persona is. Since 2026-11 the page asks no street address any more, only these two.
  */
-export const TEST_BILLING = {
-  country: "CA",
-  line1: "123 rue Exemple",
-  city: "Montréal",
-  region: "QC",
-  postal: "H2X 1Y4",
-};
+export const TEST_BILLING = { country: "CA", postal: "H2X 1Y4" };
 
-/** The hosted page's billing fields in the order they are filled: the country first (it reshapes the others). Pure. */
-export function billingSteps(billing = TEST_BILLING, name = TEST_CARD.name) {
+/**
+ * Why the journey waited 60 s for `#cardNumber` and found nothing (run 43470813543, 2026-11-13): Stripe's hosted Checkout draws the whole
+ * payment form (email, the « Card » / « Carte » method, the card fields, the Pay button) inside an Elements iframe, and its ids
+ * (`#cardNumber`, `#payment-method-label-card`, `#billing*`) are gone. The fields are now `input[name=…]` of that frame, whose `name`s do not
+ * change with the page's language; the buttons are found by their accessible name, in English and in French (the page follows the browser).
+ */
+export const PAYMENT_FRAME_FIELDS = "input[name=email], input[name=number]";
+
+/** The payment method button that opens the card fields: « Card » in English, « Carte » in French. */
+export const CARD_METHOD = /^(card|carte)$/i;
+
+/** The button that pays: « Pay » / « Payer » and nothing longer (« Pay securely with Link » is another button). */
+export const PAY_BUTTON = /^(pay|payer)$/i;
+
+/** The currency the catalogue is in (CAD): what the currency choice of Adaptive Pricing offers, in English and in French. */
+export const CAD_OPTION = /CAD|CA\$|\$\s?CA|canadi(an|en)/i;
+
+/** Whether a currency choice (its accessible name) is the catalogue's own currency. Pure. */
+export const isCadOption = (name) => CAD_OPTION.test(String(name ?? ""));
+
+/** The hosted form's fields in the order they are filled, each an `input[name=…]` of the payment frame. `email` is filled only when empty. Pure. */
+export function formSteps(email, billing = TEST_BILLING, card = TEST_CARD) {
   return [
-    { selector: "#billingCountry", action: "select", value: billing.country },
-    { selector: "#billingName", action: "fill", value: name },
-    // Typing the line opens a Google suggestion list over the next fields and the submit button: Escape closes it.
-    { selector: "#billingAddressLine1", action: "fill", value: billing.line1, press: "Escape", blur: true },
-    { selector: "#billingLocality", action: "fill", value: billing.city },
-    { selector: "#billingAdministrativeArea", action: "select", value: billing.region },
-    { selector: "#billingPostalCode", action: "fill", value: billing.postal },
-    // From Canada, Stripe ticks « save my information with Link » by itself, which makes a phone number required: the submit then
-    // does nothing (only an icon on the empty field, krizaka-internal#2316). The persona pays without Link.
-    { selector: "#enableStripePass", action: "uncheck" },
+    { selector: "input[name=email]", action: "fill-if-empty", value: email },
+    { selector: "input[name=number]", action: "fill", value: card.number },
+    { selector: "input[name=expiry]", action: "fill", value: card.expiry },
+    { selector: "input[name=cvc]", action: "fill", value: card.cvc },
+    { selector: "input[name=name]", action: "fill-if-empty", value: card.name },
+    // The country first (it reshapes the fields after it).
+    { selector: "select[name=country]", action: "select", value: billing.country },
+    { selector: "input[name=postalCode]", action: "fill", value: billing.postal },
+    // From Canada, Stripe may tick « save my information with Link », which makes a phone number required: the persona pays without Link.
+    { selector: "input[name=linkOptIn]", action: "uncheck" },
   ];
+}
+
+/**
+ * What the journey records of each frame when the form is not found: the accessible tree Playwright gives (roles and names, no values), cut,
+ * with anything that looks like a card number masked. `frames` is [{ url, tree }]. Pure.
+ */
+export function describeFrames(frames) {
+  const mask = (text) => String(text ?? "").replace(/\b(?:\d[ -]?){13,19}\b/g, "[card]");
+  return (Array.isArray(frames) ? frames : []).slice(0, 12).map((f) => ({
+    url: describeStuckPage({ url: f?.url, title: "" }).url,
+    tree: mask(f?.tree).slice(0, 3000),
+  }));
 }
 
 /**
