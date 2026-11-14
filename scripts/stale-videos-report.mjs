@@ -15,7 +15,12 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
     process.exit(2);
   }
   const { videos } = JSON.parse(readFileSync(MANIFEST, "utf8"));
-  const { GITHUB_SERVER_URL: server, GITHUB_REPOSITORY: repo, GITHUB_RUN_ID: runId, GITHUB_OUTPUT: output } = process.env;
+  const {
+    GITHUB_SERVER_URL: server,
+    GITHUB_REPOSITORY: repo,
+    GITHUB_RUN_ID: runId,
+    GITHUB_OUTPUT: output,
+  } = process.env;
   const alert = alertFor(new Date(), videos, runId ? `${server}/${repo}/actions/runs/${runId}` : "");
   writeFileSync(out, alert.body);
   if (output) appendFileSync(output, `state=${alert.state}\n`);

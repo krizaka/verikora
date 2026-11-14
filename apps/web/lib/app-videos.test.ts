@@ -4,16 +4,7 @@ import { join } from "node:path";
 
 import { describe, expect, it } from "vitest";
 
-import {
-  APP_VIDEOS,
-  frameOf,
-  FRAMES,
-  localeOf,
-  staleVideos,
-  videoId,
-  videosFor,
-  wordsId,
-} from "./app-videos";
+import { APP_VIDEOS, frameOf, FRAMES, localeOf, staleVideos, videoId, videosFor, wordsId } from "./app-videos";
 import { getDictionary, LOCALES } from "./i18n";
 
 const ROOT = join(__dirname, "..");
