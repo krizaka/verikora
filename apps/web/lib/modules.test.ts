@@ -1,5 +1,6 @@
 import { signupInvitationsSchema } from "@krizaka/auth";
 import { emitMigration } from "@krizaka/db";
+import { storageSchema } from "@krizaka/storage/provider-admin";
 import { describe, expect, it } from "vitest";
 
 import { MIGRATIONS } from "./migrations";
@@ -18,6 +19,12 @@ describe("the Krizaka modules", () => {
   it("commit the sign-up invitations exactly as @krizaka/auth emits them (a changed v1 in the package fails here, never silently)", () => {
     const committed = MIGRATIONS.find((m) => m.version === "0004_signup_invitations")?.sql;
     const emitted = emitMigration(signupInvitationsSchema, 1, { tables: {} });
+    expect(committed).toBe(emitted.trimEnd());
+  });
+
+  it("commit the storage tenant keys exactly as @krizaka/storage emits them (v2)", () => {
+    const committed = MIGRATIONS.find((m) => m.version === "0009_storage_tenant_keys")?.sql;
+    const emitted = emitMigration(storageSchema, 2, { tables: {} });
     expect(committed).toBe(emitted.trimEnd());
   });
 });
