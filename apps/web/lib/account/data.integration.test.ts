@@ -30,6 +30,7 @@ describe.runIf(enabled)("export and erasure (Loi 25)", () => {
     store,
     now: NOW,
     purgeAfterHours: 24,
+    tenant: "verikora-dev",
   });
   const file = { name: "bail.txt", type: "text/plain", size: 90 };
   const bytes = (n: string) => new TextEncoder().encode(`BAIL DE LOGEMENT\nLoyer mensuel : 1 450 $ ${n}\n`);

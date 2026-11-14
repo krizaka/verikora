@@ -37,6 +37,7 @@ describe.runIf(enabled)("the batch tick", () => {
       settings: await settingsFor(who.id),
       now: new Date(),
       environment: "dev",
+      tenant: "verikora-dev",
     });
 
   beforeAll(async () => {

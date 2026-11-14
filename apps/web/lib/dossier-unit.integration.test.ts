@@ -38,6 +38,7 @@ describe.runIf(enabled)("the dossier is the unit of billing", () => {
   const ctx = (): UploadContext => ({
     store,
     purgeAfterHours: 24,
+    tenant: "verikora-dev",
     keepAllowed: false,
     auditCaps: () => ({ perMonth: 1000, perDay: 0, freeDossiers: 1, overageCents: 0 }),
   });

@@ -29,7 +29,7 @@ import { DELETION_RULE, HELD_COLUMNS, type HeldRow, recordDeletionReceipt } from
 import { removeObject } from "./document-objects";
 import { type AnalysisRow, inspectUpload, isUuid, type StoragePolicy, storeDocument } from "./documents";
 import { codeOf, HttpError, refuse } from "./http";
-import { EXTERNAL, HOLDS_BYTES, objectKey, purgeIfDone } from "./retention";
+import { EXTERNAL, HOLDS_BYTES, legacyObjectKey, purgeIfDone } from "./retention";
 import {
   DECISION_RETENTION,
   type DecisionRetention,
@@ -198,12 +198,25 @@ export async function applicantFileState(token: string, now: Date) {
   };
 }
 
+/** The storage policy of one upload: where the file goes, the retention window, the tenant of its key, the pre-flight. */
+const policyOf = (ctx: UploadContext, keep: boolean, now: Date): StoragePolicy => ({
+  keep,
+  store: ctx.store,
+  working: ctx.working,
+  now,
+  purgeAfterHours: ctx.purgeAfterHours,
+  tenant: ctx.tenant,
+  rules: ctx.rules,
+});
+
 /** Upload-time settings the route reads from the owner's account (where documents go, the retention window, the pre-flight). */
 export interface UploadContext {
   store: DocumentStore;
   /** Where the bytes of a document that is not kept wait for their purge (ADR-0012); the folder of a laptop when absent, none in production without a store. */
   working?: DocumentStore | null;
   purgeAfterHours: number;
+  /** The installation's tenant id for the keys of new objects. */
+  tenant: string;
   rules?: NonNullable<StoragePolicy["rules"]>;
   /** The owner's settings allow keeping documents at all (« conserver » is off otherwise, ADR-0007). */
   keepAllowed: boolean;
@@ -294,7 +307,7 @@ export async function uploadApplicantDocument(
       { name: file.name, type: file.type, size: file.size },
       file.bytes,
       "other",
-      { keep, store: ctx.store, working: ctx.working, now, purgeAfterHours: ctx.purgeAfterHours, rules: ctx.rules },
+      policyOf(ctx, keep, now),
     );
     if (duplicate) {
       throw refuse(409, "DUPLICATE_DOCUMENT", "This file was already sent");
@@ -408,7 +421,7 @@ export async function purgeApplicationFiles(
     if (store?.describe().kind !== d.storage) {
       throw refuse(409, "STORAGE_UNAVAILABLE", "The storage that holds these documents is not available");
     }
-    await store.delete(objectKey(ownerId, d.id, d.mime_type));
+    await store.delete(legacyObjectKey(ownerId, d.id, d.mime_type));
   }
   const purged = await query<{ id: string }>(
     `UPDATE documents SET content = ''::bytea, text = '', object_key = NULL, storage = 'none', retain_until = NULL WHERE owner_id = $1 AND screening_id = $2 AND id <> ALL($3::uuid[]) AND (storage <> 'none' OR ${HOLDS_BYTES} OR text <> '') RETURNING id`,

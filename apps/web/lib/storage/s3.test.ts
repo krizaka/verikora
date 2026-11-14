@@ -3,6 +3,7 @@ import crypto from "node:crypto";
 import { bucketStore, encryptedStore, type FetchLike } from "@krizaka/storage";
 import { describe, expect, it } from "vitest";
 
+import { objectKey } from "../retention";
 import { documentStoreOver } from "./adapter";
 import { documentStoreContract } from "./contract.testkit";
 import { MAX_SIGNED_URL_SECONDS } from "./providers";
@@ -24,14 +25,14 @@ const DESCRIPTOR = asDescriptor({
   owner: "krizaka",
   devOnly: false,
 });
-const objects = (pass = e.STORAGE_IT_S3_PASS!) =>
+const objects = (pass = e.STORAGE_IT_S3_PASS!, prefix = "verikora-it") =>
   bucketStore({
     endpoint: e.STORAGE_IT_S3_ENDPOINT!,
     region: "us-east-1",
     bucket: e.STORAGE_IT_S3_BUCKET!,
     accessKeyId: e.STORAGE_IT_S3_USER!,
     secretAccessKey: pass,
-    prefix: "verikora-it",
+    prefix,
     fetch: fetch as unknown as FetchLike,
     clock: { now: () => new Date() },
   });
@@ -62,5 +63,22 @@ describe.runIf(enabled)("s3 adapter (S3 server)", () => {
     await expect(
       make("wrong").put("it/x/doc.txt", new Uint8Array([1]), { contentType: "text/plain" }),
     ).rejects.toMatchObject({ status: 502 });
+  });
+
+  it("a new document's bucket key is tenants/<tenant>/users/<owner>/documents/<document>/original.<ext>, with no bucket prefix", async () => {
+    const key = objectKey("verikora-it", "0f1e2d3c", "9a8b7c6d", "application/pdf");
+    expect(key).toBe("tenants/verikora-it/users/0f1e2d3c/documents/9a8b7c6d/original.pdf");
+    const body = new TextEncoder().encode("%PDF-1.7 bail");
+    const store = documentStoreOver(objects(undefined, ""), DESCRIPTOR, MAX_SIGNED_URL_SECONDS);
+    await store.put(key, body, { contentType: "application/pdf" });
+    // the same object, seen through a store whose prefix is the tenant's: the key in the bucket carries the layout
+    const underTenant = documentStoreOver(
+      objects(undefined, "tenants/verikora-it"),
+      DESCRIPTOR,
+      MAX_SIGNED_URL_SECONDS,
+    );
+    expect((await underTenant.get("users/0f1e2d3c/documents/9a8b7c6d/original.pdf"))?.bytes).toEqual(body);
+    await store.delete(key);
+    expect(await store.get(key)).toBeNull();
   });
 });

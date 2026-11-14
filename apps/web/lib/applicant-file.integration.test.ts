@@ -52,6 +52,7 @@ describe.runIf(enabled)("the applicant file (verikora#127)", () => {
   const ctx = (keepAllowed = true): UploadContext => ({
     store,
     purgeAfterHours: 24,
+    tenant: "verikora-dev",
     keepAllowed,
     auditCaps: () => ({ perMonth: 1000, perDay: 0, freeDossiers: 0, overageCents: 0 }),
   });

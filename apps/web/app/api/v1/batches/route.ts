@@ -3,7 +3,7 @@ import { apiCaller } from "@/lib/api-v1/caller";
 import { audit } from "@/lib/audit";
 import { readBatchForm } from "@/lib/batch/form";
 import { createBatch } from "@/lib/batch/run";
-import { appEnvironment } from "@/lib/env";
+import { appEnvironment, documentsTenant } from "@/lib/env";
 import { handle } from "@/lib/http";
 import { limit } from "@/lib/limits";
 import { assertFeature, settingsFor } from "@/lib/settings/guards";
@@ -21,6 +21,7 @@ export function POST(req: Request) {
       settings: await settingsFor(caller.account.id),
       now: systemClock.now(),
       environment: appEnvironment(),
+      tenant: documentsTenant(),
     });
     await audit({
       action: "api.batch.created",

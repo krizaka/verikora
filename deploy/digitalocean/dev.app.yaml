@@ -78,6 +78,8 @@ services:
       # Kept documents in development (ADR-0007, krizaka/verikora#153): its own private Bunny zone (never the public media zone), signed
       # expiring links through its token-authenticated pull zone. Fictional data only; production uses a Canadian bucket.
       - { key: MEDIA_DOCUMENTS_PROVIDER, scope: RUN_TIME, value: "bunny" }
+      # The tenant id of the object keys (Kridoc space layout, ORG-039), one per installation.
+      - { key: MEDIA_DOCUMENTS_TENANT, scope: RUN_TIME, value: "verikora-dev" }
       - { key: MEDIA_STORAGE_ENDPOINT, scope: RUN_TIME, value: "ny.storage.bunnycdn.com" }
       - { key: MEDIA_STORAGE_ZONE, scope: RUN_TIME, value: "yomizaka-docs-dev" }
       - { key: MEDIA_STORAGE_API_KEY, scope: RUN_TIME, type: SECRET, value: "__MEDIA_STORAGE_API_KEY__" }

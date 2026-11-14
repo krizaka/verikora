@@ -34,6 +34,7 @@
         "MEDIA_DOCUMENTS_PULL_HOSTNAME",
         "MEDIA_DOCUMENTS_TOKEN_KEY",
         "MEDIA_DOCUMENTS_PREFIX",
+        "MEDIA_DOCUMENTS_TENANT",
         "MEDIA_DOCUMENTS_ENCRYPTION_KEY"
       ],
       "hosts": ["ny.storage.bunnycdn.com", "yomizaka-docs-dev.b-cdn.net", "storage.bunnycdn.com"],
@@ -54,6 +55,7 @@
         "MEDIA_S3_BUCKET",
         "MEDIA_S3_ACCESS_KEY_ID",
         "MEDIA_S3_SECRET_ACCESS_KEY",
+        "MEDIA_DOCUMENTS_TENANT",
         "MEDIA_VAULT_KEY"
       ],
       "hosts": ["tor1.digitaloceanspaces.com"],

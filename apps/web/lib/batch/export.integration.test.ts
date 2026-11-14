@@ -93,7 +93,12 @@ describe.runIf(enabled)("the ZIP of a batch's reports", () => {
     );
     bearer = (await key.json()).key;
 
-    const ctx = async () => ({ settings: await settingsFor(owner.id), now: new Date(), environment: "dev" as const });
+    const ctx = async () => ({
+      settings: await settingsFor(owner.id),
+      now: new Date(),
+      environment: "dev" as const,
+      tenant: "verikora-dev",
+    });
     const created = await createBatch(
       owner,
       "Immeuble Laurier",

@@ -3,6 +3,7 @@ import { z } from "zod";
 
 import { storesOf, workingStore } from "@/app/active-store";
 import { fileByToken, uploadApplicantDocument } from "@/lib/applicant-file";
+import { documentsTenant } from "@/lib/env";
 import { handle, refuse } from "@/lib/http";
 import { limit } from "@/lib/limits";
 import { VERIKORA_RULES } from "@/lib/preflight/rules";
@@ -40,6 +41,7 @@ export function POST(req: Request) {
         store: stores.write,
         working: await workingStore(),
         purgeAfterHours: settings["limits.purgeAfterHours"].value as number,
+        tenant: documentsTenant(),
         rules: preflightRulesFrom(VERIKORA_RULES, settings),
         keepAllowed: stores.settings.mode !== STORAGE_MODE.none,
         auditCaps: capsFor(settings, new Date()),

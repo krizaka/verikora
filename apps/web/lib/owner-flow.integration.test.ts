@@ -75,6 +75,7 @@ describe.runIf(enabled)("from the applicant's upload to the owner's report (veri
     const context = {
       store,
       purgeAfterHours: 24,
+      tenant: "verikora-dev",
       keepAllowed: true,
       auditCaps: () => ({ perMonth: 1000, perDay: 0, freeDossiers: 0, overageCents: 0 }),
     };

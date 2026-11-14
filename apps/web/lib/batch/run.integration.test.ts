@@ -56,7 +56,7 @@ describe.runIf(enabled)("a batch of checks (verikora#232)", () => {
       "Immeuble Laurier",
       manifest,
       [await pdf("a.pdf", "BAIL A"), await pdf("b.pdf", "BAIL B")],
-      { settings, now: new Date(), environment: "dev" },
+      { settings, now: new Date(), environment: "dev", tenant: "verikora-dev" },
     );
     expect(created.items.map((i) => [i.line, i.state])).toEqual([
       [2, "running"],
@@ -87,7 +87,7 @@ describe.runIf(enabled)("a batch of checks (verikora#232)", () => {
       "Sans crédit",
       "file,check\nd.pdf,compliance\ne.pdf,compliance",
       [await pdf("d.pdf", "BAIL D"), await pdf("e.pdf", "BAIL E")],
-      { settings, now: new Date(), environment: "dev" },
+      { settings, now: new Date(), environment: "dev", tenant: "verikora-dev" },
     );
     expect(created.pausedBy).toBe("PAYWALL");
     expect(created.items.map((i) => i.state)).toEqual(["pending", "pending"]);

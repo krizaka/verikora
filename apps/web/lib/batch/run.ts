@@ -58,6 +58,8 @@ export interface BatchView {
 type Account = { id: string; perspective: Audience | null };
 /** Where the checks run (the flows are offered per environment): read by the route, given here — domain code reads no env. */
 type Context = { settings: Snapshot; now: Date; environment: FlowEnvironment };
+/** What a new batch also needs: the installation's tenant id for the keys of the documents it stores. */
+type CreateContext = Context & { tenant: string };
 // @fixed: the code `startAnalysis` answers when the same check of the same document is already running — a technical identifier
 const ALREADY_RUNNING = "ALREADY_RUNNING";
 const codeOf = (error: unknown) =>
@@ -68,7 +70,7 @@ export async function createBatch(
   name: string,
   manifestText: string,
   files: readonly BatchFile[],
-  { settings, now, environment }: Context,
+  { settings, now, environment, tenant }: CreateContext,
 ): Promise<BatchView> {
   const preview = await previewBatch(account.id, manifestText, files, settings, now);
   if (!preview.rows.length) throw refuse(422, "BATCH_EMPTY", "The CSV has no row to check");
@@ -83,6 +85,7 @@ export async function createBatch(
     working: await workingStore(),
     now,
     purgeAfterHours: settings["limits.purgeAfterHours"].value as number,
+    tenant,
     rules: preflightRulesFrom(VERIKORA_RULES, settings),
   };
   const byName = new Map(files.map((f) => [f.name.toLowerCase(), f]));

@@ -2,7 +2,7 @@ import { requireSession } from "@/lib/access";
 import { audit } from "@/lib/audit";
 import { readBatchForm } from "@/lib/batch/form";
 import { createBatch, listBatches } from "@/lib/batch/run";
-import { appEnvironment } from "@/lib/env";
+import { appEnvironment, documentsTenant } from "@/lib/env";
 import { handle } from "@/lib/http";
 import { limit } from "@/lib/limits";
 import { assertFeature, settingsFor } from "@/lib/settings/guards";
@@ -28,6 +28,7 @@ export function POST(req: Request) {
       settings: await settingsFor(session.account.id),
       now: new Date(),
       environment: appEnvironment(),
+      tenant: documentsTenant(),
     });
     await audit({
       action: "batch.created",
