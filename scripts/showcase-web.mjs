@@ -18,6 +18,7 @@ import path from "node:path";
 
 import { probe } from "./film-markers-lib.mjs";
 import { applyTheme, flagReader, hideEmail, themesOf } from "./lib/recording-kit.mjs";
+import { REPORT_DOCUMENT, reportDocumentIn } from "./lib/showcase-document.mjs";
 
 const require = createRequire(import.meta.url);
 const { chromium } = require("playwright-core");
@@ -142,7 +143,15 @@ const reportPath = await (async () => {
   // The home lists dossiers, not documents (#680): open the one with the demo leases, then its first document.
   await dossierRow(page).click();
   await firstDocument(page).waitFor({ timeout: 30_000 });
-  await firstDocument(page).click();
+  // Not the first row: the dossier also holds checks that did not finish, whose page is an error state (lib/showcase-document.mjs).
+  const links = await page
+    .locator('a[href*="/app/documents/"]')
+    .evaluateAll((as) =>
+      as.map((a) => ({ href: a.getAttribute("href") ?? "", text: (a.closest("li, tr") ?? a).textContent ?? "" })),
+    );
+  const wanted = reportDocumentIn(links);
+  if (!wanted) throw new Error(`${REPORT_DOCUMENT} is not in the demo dossier: the demo data changed`);
+  await page.locator(`a[href="${wanted}"]`).first().click();
   // The click starts a client navigation: the URL changes some time later, so wait for it (reading it at once saw the library, 29-30 Oct).
   await page.waitForURL(/\/app\/documents\/[^/?#]+/, { timeout: 30_000 });
   await page.waitForLoadState("networkidle");
