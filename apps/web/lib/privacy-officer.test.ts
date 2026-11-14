@@ -4,7 +4,7 @@ import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 
 import { getDictionary } from "./i18n";
-import { PRIVACY_OFFICER_EMAIL } from "./site";
+import { PRIVACY_OFFICER_EMAIL } from "./privacy-officer";
 
 const ROOT = join(__dirname, "..");
 

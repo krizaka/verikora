@@ -27,9 +27,10 @@ describe("no Krizaka e-mail address is public", () => {
     expect(mailtos).toEqual(["app/[locale]/privacy/page.tsx"]);
   });
 
-  it("the site has no support address constant; only the privacy officer's is kept", () => {
+  it("the site has no address at all; the privacy officer's lives in a privacy-* file (the rule's written exception)", () => {
     const site = readFileSync(join(ROOT, "lib/site.ts"), "utf8");
     expect(site).not.toContain("SUPPORT_EMAIL");
-    expect(site.match(ADDRESS)).toEqual([PRIVACY_OFFICER]);
+    expect(site.match(ADDRESS)).toBeNull();
+    expect(readFileSync(join(ROOT, "lib/privacy-officer.ts"), "utf8").match(ADDRESS)).toEqual([PRIVACY_OFFICER]);
   });
 });

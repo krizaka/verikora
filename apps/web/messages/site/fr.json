@@ -41,8 +41,7 @@
     "lead": "Pour les gestionnaires d'immeubles au Québec. Verikora lit les pièces envoyées par le candidat et votre modèle de bail, et relie chaque constat à sa ligne et à son article de loi.",
     "status": {
       "label": "Statut",
-      "development": "En développement : les inscriptions sont fermées pendant nos essais sur de vrais baux québécois.",
-      "preview": "Aperçu de développement : inscriptions fermées, accès sur invitation."
+      "development": "En développement : les inscriptions sont fermées pendant nos essais sur de vrais baux québécois."
     },
     "hero": {
       "primary": "Écrivez-nous pour l'essayer sur vos dossiers",
