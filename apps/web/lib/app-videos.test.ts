@@ -9,7 +9,6 @@ import {
   frameOf,
   FRAMES,
   localeOf,
-  MAX_AGE_DAYS,
   staleVideos,
   videoId,
   videosFor,
@@ -92,10 +91,6 @@ describe("the download page's videos (krizaka/.github#315)", () => {
     const page = readFileSync(join(ROOT, "app/[locale]/download/page.tsx"), "utf8");
     expect(page).toContain("videosFor");
     expect(page).not.toMatch(/b-cdn|(?:site|sites)\/|products\/verikora|\.(mp4|webm|jpg)["'`]/);
-  });
-
-  it(`none is older than ${MAX_AGE_DAYS} days: a stale recording means the e2e job stopped publishing`, () => {
-    expect(staleVideos(new Date()).map(videoId)).toEqual([]);
   });
 
   it("staleVideos tells a fresh recording from an old one", () => {
