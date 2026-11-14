@@ -96,47 +96,52 @@ async function fillStep(frame, step) {
 /** The frames of the page, the page's own first. */
 const framesOf = (page) => [page.mainFrame(), ...page.frames().filter((f) => f !== page.mainFrame())];
 
+/** The visible currency choice of the catalogue's own currency (CAD), by role and name, in any frame: clicked once. True when it was. */
+async function takeCatalogueCurrency(page) {
+  for (const frame of framesOf(page)) {
+    const options = frame.getByRole("radio").or(frame.getByRole("button")).or(frame.getByRole("option"));
+    for (const option of await options.all().catch(() => [])) {
+      const name =
+        (await option.innerText().catch(() => "")) || (await option.getAttribute("aria-label").catch(() => ""));
+      if (!isCadOption(name) || !(await option.isVisible().catch(() => false))) continue;
+      await option.click({ force: true }).catch(() => {});
+      return true;
+    }
+  }
+  return false;
+}
+
+/** The frame that holds the email or the card field, or null. */
+async function frameWithForm(page) {
+  for (const frame of framesOf(page)) {
+    if (
+      (await frame
+        .locator(PAYMENT_FRAME_FIELDS)
+        .count()
+        .catch(() => 0)) > 0
+    )
+      return frame;
+  }
+  return null;
+}
+
 /**
  * Stripe's hosted Checkout draws its payment form in an Elements iframe (run 43470813543): waits for the frame that holds the email or the card
- * field. A visitor from outside Canada first gets Adaptive Pricing's currency choice: the catalogue's own currency (CAD) is taken, by role and
- * name, whichever frame shows it.
+ * field. A visitor from outside Canada first gets Adaptive Pricing's currency choice: the catalogue's own currency (CAD) is taken, once.
  */
 async function paymentFrame(page, timeoutMs, log) {
   let chose = false;
-  const found = await until(
+  return until(
     async () => {
-      for (const frame of framesOf(page)) {
-        if (
-          (await frame
-            .locator(PAYMENT_FRAME_FIELDS)
-            .count()
-            .catch(() => 0)) > 0
-        )
-          return frame;
-      }
-      if (!chose) {
-        for (const frame of framesOf(page)) {
-          const options = frame.getByRole("radio").or(frame.getByRole("button")).or(frame.getByRole("option"));
-          for (const option of await options.all().catch(() => [])) {
-            const name =
-              (await option.innerText().catch(() => "")) ||
-              (await option.getAttribute("aria-label").catch(() => "")) ||
-              "";
-            if (!isCadOption(name) || !(await option.isVisible().catch(() => false))) continue;
-            await option.click({ force: true }).catch(() => {});
-            chose = true;
-            log("currency choice: the catalogue's own currency (CAD) taken");
-            break;
-          }
-          if (chose) break;
-        }
-      }
+      const frame = await frameWithForm(page);
+      if (frame || chose) return frame;
+      chose = await takeCatalogueCurrency(page);
+      if (chose) log("currency choice: the catalogue's own currency (CAD) taken");
       return null;
     },
     Boolean,
     { what: "the hosted page shows no payment form", timeoutMs, everyMs: 500 },
   );
-  return found;
 }
 
 /** Fills the hosted page with the TEST card and pays. The form is in an iframe; the method, the fields and the button are found by role and name. */
