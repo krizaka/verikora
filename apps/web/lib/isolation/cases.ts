@@ -304,7 +304,7 @@ export const NOT_OWNER_SCOPED: Record<string, string> = {
   "/api/rapport/[token]/pdf":
     "a share link: the token is the capability the owner sent (owner-report-shares), no session is read; an unknown token is 404",
   "/api/verify/contract/[sha256]":
-    "public by design (AGENTS.md § 4 sealed contracts): shows who sealed and when, never a name, an account or the content",
+    "public by design (docs/agents.md § 4 sealed contracts): shows who sealed and when, never a name, an account or the content",
   "/api/me/storage/cloud/[cloud]":
     "the segment is a provider name (isCloudName), not a row: it starts the caller's own connection",
   "GET /api/organize/[kind]/config":

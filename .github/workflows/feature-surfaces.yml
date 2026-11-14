@@ -1,0 +1,16 @@
+# « Done » covers every surface of the product (krizaka/.github#439): a closed `feature` issue must have every surface ticked with a PR
+# or marked `n/a — reason`, else it is reopened with a comment. The check is the org's (krizaka/.github feature-surfaces.yml).
+name: Feature surfaces
+
+on:
+  issues:
+    types: [closed]
+
+permissions: {}
+
+jobs:
+  check:
+    permissions:
+      contents: read
+      issues: write
+    uses: krizaka/.github/.github/workflows/feature-surfaces.yml@a5c115f5a6a3760b537581a26850a02f52e0fa6b # main
