@@ -10,11 +10,11 @@ import {
   type ExtractionStatus,
   fromRunStatus,
   isExtracting,
-  isTerminal,
+  isOver,
   landlordSignals,
   ODT_MIME,
   reportOf,
-  type SovkoraRun,
+  type RunPayload,
   type StartAnalysis,
   type StorageKind,
 } from "@verikora/core";
@@ -207,7 +207,7 @@ export async function startAnalysis(
     ],
   );
   await recordRealFile(ownerId, row!.id);
-  return isTerminal(row!.status) ? refresh(row!, run) : toAnalysis(row!);
+  return isOver(row!.status) ? refresh(row!, run) : toAnalysis(row!);
 }
 
 /** A run that failed gives its audit back (once: the person is not charged for a check that produced nothing) and the trail says so. True when something was given back now. */
@@ -232,7 +232,7 @@ async function giveBackFailedRun(row: AnalysisRow, error: string | null): Promis
  */
 async function readReport(
   row: AnalysisRow,
-  run: SovkoraRun,
+  run: RunPayload,
 ): Promise<{ report: ComplianceReport | AuthenticityReport | null; noReport: string | null }> {
   const text =
     (await query<{ text: string }>("SELECT text FROM documents WHERE id = $1", [row.document_id]))[0]?.text ?? "";
@@ -253,7 +253,7 @@ async function readReport(
 }
 
 /** Brings an analysis up to date with its Sovkora run (only while it runs; a finished one is kept as it was). */
-export async function refresh(row: AnalysisRow, known?: SovkoraRun): Promise<Analysis> {
+export async function refresh(row: AnalysisRow, known?: RunPayload): Promise<Analysis> {
   if (row.status !== "running" && !known) {
     return toAnalysis(row);
   }
@@ -262,7 +262,7 @@ export async function refresh(row: AnalysisRow, known?: SovkoraRun): Promise<Ana
   }
   const run = known ?? (await sovkora().getRun(row.run_id));
   const status = fromRunStatus(run.status);
-  if (!isTerminal(status)) {
+  if (!isOver(status)) {
     return toAnalysis(row);
   }
   const { report, noReport } = status === "succeeded" ? await readReport(row, run) : { report: null, noReport: null };

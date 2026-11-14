@@ -3,7 +3,7 @@ import https from "node:https";
 
 import type { OutgoingRequest, Send } from "@krizaka/webhooks";
 
-import { isPrivateAddress } from "./address";
+import { isPrivateWebhookAddress } from "./address";
 
 /**
  * The HTTP call of a webhook (verikora#241): https only, no redirect followed, a short timeout, and the connection is made to an
@@ -28,7 +28,7 @@ function checkedLookup(lookup: Lookup) {
     const answer = callback as NodeAnswer;
     const accept = (found: { address: string; family: 4 | 6 }[]) => {
       const ok = found[0];
-      if (!ok || found.some((f) => isPrivateAddress(f.address)))
+      if (!ok || found.some((f) => isPrivateWebhookAddress(f.address)))
         return answer(new Error(`${host} resolves to a private address`));
       if ((lookupOptions as { all?: boolean }).all) answer(null, found);
       else answer(null, ok.address, ok.family);

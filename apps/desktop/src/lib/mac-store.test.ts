@@ -22,7 +22,7 @@ describe("the Mac's DocumentStore", () => {
     expect(createMacStore(fakeNative()).describe()).toEqual(MAC_STORE_PLACE);
   });
 
-  it("turns the native side's « 400: … » into the port's StorageError", async () => {
+  it("turns the native side's « 400: … » into the port's DocumentStoreError", async () => {
     const refusing: StoreInvoke = async () => Promise.reject("400: not a valid object key");
     await expect(createMacStore(refusing).get("library/a.pdf")).rejects.toMatchObject({
       status: 400,

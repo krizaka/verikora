@@ -6,7 +6,7 @@ import type { QueryResultRow } from "pg";
 
 import { refuse } from "../http";
 import { documentStoreOver } from "./adapter";
-import type { DocumentStore, StoreDescriptor } from "./port";
+import type { DocumentStore, DocumentStoreDescriptor } from "./port";
 import { DATA_KIND, MAX_SIGNED_URL_SECONDS } from "./providers";
 import { asDescriptor } from "./where";
 
@@ -236,7 +236,7 @@ export async function cloudBucketStore(
   return documentStoreOver(objects, cloudDescriptor(connector), MAX_SIGNED_URL_SECONDS);
 }
 
-const cloudDescriptor = (connector: string): StoreDescriptor => ({
+const cloudDescriptor = (connector: string): DocumentStoreDescriptor => ({
   kind: "cloud",
   endpoint: connector,
   region: null,

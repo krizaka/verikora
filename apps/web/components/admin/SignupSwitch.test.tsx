@@ -2,7 +2,7 @@ import { ThemeProvider } from "@krizaka/ui/theme";
 import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it } from "vitest";
 
-import { describeSettings } from "@/lib/settings/describe";
+import { describeVerikoraSettings } from "@/lib/settings/describe";
 import en from "@/messages/en.json";
 import fr from "@/messages/fr.json";
 
@@ -12,7 +12,7 @@ type Tree = { [key: string]: Tree | string };
 const sayIn = (messages: unknown) => (path: string) =>
   `console.${path}`.split(".").reduce<Tree | string>((node, part) => (node as Tree)[part], messages as Tree) as string;
 
-const def = describeSettings().find((d) => d.key === "signup.open");
+const def = describeVerikoraSettings().find((d) => d.key === "signup.open");
 const draw = (messages: unknown, value: boolean | undefined) =>
   renderToStaticMarkup(
     <ThemeProvider>

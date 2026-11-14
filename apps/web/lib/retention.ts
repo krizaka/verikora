@@ -11,7 +11,7 @@ import {
   recordDeletionReceipt,
 } from "./deletion-receipt";
 import { noHolder, type ObjectHolder, removeObject } from "./document-objects";
-import type { StoreDescriptor } from "./storage/port";
+import type { DocumentStoreDescriptor } from "./storage/port";
 
 /**
  * Keep or purge (ADR-0007). By default a document is NOT kept: once its check has run, its file and its text are purged and
@@ -24,7 +24,7 @@ export type Query = <T extends QueryResultRow>(text: string, values?: unknown[])
 export const EXTERNAL = new Set<StorageKind>([STORAGE_KIND.bunny, STORAGE_KIND.s3, STORAGE_KIND.cloud]);
 
 /** Where a new document goes, from the person's choice and the store configured now. */
-export function storageFor(keep: boolean, active: StoreDescriptor): StorageKind {
+export function storageFor(keep: boolean, active: DocumentStoreDescriptor): StorageKind {
   if (!keep) {
     return STORAGE_KIND.none;
   }

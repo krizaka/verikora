@@ -15,7 +15,8 @@
     "test": "vitest run"
   },
   "dependencies": {
-    "@krizaka/organize": "0.1.0",
+    "@krizaka/organize": "0.5.0",
+    "@krizaka/storage": "0.8.0",
     "zod": "^4.6.5"
   },
   "devDependencies": {

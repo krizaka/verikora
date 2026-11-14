@@ -8,7 +8,7 @@ import {
   type StartAnalysis,
   storageDescriptor,
   waitForExtraction,
-  type WaitOptions,
+  type ExtractionWaitOptions,
   writeBatchManifest,
 } from "@verikora/core";
 import { z } from "zod";
@@ -108,7 +108,7 @@ export type BatchCheck = keyof typeof BATCH_CHECKS;
  * Verikora's API as the apps use it. Every answer is parsed at the edge: a shape the server did not promise stops here,
  * never inside a screen.
  */
-export function createVerikoraApi(port: ApiPort, session: SessionPort, wait: WaitOptions = {}) {
+export function createVerikoraApi(port: ApiPort, session: SessionPort, wait: ExtractionWaitOptions = {}) {
   const get = <T extends z.ZodType>(schema: T, path: string): Promise<z.infer<T>> =>
     port.call<unknown>(path).then((value) => schema.parse(value));
   return {

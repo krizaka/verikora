@@ -1,3 +1,4 @@
+import { cleanName } from "@krizaka/organize";
 import { isId, NAME_MAX } from "@verikora/core";
 import { z } from "zod";
 
@@ -7,21 +8,22 @@ import { refuse } from "../http";
 export {
   applyFilters,
   isId,
+  libraryViewHref,
+  parseLibraryView,
   parseTagsParam,
-  parseView,
   TAG_COLORS,
   type TagColor,
   tagsHref,
   toggleTag,
-  viewHref,
   type ViewState,
 } from "@verikora/core";
 
-export function cleanName(raw: string): string {
-  const name = raw.replace(/\s+/g, " ").trim();
-  if (!name) throw refuse(400, "BAD_REQUEST", "A name is required");
-  if (name.length > NAME_MAX) throw refuse(400, "BAD_REQUEST", `A name is at most ${NAME_MAX} characters`);
-  return name;
+/** The package's `cleanName`, refused over HTTP: an empty name and a name past `NAME_MAX` each say why. */
+export function requiredName(raw: string): string {
+  const name = cleanName(raw);
+  if (name) return name;
+  if (!raw.replace(/\s+/g, " ").trim()) throw refuse(400, "BAD_REQUEST", "A name is required");
+  throw refuse(400, "BAD_REQUEST", `A name is at most ${NAME_MAX} characters`);
 }
 
 export function libraryPath(locale: string, library: string, collection?: string, folder?: string): string {

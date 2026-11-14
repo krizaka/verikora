@@ -6,7 +6,7 @@ import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it, vi } from "vitest";
 
 import { I18nProvider } from "@/lib/i18n-client";
-import { parseView } from "@/lib/organisation/rules";
+import { parseLibraryView } from "@/lib/organisation/rules";
 import en from "@/messages/en.json";
 import fr from "@/messages/fr.json";
 
@@ -54,7 +54,7 @@ const render = (props: Props = {}, locale: "en" | "fr" = "fr") =>
           documents={[doc(1), doc(2)]}
           tags={[]}
           documentTags={[]}
-          view={parseView({})}
+          view={parseLibraryView({})}
           tagsByDocument={{}}
           collections={[{ id: "c1", name: "Rosemont", avatar: null }]}
           collectionTags={[]}
@@ -116,7 +116,7 @@ describe("a collection (the UX review's Y7)", () => {
       { id: T1, name: "Urgent", color: "red" },
       { id: T2, name: "2026", color: "blue" },
     ] as never;
-    const html = render({ documentTags: tags, view: parseView({ tags: T1 }) });
+    const html = render({ documentTags: tags, view: parseLibraryView({ tags: T1 }) });
     expect(html).toContain('data-testid="place-filters"');
     const text = readable(html);
     expect(text).toContain("Urgent");

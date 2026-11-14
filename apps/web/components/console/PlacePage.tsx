@@ -8,7 +8,7 @@ import { documentsByIds } from "@/lib/documents";
 import { appEnvironment } from "@/lib/env";
 import { availableFlows, offerFor } from "@/lib/flows";
 import { asLocale, getDictionary } from "@/lib/i18n";
-import { isId, libraryPath, parseView } from "@/lib/organisation/rules";
+import { isId, libraryPath, parseLibraryView } from "@/lib/organisation/rules";
 import * as org from "@/lib/organisation/store";
 import { KIND } from "@/lib/workspace/decl";
 import { workspaceFor } from "@/lib/workspace/service";
@@ -26,7 +26,7 @@ export async function PlacePage({ params, searchParams }: Readonly<Props>) {
   const session = await pageSession();
   if (!session) redirect(`/${locale}/sign-in`);
   const owner = session.account.id;
-  const view = parseView(await searchParams);
+  const view = parseLibraryView(await searchParams);
   const selected = view.tags;
   const dict = getDictionary(locale).console;
   const t = dict.organisation;

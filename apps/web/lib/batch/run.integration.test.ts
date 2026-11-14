@@ -1,4 +1,4 @@
-import type { SovkoraRun } from "@verikora/core";
+import type { RunPayload } from "@verikora/core";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 
 import { seedAudits } from "../audit-credits.testkit";
@@ -15,7 +15,7 @@ const enabled = process.env.DATABASE_IT === "1" && !!process.env.DATABASE_URL;
 describe.runIf(enabled)("a batch of checks (verikora#232)", () => {
   const runs = new Map<string, string>();
   let n = 0;
-  const run = (id: string, status: string): SovkoraRun => ({
+  const run = (id: string, status: string): RunPayload => ({
     id,
     studioKey: "compliance-check",
     blueprintVersion: "1.0.0",

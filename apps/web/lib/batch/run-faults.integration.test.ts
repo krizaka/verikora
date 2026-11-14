@@ -1,4 +1,4 @@
-import type { SovkoraRun } from "@verikora/core";
+import type { RunPayload } from "@verikora/core";
 import sharp from "sharp";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 
@@ -27,7 +27,7 @@ describe.runIf(enabled)("a batch against a busy engine and awkward files", () =>
   const pdf = async (name: string, text: string) => ({ name, type: "application/pdf", bytes: await leasePdf(text) });
   const finishAll = () => runs.forEach((r) => (r.status = "SUCCEEDED"));
 
-  const run = (id: string): SovkoraRun => {
+  const run = (id: string): RunPayload => {
     const r = runs.get(id)!;
     const outputs =
       r.status !== "SUCCEEDED"

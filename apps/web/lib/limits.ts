@@ -20,7 +20,7 @@ let store = memoryLimitStore();
 // An action has a per-subject setting only if it has a per-subject limit: a key the registry does not declare is "no limit of that kind", not an error.
 const read = limitsFromSettings((key) => (isSettingKey(key) ? (appSettings().get(key) as Promise<number>) : undefined));
 
-async function limitsOf(action: LimitAction) {
+async function limitSettingsOf(action: LimitAction) {
   try {
     return (await read(action)) ?? LIMIT_DEFAULTS[action];
   } catch (error) {
@@ -29,7 +29,7 @@ async function limitsOf(action: LimitAction) {
   }
 }
 
-const limiterFor = (limits: (counter: string) => ReturnType<typeof limitsOf>): Limiter =>
+const limiterFor = (limits: (counter: string) => ReturnType<typeof limitSettingsOf>): Limiter =>
   createLimiter({
     store,
     clock: systemClock,
@@ -68,7 +68,7 @@ export function limit(
   counter: string = action,
 ) {
   return enforce(
-    limiterFor(() => limitsOf(action)),
+    limiterFor(() => limitSettingsOf(action)),
     counter,
     req,
     subject,

@@ -21,6 +21,7 @@
     "no-hand-typed-family-name": 0,
     "no-hand-written-validation-regex": 12,
     "no-hardcoded-default-media": 0,
+    "no-local-lib-copy": 0,
     "no-local-ui-copy": 0,
     "no-long-function": 105,
     "no-raw-control": 0,

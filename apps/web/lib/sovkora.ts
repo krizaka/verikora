@@ -1,5 +1,5 @@
 import { createSovkoraClient as createSharedClient } from "@krizaka/sovkora-client";
-import { type SovkoraRun, sovkoraRun, type Studio } from "@verikora/core";
+import { type RunPayload, sovkoraRun, type Studio } from "@verikora/core";
 import { z } from "zod";
 
 import { systemClock } from "../app/system-clock";
@@ -21,9 +21,9 @@ import type { ChecksDoor } from "./screening-checks/model";
  */
 type Fetch = typeof fetch;
 
-export interface SovkoraClient {
-  startRun(studio: Studio, inputs: Record<string, string>): Promise<SovkoraRun>;
-  getRun(runId: string): Promise<SovkoraRun>;
+export interface AnalysisEngine {
+  startRun(studio: Studio, inputs: Record<string, string>): Promise<RunPayload>;
+  getRun(runId: string): Promise<RunPayload>;
   /** The Studios this product's key has installed — also the cheapest call that proves the key and the connection. */
   studios(): Promise<string[]>;
 }
@@ -31,7 +31,7 @@ export interface SovkoraClient {
 const installation = z.object({ studioKey: z.string(), pinnedVersion: z.string().optional() });
 
 /** What a refusal of Sovkora's means for Verikora — a stable code the UI translates. */
-export function sovkoraRefusal(status: number): { status: number; code: string } {
+export function engineRefusal(status: number): { status: number; code: string } {
   if (status === 401 || status === 403) return { status: 502, code: "SOVKORA_KEY" };
   if (status === 402) return { status: 502, code: "SOVKORA_CREDITS" };
   if (status === 409) return { status: 502, code: "SOVKORA_LOCKED" };
@@ -74,7 +74,7 @@ function retryHint(header: string | null): number | null {
 /** Sovkora's answer read against its schema, or its refusal as a stable code. */
 async function read<T>(res: Response, schema: z.ZodType<T>, what: string): Promise<T> {
   if (!res.ok) {
-    const { status, code } = sovkoraRefusal(res.status);
+    const { status, code } = engineRefusal(res.status);
     if (res.status === 429) {
       const wait = Math.min(
         300,
@@ -108,7 +108,7 @@ async function read<T>(res: Response, schema: z.ZodType<T>, what: string): Promi
   return parsed.data;
 }
 
-export function createSovkoraClient(options: {
+export function createAnalysisEngine(options: {
   baseUrl: string;
   apiKey: string | undefined;
   fetch?: Fetch;
@@ -118,7 +118,7 @@ export function createSovkoraClient(options: {
   startDeadlineMs?: number;
   /** One line per call: method, path (no query), status and code, elapsed time; never the key. */
   log?: (line: string) => void;
-}): SovkoraClient {
+}): AnalysisEngine {
   const doFetch = options.fetch ?? fetch;
   const base = options.baseUrl.replace(/\/$/, "");
   const installed = new Map<string, string | undefined>();
@@ -209,17 +209,17 @@ export function createSovkoraClient(options: {
   };
 }
 
-const holder = globalThis as unknown as { __verikoraSovkora?: SovkoraClient };
+const holder = globalThis as unknown as { __verikoraSovkora?: AnalysisEngine };
 
-export function sovkora(): SovkoraClient {
+export function sovkora(): AnalysisEngine {
   if (holder.__verikoraSovkora) return holder.__verikoraSovkora;
   const env = readEnv();
-  holder.__verikoraSovkora = createSovkoraClient({ baseUrl: env.AI_API_URL, apiKey: env.AI_API_KEY });
+  holder.__verikoraSovkora = createAnalysisEngine({ baseUrl: env.AI_API_URL, apiKey: env.AI_API_KEY });
   return holder.__verikoraSovkora;
 }
 
 /** Tests: use this client (null: back to the configured one). */
-export function useSovkoraClient(client: SovkoraClient | null) {
+export function useSovkoraClient(client: AnalysisEngine | null) {
   holder.__verikoraSovkora = client ?? undefined;
 }
 

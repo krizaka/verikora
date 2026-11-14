@@ -11,9 +11,9 @@ import { logError } from "../log";
 import {
   CHECK_OUTCOME,
   CHECK_PURPOSE,
+  type CheckAnswer,
   type CheckCall,
   type CheckPurpose,
-  type CheckResult,
   type ChecksDoor,
   NOT_CONFIGURED,
 } from "./model";
@@ -31,13 +31,13 @@ const PATH: Record<CheckPurpose, CheckPurposeKey> = {
   [CHECK_PURPOSE.CREDIT]: "credit",
 };
 
-const answered = (r: DoorResult): CheckResult => ({
+const answered = (r: DoorResult): CheckAnswer => ({
   outcome: r.outcome,
   refusal: r.refusal,
   category: r.category,
   providerRef: r.providerRef,
 });
-const failed: CheckResult = {
+const failed: CheckAnswer = {
   outcome: CHECK_OUTCOME.PROVIDER_ERROR,
   refusal: null,
   category: "NONE",

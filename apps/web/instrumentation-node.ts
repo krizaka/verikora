@@ -55,8 +55,8 @@ async function start() {
   }
   const e = readEnv();
   const { appSettings } = await import("./lib/settings/instance");
-  const { seedLegacySettings } = await import("./lib/settings/seed");
-  const legacy = await seedLegacySettings(
+  const { seedLegacyValues } = await import("./lib/settings/seed");
+  const legacy = await seedLegacyValues(
     appSettings(),
     { signupOpen: e.AUTH_SIGNUP_ENABLED, purgeAfterHours: e.APP_PURGE_AFTER_HOURS },
     new Date(),

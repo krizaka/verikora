@@ -16,7 +16,7 @@ export const PAYER = { firm: "firm", owner: "owner", applicant: "applicant" } as
 export type Payer = (typeof PAYER)[keyof typeof PAYER];
 export const PAYERS = Object.values(PAYER) as Payer[];
 
-export interface ChargeRequest {
+export interface ScreeningChargeRequest {
   /** Idempotency: one charge per application and check type. */
   key: string;
   payer: Payer;
@@ -27,7 +27,7 @@ export interface ChargeRequest {
   taxCode: "software-as-a-service";
 }
 export interface BillingPort {
-  charge(request: ChargeRequest): Promise<{ ref: string }>;
+  charge(request: ScreeningChargeRequest): Promise<{ ref: string }>;
   refund(ref: string): Promise<void>;
 }
 /** The port while the payments package cannot charge a check: it refuses, so a flag turned on by mistake bills nothing. */

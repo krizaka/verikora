@@ -23,14 +23,14 @@ const V4: [number, number][] = [
 
 const v4n = (ip: string) => ip.split(".").reduce((n, part) => n * 256 + Number(part), 0);
 
-export function isPrivateAddress(ip: string): boolean {
+export function isPrivateWebhookAddress(ip: string): boolean {
   const version = net.isIP(ip);
   if (version === 4)
     return V4.some(([base, bits]) => Math.floor(v4n(ip) / 2 ** (32 - bits)) === Math.floor(base / 2 ** (32 - bits)));
   if (version === 6) {
     const lower = ip.toLowerCase();
     const mapped = /^::ffff:(\d+\.\d+\.\d+\.\d+)$/.exec(lower);
-    if (mapped) return isPrivateAddress(mapped[1]!);
+    if (mapped) return isPrivateWebhookAddress(mapped[1]!);
     const first = Number.parseInt(lower.split(":")[0] || "0", 16);
     return (
       lower === "::" ||

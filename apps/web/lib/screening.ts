@@ -22,7 +22,7 @@ import {
 import { screeningBillingPort } from "./screening-checks/billing-config";
 import { allowedFor, type CheckTypeRow, priceCents, providerById, typesByKey } from "./screening-checks/catalogue";
 import { lawyerCleared, loadGate } from "./screening-checks/gate";
-import { CHECK_STATE, type CheckResult, type CheckState, stateOf } from "./screening-checks/model";
+import { CHECK_STATE, type CheckAnswer, type CheckState, stateOf } from "./screening-checks/model";
 import { adapterFor, type CheckProvider } from "./screening-checks/providers";
 
 /*
@@ -64,7 +64,7 @@ export type ScreeningResult = z.infer<typeof screeningResult>;
 export const DEMO_PROVIDER = "demo";
 
 /** One check's line: MATCH is « to review » (a file found is not a verdict), NO_MATCH « clear », the rest says where it stands. Pure. */
-export function itemOf(key: string, result: Pick<CheckResult, "outcome" | "refusal">): z.infer<typeof screeningItem> {
+export function itemOf(key: string, result: Pick<CheckAnswer, "outcome" | "refusal">): z.infer<typeof screeningItem> {
   const state: CheckState = stateOf(result);
   if (state === CHECK_STATE.answered) return { key, outcome: result.outcome === "MATCH" ? "review" : "clear" };
   return { key, outcome: state };
@@ -288,7 +288,7 @@ const actor = (row: Row) => ({ actorId: null, actorLabel: `tenant:${row.tenant_e
 interface Answer {
   type: CheckTypeRow;
   runId: string;
-  result: CheckResult;
+  result: CheckAnswer;
   item: z.infer<typeof screeningItem>;
   /** When a pending answer is asked again. */
   pollMinutes: number;
@@ -312,7 +312,7 @@ async function runChecks(row: Row, types: readonly CheckTypeRow[]): Promise<Answ
       subject: { subjectId: row.id, ...namesOf(row.tenant_name) },
       region: type.region,
     };
-    let result: CheckResult;
+    let result: CheckAnswer;
     try {
       result = await entry.provider.submit(type.purpose, call);
     } catch {

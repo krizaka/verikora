@@ -12,7 +12,6 @@ import { useMemo, useState } from "react";
 import { z } from "zod";
 
 import { errorKey } from "@/lib/client";
-import { PILOT_STAGE, type PilotCodeCounts } from "@/lib/coupons/pilot-stages";
 import {
   COUPON_CURRENCY,
   type CouponForm,
@@ -23,6 +22,7 @@ import {
   emptyCouponForm,
   stateOf,
 } from "@/lib/coupons/form";
+import { PILOT_STAGE, type PilotCodeCounts } from "@/lib/coupons/pilot-stages";
 import { formI18n } from "@/lib/form-i18n";
 import { useSay } from "@/lib/i18n-client";
 
@@ -81,7 +81,7 @@ export function CouponsView() {
         <p className="m-0 max-w-[70ch] text-sm text-fg-secondary">{say("adminConfig.coupons.lead")}</p>
         {data.data.enabled ? null : <Alert tone="warning">{say("adminConfig.coupons.off")}</Alert>}
       </div>
-      <NewCoupon partners={people.data?.partners ?? []} />
+      <NewCouponForm partners={people.data?.partners ?? []} />
       <CouponTable coupons={data.data.coupons} partners={people.data?.partners ?? []} onOpen={setOpen} />
       <PilotCounters codes={pilots.data?.codes ?? []} />
       {open ? <Redemptions id={open} onClose={() => setOpen(null)} /> : null}
@@ -101,7 +101,7 @@ function useRefresh() {
     ]);
 }
 
-function NewCoupon({ partners: people }: Readonly<{ partners: Partner[] }>) {
+function NewCouponForm({ partners: people }: Readonly<{ partners: Partner[] }>) {
   const { say, locale } = useSay();
   const refresh = useRefresh();
   const [shown, setShown] = useState(false);

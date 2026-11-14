@@ -1,6 +1,14 @@
 import { describe, expect, it } from "vitest";
 
-import { applyFilters, parseTagsParam, parseView, TAG_COLORS, tagsHref, toggleTag, viewHref } from "./organisation";
+import {
+  applyFilters,
+  parseTagsParam,
+  parseLibraryView,
+  TAG_COLORS,
+  tagsHref,
+  toggleTag,
+  libraryViewHref,
+} from "./organisation";
 
 const A = "11111111-1111-4111-8111-111111111111";
 const B = "22222222-2222-4222-8222-222222222222";
@@ -26,21 +34,21 @@ describe("the tags parameter is the filter's state", () => {
 
 describe("the library's filters are the URL's state: ?tags=…&kind=…&status=…", () => {
   it("reads the three, ignoring what is not one of their values", () => {
-    expect(parseView({ tags: `${A}`, kind: "lease", status: "attention" })).toEqual({
+    expect(parseLibraryView({ tags: `${A}`, kind: "lease", status: "attention" })).toEqual({
       tags: [A],
       kind: "lease",
       status: "attention",
     });
-    expect(parseView({ kind: "spreadsheet", status: "nope" })).toEqual({ tags: [], kind: null, status: null });
-    expect(parseView({})).toEqual({ tags: [], kind: null, status: null });
+    expect(parseLibraryView({ kind: "spreadsheet", status: "nope" })).toEqual({ tags: [], kind: null, status: null });
+    expect(parseLibraryView({})).toEqual({ tags: [], kind: null, status: null });
   });
   it("writes them back in a stable order, keeping the others when one changes", () => {
     const path = "/fr/app/library/l/c";
-    expect(viewHref(path, { tags: [], kind: null, status: null })).toBe(path);
-    expect(viewHref(path, { tags: [A], kind: "invoice", status: "checked" })).toBe(
+    expect(libraryViewHref(path, { tags: [], kind: null, status: null })).toBe(path);
+    expect(libraryViewHref(path, { tags: [A], kind: "invoice", status: "checked" })).toBe(
       `${path}?tags=${A}&kind=invoice&status=checked`,
     );
-    expect(viewHref(path, { tags: [], kind: null, status: "failed" })).toBe(`${path}?status=failed`);
+    expect(libraryViewHref(path, { tags: [], kind: null, status: "failed" })).toBe(`${path}?status=failed`);
   });
   it("filters documents by kind and by status (all given filters must match)", () => {
     const docs = [

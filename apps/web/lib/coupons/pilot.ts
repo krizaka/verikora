@@ -59,7 +59,7 @@ export async function checkPilotCode(code: string, ip: string | null): Promise<v
   }
 }
 
-export interface RedeemInput {
+export interface PilotRedeemInput {
   code: string;
   accountId: string;
   idempotencyKey: string;
@@ -76,7 +76,7 @@ export interface RedeemInput {
  * Redeems a credit code for an account, in one transaction. A pilot code first takes the account's row lock, so two pilot codes redeemed at once on one account are
  * serialised: the second finds the first and is refused with `PILOT_ALREADY_USED` (409), and the refusal has its audit line.
  */
-export async function redeemCreditCode(input: RedeemInput): Promise<CreditRedemption> {
+export async function redeemCreditCode(input: PilotRedeemInput): Promise<CreditRedemption> {
   const within = <T>(work: (tx: Query) => Promise<T>): Promise<T> => (input.run ? work(input.run) : transaction(work));
   try {
     const redeemed = await guarded(() =>

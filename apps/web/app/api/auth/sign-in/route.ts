@@ -7,7 +7,7 @@ import { clientAddress } from "@/lib/client-address";
 import { query } from "@/lib/db";
 import { handle, readJson, refuse } from "@/lib/http";
 import { limit } from "@/lib/limits";
-import { createSession, sessionCookie } from "@/lib/session";
+import { createSession, verikoraSessionCookie } from "@/lib/session";
 import { assertOpen } from "@/lib/settings/guards";
 
 const body = z.object({
@@ -34,7 +34,7 @@ export function POST(req: Request) {
     // A native app keeps the token in its Keychain and sends it as a bearer; it never gets a cookie.
     if (client === "native")
       return Response.json({ account: signedIn, token }, { headers: { "Cache-Control": "no-store" } });
-    (await cookies()).set(sessionCookie(token, expires));
+    (await cookies()).set(verikoraSessionCookie(token, expires));
     return Response.json({ account: signedIn });
   });
 }

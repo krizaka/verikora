@@ -183,7 +183,7 @@ export function fromRunStatus(status: string): AnalysisStatus {
   }
 }
 
-export const isTerminal = (status: AnalysisStatus) => status !== "running";
+export const isOver = (status: AnalysisStatus) => status !== "running";
 
 /** A document's state in the library, derived from its analyses. */
 export const documentStatus = z.enum(DOCUMENT_STATUSES);
@@ -382,7 +382,7 @@ export const sovkoraRun = z.object({
   startedAt: z.string().nullable().optional(),
   finishedAt: z.string().nullable().optional(),
 });
-export type SovkoraRun = z.infer<typeof sovkoraRun>;
+export type RunPayload = z.infer<typeof sovkoraRun>;
 
 const json = (value: string | null | undefined): unknown => {
   if (!value) return undefined;

@@ -21,8 +21,8 @@ importers:
         specifier: 0.2.0
         version: 0.2.0
       '@krizaka/config':
-        specifier: ^0.24.0
-        version: 0.24.0(eslint-config-next@16.4.1(eslint@9.39.5(jiti@2.7.0))(typescript@6.0.3))(eslint@9.39.5(jiti@2.7.0))(prettier@3.9.10)(typescript@6.0.3)
+        specifier: ^0.25.0
+        version: 0.25.0(eslint-config-next@16.4.1(eslint@9.39.5(jiti@2.7.0))(typescript@6.0.3))(eslint@9.39.5(jiti@2.7.0))(prettier@3.9.10)(typescript@6.0.3)
       '@krizaka/i18n':
         specifier: ^0.2.7
         version: 0.2.7(react@19.3.1)(typescript@6.0.3)
@@ -233,8 +233,8 @@ importers:
         version: 4.6.7
     devDependencies:
       '@krizaka/config':
-        specifier: ^0.12.0
-        version: 0.12.0(eslint-config-next@16.4.1(@typescript-eslint/parser@8.72.0(eslint@9.39.5(jiti@2.7.0))(typescript@6.0.3))(eslint@9.39.5(jiti@2.7.0))(typescript@6.0.3))(eslint@9.39.5(jiti@2.7.0))(prettier@3.9.10)(typescript@6.0.3)
+        specifier: ^0.25.0
+        version: 0.25.0(eslint-config-next@16.4.1(@typescript-eslint/parser@8.72.0(eslint@9.39.5(jiti@2.7.0))(typescript@6.0.3))(eslint@9.39.5(jiti@2.7.0))(typescript@6.0.3))(eslint@9.39.5(jiti@2.7.0))(prettier@3.9.10)(typescript@6.0.3)
       '@testing-library/react-native':
         specifier: ^14.1.0
         version: 14.1.0(jest@30.5.2(@types/node@24.19.2))(react-native@0.88.0(@babel/core@7.29.7)(@react-native/metro-config@0.88.0(@babel/core@7.29.7))(@types/react@19.3.0)(react@19.3.1))(react@19.3.1)(test-renderer@1.3.0(@types/react@19.3.0)(react@19.3.1))
@@ -399,8 +399,8 @@ importers:
         version: 4.6.7
     devDependencies:
       '@krizaka/config':
-        specifier: ^0.24.0
-        version: 0.24.0(eslint-config-next@16.4.1(eslint@9.39.5(jiti@2.7.0))(typescript@5.9.3))(eslint@9.39.5(jiti@2.7.0))(prettier@3.9.10)(typescript@5.9.3)
+        specifier: ^0.25.0
+        version: 0.25.0(eslint-config-next@16.4.1(eslint@9.39.5(jiti@2.7.0))(typescript@5.9.3))(eslint@9.39.5(jiti@2.7.0))(prettier@3.9.10)(typescript@5.9.3)
       '@tailwindcss/postcss':
         specifier: ^4.3.3
         version: 4.3.3
@@ -464,7 +464,7 @@ importers:
     dependencies:
       '@krizaka/query':
         specifier: ^0.3.0
-        version: 0.3.0(@types/react@19.3.0)(csstype@3.2.3)(next@16.4.1(@playwright/test@1.64.0)(@types/node@26.6.6)(babel-plugin-react-compiler@1.0.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1))(pg@8.23.1)(react@19.3.1)
+        version: 0.3.0(@types/react@19.3.0)(csstype@3.2.3)(next@16.4.1(@babel/core@7.29.7)(@playwright/test@1.64.0)(@types/node@26.6.6)(babel-plugin-react-compiler@1.0.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1))(pg@8.23.1)(react@19.3.1)
       '@verikora/core':
         specifier: workspace:*
         version: link:../core
@@ -485,8 +485,11 @@ importers:
   packages/core:
     dependencies:
       '@krizaka/organize':
-        specifier: 0.1.0
-        version: 0.1.0
+        specifier: 0.5.0
+        version: 0.5.0(vitest@4.1.12)
+      '@krizaka/storage':
+        specifier: 0.8.0
+        version: 0.8.0(opendal@0.49.13)(vitest@4.1.12)(zod@4.6.7)
       zod:
         specifier: 4.6.7
         version: 4.6.7
@@ -2002,23 +2005,8 @@ packages:
       react-native-svg:
         optional: true
 
-  '@krizaka/config@0.12.0':
-    resolution: {integrity: sha512-j3jPlncOzoIxVagD4HMqy9RZwIZLh1KI2ClGM+TeJzMRPqNEMi6HAk581jro/9GOSzGT6Ix4TI7gUTUQ8efCZQ==}
-    engines: {node: '>=22'}
-    hasBin: true
-    peerDependencies:
-      eslint: ^9 || ^10
-      eslint-config-next: '>=16'
-      prettier: ^3
-      typescript: ^5
-    peerDependenciesMeta:
-      eslint-config-next:
-        optional: true
-      prettier:
-        optional: true
-
-  '@krizaka/config@0.24.0':
-    resolution: {integrity: sha512-n9dzyLhT3vyh/ZJSEeCjph1lu8iCHRdW9aE1zJ1Wq6pwzdTWsQLBdjlG3mQfLdARnjFLRJvVJbtKUOcUuGqjkg==}
+  '@krizaka/config@0.25.0':
+    resolution: {integrity: sha512-2TmRzvHqZ8KF43+TSKlMT/+YmZk4+Z0lk7mujVxqeG++XQQ2NiPZow1W4MZvL83u8Gafv/VBX8CDgFMehOTiFg==}
     engines: {node: '>=22'}
     hasBin: true
     peerDependencies:
@@ -2118,10 +2106,6 @@ packages:
     resolution: {integrity: sha512-mJibS2PATuWYYBVzbwTeIuLxNHuzLrj/AEGFfQqkWJI5nUR32Rs4NaCJf+FYwSfyXe2/XWuVtczFt6x5lPUKWg==}
     engines: {node: '>=22'}
     hasBin: true
-
-  '@krizaka/organize@0.1.0':
-    resolution: {integrity: sha512-wvCyY1d2RKWcvuv5A0CBOBifyZoPkI9nZWD/jSA1rq7+8Tg/ltCqIcXBQnWr1gZXtDLt+YNyOkD+L4s1qVEJbg==}
-    engines: {node: '>=22'}
 
   '@krizaka/organize@0.4.0':
     resolution: {integrity: sha512-6b9tjOfsCsiawp4mMSNKK3N2UvOdg90PRyYUXJuD2bZccGSsnYWzvaSuJHSiK+4mKR81iu6ioEf4YWtR1Hg1pg==}
@@ -10566,7 +10550,7 @@ snapshots:
       react-native: 0.88.0(@babel/core@7.29.7)(@react-native/metro-config@0.88.0(@babel/core@7.29.7))(@types/react@19.3.0)(react@19.3.1)
       react-native-svg: 15.16.0(react-native@0.88.0(@babel/core@7.29.7)(@react-native/metro-config@0.88.0(@babel/core@7.29.7))(@types/react@19.3.0)(react@19.3.1))(react@19.3.1)
 
-  '@krizaka/config@0.12.0(eslint-config-next@16.4.1(@typescript-eslint/parser@8.72.0(eslint@9.39.5(jiti@2.7.0))(typescript@6.0.3))(eslint@9.39.5(jiti@2.7.0))(typescript@6.0.3))(eslint@9.39.5(jiti@2.7.0))(prettier@3.9.10)(typescript@6.0.3)':
+  '@krizaka/config@0.25.0(eslint-config-next@16.4.1(@typescript-eslint/parser@8.72.0(eslint@9.39.5(jiti@2.7.0))(typescript@6.0.3))(eslint@9.39.5(jiti@2.7.0))(typescript@6.0.3))(eslint@9.39.5(jiti@2.7.0))(prettier@3.9.10)(typescript@6.0.3)':
     dependencies:
       '@eslint/js': 10.0.1(eslint@9.39.5(jiti@2.7.0))
       dependency-cruiser: 18.7.0
@@ -10584,7 +10568,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@krizaka/config@0.24.0(eslint-config-next@16.4.1(eslint@9.39.5(jiti@2.7.0))(typescript@5.9.3))(eslint@9.39.5(jiti@2.7.0))(prettier@3.9.10)(typescript@5.9.3)':
+  '@krizaka/config@0.25.0(eslint-config-next@16.4.1(eslint@9.39.5(jiti@2.7.0))(typescript@5.9.3))(eslint@9.39.5(jiti@2.7.0))(prettier@3.9.10)(typescript@5.9.3)':
     dependencies:
       '@eslint/js': 10.0.1(eslint@9.39.5(jiti@2.7.0))
       dependency-cruiser: 18.7.0
@@ -10602,7 +10586,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@krizaka/config@0.24.0(eslint-config-next@16.4.1(eslint@9.39.5(jiti@2.7.0))(typescript@6.0.3))(eslint@9.39.5(jiti@2.7.0))(prettier@3.9.10)(typescript@6.0.3)':
+  '@krizaka/config@0.25.0(eslint-config-next@16.4.1(eslint@9.39.5(jiti@2.7.0))(typescript@6.0.3))(eslint@9.39.5(jiti@2.7.0))(prettier@3.9.10)(typescript@6.0.3)':
     dependencies:
       '@eslint/js': 10.0.1(eslint@9.39.5(jiti@2.7.0))
       dependency-cruiser: 18.7.0
@@ -10701,8 +10685,6 @@ snapshots:
 
   '@krizaka/org@1.0.0': {}
 
-  '@krizaka/organize@0.1.0': {}
-
   '@krizaka/organize@0.4.0(vitest@4.1.12)':
     optionalDependencies:
       vitest: 4.1.12(@types/node@26.6.6)(@vitest/coverage-v8@4.1.12)(jsdom@30.1.3(@noble/hashes@2.4.0))(vite@8.3.4(@types/node@26.6.6)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(tsx@4.23.15)(yaml@2.9.1))
@@ -10775,27 +10757,6 @@ snapshots:
       '@tanstack/react-query-devtools': 5.104.5(@tanstack/react-query@5.104.5(@types/react@19.3.0)(react@19.3.1))(@types/react@19.3.0)(csstype@3.2.3)(react@19.3.1)
       '@tanstack/react-query-persist-client': 5.104.5(@tanstack/react-query@5.104.5(@types/react@19.3.0)(react@19.3.1))(@types/react@19.3.0)(react@19.3.1)
       nuqs: 2.10.2(next@16.4.1(@babel/core@7.29.7)(@playwright/test@1.64.0)(@types/node@26.6.6)(babel-plugin-react-compiler@1.0.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1))(react@19.3.1)
-      react: 19.3.1
-    optionalDependencies:
-      next: 16.4.1(@babel/core@7.29.7)(@playwright/test@1.64.0)(@types/node@26.6.6)(babel-plugin-react-compiler@1.0.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
-    transitivePeerDependencies:
-      - '@remix-run/react'
-      - '@tanstack/react-router'
-      - '@types/react'
-      - csstype
-      - ioredis
-      - pg
-      - react-router
-      - react-router-dom
-
-  '@krizaka/query@0.3.0(@types/react@19.3.0)(csstype@3.2.3)(next@16.4.1(@playwright/test@1.64.0)(@types/node@26.6.6)(babel-plugin-react-compiler@1.0.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1))(pg@8.23.1)(react@19.3.1)':
-    dependencies:
-      '@krizaka/realtime': 0.2.1(pg@8.23.1)
-      '@tanstack/query-async-storage-persister': 5.104.5
-      '@tanstack/react-query': 5.104.5(@types/react@19.3.0)(react@19.3.1)
-      '@tanstack/react-query-devtools': 5.104.5(@tanstack/react-query@5.104.5(@types/react@19.3.0)(react@19.3.1))(@types/react@19.3.0)(csstype@3.2.3)(react@19.3.1)
-      '@tanstack/react-query-persist-client': 5.104.5(@tanstack/react-query@5.104.5(@types/react@19.3.0)(react@19.3.1))(@types/react@19.3.0)(react@19.3.1)
-      nuqs: 2.10.2(next@16.4.1(@playwright/test@1.64.0)(@types/node@26.6.6)(babel-plugin-react-compiler@1.0.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1))(react@19.3.1)
       react: 19.3.1
     optionalDependencies:
       next: 16.4.1(@babel/core@7.29.7)(@playwright/test@1.64.0)(@types/node@26.6.6)(babel-plugin-react-compiler@1.0.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
@@ -16517,13 +16478,6 @@ snapshots:
       next: 16.4.1(@babel/core@7.29.7)(@playwright/test@1.64.0)(@types/node@24.19.2)(babel-plugin-react-compiler@1.0.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
 
   nuqs@2.10.2(next@16.4.1(@babel/core@7.29.7)(@playwright/test@1.64.0)(@types/node@26.6.6)(babel-plugin-react-compiler@1.0.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1))(react@19.3.1):
-    dependencies:
-      '@standard-schema/spec': 1.1.0
-      react: 19.3.1
-    optionalDependencies:
-      next: 16.4.1(@babel/core@7.29.7)(@playwright/test@1.64.0)(@types/node@26.6.6)(babel-plugin-react-compiler@1.0.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
-
-  nuqs@2.10.2(next@16.4.1(@playwright/test@1.64.0)(@types/node@26.6.6)(babel-plugin-react-compiler@1.0.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1))(react@19.3.1):
     dependencies:
       '@standard-schema/spec': 1.1.0
       react: 19.3.1

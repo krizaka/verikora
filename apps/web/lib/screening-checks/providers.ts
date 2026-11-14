@@ -3,9 +3,9 @@ import { checksDoor } from "../sovkora";
 import { liveGate } from "./gate";
 import {
   CHECK_OUTCOME,
+  type CheckAnswer,
   type CheckCall,
   type CheckPurpose,
-  type CheckResult,
   type ChecksDoor,
   closedDoor,
   NOT_CONFIGURED,
@@ -19,12 +19,12 @@ import {
 export interface CheckProvider {
   /** True when the data is fictitious: the pages say so. */
   demo: boolean;
-  submit(purpose: CheckPurpose, call: CheckCall): Promise<CheckResult>;
+  submit(purpose: CheckPurpose, call: CheckCall): Promise<CheckAnswer>;
   /** A pending answer is collected by polling the same provider with its reference (webhooks later). */
-  collect(purpose: CheckPurpose, call: CheckCall, providerRef: string): Promise<CheckResult>;
+  collect(purpose: CheckPurpose, call: CheckCall, providerRef: string): Promise<CheckAnswer>;
 }
 
-const result = (outcome: CheckResult["outcome"], extra: Partial<CheckResult> = {}): CheckResult => ({
+const result = (outcome: CheckAnswer["outcome"], extra: Partial<CheckAnswer> = {}): CheckAnswer => ({
   outcome,
   refusal: null,
   category: "NONE",

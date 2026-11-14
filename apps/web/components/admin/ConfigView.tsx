@@ -16,7 +16,7 @@ import { z } from "zod";
 import { errorKey } from "@/lib/client";
 import { formI18n } from "@/lib/form-i18n";
 import { useSay } from "@/lib/i18n-client";
-import type { SettingDescription } from "@/lib/settings/describe";
+import type { AdminSettingDescription } from "@/lib/settings/describe";
 import { type Group, KIND, SCOPE, type Scope } from "@/lib/settings/registry";
 import type { AuditEntry } from "@/lib/settings/service";
 
@@ -24,7 +24,7 @@ type Lang = ReturnType<typeof useSay>["locale"];
 
 const sourceOf = z.enum(["default", SCOPE.global, SCOPE.workspace, SCOPE.user]);
 const settingsAnswer = z.object({
-  definitions: z.array(z.custom<SettingDescription>()),
+  definitions: z.array(z.custom<AdminSettingDescription>()),
   overrides: z.record(z.string(), z.unknown()),
   effective: z.record(z.string(), z.object({ value: z.unknown(), source: sourceOf })),
 });
@@ -108,7 +108,7 @@ const bilingualForm = createKrizakaForm({
 });
 
 interface RowProps {
-  def: SettingDescription;
+  def: AdminSettingDescription;
   scope: Scope;
   override: unknown;
   effective: { value: unknown; source: string } | undefined;
@@ -201,7 +201,7 @@ function IntegerControl({
   current,
   say,
   onSet,
-}: Readonly<{ def: SettingDescription; current: number; say: Say; onSet: (v: unknown) => Promise<unknown> }>) {
+}: Readonly<{ def: AdminSettingDescription; current: number; say: Say; onSet: (v: unknown) => Promise<unknown> }>) {
   const { locale } = useSay();
   const form = numberForm.useForm({
     ...formI18n(say, locale),

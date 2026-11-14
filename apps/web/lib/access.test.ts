@@ -1,23 +1,23 @@
 import { describe, expect, it } from "vitest";
 
-import { hostAllowed, ipAllowed, sessionTokenOf } from "./access";
+import { consoleIpAllowed, hostAllowed, requestSessionToken } from "./access";
 import { isToken, newToken, tokenHash } from "./session";
 
 describe("the administration's address lock", () => {
   const from = (ip: string) => new Headers({ "do-connecting-ip": ip });
   it("lets in only an address of AUTH_ALLOWED_IPS, read from the edge's header", () => {
     const env = { NODE_ENV: "production", AUTH_ALLOWED_IPS: "203.0.113.7", ABUSE_CLIENT_IP_HEADER: "do-connecting-ip" };
-    expect(ipAllowed(from("203.0.113.7"), env)).toBe(true);
-    expect(ipAllowed(from("198.51.100.9"), env)).toBe(false);
-    expect(ipAllowed(new Headers(), env)).toBe(false);
+    expect(consoleIpAllowed(from("203.0.113.7"), env)).toBe(true);
+    expect(consoleIpAllowed(from("198.51.100.9"), env)).toBe(false);
+    expect(consoleIpAllowed(new Headers(), env)).toBe(false);
   });
   it("lets nobody in production without a list; anybody in development", () => {
-    expect(ipAllowed(from("203.0.113.7"), { NODE_ENV: "production" })).toBe(false);
-    expect(ipAllowed(new Headers(), { NODE_ENV: "development" })).toBe(true);
+    expect(consoleIpAllowed(from("203.0.113.7"), { NODE_ENV: "production" })).toBe(false);
+    expect(consoleIpAllowed(new Headers(), { NODE_ENV: "development" })).toBe(true);
   });
   it("never trusts the left of X-Forwarded-For (the client writes it)", () => {
     const env = { NODE_ENV: "production", AUTH_ALLOWED_IPS: "203.0.113.7" };
-    expect(ipAllowed(new Headers({ "x-forwarded-for": "203.0.113.7, 198.51.100.9" }), env)).toBe(false);
+    expect(consoleIpAllowed(new Headers({ "x-forwarded-for": "203.0.113.7, 198.51.100.9" }), env)).toBe(false);
   });
 });
 
@@ -55,22 +55,22 @@ describe("run durations", async () => {
 describe("the session token of a request", () => {
   const token = newToken();
   it("reads the cookie of the web", () => {
-    expect(sessionTokenOf(new Headers({ cookie: `a=b; verikora_session=${token}` }))).toBe(token);
+    expect(requestSessionToken(new Headers({ cookie: `a=b; verikora_session=${token}` }))).toBe(token);
   });
   it("reads the bearer of a native app", () => {
-    expect(sessionTokenOf(new Headers({ authorization: `Bearer ${token}` }))).toBe(token);
-    expect(sessionTokenOf(new Headers({ authorization: `bearer ${token}` }))).toBe(token);
+    expect(requestSessionToken(new Headers({ authorization: `Bearer ${token}` }))).toBe(token);
+    expect(requestSessionToken(new Headers({ authorization: `bearer ${token}` }))).toBe(token);
   });
   it("prefers the bearer: an app never replays a stale cookie", () => {
     const other = newToken();
-    expect(sessionTokenOf(new Headers({ authorization: `Bearer ${token}`, cookie: `verikora_session=${other}` }))).toBe(
-      token,
-    );
+    expect(
+      requestSessionToken(new Headers({ authorization: `Bearer ${token}`, cookie: `verikora_session=${other}` })),
+    ).toBe(token);
   });
   it.each([[new Headers()], [new Headers({ authorization: "Basic abc" })], [new Headers({ cookie: "other=1" })]])(
     "answers nothing without a session",
     (headers) => {
-      expect(sessionTokenOf(headers)).toBeUndefined();
+      expect(requestSessionToken(headers)).toBeUndefined();
     },
   );
 });

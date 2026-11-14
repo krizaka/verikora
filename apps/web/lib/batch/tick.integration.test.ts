@@ -1,4 +1,4 @@
-import type { SovkoraRun } from "@verikora/core";
+import type { RunPayload } from "@verikora/core";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 
 import { seedAudits } from "../audit-credits.testkit";
@@ -25,7 +25,7 @@ describe.runIf(enabled)("the batch tick", () => {
   let owner = { id: "", perspective: null };
   let other = { id: "", perspective: null };
   const pdf = async (name: string, text: string) => ({ name, type: "application/pdf", bytes: await leasePdf(text) });
-  const run = (id: string): SovkoraRun => ({
+  const run = (id: string): RunPayload => ({
     id,
     studioKey: "compliance-check",
     blueprintVersion: "1.0.0",

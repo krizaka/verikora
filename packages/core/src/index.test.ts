@@ -6,7 +6,7 @@ import {
   finding,
   fromRunStatus,
   isSeededCheck,
-  isTerminal,
+  isOver,
   passages,
   queryKeys,
   reportOf,
@@ -54,8 +54,8 @@ describe("Sovkora runs", () => {
     expect(fromRunStatus("CANCELLED")).toBe("cancelled");
     expect(fromRunStatus("RUNNING")).toBe("running");
     expect(fromRunStatus("COMPENSATING")).toBe("running");
-    expect(isTerminal("running")).toBe(false);
-    expect(isTerminal("failed")).toBe(true);
+    expect(isOver("running")).toBe(false);
+    expect(isOver("failed")).toBe(true);
   });
 
   it("reads the compliance report from the run's `report` output, wrapped or bare", () => {

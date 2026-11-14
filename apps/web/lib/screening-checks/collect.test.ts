@@ -1,11 +1,11 @@
 import { describe, expect, it } from "vitest";
 
 import { decide } from "./collect";
-import type { CheckResult } from "./model";
+import type { CheckAnswer } from "./model";
 import { demoProvider } from "./providers";
 
 const NOW = new Date("2026-10-27T12:00:00Z");
-const result = (outcome: CheckResult["outcome"]): CheckResult => ({
+const result = (outcome: CheckAnswer["outcome"]): CheckAnswer => ({
   outcome,
   refusal: null,
   category: "NONE",

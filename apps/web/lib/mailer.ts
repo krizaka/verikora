@@ -124,7 +124,7 @@ function send(mail: AccountMail, options: Options) {
   }
 }
 
-export interface MailDeps {
+export interface MailerDeps {
   fetch?: typeof fetch;
   log?: Parameters<typeof sendEmail>[2]["log"];
   suppression?: SuppressionList;
@@ -137,7 +137,7 @@ export interface MailDeps {
  * list, or a link already mailed, is not an error: nothing is sent and the answer is the same (no disclosure).
  */
 export const mailerFor =
-  (e: MailConfig, deps: MailDeps = {}): Mailer =>
+  (e: MailConfig, deps: MailerDeps = {}): Mailer =>
   async (mail) => {
     const options = {
       to: mail.to,

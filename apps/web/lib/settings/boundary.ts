@@ -4,7 +4,7 @@ import type { FileKind, PreflightRules } from "../preflight/port";
 import type { SettingKey } from "./registry";
 import type { Resolved } from "./resolve";
 
-/** The settings a check at the server boundary reads: a resolved snapshot (see SettingsService.snapshot). */
+/** The settings a check at the server boundary reads: a resolved snapshot (see VerikoraSettings.snapshot). */
 export type Snapshot = Record<SettingKey, Resolved>;
 const value = <T>(s: Snapshot, key: SettingKey) => s[key].value as T;
 

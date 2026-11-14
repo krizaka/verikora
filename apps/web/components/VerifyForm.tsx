@@ -163,12 +163,12 @@ export function VerifyForm({ labels, locale }: Readonly<{ labels: VerifyLabels; 
           )}
         </Alert>
       ) : null}
-      {result ? <VerifyResult result={result} labels={labels} /> : null}
+      {result ? <VerifyResultView result={result} labels={labels} /> : null}
     </div>
   );
 }
 
-function VerifyResult({
+function VerifyResultView({
   result,
   labels,
 }: Readonly<{ result: Verification | OwnerVerificationView | DeletionReceiptView; labels: VerifyLabels }>) {

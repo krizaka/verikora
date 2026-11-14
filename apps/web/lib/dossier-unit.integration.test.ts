@@ -1,4 +1,4 @@
-import { memoryStore, type SovkoraRun } from "@verikora/core";
+import { memoryStore, type RunPayload } from "@verikora/core";
 import { afterAll, beforeAll, describe, expect, it, vi } from "vitest";
 
 import { CONSENT_MEANS, CONSENT_PURPOSE, grantConsent, NOTICE_VERSION } from "./applicant-consent";
@@ -28,7 +28,7 @@ describe.runIf(enabled)("the dossier is the unit of billing", () => {
   const store = memoryStore();
   const stamp = Date.now();
   let n = 0;
-  const run = (id: string): SovkoraRun => ({
+  const run = (id: string): RunPayload => ({
     id,
     studioKey: "x",
     blueprintVersion: "1.0.0",

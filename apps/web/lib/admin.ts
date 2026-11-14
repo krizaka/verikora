@@ -132,7 +132,7 @@ export async function allRuns(): Promise<AdminRun[]> {
   }));
 }
 
-export interface AuditEntry {
+export interface AdminAuditEntry {
   id: string;
   at: string;
   actor: string;
@@ -145,7 +145,7 @@ export interface AuditEntry {
  * The newest entries of the trail (`@krizaka/audit`'s `list`, a page at a time). With an id: every entry that person did or that was
  * about them — the package filters a target by its kind and its id, and this reads by the id alone (krizaka-ts gap), so that case reads `audit.entry` itself.
  */
-export async function auditLog(limit = 300, targetId?: string): Promise<AuditEntry[]> {
+export async function auditLog(limit = 300, targetId?: string): Promise<AdminAuditEntry[]> {
   if (targetId) {
     const rows = await query<{
       id: string;

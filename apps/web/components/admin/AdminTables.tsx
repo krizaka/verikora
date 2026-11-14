@@ -7,7 +7,7 @@ import { DataTable, type DataTableColumn } from "@krizaka/ui/data-table";
 import { useRouter } from "next/navigation";
 import { useMemo } from "react";
 
-import type { AdminDocument, AdminRun, AuditEntry } from "@/lib/admin";
+import type { AdminAuditEntry, AdminDocument, AdminRun } from "@/lib/admin";
 import { errorKey } from "@/lib/client";
 import { useSay } from "@/lib/i18n-client";
 
@@ -219,7 +219,7 @@ export function DocumentsTable({ rows }: Readonly<{ rows: AdminDocument[] }>) {
     />
   );
 }
-function auditColumns(say: Say, locale: Lang): DataTableColumn<AuditEntry>[] {
+function auditColumns(say: Say, locale: Lang): DataTableColumn<AdminAuditEntry>[] {
   return [
     {
       id: "at",
@@ -253,7 +253,7 @@ function auditColumns(say: Say, locale: Lang): DataTableColumn<AuditEntry>[] {
   ];
 }
 
-export function AuditTable({ entries }: Readonly<{ entries: AuditEntry[] }>) {
+export function AuditTable({ entries }: Readonly<{ entries: AdminAuditEntry[] }>) {
   const { say, locale } = useSay();
   const columns = useMemo(() => auditColumns(say, locale), [say, locale]);
   return (
