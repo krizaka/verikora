@@ -5,7 +5,7 @@ import type { QueryResultRow } from "pg";
 import { refuse } from "../http";
 import { KIND, WORKSPACE } from "../workspace/decl";
 import { guard, organizeOver } from "./organize";
-import { cleanName, type DeleteChoice, isId, type TagColor } from "./rules";
+import { type DeleteChoice, isId, requiredName, type TagColor } from "./rules";
 
 /**
  * The organisation's storage (ADR-0007): libraries, collections, folders (one level), tags and where a document sits.
@@ -61,7 +61,7 @@ const one = async <T>(rows: Promise<T[]>, what: string): Promise<T> => {
 
 /** The owner's default library, created on first use. */
 export async function ensureLibrary(q: Query, owner: string, name: string): Promise<Library> {
-  const label = cleanName(name);
+  const label = requiredName(name);
   const [found] = await q<Library>("SELECT id, name FROM libraries WHERE owner_id = $1 ORDER BY created_at LIMIT 1", [
     owner,
   ]);
@@ -79,7 +79,7 @@ export const createLibrary = (q: Query, owner: string, name: string) =>
       (
         await q<Library>("INSERT INTO libraries (owner_id, name) VALUES ($1, $2) RETURNING id, name", [
           owner,
-          cleanName(name),
+          requiredName(name),
         ])
       )[0]!,
   );
@@ -89,7 +89,7 @@ export const renameLibrary = (q: Query, owner: string, id: string, name: string)
       q<Library>("UPDATE libraries SET name = $3 WHERE owner_id = $1 AND id = $2 RETURNING id, name", [
         owner,
         id,
-        cleanName(name),
+        requiredName(name),
       ]),
       "library",
     ),
@@ -242,7 +242,7 @@ async function createChild<K extends ChildKind>(
       (
         await q<Owned[K] & QueryResultRow>(
           `INSERT INTO ${table} (${parentColumn}, name) VALUES ($1, $2) RETURNING ${columns}`,
-          [parentId, cleanName(name)],
+          [parentId, requiredName(name)],
         )
       )[0]!,
   );
@@ -261,7 +261,7 @@ async function renameChild<K extends ChildKind>(
       (
         await q<Owned[K] & QueryResultRow>(
           `UPDATE ${CHILD[kind].table} SET name = $2 WHERE id = $1 RETURNING ${CHILD[kind].columns}`,
-          [id, cleanName(name)],
+          [id, requiredName(name)],
         )
       )[0]!,
   );

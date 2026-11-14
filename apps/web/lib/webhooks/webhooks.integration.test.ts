@@ -1,7 +1,7 @@
 import { readFileSync } from "node:fs";
 
 import { EVENT_ID_HEADER, EVENT_TYPE_HEADER, type Send, SIGNATURE_HEADER, verifySignature } from "@krizaka/webhooks";
-import type { SovkoraRun } from "@verikora/core";
+import type { RunPayload } from "@verikora/core";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 
 import { GET as deliveriesRoute } from "@/app/api/me/webhooks/[id]/deliveries/route";
@@ -35,7 +35,7 @@ describe.runIf(enabled)("webhooks", () => {
   const actor = { id: null, label: "test" };
   const runs = new Map<string, string>();
   let n = 0;
-  const run = (id: string): SovkoraRun => ({
+  const run = (id: string): RunPayload => ({
     id,
     studioKey: "compliance-check",
     blueprintVersion: "1.0.0",

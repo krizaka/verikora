@@ -1,6 +1,6 @@
 import { meResponse } from "@krizaka/auth/contract";
 
-import { sessionTokenOf } from "@/lib/access";
+import { requestSessionToken } from "@/lib/access";
 import { env } from "@/lib/env";
 import { handle, HttpError } from "@/lib/http";
 import { limit } from "@/lib/limits";
@@ -17,7 +17,7 @@ export const dynamic = "force-dynamic";
  */
 export const GET = (req: Request) =>
   handle(async () => {
-    const session = await resolveSession(sessionTokenOf(req.headers));
+    const session = await resolveSession(requestSessionToken(req.headers));
     let account = null;
     if (session) {
       try {

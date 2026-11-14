@@ -68,5 +68,5 @@ export const createSession = sessions.create;
 export const resolveSession = sessions.resolve;
 export const revokeSession = sessions.revoke;
 
-export const sessionCookie = (token: string, expires: Date) =>
+export const verikoraSessionCookie = (token: string, expires: Date) =>
   cookieOf(token, expires, { name: SESSION_COOKIE, secure: process.env.NODE_ENV === "production" });

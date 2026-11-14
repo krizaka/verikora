@@ -42,7 +42,7 @@
   "devDependencies": {
     "@ast-grep/cli": "0.51.0",
     "@krizaka/a11y-audit": "0.2.0",
-    "@krizaka/config": "^0.24.0",
+    "@krizaka/config": "^0.25.0",
     "@krizaka/i18n": "^0.2.7",
     "@krizaka/intl": "^0.4.1",
     "@krizaka/org": "^1.0.0",

@@ -42,7 +42,7 @@ const invitationsOn = (run: Query) =>
   });
 
 /** A refusal of the package, as the API answers it: its status and its stable code. */
-function refusalOf(error: unknown): unknown {
+function invitationRefusal(error: unknown): unknown {
   return error instanceof SignupInvitationError
     ? refuse(error.status, error.code, "This invitation cannot be used")
     : error;
@@ -52,7 +52,7 @@ async function guarded<T>(work: () => Promise<T>): Promise<T> {
   try {
     return await work();
   } catch (error) {
-    throw refusalOf(error);
+    throw invitationRefusal(error);
   }
 }
 

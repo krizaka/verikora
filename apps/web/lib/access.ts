@@ -18,7 +18,10 @@ import { assertOpen } from "./settings/guards";
  * locks — a session, the ADMIN role, and an address of AUTH_ALLOWED_IPS (empty in production = nobody). A failed lock answers 404
  * on pages (the administration does not announce itself) and 403 on the API.
  */
-export function ipAllowed(requestHeaders: Headers, source: Record<string, string | undefined> = process.env): boolean {
+export function consoleIpAllowed(
+  requestHeaders: Headers,
+  source: Record<string, string | undefined> = process.env,
+): boolean {
   return listed(clientAddress(requestHeaders, source), consoleAllowedIps(source));
 }
 
@@ -27,16 +30,16 @@ export function hostAllowed(
   requestHeaders: Headers,
   source: Record<string, string | undefined> = process.env,
 ): boolean {
-  return !isAdminHost(requestHeaders.get("host")) || ipAllowed(requestHeaders, source);
+  return !isAdminHost(requestHeaders.get("host")) || consoleIpAllowed(requestHeaders, source);
 }
 
 /** The session token of a request: the native apps' `Authorization: Bearer` (which wins), else the web's cookie. */
-export const sessionTokenOf = (requestHeaders: Headers): string | undefined =>
+export const requestSessionToken = (requestHeaders: Headers): string | undefined =>
   tokenOf(requestHeaders, { cookie: SESSION_COOKIE });
 
 /** The API's caller, from the bearer or the session cookie — or 401. */
 export async function requireSession(req: Request): Promise<Session> {
-  const session = await resolveSession(sessionTokenOf(req.headers));
+  const session = await resolveSession(requestSessionToken(req.headers));
   if (!session) throw refuse(401, "UNAUTHENTICATED", "Sign in first");
   await assertOpen(session.account);
   return session;
@@ -49,6 +52,7 @@ const REFUSALS: Record<string, string> = {
   [ADMIN_REFUSAL.notFound]: "Not found",
 };
 
+// lib-allow: Verikora binds `adminGate` of @krizaka/auth to its own session, its API refusals and the allowed addresses
 export async function requireAdmin(req: Request): Promise<Session> {
   const session = await requireSession(req);
   const decision = adminGate({

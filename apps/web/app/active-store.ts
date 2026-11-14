@@ -7,9 +7,9 @@ import { env } from "@/lib/env";
 import { EXTERNAL } from "@/lib/retention";
 import { localStore } from "@/lib/storage/local";
 import { noneStore } from "@/lib/storage/none";
-import type { DocumentStore, StoreDescriptor } from "@/lib/storage/port";
+import type { DocumentStore, DocumentStoreDescriptor } from "@/lib/storage/port";
 import { DATA_KIND } from "@/lib/storage/providers";
-import { ownS3Store, type StorageSettings, storeForOwner } from "@/lib/storage/settings";
+import { ownS3Store, type StorageChoice, storeForOwner } from "@/lib/storage/settings";
 
 /** The documents store this deployment configures (Krizaka's): the default provider the admin chose in the database (ADR-005); none = nothing is kept. */
 export const krizakaStore = async (): Promise<DocumentStore> =>
@@ -18,10 +18,10 @@ export const krizakaStore = async (): Promise<DocumentStore> =>
 export interface OwnerStores {
   /** Where new kept documents go: nothing, Krizaka's store or the owner's own cloud, from their settings. */
   write: DocumentStore;
-  settings: StorageSettings;
+  settings: StorageChoice;
   /** The store that holds a document of this owner (by who owns that store); null when it is not available. */
   of: (owner: CloudOwner) => DocumentStore | null;
-  describe: (owner: CloudOwner) => StoreDescriptor;
+  describe: (owner: CloudOwner) => DocumentStoreDescriptor;
 }
 
 /** The stores of an account: its own settings decide where new documents go; each kept document is read from the store that holds it. */
@@ -31,7 +31,7 @@ export async function storesOf(ownerId: string): Promise<OwnerStores> {
   const own = await ownS3Store(query, ownerId, registry);
   const { store: write, settings } = await storeForOwner(query, ownerId, registry, krizaka).catch(() => ({
     store: noneStore(),
-    settings: { mode: "none", keepDefault: false, s3: null, testedAt: null } as StorageSettings,
+    settings: { mode: "none", keepDefault: false, s3: null, testedAt: null } as StorageChoice,
   }));
   const of = (o: CloudOwner) => (o === STORAGE_OWNER.workspace ? own : krizaka);
   return { write, settings, of, describe: (o) => (of(o) ?? noneStore()).describe() };

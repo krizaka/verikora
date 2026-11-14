@@ -1,7 +1,7 @@
 import { type ObjectStore, STORAGE_CODE, StorageError as PackageError } from "@krizaka/storage";
 
-import type { DocumentStore, StoreDescriptor } from "./port";
-import { assertKey, StorageError } from "./port";
+import type { DocumentStore, DocumentStoreDescriptor } from "./port";
+import { assertDocumentKey, DocumentStoreError } from "./port";
 
 /**
  * Verikora's DocumentStore (`@verikora/core`, shared with the Mac and the phone) over a `@krizaka/storage` ObjectStore: the same
@@ -10,7 +10,7 @@ import { assertKey, StorageError } from "./port";
  */
 export function documentStoreOver(
   objects: ObjectStore,
-  descriptor: StoreDescriptor,
+  descriptor: DocumentStoreDescriptor,
   maxTtlSeconds: number,
 ): DocumentStore {
   const guard = async <T>(run: () => Promise<T>): Promise<T> => {
@@ -18,16 +18,18 @@ export function documentStoreOver(
       return await run();
     } catch (error) {
       if (error instanceof PackageError && error.code === STORAGE_CODE.unreadable)
-        throw new StorageError(500, "The stored object failed its integrity check");
-      if (error instanceof PackageError) throw new StorageError(502, `Storage refused the request (${error.code})`);
+        throw new DocumentStoreError(500, "The stored object failed its integrity check");
+      if (error instanceof PackageError)
+        throw new DocumentStoreError(502, `Storage refused the request (${error.code})`);
       throw error;
     }
   };
   return {
-    put: (key, bytes, meta) => guard(() => objects.put(assertKey(key), bytes, meta)),
-    get: (key) => guard(() => objects.get(assertKey(key))),
-    signedUrl: (key, ttlSeconds) => guard(() => objects.signedUrl(assertKey(key), Math.min(ttlSeconds, maxTtlSeconds))),
-    delete: (key) => guard(() => objects.delete(assertKey(key))),
+    put: (key, bytes, meta) => guard(() => objects.put(assertDocumentKey(key), bytes, meta)),
+    get: (key) => guard(() => objects.get(assertDocumentKey(key))),
+    signedUrl: (key, ttlSeconds) =>
+      guard(() => objects.signedUrl(assertDocumentKey(key), Math.min(ttlSeconds, maxTtlSeconds))),
+    delete: (key) => guard(() => objects.delete(assertDocumentKey(key))),
     describe: () => descriptor,
   };
 }

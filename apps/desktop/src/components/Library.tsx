@@ -153,7 +153,7 @@ function FolderEntries({
   );
 }
 
-function refusalOf(error: unknown): Pick<Refused, "reason" | "megabytes"> | null {
+function uploadRefusalOf(error: unknown): Pick<Refused, "reason" | "megabytes"> | null {
   if (error instanceof Refused) return error;
   return error ? { reason: "failed" } : null;
 }
@@ -199,7 +199,7 @@ export function Library({
   useFolderWatch(folder, checkMany, t);
 
   const documents = (listing.data?.entries ?? []).filter((e) => !e.isDir);
-  const refusal = refusalOf(check.error ?? batch.error);
+  const refusal = uploadRefusalOf(check.error ?? batch.error);
   const busy = check.isPending || batch.isPending;
   const isRoot = folder !== null && (granted.data ?? []).includes(folder);
 

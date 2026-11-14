@@ -29,10 +29,10 @@ import {
   type ReportLabels,
   type ReportPayload,
   reportPayload,
+  type ReportVerifyFailure,
   sha256,
   signedMessage,
   type Verification,
-  type VerifyFailure,
 } from "./report";
 import { type SigningKey } from "./report-key";
 import { SITE_URL } from "./site";
@@ -317,7 +317,7 @@ export async function verifyPdf(
   document?: Uint8Array | null,
 ): Promise<Verification> {
   const fileSha256 = sha256(bytes);
-  const fail = (reason: VerifyFailure): Verification => ({ ok: false, reason, fileSha256 });
+  const fail = (reason: ReportVerifyFailure): Verification => ({ ok: false, reason, fileSha256 });
   if (!(bytes.length > 5 && Buffer.from(bytes.subarray(0, 5)).toString("latin1") === "%PDF-")) {
     return fail("NOT_A_REPORT");
   }

@@ -6,14 +6,14 @@ import { headers } from "next/headers";
 import { notFound, redirect } from "next/navigation";
 
 import { SignInForm } from "@/components/console/SignInForm";
-import { ipAllowed, pageAdmin } from "@/lib/access";
+import { consoleIpAllowed, pageAdmin } from "@/lib/access";
 import { PRODUCT_NAME } from "@/lib/brand";
 import { asLocale, getDictionary } from "@/lib/i18n";
 
 /** The administration's own sign-in (its cookie belongs to admin.verikora.com), on @krizaka/ui's auth template. */
 export default async function AdminSignIn({ params }: Readonly<{ params: Promise<{ locale: string }> }>) {
   const locale = asLocale((await params).locale);
-  if (!ipAllowed(await headers())) notFound();
+  if (!consoleIpAllowed(await headers())) notFound();
   if (await pageAdmin().catch(() => null)) redirect(`/${locale}`);
   const t = getDictionary(locale).console.adminConsole;
   return (

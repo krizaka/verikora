@@ -1,11 +1,11 @@
 import {
-  assertKey,
+  assertDocumentKey,
   type DocumentStore,
+  type DocumentStoreDescriptor,
   isId,
   STORAGE_KIND,
   STORAGE_OWNER,
   STORAGE_RESIDENCY,
-  type StoreDescriptor,
 } from "@verikora/core";
 
 /** What the device store needs from the file system: the app's sandbox, never a path outside it. */
@@ -28,7 +28,7 @@ export const DEVICE_PLACE = {
   residency: STORAGE_RESIDENCY.device,
 } as const;
 
-const DESCRIPTOR: StoreDescriptor = {
+const DESCRIPTOR: DocumentStoreDescriptor = {
   kind: STORAGE_KIND.device,
   endpoint: null,
   region: null,
@@ -58,14 +58,14 @@ const SEPARATOR = "@";
 export function createPhoneStore(files: FilePort, root: string): PhoneStore {
   const directory = `${root.replace(/\/$/, "")}/store`;
   const nameFor = (key: string, contentType: string) =>
-    `${encodeURIComponent(assertKey(key))}${SEPARATOR}${encodeURIComponent(contentType)}`;
+    `${encodeURIComponent(assertDocumentKey(key))}${SEPARATOR}${encodeURIComponent(contentType)}`;
   const entries = () =>
     files.names(directory).map((name) => ({
       name,
       key: decodeURIComponent(name.slice(0, name.indexOf(SEPARATOR))),
       contentType: decodeURIComponent(name.slice(name.indexOf(SEPARATOR) + 1)),
     }));
-  const entryOf = (key: string) => entries().find((e) => e.key === assertKey(key));
+  const entryOf = (key: string) => entries().find((e) => e.key === assertDocumentKey(key));
   const drop = (key: string) => {
     const entry = entryOf(key);
     if (entry) files.remove(`${directory}/${entry.name}`);

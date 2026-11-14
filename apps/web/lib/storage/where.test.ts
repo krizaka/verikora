@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import type { StoreDescriptor } from "./port";
+import type { DocumentStoreDescriptor } from "./port";
 import { storageNotice, storedAs } from "./where";
 
 const D = {
@@ -47,7 +47,7 @@ describe("where a document lives, as the info panel says it", () => {
     ],
     ["on the device", { kind: "device", owner: "device", residency: "device" }, { key: "device", vars: {} }],
   ] as const)("%s", (_name, override, expected) =>
-    expect(storageNotice({ ...D, ...override } as StoreDescriptor)).toEqual(expected),
+    expect(storageNotice({ ...D, ...override } as DocumentStoreDescriptor)).toEqual(expected),
   );
 });
 

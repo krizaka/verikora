@@ -1,9 +1,9 @@
 import { createHash, randomUUID } from "node:crypto";
 
 import {
-  ANALYSIS_STATUS,
   type AcceptedType,
   type Analysis,
+  ANALYSIS_STATUS,
   type AnalysisStatus,
   type AuthenticityReport,
   type CloudOwner,
@@ -34,7 +34,7 @@ import { type FileKind, OUTCOME, type PreflightRules, type RejectReason } from "
 import { VERIKORA_RULES } from "./preflight/rules";
 import { EXTERNAL, objectKey, purgeDeadline, storageFor } from "./retention";
 import { localStore } from "./storage/local";
-import type { DocumentStore, StoreDescriptor } from "./storage/port";
+import type { DocumentStore, DocumentStoreDescriptor } from "./storage/port";
 import { storedAs } from "./storage/where";
 import { understanding } from "./understanding";
 
@@ -195,8 +195,8 @@ export async function declaredKindOf(ownerId: string, id: string): Promise<Docum
 export async function documentStorage(
   ownerId: string,
   id: string,
-  describe: (owner: CloudOwner) => StoreDescriptor,
-): Promise<{ storage: StoreDescriptor; retainUntil: string | null; purged: boolean }> {
+  describe: (owner: CloudOwner) => DocumentStoreDescriptor,
+): Promise<{ storage: DocumentStoreDescriptor; retainUntil: string | null; purged: boolean }> {
   if (!isUuid(id)) throw refuse(404, "NOT_FOUND", "No such document");
   const [row] = await query<{
     storage: StorageKind;

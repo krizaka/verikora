@@ -1,4 +1,4 @@
-import { memoryStore, type SovkoraRun } from "@verikora/core";
+import { memoryStore, type RunPayload } from "@verikora/core";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 
 import { CONSENT_MEANS, CONSENT_PURPOSE, grantConsent, NOTICE_VERSION } from "./applicant-consent";
@@ -23,7 +23,7 @@ const BANNED = /certificat|authentique|conforme|approuv|refus|certificate|authen
 describe.runIf(enabled)("from the applicant's upload to the owner's report (verikora#130)", () => {
   const runs = new Map<string, string>();
   let n = 0;
-  const run = (id: string, status: string): SovkoraRun => ({
+  const run = (id: string, status: string): RunPayload => ({
     id,
     studioKey: "x",
     blueprintVersion: "1.0.0",

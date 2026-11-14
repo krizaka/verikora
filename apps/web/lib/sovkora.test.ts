@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { createSovkoraClient, sovkoraRefusal } from "./sovkora";
+import { createAnalysisEngine, engineRefusal } from "./sovkora";
 
 const RUN = {
   id: "8f6b1c2e-1d2c-4b8a-9a55-0d1e2f3a4b5c",
@@ -39,7 +39,7 @@ describe("the Sovkora client", () => {
       }),
       "POST /edge/api/v1/studios/compliance-check/runs": () => ({ status: 202, body: RUN }),
     });
-    const client = createSovkoraClient({
+    const client = createAnalysisEngine({
       baseUrl: "https://dev.sovkora.com/edge",
       apiKey: "oz_test",
       fetch: edge.fetch,
@@ -69,7 +69,7 @@ describe("the Sovkora client", () => {
         body: { ...RUN, studioKey: "document-authenticity" },
       }),
     });
-    const client = createSovkoraClient({
+    const client = createAnalysisEngine({
       baseUrl: "https://dev.sovkora.com/edge/",
       apiKey: "oz_test",
       fetch: edge.fetch,
@@ -79,21 +79,21 @@ describe("the Sovkora client", () => {
   });
 
   it("turns Sovkora's refusals into stable codes, and never starts without a key", async () => {
-    expect(sovkoraRefusal(401).code).toBe("SOVKORA_KEY");
-    expect(sovkoraRefusal(409).code).toBe("SOVKORA_LOCKED");
-    expect(sovkoraRefusal(500).code).toBe("SOVKORA_UNAVAILABLE");
+    expect(engineRefusal(401).code).toBe("SOVKORA_KEY");
+    expect(engineRefusal(409).code).toBe("SOVKORA_LOCKED");
+    expect(engineRefusal(500).code).toBe("SOVKORA_UNAVAILABLE");
     const locked = fakeEdge({
       "GET /edge/api/v1/studios/installations": () => ({ status: 200, body: [{ studioKey: "compliance-check" }] }),
       "POST /edge/api/v1/studios/compliance-check/runs": () => ({ status: 409 }),
     });
     await expect(
-      createSovkoraClient({ baseUrl: "https://x/edge", apiKey: "oz_t", fetch: locked.fetch }).startRun(
+      createAnalysisEngine({ baseUrl: "https://x/edge", apiKey: "oz_t", fetch: locked.fetch }).startRun(
         "compliance-check",
         {},
       ),
     ).rejects.toMatchObject({ body: { code: "SOVKORA_LOCKED" } });
     await expect(
-      createSovkoraClient({ baseUrl: "https://x/edge", apiKey: undefined, fetch: locked.fetch }).getRun(RUN.id),
+      createAnalysisEngine({ baseUrl: "https://x/edge", apiKey: undefined, fetch: locked.fetch }).getRun(RUN.id),
     ).rejects.toMatchObject({ body: { code: "SOVKORA_NOT_CONFIGURED" } });
   });
 
@@ -104,14 +104,14 @@ describe("the Sovkora client", () => {
         body: [{ studioKey: "compliance-check", pinnedVersion: "1.4.0" }],
       }),
     });
-    const client = createSovkoraClient({ baseUrl: "https://x/edge", apiKey: "oz_t", fetch: old.fetch });
+    const client = createAnalysisEngine({ baseUrl: "https://x/edge", apiKey: "oz_t", fetch: old.fetch });
     await expect(
       client.startRun("compliance-check", { document: "Avis", declaredKind: "NOTICE" }),
     ).rejects.toMatchObject({ body: { code: "SOVKORA_STUDIO_OLD" } });
     expect(old.calls.some((c) => c.url.includes("/runs"))).toBe(false);
   });
   it("a busy engine (429, « too many concurrent runs ») is SOVKORA_BUSY with the wait it asked for — not a failure (verikora#248)", async () => {
-    expect(sovkoraRefusal(429)).toEqual({ status: 429, code: "SOVKORA_BUSY" });
+    expect(engineRefusal(429)).toEqual({ status: 429, code: "SOVKORA_BUSY" });
     const busy = fakeEdge({
       "GET /edge/api/v1/studios/installations": () => ({ status: 200, body: [{ studioKey: "compliance-check" }] }),
       "POST /edge/api/v1/studios/compliance-check/runs": () => ({
@@ -119,7 +119,7 @@ describe("the Sovkora client", () => {
         body: { status: "too_many_concurrent_runs", limit: 2, active: 2, retryAfterSeconds: 15 },
       }),
     });
-    const error = await createSovkoraClient({ baseUrl: "https://x/edge", apiKey: "oz_t", fetch: busy.fetch })
+    const error = await createAnalysisEngine({ baseUrl: "https://x/edge", apiKey: "oz_t", fetch: busy.fetch })
       .startRun("compliance-check", {})
       .catch((e: unknown) => e as { status: number; body: Record<string, unknown>; headers: Record<string, string> });
     expect(error).toMatchObject({
@@ -134,7 +134,7 @@ describe("the Sovkora client", () => {
       const edge = fakeEdge({
         "GET /edge/api/v1/studios/installations": () => ({ status: 200, body: [{ studioKey: "compliance-check" }] }),
       });
-      return createSovkoraClient({
+      return createAnalysisEngine({
         baseUrl: "https://x/edge",
         apiKey: "oz_t",
         fetch: (async (url: string, init?: RequestInit) =>
@@ -156,7 +156,7 @@ describe("the Sovkora client", () => {
   it("refuses a run id that is not one before calling anyone", async () => {
     const edge = fakeEdge({});
     expect(() =>
-      createSovkoraClient({ baseUrl: "https://x/edge", apiKey: "oz_t", fetch: edge.fetch }).getRun("../admin"),
+      createAnalysisEngine({ baseUrl: "https://x/edge", apiKey: "oz_t", fetch: edge.fetch }).getRun("../admin"),
     ).toThrow();
     expect(edge.calls).toHaveLength(0);
   });
@@ -166,7 +166,7 @@ describe("the Sovkora client", () => {
       "GET /edge/api/v1/studios/runs/8f6b1c2e-1d2c-4b8a-9a55-0d1e2f3a4b5c": () => ({ status: 200, body: { nope: 1 } }),
     });
     await expect(
-      createSovkoraClient({ baseUrl: "https://x/edge", apiKey: "oz_t", fetch: edge.fetch }).getRun(RUN.id),
+      createAnalysisEngine({ baseUrl: "https://x/edge", apiKey: "oz_t", fetch: edge.fetch }).getRun(RUN.id),
     ).rejects.toMatchObject({ body: { code: "SOVKORA_SHAPE" } });
   });
 
@@ -175,7 +175,7 @@ describe("the Sovkora client", () => {
   it("answers SOVKORA_UNAVAILABLE when the edge never answers, within the start's one deadline", async () => {
     const neverAnswers = (() => new Promise<Response>(() => {})) as unknown as typeof globalThis.fetch;
     const lines: string[] = [];
-    const client = createSovkoraClient({
+    const client = createAnalysisEngine({
       baseUrl: "https://x/edge",
       apiKey: "oz_t",
       fetch: neverAnswers,
@@ -202,7 +202,7 @@ describe("the Sovkora client", () => {
       (init.method ?? "GET") === "GET"
         ? new Promise<Response>((resolve) => setTimeout(() => resolve(edge.fetch(url, init)), 30))
         : new Promise<Response>(() => {})) as unknown as typeof globalThis.fetch;
-    const client = createSovkoraClient({
+    const client = createAnalysisEngine({
       baseUrl: "https://x/edge",
       apiKey: "oz_t",
       fetch,
@@ -223,7 +223,7 @@ describe("the Sovkora client", () => {
       "POST /edge/api/v1/studios/compliance-check/installations": () => ({ status: 401 }),
     });
     const lines: string[] = [];
-    const client = createSovkoraClient({
+    const client = createAnalysisEngine({
       baseUrl: "https://x/edge",
       apiKey: "oz_secret_key",
       fetch: edge.fetch,

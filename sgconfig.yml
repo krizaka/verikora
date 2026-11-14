@@ -5,6 +5,7 @@
 ruleDirs:
   - node_modules/@krizaka/config/ast-grep/core
   - node_modules/@krizaka/config/ast-grep/web
+  - node_modules/@krizaka/config/ast-grep/app
   - rules
 testConfigs:
   - testDir: rule-tests

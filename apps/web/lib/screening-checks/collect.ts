@@ -6,7 +6,7 @@ import { logError } from "../log";
 import { bandOf, itemOf, namesOf, type ScreeningResult } from "../screening";
 import { isRefundable, refundCheck } from "./billing";
 import { screeningBillingPort } from "./billing-config";
-import { CHECK_OUTCOME, CHECK_STATE, type CheckPurpose, type CheckResult, stateOf } from "./model";
+import { CHECK_OUTCOME, CHECK_STATE, type CheckAnswer, type CheckPurpose, stateOf } from "./model";
 import { adapterFor, type CheckProvider } from "./providers";
 
 /*
@@ -30,15 +30,15 @@ export interface Due {
   poll_max: number;
 }
 
-export type Next = { settle: CheckResult } | { later: Date } | { giveUp: true };
+export type Next = { settle: CheckAnswer } | { later: Date } | { giveUp: true };
 
 /** Pure: what follows a poll. An answer settles; a pending one is asked again later, until the provider's tries are spent, then given up (never kept pending for good). */
-export function decide(result: CheckResult, polls: number, pollMax: number, pollMinutes: number, now: Date): Next {
+export function decide(result: CheckAnswer, polls: number, pollMax: number, pollMinutes: number, now: Date): Next {
   if (result.outcome !== CHECK_OUTCOME.PENDING) return { settle: result };
   return polls + 1 >= pollMax ? { giveUp: true } : { later: addMinutes(now, pollMinutes) };
 }
 
-const GAVE_UP: CheckResult = { outcome: CHECK_OUTCOME.TIMEOUT, refusal: null, category: "NONE", providerRef: null };
+const GAVE_UP: CheckAnswer = { outcome: CHECK_OUTCOME.TIMEOUT, refusal: null, category: "NONE", providerRef: null };
 
 export function dueChecks(now: Date, limit: number): Promise<Due[]> {
   return query<Due>(
@@ -76,7 +76,7 @@ export async function refreshResult(screeningId: string, now: Date): Promise<voi
 
 /** Polls one check. Returns true when it was settled by this call. */
 export async function collectOne(due: Due, provider: CheckProvider, now: Date): Promise<boolean> {
-  let polled: CheckResult;
+  let polled: CheckAnswer;
   try {
     const call = {
       userId: due.landlord_id,

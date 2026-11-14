@@ -1,4 +1,4 @@
-import { assertKey, type DocumentStore, type StoredObject } from "./document-store";
+import { assertDocumentKey, type DocumentStore, type StoredObject } from "./document-store";
 
 /** An in-memory store: the reference behaviour every adapter's contract test is written against, and a test double. */
 export function memoryStore(
@@ -7,17 +7,17 @@ export function memoryStore(
   const objects = new Map<string, StoredObject>();
   return {
     async put(key, bytes, meta) {
-      objects.set(assertKey(key), { bytes: new Uint8Array(bytes), contentType: meta.contentType });
+      objects.set(assertDocumentKey(key), { bytes: new Uint8Array(bytes), contentType: meta.contentType });
     },
     async get(key) {
-      const found = objects.get(assertKey(key));
+      const found = objects.get(assertDocumentKey(key));
       return found ? { bytes: new Uint8Array(found.bytes), contentType: found.contentType } : null;
     },
     async signedUrl() {
       return null;
     },
     async delete(key) {
-      objects.delete(assertKey(key));
+      objects.delete(assertDocumentKey(key));
     },
     describe: () => ({
       kind: "device",

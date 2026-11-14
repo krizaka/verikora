@@ -4,7 +4,7 @@ import { type ActiveFilter, FilterBar, FilterMenu } from "@krizaka/ui/filter-bar
 import { useRouter } from "next/navigation";
 
 import { useSay } from "@/lib/i18n-client";
-import { viewHref, type ViewState } from "@/lib/organisation/rules";
+import { libraryViewHref, type ViewState } from "@/lib/organisation/rules";
 import { pluralKey } from "@/lib/plural";
 
 /**
@@ -26,7 +26,7 @@ export function PlaceFilters({
 }>) {
   const { say } = useSay();
   const router = useRouter();
-  const go = (ids: string[]) => router.push(viewHref(path, { ...view, tags: ids }), { scroll: false });
+  const go = (ids: string[]) => router.push(libraryViewHref(path, { ...view, tags: ids }), { scroll: false });
   const active: ActiveFilter[] = selected.flatMap((id) => {
     const tag = tags.find((t) => t.id === id);
     return tag ? [{ id: `tag:${id}`, label: tag.name, onRemove: () => go(selected.filter((x) => x !== id)) }] : [];

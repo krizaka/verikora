@@ -23,7 +23,7 @@ export class ExtractionNotReady extends Error {
   }
 }
 
-export interface WaitOptions {
+export interface ExtractionWaitOptions {
   /** Time between two reads. */
   intervalMs?: number;
   /** After this the wait gives up (the worker has its own deadline; this is the client's). */
@@ -40,7 +40,7 @@ export interface WaitOptions {
  */
 export async function waitForExtraction<T extends { extraction?: ExtractionStatus; extractionError?: string | null }>(
   read: () => Promise<T>,
-  options: WaitOptions = {},
+  options: ExtractionWaitOptions = {},
 ): Promise<T> {
   const {
     intervalMs = 700,

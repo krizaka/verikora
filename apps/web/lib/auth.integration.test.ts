@@ -19,7 +19,7 @@ import { POST as signIn } from "@/app/api/auth/sign-in/route";
 import { POST as signOut } from "@/app/api/auth/sign-out/route";
 import { GET as me } from "@/app/api/me/route";
 
-import { requireAdmin, requireSession, sessionTokenOf } from "./access";
+import { requestSessionToken, requireAdmin, requireSession } from "./access";
 import { migrate, pool, query } from "./db";
 import { resetRateLimits } from "./limits";
 import { resolveSession, SESSION_COOKIE } from "./session";
@@ -232,6 +232,6 @@ describe.runIf(enabled)("sign-in, sessions and the administration's locks", () =
       status: 403,
       body: { code: "IP_NOT_ALLOWED" },
     });
-    expect(sessionTokenOf(new Headers({ authorization: `Bearer ${adminToken}` }))).toBe(adminToken);
+    expect(requestSessionToken(new Headers({ authorization: `Bearer ${adminToken}` }))).toBe(adminToken);
   });
 });

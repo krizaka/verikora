@@ -1,7 +1,7 @@
 import { seedLegacySettings as seed } from "@krizaka/settings";
 
 import { type SettingKey, settings } from "./registry";
-import type { SettingsService } from "./service";
+import type { VerikoraSettings } from "./service";
 
 /**
  * A deployment that was configured by environment before settings existed keeps behaving the same (the package's rule): at server
@@ -17,7 +17,7 @@ const LEGACY_KEYS = { signupOpen: "signup.open", purgeAfterHours: "limits.purgeA
   SettingKey
 >;
 
-export const seedLegacySettings = (service: SettingsService, legacy: LegacyValues, now: Date): Promise<SettingKey[]> =>
+export const seedLegacyValues = (service: VerikoraSettings, legacy: LegacyValues, now: Date): Promise<SettingKey[]> =>
   seed(
     settings,
     service,

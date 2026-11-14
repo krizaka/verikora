@@ -29,7 +29,7 @@ export interface OwnS3 {
   accessKeyId: string;
 }
 
-export interface StorageSettings {
+export interface StorageChoice {
   mode: StorageMode;
   keepDefault: boolean;
   s3: (OwnS3 & { hasSecret: boolean }) | null;
@@ -54,7 +54,7 @@ interface Row extends QueryResultRow {
 const COLUMNS =
   "cloud_connector, mode, keep_default, s3_endpoint, s3_region, s3_bucket, s3_access_key_id, s3_secret_sealed, provider_id, tested_at";
 
-const publicView = (r: Row | undefined): StorageSettings =>
+const publicView = (r: Row | undefined): StorageChoice =>
   !r
     ? { mode: "krizaka", keepDefault: false, s3: null, cloud: null, testedAt: null }
     : {
@@ -74,7 +74,7 @@ const publicView = (r: Row | undefined): StorageSettings =>
       };
 
 /** What the page may see: never the secret. */
-export async function loadSettings(q: Query, owner: string): Promise<StorageSettings> {
+export async function loadSettings(q: Query, owner: string): Promise<StorageChoice> {
   const [row] = await q<Row>(`SELECT ${COLUMNS} FROM storage_settings WHERE owner_id = $1`, [owner]);
   return publicView(row);
 }
@@ -96,7 +96,7 @@ export async function saveSettings(
   own: OwnProviders | null,
   actor: Actor,
   now: Date,
-): Promise<StorageSettings> {
+): Promise<StorageChoice> {
   if (input.keepDefault && input.mode === STORAGE_MODE.none) {
     throw refuse(400, "BAD_REQUEST", "Nothing can be kept by default when keeping is off");
   }
@@ -193,7 +193,7 @@ export async function storeForOwner(
   owner: string,
   own: OwnProviders | null,
   krizaka: DocumentStore,
-): Promise<{ store: DocumentStore; settings: StorageSettings }> {
+): Promise<{ store: DocumentStore; settings: StorageChoice }> {
   const settings = await loadSettings(q, owner);
   if (settings.mode === STORAGE_MODE.none) {
     return { store: noneStore(), settings };
@@ -215,7 +215,7 @@ export async function saveCloud(
   connector: string,
   providerId: string,
   now: Date,
-): Promise<StorageSettings> {
+): Promise<StorageChoice> {
   await q(
     `INSERT INTO storage_settings (owner_id, mode, keep_default, cloud_connector, provider_id, tested_at, updated_at) VALUES ($1, 'cloud', false, $2, $3, $4, $4)
      ON CONFLICT (owner_id) DO UPDATE SET mode = 'cloud', cloud_connector = excluded.cloud_connector, provider_id = excluded.provider_id, tested_at = excluded.tested_at, updated_at = excluded.updated_at`,
@@ -225,7 +225,7 @@ export async function saveCloud(
 }
 
 /** The person disconnected: new documents go back to Krizaka's store; the connector and provider stay named, because the documents in their cloud still do. */
-export async function saveDisconnected(q: Query, owner: string, now: Date): Promise<StorageSettings> {
+export async function saveDisconnected(q: Query, owner: string, now: Date): Promise<StorageChoice> {
   await q(
     "UPDATE storage_settings SET mode = 'krizaka', keep_default = false, updated_at = $2 WHERE owner_id = $1 AND mode = 'cloud'",
     [owner, now],

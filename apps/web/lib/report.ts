@@ -313,11 +313,12 @@ export function issueReport(payload: ReportPayload, labels: ReportLabels, key: S
   return { html, fileSha256: sha256(html), attestation };
 }
 
-export type VerifyFailure = "NOT_A_REPORT" | "UNREADABLE" | "BAD_SIGNATURE" | "ALTERED" | "UNKNOWN_KEY" | "SPECIMEN";
+export type ReportVerifyFailure =
+  "NOT_A_REPORT" | "UNREADABLE" | "BAD_SIGNATURE" | "ALTERED" | "UNKNOWN_KEY" | "SPECIMEN";
 
 export type Verification =
   | { ok: true; fileSha256: string; keyId: string; payload: ReportPayload; documentMatch: boolean | null }
-  | { ok: false; reason: VerifyFailure; fileSha256: string };
+  | { ok: false; reason: ReportVerifyFailure; fileSha256: string };
 
 /**
  * Checks a report file against a public key (and, optionally, the original document's bytes). Never throws on hostile
@@ -330,7 +331,7 @@ export function verifyReport(
   document?: Uint8Array | null,
 ): Verification {
   const fileSha256 = sha256(file);
-  const fail = (reason: VerifyFailure): Verification => ({ ok: false, reason, fileSha256 });
+  const fail = (reason: ReportVerifyFailure): Verification => ({ ok: false, reason, fileSha256 });
   // A pasted text may arrive with CRLF line ends; our files never contain a CR.
   const text = file.includes("\r") ? file.replaceAll("\r\n", "\n") : file;
   const match = BLOCK.exec(text);

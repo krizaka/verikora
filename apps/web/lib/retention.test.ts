@@ -1,9 +1,9 @@
 import { describe, expect, it } from "vitest";
 
 import { objectKey, purgeDeadline, storageFor } from "./retention";
-import type { StoreDescriptor } from "./storage/port";
+import type { DocumentStoreDescriptor } from "./storage/port";
 
-const D: StoreDescriptor = {
+const D: DocumentStoreDescriptor = {
   kind: "none",
   endpoint: null,
   region: null,

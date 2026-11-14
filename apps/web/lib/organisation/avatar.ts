@@ -10,7 +10,7 @@ import type { Query } from "./store";
  * uploaded image — checked by the pre-flight, made square with no metadata, kept behind the storage port. A new image is a new version.
  * Images stored before the package (`<owner>/<id>/<version>.jpg`) are still read; new ones are written under the package's key only.
  */
-export interface AvatarRules {
+export interface AvatarPolicy {
   allowedSeeds: readonly string[];
   maxBytes: number;
   size: number;
@@ -51,7 +51,7 @@ export const uploadAvatar = (
   owner: string,
   id: string,
   file: { name: string; type: string; bytes: Uint8Array },
-  deps: AvatarRules & { store: DocumentStore },
+  deps: AvatarPolicy & { store: DocumentStore },
 ): Promise<CollectionAvatar> =>
   guard(
     () =>

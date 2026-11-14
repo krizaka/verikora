@@ -1,4 +1,4 @@
-import { memoryStore, type SovkoraRun } from "@verikora/core";
+import { memoryStore, type RunPayload } from "@verikora/core";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 
 import {
@@ -40,7 +40,7 @@ const DAY_MS = 86_400_000;
 describe.runIf(enabled)("the applicant file (verikora#127)", () => {
   const runs = new Map<string, string>();
   let n = 0;
-  const run = (id: string, status: string): SovkoraRun => ({
+  const run = (id: string, status: string): RunPayload => ({
     id,
     studioKey: "x",
     blueprintVersion: "1.0.0",

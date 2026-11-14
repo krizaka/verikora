@@ -1,4 +1,4 @@
-import type { SovkoraRun } from "@verikora/core";
+import type { RunPayload } from "@verikora/core";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 
 import { POST as createKeyRoute } from "@/app/api/me/api-keys/route";
@@ -29,7 +29,7 @@ describe.runIf(enabled)("the public API v1 (verikora#202)", () => {
   const stamp = `${Date.now()}-${Math.random().toString(16).slice(2, 8)}`;
   const runs = new Map<string, string>();
   let n = 0;
-  const run = (id: string, status: string): SovkoraRun => ({
+  const run = (id: string, status: string): RunPayload => ({
     id,
     studioKey: "compliance-check",
     blueprintVersion: "1.0.0",

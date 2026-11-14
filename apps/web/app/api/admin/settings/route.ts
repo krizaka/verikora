@@ -2,7 +2,7 @@ import { z } from "zod";
 
 import { requireAdmin } from "@/lib/access";
 import { handle, readJson } from "@/lib/http";
-import { describeSettings } from "@/lib/settings/describe";
+import { describeVerikoraSettings } from "@/lib/settings/describe";
 import { appSettings } from "@/lib/settings/instance";
 import { settingsRefusal } from "@/lib/settings/refusal";
 import { SCOPE } from "@/lib/settings/registry";
@@ -46,7 +46,7 @@ export const GET = (req: Request) =>
     const context = contextOf();
     return Response.json(
       {
-        definitions: describeSettings(),
+        definitions: describeVerikoraSettings(),
         overrides: await service.overrides(ref),
         effective: await service.snapshot(context),
       },

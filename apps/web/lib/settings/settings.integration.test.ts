@@ -3,8 +3,8 @@ import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import { migrate, query } from "../db";
 import { assertFeature, assertOpen, FEATURE, type Feature, maintenance, settingsFor } from "./guards";
 import { appSettings } from "./instance";
-import { seedLegacySettings } from "./seed";
-import { GLOBAL, postgresSettings, type ScopeRef, SettingsError } from "./service";
+import { seedLegacyValues } from "./seed";
+import { GLOBAL, postgresVerikoraSettings, type ScopeRef, SettingsError } from "./service";
 
 /** The settings service against a real PostgreSQL (skipped without DATABASE_IT=1 and DATABASE_URL). */
 const enabled = process.env.DATABASE_IT === "1" && !!process.env.DATABASE_URL;
@@ -18,7 +18,7 @@ describe.runIf(enabled)("settings (ADR-0009)", () => {
     await query("DELETE FROM settings_audit");
   });
   const workspaces = new Map<string, string>();
-  const service = postgresSettings({ query, workspaceOf: async (u) => workspaces.get(u) ?? null, cacheMs: 0 });
+  const service = postgresVerikoraSettings({ query, workspaceOf: async (u) => workspaces.get(u) ?? null, cacheMs: 0 });
   const user = (id: string): ScopeRef => ({ scope: "user", id });
   const workspace = (id: string): ScopeRef => ({ scope: "workspace", id });
 
@@ -87,14 +87,14 @@ describe.runIf(enabled)("settings (ADR-0009)", () => {
   });
 
   it("a change is visible at once on this instance even with a cache", async () => {
-    const cached = postgresSettings({ query, cacheMs: 60_000, clock: () => 1 });
+    const cached = postgresVerikoraSettings({ query, cacheMs: 60_000, clock: () => 1 });
     expect(await cached.get("audit.freeFirst")).toBe(true);
     await cached.set(ADMIN, GLOBAL, "audit.freeFirst", false, NOW);
     expect(await cached.get("audit.freeFirst")).toBe(false);
   });
 
   it("a deployment default is used until an override exists", async () => {
-    const legacy = postgresSettings({ query, cacheMs: 0, defaults: { "signup.open": true } });
+    const legacy = postgresVerikoraSettings({ query, cacheMs: 0, defaults: { "signup.open": true } });
     expect(await legacy.get("signup.open")).toBe(true);
     await legacy.set(ADMIN, GLOBAL, "signup.open", false, NOW);
     expect(await legacy.get("signup.open")).toBe(false);
@@ -169,11 +169,11 @@ describe.runIf(enabled)("settings at the server boundary", () => {
 
   it("legacy environment values are written once at start, only when they differ from the default and nobody set them since", async () => {
     await query("DELETE FROM app_settings");
-    const service = postgresSettings({ query, cacheMs: 0 });
-    expect(await seedLegacySettings(service, { signupOpen: true, purgeAfterHours: 24 }, NOW)).toEqual(["signup.open"]);
+    const service = postgresVerikoraSettings({ query, cacheMs: 0 });
+    expect(await seedLegacyValues(service, { signupOpen: true, purgeAfterHours: 24 }, NOW)).toEqual(["signup.open"]);
     expect(await service.get("signup.open")).toBe(true);
     await service.set(ADMIN, GLOBAL, "signup.open", false, NOW);
-    expect(await seedLegacySettings(service, { signupOpen: true, purgeAfterHours: 24 }, NOW)).toEqual([]);
+    expect(await seedLegacyValues(service, { signupOpen: true, purgeAfterHours: 24 }, NOW)).toEqual([]);
     expect(await service.get("signup.open")).toBe(false);
   });
 });

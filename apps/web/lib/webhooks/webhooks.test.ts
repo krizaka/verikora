@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import type { BatchView } from "../batch/run";
-import { isPrivateAddress } from "./address";
+import { isPrivateWebhookAddress } from "./address";
 import { eventsOfFinishedBatch, WEBHOOK_EVENT } from "./events";
 import { sealer } from "./seal";
 import { safeSend } from "./send";
@@ -48,7 +48,7 @@ describe("addresses a webhook must never reach", () => {
     "::ffff:10.0.0.1",
     "not-an-ip",
   ])("%s is refused", (ip) => {
-    expect(isPrivateAddress(ip)).toBe(true);
+    expect(isPrivateWebhookAddress(ip)).toBe(true);
   });
 
   it.each([
@@ -61,7 +61,7 @@ describe("addresses a webhook must never reach", () => {
     "2606:4700:4700::1111",
     "::ffff:8.8.8.8",
   ])("%s is public", (ip) => {
-    expect(isPrivateAddress(ip)).toBe(false);
+    expect(isPrivateWebhookAddress(ip)).toBe(false);
   });
 });
 

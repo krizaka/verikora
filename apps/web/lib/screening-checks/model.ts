@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 /*
- * The vocabulary of an external check, as Sovkora's engine answers it (sovkora-engine `CheckResult`, #73): closed sets,
+ * The vocabulary of an external check, as Sovkora's engine answers it (sovkora-engine `CheckAnswer`, #73): closed sets,
  * never free text. Verikora shows every outcome honestly and never invents one — a check that cannot run says so.
  */
 export const CHECK_OUTCOME = {
@@ -12,7 +12,7 @@ export const CHECK_OUTCOME = {
   TIMEOUT: "TIMEOUT",
   REFUSED: "REFUSED",
 } as const;
-export type CheckOutcome = (typeof CHECK_OUTCOME)[keyof typeof CHECK_OUTCOME];
+export type ScreeningOutcome = (typeof CHECK_OUTCOME)[keyof typeof CHECK_OUTCOME];
 
 export const CHECK_REFUSAL = {
   NO_CONSENT: "NO_CONSENT",
@@ -20,7 +20,7 @@ export const CHECK_REFUSAL = {
   BUDGET_EXHAUSTED: "BUDGET_EXHAUSTED",
   NOT_CONFIGURED: "NOT_CONFIGURED",
 } as const;
-export type CheckRefusal = (typeof CHECK_REFUSAL)[keyof typeof CHECK_REFUSAL];
+export type ScreeningRefusal = (typeof CHECK_REFUSAL)[keyof typeof CHECK_REFUSAL];
 
 /** The engine's closed category of a file found. Never the record's content. */
 export const CHECK_CATEGORY = {
@@ -36,19 +36,19 @@ export const CHECK_PURPOSE = { COURT_RECORDS: "COURT_RECORDS", CREDIT: "CREDIT" 
 export type CheckPurpose = (typeof CHECK_PURPOSE)[keyof typeof CHECK_PURPOSE];
 
 export const checkResult = z.object({
-  outcome: z.enum(Object.values(CHECK_OUTCOME) as [CheckOutcome, ...CheckOutcome[]]),
+  outcome: z.enum(Object.values(CHECK_OUTCOME) as [ScreeningOutcome, ...ScreeningOutcome[]]),
   refusal: z
-    .enum(Object.values(CHECK_REFUSAL) as [CheckRefusal, ...CheckRefusal[]])
+    .enum(Object.values(CHECK_REFUSAL) as [ScreeningRefusal, ...ScreeningRefusal[]])
     .nullable()
     .default(null),
   category: z.enum(Object.values(CHECK_CATEGORY) as [string, ...string[]]).default("NONE"),
   /** The provider's opaque reference: kept to collect a pending answer, never shown, never a name or a figure. */
   providerRef: z.string().max(200).nullable().default(null),
 });
-export type CheckResult = z.infer<typeof checkResult>;
+export type CheckAnswer = z.infer<typeof checkResult>;
 
 /** Who is checked: an opaque id the engine hashes, and the names it needs to search. Names never reach the audit or the stored result. */
-export interface CheckSubject {
+export interface ScreeningSubject {
   subjectId: string;
   firstName: string;
   lastName: string;
@@ -57,7 +57,7 @@ export interface CheckSubject {
 export interface CheckCall {
   userId: string;
   runId: string;
-  subject: CheckSubject;
+  subject: ScreeningSubject;
   region: string;
 }
 
@@ -71,7 +71,7 @@ export const CHECK_STATE = {
 export type CheckState = (typeof CHECK_STATE)[keyof typeof CHECK_STATE];
 
 /** NOT_CONFIGURED (and an engine without a key) read « not available yet », never as a failure of the person or a result. */
-export function stateOf(result: Pick<CheckResult, "outcome" | "refusal">): CheckState {
+export function stateOf(result: Pick<CheckAnswer, "outcome" | "refusal">): CheckState {
   switch (result.outcome) {
     case CHECK_OUTCOME.MATCH:
     case CHECK_OUTCOME.NO_MATCH:
@@ -88,7 +88,7 @@ export function stateOf(result: Pick<CheckResult, "outcome" | "refusal">): Check
 }
 
 /** What the engine answers while no provider account exists: a refusal that says « not configured », never a result. */
-export const NOT_CONFIGURED: CheckResult = {
+export const NOT_CONFIGURED: CheckAnswer = {
   outcome: CHECK_OUTCOME.REFUSED,
   refusal: CHECK_REFUSAL.NOT_CONFIGURED,
   category: "NONE",
@@ -100,7 +100,7 @@ export const NOT_CONFIGURED: CheckResult = {
  * live one, `closedDoor` answers NOT_CONFIGURED to everything (tests, and a product without the door).
  */
 export interface ChecksDoor {
-  submit(purpose: CheckPurpose, call: CheckCall): Promise<CheckResult>;
-  collect(purpose: CheckPurpose, call: CheckCall, providerRef: string): Promise<CheckResult>;
+  submit(purpose: CheckPurpose, call: CheckCall): Promise<CheckAnswer>;
+  collect(purpose: CheckPurpose, call: CheckCall, providerRef: string): Promise<CheckAnswer>;
 }
 export const closedDoor: ChecksDoor = { submit: async () => NOT_CONFIGURED, collect: async () => NOT_CONFIGURED };

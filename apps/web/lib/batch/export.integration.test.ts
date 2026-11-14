@@ -1,4 +1,4 @@
-import type { SovkoraRun } from "@verikora/core";
+import type { RunPayload } from "@verikora/core";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 
 import { GET as webExport } from "@/app/api/batches/[id]/export/route";
@@ -32,7 +32,7 @@ describe.runIf(enabled)("the ZIP of a batch's reports", () => {
   let bearer = "";
   let batchId = "";
 
-  const run = (id: string): SovkoraRun => {
+  const run = (id: string): RunPayload => {
     const r = runs.get(id)!;
     const outputs =
       r.status !== "SUCCEEDED"

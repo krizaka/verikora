@@ -1,11 +1,11 @@
 import type { DocumentStore } from "./port";
-import { StorageError } from "./port";
+import { DocumentStoreError } from "./port";
 
 /** The default: nothing is kept. The document is purged after the check and only the report stays; the user keeps what they choose to keep. */
 export function noneStore(): DocumentStore {
   return {
     async put() {
-      throw new StorageError(409, "Keeping documents is switched off");
+      throw new DocumentStoreError(409, "Keeping documents is switched off");
     },
     async get() {
       return null;

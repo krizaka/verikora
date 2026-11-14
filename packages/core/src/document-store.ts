@@ -4,15 +4,14 @@
  * Bunny (development and fictional data only), any S3-compatible provider —; the Mac keeps documents in a folder of its own
  * (apps/desktop), the phone in its sandbox. Every adapter passes `documentStoreContract` (`@verikora/core/document-store/contract`).
  */
+import type { StoredObject } from "@krizaka/storage";
+
 import type { StorageKind, StorageOwner, StorageResidency } from "./index";
 
-export interface StoredObject {
-  bytes: Uint8Array;
-  contentType: string;
-}
+export type { StoredObject };
 
 /** Where a document lives, as the info panel says it (#164). */
-export interface StoreDescriptor {
+export interface DocumentStoreDescriptor {
   kind: StorageKind;
   /** The host the files go to (`tor1.digitaloceanspaces.com`, `s3.example.com`), when there is one. */
   endpoint: string | null;
@@ -33,10 +32,10 @@ export interface DocumentStore {
   signedUrl(key: string, ttlSeconds: number): Promise<string | null>;
   /** Idempotent: deleting what is not there succeeds. */
   delete(key: string): Promise<void>;
-  describe(): StoreDescriptor;
+  describe(): DocumentStoreDescriptor;
 }
 
-export class StorageError extends Error {
+export class DocumentStoreError extends Error {
   constructor(
     readonly status: number,
     message: string,
@@ -52,8 +51,8 @@ const KEY = /^[a-z0-9][a-z0-9/_.-]{0,254}$/;
  * trailing `/`. Nothing escapes the prefix, and no two adapters read one key as two objects (`a/./b.pdf` is one file on a disk
  * and another entry in a map: refused everywhere).
  */
-export function assertKey(key: string): string {
+export function assertDocumentKey(key: string): string {
   if (!KEY.test(key) || key.includes("..") || key.includes("//") || key.endsWith("/") || key.split("/").includes("."))
-    throw new StorageError(400, "Not a valid object key");
+    throw new DocumentStoreError(400, "Not a valid object key");
   return key;
 }
