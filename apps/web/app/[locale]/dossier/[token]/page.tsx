@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 import { ApplicantFile } from "@/components/applicant/ApplicantFile";
 import { DISPLAY_TIME_ZONE, INTL } from "@/components/console/format";
 import { SiteHeader } from "@/components/SiteChrome";
-import { SiteFooter } from "@/components/SiteFooter";
+import { ProductFooter } from "@/components/SiteFooter";
 import { activeConsents, NOTICE_VERSION } from "@/lib/applicant-consent";
 import { applicantFileState, fileByToken } from "@/lib/applicant-file";
 import { loadApplicantPage } from "@/lib/applicant-page";
@@ -49,7 +49,7 @@ export default async function ApplicantFilePage({
           expires={expires}
         />
       </main>
-      <SiteFooter locale={locale} />
+      <ProductFooter locale={locale} />
     </>
   );
 }

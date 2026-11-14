@@ -10,8 +10,8 @@ import { queries } from "@/config";
 import { routes } from "@/domain/links";
 import { checksTabOf } from "@/domain/tabs";
 import { useI18n } from "@/i18n";
-import { AppHeader } from "@/ui/AppHeader";
 import { DocumentRow } from "@/ui/DocumentRow";
+import { TabHeader } from "@/ui/TabHeader";
 import { useLocale } from "@/use-locale";
 
 type Batch = { id: string; name: string; items: number; done: number };
@@ -41,7 +41,7 @@ export default function Checks() {
   );
 
   return (
-    <Screen header={<AppHeader title={t("sections.checks")} />} scroll={false}>
+    <Screen header={<TabHeader title={t("sections.checks")} />} scroll={false}>
       {tab === "lots" ? (
         <List<Batch>
           label={t("checksTabs.lots")}

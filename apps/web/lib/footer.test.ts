@@ -5,7 +5,7 @@ import { footerLine, org } from "@krizaka/org";
 import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it } from "vitest";
 
-import { SiteFooter } from "@/components/SiteFooter";
+import { ProductFooter } from "@/components/SiteFooter";
 
 // One footer, one contentinfo: @krizaka/ui's SiteFooter in product mode, rendered once per page after its <main>.
 const ROOT = join(__dirname, "..");
@@ -26,11 +26,11 @@ describe("the pages render exactly one footer", () => {
     expect(footer).not.toContain("dev-environment-notice</p>");
   });
 
-  it("each public page renders <SiteFooter/> once, after its main, and nothing else renders a footer", () => {
+  it("each public page renders <ProductFooter/> once, after its main, and nothing else renders a footer", () => {
     for (const page of ["page.tsx", "privacy/page.tsx", "docs/page.tsx", "download/page.tsx"]) {
       const source = read(`app/[locale]/${page}`);
-      expect(source.match(/<SiteFooter\b/g)).toHaveLength(1);
-      expect(source.lastIndexOf("</main>")).toBeLessThan(source.indexOf("<SiteFooter "));
+      expect(source.match(/<ProductFooter\b/g)).toHaveLength(1);
+      expect(source.lastIndexOf("</main>")).toBeLessThan(source.indexOf("<ProductFooter "));
     }
     const offenders = [...files("app"), ...files("components")]
       .filter((f) => /\.tsx$/.test(f) && !/components\/SiteFooter\.tsx$/.test(f))
@@ -40,7 +40,7 @@ describe("the pages render exactly one footer", () => {
 
   it("renders one footer landmark, signed « A Krizaka product », with no family navigation", () => {
     for (const locale of ["en", "fr"] as const) {
-      const html = renderToStaticMarkup(SiteFooter({ locale }));
+      const html = renderToStaticMarkup(ProductFooter({ locale }));
       expect(html.match(/<footer\b/g)).toHaveLength(1);
       expect(html).toContain('href="https://www.krizaka.com"');
       expect(html).not.toMatch(/Krizaka family|Famille Krizaka/);
@@ -52,14 +52,14 @@ describe("the pages render exactly one footer", () => {
     expect(footer).toContain('from "@krizaka/org"');
     expect(footer).toContain("org={org}");
     for (const locale of ["en", "fr"] as const) {
-      const html = renderToStaticMarkup(SiteFooter({ locale })).replaceAll("&#x27;", "'");
+      const html = renderToStaticMarkup(ProductFooter({ locale })).replaceAll("&#x27;", "'");
       expect(html).toContain(footerLine(locale));
     }
   });
 
   it("shows « Privacy » and « Terms » once, in the legal line, pointing to Verikora's own pages (its policy, its Law 25 officer), never krizaka.com", () => {
     for (const locale of ["en", "fr"] as const) {
-      const html = renderToStaticMarkup(SiteFooter({ locale }));
+      const html = renderToStaticMarkup(ProductFooter({ locale }));
       for (const link of org.footer.legal) {
         expect(html.split(`>${link.label[locale]}<`)).toHaveLength(2);
         expect(html).not.toContain(link.url[locale]);

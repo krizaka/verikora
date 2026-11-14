@@ -7,6 +7,8 @@ coverage
 .turbo
 .expo
 out
+target
+apps/desktop/src-tauri/gen
 *.min.*
 package-lock.json
 pnpm-lock.yaml

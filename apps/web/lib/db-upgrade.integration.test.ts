@@ -4,7 +4,7 @@ import { describe, expect, it } from "vitest";
 
 import { BASELINE_VERSION, LAST_REPLACED_VERSION } from "./baseline-adoption";
 import { seedConfig } from "./config-seed";
-import { MIGRATION_LOCK_KEY, migrate } from "./db";
+import { migrate, MIGRATION_LOCK_KEY } from "./db";
 import { MIGRATIONS } from "./migrations";
 import { MODULES } from "./modules";
 import { diffSnapshot, readSnapshot, type SchemaSnapshot } from "./schema-check";

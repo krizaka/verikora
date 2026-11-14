@@ -3,7 +3,7 @@ import { fireEvent, render, screen } from "@testing-library/react-native";
 import * as React from "react";
 
 import { I18nProvider } from "@/i18n";
-import { AppHeader } from "@/ui/AppHeader";
+import { TabHeader } from "@/ui/TabHeader";
 
 const mockNavigate = jest.fn();
 jest.mock("expo-router", () => ({
@@ -26,7 +26,7 @@ const wrap = (node: React.ReactElement) => (
 
 describe("a tab's header", () => {
   it("shows the screen's title and the signed-in account, which opens the account and settings", async () => {
-    await render(wrap(<AppHeader title="Aujourd'hui" />));
+    await render(wrap(<TabHeader title="Aujourd'hui" />));
     expect(screen.getAllByText("Aujourd'hui").length).toBeGreaterThan(0);
     const account = await screen.findByRole("button", { name: "Votre compte : Éric Gagnon" });
     await fireEvent.press(account);
@@ -34,7 +34,7 @@ describe("a tab's header", () => {
   });
 
   it("holds « Vérifier un document » as its « + », the one action of every tab (verikora#319)", async () => {
-    await render(wrap(<AppHeader title="Bibliothèque" />));
+    await render(wrap(<TabHeader title="Bibliothèque" />));
     await fireEvent.press(await screen.findByRole("button", { name: "Vérifier un document" }));
     expect(mockNavigate).toHaveBeenCalledWith("/fr/app/check");
   });

@@ -9,7 +9,7 @@ vi.mock("next/navigation", () => ({
 }));
 vi.mock("@/lib/owner-report-shares", () => ({ openShare: async () => open.report }));
 vi.mock("@/components/SiteChrome", () => ({ SiteHeader: () => null }));
-vi.mock("@/components/SiteFooter", () => ({ SiteFooter: () => null }));
+vi.mock("@/components/SiteFooter", () => ({ ProductFooter: () => null }));
 
 import OwnerReportPage from "./page";
 

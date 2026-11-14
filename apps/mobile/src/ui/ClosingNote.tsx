@@ -8,7 +8,7 @@ export function ClosingNote({ note }: Readonly<{ note: Note }>) {
   return (
     <View style={{ gap: 12 }}>
       <Txt variant="title">{note.title}</Txt>
-      <Section heading={note.result.heading} text={note.result.text} />
+      <NoteSection heading={note.result.heading} text={note.result.text} />
       <Card.Root>
         <Card.Body>
           <Txt variant="label">{note.next.heading}</Txt>
@@ -25,7 +25,7 @@ export function ClosingNote({ note }: Readonly<{ note: Note }>) {
           ))}
         </Card.Body>
       </Card.Root>
-      <Section heading={note.what.heading} text={note.what.text} />
+      <NoteSection heading={note.what.heading} text={note.what.text} />
       <Card.Root>
         <Card.Body>
           <Txt variant="label">{note.how.heading}</Txt>
@@ -44,7 +44,7 @@ export function ClosingNote({ note }: Readonly<{ note: Note }>) {
           ))}
         </Card.Body>
       </Card.Root>
-      <Section heading={note.decides.heading} text={note.decides.text} />
+      <NoteSection heading={note.decides.heading} text={note.decides.text} />
       {note.reviewPending ? <Txt tone="warning">{note.reviewPending}</Txt> : null}
       <Txt tone="muted" variant="caption">
         {note.disclaimer}
@@ -53,7 +53,7 @@ export function ClosingNote({ note }: Readonly<{ note: Note }>) {
   );
 }
 
-function Section({ heading, text }: Readonly<{ heading: string; text: string }>) {
+function NoteSection({ heading, text }: Readonly<{ heading: string; text: string }>) {
   return (
     <Card.Root>
       <Card.Body>

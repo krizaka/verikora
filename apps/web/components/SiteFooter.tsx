@@ -15,7 +15,7 @@ import { APP_VERSION, contactHref, pagePath, REPO_URL } from "@/lib/site";
  * Technologies Krizaka · Fait à Montréal ») and the legal links (privacy, terms: once, in the legal line) are the organisation's own facts
  * (`@krizaka/org`), never typed here. « Support » is Krizaka's contact form (kind + product in the link), never an address.
  */
-export function SiteFooter({ locale }: Readonly<{ locale: Locale }>) {
+export function ProductFooter({ locale }: Readonly<{ locale: Locale }>) {
   const t = translator(locale);
   return (
     <FamilyFooter

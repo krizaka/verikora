@@ -19,7 +19,7 @@ import { uploadForm } from "@/data/upload";
 import { routes } from "@/domain/links";
 import { useI18n } from "@/i18n";
 import { pick, SOURCE, type Source } from "@/pickers";
-import { AppHeader } from "@/ui/AppHeader";
+import { TabHeader } from "@/ui/TabHeader";
 import { useLocale } from "@/use-locale";
 
 /** Why a pick did not become a check: a refusal of the pre-flight, or the server's. */
@@ -84,7 +84,7 @@ export default function Verify() {
   });
 
   return (
-    <Screen header={<AppHeader title={t("verify.title")} />}>
+    <Screen header={<TabHeader title={t("verify.title")} />}>
       <View style={{ gap: 8 }}>
         <Txt tone="secondary">{t("verify.lead")}</Txt>
       </View>

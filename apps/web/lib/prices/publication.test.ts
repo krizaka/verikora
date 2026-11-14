@@ -5,7 +5,7 @@ import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it } from "vitest";
 
 import sitemap from "@/app/sitemap";
-import { SiteFooter } from "@/components/SiteFooter";
+import { ProductFooter } from "@/components/SiteFooter";
 
 import { isListed } from "../listed";
 import { menuItems } from "../nav";
@@ -26,7 +26,7 @@ describe("the pricing page is published once the grid is decided (#388, ADR-0013
     expect(isListed("pricing")).toBe(offered);
     expect(menuItems().some((m) => m.page === "pricing")).toBe(offered);
     for (const locale of ["en", "fr"] as const) {
-      expect(renderToStaticMarkup(SiteFooter({ locale })).includes(`href="/${locale}/pricing"`)).toBe(offered);
+      expect(renderToStaticMarkup(ProductFooter({ locale })).includes(`href="/${locale}/pricing"`)).toBe(offered);
       expect(sitemap().some((e) => e.url === `${SITE_URL}/${locale}/pricing`)).toBe(offered);
     }
     expect(llmsText().includes("/pricing")).toBe(offered);

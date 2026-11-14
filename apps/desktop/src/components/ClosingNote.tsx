@@ -7,7 +7,7 @@ export function ClosingNote({ note }: Readonly<{ note: Note }>) {
   return (
     <div className="flex flex-col gap-4">
       <h2 className="text-xl font-semibold">{note.title}</h2>
-      <Section heading={note.result.heading} text={note.result.text} />
+      <NoteSection heading={note.result.heading} text={note.result.text} />
       <Card.Root className="flex flex-col gap-3 p-4">
         <h3 className="text-sm font-semibold">{note.next.heading}</h3>
         {note.next.none ? <p>{note.next.none}</p> : null}
@@ -22,7 +22,7 @@ export function ClosingNote({ note }: Readonly<{ note: Note }>) {
           </div>
         ))}
       </Card.Root>
-      <Section heading={note.what.heading} text={note.what.text} />
+      <NoteSection heading={note.what.heading} text={note.what.text} />
       <Card.Root className="flex flex-col gap-2 p-4">
         <h3 className="text-sm font-semibold">{note.how.heading}</h3>
         {note.how.sentences.map((sentence) => (
@@ -39,14 +39,14 @@ export function ClosingNote({ note }: Readonly<{ note: Note }>) {
           ))}
         </ul>
       </Card.Root>
-      <Section heading={note.decides.heading} text={note.decides.text} />
+      <NoteSection heading={note.decides.heading} text={note.decides.text} />
       {note.reviewPending ? <p className="text-sm text-warning">{note.reviewPending}</p> : null}
       <p className="text-xs text-fg-muted">{note.disclaimer}</p>
     </div>
   );
 }
 
-function Section({ heading, text }: Readonly<{ heading: string; text: string }>) {
+function NoteSection({ heading, text }: Readonly<{ heading: string; text: string }>) {
   return (
     <Card.Root className="flex flex-col gap-2 p-4">
       <h3 className="text-sm font-semibold">{heading}</h3>

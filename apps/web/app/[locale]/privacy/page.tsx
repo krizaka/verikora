@@ -4,7 +4,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 import { SiteHeader } from "@/components/SiteChrome";
-import { SiteFooter } from "@/components/SiteFooter";
+import { ProductFooter } from "@/components/SiteFooter";
 import { asLocale, format, getDictionary } from "@/lib/i18n";
 import { pageMetadata, siteJsonLd } from "@/lib/seo";
 import { pagePath, PRIVACY_OFFICER_EMAIL, PRIVACY_UPDATED } from "@/lib/site";
@@ -44,7 +44,7 @@ export default async function Privacy({ params }: Readonly<{ params: Promise<{ l
           ))}
         </Page>
       </main>
-      <SiteFooter locale={locale} />
+      <ProductFooter locale={locale} />
     </>
   );
 }

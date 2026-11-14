@@ -4,6 +4,7 @@ import { krizakaFetch, useMutation } from "@krizaka/query";
 import { Alert } from "@krizaka/ui/alert";
 import { Button } from "@krizaka/ui/button";
 import { Card } from "@krizaka/ui/card";
+import { Textarea } from "@krizaka/ui/field";
 import { useState } from "react";
 
 import { INTL } from "@/components/console/format";
@@ -185,9 +186,9 @@ export function TenantScreening({
               <label className="text-sm font-semibold text-fg" htmlFor="contest-comment">
                 {words.comment}
               </label>
-              <textarea
+              <Textarea
                 id="contest-comment"
-                className="min-h-24 rounded-lg border border-border-default bg-surface-1 p-3 text-sm text-fg"
+                className="min-h-24"
                 maxLength={500}
                 value={comment}
                 onChange={(e) => setComment(e.target.value)}

@@ -6,7 +6,7 @@ import { describe, expect, it } from "vitest";
 
 import sitemap from "@/app/sitemap";
 import { PricingContent } from "@/components/pricing/PricingContent";
-import { SiteFooter } from "@/components/SiteFooter";
+import { ProductFooter } from "@/components/SiteFooter";
 
 import { getDictionary } from "./i18n";
 import { llmsText } from "./seo";
@@ -45,7 +45,7 @@ describe("the public face says only what is true (audit 2026-11-04, krizaka-inte
       const c = getDictionary(locale).contact;
       expect(JSON.stringify(c)).not.toMatch(/ouvrable|business day|\b24 ?h|48 ?h/i);
       expect(sitemap().some((e) => e.url === `${SITE_URL}${pagePath(locale, "contact")}`)).toBe(true);
-      const footer = renderToStaticMarkup(SiteFooter({ locale }));
+      const footer = renderToStaticMarkup(ProductFooter({ locale }));
       expect(footer).not.toContain("mailto:");
       expect(footer).toContain(`href="${contactHref("verikora-footer", locale).replaceAll("&", "&amp;")}"`);
       expect(footer).toContain(`href="/${locale}/contact"`);

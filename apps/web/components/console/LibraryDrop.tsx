@@ -4,6 +4,7 @@ import { krizakaFetch, useQuery } from "@krizaka/query";
 import { Alert } from "@krizaka/ui/alert";
 import { Button } from "@krizaka/ui/button";
 import { DropOverlay } from "@krizaka/ui/drop-overlay";
+import { Input } from "@krizaka/ui/field";
 import { Dropzone, type FileRejection, type UploadItem, useUploadQueue } from "@krizaka/ui/file-upload";
 import { QueueStatus, tally, TaskTray, UploadQueue, type UploadQueueItem } from "@krizaka/ui/upload-queue";
 import { type Jurisdiction, MAX_FILE_BYTES, STORAGE_MODE, STORAGE_MODES } from "@verikora/core";
@@ -111,8 +112,9 @@ export function AddFilesButton({
       <Button variant={variant} size={size} onClick={() => input.current?.click()} data-testid="add-files">
         {children}
       </Button>
-      <input
+      <Input
         ref={input}
+        className="hidden"
         type="file"
         accept={ACCEPT}
         multiple

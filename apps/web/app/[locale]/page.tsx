@@ -9,7 +9,7 @@ import { BarQueryRoot } from "@/components/BarSession";
 import { HeroFinding } from "@/components/home/HeroFinding";
 import { RealReport } from "@/components/home/RealReport";
 import { SiteHeader } from "@/components/SiteChrome";
-import { SiteFooter } from "@/components/SiteFooter";
+import { ProductFooter } from "@/components/SiteFooter";
 import { HERO } from "@/content/recorded-runs/samples.mjs";
 import { asLocale, getDictionary } from "@/lib/i18n";
 import type { ConsoleMessages } from "@/lib/i18n-client";
@@ -162,7 +162,7 @@ export default async function Home({ params }: Readonly<{ params: Promise<{ loca
           </LandingPage>
         </main>
       </BarQueryRoot>
-      <SiteFooter locale={locale} />
+      <ProductFooter locale={locale} />
     </>
   );
 }

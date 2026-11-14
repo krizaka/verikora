@@ -6,7 +6,7 @@ import { describe, expect, it } from "vitest";
 
 import sitemap from "@/app/sitemap";
 import { DocsContent } from "@/components/docs/DocsContent";
-import { SiteFooter } from "@/components/SiteFooter";
+import { ProductFooter } from "@/components/SiteFooter";
 
 import { openApiDocument } from "./api-v1/openapi";
 import { DOCS_SECTIONS } from "./docs";
@@ -80,7 +80,7 @@ describe("/docs", () => {
     const nav = readFileSync(join(import.meta.dirname, "nav.ts"), "utf8");
     expect(nav).toContain('page: "docs"');
     for (const locale of LOCALES)
-      expect(renderToStaticMarkup(SiteFooter({ locale }))).toContain(`href="/${locale}/docs"`);
+      expect(renderToStaticMarkup(ProductFooter({ locale }))).toContain(`href="/${locale}/docs"`);
     const urls = sitemap().map((e) => e.url);
     for (const locale of LOCALES) expect(urls).toContain(`${SITE_URL}/${locale}/docs`);
     expect(llmsText()).toContain(`${SITE_URL}/en/docs`);

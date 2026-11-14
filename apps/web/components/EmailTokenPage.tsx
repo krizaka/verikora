@@ -1,9 +1,10 @@
+import { Button } from "@krizaka/ui/button";
 import { Page } from "@krizaka/ui/page";
 import { PageHero } from "@krizaka/ui/page-hero";
 import Link from "next/link";
 
 import { SiteHeader } from "@/components/SiteChrome";
-import { SiteFooter } from "@/components/SiteFooter";
+import { ProductFooter } from "@/components/SiteFooter";
 import { asLocale, getDictionary } from "@/lib/i18n";
 import { pagePath } from "@/lib/site";
 
@@ -41,17 +42,20 @@ export async function EmailTokenPage({
         />
         <Page>
           {valid ? (
+            // ui-allow: a native POST with no script, so a mail scanner cannot spend the single-use link; a @krizaka/ui Form is client state with no plain action
             <form method="post" action={action}>
+              {/* ui-allow: hidden carriers of the token and the language in that native POST */}
               <input type="hidden" name="token" value={token} />
+              {/* ui-allow: hidden carriers of the token and the language in that native POST */}
               <input type="hidden" name="locale" value={locale} />
-              <button type="submit" className="rounded-md bg-accent px-5 py-3 font-semibold text-on-accent">
+              <Button type="submit" size="lg" variant="primary">
                 {v.button}
-              </button>
+              </Button>
             </form>
           ) : null}
         </Page>
       </main>
-      <SiteFooter locale={locale} />
+      <ProductFooter locale={locale} />
     </>
   );
 }

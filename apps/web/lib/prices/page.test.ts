@@ -8,8 +8,8 @@ import {
 import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it } from "vitest";
 
-import { getDictionary } from "@/lib/i18n";
 import { PricingContent } from "@/components/pricing/PricingContent";
+import { getDictionary } from "@/lib/i18n";
 
 import { PRICE, PRICES } from "../pricing";
 import { pricingLines } from "./page";

@@ -8,7 +8,7 @@ import { useAuth } from "@/auth";
 import { APP_VERSION, webUrl } from "@/config";
 import { LOCALES } from "@/domain/links";
 import { useI18n } from "@/i18n";
-import { AppHeader } from "@/ui/AppHeader";
+import { TabHeader } from "@/ui/TabHeader";
 import { useLocale } from "@/use-locale";
 
 /** The settings: the language (the URL's), where the documents live, the account. */
@@ -18,7 +18,7 @@ export default function Settings() {
   const { signOut } = useAuth();
   const router = useRouter();
   return (
-    <Screen header={<AppHeader title={t("settings.title")} />}>
+    <Screen header={<TabHeader title={t("settings.title")} />}>
       <View style={{ gap: 8 }}>
         <Txt variant="label">{t("settings.language")}</Txt>
         <Segmented
