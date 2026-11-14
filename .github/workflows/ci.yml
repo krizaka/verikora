@@ -32,15 +32,15 @@ jobs:
         apps/*/coverage/lcov.info
         packages/*/coverage/lcov.info
       test-script: test:coverage
-      container: true      # the image is built on every PR that can break it (Dockerfile, manifests, lockfiles, COPY paths)
+      container: true # the image is built on every PR that can break it (Dockerfile, manifests, lockfiles, COPY paths)
       container-dockerfile: deploy/docker/Dockerfile
       container-image: app:ci
-      container-smoke: scripts/ci-container-smoke.sh   # the photo stack (sharp, HEIC, Tesseract) runs inside the image, at 512 MB
+      container-smoke: scripts/ci-container-smoke.sh # the photo stack (sharp, HEIC, Tesseract) runs inside the image, at 512 MB
       # What App Platform passes as build arguments: indexing off (a dev build), a placeholder commit.
       container-build-args: |
         APP_SEARCH_INDEXING=off
         APP_COMMIT_SHA=ci
-      duplication: true      # jscpd + dup-ratchet.json: duplicated lines may only go down
+      duplication: true # jscpd + dup-ratchet.json: duplicated lines may only go down
       package-manager: pnpm
       parallel: true
       typecheck-script: typecheck
