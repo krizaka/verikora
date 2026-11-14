@@ -5,6 +5,8 @@
 set -euo pipefail
 export APP_ENVIRONMENT=dev
 export APP_SEARCH_INDEXING=off
+# The installation's tenant id: the app refuses to start without it (krizaka-internal#3638); a CI-only tenant, never a real one.
+export MEDIA_DOCUMENTS_TENANT=verikora-ci
 export DATABASE_URL="postgresql://ci:ci-only-password@postgres:5432/ci"
 export AUTH_SESSION_SECRET=ci-only-session-secret-0123456789abcdef
 export AI_API_KEY=oz_ci_only_not_a_key
