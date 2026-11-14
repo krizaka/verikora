@@ -41,7 +41,8 @@
     {
       "name": "web lint (eslint, lint ratchet, dependency-cruiser)",
       "paths": ["apps/web/**", ".dependency-cruiser*"],
-      "run": ["pnpm", "--filter", "@verikora/web", "run", "lint"],
+      "run": ["pnpm", "run", "lint"],
+      "cwd": "apps/web",
       "timeoutSeconds": 900
     },
     {
@@ -49,8 +50,6 @@
       "paths": ["apps/web/**"],
       "run": [
         "pnpm",
-        "--filter",
-        "@verikora/web",
         "exec",
         "vitest",
         "run",
@@ -63,6 +62,7 @@
         "--coverage.reporter=lcov",
         "--passWithNoTests"
       ],
+      "cwd": "apps/web",
       "timeoutSeconds": 900
     },
     {
@@ -70,8 +70,6 @@
       "paths": ["packages/core/**"],
       "run": [
         "pnpm",
-        "--filter",
-        "@verikora/core",
         "exec",
         "vitest",
         "run",
@@ -82,6 +80,7 @@
         "--coverage.reporter=lcov",
         "--passWithNoTests"
       ],
+      "cwd": "packages/core",
       "timeoutSeconds": 600
     },
     {
@@ -89,8 +88,6 @@
       "paths": ["packages/client/**"],
       "run": [
         "pnpm",
-        "--filter",
-        "@verikora/client",
         "exec",
         "vitest",
         "run",
@@ -101,6 +98,7 @@
         "--coverage.reporter=lcov",
         "--passWithNoTests"
       ],
+      "cwd": "packages/client",
       "timeoutSeconds": 600
     },
     {
@@ -112,22 +110,16 @@
     {
       "name": "mobile tests (jest)",
       "paths": ["apps/mobile/**"],
-      "run": [
-        "pnpm",
-        "--filter",
-        "@verikora/mobile",
-        "exec",
-        "jest",
-        "--changedSince=origin/main",
-        "--passWithNoTests"
-      ],
+      "run": ["pnpm", "exec", "jest", "--changedSince=origin/main", "--passWithNoTests"],
+      "cwd": "apps/mobile",
       "heavy": true,
       "timeoutSeconds": 900
     },
     {
       "name": "desktop typecheck, tests and Rust tests (apps/desktop check)",
       "paths": ["apps/desktop/**"],
-      "run": ["pnpm", "--filter", "@verikora/desktop", "run", "check"],
+      "run": ["pnpm", "run", "check"],
+      "cwd": "apps/desktop",
       "heavy": true,
       "timeoutSeconds": 1800
     }
