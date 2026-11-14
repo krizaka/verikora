@@ -5,67 +5,67 @@
     {
       "platform": "android",
       "flow": "documents-en",
-      "seconds": 10,
-      "capturedAt": "2026-10-31T10:47:29.721Z",
+      "seconds": 7.1,
+      "capturedAt": "2026-11-14T14:06:05.069Z",
       "files": {
-        "webm": "sites/verikora/download/android-documents-en.a31c48b7a8.webm",
-        "mp4": "sites/verikora/download/android-documents-en.08312fdbd2.mp4",
-        "poster": "sites/verikora/download/android-documents-en.a4ec833788.jpg"
+        "webm": "sites/verikora/download/android-documents-en.9b9bc3c02e.webm",
+        "mp4": "sites/verikora/download/android-documents-en.4dba4ed103.mp4",
+        "poster": "sites/verikora/download/android-documents-en.1d0290f1ae.jpg"
       }
     },
     {
       "platform": "mac",
       "flow": "library-fr",
       "seconds": 6.2,
-      "capturedAt": "2026-10-31T10:47:33.333Z",
+      "capturedAt": "2026-11-14T14:06:08.273Z",
       "files": {
-        "webm": "sites/verikora/download/mac-library-fr.aaa86dc5a9.webm",
-        "mp4": "sites/verikora/download/mac-library-fr.4a2163d61c.mp4",
-        "poster": "sites/verikora/download/mac-library-fr.dd1ca6402d.jpg"
+        "webm": "sites/verikora/download/mac-library-fr.ab6c4ddb42.webm",
+        "mp4": "sites/verikora/download/mac-library-fr.ea8ea5e20a.mp4",
+        "poster": "sites/verikora/download/mac-library-fr.5f16ff65e2.jpg"
       }
     },
     {
       "platform": "web",
       "flow": "binder-en",
-      "seconds": 4.6,
-      "capturedAt": "2026-10-31T10:47:07.190Z",
+      "seconds": 4.9,
+      "capturedAt": "2026-11-14T14:05:49.738Z",
       "files": {
-        "webm": "sites/verikora/download/web-binder-en.facb390cb9.webm",
-        "mp4": "sites/verikora/download/web-binder-en.8ac64b1a9f.mp4",
-        "poster": "sites/verikora/download/web-binder-en.f3789ea4ae.jpg"
+        "webm": "sites/verikora/download/web-binder-en.ef40fd1429.webm",
+        "mp4": "sites/verikora/download/web-binder-en.49346c64bc.mp4",
+        "poster": "sites/verikora/download/web-binder-en.4e982cb0bb.jpg"
       }
     },
     {
       "platform": "web",
       "flow": "binder-fr",
-      "seconds": 4.8,
-      "capturedAt": "2026-10-31T10:47:11.075Z",
+      "seconds": 4.6,
+      "capturedAt": "2026-11-14T14:05:52.942Z",
       "files": {
-        "webm": "sites/verikora/download/web-binder-fr.9dc6b3dccb.webm",
-        "mp4": "sites/verikora/download/web-binder-fr.a0738e6b04.mp4",
-        "poster": "sites/verikora/download/web-binder-fr.24eed663b2.jpg"
+        "webm": "sites/verikora/download/web-binder-fr.65941de2c9.webm",
+        "mp4": "sites/verikora/download/web-binder-fr.88847017c0.mp4",
+        "poster": "sites/verikora/download/web-binder-fr.c968d1e498.jpg"
       }
     },
     {
       "platform": "web",
       "flow": "report-en",
-      "seconds": 2,
-      "capturedAt": "2026-10-31T10:47:13.423Z",
+      "seconds": 3.1,
+      "capturedAt": "2026-11-14T14:05:55.693Z",
       "files": {
-        "webm": "sites/verikora/download/web-report-en.bb49275fb3.webm",
-        "mp4": "sites/verikora/download/web-report-en.75bd2d64c0.mp4",
-        "poster": "sites/verikora/download/web-report-en.187444b80b.jpg"
+        "webm": "sites/verikora/download/web-report-en.b433824c3c.webm",
+        "mp4": "sites/verikora/download/web-report-en.470b4c9d37.mp4",
+        "poster": "sites/verikora/download/web-report-en.66209b91e0.jpg"
       }
     },
     {
       "platform": "web",
       "flow": "report-fr",
-      "seconds": 1.9,
-      "capturedAt": "2026-10-31T10:47:15.601Z",
+      "seconds": 3,
+      "capturedAt": "2026-11-14T14:05:58.383Z",
       "files": {
-        "webm": "sites/verikora/download/web-report-fr.67681660f3.webm",
-        "mp4": "sites/verikora/download/web-report-fr.9f14a2242f.mp4",
-        "poster": "sites/verikora/download/web-report-fr.96370b67e5.jpg"
+        "webm": "sites/verikora/download/web-report-fr.10ffd96eb3.webm",
+        "mp4": "sites/verikora/download/web-report-fr.2cb11371be.mp4",
+        "poster": "sites/verikora/download/web-report-fr.27faccb45e.jpg"
       }
     }
   ]
