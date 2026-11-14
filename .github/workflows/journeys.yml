@@ -2,10 +2,12 @@ name: Journeys
 
 # The customer journeys (ADR-017, krizaka/.github#423) as the seeded cast: apps/web/e2e/journeys/journeys.json lists them, the
 # kit is @krizaka/page-audit/journey. The same app, seed and Playwright container as the visual regression; retries are 0 and
-# a flake is a bug. Not a required check until it has been green for a week on main (the CTO's call).
+# a flake is a bug. A required check of the merge queue (krizaka-internal#2380, the sealed-PDF journey): it reports on the queue
+# entry too, as the visual regression does.
 on:
   pull_request:
     branches: [main]
+  merge_group:
 
 permissions:
   contents: read
