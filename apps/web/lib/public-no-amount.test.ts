@@ -23,7 +23,11 @@ const strings = (value: unknown, path = ""): [string, string][] =>
 const publicWords = PUBLIC.flatMap((dir) =>
   readdirSync(join(MESSAGES, dir))
     .filter((f) => f.endsWith(".json"))
-    .flatMap((f) => strings(JSON.parse(readFileSync(join(MESSAGES, dir, f), "utf8"))).map(([p, v]) => [`${dir}/${f}${p}`, v] as const)),
+    .flatMap((f) =>
+      strings(JSON.parse(readFileSync(join(MESSAGES, dir, f), "utf8"))).map(
+        ([p, v]) => [`${dir}/${f}${p}`, v] as const,
+      ),
+    ),
 );
 
 describe("no money amount in the public words", () => {

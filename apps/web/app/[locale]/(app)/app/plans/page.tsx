@@ -15,7 +15,6 @@ import { isSoldKind, SOLD } from "@/lib/pricing";
 import { statusLine } from "@/lib/product-status";
 import { settingsFor } from "@/lib/settings/guards";
 
-
 /** The offers are data an administrator schedules (ADR-009): read at each request, as on the public page. */
 export const dynamic = "force-dynamic";
 

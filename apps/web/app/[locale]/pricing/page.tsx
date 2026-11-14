@@ -12,7 +12,6 @@ import { PRICING_PUBLISHED } from "@/lib/prices/publication";
 import { statusLine } from "@/lib/product-status";
 import { pageMetadata, siteJsonLd } from "@/lib/seo";
 
-
 /** The prices are data an administrator schedules (ADR-009): the page is read at each request, never frozen at build. */
 export const dynamic = "force-dynamic";
 

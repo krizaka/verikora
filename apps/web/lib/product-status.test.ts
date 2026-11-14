@@ -11,10 +11,13 @@ describe("the product status word", () => {
     expect(PRODUCT_STATUS).toBe("development");
   });
 
-  it.each(["en", "fr"] as const)("the landing's status sentence starts with the word « %s » of the status", (locale) => {
-    const line = statusLine(getDictionary(locale).landing.status);
-    expect(line.startsWith(STATUS_WORD[locale])).toBe(true);
-  });
+  it.each(["en", "fr"] as const)(
+    "the landing's status sentence starts with the word « %s » of the status",
+    (locale) => {
+      const line = statusLine(getDictionary(locale).landing.status);
+      expect(line.startsWith(STATUS_WORD[locale])).toBe(true);
+    },
+  );
 
   it("no other status word is public: no dev-preview wording survives", () => {
     for (const locale of ["en", "fr"] as const) {
