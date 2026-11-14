@@ -37,11 +37,15 @@ export interface KindForm {
   presets: { id: string; endpointTemplate: string | null; regions: readonly string[] }[];
 }
 
+/** Kinds the package offers that this app does not expose to its admins yet (the managed kind arrived with @krizaka/storage 0.11; offering it is a product decision, krizaka-internal#3630). */
+const NOT_OFFERED: readonly string[] = ["managed"];
+
 /** The kinds an admin may add here: implemented, for the admin, openable by this runtime, and not a dev-only kind in production. */
 export function adminKinds(runtime: "server" | "dev", environment: "dev" | "prod"): KindForm[] {
   return PROVIDER_KINDS.filter(
     (k) =>
       k.implemented &&
+      !NOT_OFFERED.includes(k.kind) &&
       k.scopes.includes("admin") &&
       k.runtimes.includes(runtime) &&
       !(k.devOnly && environment === "prod"),
