@@ -68,7 +68,7 @@ describe.runIf(enabled)("the storage providers in the database", () => {
       { name: "bail.txt", type: "text/plain", size: 100 },
       new TextEncoder().encode(TEXT),
       "lease",
-      { keep: false, store: working, working, now: NOW, purgeAfterHours: 24 },
+      { keep: false, store: working, working, now: NOW, purgeAfterHours: 24, tenant: "verikora-dev" },
     );
     const [row] = await query<{ provider_id: string }>("SELECT provider_id FROM documents WHERE id = $1", [summary.id]);
     expect(row!.provider_id).toBe(imported.id);

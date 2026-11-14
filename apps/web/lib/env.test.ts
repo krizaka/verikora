@@ -13,6 +13,7 @@ const PROD = {
   AUTH_SESSION_SECRET: "a".repeat(40),
   AI_API_KEY: "oz_live_key",
   APP_REPORT_SIGNING_KEY: generateSigningKeyBase64(),
+  MEDIA_DOCUMENTS_TENANT: "verikora-prod",
 };
 
 describe("env", () => {
@@ -56,6 +57,7 @@ describe("env", () => {
       "AUTH_SESSION_SECRET must be at least 32 characters",
       "AI_API_KEY must be an Sovkora key (oz_…)",
       "APP_REPORT_SIGNING_KEY is not set",
+      "MEDIA_DOCUMENTS_TENANT is not set (the installation's tenant id, e.g. verikora-prod)",
       "DATABASE_CA_CERT is required for a TLS database",
     ]);
     expect(problems.join(" ")).not.toContain("sk-not-sovkora");

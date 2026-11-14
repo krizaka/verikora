@@ -72,7 +72,7 @@ describe.runIf(enabled)("webhooks", () => {
       name,
       `file,check,reference\n${name}.pdf,compliance,REF-${name}`,
       [await pdf(`${name}.pdf`, `BAIL ${name} ${stamp}`)],
-      { settings: await settingsFor(pro.id), now: new Date(), environment: "dev" },
+      { settings: await settingsFor(pro.id), now: new Date(), environment: "dev", tenant: "verikora-dev" },
     );
     runs.forEach((_, id) => runs.set(id, "SUCCEEDED"));
     return advanceBatch(pro, created.id, { settings: await settingsFor(pro.id), now: new Date(), environment: "dev" });

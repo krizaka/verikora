@@ -23,4 +23,5 @@ jobs:
       snapshot-paths: apps/web/e2e/visual/__screenshots__
       env: |
         E2E_EMAIL=eric@demo.verikora.test
+        MEDIA_DOCUMENTS_TENANT=verikora-ci
         E2E_PASSWORD=ci-only-demo-password-0123

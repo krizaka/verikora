@@ -8,14 +8,12 @@ import { entitlementOf } from "@/lib/billing";
 import { query } from "@/lib/db";
 import { env } from "@/lib/env";
 import { asLocale, getDictionary } from "@/lib/i18n";
-import { productStatus } from "@/lib/landing";
 import { paymentsFrom } from "@/lib/payments/config";
 import { pricingView } from "@/lib/prices/pricing-view";
 import { PRICING_PUBLISHED } from "@/lib/prices/publication";
 import { isSoldKind, SOLD } from "@/lib/pricing";
+import { statusLine } from "@/lib/product-status";
 import { settingsFor } from "@/lib/settings/guards";
-
-import preview from "../../../../../../../dev-preview.json";
 
 /** The offers are data an administrator schedules (ADR-009): read at each request, as on the public page. */
 export const dynamic = "force-dynamic";
@@ -51,7 +49,7 @@ export default async function PlansPage({ params }: Readonly<{ params: Promise<{
       <PricingContent
         locale={locale}
         {...view}
-        status={dict.landing.status[productStatus(preview)]}
+        status={statusLine(dict.landing.status)}
         action={(plan) => {
           return isSoldKind(plan) ? (
             <SubscribeButton

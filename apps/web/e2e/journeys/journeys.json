@@ -149,5 +149,21 @@
     "video": true,
     "budgetSeconds": 60,
     "tags": ["critical"]
+  },
+  {
+    "id": "sealed-pdf",
+    "promise": "Eric downloads the signed PDF Verikora sells for a finished check and its seal verifies on the verification page; one altered byte makes it fail",
+    "persona": "eric",
+    "platforms": ["web"],
+    "steps": [
+      "sign in as Eric",
+      "open the report of the seeded lease",
+      "download the signed PDF",
+      "upload it on the verification page and see the seal verified",
+      "alter one byte of the file, upload it again and see the verification fail"
+    ],
+    "video": true,
+    "budgetSeconds": 90,
+    "tags": ["critical"]
   }
 ]

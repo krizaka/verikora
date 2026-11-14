@@ -15,7 +15,7 @@ import { auditIn } from "../audit";
 import { transaction } from "../db";
 import { removeObject } from "../document-objects";
 import { refuse } from "../http";
-import { EXTERNAL, HOLDS_BYTES, objectKey } from "../retention";
+import { EXTERNAL, HOLDS_BYTES, legacyObjectKey } from "../retention";
 import type { DocumentStore } from "../storage/port";
 import { KIND, KINDS, OWNER_ROLE, WORKSPACE } from "./decl";
 import { DEFAULT_CONFIGS } from "./defaults";
@@ -107,7 +107,7 @@ export async function closeDecidedFiles(
         ))
       )
         throw refuse(409, "STORAGE_UNAVAILABLE", "The storage that holds these documents is not available");
-    } else if (EXTERNAL.has(d.storage as never)) await options.store!.delete(objectKey(owner, d.id, d.mime_type));
+    } else if (EXTERNAL.has(d.storage as never)) await options.store!.delete(legacyObjectKey(owner, d.id, d.mime_type));
   }
 }
 

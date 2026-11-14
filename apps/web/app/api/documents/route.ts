@@ -8,6 +8,7 @@ import { assertUploadForApplication, attachToApplication } from "@/lib/applicant
 import { audit } from "@/lib/audit";
 import { query } from "@/lib/db";
 import { listDocuments, storeDocument } from "@/lib/documents";
+import { documentsTenant } from "@/lib/env";
 import { handle, HttpError, refuse } from "@/lib/http";
 import { limit } from "@/lib/limits";
 import { isId } from "@/lib/organisation/rules";
@@ -66,6 +67,7 @@ async function storeUpload(
       working: await workingStore(),
       now: new Date(),
       purgeAfterHours: settings["limits.purgeAfterHours"].value as number,
+      tenant: documentsTenant(),
       rules: preflightRulesFrom(VERIKORA_RULES, settings),
     };
     return photos

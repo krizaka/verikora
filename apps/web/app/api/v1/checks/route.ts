@@ -4,7 +4,7 @@ import { checkView } from "@/lib/api-v1/checks";
 import { audit } from "@/lib/audit";
 import { readCheckForm } from "@/lib/batch/form";
 import { createBatch } from "@/lib/batch/run";
-import { appEnvironment } from "@/lib/env";
+import { appEnvironment, documentsTenant } from "@/lib/env";
 import { handle } from "@/lib/http";
 import { settingsFor } from "@/lib/settings/guards";
 
@@ -19,6 +19,7 @@ export function POST(req: Request) {
       settings: await settingsFor(caller.account.id),
       now: systemClock.now(),
       environment: appEnvironment(),
+      tenant: documentsTenant(),
     });
     const check = checkView(batch);
     await audit({

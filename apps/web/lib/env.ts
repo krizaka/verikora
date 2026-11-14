@@ -3,6 +3,7 @@ import { STORAGE_KIND, STORAGE_PROVIDERS } from "@verikora/core";
 import { z } from "zod";
 
 import { transferProblems, type TransferRegister } from "./privacy/transfers";
+import { DEV_TENANT, TENANT_ID } from "./tenant";
 import { parseSigningKey } from "./report-key";
 
 /**
@@ -99,7 +100,13 @@ export const envSchema = z.object({
   MEDIA_CLOUD_MICROSOFT_CLIENT_ID: z.string().optional(),
   MEDIA_CLOUD_MICROSOFT_CLIENT_SECRET: z.string().optional(),
   /** The `MEDIA_DOCUMENTS_*`, `MEDIA_STORAGE_*` and `MEDIA_S3_*` values below only bootstrap: read once to import the provider a deployment already used (`bootstrapFromEnvironment`), never to choose a store afterwards. */
-  MEDIA_DOCUMENTS_PREFIX: z.string().default("verikora"),
+  /** The bucket prefix of a provider imported from here: empty, since an object key carries its tenant (`tenants/<tenant>/users/<owner>/…`). A provider already imported keeps its own prefix. */
+  MEDIA_DOCUMENTS_PREFIX: z.string().default(""),
+  /** This installation's tenant id in the Kridoc space layout (`verikora-dev`, `verikora-prod`): 1 to 64 of `[a-z0-9_-]`. A bad value fails the parse; missing, it is `verikora-dev` outside production and refuses the boot in production. */
+  MEDIA_DOCUMENTS_TENANT: z
+    .string()
+    .regex(TENANT_ID, "MEDIA_DOCUMENTS_TENANT must be 1 to 64 of a-z 0-9 _ -")
+    .optional(),
   /** AES-256-GCM key (32 bytes, base64) that encrypts every kept document before it leaves; the provider only holds ciphertext. */
   MEDIA_DOCUMENTS_ENCRYPTION_KEY: z.string().optional(),
   MEDIA_STORAGE_ENDPOINT: z.string().default("storage.bunnycdn.com"),
@@ -133,6 +140,11 @@ export function readEnv(source: Record<string, string | undefined> = process.env
   return envSchema.parse(source);
 }
 
+const tenantProblems = (env: Env): string[] =>
+  env.MEDIA_DOCUMENTS_TENANT
+    ? []
+    : ["MEDIA_DOCUMENTS_TENANT is not set (the installation's tenant id, e.g. verikora-prod)"];
+
 /** What a production server cannot run without — named, never shown. */
 export function productionProblems(env: Env, register?: TransferRegister): string[] {
   if (env.NODE_ENV !== "production") {
@@ -157,6 +169,7 @@ export function productionProblems(env: Env, register?: TransferRegister): strin
       problems.push((error as Error).message);
     }
   }
+  problems.push(...tenantProblems(env));
   if (env.APP_ENVIRONMENT === "prod" && env.MEDIA_DOCUMENTS_PROVIDER === STORAGE_KIND.bunny) {
     problems.push("MEDIA_DOCUMENTS_PROVIDER=bunny has no Canadian region: development and fictional data only");
   }
@@ -183,6 +196,15 @@ export function assertProductionEnv(
 }
 
 export const env = () => readEnv();
+
+/** The tenant id of the documents keys, read once at the edge from the setting; never from a request. */
+export function documentsTenant(source: Record<string, string | undefined> = process.env): string {
+  const e = readEnv(source);
+  if (e.NODE_ENV === "production" && !e.MEDIA_DOCUMENTS_TENANT) {
+    throw new Error("MEDIA_DOCUMENTS_TENANT is not set");
+  }
+  return e.MEDIA_DOCUMENTS_TENANT ?? DEV_TENANT;
+}
 /** The administration's allow-list; `null` = no restriction (development only). */
 export function consoleAllowedIps(source: Record<string, string | undefined> = process.env): readonly string[] | null {
   const e = readEnv(source);

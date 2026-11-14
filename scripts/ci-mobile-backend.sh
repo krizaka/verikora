@@ -30,6 +30,8 @@ for _ in $(seq 1 60); do docker exec e2e-pg pg_isready -U verikora_db >/dev/null
 
 export APP_ENVIRONMENT=dev
 export APP_SEARCH_INDEXING=off
+# The installation's tenant id: the app refuses to start without it (krizaka-internal#3638); a CI-only tenant, never a real one.
+export MEDIA_DOCUMENTS_TENANT=verikora-ci
 export DATABASE_URL="postgresql://verikora_db:${DB_PASS}@localhost:5432/verikora_db"
 export AUTH_SESSION_SECRET="$(openssl rand -hex 32)"
 export AI_API_KEY=oz_ci_only_not_a_key
