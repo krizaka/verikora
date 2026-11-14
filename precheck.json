@@ -1,0 +1,135 @@
+{
+  "$schema": "https://github.com/krizaka/krizaka-agents/blob/main/schemas/precheck.schema.json",
+  "budgetSeconds": 2400,
+  "checks": [
+    {
+      "name": "format (ci lint: prettier --check)",
+      "paths": ["**/*.ts", "**/*.tsx", "**/*.js", "**/*.jsx", "**/*.mjs", "**/*.cjs", "**/*.json", "**/*.css"],
+      "run": ["pnpm", "run", "format:check"],
+      "timeoutSeconds": 300
+    },
+    {
+      "name": "i18n catalogues (ci lint)",
+      "paths": ["apps/web/messages/**", "scripts/merge-messages.mjs"],
+      "run": ["pnpm", "run", "check:i18n"],
+      "timeoutSeconds": 300
+    },
+    {
+      "name": "code names (ci lint)",
+      "paths": [
+        "apps/web/messages/**",
+        "packages/client/src/messages/**",
+        "apps/mobile/src/i18n/**",
+        "apps/desktop/src/i18n/**",
+        "apps/web/app/manifest.webmanifest"
+      ],
+      "run": ["pnpm", "run", "check:code-names"],
+      "timeoutSeconds": 300
+    },
+    {
+      "name": "ast-grep rule tests (ci lint)",
+      "paths": ["rules/**", "rule-tests/**", "sgconfig.yml"],
+      "run": ["pnpm", "run", "lint:sg:test"],
+      "timeoutSeconds": 300
+    },
+    {
+      "name": "ast-grep ratchet (ci lint)",
+      "paths": ["rules/**", "sgconfig.yml", "sg-ratchet.json", "**/*.ts", "**/*.tsx"],
+      "run": ["pnpm", "run", "lint:sg"],
+      "timeoutSeconds": 300
+    },
+    {
+      "name": "web lint (eslint, lint ratchet, dependency-cruiser)",
+      "paths": ["apps/web/**", ".dependency-cruiser*"],
+      "run": ["pnpm", "--filter", "@verikora/web", "run", "lint"],
+      "timeoutSeconds": 900
+    },
+    {
+      "name": "web unit tests with coverage (apps/web/coverage/lcov.info)",
+      "paths": ["apps/web/**"],
+      "run": [
+        "pnpm",
+        "--filter",
+        "@verikora/web",
+        "exec",
+        "vitest",
+        "run",
+        "--project",
+        "unit",
+        "--changed",
+        "origin/main",
+        "--coverage.enabled",
+        "--coverage.provider=v8",
+        "--coverage.reporter=lcov",
+        "--passWithNoTests"
+      ],
+      "timeoutSeconds": 900
+    },
+    {
+      "name": "core unit tests with coverage",
+      "paths": ["packages/core/**"],
+      "run": [
+        "pnpm",
+        "--filter",
+        "@verikora/core",
+        "exec",
+        "vitest",
+        "run",
+        "--changed",
+        "origin/main",
+        "--coverage.enabled",
+        "--coverage.provider=v8",
+        "--coverage.reporter=lcov",
+        "--passWithNoTests"
+      ],
+      "timeoutSeconds": 600
+    },
+    {
+      "name": "client unit tests with coverage",
+      "paths": ["packages/client/**"],
+      "run": [
+        "pnpm",
+        "--filter",
+        "@verikora/client",
+        "exec",
+        "vitest",
+        "run",
+        "--changed",
+        "origin/main",
+        "--coverage.enabled",
+        "--coverage.provider=v8",
+        "--coverage.reporter=lcov",
+        "--passWithNoTests"
+      ],
+      "timeoutSeconds": 600
+    },
+    {
+      "name": "repository script tests (root vitest)",
+      "paths": ["scripts/**", "vitest.config.mts", "precheck.json", "apps/web/messages/**"],
+      "run": ["pnpm", "exec", "vitest", "run"],
+      "timeoutSeconds": 600
+    },
+    {
+      "name": "mobile tests (jest)",
+      "paths": ["apps/mobile/**"],
+      "run": [
+        "pnpm",
+        "--filter",
+        "@verikora/mobile",
+        "exec",
+        "jest",
+        "--changedSince=origin/main",
+        "--passWithNoTests"
+      ],
+      "heavy": true,
+      "timeoutSeconds": 900
+    },
+    {
+      "name": "desktop typecheck, tests and Rust tests (apps/desktop check)",
+      "paths": ["apps/desktop/**"],
+      "run": ["pnpm", "--filter", "@verikora/desktop", "run", "check"],
+      "heavy": true,
+      "timeoutSeconds": 1800
+    }
+  ]
+}
