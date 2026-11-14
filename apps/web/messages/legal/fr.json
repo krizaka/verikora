@@ -60,6 +60,11 @@
         "p": "Vous pouvez accéder à vos renseignements, les corriger ou les supprimer, retirer votre consentement et récupérer vos données en écrivant au responsable. Supprimer un document supprime son fichier, son texte et ses résultats. Fermer votre compte supprime vos documents. Nous conservons les factures comme la loi l’exige."
       },
       {
+        "id": "complaints",
+        "h": "Déposer une plainte",
+        "p": "Pour déposer une plainte sur vos renseignements personnels, écrivez par le formulaire de contact de krizaka.com (krizaka.com/contact). La personne responsable la lit et répond dans un délai de 30 jours. Vous pouvez aussi vous adresser à la Commission d’accès à l’information du Québec."
+      },
+      {
         "id": "incidents",
         "h": "Incidents",
         "p": "Si un incident de confidentialité présente un risque de préjudice sérieux, nous avisons la Commission d’accès à l’information et les personnes concernées, comme la loi l’exige."
