@@ -5,7 +5,7 @@ import * as React from "react";
 
 import { I18nProvider } from "@/i18n";
 import { SessionBoundary } from "@/session-boundary";
-import { AppHeader } from "@/ui/AppHeader";
+import { TabHeader } from "@/ui/TabHeader";
 
 jest.mock("expo-router", () => ({
   useRouter: () => ({ navigate: jest.fn(), replace: jest.fn() }),
@@ -54,7 +54,7 @@ describe("one account's data never shows to the next", () => {
     // Alice's identity is cached; every refresh fails (the phone is offline): Query keeps her beside the error.
     client.setQueryData(["verikora", "me"], { name: "Alice Tremblay", email: "alice@example.test", avatarSeed: null });
     fetchMe.mockRejectedValue(new Error("offline"));
-    await render(wrap(client, session, <AppHeader title="Aujourd'hui" />));
+    await render(wrap(client, session, <TabHeader title="Aujourd'hui" />));
     expect(await screen.findByRole("button", { name: "Votre compte : Alice Tremblay" })).toBeTruthy();
 
     // Alice signs out and Benoît signs in; his `/api/me` fails too. Nothing of Alice may remain on his screen.

@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 
 import { DocsContent } from "@/components/docs/DocsContent";
 import { SiteHeader } from "@/components/SiteChrome";
-import { SiteFooter } from "@/components/SiteFooter";
+import { ProductFooter } from "@/components/SiteFooter";
 import { asLocale } from "@/lib/i18n";
 import { pageMetadata, siteJsonLd } from "@/lib/seo";
 
@@ -20,7 +20,7 @@ export default async function Docs({ params }: Readonly<{ params: Promise<{ loca
       <main id="content">
         <DocsContent locale={locale} />
       </main>
-      <SiteFooter locale={locale} />
+      <ProductFooter locale={locale} />
     </>
   );
 }

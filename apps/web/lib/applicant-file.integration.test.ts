@@ -23,11 +23,11 @@ import {
 } from "./applicant-file";
 import { applicantFileState } from "./applicant-file";
 import { fileByToken } from "./applicant-file";
-import { purgeExpired as purgeDocumentsExpired } from "./retention";
-import { DECISION_RETENTION } from "./retention-policy";
 import { loadApplicantPage } from "./applicant-page";
 import { migrate, query } from "./db";
 import { cleanPdf } from "./preflight/fixtures";
+import { purgeExpired as purgeDocumentsExpired } from "./retention";
+import { DECISION_RETENTION } from "./retention-policy";
 import { consent as screeningConsent, requestScreening } from "./screening";
 import { answerSignal, answersOf } from "./signal-answers";
 import { useSovkoraClient } from "./sovkora";

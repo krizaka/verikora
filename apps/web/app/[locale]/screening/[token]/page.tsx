@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 
 import { TenantScreening, type TenantWords } from "@/components/screening/TenantScreening";
 import { SiteHeader } from "@/components/SiteChrome";
-import { SiteFooter } from "@/components/SiteFooter";
+import { ProductFooter } from "@/components/SiteFooter";
 import { HttpError } from "@/lib/http";
 import { asLocale, getDictionary } from "@/lib/i18n";
 import { viewForTenant } from "@/lib/screening";
@@ -43,7 +43,7 @@ export default async function TenantScreeningPage({
       <main id="content" className="mx-auto w-full max-w-(--kz-page-max,72rem) px-(--kz-page-gutter,1rem) pb-16 pt-28">
         <TenantScreening token={token} initial={view} words={words} locale={locale} />
       </main>
-      <SiteFooter locale={locale} />
+      <ProductFooter locale={locale} />
     </>
   );
 }

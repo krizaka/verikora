@@ -15,7 +15,7 @@ import { useLocale } from "@/use-locale";
  * verikora#319), and the signed-in account on the right at every size (Oussama's decision, 2026-10-23) — the avatar opens
  * the account and the settings.
  */
-export function AppHeader({ title }: Readonly<{ title: string }>) {
+export function TabHeader({ title }: Readonly<{ title: string }>) {
   const { t } = useI18n();
   const { locale } = useLocale();
   const router = useRouter();

@@ -5,6 +5,7 @@ import { Alert } from "@krizaka/ui/alert";
 import { Badge } from "@krizaka/ui/badge";
 import { Button } from "@krizaka/ui/button";
 import { Card } from "@krizaka/ui/card";
+import { Checkbox } from "@krizaka/ui/checkbox";
 import { createKrizakaForm } from "@krizaka/ui/form";
 import { AUDIENCES, JURISDICTIONS } from "@verikora/core";
 import { useRouter } from "next/navigation";
@@ -225,18 +226,17 @@ export function FlowEditor({ flow, initial }: Readonly<{ flow: AdminFlow | null;
           <Card.Root className="flex flex-col gap-3 p-4">
             <h2 className="font-display text-base font-bold text-fg">{t("environments")}</h2>
             {(["dev", "prod"] as const).map((e) => (
-              <label key={e} className="flex min-h-11 items-center gap-3 text-sm text-fg">
-                <input
-                  type="checkbox"
-                  className="size-5"
-                  checked={flow.environments[e]}
-                  onChange={(ev) =>
-                    env.mutate({ environment: e, enabled: ev.target.checked }, { onSuccess: () => router.refresh() })
-                  }
-                  data-testid={`env-${e}`}
-                />
+              <Checkbox
+                key={e}
+                className="min-h-11"
+                checked={flow.environments[e]}
+                onCheckedChange={(on) =>
+                  env.mutate({ environment: e, enabled: on === true }, { onSuccess: () => router.refresh() })
+                }
+                data-testid={`env-${e}`}
+              >
                 {say("adminConsole.flows.editor.enabledIn").replace("{env}", e)}
-              </label>
+              </Checkbox>
             ))}
           </Card.Root>
           <Card.Root className="flex flex-col gap-3 p-4">

@@ -5,7 +5,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 import { SiteHeader } from "@/components/SiteChrome";
-import { SiteFooter } from "@/components/SiteFooter";
+import { ProductFooter } from "@/components/SiteFooter";
 import { asLocale, getDictionary } from "@/lib/i18n";
 import { pageMetadata, siteJsonLd } from "@/lib/seo";
 import { TERMS_VERSION } from "@/lib/signup";
@@ -41,7 +41,7 @@ export default async function Terms({ params }: Readonly<{ params: Promise<{ loc
           ))}
         </Page>
       </main>
-      <SiteFooter locale={locale} />
+      <ProductFooter locale={locale} />
     </>
   );
 }

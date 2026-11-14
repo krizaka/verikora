@@ -6,7 +6,7 @@ import Link from "next/link";
 
 import { AppVideoPlayer } from "@/components/download/AppVideoPlayer";
 import { SiteHeader } from "@/components/SiteChrome";
-import { SiteFooter } from "@/components/SiteFooter";
+import { ProductFooter } from "@/components/SiteFooter";
 import { frameOf, videoId, videosFor, videoUrl, wordsId } from "@/lib/app-videos";
 import { DOWNLOAD_STATE, DOWNLOADS, downloadState } from "@/lib/downloads";
 import { asLocale, format, getDictionary } from "@/lib/i18n";
@@ -98,7 +98,7 @@ export default async function Download({ params }: Readonly<{ params: Promise<{ 
           )}
         </Page>
       </main>
-      <SiteFooter locale={locale} />
+      <ProductFooter locale={locale} />
     </>
   );
 }

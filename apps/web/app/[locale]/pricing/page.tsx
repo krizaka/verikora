@@ -3,7 +3,7 @@ import { notFound, redirect } from "next/navigation";
 
 import { PricingContent } from "@/components/pricing/PricingContent";
 import { SiteHeader } from "@/components/SiteChrome";
-import { SiteFooter } from "@/components/SiteFooter";
+import { ProductFooter } from "@/components/SiteFooter";
 import { pageSession } from "@/lib/access";
 import { CONSOLE_ROUTES } from "@/lib/console-nav";
 import { asLocale, getDictionary } from "@/lib/i18n";
@@ -45,7 +45,7 @@ export default async function Pricing({ params }: Readonly<{ params: Promise<{ l
           status={getDictionary(locale).landing.status[productStatus(preview)]}
         />
       </main>
-      <SiteFooter locale={locale} />
+      <ProductFooter locale={locale} />
     </>
   );
 }

@@ -9,7 +9,7 @@ import { ButtonLink } from "@/components/ButtonLink";
 import { DISPLAY_TIME_ZONE, INTL } from "@/components/console/format";
 import { OwnerReportDocument } from "@/components/OwnerReportDocument";
 import { SiteHeader } from "@/components/SiteChrome";
-import { SiteFooter } from "@/components/SiteFooter";
+import { ProductFooter } from "@/components/SiteFooter";
 import { asLocale, format, getDictionary } from "@/lib/i18n";
 import { limit } from "@/lib/limits";
 import { pickReportLang } from "@/lib/owner-report-lang";
@@ -95,7 +95,7 @@ export default async function OwnerReportPage({
           </Section>
         </Page>
       </main>
-      <SiteFooter locale={locale} />
+      <ProductFooter locale={locale} />
     </>
   );
 }

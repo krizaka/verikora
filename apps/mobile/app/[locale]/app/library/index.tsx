@@ -9,8 +9,8 @@ import { View } from "react-native";
 import { queries } from "@/config";
 import { routes } from "@/domain/links";
 import { useI18n } from "@/i18n";
-import { AppHeader } from "@/ui/AppHeader";
 import { DocumentRow } from "@/ui/DocumentRow";
+import { TabHeader } from "@/ui/TabHeader";
 import { useLocale } from "@/use-locale";
 
 /** The library: the collections of each library, then the recent documents. */
@@ -44,7 +44,7 @@ export default function Library() {
   );
 
   return (
-    <Screen header={<AppHeader title={t("library.title")} />} scroll={false}>
+    <Screen header={<TabHeader title={t("library.title")} />} scroll={false}>
       <List<DocumentSummary>
         label={t("library.recent")}
         data={documents.data ?? []}
