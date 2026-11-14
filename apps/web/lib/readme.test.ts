@@ -29,7 +29,7 @@ describe("README", () => {
       expect(existsSync(join(root, path!)), path).toBe(true);
   });
   it("says that the Dev preview is web only, and where the apps live", () => {
-    for (const text of [readme, readFileSync(join(root, "AGENTS.md"), "utf8")]) {
+    for (const text of [readme, readFileSync(join(root, "docs/agents.md"), "utf8")]) {
       expect(text).toMatch(/web only/i);
       expect(text).toContain("apps/mobile");
     }

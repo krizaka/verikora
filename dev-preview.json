@@ -37,7 +37,7 @@
       "checked": "2026-10-19"
     },
     "mobile.build": {
-      "na": "No mobile app for the Dev preview: web only, phone-first; AGENTS.md section 3 says so (decision 2026-10-17)."
+      "na": "No mobile app for the Dev preview: web only, phone-first; docs/agents.md section 3 says so (decision 2026-10-17)."
     },
     "mobile.ux-review": {
       "na": "mobile.build is not applicable: Verikora has no mobile app in the Dev preview (web only, phone-first)."
