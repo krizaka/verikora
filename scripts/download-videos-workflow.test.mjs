@@ -34,7 +34,7 @@ describe("the download videos workflow", () => {
   });
   it("waits for the navigation to the document before it reads the URL (a click is a client navigation)", () => {
     const script = readFileSync(new URL("./showcase-web.mjs", import.meta.url), "utf8");
-    const click = script.indexOf("page.locator(`a[href=\"${wanted}\"]`).first().click()");
+    const click = script.indexOf('page.locator(`a[href="${wanted}"]`).first().click()');
     const wait = script.indexOf("waitForURL(", click);
     const read = script.indexOf("new URL(page.url())", click);
     assert.ok(click > 0 && wait > click && read > wait, "waitForURL must sit between the click and the URL read");
