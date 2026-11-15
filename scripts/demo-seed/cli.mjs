@@ -54,6 +54,9 @@ async function runCast(client, url, { messagesByLocale, locale }) {
   );
 }
 
+/** The cluster's CA from the environment, its escaped newlines restored. */
+const caCert = () => process.env.DATABASE_CA_CERT?.replaceAll(String.raw`\n`, "\n");
+
 async function main() {
   assertNotProduction(process.env);
   const cast = process.argv.includes("--cast");
@@ -69,9 +72,7 @@ async function main() {
   url.searchParams.delete("sslmode");
   const client = new pg.Client({
     connectionString: url.toString(),
-    ...(tls
-      ? { ssl: { ca: process.env.DATABASE_CA_CERT?.replaceAll(String.raw`\n`, "\n"), rejectUnauthorized: true } }
-      : {}),
+    ...(tls ? { ssl: { ca: caCert(), rejectUnauthorized: true } } : {}),
   });
   const messagesByLocale = Object.fromEntries(
     ["fr", "en"].map((l) => [

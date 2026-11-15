@@ -28,6 +28,9 @@ export function accountsFromEnv(env) {
   return accounts.map((a) => ({ ...a, email: a.email.trim().toLowerCase(), name: QA_PERSONAS[a.role].displayName }));
 }
 
+/** The cluster's CA from the environment, its escaped newlines restored. */
+const caCert = () => process.env.DATABASE_CA_CERT?.replaceAll(String.raw`\n`, "\n");
+
 async function main() {
   const { default: pg } = await import("pg");
   const url = new URL(process.env.DATABASE_URL ?? "");
@@ -35,9 +38,7 @@ async function main() {
   url.searchParams.delete("sslmode");
   const client = new pg.Client({
     connectionString: url.toString(),
-    ...(tls
-      ? { ssl: { ca: process.env.DATABASE_CA_CERT?.replaceAll(String.raw`\n`, "\n"), rejectUnauthorized: true } }
-      : {}),
+    ...(tls ? { ssl: { ca: caCert(), rejectUnauthorized: true } } : {}),
   });
   await client.connect();
   try {
