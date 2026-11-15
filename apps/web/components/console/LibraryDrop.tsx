@@ -9,7 +9,7 @@ import { Dropzone, type FileRejection, type UploadItem, useUploadQueue } from "@
 import { QueueStatus, tally, TaskTray, UploadQueue, type UploadQueueItem } from "@krizaka/ui/upload-queue";
 import { type Jurisdiction, MAX_FILE_BYTES, STORAGE_MODE, STORAGE_MODES } from "@verikora/core";
 import { useRouter } from "next/navigation";
-import { createContext, type ReactNode, useContext, useRef, useState } from "react";
+import { createContext, type ReactNode, useCallback, useContext, useMemo, useRef, useState } from "react";
 import { z } from "zod";
 
 import { useAppConfig } from "@/lib/app-config-client";
@@ -38,7 +38,9 @@ const REFUSAL: Partial<Record<string, string>> = {
 /** Several photos dropped together are the pages of ONE document (the default, as on the task page): the first photo carries the group, the other files go one by one. */
 export function bundlePhotos(files: readonly File[]): { queued: File[]; groups: Map<File, File[]> } {
   const photos = files.filter(isPhotoFile);
-  if (photos.length < 2) return { queued: [...files], groups: new Map() };
+  if (photos.length < 2) {
+    return { queued: [...files], groups: new Map() };
+  }
   return { queued: [...files.filter((f) => !isPhotoFile(f)), photos[0]!], groups: new Map([[photos[0]!, photos]]) };
 }
 
@@ -74,7 +76,9 @@ export function queueItemsOf(
 /** The non-blocking tray of the files being checked (bottom-right from `sm`, the bottom edge on a phone); nothing while the queue is empty. */
 export function UploadTray({ items }: Readonly<{ items: readonly UploadQueueItem[] }>) {
   const { say } = useSay();
-  if (!items.length) return null;
+  if (!items.length) {
+    return null;
+  }
   const t = tally(items);
   const working = t.working + t.queued;
   const summary = [
@@ -106,7 +110,9 @@ export function AddFilesButton({
 }: Readonly<{ children: ReactNode; variant?: "primary" | "secondary" | "ghost"; size?: "sm" | "md" }>) {
   const island = useContext(DropIsland);
   const input = useRef<HTMLInputElement>(null);
-  if (!island) return null;
+  if (!island) {
+    return null;
+  }
   return (
     <>
       <Button variant={variant} size={size} onClick={() => input.current?.click()} data-testid="add-files">
@@ -123,7 +129,9 @@ export function AddFilesButton({
         aria-hidden
         onChange={(e) => {
           const files = Array.from(e.currentTarget.files ?? []);
-          if (files.length) island.add(files);
+          if (files.length) {
+            island.add(files);
+          }
           e.currentTarget.value = "";
         }}
       />
@@ -185,35 +193,48 @@ export function LibraryDrop({
         throw translated(error, say);
       }
       // A file dropped on the library is checked like one dropped on the task page: at once when its kind is sure (the review's Y4).
-      if (!stored.duplicate) await startIfSure(stored.document.id, "auto", jurisdictions, new Date());
+      if (!stored.duplicate) {
+        await startIfSure(stored.document.id, "auto", jurisdictions, new Date());
+      }
       router.refresh();
     },
   });
-  const refusal = (r: FileRejection) => say(REFUSAL[r.reason] ?? "library.refusedCount", { name: r.file.name });
-  const add = (files: readonly File[]) => {
-    const { queued, groups } = bundlePhotos(files);
-    for (const [lead, group] of groups) GROUPS.set(lead, group);
-    if (groups.size)
-      setPages((m) => new Map([...m, ...[...groups].map(([lead, group]) => [lead.name, group.length] as const)]));
-    queue.add(queued);
-  };
-  const items = queueItemsOf(queue.items, say, queue.retry, pages);
-  const zoneNode = (
-    <div data-testid="library-dropzone">
-      <Dropzone
-        title={say("library.dropTitle")}
-        browseLabel={say("library.browse")}
-        inputLabel={say("library.inputLabel")}
-        hint={say("library.hint")}
-        accept={ACCEPT}
-        maxSize={app?.maxFileBytes ?? MAX_FILE_BYTES}
-        maxFiles={20}
-        multiple
-        onFiles={(files) => add(files)}
-        refusalLabel={refusal}
-      />
-    </div>
+  const { add: enqueue } = queue;
+  const add = useCallback(
+    (files: readonly File[]) => {
+      const { queued, groups } = bundlePhotos(files);
+      for (const [lead, group] of groups) {
+        GROUPS.set(lead, group);
+      }
+      if (groups.size) {
+        setPages((m) => new Map([...m, ...[...groups].map(([lead, group]) => [lead.name, group.length] as const)]));
+      }
+      enqueue(queued);
+    },
+    [enqueue],
   );
+  const items = queueItemsOf(queue.items, say, queue.retry, pages);
+  const maxSize = app?.maxFileBytes ?? MAX_FILE_BYTES;
+  const zoneNode = useMemo(
+    () => (
+      <div data-testid="library-dropzone">
+        <Dropzone
+          title={say("library.dropTitle")}
+          browseLabel={say("library.browse")}
+          inputLabel={say("library.inputLabel")}
+          hint={say("library.hint")}
+          accept={ACCEPT}
+          maxSize={maxSize}
+          maxFiles={20}
+          multiple
+          onFiles={(files) => add(files)}
+          refusalLabel={(r: FileRejection) => say(REFUSAL[r.reason] ?? "library.refusedCount", { name: r.file.name })}
+        />
+      </div>
+    ),
+    [say, maxSize, add],
+  );
+  const island = useMemo(() => ({ add, zone: zoneNode }), [add, zoneNode]);
   return (
     <>
       <DropOverlay
@@ -221,16 +242,16 @@ export function LibraryDrop({
         hint={say("library.dropAnywhereHint")}
         accept={ACCEPT_RULES}
         onFiles={(accepted, rejected) => {
-          if (accepted.length) add(accepted);
+          if (accepted.length) {
+            add(accepted);
+          }
           setNotice(rejected.length ? say("library.refusedType", { name: rejected[0]!.name }) : null);
         }}
       />
       {zone ? zoneNode : null}
       {examples?.(add)}
       {notice ? <Alert tone="warning">{notice}</Alert> : null}
-      {children !== undefined ? (
-        <DropIsland.Provider value={{ add, zone: zoneNode }}>{children}</DropIsland.Provider>
-      ) : null}
+      {children !== undefined ? <DropIsland.Provider value={island}>{children}</DropIsland.Provider> : null}
       <UploadTray items={items} />
     </>
   );

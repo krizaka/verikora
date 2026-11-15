@@ -4,10 +4,10 @@ import {
   type AuthenticityReport,
   type ComplianceReport,
   type Signal,
-  signalFamily,
 } from "@verikora/core";
 
 import type { ApplicantFileView } from "./applicant-file";
+import { signalViewOf } from "./signal-view";
 
 /**
  * The verification report an owner reads (verikora#128), pure: what is kept of an applicant file, and what is dropped.
@@ -68,17 +68,7 @@ const isCompliance = (r: Analysis["report"]): r is ComplianceReport => !!r && "f
 const isAuthenticity = (r: Analysis["report"]): r is AuthenticityReport => !!r && "signals" in r;
 
 /** A signal as the owner reads it: its family and the page, revision and field it concerns (no box, no value). */
-export const ownerSignalOf = (s: Signal): OwnerSignal => {
-  const { page, revision, field } = s.evidence ?? {};
-  const evidence = { ...(page ? { page } : {}), ...(revision ? { revision } : {}), ...(field ? { field } : {}) };
-  return {
-    id: s.signalId,
-    level: s.level,
-    observation: s.observation,
-    family: signalFamily(s),
-    ...(Object.keys(evidence).length ? { evidence } : {}),
-  };
-};
+export const ownerSignalOf = (s: Signal): OwnerSignal => signalViewOf(s);
 
 /** The reference the owner and the manager both read: the first 8 characters of the file's id, no personal data. */
 export const referenceOf = (fileId: string) => fileId.replaceAll("-", "").slice(0, 8).toUpperCase();

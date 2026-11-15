@@ -9,10 +9,19 @@ import { PRODUCT_NAME } from "@/lib/brand";
 import { format, getDictionary, type Locale } from "./i18n";
 import type { OwnerReport } from "./owner-report";
 import { traceCardsOf } from "./owner-traces";
-import { drawPages, embedFonts, type Face, type Fonts, paginate, printable, signedBodyOf } from "./pdf-layout";
+import {
+  checkSignature,
+  drawPages,
+  embedFonts,
+  type Face,
+  type Fonts,
+  paginate,
+  printable,
+  signedBodyOf,
+} from "./pdf-layout";
 import { canonicalJson, sha256 } from "./report";
 import { type SigningKey } from "./report-key";
-import { ATTESTATION_KEY } from "./report-pdf";
+import { ATTESTATION_KEY, saveWithAttestation } from "./report-pdf";
 
 /*
  * The signed PDF of the owner report (verikora#481): the redacted report of an applicant file (hashes, signals, rules,
@@ -284,12 +293,7 @@ export async function issueOwnerReportPdf(
   doc.setCreator(name);
   doc.setCreationDate(issued);
   doc.setModificationDate(issued);
-  const info = doc.context.lookup(doc.context.trailerInfo.Info, PDFDict);
-  info.set(
-    PDFName.of(ATTESTATION_KEY),
-    PDFString.of(Buffer.from(JSON.stringify(attestation), "utf8").toString("base64")),
-  );
-  const bytes = await doc.save({ useObjectStreams: false });
+  const bytes = await saveWithAttestation(doc, attestation);
   return { bytes, fileSha256: sha256(bytes), attestation };
 }
 
@@ -326,26 +330,13 @@ export async function verifyOwnerReportPdf(
     reason,
     fileSha256,
   });
-  if (!(bytes.length > 5 && Buffer.from(bytes.subarray(0, 5)).toString("latin1") === "%PDF-")) {
-    return fail("NOT_A_REPORT");
+  const signature = await checkSignature(bytes, key, ownerAttestationOfPdf, (a) =>
+    signedMessage(a.payload, a.bodySha256),
+  );
+  if (!signature.ok) {
+    return fail(signature.reason);
   }
-  const attestation = await ownerAttestationOfPdf(bytes);
-  if (!attestation) {
-    return fail("UNREADABLE");
-  }
-  if (attestation.keyId !== key.keyId) {
-    return fail("UNKNOWN_KEY");
-  }
-  if (
-    !crypto.verify(
-      null,
-      signedMessage(attestation.payload, attestation.bodySha256),
-      key.publicKey,
-      Buffer.from(attestation.signature, "base64"),
-    )
-  ) {
-    return fail("BAD_SIGNATURE");
-  }
+  const attestation = signature.attestation;
   const { extractText, getDocumentProxy } = await import("unpdf");
   try {
     const pages = (await extractText(await getDocumentProxy(new Uint8Array(bytes)), { mergePages: false }))

@@ -20,13 +20,17 @@ const LANDING = ["/", "/fr", "/en"] as const;
 const hinted = <T extends NextResponse>(response: T, request: NextRequest): T =>
   sessionHint(response, request, { cookie: SESSION_COOKIE, secure: process.env.NODE_ENV === "production" });
 const seal = <T extends Response>(response: T, closed: boolean): T => {
-  if (closed) response.headers.set("x-robots-tag", NOINDEX_HEADER);
+  if (closed) {
+    response.headers.set("x-robots-tag", NOINDEX_HEADER);
+  }
   return response;
 };
 
 /** dev.verikora.com (APP_DEV_HOST): robots.txt closes everything; a page goes to www (308); healthz keeps serving. */
 function devResponse(request: NextRequest): NextResponse {
-  if (request.nextUrl.pathname === "/robots.txt") return closedRobots();
+  if (request.nextUrl.pathname === "/robots.txt") {
+    return closedRobots();
+  }
   const to = devRedirect(
     request.method,
     request.nextUrl.pathname,
@@ -62,10 +66,18 @@ export function proxy(request: NextRequest) {
   const closed = admin || dev || !indexableOn(host);
   const pathname = request.nextUrl.pathname;
   // The API (and /.well-known) is not routed by language or host: it only carries the noindex header.
-  if (pathname.startsWith("/api/") || pathname.startsWith("/.well-known/")) return seal(NextResponse.next(), closed);
-  if (dev) return seal(devResponse(request), closed);
-  if (!admin && closed && pathname === "/robots.txt") return seal(closedRobots(), closed);
-  if (!admin && closed && pathname === "/sitemap.xml") return seal(notFound(), closed);
+  if (pathname.startsWith("/api/") || pathname.startsWith("/.well-known/")) {
+    return seal(NextResponse.next(), closed);
+  }
+  if (dev) {
+    return seal(devResponse(request), closed);
+  }
+  if (!admin && closed && pathname === "/robots.txt") {
+    return seal(closedRobots(), closed);
+  }
+  if (!admin && closed && pathname === "/sitemap.xml") {
+    return seal(notFound(), closed);
+  }
   const home = admin
     ? null
     : landingRedirect(request, {
@@ -74,10 +86,14 @@ export function proxy(request: NextRequest) {
         home: () => `/${isLocale(pathname.split("/")[1]) ? pathname.split("/")[1] : chosen}/app`,
         origin: process.env.APP_PUBLIC_URL ?? SITE_URL,
       });
-  if (home) return seal(home, closed);
+  if (home) {
+    return seal(home, closed);
+  }
   const route = routeFor(host, pathname, chosen);
   const direct = directResponse(request, route, host);
-  if (direct) return seal(direct, closed);
+  if (direct) {
+    return seal(direct, closed);
+  }
   // The language of the address, carried to the page as `x-locale`: the 404 (no route, no params) answers in it (the UX review's Y10).
   const segment = pathname.split("/")[1];
   const forwarded = new Headers(request.headers);
@@ -96,7 +112,7 @@ export const config = {
   // Every localised address too, even with a dot in a segment (`/fr/screening/missing.pdf`): its 404 needs the language (Y10).
   matcher: [
     "/api/:path*",
-    "/((?!api|_next/static|_next/image|og.png|favicon.ico|icon.svg|.*\\..*).*)",
+    "/((?!api|_next/static|_next/image|og.png|favicon.ico|icon.svg|.*[.].*).*)",
     "/(en|fr)/:path*",
     "/robots.txt",
     "/sitemap.xml",

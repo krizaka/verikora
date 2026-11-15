@@ -12,30 +12,15 @@ import { fileURLToPath } from "node:url";
 
 import { localDay } from "@krizaka/intl";
 
+import { runToEnd, sovkoraClient } from "./lib/sovkora-recording.mjs";
 import { SAMPLES } from "../apps/web/content/recorded-runs/samples.mjs";
 
 // The calendar day of the law (apps/web/lib/rulesets.ts LAW_TIME_ZONE), never the UTC day (verikora#309).
 const LAW_TIME_ZONE = "America/Toronto";
 
+const client = sovkoraClient();
 const OUT = join(dirname(fileURLToPath(import.meta.url)), "../apps/web/content/recorded-runs");
-const base = (process.env.AI_API_URL ?? "https://dev.sovkora.com/edge").replace(/\/$/, "");
-const key = process.env.AI_API_KEY;
-if (!key) throw new Error("AI_API_KEY is not set");
-const STUDIO = "compliance-check";
-
-async function call(path, init = {}) {
-  const res = await fetch(`${base}${path}`, {
-    method: init.method ?? "GET",
-    headers: {
-      authorization: `Bearer ${key}`,
-      accept: "application/json",
-      ...(init.body ? { "content-type": "application/json" } : {}),
-    },
-    body: init.body ? JSON.stringify(init.body) : undefined,
-  });
-  if (!res.ok) throw new Error(`Sovkora answered ${res.status} on ${init.method ?? "GET"} ${path.split("?")[0]}`);
-  return res.json();
-}
+const { base, studio: STUDIO, call } = client;
 
 const installed = await call("/api/v1/studios/installations");
 if (!installed.some((i) => i.studioKey === STUDIO))
@@ -52,12 +37,7 @@ for (const [side, sample] of Object.entries(SAMPLES)) {
     asOf: localDay(new Date(), LAW_TIME_ZONE),
     ...(sample.ruleset ? { ruleset: sample.ruleset } : {}),
   };
-  let run = await call(`/api/v1/studios/${STUDIO}/runs`, { method: "POST", body: { inputs } });
-  for (let i = 0; i < 90 && !["SUCCEEDED", "FAILED", "CANCELLED"].includes(run.status); i++) {
-    await new Promise((r) => setTimeout(r, 2000));
-    run = await call(`/api/v1/studios/runs/${run.id}`);
-  }
-  if (run.status !== "SUCCEEDED") throw new Error(`${side}: the run ${run.id} ended ${run.status}`);
+  const run = await runToEnd(client, inputs, side);
   const recording = {
     side,
     recordedAt: new Date().toISOString(),

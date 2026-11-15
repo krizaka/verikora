@@ -13,7 +13,7 @@ import { mkdirSync, renameSync, writeFileSync } from "node:fs";
 import { createRequire } from "node:module";
 import path from "node:path";
 
-import { flagReader, hideEmail } from "./lib/recording-kit.mjs";
+import { flagReader, hideEmail, signedInState } from "./lib/recording-kit.mjs";
 
 const require = createRequire(import.meta.url);
 const { chromium } = require("playwright-core");
@@ -45,15 +45,7 @@ const base = {
 };
 
 // Sign in once, off camera: the clips start signed in.
-const auth = await browser.newContext(base);
-const signIn = await auth.newPage();
-await signIn.goto(`${BASE}/${locale}/sign-in`, { waitUntil: "networkidle" });
-await signIn.fill('input[type="email"]', email);
-await signIn.fill('input[type="password"]', password);
-await signIn.locator('form button[type="submit"]').first().click();
-await signIn.waitForURL(/\/app/, { timeout: 30_000 });
-const storageState = await auth.storageState();
-await auth.close();
+const storageState = await signedInState(browser, base, { url: `${BASE}/${locale}/sign-in`, email, password });
 
 const evidence = { device, locale, base: BASE, recordedAt: new Date().toISOString(), steps: {} };
 

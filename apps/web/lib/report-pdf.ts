@@ -6,6 +6,7 @@ import { z } from "zod";
 import { LINE, type LineKind, noteLines } from "./closing-note/render";
 import { numberFindings } from "./document-face";
 import {
+  checkSignature,
   drawPages,
   embedFonts,
   type Face,
@@ -276,13 +277,18 @@ export async function issuePdf(
   doc.setCreator(name);
   doc.setCreationDate(finished);
   doc.setModificationDate(finished);
+  const bytes = await saveWithAttestation(doc, attestation);
+  return { bytes, fileSha256: sha256(bytes), attestation };
+}
+
+/** The PDF's bytes with the attestation in its Info dictionary (base64 JSON), where `attestationOfPdf` reads it back. */
+export async function saveWithAttestation(doc: PDFDocument, attestation: unknown): Promise<Uint8Array> {
   const info = doc.context.lookup(doc.context.trailerInfo.Info, PDFDict);
   info.set(
     PDFName.of(ATTESTATION_KEY),
     PDFString.of(Buffer.from(JSON.stringify(attestation), "utf8").toString("base64")),
   );
-  const bytes = await doc.save({ useObjectStreams: false });
-  return { bytes, fileSha256: sha256(bytes), attestation };
+  return doc.save({ useObjectStreams: false });
 }
 
 const attestationSchema = z.object({
@@ -317,26 +323,11 @@ export async function verifyPdf(
 ): Promise<Verification> {
   const fileSha256 = sha256(bytes);
   const fail = (reason: ReportVerifyFailure): Verification => ({ ok: false, reason, fileSha256 });
-  if (!(bytes.length > 5 && Buffer.from(bytes.subarray(0, 5)).toString("latin1") === "%PDF-")) {
-    return fail("NOT_A_REPORT");
+  const signature = await checkSignature(bytes, key, attestationOfPdf, (a) => signedMessage(a.payload, a.bodySha256));
+  if (!signature.ok) {
+    return fail(signature.reason);
   }
-  const attestation = await attestationOfPdf(bytes);
-  if (!attestation) {
-    return fail("UNREADABLE");
-  }
-  if (attestation.keyId !== key.keyId) {
-    return fail("UNKNOWN_KEY");
-  }
-  if (
-    !crypto.verify(
-      null,
-      signedMessage(attestation.payload, attestation.bodySha256),
-      key.publicKey,
-      Buffer.from(attestation.signature, "base64"),
-    )
-  ) {
-    return fail("BAD_SIGNATURE");
-  }
+  const attestation = signature.attestation;
   // The pages the signature covers: every page but the last (the visible signature page).
   const { extractText, getDocumentProxy } = await import("unpdf");
   let text: string;

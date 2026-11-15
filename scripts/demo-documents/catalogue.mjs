@@ -416,7 +416,7 @@ export const PERSONA_ERIC = {
   collections: [
     { key: "rosemont", documents: SPECS.filter((s) => /rosemont/.test(s.id)).map((s) => s.id) },
     { key: "villeray", documents: SPECS.filter((s) => s.id.includes("villeray")).map((s) => s.id) },
-    { key: "invoices", documents: SPECS.filter((s) => /^facture-2026/.test(s.id)).map((s) => s.id) },
+    { key: "invoices", documents: SPECS.filter((s) => s.id.startsWith("facture-2026")).map((s) => s.id) },
     // Two folders with nothing in them (and the default one stays empty): the empty state of the open folder's card is rendered and audited (verikora#435).
     { key: "empty-a", documents: [] },
     { key: "empty-b", documents: [] },
