@@ -1,6 +1,6 @@
 # A merged change of the App Platform spec reaches verikora-dev through CI (krizaka-internal#3879): this dispatches the
 # deploy-spec-apply workflow of krizaka/.github, which reads the target from its registry (deploy/apps.json), prints the diff
-# (keys only), applies the spec (the live secrets kept), rebuilds main and waits for ACTIVE. The DigitalOcean write token stays in
+# (keys only), applies the whole spec, jobs included (the live secrets kept), rebuilds main and waits for ACTIVE. The DigitalOcean write token stays in
 # the `dev` environment of krizaka/.github; this job holds only an App token that may start that one workflow.
 name: Apply the merged App Platform spec
 
@@ -43,9 +43,6 @@ jobs:
         env:
           GH_TOKEN: ${{ steps.app.outputs.token }}
           DRY_RUN: ${{ github.event_name == 'workflow_dispatch' && inputs.dry-run }}
-          # The web service only: the backup jobs of the spec are « written, not applied » until the founder applies them
-          # (their BACKUP_AGE_RECIPIENT is in no vault, krizaka-internal#3879). Empty this once they run.
-          ONLY: services/web
         run: |
-          gh workflow run deploy-spec-apply.yml -R krizaka/.github --ref main -f app=verikora-dev -f dry-run="$DRY_RUN" -f only="$ONLY"
+          gh workflow run deploy-spec-apply.yml -R krizaka/.github --ref main -f app=verikora-dev -f dry-run="$DRY_RUN"
           echo "deploy-spec-apply started for verikora-dev (dry run: $DRY_RUN): https://github.com/krizaka/.github/actions/workflows/deploy-spec-apply.yml"
