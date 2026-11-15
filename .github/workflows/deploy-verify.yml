@@ -1,0 +1,20 @@
+# The deploy guard (krizaka-internal#3780): a merge to main is green only when the App Platform deployment caused by that
+# commit reaches ACTIVE; an automatic rollback after an ERROR is red. Needs the read-only DIGITALOCEAN_ACCESS_TOKEN as a
+# secret of this repository (without it the job warns and passes). Red until krizaka-internal#3878 fixes the app's health check (dev.app.yaml is not touched here): correct.
+name: Deploy verify
+
+on:
+  push:
+    branches: [main]
+
+permissions: {}
+
+jobs:
+  deploy-verify:
+    permissions:
+      contents: read
+    uses: krizaka/.github/.github/workflows/deploy-verify.yml@ec5840ca19e55acdcfaa51b82d925d1c8c0c2a55 # main
+    with:
+      app: verikora-dev
+    secrets:
+      DIGITALOCEAN_ACCESS_TOKEN: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
