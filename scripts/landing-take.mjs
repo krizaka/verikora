@@ -13,7 +13,7 @@ import { mkdirSync, mkdtempSync, writeFileSync } from "node:fs";
 import { createRequire } from "node:module";
 import os from "node:os";
 import path from "node:path";
-import { applyTheme, themesOf } from "./lib/recording-kit.mjs";
+import { applyTheme, signedInState, themesOf } from "./lib/recording-kit.mjs";
 import { byTestId } from "./lib/check-selectors.mjs";
 
 const require = createRequire(import.meta.url);
@@ -65,16 +65,9 @@ const base = {
 };
 
 // Sign in once, off camera, and choose a side so the onboarding card does not cover the library.
-const auth = await browser.newContext(base);
-const signIn = await auth.newPage();
-await signIn.goto(`${BASE}/${locale}/sign-in`, { waitUntil: "networkidle" });
-await signIn.fill('input[type="email"]', email);
-await signIn.fill('input[type="password"]', password);
-await signIn.locator('form button[type="submit"]').first().click();
-await signIn.waitForURL(/\/app/, { timeout: 30_000 });
-await auth.request.put(`${BASE}/api/me/perspective`, { data: { perspective: "tenant" } });
-const storageState = await auth.storageState();
-await auth.close();
+const storageState = await signedInState(browser, base, { url: `${BASE}/${locale}/sign-in`, email, password }, (auth) =>
+  auth.request.put(`${BASE}/api/me/perspective`, { data: { perspective: "tenant" } }),
+);
 
 const hideEmail = () => {
   const hide = () => {

@@ -8,6 +8,7 @@
 import { fileURLToPath } from "node:url";
 
 import { generateDocument } from "./demo-documents/index.mjs";
+import { apiCall, nativeSignIn } from "./lib/native-session.mjs";
 
 /** The Québec lease versions the UI asks for (apps/web/lib/rulesets.ts; apps/web/lib/sovkora-contract.test.ts keeps them equal). */
 export const LEASE_REFS = [
@@ -91,18 +92,8 @@ export async function smokeLeaseCheck({
   onReport = null,
 }) {
   if (!email || !password) throw new Error("SMOKE_EMAIL and SMOKE_PASSWORD are required (the persona)");
-  const call = async (path, init = {}, token) => {
-    const res = await fetchImpl(`${base}${path}`, {
-      ...init,
-      headers: { accept: "application/json", ...(token ? { authorization: `Bearer ${token}` } : {}), ...init.headers },
-    });
-    return { res, body: await res.json().catch(() => null) };
-  };
-  const signIn = await call("/api/auth/sign-in", {
-    method: "POST",
-    headers: { "content-type": "application/json" },
-    body: JSON.stringify({ email, password, client: "native" }),
-  });
+  const call = apiCall(base, fetchImpl);
+  const signIn = await nativeSignIn(call, email, password);
   if (!signIn.res.ok || typeof signIn.body?.token !== "string")
     throw new Error(describeFailure("sign-in", signIn.res.status, signIn.body, signIn.res.headers));
   const token = signIn.body.token;

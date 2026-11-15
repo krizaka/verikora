@@ -1,3 +1,5 @@
+import crypto from "node:crypto";
+
 import { type PDFDocument, type PDFFont, rgb, StandardFonts } from "pdf-lib";
 
 /*
@@ -43,7 +45,9 @@ export function wrap(text: string, font: PDFFont, size: number, width: number): 
     let rest = w;
     while (font.widthOfTextAtSize(rest, size) > width) {
       let n = rest.length;
-      while (n > 1 && font.widthOfTextAtSize(rest.slice(0, n), size) > width) n -= 1;
+      while (n > 1 && font.widthOfTextAtSize(rest.slice(0, n), size) > width) {
+        n -= 1;
+      }
       lines.push(rest.slice(0, n));
       rest = rest.slice(n);
     }
@@ -51,13 +55,18 @@ export function wrap(text: string, font: PDFFont, size: number, width: number): 
   };
   for (const word of text.split(" ")) {
     const test = line ? `${line} ${word}` : word;
-    if (font.widthOfTextAtSize(test, size) <= width) line = test;
-    else {
-      if (line) lines.push(line);
+    if (font.widthOfTextAtSize(test, size) <= width) {
+      line = test;
+    } else {
+      if (line) {
+        lines.push(line);
+      }
       push(word);
     }
   }
-  if (line) lines.push(line);
+  if (line) {
+    lines.push(line);
+  }
   return lines;
 }
 
@@ -138,8 +147,9 @@ export function drawPages(
       font: fonts.regular,
       color: INK,
     });
-    for (const l of [...(index === 0 ? foot : []), ...lines])
+    for (const l of [...(index === 0 ? foot : []), ...lines]) {
       page.drawText(l.text, { x: PAGE.margin, y: l.y, size: l.size, font: fonts[l.face], color: INK });
+    }
   }
 }
 
@@ -151,6 +161,35 @@ export function drawPages(
 export function signedBodyOf(pages: readonly string[]): string | null {
   const total = pages.length;
   const body = pages.slice(0, -1).map((p) => p.replace(/\s+/g, ""));
-  if (body.some((p, i) => !p.startsWith(`${i + 1}/${total}`))) return null;
+  if (body.some((p, i) => !p.startsWith(`${i + 1}/${total}`))) {
+    return null;
+  }
   return body.map((p, i) => p.slice(`${i + 1}/${total}`.length)).join("");
+}
+
+/** The reasons a signed PDF is refused before its text is read. */
+export type SignatureRefusal = "NOT_A_REPORT" | "UNREADABLE" | "UNKNOWN_KEY" | "BAD_SIGNATURE";
+
+/**
+ * The first half of every signed-PDF check: a PDF, an attestation it carries, the key that signed it, the signature itself.
+ * Each report kind says how it reads its attestation and what message it signed; the text of the pages is checked by the caller.
+ */
+export async function checkSignature<A extends { keyId: string; bodySha256: string; signature: string }>(
+  bytes: Uint8Array,
+  key: { keyId: string; publicKey: crypto.KeyObject },
+  read: (bytes: Uint8Array) => Promise<A | null>,
+  message: (attestation: A) => Buffer,
+): Promise<{ ok: true; attestation: A } | { ok: false; reason: SignatureRefusal }> {
+  if (!(bytes.length > 5 && Buffer.from(bytes.subarray(0, 5)).toString("latin1") === "%PDF-")) {
+    return { ok: false, reason: "NOT_A_REPORT" };
+  }
+  const attestation = await read(bytes);
+  if (!attestation) {
+    return { ok: false, reason: "UNREADABLE" };
+  }
+  if (attestation.keyId !== key.keyId) {
+    return { ok: false, reason: "UNKNOWN_KEY" };
+  }
+  const signed = crypto.verify(null, message(attestation), key.publicKey, Buffer.from(attestation.signature, "base64"));
+  return signed ? { ok: true, attestation } : { ok: false, reason: "BAD_SIGNATURE" };
 }

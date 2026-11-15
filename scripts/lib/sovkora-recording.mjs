@@ -1,0 +1,39 @@
+// Shared by the record-*.mjs scripts: the Sovkora client (key from the environment, never printed) and one compliance run.
+const FINAL = ["SUCCEEDED", "FAILED", "CANCELLED"];
+
+/** `call(path, init)` against a Studio API at `root` with a bearer key: the parsed JSON, a refusal when the answer is not ok. */
+export const sovkoraCall =
+  (root, key) =>
+  async (path, init = {}) => {
+    const res = await fetch(`${root}${path}`, {
+      method: init.method ?? "GET",
+      headers: {
+        authorization: `Bearer ${key}`,
+        accept: "application/json",
+        ...(init.body ? { "content-type": "application/json" } : {}),
+      },
+      body: init.body ? JSON.stringify(init.body) : undefined,
+    });
+    if (!res.ok) throw new Error(`Sovkora answered ${res.status} on ${init.method ?? "GET"} ${path.split("?")[0]}`);
+    return res.json();
+  };
+
+/** The client of the Studio API: `base`, the `studio` key and `call(path, init)` returning the parsed JSON. */
+export function sovkoraClient(env = process.env) {
+  const base = (env.AI_API_URL ?? "https://dev.sovkora.com/edge").replace(/\/$/, "");
+  const key = env.AI_API_KEY;
+  if (!key) throw new Error("AI_API_KEY is not set");
+  const studio = "compliance-check";
+  return { base, studio, call: sovkoraCall(base, key) };
+}
+
+/** Starts a run of the Studio with `inputs`, polls it to its end and returns it; throws unless it SUCCEEDED (`label` names it). */
+export async function runToEnd(client, inputs, label) {
+  let run = await client.call(`/api/v1/studios/${client.studio}/runs`, { method: "POST", body: { inputs } });
+  for (let i = 0; i < 90 && !FINAL.includes(run.status); i++) {
+    await new Promise((r) => setTimeout(r, 2000));
+    run = await client.call(`/api/v1/studios/runs/${run.id}`);
+  }
+  if (run.status !== "SUCCEEDED") throw new Error(`${label}: the run ${run.id} ended ${run.status}`);
+  return run;
+}

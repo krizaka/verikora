@@ -1,5 +1,5 @@
-import type { Signal, SignalFamily } from "@verikora/core";
-import { landlordSignals, signalFamily } from "@verikora/core";
+import type { Signal } from "@verikora/core";
+import { landlordSignals } from "@verikora/core";
 
 import { activeConsents, CONSENT_PURPOSE, hasConsent } from "./applicant-consent";
 import { LINK, linkState } from "./applicant-file-rules";
@@ -8,6 +8,8 @@ import { query } from "./db";
 import { isUuid } from "./documents";
 import { refuse } from "./http";
 import { ANSWER_MAX, cleanAnswer } from "./signal-answer-rules";
+import type { SignalView } from "./signal-view";
+import { signalViewOf } from "./signal-view";
 
 /*
  * The applicant's answer to a trace found in their document (ADR-0014 §4, verikora#626). The person concerned is told which traces
@@ -23,12 +25,7 @@ export interface Answer {
 }
 
 /** A trace as the applicant reads it: facts about their own file, the engine's words, and their answer if they gave one. No box. */
-export interface ApplicantSignal {
-  id: string;
-  level: string;
-  observation: string;
-  family: SignalFamily;
-  evidence?: { page?: number; revision?: number; field?: string };
+export interface ApplicantSignal extends SignalView {
   answer: Answer | null;
 }
 
@@ -37,18 +34,7 @@ export function applicantSignalsOf(
   report: { signals?: readonly Signal[] } | null | undefined,
   answers: ReadonlyMap<string, Answer>,
 ): ApplicantSignal[] {
-  return (report?.signals ?? []).map((s) => {
-    const { page, revision, field } = s.evidence ?? {};
-    const evidence = { ...(page ? { page } : {}), ...(revision ? { revision } : {}), ...(field ? { field } : {}) };
-    return {
-      id: s.signalId,
-      level: s.level,
-      observation: s.observation,
-      family: signalFamily(s),
-      ...(Object.keys(evidence).length ? { evidence } : {}),
-      answer: answers.get(s.signalId) ?? null,
-    };
-  });
+  return (report?.signals ?? []).map((s) => ({ ...signalViewOf(s), answer: answers.get(s.signalId) ?? null }));
 }
 
 /** The answers of some documents: document id → signal id → answer. */

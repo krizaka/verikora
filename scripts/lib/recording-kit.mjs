@@ -42,3 +42,26 @@ export const presetTheme = (theme) => {
 export const applyTheme = async (ctx, theme) => {
   await ctx.addInitScript(presetTheme, theme);
 };
+
+/**
+ * Signs in once, off camera, in a context of its own and returns its storage state: the clips start signed in. `beforeClose(auth)`
+ * runs once signed in (a choice made through the context's API) and before the state is taken.
+ */
+export const signedInState = async (
+  browser,
+  contextOptions,
+  { url, email, password },
+  beforeClose = async () => {},
+) => {
+  const auth = await browser.newContext(contextOptions);
+  const page = await auth.newPage();
+  await page.goto(url, { waitUntil: "networkidle" });
+  await page.fill('input[type="email"]', email);
+  await page.fill('input[type="password"]', password);
+  await page.locator('form button[type="submit"]').first().click();
+  await page.waitForURL(/\/app/, { timeout: 30_000 });
+  await beforeClose(auth);
+  const state = await auth.storageState();
+  await auth.close();
+  return state;
+};

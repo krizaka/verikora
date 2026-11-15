@@ -11,41 +11,21 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
 import { generateDocument } from "./demo-documents/index.mjs";
+import { runToEnd, sovkoraClient } from "./lib/sovkora-recording.mjs";
 
 const OUT = join(dirname(fileURLToPath(import.meta.url)), "../apps/web/content/demo-lease-runs");
-const base = (process.env.AI_API_URL ?? "https://dev.sovkora.com/edge").replace(/\/$/, "");
-const key = process.env.AI_API_KEY;
-if (!key) throw new Error("AI_API_KEY is not set");
-const STUDIO = "compliance-check";
+const client = sovkoraClient();
+const { base, studio: STUDIO } = client;
 const CASES = [
   { name: "clean", id: "bail-rosemont-1-conforme" },
   { name: "errors", id: "bail-rosemont-5-clause-illegale" },
 ];
 
-async function call(path, init = {}) {
-  const res = await fetch(`${base}${path}`, {
-    method: init.method ?? "GET",
-    headers: {
-      authorization: `Bearer ${key}`,
-      accept: "application/json",
-      ...(init.body ? { "content-type": "application/json" } : {}),
-    },
-    body: init.body ? JSON.stringify(init.body) : undefined,
-  });
-  if (!res.ok) throw new Error(`Sovkora answered ${res.status} on ${init.method ?? "GET"} ${path.split("?")[0]}`);
-  return res.json();
-}
-
 mkdirSync(OUT, { recursive: true });
 for (const c of CASES) {
   const doc = await generateDocument(c.id);
   const inputs = { document: doc.text, jurisdiction: "QC", asOf: "2026-10-23" };
-  let run = await call(`/api/v1/studios/${STUDIO}/runs`, { method: "POST", body: { inputs } });
-  for (let i = 0; i < 90 && !["SUCCEEDED", "FAILED", "CANCELLED"].includes(run.status); i++) {
-    await new Promise((r) => setTimeout(r, 2000));
-    run = await call(`/api/v1/studios/runs/${run.id}`);
-  }
-  if (run.status !== "SUCCEEDED") throw new Error(`${c.id}: the run ${run.id} ended ${run.status}`);
+  const run = await runToEnd(client, inputs, c.id);
   const recording = {
     recordedAt: new Date().toISOString(),
     source: base,

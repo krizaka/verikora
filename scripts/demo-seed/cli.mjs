@@ -7,6 +7,7 @@
 import { readFileSync } from "node:fs";
 import { createRequire } from "node:module";
 
+import { pgClientOptions } from "../../apps/web/scripts/pg-client-options.mjs";
 import { matchesRecorded } from "./cast.mjs";
 import { seedPilotCode } from "./pilot-code.mjs";
 import { assertNotProduction, PERSONAS, seedCast, seedPersona } from "./seed.mjs";
@@ -54,9 +55,6 @@ async function runCast(client, url, { messagesByLocale, locale }) {
   );
 }
 
-/** The cluster's CA from the environment, its escaped newlines restored. */
-const caCert = () => process.env.DATABASE_CA_CERT?.replaceAll(String.raw`\n`, "\n");
-
 async function main() {
   assertNotProduction(process.env);
   const cast = process.argv.includes("--cast");
@@ -67,13 +65,7 @@ async function main() {
   if (!["fr", "en"].includes(locale)) throw new Error("--locale must be fr or en");
   const web = createRequire(new URL("../../apps/web/package.json", import.meta.url));
   const pg = web("pg");
-  const url = new URL(process.env.DATABASE_URL ?? "");
-  const tls = ["require", "verify-ca", "verify-full"].includes(url.searchParams.get("sslmode") ?? "");
-  url.searchParams.delete("sslmode");
-  const client = new pg.Client({
-    connectionString: url.toString(),
-    ...(tls ? { ssl: { ca: caCert(), rejectUnauthorized: true } } : {}),
-  });
+  const client = new pg.Client(pgClientOptions());
   const messagesByLocale = Object.fromEntries(
     ["fr", "en"].map((l) => [
       l,

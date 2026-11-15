@@ -8,6 +8,8 @@
 import { hashPassword } from "@krizaka/auth";
 import { personaByRole } from "@krizaka/org";
 
+import { pgClientOptions } from "./pg-client-options.mjs";
+
 // The scheme is @krizaka/auth's (scrypt N=2^15 r=8 p=1, `scrypt$N$r$p$salt$hash`): the one the sign-in verifies.
 export { hashPassword };
 
@@ -28,18 +30,9 @@ export function accountsFromEnv(env) {
   return accounts.map((a) => ({ ...a, email: a.email.trim().toLowerCase(), name: QA_PERSONAS[a.role].displayName }));
 }
 
-/** The cluster's CA from the environment, its escaped newlines restored. */
-const caCert = () => process.env.DATABASE_CA_CERT?.replaceAll(String.raw`\n`, "\n");
-
 async function main() {
   const { default: pg } = await import("pg");
-  const url = new URL(process.env.DATABASE_URL ?? "");
-  const tls = ["require", "verify-ca", "verify-full"].includes(url.searchParams.get("sslmode") ?? "");
-  url.searchParams.delete("sslmode");
-  const client = new pg.Client({
-    connectionString: url.toString(),
-    ...(tls ? { ssl: { ca: caCert(), rejectUnauthorized: true } } : {}),
-  });
+  const client = new pg.Client(pgClientOptions());
   await client.connect();
   try {
     for (const a of accountsFromEnv(process.env)) {

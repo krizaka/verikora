@@ -21,13 +21,12 @@
     "retiredImport": 0,
     "routeStateSelection": 0,
     "cognitiveComplexity": 0,
-    "sonar": 3,
-    "codeRules": 1089,
-    "code/curly": 1055,
+    "sonar": 2,
+    "codeRules": 1069,
+    "code/curly": 1035,
     "code/max-depth": 27,
     "code/no-console": 5,
     "sonarjs/sql-queries": 2,
-    "sonarjs/no-nested-conditional": 1,
     "code/max-nested-callbacks": 2,
     "pageTemplate": 47
   }

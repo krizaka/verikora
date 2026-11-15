@@ -74,7 +74,9 @@ export function CouponsView() {
     queryKey: ["admin-pilot-counters"],
     queryFn: () => krizakaFetch("/api/admin/coupons/pilot-counters", { schema: pilotCounts }),
   });
-  if (!data.data) return null;
+  if (!data.data) {
+    return null;
+  }
   return (
     <div className="flex flex-col gap-8" data-testid="coupons">
       <div className="flex flex-col gap-2">
@@ -299,19 +301,24 @@ function couponColumns(
   const partnerName = (id: string | null) =>
     id ? (partners.find((p) => p.id === id)?.displayName ?? say("adminConfig.coupons.erased")) : "—";
   const discountValue = (c: Coupon) => {
-    if (c.percentOffBp !== null) return (c.percentOffBp ?? 0) / 100;
+    if (c.percentOffBp !== null) {
+      return (c.percentOffBp ?? 0) / 100;
+    }
     return new Intl.NumberFormat(locale, {
       style: "currency",
       currency: (c.currency ?? COUPON_CURRENCY).toUpperCase(),
     }).format((c.amountOffMinor ?? 0) / 100);
   };
-  const terms = (c: Coupon) =>
-    c.kind === "credit"
-      ? say("adminConfig.coupons.creditTerms", { credits: c.credits ?? 0, days: c.creditsValidDays ?? 0 })
-      : say(`adminConfig.coupons.discountTerms.${c.percentOffBp === null ? "amount" : "percent"}`, {
-          value: discountValue(c),
-          duration: say(`adminConfig.coupons.durations.${c.duration ?? "once"}`),
-        });
+  const terms = (c: Coupon) => {
+    if (c.kind === "credit") {
+      return say("adminConfig.coupons.creditTerms", { credits: c.credits ?? 0, days: c.creditsValidDays ?? 0 });
+    }
+    const shape = c.percentOffBp === null ? "amount" : "percent";
+    return say(`adminConfig.coupons.discountTerms.${shape}`, {
+      value: discountValue(c),
+      duration: say(`adminConfig.coupons.durations.${c.duration ?? "once"}`),
+    });
+  };
   return [
     {
       id: "code",

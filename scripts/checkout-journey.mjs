@@ -32,6 +32,7 @@ import {
   returnedFromCheckout,
   plain,
 } from "./checkout-journey-lib.mjs";
+import { apiCall, nativeSignIn } from "./lib/native-session.mjs";
 import { smokeLeaseCheck } from "./smoke-lease-check.mjs";
 
 const SUBMIT_ATTEMPTS = 3;
@@ -216,18 +217,8 @@ export async function checkoutJourney({
 }) {
   if (!email || !password) throw new Error("SMOKE_EMAIL and SMOKE_PASSWORD are required (the persona)");
   const stripe = processor(stripeKey);
-  const call = async (path, init = {}, token) => {
-    const res = await fetch(`${base}${path}`, {
-      ...init,
-      headers: { accept: "application/json", ...(token ? { authorization: `Bearer ${token}` } : {}), ...init.headers },
-    });
-    return { res, body: await res.json().catch(() => null) };
-  };
-  const signIn = await call("/api/auth/sign-in", {
-    method: "POST",
-    headers: { "content-type": "application/json" },
-    body: JSON.stringify({ email, password, client: "native" }),
-  });
+  const call = apiCall(base, fetch);
+  const signIn = await nativeSignIn(call, email, password);
   if (!signIn.res.ok || typeof signIn.body?.token !== "string") throw new Error(`sign-in: HTTP ${signIn.res.status}`);
   const token = signIn.body.token;
   const billing = () => call("/api/billing", {}, token).then((r) => r.body);
