@@ -12,6 +12,9 @@ export const scopeFile = (home) => join(home, "Library", "Application Support", 
 /** The scope the kit loads: `{"roots":[…]}`. It drops a root that is gone or not grantable (the home, `/`, `/tmp`, `/var`). */
 export const scopeJson = (roots) => `${JSON.stringify({ roots }, null, 2)}\n`;
 
+/** Where `@krizaka/ui`'s ThemeProvider keeps the chosen mode (`light`, `dark` or `system`) in the page's storage. */
+export const THEME_KEY = "kz-theme";
+
 /** The route of a folder in the app (`#/library/<folder>`), the same as the library's links. */
 export const libraryHash = (folder) => `#/library/${encodeURIComponent(folder)}`;
 

@@ -17,7 +17,7 @@ import { pathToFileURL } from "node:url";
 import { parseArgs } from "node:util";
 
 import { generateDocument } from "./demo-documents/index.mjs";
-import { client, libraryHash, scopeFile, scopeJson, until } from "./desktop-journey-lib.mjs";
+import { client, libraryHash, scopeFile, scopeJson, THEME_KEY, until } from "./desktop-journey-lib.mjs";
 
 const { values } = parseArgs({
   options: {
@@ -119,6 +119,20 @@ async function assertFit(drv, screen) {
 
 const waitFor = (driver, what, css, timeoutMs = SCREEN_MS) => until(what, () => driver.exists(css), { timeoutMs });
 
+/** Sets the theme the way the toggle does (`kz-theme` in the page's storage) and reloads the window. */
+async function setTheme(drv, mode) {
+  await drv.run("localStorage.setItem(arguments[0], arguments[1]); location.reload()", THEME_KEY, mode);
+  await hold(2500);
+}
+
+async function tryStep(name, step) {
+  try {
+    await step();
+  } catch (error) {
+    console.error(`desktop journey: optional step "${name}" skipped: ${error.message}`);
+  }
+}
+
 let app;
 let driver;
 try {
@@ -133,6 +147,8 @@ try {
   driver = await connect("first launch");
   await signInIfAsked(driver);
   await waitFor(driver, "the granted folder in the library", FOLDER_LINK);
+  // The development notice and the account load a moment after the folder: wait for them (not in the film, which refuses the notice).
+  if (!values.film) await waitFor(driver, "the development notice", UNFIT.notice, 15_000).catch(() => undefined);
   await shot(driver, "1-library");
   await mkdir(out, { recursive: true });
   filmWindow();
@@ -174,6 +190,33 @@ try {
   const kept = JSON.parse(await readFile(scope, "utf8")).roots;
   if (!kept.includes(folder)) throw new Error(`the scope lost the folder: ${JSON.stringify(kept)}`);
   await shot(driver, "4-relaunch");
+  // The blog's ergonomics post shows the Mac app in both themes and with nothing granted (krizaka-internal#3912). A step that fails
+  // here never fails the journey above: it is logged, and its capture is missing.
+  if (!values.film) {
+    await tryStep("dark theme", async () => {
+      await setTheme(driver, "dark");
+      await waitFor(driver, "the library, dark", FOLDER_LINK);
+      await shot(driver, "5-theme-dark");
+    });
+    await tryStep("light theme", async () => {
+      await setTheme(driver, "light");
+      await waitFor(driver, "the library, light", FOLDER_LINK);
+      await shot(driver, "5-theme-light");
+    });
+    await tryStep("empty library", async () => {
+      await driver.run("localStorage.removeItem(arguments[0])", THEME_KEY);
+      await driver.quit().catch(() => undefined);
+      app.kill();
+      await new Promise((resolveExit) => app.once("exit", resolveExit));
+      await writeFile(scope, scopeJson([]));
+      app = launch();
+      driver = await connect("empty library");
+      await signInIfAsked(driver);
+      await waitFor(driver, "the empty library", "[data-testid=library-empty], main");
+      await hold(2500);
+      await shot(driver, "6-empty-library");
+    });
+  }
   // The relaunch is proved, not filmed: the film ends on the check's result, never on the library it is reached from (verikora#1968).
   film.finish(); // too few frames: the journey fails loudly, no empty clip
   console.log("desktop journey: ok");
