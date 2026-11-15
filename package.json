@@ -43,7 +43,7 @@
     "@ast-grep/cli": "0.51.0",
     "@krizaka/a11y-audit": "0.2.0",
     "@krizaka/config": "^0.25.0",
-    "@krizaka/i18n": "^0.2.7",
+    "@krizaka/i18n": "^0.2.8",
     "@krizaka/intl": "^0.4.1",
     "@krizaka/org": "^1.6.0",
     "@krizaka/page-audit": "^0.8.2",
