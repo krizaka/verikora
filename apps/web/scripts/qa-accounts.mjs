@@ -35,7 +35,9 @@ async function main() {
   url.searchParams.delete("sslmode");
   const client = new pg.Client({
     connectionString: url.toString(),
-    ...(tls ? { ssl: { ca: process.env.DATABASE_CA_CERT?.replaceAll("\\n", "\n"), rejectUnauthorized: true } } : {}),
+    ...(tls
+      ? { ssl: { ca: process.env.DATABASE_CA_CERT?.replaceAll(String.raw`\n`, "\n"), rejectUnauthorized: true } }
+      : {}),
   });
   await client.connect();
   try {

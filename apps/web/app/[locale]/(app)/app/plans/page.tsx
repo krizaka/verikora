@@ -18,16 +18,15 @@ import { settingsFor } from "@/lib/settings/guards";
 
 type PlanProps = ComponentProps<typeof PricingContent>;
 
-/** The button of a plan card: « Subscribe » for a plan that is sold, « Current plan » for the one the account holds. */
-function PlanAction({
-  plan,
-  dict,
-  entitlement,
-}: Readonly<{
-  plan: Parameters<NonNullable<PlanProps["action"]>>[0];
-  dict: ReturnType<typeof getDictionary>;
-  entitlement: Awaited<ReturnType<typeof entitlementOf>>;
-}>) {
+/**
+ * The button of a plan card: « Subscribe » for a plan that is sold, « Current plan » for the one the account holds.
+ * A render function, not a component: the page's `action` prop calls it, so no component is defined inside the page.
+ */
+function planAction(
+  plan: Parameters<NonNullable<PlanProps["action"]>>[0],
+  dict: ReturnType<typeof getDictionary>,
+  entitlement: Awaited<ReturnType<typeof entitlementOf>>,
+) {
   if (!isSoldKind(plan)) {
     return null;
   }
@@ -75,7 +74,7 @@ export default async function PlansPage({ params }: Readonly<{ params: Promise<{
         locale={locale}
         {...view}
         status={statusLine(dict.landing.status)}
-        action={(plan) => <PlanAction plan={plan} dict={dict} entitlement={entitlement} />}
+        action={(plan) => planAction(plan, dict, entitlement)}
       />
       {paymentsOn ? null : <p data-testid="payments-off">{dict.pricing.paymentsOff}</p>}
     </>

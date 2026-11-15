@@ -97,8 +97,8 @@ const KIND_BEFORE: readonly { kind: DateFact["kind"]; pattern: RegExp }[] = [
   {
     kind: "issued",
     pattern: wordsPattern(
-      String.raw`[ée]mis`,
-      String.raw`d['’][ée]mission`,
+      "[ée]mis",
+      "d['’][ée]mission",
       String.raw`date\s+(?:de\s+la\s+facture|du\s+re[çc]u|de\s+l['’]inscription)`,
       "issued",
       String.raw`invoice\s+date`,
