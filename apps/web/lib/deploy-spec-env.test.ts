@@ -14,8 +14,12 @@ const SIGNING_KEY = generateSigningKeyBase64();
 
 /** A valid-shaped stand-in for a secret the spec only names (`__NAME__`). */
 const placeholder = (key: string): string => {
-  if (key === "AI_API_KEY") return "oz_placeholder";
-  if (key === "APP_REPORT_SIGNING_KEY") return SIGNING_KEY;
+  if (key === "AI_API_KEY") {
+    return "oz_placeholder";
+  }
+  if (key === "APP_REPORT_SIGNING_KEY") {
+    return SIGNING_KEY;
+  }
   return "x".repeat(40);
 };
 
