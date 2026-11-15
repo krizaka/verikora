@@ -45,8 +45,9 @@ export async function runToEnd(client, inputs, label) {
   let run = await client.call(`/api/v1/studios/${client.studio}/runs`, { method: "POST", body: { inputs } });
   for (let i = 0; i < 90 && !FINAL.has(run.status); i++) {
     await new Promise((r) => setTimeout(r, 2000));
-    if (!RUN_ID.test(String(run.id))) throw new Error(`${label}: Sovkora answered an unusable run id`);
-    run = await client.call(`/api/v1/studios/runs/${encodeURIComponent(run.id)}`);
+    const id = RUN_ID.exec(String(run.id))?.[0];
+    if (!id) throw new Error(`${label}: Sovkora answered an unusable run id`);
+    run = await client.call(`/api/v1/studios/runs/${encodeURIComponent(id)}`);
   }
   if (run.status !== "SUCCEEDED") throw new Error(`${label}: the run ${run.id} ended ${run.status}`);
   return run;

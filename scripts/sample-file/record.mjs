@@ -6,35 +6,27 @@ import { join } from "node:path";
 import { localDay } from "@krizaka/intl";
 
 import { OUT } from "./build.mjs";
-import { sovkoraClient } from "../lib/sovkora-recording.mjs";
+import { runToEnd, sovkoraClient } from "../lib/sovkora-recording.mjs";
 import { DOCUMENTS } from "./documents.mjs";
 
 const LAW_TIME_ZONE = "America/Toronto"; // lib/rulesets.ts: the calendar day of the law
 const STUDIO = "compliance-check";
-const DONE = new Set(["SUCCEEDED", "FAILED", "CANCELLED"]);
 // The engine is the one dev Studio, fixed here: the check is never sent to an address taken from the environment.
 const SOVKORA_DEV = "https://dev.sovkora.com/edge";
-const RUN_ID = /^[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}$/;
 
 export async function recordSampleRun({ key = process.env.AI_API_KEY } = {}) {
   if (!key)
     throw new Error("AI_API_KEY is not set — without it, the recorded run in fixtures/sample-file is used as it is");
   const root = SOVKORA_DEV;
-  const { call } = sovkoraClient({ AI_API_URL: root, AI_API_KEY: key });
+  const client = sovkoraClient({ AI_API_URL: root, AI_API_KEY: key });
+  const { call } = client;
   const installed = await call("/api/v1/studios/installations");
   if (!installed.some((i) => i.studioKey === STUDIO))
     await call(`/api/v1/studios/${STUDIO}/installations?locale=en`, { method: "POST", body: { config: {} } });
 
   const lease = DOCUMENTS.find((d) => d.checked === STUDIO);
   const inputs = { document: lease.lines.join("\n"), jurisdiction: "QC", asOf: localDay(new Date(), LAW_TIME_ZONE) };
-  let run = await call(`/api/v1/studios/${STUDIO}/runs`, { method: "POST", body: { inputs } });
-  for (let i = 0; i < 90 && !DONE.has(run.status); i++) {
-    await new Promise((r) => setTimeout(r, 2000));
-    const id = RUN_ID.exec(String(run.id))?.[0];
-    if (!id) throw new Error("Sovkora returned a run id of an unexpected shape");
-    run = await call(`/api/v1/studios/runs/${id}`);
-  }
-  if (run.status !== "SUCCEEDED") throw new Error(`the run ended ${run.status}`);
+  const run = await runToEnd(client, inputs, "sample lease");
   const recording = {
     side: "tenant",
     recordedAt: new Date().toISOString(),
