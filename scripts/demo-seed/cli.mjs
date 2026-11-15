@@ -65,6 +65,7 @@ async function main() {
   if (!["fr", "en"].includes(locale)) throw new Error("--locale must be fr or en");
   const web = createRequire(new URL("../../apps/web/package.json", import.meta.url));
   const pg = web("pg");
+  const url = new URL(process.env.DATABASE_URL ?? "");
   const client = new pg.Client(pgClientOptions());
   const messagesByLocale = Object.fromEntries(
     ["fr", "en"].map((l) => [
