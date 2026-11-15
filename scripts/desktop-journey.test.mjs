@@ -2,7 +2,16 @@ import assert from "node:assert/strict";
 import { existsSync, readFileSync } from "node:fs";
 import { describe, it } from "vitest";
 
-import { client, elementId, IDENTIFIER, libraryHash, scopeFile, scopeJson, until } from "./desktop-journey-lib.mjs";
+import {
+  client,
+  elementId,
+  IDENTIFIER,
+  libraryHash,
+  scopeFile,
+  scopeJson,
+  THEME_KEY,
+  until,
+} from "./desktop-journey-lib.mjs";
 
 const read = (path) => readFileSync(new URL(path, import.meta.url), "utf8");
 const code = (source) => source.replace(/^\s*#.*$/gm, "");
@@ -174,5 +183,14 @@ describe("the journey films the window, after the sign-in, without the engine's 
     assert.doesNotMatch(flow, /tapOn: "(Lots|Batches)"/);
     assert.match(flow, /assertNotVisible/);
     assert.match(flow.slice(flow.indexOf("stopRecording") - 200), /extendedWaitUntil|assertNotVisible/);
+  });
+});
+
+describe("the journey's captures for the blog (krizaka-internal#3912)", () => {
+  it("sets the theme under the key the ThemeProvider reads, and never fails the journey on an optional step", () => {
+    assert.equal(THEME_KEY, "kz-theme");
+    const journey = code(read("./desktop-journey.mjs"));
+    for (const name of ["5-theme-dark", "5-theme-light", "6-empty-library"]) assert.ok(journey.includes(name), name);
+    assert.match(journey, /optional step/);
   });
 });
