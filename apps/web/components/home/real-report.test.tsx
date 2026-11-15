@@ -53,7 +53,7 @@ describe("the home's real report, rendered", async () => {
   });
 
   it("shows every finding of the run it names, and puts forward no security-deposit finding (QC-LEASE-004 is not applicable to this lease)", () => {
-    expect(report.findings.length).toBe(run.report.findings.length);
+    expect(report.findings).toHaveLength(run.report.findings.length);
     expect(report.findings.find((f) => f.ruleId === "QC-LEASE-004")?.verdict).toBe("NOT_APPLICABLE");
     for (const html of Object.values(pages)) {
       expect(html).not.toContain("proof-excerpt");

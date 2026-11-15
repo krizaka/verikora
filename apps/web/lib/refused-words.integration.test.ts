@@ -26,7 +26,7 @@ describe.runIf(enabled)("the refused-word list", () => {
     const list = await listRefusedWords();
     expect(list.en).toEqual(expect.arrayContaining(["fraud", "liar", "reject"]));
     expect(list.fr).toEqual(expect.arrayContaining(["fraude", "menteur", "rejeter"]));
-    expect((await refusedWords()).length).toBe(list.en.length + list.fr.length);
+    expect(await refusedWords()).toHaveLength(list.en.length + list.fr.length);
   });
 
   it("adds a word, normalised, once, and removes it", async () => {

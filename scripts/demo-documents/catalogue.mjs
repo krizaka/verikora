@@ -31,10 +31,17 @@ const EMPLOYERS = [
   "Café Inventé s.e.n.c.",
 ];
 
+/** Digits in groups of three, separated by a space ("1234567" → "1 234 567"). */
+const groupThousands = (digits) => {
+  const groups = [];
+  for (let end = digits.length; end > 0; end -= 3) groups.unshift(digits.slice(Math.max(0, end - 3), end));
+  return groups.join(" ");
+};
+
 const money = (cents) => {
   const sign = cents < 0 ? "-" : "";
   const abs = Math.abs(cents);
-  const whole = String(Math.floor(abs / 100)).replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+  const whole = groupThousands(String(Math.floor(abs / 100)));
   return `${sign}${whole},${String(abs % 100).padStart(2, "0")} $`;
 };
 
@@ -408,7 +415,7 @@ export const PERSONA_ERIC = {
   // The display name comes from the cast (`@krizaka/org`, persona `eric`): one source for the seed, the QA accounts and the recordings.
   collections: [
     { key: "rosemont", documents: SPECS.filter((s) => /rosemont/.test(s.id)).map((s) => s.id) },
-    { key: "villeray", documents: SPECS.filter((s) => /villeray/.test(s.id)).map((s) => s.id) },
+    { key: "villeray", documents: SPECS.filter((s) => s.id.includes("villeray")).map((s) => s.id) },
     { key: "invoices", documents: SPECS.filter((s) => /^facture-2026/.test(s.id)).map((s) => s.id) },
     // Two folders with nothing in them (and the default one stays empty): the empty state of the open folder's card is rendered and audited (verikora#435).
     { key: "empty-a", documents: [] },

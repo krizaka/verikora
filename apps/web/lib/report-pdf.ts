@@ -9,7 +9,6 @@ import {
   drawPages,
   embedFonts,
   type Face,
-  foldToWinAnsi,
   type Fonts,
   LINE_HEIGHT,
   PAGE,
@@ -19,7 +18,7 @@ import {
   wrap,
 } from "./pdf-layout";
 
-export { foldToWinAnsi };
+export { foldToWinAnsi } from "./pdf-layout";
 import { PRODUCT_NAME } from "@/lib/brand";
 
 import {

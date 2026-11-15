@@ -318,7 +318,7 @@ export const NOT_OWNER_SCOPED: Record<string, string> = {
 };
 
 /** The console pages that take an id, and the case that runs the loader they share with the API (same function, same owner check). */
-export const PAGES: Record<string, RouteKey | string> = {
+export const PAGES: Record<string, string> = {
   "[locale]/(app)/app/documents/[id]": "redirect to the document's default tab: see documents/[id]/[tab]",
   "[locale]/(app)/app/documents/[id]/[tab]": "GET /api/documents/[id]",
   "[locale]/(app)/app/dossiers/[id]": "GET /api/applications/[id]",

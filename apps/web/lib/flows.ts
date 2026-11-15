@@ -1,6 +1,5 @@
 import {
   type Audience,
-  AUDIENCE_STATUS,
   AUDIENCES,
   FLOW_STATUS,
   type FlowDefinition,
@@ -60,7 +59,7 @@ export const seedFlows = (environment: FlowEnvironment): AvailableFlow[] =>
  */
 export async function availableFlows(
   environment: FlowEnvironment,
-  options: { fallback?: boolean } = { fallback: true },
+  options: { fallback?: boolean } = {},
 ): Promise<AvailableFlow[]> {
   try {
     const rows = await query<VersionRow>(
@@ -76,7 +75,7 @@ export async function availableFlows(
       return definition ? [{ key: r.key, versionId: r.version_id, version: r.version, definition }] : [];
     });
   } catch (error) {
-    if (!options.fallback) throw error;
+    if (options.fallback === false) throw error;
     logError("flows: the database could not be read, using the seeded definitions", error);
     return seedFlows(environment);
   }
@@ -113,7 +112,7 @@ export const offerFor = (flows: readonly AvailableFlow[], audience: Audience | n
   offerOf(flowsFor(flows, audience).map((f) => f.definition));
 
 /** Without any enabled flow the status words fall back to the vocabulary's own (`AUDIENCE_STATUS`) — used only by tests of the fallback. */
-export const vocabularyStatus = AUDIENCE_STATUS;
+export { AUDIENCE_STATUS as vocabularyStatus } from "@verikora/core";
 
 /* ---- consents ---- */
 

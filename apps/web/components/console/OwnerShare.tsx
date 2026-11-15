@@ -76,7 +76,7 @@ export function OwnerShare({ fileId, origin }: Readonly<{ fileId: string; origin
     try {
       const made = await create.mutateAsync();
       setToken(made.token);
-      setLink(`${origin ?? window.location.origin}/${locale}/rapport/${made.token}`);
+      setLink(`${origin ?? globalThis.location.origin}/${locale}/rapport/${made.token}`);
       await client.invalidateQueries({ queryKey: key });
     } catch (error) {
       fail(error);
@@ -196,9 +196,8 @@ export function OwnerShare({ fileId, origin }: Readonly<{ fileId: string; origin
         </div>
       ) : null}
       <h3 className="m-0 text-base font-bold text-fg">{say("dossiers.share.active")}</h3>
-      {list.isPending ? (
-        <p className="m-0 text-sm text-fg-secondary">{say("dossiers.share.loading")}</p>
-      ) : live.length ? (
+      {list.isPending ? <p className="m-0 text-sm text-fg-secondary">{say("dossiers.share.loading")}</p> : null}
+      {!list.isPending && live.length > 0 ? (
         <List
           aria-label={say("dossiers.share.active")}
           items={live}
@@ -221,9 +220,10 @@ export function OwnerShare({ fileId, origin }: Readonly<{ fileId: string; origin
             ),
           })}
         />
-      ) : (
+      ) : null}
+      {!list.isPending && live.length === 0 ? (
         <p className="m-0 text-sm text-fg-secondary">{say("dossiers.share.none")}</p>
-      )}
+      ) : null}
     </section>
   );
 }

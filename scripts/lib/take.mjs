@@ -31,7 +31,6 @@ export function retime(t, spans) {
     if (t <= from) break;
     out += from - cursor;
     out += (Math.min(t, to) - from) / speed;
-    cursor = Math.min(t, to);
     if (t <= to) return out;
     cursor = to;
   }

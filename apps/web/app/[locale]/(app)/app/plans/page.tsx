@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import type { ComponentProps } from "react";
 
 import { SubscribeButton } from "@/components/console/SubscribeButton";
 import { PricingContent } from "@/components/pricing/PricingContent";
@@ -14,6 +15,30 @@ import { PRICING_PUBLISHED } from "@/lib/prices/publication";
 import { isSoldKind, SOLD } from "@/lib/pricing";
 import { statusLine } from "@/lib/product-status";
 import { settingsFor } from "@/lib/settings/guards";
+
+type PlanProps = ComponentProps<typeof PricingContent>;
+
+/** The button of a plan card: « Subscribe » for a plan that is sold, « Current plan » for the one the account holds. */
+function PlanAction({
+  plan,
+  dict,
+  entitlement,
+}: Readonly<{
+  plan: Parameters<NonNullable<PlanProps["action"]>>[0];
+  dict: ReturnType<typeof getDictionary>;
+  entitlement: Awaited<ReturnType<typeof entitlementOf>>;
+}>) {
+  if (!isSoldKind(plan)) {
+    return null;
+  }
+  return (
+    <SubscribeButton
+      kind={plan}
+      plan={dict.pricing.plans[plan as keyof typeof dict.pricing.plans]?.name ?? plan}
+      current={entitlement.pro && entitlement.planKey === SOLD[plan].key}
+    />
+  );
+}
 
 /** The offers are data an administrator schedules (ADR-009): read at each request, as on the public page. */
 export const dynamic = "force-dynamic";
@@ -50,15 +75,7 @@ export default async function PlansPage({ params }: Readonly<{ params: Promise<{
         locale={locale}
         {...view}
         status={statusLine(dict.landing.status)}
-        action={(plan) => {
-          return isSoldKind(plan) ? (
-            <SubscribeButton
-              kind={plan}
-              plan={dict.pricing.plans[plan as keyof typeof dict.pricing.plans]?.name ?? plan}
-              current={entitlement.pro && entitlement.planKey === SOLD[plan].key}
-            />
-          ) : null;
-        }}
+        action={(plan) => <PlanAction plan={plan} dict={dict} entitlement={entitlement} />}
       />
       {paymentsOn ? null : <p data-testid="payments-off">{dict.pricing.paymentsOff}</p>}
     </>

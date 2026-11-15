@@ -23,5 +23,8 @@ export function pickReportLang(asked: string | undefined, acceptLanguage: string
     })
     .filter((r) => r.q > 0)
     .sort((a, b) => b.q - a.q || a.i - b.i);
-  return LANGS.find((l) => l === ranked.find((r) => LANGS.some((x) => x === r.lang))?.lang) ?? fallback;
+  return (
+    LANGS.find((l) => l === ranked.find((r) => (LANGS as readonly (string | undefined)[]).includes(r.lang))?.lang) ??
+    fallback
+  );
 }

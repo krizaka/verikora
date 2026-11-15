@@ -70,11 +70,13 @@ export async function runBackup(ports, { environment, recipient, retentionDays }
     scratchCreated = true;
     await scratch.restore(scratchDb, plainPath);
     const differences = countDifferences(counts, await scratch.count(scratchDb));
-    if (differences.length > 0)
+    if (differences.length > 0) {
+      const listed = differences.map((d) => `${d.table} ${d.source}→${d.restored}`).join(", ");
       throw new BackupError(
         "DRILL_MISMATCH",
-        `the restore drill found ${differences.length} table(s) that differ: ${differences.map((d) => `${d.table} ${d.source}→${d.restored}`).join(", ")}`,
+        `the restore drill found ${differences.length} table(s) that differ: ${listed}`,
       );
+    }
     log("restore drill passed: every table has the same row count");
 
     const encryptedPath = await tools.encrypt(plainPath, age);

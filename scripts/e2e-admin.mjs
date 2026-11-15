@@ -17,7 +17,7 @@ import { auditContext, loadSettled } from "@krizaka/page-audit";
 
 const require = createRequire(import.meta.url);
 const { chromium } = require("playwright-core");
-const pg = require("../apps/web/node_modules/pg");
+const pg = createRequire(new URL("../apps/web/package.json", import.meta.url))("pg");
 
 const PORT = 3191;
 const BASE = `http://admin.localhost:${PORT}`;

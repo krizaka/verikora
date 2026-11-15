@@ -126,15 +126,18 @@ function whatTextOf(pack: Pack, input: ComplianceInput, lang: Lang): string {
     : line("whatCompliance", lang, { what, count: input.findings.length, scope, date });
 }
 
+type PhotoSource = NonNullable<ComplianceInput["textSource"]>;
+
+/** The sentence about a photo read by the text reader: how sure the reading was. */
+function photoConfidenceLine(src: Exclude<PhotoSource, { kind: typeof TEXT_SOURCE.vision }>, lang: Lang): string {
+  return line(src.lowConfidence ? "howPhotoLow" : "howPhoto", lang, { confidence: Math.round(src.confidence) });
+}
+
 /** How the check was made, with the way the text was read when it was a photo. */
 function howSentencesOf(input: ComplianceInput, lang: Lang): string[] {
   const src = input.textSource;
   const photo = src
-    ? [
-        src.kind === TEXT_SOURCE.vision
-          ? line("howPhotoModel", lang)
-          : line(src.lowConfidence ? "howPhotoLow" : "howPhoto", lang, { confidence: Math.round(src.confidence) }),
-      ]
+    ? [src.kind === TEXT_SOURCE.vision ? line("howPhotoModel", lang) : photoConfidenceLine(src, lang)]
     : [];
   const model = input.findings.some((f) => f.method && f.method !== DETERMINISTIC) ? [line("howModel", lang)] : [];
   return [...sentences("how", lang), ...photo, ...model];

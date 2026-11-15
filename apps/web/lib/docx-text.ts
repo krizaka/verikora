@@ -8,13 +8,13 @@ import { MAX_OFFICE_PART_BYTES, zipEntryBytes } from "./preflight/inspector";
 const DOCUMENT_PART = "word/document.xml";
 
 const ENTITIES: Record<string, string> = { amp: "&", lt: "<", gt: ">", quot: '"', apos: "'" };
+const numericEntity = (code: string) =>
+  String.fromCodePoint(
+    code[1]?.toLowerCase() === "x" ? Number.parseInt(code.slice(2), 16) : Number.parseInt(code.slice(1), 10),
+  );
 const decode = (text: string) =>
   text.replace(/&(#x[0-9a-f]+|#\d+|[a-z]+);/gi, (whole, code: string) =>
-    code[0] === "#"
-      ? String.fromCodePoint(
-          code[1]?.toLowerCase() === "x" ? Number.parseInt(code.slice(2), 16) : Number.parseInt(code.slice(1), 10),
-        )
-      : (ENTITIES[code] ?? whole),
+    code.startsWith("#") ? numericEntity(code) : (ENTITIES[code] ?? whole),
   );
 
 /** The ODF elements whose tags matter: paragraphs and headings, the tracked changes (history), spaces, tabs, breaks, notes. */

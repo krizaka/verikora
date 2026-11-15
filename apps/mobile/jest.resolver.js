@@ -7,7 +7,7 @@ const preset = require(
   }),
 );
 
-module.exports = (request, options) => {
+module.exports = function resolveKrizakaPackages(request, options) {
   if (request.startsWith("@krizaka/") || request.startsWith("@tanstack/")) {
     return options.defaultResolver(request, { ...options, conditions: ["import", "react-native", "default"] });
   }

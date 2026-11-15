@@ -1,10 +1,10 @@
 import { audit } from "./audit";
 import { query, transaction } from "./db";
 import { refuse } from "./http";
-import { REFUSED_LANGUAGES, type RefusedLanguage, type RefusedWords, validateRefusedWord } from "./report-contract";
+import { type RefusedLanguage, type RefusedWords, validateRefusedWord } from "./report-contract";
 
 /** The words a report may never use, per language: data, seeded by migration 0005, edited by the administration (krizaka-internal#3378). */
-export { REFUSED_LANGUAGES, type RefusedLanguage, type RefusedWords };
+export { REFUSED_LANGUAGES, type RefusedLanguage, type RefusedWords } from "./report-contract";
 
 type Actor = { id: string; email: string };
 

@@ -1,4 +1,4 @@
-import { isId, parseTagsParam, TAG_COLORS, tagsHref, toggleTag, type TagColor } from "@krizaka/organize/contract";
+import { parseTagsParam } from "@krizaka/organize/contract";
 
 import { DOCUMENT_KINDS, DOCUMENT_STATUSES } from "./vocabulary";
 
@@ -8,7 +8,7 @@ type DocumentStatus = (typeof DOCUMENT_STATUSES)[number];
 /** The pure rules of the organisation (ADR-0007): names, tag colours, the `tags` filter, the paths, the delete choice. */
 // @fixed: the length of the name columns and of the field in the UI
 export const NAME_MAX = 80;
-export { isId, parseTagsParam, TAG_COLORS, tagsHref, toggleTag, type TagColor };
+export { isId, parseTagsParam, TAG_COLORS, tagsHref, toggleTag, type TagColor } from "@krizaka/organize/contract";
 
 /** The filters of a library view: all of them live in the URL (`?tags=…&kind=…&status=…`), so back, forward, refresh and a shared link keep them. */
 export interface ViewState {

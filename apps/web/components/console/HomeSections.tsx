@@ -4,8 +4,8 @@ import { Badge } from "@krizaka/ui/badge";
 import { List } from "@krizaka/ui/list";
 import Link from "next/link";
 
-import { CONSOLE_ROUTES } from "@/lib/console-nav";
 import type { CheckSummary } from "@/lib/checks";
+import { CONSOLE_ROUTES } from "@/lib/console-nav";
 import type { CreditsFigure } from "@/lib/home-b2";
 import { latestChecksOf, reportHref, type ToTreatRow } from "@/lib/home-todo";
 import { useSay } from "@/lib/i18n-client";

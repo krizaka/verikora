@@ -31,7 +31,6 @@ import {
   PLAN,
   returnedFromCheckout,
   plain,
-  TEST_CARD,
 } from "./checkout-journey-lib.mjs";
 import { smokeLeaseCheck } from "./smoke-lease-check.mjs";
 

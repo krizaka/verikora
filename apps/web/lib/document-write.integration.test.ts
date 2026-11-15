@@ -1,8 +1,8 @@
 import { beforeAll, describe, expect, it } from "vitest";
 
 import { migrate, query } from "./db";
-import { documentsTenant } from "./env";
 import { getFile, type StoragePolicy, storeDocument } from "./documents";
+import { documentsTenant } from "./env";
 import { purgeIfDone } from "./retention";
 import { memoryStore } from "./storage/memory";
 import { noneStore } from "./storage/none";

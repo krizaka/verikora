@@ -22,16 +22,17 @@ function addReleaseSigning(gradle) {
   );
   if (withConfig === gradle) throw new Error("with-release-signing: the signingConfigs block of the template changed");
   const used = withConfig.replace(
-    /(buildTypes \{\n(?:.*\n)*? {8}release \{\n(?:.*\n)*?\s*)signingConfig signingConfigs\.debug/,
+    /(buildTypes \{\n(?:.*\n)*? {8}release \{\n(?:.*\n)*? *)signingConfig signingConfigs\.debug/,
     `$1signingConfig System.getenv("KRIZAKA_ANDROID_KEYSTORE") ? signingConfigs.release : signingConfigs.debug`,
   );
   if (used === withConfig) throw new Error("with-release-signing: the release build type of the template changed");
   return used;
 }
 
-module.exports = (config) =>
-  withAppBuildGradle(config, (c) => {
+module.exports = function withReleaseSigning(config) {
+  return withAppBuildGradle(config, (c) => {
     c.modResults.contents = addReleaseSigning(c.modResults.contents);
     return c;
   });
+};
 module.exports.addReleaseSigning = addReleaseSigning;

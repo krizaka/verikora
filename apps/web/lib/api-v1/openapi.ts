@@ -1,7 +1,6 @@
 import { BATCH_CHECKS, BATCH_COLUMNS, BATCH_ROW_ERROR } from "@verikora/core";
 
-import { PRODUCT_NAME } from "@/lib/brand";
-import { ENGINE_NAME } from "@/lib/brand";
+import { ENGINE_NAME, PRODUCT_NAME } from "@/lib/brand";
 
 import { VERIKORA_API_KEY_RULES } from "../api-keys";
 

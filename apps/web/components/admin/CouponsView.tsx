@@ -298,17 +298,18 @@ function couponColumns(
   const now = new Date();
   const partnerName = (id: string | null) =>
     id ? (partners.find((p) => p.id === id)?.displayName ?? say("adminConfig.coupons.erased")) : "—";
+  const discountValue = (c: Coupon) => {
+    if (c.percentOffBp !== null) return (c.percentOffBp ?? 0) / 100;
+    return new Intl.NumberFormat(locale, {
+      style: "currency",
+      currency: (c.currency ?? COUPON_CURRENCY).toUpperCase(),
+    }).format((c.amountOffMinor ?? 0) / 100);
+  };
   const terms = (c: Coupon) =>
     c.kind === "credit"
       ? say("adminConfig.coupons.creditTerms", { credits: c.credits ?? 0, days: c.creditsValidDays ?? 0 })
       : say(`adminConfig.coupons.discountTerms.${c.percentOffBp === null ? "amount" : "percent"}`, {
-          value:
-            c.percentOffBp === null
-              ? new Intl.NumberFormat(locale, {
-                  style: "currency",
-                  currency: (c.currency ?? COUPON_CURRENCY).toUpperCase(),
-                }).format((c.amountOffMinor ?? 0) / 100)
-              : (c.percentOffBp ?? 0) / 100,
+          value: discountValue(c),
           duration: say(`adminConfig.coupons.durations.${c.duration ?? "once"}`),
         });
   return [
@@ -540,7 +541,7 @@ function Redemptions({ id, onClose }: Readonly<{ id: string; onClose: () => void
       </div>
       <p className="m-0 max-w-[70ch] text-sm text-fg-secondary">{say("adminConfig.coupons.redemptionsNote")}</p>
       {problem ? <Alert tone="danger">{problem}</Alert> : null}
-      {data.data && data.data.redemptions.length === 0 ? (
+      {data.data?.redemptions.length === 0 ? (
         <p className="m-0 text-sm text-fg-secondary">{say("adminConfig.coupons.noRedemptions")}</p>
       ) : null}
       {data.data && data.data.redemptions.length > 0 ? (
@@ -739,7 +740,7 @@ function PartnerReport({ id, onClose }: Readonly<{ id: string; onClose: () => vo
         </Button>
       </div>
       <p className="m-0 max-w-[70ch] text-sm text-fg-secondary">{say("adminConfig.coupons.reportNote")}</p>
-      {data.data && data.data.rows.length === 0 ? (
+      {data.data?.rows.length === 0 ? (
         <p className="m-0 text-sm text-fg-secondary">{say("adminConfig.coupons.noRedemptions")}</p>
       ) : null}
       {data.data && data.data.rows.length > 0 ? (

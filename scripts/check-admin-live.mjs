@@ -41,7 +41,7 @@ const arg = (name, fallback) => {
 /** Signs the administrator in; a problem line when the gate or the landing is not what it should be, null when signed in. */
 async function signIn(page, { base, email, password, tag }) {
   const gate = await loadSettled(page, `${base}/en/sign-in`, { waitUntil: "networkidle" });
-  if (!gate || gate.status() !== 200)
+  if (gate?.status() !== 200)
     return `${tag}: the sign-in answers ${gate?.status()} — run this from an address of AUTH_ALLOWED_IPS`;
   await page.getByLabel("E-mail").fill(email);
   await page.getByLabel("Password").fill(password);
@@ -101,7 +101,7 @@ export async function walk({ base, email, password, shots }) {
       problems.push(...(await auditPage(page, { base, path, tag, errors })));
       if (shots) {
         mkdirSync(shots, { recursive: true });
-        await page.screenshot({ path: join(shots, `${tag}${(path || "/overview").replace(/\//g, "-")}.png`) });
+        await page.screenshot({ path: join(shots, `${tag}${(path || "/overview").replaceAll("/", "-")}.png`) });
       }
     }
     await context.close();

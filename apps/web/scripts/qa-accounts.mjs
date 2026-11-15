@@ -35,7 +35,7 @@ async function main() {
   url.searchParams.delete("sslmode");
   const client = new pg.Client({
     connectionString: url.toString(),
-    ...(tls ? { ssl: { ca: process.env.DATABASE_CA_CERT?.replace(/\\n/g, "\n"), rejectUnauthorized: true } } : {}),
+    ...(tls ? { ssl: { ca: process.env.DATABASE_CA_CERT?.replaceAll("\\n", "\n"), rejectUnauthorized: true } } : {}),
   });
   await client.connect();
   try {
@@ -53,8 +53,10 @@ async function main() {
 }
 
 if (import.meta.url === `file://${process.argv[1]}`) {
-  main().catch((error) => {
+  try {
+    await main();
+  } catch (error) {
     console.error(`qa-accounts: ${error.message}`);
     process.exit(1);
-  });
+  }
 }

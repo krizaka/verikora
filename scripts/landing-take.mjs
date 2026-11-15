@@ -325,7 +325,7 @@ const at = (name) => {
   if (t <= waitTo) return +(waitFrom + (t - waitFrom) / WAIT_SPEED).toFixed(2);
   return +(waitFrom + (waitTo - waitFrom) / WAIT_SPEED + (t - waitTo)).toFixed(2);
 };
-const fps = frames.length / (frames[frames.length - 1].at - frames[0].at);
+const fps = frames.length / (frames.at(-1).at - frames[0].at);
 if (fps < MIN_FPS)
   throw new Error(`the take was filmed at ${fps.toFixed(1)} fps (< ${MIN_FPS}): run it again on a quieter machine`);
 const evidence = {

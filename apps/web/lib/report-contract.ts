@@ -66,7 +66,7 @@ export function quoteIsIn(text: string, quote: string): boolean {
 
 const fold = (s: string) => s.normalize("NFD").replace(/\p{M}/gu, "").toLowerCase();
 
-const escape = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+const escape = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, String.raw`\$&`);
 
 /** Whether a refused word or phrase appears as whole words in a sentence (accents and case ignored). */
 export function containsWord(sentence: string, word: string): boolean {
