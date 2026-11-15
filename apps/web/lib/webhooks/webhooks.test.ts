@@ -1,7 +1,7 @@
+import { isPrivateAddress } from "@krizaka/storage/node";
 import { describe, expect, it } from "vitest";
 
 import type { BatchView } from "../batch/run";
-import { isPrivateAddress } from "@krizaka/storage/node";
 import { eventsOfFinishedBatch, WEBHOOK_EVENT } from "./events";
 import { sealer } from "./seal";
 import { safeSend } from "./send";

@@ -44,7 +44,7 @@ export const manifestKeyOf = (dump) => `${dump.slice(0, -DUMP_SUFFIX.length)}${M
 /** The backups among the listed objects, newest first; anything that is not ours (foreign names) is ignored and never deleted. */
 export function backupsIn(listed, environment) {
   const prefix = prefixOf(environment);
-  const own = new RegExp(`^${prefix}verikora-${environment}-(\\d{8}T\\d{6}Z)\\.dump\\.age$`);
+  const own = new RegExp(String.raw`^${prefix}verikora-${environment}-(\d{8}T\d{6}Z)\.dump\.age$`);
   return listed
     .map((o) => ({ key: o.key, size: o.size, at: dateOfStamp(own.exec(o.key)?.[1] ?? "") }))
     .filter((b) => b.at !== null)

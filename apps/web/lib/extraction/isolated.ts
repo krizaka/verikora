@@ -114,7 +114,7 @@ function endWorker(w: Warm | null) {
 }
 
 function workerFor(maxHeapMb: number, unpdf: string): Warm {
-  if (warm && warm.heapMb === maxHeapMb && warm.jobs < WARM.jobs) {
+  if (warm?.heapMb === maxHeapMb && warm.jobs < WARM.jobs) {
     return warm;
   }
   endWorker(warm);

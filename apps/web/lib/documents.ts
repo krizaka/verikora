@@ -32,11 +32,11 @@ import { personalInfo } from "./pii";
 import { createInspector } from "./preflight/inspector";
 import { type FileKind, OUTCOME, type PreflightRules, type RejectReason } from "./preflight/port";
 import { VERIKORA_RULES } from "./preflight/rules";
-import { DEV_TENANT } from "./tenant";
 import { EXTERNAL, legacyObjectKey, objectKey, purgeDeadline, storageFor } from "./retention";
 import { localStore } from "./storage/local";
 import type { DocumentStore, DocumentStoreDescriptor } from "./storage/port";
 import { storedAs } from "./storage/where";
+import { DEV_TENANT } from "./tenant";
 import { understanding } from "./understanding";
 
 interface DocumentRow {

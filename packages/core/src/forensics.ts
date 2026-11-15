@@ -90,7 +90,7 @@ const latin1 = (bytes: Uint8Array): string => new TextDecoder("latin1").decode(b
 
 function unescapeLiteral(raw: string): string {
   return raw.replace(/\\([nrtbf()\\]|[0-7]{1,3})/g, (_m, c: string) => {
-    if (/^[0-7]+$/.test(c)) return String.fromCharCode(Number.parseInt(c, 8));
+    if (/^[0-7]+$/.test(c)) return String.fromCodePoint(Number.parseInt(c, 8));
     return ({ n: "\n", r: "\r", t: "\t", b: "\b", f: "\f" } as Record<string, string>)[c] ?? c;
   });
 }
@@ -104,16 +104,16 @@ function decodeHex(hex: string): string {
   if (bytes[0] === 0xfe && bytes[1] === 0xff) {
     let out = "";
     for (let i = 2; i + 1 < bytes.length; i += 2)
-      out += String.fromCharCode(((bytes[i] ?? 0) << 8) | (bytes[i + 1] ?? 0));
+      out += String.fromCodePoint(((bytes[i] ?? 0) << 8) | (bytes[i + 1] ?? 0));
     return out;
   }
-  return String.fromCharCode(...bytes);
+  return String.fromCodePoint(...bytes);
 }
 
 /** Every value given to a name like /Producer, in file order (an incremental update appends its own after the first). */
 function stringValues(text: string, name: string): string[] {
   const out: { at: number; value: string }[] = [];
-  const re = new RegExp(`/${name}\\s*(?:\\(((?:\\\\.|[^\\\\)])*)\\)|<([0-9A-Fa-f\\s]*)>)`, "g");
+  const re = new RegExp(String.raw`/${name}\s*(?:\(((?:\\.|[^\\)])*)\)|<([0-9A-Fa-f\s]*)>)`, "g");
   for (let m = re.exec(text); m; m = re.exec(text)) {
     out.push({ at: m.index, value: (m[1] === undefined ? decodeHex(m[2] ?? "") : unescapeLiteral(m[1])).trim() });
   }

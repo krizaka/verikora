@@ -19,9 +19,9 @@ const arg = (name, fallback) => {
 
 /** Records, from the first moment of the document, whether the header ever held a link to the sign-in page. */
 export const watchSignInLink = () => {
-  window.__sawSignIn = false;
+  globalThis.__sawSignIn = false;
   const look = () => {
-    if (document.querySelector('header a[href$="/sign-in"], nav a[href$="/sign-in"]')) window.__sawSignIn = true;
+    if (document.querySelector('header a[href$="/sign-in"], nav a[href$="/sign-in"]')) globalThis.__sawSignIn = true;
   };
   new MutationObserver(look).observe(document, { childList: true, subtree: true });
   document.addEventListener("DOMContentLoaded", look);
@@ -71,7 +71,7 @@ export async function check({ base, locale = "fr", email, password }) {
         timeout: 15_000,
       })
       .catch(() => {});
-    if (await page.evaluate(() => window.__sawSignIn))
+    if (await page.evaluate(() => globalThis.__sawSignIn))
       problems.push(`/${locale}/terms signed in: the bar drew « Sign in » for an instant`);
     await context.close();
   } finally {

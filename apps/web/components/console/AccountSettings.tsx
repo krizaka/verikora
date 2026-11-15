@@ -203,17 +203,17 @@ export function BillingActions({
   return (
     <div className="flex flex-wrap items-center gap-3">
       {free ? (
-        <>
-          <Button
-            size="md"
-            variant="primary"
-            shape="cut"
-            loading={buy.pending}
-            onClick={() => buy.go("document", () => undefined)}
-          >
-            {say("paywall.payOne")}
-          </Button>
-        </>
+        <Button
+          size="md"
+          variant="primary"
+          shape="cut"
+          loading={buy.pending}
+          onClick={() => {
+            void buy.go("document", () => undefined);
+          }}
+        >
+          {say("paywall.payOne")}
+        </Button>
       ) : null}
       {e?.hasCustomer ? (
         <Button size="md" variant="ghost" loading={portal.pending} onClick={() => portal.go(null, () => undefined)}>

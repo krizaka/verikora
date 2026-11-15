@@ -10,7 +10,7 @@ import type { WorkspaceDecl } from "@krizaka/organize";
 export const KIND = { applicantFile: "applicant_file", document: "document" } as const;
 export type Kind = (typeof KIND)[keyof typeof KIND];
 export const KINDS: readonly Kind[] = Object.values(KIND);
-export const isKind = (value: unknown): value is Kind => KINDS.some((k) => k === value);
+export const isKind = (value: unknown): value is Kind => KINDS.includes(value as Kind);
 
 /** The role of the account that owns the workspace. There is one today; an organisation's members come with verikora#126. */
 export const OWNER_ROLE = "owner";

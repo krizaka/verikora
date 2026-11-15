@@ -23,7 +23,7 @@ function seedClock() {
   return frozen ? new Date(frozen) : new Date();
 }
 
-const LOCAL_HOSTS = ["localhost", "127.0.0.1", "::1", "[::1]", "postgres", "db"];
+const LOCAL_HOSTS = new Set(["localhost", "127.0.0.1", "::1", "[::1]", "postgres", "db"]);
 
 /** The whole cast on the database; with --check, compared to the recorded fingerprint (exact on a local database, « all there » on dev). */
 async function runCast(client, url, { messagesByLocale, locale }) {
@@ -42,7 +42,7 @@ async function runCast(client, url, { messagesByLocale, locale }) {
   console.log(`fingerprint: ${run.fingerprint}`);
   if (!process.argv.includes("--check")) return;
   const expected = JSON.parse(readFileSync(new URL("./fingerprint.json", import.meta.url), "utf8")).fingerprint;
-  const exact = LOCAL_HOSTS.includes(url.hostname);
+  const exact = LOCAL_HOSTS.has(url.hostname);
   if (!matchesRecorded(run.fingerprint, expected, exact))
     throw new Error(
       `the seeded data differs from the recorded fingerprint\n  expected ${expected}\n  got      ${run.fingerprint}`,
@@ -53,6 +53,9 @@ async function runCast(client, url, { messagesByLocale, locale }) {
       : "fingerprint: everything recorded is there (this database is lived in: counts may exceed it)",
   );
 }
+
+/** The cluster's CA from the environment, its escaped newlines restored. */
+const caCert = () => process.env.DATABASE_CA_CERT?.replaceAll(String.raw`\n`, "\n");
 
 async function main() {
   assertNotProduction(process.env);
@@ -69,7 +72,7 @@ async function main() {
   url.searchParams.delete("sslmode");
   const client = new pg.Client({
     connectionString: url.toString(),
-    ...(tls ? { ssl: { ca: process.env.DATABASE_CA_CERT?.replace(/\\n/g, "\n"), rejectUnauthorized: true } } : {}),
+    ...(tls ? { ssl: { ca: caCert(), rejectUnauthorized: true } } : {}),
   });
   const messagesByLocale = Object.fromEntries(
     ["fr", "en"].map((l) => [
@@ -104,7 +107,9 @@ async function main() {
   }
 }
 
-main().catch((error) => {
+try {
+  await main();
+} catch (error) {
   console.error(`demo:seed: ${error.message}`);
   process.exit(1);
-});
+}

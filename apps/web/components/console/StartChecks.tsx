@@ -251,7 +251,7 @@ function ComplianceBody({ doc, offer, running }: Readonly<Pick<StartProps, "doc"
 }
 
 /** What starting one check holds: the compliance form (the kind declared and the one Verikora read select the ruleset, ADR-089; a mismatch is shown and confirmed in the form) or the authenticity form — or why it cannot run. */
-function StartBody({ studio, doc, offer, examinable, running }: StartProps & { studio: Studio }) {
+function StartBody({ studio, doc, offer, examinable, running }: Omit<StartProps, "perspective"> & { studio: Studio }) {
   if (studio === "document-authenticity")
     return <AuthenticityBody doc={doc} examinable={examinable} running={running} />;
   return <ComplianceBody doc={doc} offer={offer} running={running} />;
@@ -270,7 +270,13 @@ export function StartCards(props: Readonly<StartProps>) {
       {startableStudios(props.perspective, props.doc, props.offer.studios).map((studio) => (
         <Card.Root key={studio} className="p-4">
           <h3 className="mb-2 font-display text-base font-bold text-fg">{say(TITLE[studio])}</h3>
-          <StartBody {...props} studio={studio} />
+          <StartBody
+            doc={props.doc}
+            offer={props.offer}
+            examinable={props.examinable}
+            running={props.running}
+            studio={studio}
+          />
         </Card.Root>
       ))}
     </>
@@ -306,7 +312,13 @@ export function StartCheckActions({ done, ...props }: StartProps & { done: reado
               <Dialog.Title>{label(studio)}</Dialog.Title>
             </Dialog.Header>
             <Dialog.Body>
-              <StartBody {...props} studio={studio} />
+              <StartBody
+                doc={props.doc}
+                offer={props.offer}
+                examinable={props.examinable}
+                running={props.running}
+                studio={studio}
+              />
             </Dialog.Body>
           </Dialog.Content>
         </Dialog.Root>

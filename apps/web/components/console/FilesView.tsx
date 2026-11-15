@@ -401,7 +401,7 @@ function Binder({ workspace, base }: Readonly<{ workspace: FilesWorkspace; base:
   const { say, locale } = useSay();
   const { plan, counts } = workspace;
   // `Tabs.Nav` marks a tab active when the link's parameters are in the route: « Tous » is `status=` (none), a state `status=<key>`.
-  const current = `${base}?status=${plan.activeState === null ? "" : plan.activeState}`;
+  const current = `${base}?status=${plan.activeState ?? ""}`;
   return (
     <div className="flex flex-col gap-3" data-testid="binder">
       <Tabs.Nav label={say("dossiers.binder.label")} current={current} variant="binder">

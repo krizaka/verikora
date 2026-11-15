@@ -1,5 +1,5 @@
-import { AVAILABILITY } from "@krizaka/settings";
 import { type Catalogue, ensureCatalogue, type SetupResult, type StripeCall } from "@krizaka/payments";
+import { AVAILABILITY } from "@krizaka/settings";
 
 import { PRODUCT_NAME } from "@/lib/brand";
 

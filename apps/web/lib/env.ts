@@ -3,8 +3,8 @@ import { STORAGE_KIND, STORAGE_PROVIDERS } from "@verikora/core";
 import { z } from "zod";
 
 import { transferProblems, type TransferRegister } from "./privacy/transfers";
-import { DEV_TENANT, TENANT_ID } from "./tenant";
 import { parseSigningKey } from "./report-key";
+import { DEV_TENANT, TENANT_ID } from "./tenant";
 
 /**
  * Every environment variable of the app, declared once (named by bounded context — APP_, DATABASE_, AUTH_, ABUSE_, AI_ —

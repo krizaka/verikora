@@ -122,7 +122,7 @@ async function upload(kind, file) {
   await page.locator("input[type=file]").setInputFiles(path.join(docs, file));
   await page
     .locator('a[href*="/app/documents/"]')
-    .filter({ hasText: file.replace(/\.txt$/, "").replace(/-/g, " ") })
+    .filter({ hasText: file.replace(/\.txt$/, "").replaceAll("-", " ") })
     .first()
     .waitFor({ timeout: 30_000 });
   await hold(900);
@@ -130,7 +130,7 @@ async function upload(kind, file) {
 async function openDoc(file) {
   await page
     .locator('a[href*="/app/documents/"]')
-    .filter({ hasText: file.replace(/\.txt$/, "").replace(/-/g, " ") })
+    .filter({ hasText: file.replace(/\.txt$/, "").replaceAll("-", " ") })
     .first()
     .click();
   await page.waitForURL(/\/app\/documents\//);
@@ -138,7 +138,7 @@ async function openDoc(file) {
 }
 /** Runs the check and waits for Sovkora's report (its ruleset line appears with the findings). */
 async function check(type, ruleset, announce = false) {
-  const seen = (re) => (document.body.innerText.match(new RegExp(re, "g")) ?? []).length;
+  const seen = (re) => [...document.body.innerText.matchAll(new RegExp(re, "g"))].length;
   const marker = JSON.stringify(`${ruleset} ·`);
   const before = await page.evaluate(`(${seen.toString()})(${marker})`);
   const form = page.locator("form[aria-label]").first();
@@ -149,7 +149,7 @@ async function check(type, ruleset, announce = false) {
   if (announce) take.beat("running");
   const done = take.fast(8);
   await page.waitForFunction(
-    ([re, n]) => (document.body.innerText.match(new RegExp(re, "g")) ?? []).length > n,
+    ([re, n]) => [...document.body.innerText.matchAll(new RegExp(re, "g"))].length > n,
     [`${ruleset} ·`, before],
     { timeout: 240_000 },
   );

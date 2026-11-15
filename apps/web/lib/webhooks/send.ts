@@ -1,9 +1,8 @@
 import dns from "node:dns";
 import https from "node:https";
 
-import type { OutgoingRequest, Send } from "@krizaka/webhooks";
-
 import { isPrivateAddress } from "@krizaka/storage/node";
+import type { OutgoingRequest, Send } from "@krizaka/webhooks";
 
 /**
  * The HTTP call of a webhook (verikora#241): https only, no redirect followed, a short timeout, and the connection is made to an

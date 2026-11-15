@@ -27,10 +27,11 @@ type Listing = Awaited<ReturnType<typeof verikoraNative.listDocuments>>;
 
 /** Whether the folder on screen is watched, kept in step with the folder shown. */
 function useWatched(folder: string | null) {
-  const [chosen, choose] = useState<{ folder: string | null; on: boolean } | null>(null);
+  const [chosen, setChosen] = useState<{ folder: string | null; on: boolean } | null>(null);
   // A choice made on one folder never carries to the next: the state is read for the folder shown, else from the store.
-  const watched = chosen && chosen.folder === folder ? chosen.on : folder ? inbox.isWatched(folder) : false;
-  const setWatched = useCallback((on: boolean) => choose({ folder, on }), [folder]);
+  const stored = folder ? inbox.isWatched(folder) : false;
+  const watched = chosen?.folder === folder ? chosen.on : stored;
+  const setWatched = useCallback((on: boolean) => setChosen({ folder, on }), [folder]);
   return [watched, setWatched] as const;
 }
 

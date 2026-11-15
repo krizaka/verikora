@@ -21,7 +21,7 @@ export const OFFER = {
 
 /** `date` plus `months` calendar months, in UTC (the 31st of a short month lands on its last day). */
 export function addMonths(date, months) {
-  const d = new Date(date.getTime());
+  const d = new Date(date);
   const day = d.getUTCDate();
   d.setUTCDate(1);
   d.setUTCMonth(d.getUTCMonth() + months);

@@ -12,5 +12,5 @@ printf '{"identities":[{"name":"ci","credentials":[{"accessKey":"%s","secretKey"
 docker run -d --name "$NAME" -p 8333:8333 -v "$DIR/s3.json:/etc/s3.json:ro" chrislusf/seaweedfs@sha256:4e61d15fd35994cb1e43e1e553dff106794841fd9a99ade2fc8c8bfce4d7872d server -s3 -s3.config=/etc/s3.json -dir=/data >/dev/null
 for _ in $(seq 1 60); do curl -s -o /dev/null http://localhost:8333/ && break; sleep 1; done
 code=$(curl -s -o /dev/null -w '%{http_code}' --aws-sigv4 "aws:amz:us-east-1:s3" --user "$USER_NAME:$PASS" -X PUT "http://localhost:8333/$BUCKET")
-[ "$code" = 200 ] || { docker logs "$NAME" | tail -20; echo "bucket creation answered $code"; exit 1; }
+[[ "$code" = 200 ]] || { docker logs "$NAME" | tail -20; echo "bucket creation answered $code"; exit 1; }
 echo "s3 ready: http://localhost:8333 bucket $BUCKET"

@@ -147,7 +147,7 @@ function CloudPanel({
   const go = async (cloud: string) => {
     setProblem(null);
     try {
-      window.location.assign((await connect.mutateAsync(cloud)).url);
+      globalThis.location.assign((await connect.mutateAsync(cloud)).url);
     } catch (error) {
       setProblem(say(`errors.${errorKey(error)}`));
     }

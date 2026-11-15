@@ -18,6 +18,6 @@ export function seededRandom(seed) {
 /** A stable 32-bit hash of a string (FNV-1a): the seed of one document is the run's seed mixed with its id. */
 export function hashSeed(text) {
   let h = 0x811c9dc5;
-  for (let i = 0; i < text.length; i++) h = Math.imul(h ^ text.charCodeAt(i), 0x01000193) >>> 0;
+  for (let i = 0; i < text.length; i++) h = Math.imul(h ^ text.codePointAt(i), 0x01000193) >>> 0;
   return h;
 }
