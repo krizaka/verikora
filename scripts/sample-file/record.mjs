@@ -6,7 +6,7 @@ import { join } from "node:path";
 import { localDay } from "@krizaka/intl";
 
 import { OUT } from "./build.mjs";
-import { sovkoraCall } from "../lib/sovkora-recording.mjs";
+import { sovkoraClient } from "../lib/sovkora-recording.mjs";
 import { DOCUMENTS } from "./documents.mjs";
 
 const LAW_TIME_ZONE = "America/Toronto"; // lib/rulesets.ts: the calendar day of the law
@@ -20,7 +20,7 @@ export async function recordSampleRun({ key = process.env.AI_API_KEY } = {}) {
   if (!key)
     throw new Error("AI_API_KEY is not set — without it, the recorded run in fixtures/sample-file is used as it is");
   const root = SOVKORA_DEV;
-  const call = sovkoraCall(root, key);
+  const { call } = sovkoraClient({ AI_API_URL: root, AI_API_KEY: key });
   const installed = await call("/api/v1/studios/installations");
   if (!installed.some((i) => i.studioKey === STUDIO))
     await call(`/api/v1/studios/${STUDIO}/installations?locale=en`, { method: "POST", body: { config: {} } });

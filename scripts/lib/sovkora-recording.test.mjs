@@ -1,6 +1,6 @@
 import { afterEach, expect, test, vi } from "vitest";
 
-import { runToEnd, sovkoraCall, sovkoraClient, sovkoraRoot } from "./sovkora-recording.mjs";
+import { runToEnd, sovkoraClient, sovkoraRoot } from "./sovkora-recording.mjs";
 
 afterEach(() => vi.unstubAllGlobals());
 
@@ -23,7 +23,7 @@ test("the client needs the key and defaults to the dev engine", () => {
 test("a call sends the bearer key and the JSON body to a Studio path; another path is refused before any request", async () => {
   const fetchMock = vi.fn(async () => answer({ ok: 1 }));
   vi.stubGlobal("fetch", fetchMock);
-  const call = sovkoraCall("https://dev.sovkora.com/edge", "k");
+  const call = sovkoraClient({ AI_API_KEY: "k" }).call;
   await expect(call("/api/v1/studios/compliance-check/runs", { method: "POST", body: { a: 1 } })).resolves.toEqual({
     ok: 1,
   });
@@ -38,7 +38,7 @@ test("a call sends the bearer key and the JSON body to a Studio path; another pa
 
 test("a refusal names the status and the path without its query", async () => {
   vi.stubGlobal("fetch", async () => answer({}, false, 403));
-  await expect(sovkoraCall("https://dev.sovkora.com/edge", "k")("/api/v1/studios/installations?x=1")).rejects.toThrow(
+  await expect(sovkoraClient({ AI_API_KEY: "k" }).call("/api/v1/studios/installations?x=1")).rejects.toThrow(
     "Sovkora answered 403 on GET /api/v1/studios/installations",
   );
 });

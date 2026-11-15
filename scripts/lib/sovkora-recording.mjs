@@ -14,7 +14,7 @@ export function sovkoraRoot(address) {
 }
 
 /** `call(path, init)` against a Studio API at `root` with a bearer key: the parsed JSON, a refusal when the answer is not ok. */
-export const sovkoraCall =
+const sovkoraCall =
   (root, key) =>
   async (path, init = {}) => {
     if (!STUDIO_PATH.test(path) || path.includes("..")) throw new Error(`not a Studio path: ${path.split("?")[0]}`);
