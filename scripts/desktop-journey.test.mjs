@@ -2,7 +2,16 @@ import assert from "node:assert/strict";
 import { existsSync, readFileSync } from "node:fs";
 import { describe, it } from "vitest";
 
-import { client, elementId, IDENTIFIER, libraryHash, scopeFile, scopeJson, THEME_KEY, until } from "./desktop-journey-lib.mjs";
+import {
+  client,
+  elementId,
+  IDENTIFIER,
+  libraryHash,
+  scopeFile,
+  scopeJson,
+  THEME_KEY,
+  until,
+} from "./desktop-journey-lib.mjs";
 
 const read = (path) => readFileSync(new URL(path, import.meta.url), "utf8");
 const code = (source) => source.replace(/^\s*#.*$/gm, "");
