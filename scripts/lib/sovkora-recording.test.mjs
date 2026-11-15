@@ -28,7 +28,7 @@ test("a call sends the bearer key and the JSON body to a Studio path; another pa
     ok: 1,
   });
   const [url, init] = fetchMock.mock.calls[0];
-  expect(url).toBe("https://dev.sovkora.com/edge/api/v1/studios/compliance-check/runs");
+  expect(String(url)).toBe("https://dev.sovkora.com/edge/api/v1/studios/compliance-check/runs");
   expect(init).toMatchObject({ method: "POST", body: '{"a":1}' });
   expect(init.headers).toMatchObject({ authorization: "Bearer k", "content-type": "application/json" });
   await expect(call("/api/v1/studios/../admin")).rejects.toThrow("not a Studio path");

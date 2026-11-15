@@ -18,7 +18,9 @@ const sovkoraCall =
   (root, key) =>
   async (path, init = {}) => {
     if (!STUDIO_PATH.test(path) || path.includes("..")) throw new Error(`not a Studio path: ${path.split("?")[0]}`);
-    const res = await fetch(`${sovkoraRoot(root)}${path}`, {
+    const url = new URL(`${sovkoraRoot(root)}${path}`);
+    if (url.origin !== new URL(root).origin) throw new Error("the recording only goes to Sovkora's engine");
+    const res = await fetch(url, {
       method: init.method ?? "GET",
       headers: {
         authorization: `Bearer ${key}`,
