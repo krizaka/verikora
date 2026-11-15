@@ -43,6 +43,8 @@ jobs:
         env:
           GH_TOKEN: ${{ steps.app.outputs.token }}
           DRY_RUN: ${{ github.event_name == 'workflow_dispatch' && inputs.dry-run }}
+          # The backup jobs are new components: their database and vault secrets are the web service's live ones (same app, same dev values).
+          SHARE: DATABASE_URL,DATABASE_CA_CERT,MEDIA_VAULT_KEY
         run: |
-          gh workflow run deploy-spec-apply.yml -R krizaka/.github --ref main -f app=verikora-dev -f dry-run="$DRY_RUN"
+          gh workflow run deploy-spec-apply.yml -R krizaka/.github --ref main -f app=verikora-dev -f dry-run="$DRY_RUN" -f share-secret="$SHARE"
           echo "deploy-spec-apply started for verikora-dev (dry run: $DRY_RUN): https://github.com/krizaka/.github/actions/workflows/deploy-spec-apply.yml"
