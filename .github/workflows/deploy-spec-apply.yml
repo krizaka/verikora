@@ -1,0 +1,48 @@
+# A merged change of the App Platform spec reaches verikora-dev through CI (krizaka-internal#3879): this dispatches the
+# deploy-spec-apply workflow of krizaka/.github, which reads the target from its registry (deploy/apps.json), prints the diff
+# (keys only), applies the spec (the live secrets kept), rebuilds main and waits for ACTIVE. The DigitalOcean write token stays in
+# the `dev` environment of krizaka/.github; this job holds only an App token that may start that one workflow.
+name: Apply the merged App Platform spec
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - deploy/digitalocean/dev.app.yaml
+      - .krizaka-deploy.json
+  workflow_dispatch:
+    inputs:
+      dry-run:
+        description: "Only print what the apply would change."
+        type: boolean
+        default: true
+
+permissions: {}
+
+concurrency:
+  group: deploy-spec-apply
+  cancel-in-progress: false
+
+jobs:
+  dispatch:
+    name: Dispatch deploy-spec-apply for verikora-dev
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions: {}
+    steps:
+      - id: app
+        uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
+        with:
+          app-id: ${{ vars.RELEASE_APP_ID }}
+          private-key: ${{ secrets.RELEASE_APP_PRIVATE_KEY }}
+          owner: krizaka
+          repositories: .github
+          permission-actions: write
+
+      - name: Dispatch
+        env:
+          GH_TOKEN: ${{ steps.app.outputs.token }}
+          DRY_RUN: ${{ github.event_name == 'workflow_dispatch' && inputs.dry-run }}
+        run: |
+          gh workflow run deploy-spec-apply.yml -R krizaka/.github --ref main -f app=verikora-dev -f dry-run="$DRY_RUN"
+          echo "deploy-spec-apply started for verikora-dev (dry run: $DRY_RUN): https://github.com/krizaka/.github/actions/workflows/deploy-spec-apply.yml"
