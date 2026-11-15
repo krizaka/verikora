@@ -3,6 +3,7 @@
   "url": "https://dev.verikora.com",
   "health": "/api/healthz",
   "indexing": "on",
+  "liveIndexing": "off",
   "spec": "deploy/digitalocean/dev.app.yaml",
   "product": "verikora"
 }

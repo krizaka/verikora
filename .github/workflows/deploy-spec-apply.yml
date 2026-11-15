@@ -43,6 +43,9 @@ jobs:
         env:
           GH_TOKEN: ${{ steps.app.outputs.token }}
           DRY_RUN: ${{ github.event_name == 'workflow_dispatch' && inputs.dry-run }}
+          # The web service only: the backup jobs of the spec are « written, not applied » until the founder applies them
+          # (their BACKUP_AGE_RECIPIENT is in no vault, krizaka-internal#3879). Empty this once they run.
+          ONLY: services/web
         run: |
-          gh workflow run deploy-spec-apply.yml -R krizaka/.github --ref main -f app=verikora-dev -f dry-run="$DRY_RUN"
+          gh workflow run deploy-spec-apply.yml -R krizaka/.github --ref main -f app=verikora-dev -f dry-run="$DRY_RUN" -f only="$ONLY"
           echo "deploy-spec-apply started for verikora-dev (dry run: $DRY_RUN): https://github.com/krizaka/.github/actions/workflows/deploy-spec-apply.yml"
