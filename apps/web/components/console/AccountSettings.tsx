@@ -208,7 +208,9 @@ export function BillingActions({
           variant="primary"
           shape="cut"
           loading={buy.pending}
-          onClick={() => buy.go("document", () => undefined)}
+          onClick={() => {
+            void buy.go("document", () => undefined);
+          }}
         >
           {say("paywall.payOne")}
         </Button>
