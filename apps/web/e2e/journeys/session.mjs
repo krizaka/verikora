@@ -25,13 +25,19 @@ const CAST = {
  * scripts/ci-visual-start.sh; without DATABASE_URL the journey fails, it never runs on a stale state.
  */
 export async function resetToNewAccount(id) {
+  await setPerspective(id, null);
+}
+
+/** Sets the side (`accounts.perspective`) of a seeded persona: a journey about roles states the role it signs in with. */
+export async function setPerspective(id, perspective) {
   const url = process.env.DATABASE_URL;
   if (!url) throw new Error("DATABASE_URL is required: the first-run journey resets its account before each test");
   const client = new pg.Client({ connectionString: url });
   await client.connect();
   try {
-    const { rowCount } = await client.query("UPDATE accounts SET perspective = NULL WHERE email = $1", [
+    const { rowCount } = await client.query("UPDATE accounts SET perspective = $2 WHERE email = $1", [
       seededPersona(CAST, id).email,
+      perspective,
     ]);
     if (rowCount !== 1) throw new Error(`the seeded persona ${id} is not in the database`);
   } finally {

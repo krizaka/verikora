@@ -1,3 +1,4 @@
+import { localDay } from "@krizaka/intl";
 import type { Metadata } from "next";
 import { notFound, permanentRedirect } from "next/navigation";
 
@@ -9,7 +10,9 @@ import { isDocumentTab, movedDocumentHref, searchOf } from "@/lib/console-nav";
 import { query } from "@/lib/db";
 import { documentStorage, getDocument } from "@/lib/documents";
 import { appEnvironment } from "@/lib/env";
-import { availableFlows, offerFor } from "@/lib/flows";
+import { rolesByKind } from "@/lib/check-offer";
+import { availableFlows, offerFor, rolesOffering } from "@/lib/flows";
+import { LAW_TIME_ZONE } from "@/lib/rulesets";
 import { HttpError } from "@/lib/http";
 import { asLocale, getDictionary } from "@/lib/i18n";
 import { leaseBundle } from "@/lib/lease-bundle";
@@ -65,6 +68,8 @@ export default async function DocumentTabPage({
     tab === "rapport" && document.insight
       ? await registryReport(document.insight.understanding, registries(systemClock), systemClock.now())
       : null;
+  const flows = await availableFlows(appEnvironment());
+  const today = localDay(systemClock.now(), LAW_TIME_ZONE);
   return (
     <DocumentView
       initial={document}
@@ -74,7 +79,10 @@ export default async function DocumentTabPage({
       place={await placeOf(query, session.account.id, id)}
       perspective={session.account.perspective}
       answers={Object.fromEntries((await answersOf([id])).get(id) ?? [])}
-      offer={offerFor(await availableFlows(appEnvironment()), session.account.perspective)}
+      offer={{
+        ...offerFor(flows, session.account.perspective),
+        rolesByKind: rolesByKind((ruleset) => rolesOffering(flows, ruleset), today),
+      }}
     />
   );
 }

@@ -111,7 +111,8 @@ export const SEED_FLOWS: readonly SeedFlow[] = [
         fr: "Une facture reçue au regard des mentions obligatoires du Québec et du format des numéros de TPS et de TVQ, et le PDF examiné. Les règles des contrats de fournisseurs arrivent.",
       },
       status: "available",
-      audiences: ["business"],
+      // A landlord receives supplier invoices too (maintenance, snow removal, repairs): the role orders the catalogue, it never hides them.
+      audiences: ["landlord", "business"],
       steps: [INVOICE, AUTHENTICITY],
       consents: [],
       providers: [],

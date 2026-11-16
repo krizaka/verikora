@@ -36,6 +36,11 @@ describe("the seeded flows", () => {
       ["BE-WAL", "be-residential-lease"],
     ]);
   });
+  it("offers the Québec invoice check to the landlord, never to the tenant", () => {
+    const flows = seedFlows("dev");
+    expect(offerFor(flows, "landlord").rulesets).toContain("qc-invoice");
+    expect(offerFor(flows, "tenant").rulesets).not.toContain("qc-invoice");
+  });
   it("run the Québec invoice check for the freelancer and the business flows (dev only); only the screening stays « soon »", () => {
     expect(SEED_FLOWS.filter((s) => s.definition.status === "soon").map((s) => s.key)).toEqual(["tenant-screening"]);
     for (const [key, rulesets] of [

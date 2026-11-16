@@ -19,6 +19,7 @@ import { SEED_FLOWS } from "./flows-seed";
 import { refuse } from "./http";
 import { logError } from "./log";
 import { accountSubject, consentsFor } from "./privacy";
+import { rulesetId } from "./rulesets";
 
 /**
  * Flows are data (ADR-0003): defined and administered in the database by the platform administrator, read by the app. This
@@ -101,6 +102,14 @@ export function audiencesOf(flows: readonly AvailableFlow[]): { audience: Audien
 export const flowsFor = (flows: readonly AvailableFlow[], audience: Audience | null): AvailableFlow[] =>
   audience ? flows.filter((f) => f.definition.audiences.includes(audience)) : [...flows];
 
+const runsRuleset = (flow: AvailableFlow, ruleset: string): boolean =>
+  flow.definition.status === FLOW_STATUS.available &&
+  flow.definition.steps.some((s) => s.kind === STEP_KIND.studio && s.jurisdictions.some((j) => j.ruleset === ruleset));
+
+/** The roles whose flows run a ruleset, in the vocabulary's order — what « this check is not offered on your account » points to. */
+export const rolesOffering = (flows: readonly AvailableFlow[], ruleset: string): Audience[] =>
+  AUDIENCES.filter((audience) => flowsFor(flows, audience).some((f) => runsRuleset(f, ruleset)));
+
 /** The flow that carries the applicant files (verikora#127: a screening row of flow « file »). */
 export const APPLICANT_FILE_FLOW = "tenant-screening";
 
@@ -171,7 +180,7 @@ export async function revokeConsent(
  * be granted. Returns the flow to run under, or the refusal (the route turns it into a 403 with a stable code).
  */
 /** A dated ruleset (`qc-residential-lease/2026-10-24`) runs under the flow that names its ruleset (`qc-residential-lease`). */
-export const rulesetId = (ruleset: string): string => ruleset.split("/")[0] ?? ruleset;
+export { rulesetId };
 
 export function decideStart(
   flows: readonly AvailableFlow[],
