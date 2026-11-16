@@ -6,66 +6,66 @@
       "platform": "android",
       "flow": "documents-en",
       "seconds": 5.7,
-      "capturedAt": "2026-11-15T12:56:52.433Z",
+      "capturedAt": "2026-11-16T13:53:39.886Z",
       "files": {
-        "webm": "sites/verikora/download/android-documents-en.9369c0a59f.webm",
-        "mp4": "sites/verikora/download/android-documents-en.78a43bd902.mp4",
-        "poster": "sites/verikora/download/android-documents-en.0bd3acc6e1.jpg"
+        "webm": "sites/verikora/download/android-documents-en.0df506e4b2.webm",
+        "mp4": "sites/verikora/download/android-documents-en.6c6533f3e0.mp4",
+        "poster": "sites/verikora/download/android-documents-en.a4d597732b.jpg"
       }
     },
     {
       "platform": "mac",
       "flow": "library-fr",
-      "seconds": 6,
-      "capturedAt": "2026-11-15T12:56:56.990Z",
+      "seconds": 6.5,
+      "capturedAt": "2026-11-16T13:53:43.672Z",
       "files": {
-        "webm": "sites/verikora/download/mac-library-fr.42db76c639.webm",
-        "mp4": "sites/verikora/download/mac-library-fr.97a07edd57.mp4",
-        "poster": "sites/verikora/download/mac-library-fr.dafcf3bbee.jpg"
+        "webm": "sites/verikora/download/mac-library-fr.1bdb685dcb.webm",
+        "mp4": "sites/verikora/download/mac-library-fr.371ca649b4.mp4",
+        "poster": "sites/verikora/download/mac-library-fr.ddb92b159c.jpg"
       }
     },
     {
       "platform": "web",
       "flow": "binder-en",
-      "seconds": 4.6,
-      "capturedAt": "2026-11-15T12:56:30.178Z",
+      "seconds": 4.5,
+      "capturedAt": "2026-11-16T13:53:21.093Z",
       "files": {
-        "webm": "sites/verikora/download/web-binder-en.b36d9e7070.webm",
-        "mp4": "sites/verikora/download/web-binder-en.85091cbc1a.mp4",
-        "poster": "sites/verikora/download/web-binder-en.5241b22f1c.jpg"
+        "webm": "sites/verikora/download/web-binder-en.98476f3700.webm",
+        "mp4": "sites/verikora/download/web-binder-en.2fd96981a2.mp4",
+        "poster": "sites/verikora/download/web-binder-en.be71e1da9b.jpg"
       }
     },
     {
       "platform": "web",
       "flow": "binder-fr",
-      "seconds": 4.8,
-      "capturedAt": "2026-11-15T12:56:35.478Z",
+      "seconds": 5.1,
+      "capturedAt": "2026-11-16T13:53:25.709Z",
       "files": {
-        "webm": "sites/verikora/download/web-binder-fr.ca189db697.webm",
-        "mp4": "sites/verikora/download/web-binder-fr.4ce79448b8.mp4",
-        "poster": "sites/verikora/download/web-binder-fr.fec040c344.jpg"
+        "webm": "sites/verikora/download/web-binder-fr.cf5072788b.webm",
+        "mp4": "sites/verikora/download/web-binder-fr.2315a52f89.mp4",
+        "poster": "sites/verikora/download/web-binder-fr.2cbb4574c6.jpg"
       }
     },
     {
       "platform": "web",
       "flow": "report-en",
-      "seconds": 3,
-      "capturedAt": "2026-11-15T12:56:38.597Z",
+      "seconds": 2.7,
+      "capturedAt": "2026-11-16T13:53:28.732Z",
       "files": {
-        "webm": "sites/verikora/download/web-report-en.30703673ab.webm",
-        "mp4": "sites/verikora/download/web-report-en.97913ff994.mp4",
-        "poster": "sites/verikora/download/web-report-en.63aa2c275c.jpg"
+        "webm": "sites/verikora/download/web-report-en.237bdfab1e.webm",
+        "mp4": "sites/verikora/download/web-report-en.afdd1a418c.mp4",
+        "poster": "sites/verikora/download/web-report-en.db2828a314.jpg"
       }
     },
     {
       "platform": "web",
       "flow": "report-fr",
-      "seconds": 3.1,
-      "capturedAt": "2026-11-15T12:56:42.702Z",
+      "seconds": 2.7,
+      "capturedAt": "2026-11-16T13:53:31.943Z",
       "files": {
-        "webm": "sites/verikora/download/web-report-fr.0fc307291c.webm",
-        "mp4": "sites/verikora/download/web-report-fr.4985113e9a.mp4",
-        "poster": "sites/verikora/download/web-report-fr.72a6f9c0a5.jpg"
+        "webm": "sites/verikora/download/web-report-fr.3ea674bd6e.webm",
+        "mp4": "sites/verikora/download/web-report-fr.28265b7baa.mp4",
+        "poster": "sites/verikora/download/web-report-fr.bc638874e0.jpg"
       }
     }
   ]
