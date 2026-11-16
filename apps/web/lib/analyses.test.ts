@@ -130,7 +130,7 @@ describe("reports", () => {
       },
     ],
   };
-  it("asks for attention on a failed blocking rule or an incoherent signal — never on its own judgement", () => {
+  it("asks for attention on a failed rule or an incoherent signal — never on its own judgement", () => {
     expect(needsAttention(compliance)).toBe(true);
     expect(needsAttention({ ...compliance, findings: [{ ...compliance.findings[0]!, verdict: "PASS" }] })).toBe(false);
     expect(needsAttention({ signals: [{ signalId: "PDF-META-002", level: "incohérent", observation: "…" }] })).toBe(
@@ -138,6 +138,15 @@ describe("reports", () => {
     );
     expect(needsAttention({ signals: [{ signalId: "PDF-META-001", level: "observé", observation: "…" }] })).toBe(false);
     expect(needsAttention(null)).toBe(false);
+  });
+  // krizaka-internal#3982: the page said « À regarder · 4 règles » under a « Vérifié » header, because only a blocking failure counted.
+  it("asks for attention on any failed rule, whatever its severity — the header never says « Vérifié » over open findings", () => {
+    const failed = (severity: "MAJOR" | "ADVISORY") => ({
+      ...compliance,
+      findings: [{ ...compliance.findings[0]!, severity }],
+    });
+    expect(needsAttention(failed("MAJOR"))).toBe(true);
+    expect(needsAttention(failed("ADVISORY"))).toBe(true);
   });
   it("makes the findings searchable: rule, explanation, passage, citation", () => {
     const text = searchText(compliance);
