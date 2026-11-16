@@ -3,7 +3,16 @@
   "title": "A compliance-check run as Sovkora's edge answers GET /api/v1/studios/runs/{runId}",
   "description": "The fields Verikora reads (verikora packages/core reportOf and apps/web analysis-report-map), derived from the 2.x run recorded in contracts/recorded-runs/compliance-check-tenant.json (compliance-check 2.x, report contract 2.0). Written in the subset of JSON Schema the studio service enforces (OutputContract: no $ref, no oneOf); $defs.report is the schema of the `report` output's value, which the run carries as a JSON string. Open on purpose: Sovkora may add a field; removing or renaming one that is required here breaks Verikora.",
   "type": "object",
-  "required": ["id", "studioKey", "blueprintVersion", "status", "outputs", "errorMessage", "startedAt", "finishedAt"],
+  "required": [
+    "id",
+    "studioKey",
+    "blueprintVersion",
+    "status",
+    "outputs",
+    "errorMessage",
+    "startedAt",
+    "finishedAt"
+  ],
   "properties": {
     "id": {
       "type": "string"
@@ -21,7 +30,11 @@
       "type": "array",
       "items": {
         "type": "object",
-        "required": ["key", "type", "value"],
+        "required": [
+          "key",
+          "type",
+          "value"
+        ],
         "properties": {
           "key": {
             "type": "string"
@@ -48,7 +61,15 @@
   "$defs": {
     "report": {
       "type": "object",
-      "required": ["contract", "outcome", "ruleset", "jurisdiction", "asOf", "summary", "findings"],
+      "required": [
+        "contract",
+        "outcome",
+        "ruleset",
+        "jurisdiction",
+        "asOf",
+        "summary",
+        "findings"
+      ],
       "properties": {
         "contract": {
           "type": "string"
@@ -58,7 +79,10 @@
         },
         "ruleset": {
           "type": "object",
-          "required": ["id", "version"],
+          "required": [
+            "id",
+            "version"
+          ],
           "properties": {
             "id": {
               "type": "string"
@@ -82,7 +106,11 @@
         },
         "summary": {
           "type": "object",
-          "required": ["byVerdict", "blockingFailures", "rulesEvaluated"],
+          "required": [
+            "byVerdict",
+            "blockingFailures",
+            "rulesEvaluated"
+          ],
           "properties": {
             "byVerdict": {
               "type": "object"
@@ -102,7 +130,16 @@
           "minItems": 1,
           "items": {
             "type": "object",
-            "required": ["ruleId", "title", "severity", "verdict", "evidenceSpan", "explanation", "method", "citation"],
+            "required": [
+              "ruleId",
+              "title",
+              "severity",
+              "verdict",
+              "evidenceSpan",
+              "explanation",
+              "method",
+              "citation"
+            ],
             "properties": {
               "ruleId": {
                 "type": "string"
@@ -124,7 +161,10 @@
               },
               "citation": {
                 "type": "object",
-                "required": ["reference", "pinned"],
+                "required": [
+                  "reference",
+                  "pinned"
+                ],
                 "properties": {
                   "reference": {
                     "type": "string"
