@@ -47,7 +47,7 @@ export function DocumentReportTab({
   startCards: ReactNode;
 }>) {
   const { say, locale } = useSay();
-  const { latestCompliance, latestReport, latestAuthenticity, runningStudio, failures } = facts;
+  const { latestCompliance, latestReport, latestAuthenticity, runningStudio, failures, failure } = facts;
   // The notes at the foot (design § 3.5): the review note first (the verdict points to it, REVIEW_NOTE), then a demo check's note — never a box above the report.
   const shown = latestCompliance && latestReport ? latestCompliance : latestAuthenticity;
   const notes = [
@@ -55,8 +55,6 @@ export function DocumentReportTab({
     ...(shown && isSeededCheck(shown) ? [say("analysis.seededNote")] : []),
   ];
   // The newest check decides: one that did not finish is said once, in plain words, with a way out; an older failure behind a report is history.
-  const newest = doc.analyses[0];
-  const failure = newest && failures.includes(newest) && !newest.report && !runningStudio ? newest : null;
   const body = () => {
     if (latestCompliance && latestReport) {
       return (

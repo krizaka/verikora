@@ -16,6 +16,7 @@ import { useSay } from "@/lib/i18n-client";
 import { ROUTE_STATES } from "@/lib/route-state";
 import { useRouteState } from "@/lib/use-route-state";
 
+import { BROWSE_BUTTON_TARGET } from "./phone-targets";
 import { ACCEPT, isPhotoFile, type Placement, send, translated } from "./upload";
 
 export type { Placement } from "./upload";
@@ -180,6 +181,7 @@ export function DocumentUploader({
   );
   const dropzone = (
     <Dropzone
+      className={BROWSE_BUTTON_TARGET}
       title={say("library.dropTitle")}
       browseLabel={say("library.browse")}
       inputLabel={say("library.inputLabel")}

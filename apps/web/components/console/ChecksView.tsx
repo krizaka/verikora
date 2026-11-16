@@ -39,6 +39,7 @@ import { pluralKey } from "@/lib/plural";
 import { BatchImport } from "./BatchImport";
 import { STATUS_TONE } from "./DocumentTable";
 import { formatDate } from "./format";
+import { EXPAND_BUTTON_TARGET } from "./phone-targets";
 import { RunId } from "./RunId";
 import { tableLabels } from "./table-labels";
 
@@ -117,6 +118,7 @@ function ChecksTable({ rows }: Readonly<{ rows: CheckSummary[] }>) {
       rowLabel={(c) => c.title}
       pageSize={12}
       labels={labels}
+      className={EXPAND_BUTTON_TARGET}
       phone="list"
     />
   );

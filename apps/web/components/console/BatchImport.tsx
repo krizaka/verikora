@@ -13,6 +13,8 @@ import { useMemo, useState } from "react";
 import { errorKey } from "@/lib/client";
 import { useSay } from "@/lib/i18n-client";
 
+import { BROWSE_BUTTON_TARGET } from "./phone-targets";
+
 type Say = ReturnType<typeof useSay>["say"];
 
 /** What the preview answers (lib/batch/preview.ts). */
@@ -145,6 +147,7 @@ export function BatchImport() {
         <h2 className="mb-1 font-display text-lg font-bold text-fg">{say("batch.title")}</h2>
         <p className="mb-3 text-sm text-fg-secondary">{say("batch.lead")}</p>
         <Dropzone
+          className={BROWSE_BUTTON_TARGET}
           title={say("batch.drop")}
           browseLabel={say("library.browse")}
           inputLabel={say("batch.inputLabel")}

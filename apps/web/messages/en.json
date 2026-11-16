@@ -384,6 +384,8 @@
       "groupedUploaded": "{count} photos make one document in your library.",
       "photoNotice": "Photos are straightened and cropped, then read on the spot. The photo's own data (position, device) is removed.",
       "table": {
+        "details": "Details",
+        "expandRow": "Show details of {name}",
         "empty": "No document matches.",
         "results": "{count} documents",
         "filters": "Filter the documents",
