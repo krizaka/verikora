@@ -211,9 +211,13 @@ try {
       await writeFile(scope, scopeJson([]));
       app = launch();
       driver = await connect("empty library");
-      await signInIfAsked(driver);
-      await waitFor(driver, "the empty library", "[data-testid=library-empty], main");
-      await hold(2500);
+      // No folder is granted: there is no folder link to wait for, so the library's own words are awaited.
+      await until(
+        "the empty library",
+        async () => /No folder yet|Aucun dossier/.test(String(await driver.run("return document.body.innerText"))),
+        { timeoutMs: SCREEN_MS },
+      );
+      await hold(1500);
       await shot(driver, "6-empty-library");
     });
   }
