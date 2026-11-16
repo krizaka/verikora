@@ -10,9 +10,10 @@ import { availableFlows, offerFor } from "@/lib/flows";
 import { asLocale, getDictionary } from "@/lib/i18n";
 import { isId, libraryPath, parseLibraryView } from "@/lib/organisation/rules";
 import * as org from "@/lib/organisation/store";
+import { libraryTags, tagsOfContainers } from "@/lib/organisation/tag-list";
 import { KIND } from "@/lib/workspace/decl";
 import { workspaceFor } from "@/lib/workspace/service";
-import { asTag, asTags } from "@/lib/workspace/tags";
+import { asTags } from "@/lib/workspace/tags";
 
 type Props = {
   params: Promise<{ locale: string; library?: string; collection?: string; folder?: string }>;
@@ -30,10 +31,9 @@ export async function PlacePage({ params, searchParams }: Readonly<Props>) {
   const selected = view.tags;
   const dict = getDictionary(locale).console;
   const t = dict.organisation;
-  const tags = await org.listTags(query, owner);
-  // A document's tags are the workspace's (verikora#324): markers, the ALL-tags filter. A collection's and a folder's stay the first layer's.
+  // One tag list for the library (krizaka-internal#3994): a collection, a folder and a document wear tags of the same list.
+  const tags = await libraryTags(query, owner);
   const workspace = workspaceFor({ clock: systemClock });
-  const documentTags = (await workspace.tags.list(owner, KIND.document)).map(asTag);
   const overview = await org.overview(query, owner);
   const collections = overview.flatMap((l) =>
     l.collections.map((c) => ({ id: c.id, name: c.name, avatar: c.avatar, libraryId: l.id })),
@@ -50,7 +50,7 @@ export async function PlacePage({ params, searchParams }: Readonly<Props>) {
     .documentIds;
   const documents = await documentsByIds(owner, ids);
   const byDoc = asTags(await workspace.tags.of(owner, KIND.document, ids));
-  const collTags = await org.tagsOf(query, owner, "collection", [collection.id]);
+  const collTags = await tagsOfContainers(query, owner, KIND.collection, [collection.id]);
   const lib = overview.find((l) => l.id === collection.library_id);
   if (!lib) notFound();
   return (
@@ -68,7 +68,6 @@ export async function PlacePage({ params, searchParams }: Readonly<Props>) {
       folders={folders}
       documents={documents}
       tags={tags}
-      documentTags={documentTags}
       view={view}
       jurisdictions={offer.jurisdictions}
       offeredRulesets={offer.rulesets}

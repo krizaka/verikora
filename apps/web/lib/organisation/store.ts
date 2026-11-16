@@ -5,14 +5,17 @@ import type { QueryResultRow } from "pg";
 import { refuse } from "../http";
 import { KIND, WORKSPACE } from "../workspace/decl";
 import { guard, organizeOver } from "./organize";
-import { type DeleteChoice, isId, requiredName, type TagColor } from "./rules";
+import type { Query } from "./query";
+import { type DeleteChoice, isId, requiredName } from "./rules";
+import type { Tag } from "./tag";
+import { tagsOfContainers } from "./tag-list";
 
 /**
  * The organisation's storage (ADR-0007): libraries, collections, folders (one level), tags and where a document sits.
  * It takes its `query` as a parameter (tested against a real PostgreSQL) and knows nothing of the checks: it hands out
  * document ids, the documents module turns them into summaries.
  */
-export type Query = <T extends QueryResultRow>(text: string, values?: unknown[]) => Promise<T[]>;
+export type { Query } from "./query";
 
 export interface Library {
   id: string;
@@ -31,12 +34,7 @@ export interface Folder {
   collection_id: string;
   name: string;
 }
-export interface Tag {
-  id: string;
-  name: string;
-  color: TagColor;
-}
-export type TagTarget = "collection" | "folder";
+export type { Tag } from "./tag";
 
 const notFound = (what: string) => refuse(404, "NOT_FOUND", `No such ${what}`);
 const taken = () => refuse(409, "NAME_TAKEN", "That name is already used here");
@@ -163,10 +161,10 @@ export async function overview(q: Query, owner: string): Promise<LibraryOverview
       WHERE l.owner_id = $1 ORDER BY lower(c.name)`,
     [owner],
   );
-  const tags = await tagsOf(
+  const tags = await tagsOfContainers(
     q,
     owner,
-    "collection",
+    KIND.collection,
     cols.map((c) => c.id),
   );
   return libs.map((l) => ({
@@ -377,30 +375,6 @@ export async function placeDocument(q: Query, owner: string, documentId: string,
   ]);
 }
 
-// ── tags (the package's) ──────────────────────────────────────────────────────────────────────────────────────────────
-
-export const listTags = (q: Query, owner: string) => guard(() => organizeOver(q).tags.list(owner));
-export const createTag = (q: Query, owner: string, name: string, color: TagColor) =>
-  guard(() => organizeOver(q).tags.create(owner, { name, color }));
-export const updateTag = (
-  q: Query,
-  owner: string,
-  id: string,
-  patch: { name?: string; color?: TagColor },
-): Promise<Tag> => guard(() => organizeOver(q).tags.update(owner, id, patch));
-export const deleteTag = (q: Query, owner: string, id: string): Promise<void> =>
-  guard(() => organizeOver(q).tags.remove(owner, id));
-/** Replaces the tags of a collection or a folder (all of them must be the owner's). The documents' tags are the workspace's. */
-export const setTags = (
-  q: Query,
-  owner: string,
-  target: { kind: TagTarget; id: string },
-  tagIds: string[],
-): Promise<void> => guard(() => organizeOver(q).tags.assign(owner, target.kind, target.id, tagIds));
-/** The tags of many targets at once, by target id. */
-export const tagsOf = (q: Query, owner: string, kind: TagTarget, ids: string[]): Promise<Map<string, Tag[]>> =>
-  guard(() => organizeOver(q).tags.of(owner, kind, ids));
-
 // ── reading a place ───────────────────────────────────────────────────────────────────────────────────────────────────
 
 /** Where a document sits, for the way back from its page: its library and collection (the default one unless placed by hand) — null for another owner's document. */
@@ -442,10 +416,10 @@ export async function foldersOf(
     "SELECT f.id, f.collection_id, f.name, (SELECT count(*) FROM documents d WHERE d.folder_id = f.id) AS files FROM folders f WHERE f.collection_id = $1 ORDER BY lower(f.name)",
     [collectionId],
   );
-  const tags = await tagsOf(
+  const tags = await tagsOfContainers(
     q,
     owner,
-    "folder",
+    KIND.folder,
     rows.map((r) => r.id),
   );
   return rows.map((r) => ({ ...r, files: Number(r.files), tags: tags.get(r.id) ?? [] }));

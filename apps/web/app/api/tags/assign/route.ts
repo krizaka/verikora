@@ -1,17 +1,17 @@
 import { z } from "zod";
 
 import { readJson } from "@/lib/http";
-import { act } from "@/lib/organisation/api";
-import { setTags } from "@/lib/organisation/store";
+import { workspaceAct } from "@/lib/workspace/api";
+import { KIND } from "@/lib/workspace/decl";
 
 export const dynamic = "force-dynamic";
 
-/** Replaces the tags of a collection or a folder. A document's tags are the workspace's: `PUT /api/organize/document/tags/set`. */
+/** Replaces the tags of a collection or a folder (the library's list). A document's: `PUT /api/organize/document/tags/set`. */
 export const PUT = (req: Request) =>
-  act(req, async ({ owner, q }) => {
+  workspaceAct(req, Promise.resolve({ kind: KIND.collection }), async ({ account, actor, workspace }) => {
     const input = await readJson(
       req,
-      z.object({ kind: z.enum(["collection", "folder"]), id: z.string(), tagIds: z.array(z.string()).max(50) }),
+      z.object({ kind: z.enum([KIND.collection, KIND.folder]), id: z.string(), tagIds: z.array(z.string()).max(50) }),
     );
-    await setTags(q, owner, { kind: input.kind, id: input.id }, input.tagIds);
+    await workspace.tags.set(account.id, actor, input.kind, input.id, input.tagIds);
   });

@@ -12,12 +12,12 @@ import { useState } from "react";
 import { errorKey } from "@/lib/client";
 import { useSay } from "@/lib/i18n-client";
 import type { TagColor } from "@/lib/organisation/rules";
-import type { Kind } from "@/lib/workspace/decl";
+import type { ListKind } from "@/lib/workspace/decl";
 
 import { CreateButton, NameDialog } from "./OrganisationActions";
 
 export type Bookmark = { id: string; name: string; color: TagColor };
-export type BookmarkGroup = { kind: Kind; bookmarks: readonly Bookmark[] };
+export type BookmarkGroup = { kind: ListKind; bookmarks: readonly Bookmark[] };
 
 /**
  * « Signets » (verikora#339): the person's own coloured categories, one list per kind (files, documents). Create, rename, recolour and
@@ -50,7 +50,7 @@ export function BookmarksSection({ groups }: Readonly<{ groups: readonly Bookmar
   );
 }
 
-function BookmarkRow({ kind, bookmark }: Readonly<{ kind: Kind; bookmark: Bookmark }>) {
+function BookmarkRow({ kind, bookmark }: Readonly<{ kind: ListKind; bookmark: Bookmark }>) {
   const { say } = useSay();
   const [dialog, setDialog] = useState<"edit" | "delete" | null>(null);
   return (
@@ -100,7 +100,7 @@ function DeleteBookmark({
   kind,
   bookmark,
   onClose,
-}: Readonly<{ kind: Kind; bookmark: Bookmark; onClose: () => void }>) {
+}: Readonly<{ kind: ListKind; bookmark: Bookmark; onClose: () => void }>) {
   const { say } = useSay();
   const router = useRouter();
   const [problem, setProblem] = useState<string | null>(null);

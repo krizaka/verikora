@@ -1,19 +1,34 @@
 import { z } from "zod";
 
 import { readJson } from "@/lib/http";
-import { act } from "@/lib/organisation/api";
 import { TAG_COLORS } from "@/lib/organisation/rules";
-import { createTag, listTags } from "@/lib/organisation/store";
+import { workspaceAct } from "@/lib/workspace/api";
+import { KIND } from "@/lib/workspace/decl";
+import { asTag } from "@/lib/workspace/tags";
 
 export const dynamic = "force-dynamic";
 
-export const GET = (req: Request) => act(req, async ({ owner, q }) => ({ tags: await listTags(q, owner) }));
+const LIST = Promise.resolve({ kind: KIND.document });
+
+/**
+ * The library's tag list as the first tags API read it (`{ id, name, color }`), answered from the one list (krizaka-internal#3994):
+ * the same rows as `/api/organize/document/tags`. Kept for one release; the follow-up removes it.
+ */
+export const GET = (req: Request) =>
+  workspaceAct(req, LIST, async ({ account, workspace }) => ({
+    tags: (await workspace.tags.list(account.id, KIND.document)).map(asTag),
+  }));
 export const POST = (req: Request) =>
-  act(
+  workspaceAct(
     req,
-    async ({ owner, q }) => {
+    LIST,
+    async ({ account, actor, workspace }) => {
       const input = await readJson(req, z.object({ name: z.string(), color: z.enum(TAG_COLORS) }));
-      return { tag: await createTag(q, owner, input.name, input.color) };
+      return {
+        tag: asTag(
+          await workspace.tags.create(account.id, actor, KIND.document, { name: input.name, marker: input.color }),
+        ),
+      };
     },
-    201,
+    { status: 201 },
   );

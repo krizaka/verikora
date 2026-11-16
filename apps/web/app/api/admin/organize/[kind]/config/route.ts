@@ -4,7 +4,7 @@ import { systemClock } from "@/app/system-clock";
 import { requireAdmin } from "@/lib/access";
 import { handle, readJson, refuse } from "@/lib/http";
 import { guard } from "@/lib/organisation/organize";
-import { isKind } from "@/lib/workspace/decl";
+import { isListKind } from "@/lib/workspace/decl";
 import { actorOf, workspaceFor } from "@/lib/workspace/service";
 
 export const dynamic = "force-dynamic";
@@ -13,7 +13,9 @@ type Params = { params: Promise<{ kind: string }> };
 
 const kindOf = async (params: Params["params"]) => {
   const { kind } = await params;
-  if (!isKind(kind)) throw refuse(404, "NOT_FOUND", "No such kind");
+  if (!isListKind(kind)) {
+    throw refuse(404, "NOT_FOUND", "No such kind");
+  }
   return kind;
 };
 

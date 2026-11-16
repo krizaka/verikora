@@ -32,7 +32,6 @@ export function PlaceView({
   folders,
   documents,
   tags,
-  documentTags,
   view,
   tagsByDocument,
   folderTags,
@@ -49,10 +48,8 @@ export function PlaceView({
   folder?: { id: string; name: string };
   folders: (Folder & { files: number; tags: Tag[] })[];
   documents: DocumentSummary[];
-  /** The first layer's tags: a collection's and a folder's. */
+  /** The library's one tag list (krizaka-internal#3994): worn by a collection, a folder and a document; the filter bar's and the rows'. */
   tags: Tag[];
-  /** The workspace's tags of kind « document »: the filter bar's and the rows'. */
-  documentTags: Tag[];
   view: ViewState;
   tagsByDocument: Record<string, Tag[]>;
   folderTags?: Record<string, string[]>;
@@ -165,8 +162,8 @@ export function PlaceView({
             ))}
           </nav>
         ) : null}
-        {documentTags.length > 0 ? (
-          <PlaceFilters tags={documentTags} selected={view.tags} path={path} view={view} count={documents.length} />
+        {tags.length > 0 ? (
+          <PlaceFilters tags={tags} selected={view.tags} path={path} view={view} count={documents.length} />
         ) : null}
         <section aria-label={t.filesIn} className="flex flex-col gap-3">
           {documents.length > 0 ? (
@@ -176,7 +173,7 @@ export function PlaceView({
                 collections,
                 folders: folderOptions,
                 collectionId: collection.id,
-                tags: documentTags,
+                tags,
                 tagsByDocument,
               }}
             />
