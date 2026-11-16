@@ -184,5 +184,23 @@
     "video": false,
     "budgetSeconds": 90,
     "tags": []
+  },
+  {
+    "id": "tag-a-document",
+    "promise": "Eric tags a document of his collection with a new red tag in one dialog, and its row shows a red marker and the tag's name",
+    "persona": "eric",
+    "platforms": ["web"],
+    "steps": [
+      "sign in as Eric",
+      "open the library and the collection Immeuble Rosemont",
+      "open the actions menu of a document and choose « Modifier les étiquettes »",
+      "type a new name and choose Rouge in the same dialog, create it — still one dialog",
+      "save — the dialog closes",
+      "see the document's row wear the tag: a red marker and its name",
+      "delete the tag to restore the data"
+    ],
+    "video": false,
+    "budgetSeconds": 90,
+    "tags": []
   }
 ]

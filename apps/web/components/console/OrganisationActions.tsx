@@ -1,6 +1,7 @@
 "use client";
 
 import { MoreIcon } from "@krizaka/icons";
+import { type Marker, MARKERS } from "@krizaka/organize/contract";
 import { krizakaFetch, useMutation } from "@krizaka/query";
 import { AVATAR_NONE, AvatarPicker } from "@krizaka/ui/account-settings";
 import { Alert } from "@krizaka/ui/alert";
@@ -11,6 +12,7 @@ import { createKrizakaForm } from "@krizaka/ui/form";
 import { RadioGroup } from "@krizaka/ui/radio-group";
 import { TagSelector } from "@krizaka/ui/tag-selector";
 import { AVATAR_KIND, type CollectionAvatar as CollectionAvatarData } from "@verikora/core";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { type ReactNode, useState } from "react";
 import { z } from "zod";
@@ -21,6 +23,7 @@ import { useAppConfig } from "@/lib/app-config-client";
 import { errorKey } from "@/lib/client";
 import { useSay } from "@/lib/i18n-client";
 import { TAG_COLORS, type TagColor } from "@/lib/organisation/rules";
+import { KIND } from "@/lib/workspace/decl";
 
 /** The creating, renaming, moving, tagging and deleting of the organisation (ADR-0007): each a call to its route, then the page refreshes. */
 export type Option = { id: string; name: string; avatar?: CollectionAvatarData | null; libraryId?: string };
@@ -471,6 +474,14 @@ function MoveDialog({
   );
 }
 
+/** The marker names the colour choice writes beside each swatch (never colour alone). */
+const markerNames = (say: ReturnType<typeof useSay>["say"]) =>
+  Object.fromEntries(MARKERS.map((m) => [m, say(`organisation.colors.${m}`)])) as Record<Marker, string>;
+
+/**
+ * The tags of a collection, a folder or a document: ONE dialog on the library's one tag list (krizaka-internal#3994). Coloured chips
+ * (marker and name), a tick on the chosen ones, a new tag created inline with its colour, « Enregistrer » the primary on the right.
+ */
 function TagsDialog({
   kind,
   id,
@@ -478,35 +489,58 @@ function TagsDialog({
   current,
   onClose,
 }: Readonly<{ kind: ItemKind; id: string; tags: TagOption[]; current: string[]; onClose: () => void }>) {
-  const { say } = useSay();
+  const { say, locale } = useSay();
   const [value, setValue] = useState<string[]>(current);
-  // A document's tags are the workspace's (verikora#324); a collection's and a folder's are the first layer's.
+  const [created, setCreated] = useState<TagOption[]>([]);
+  const [problem, setProblem] = useState<string | null>(null);
+  const create = useMutation({
+    mutationFn: (tag: { name: string; marker: Marker }) =>
+      krizakaFetch(`/api/organize/${KIND.document}/tags`, { method: "POST", json: tag }),
+  });
+  const addTag = async (name: string, marker: Marker) => {
+    setProblem(null);
+    try {
+      const { tag } = (await create.mutateAsync({ name, marker })) as {
+        tag: { id: string; name: string; marker: TagColor };
+      };
+      setCreated((list) => [...list, { id: tag.id, name: tag.name, color: tag.marker }]);
+      setValue((ids) => [...ids, tag.id]);
+    } catch (error) {
+      setProblem(say(`errors.${errorKey(error)}`));
+    }
+  };
   const save = useAction<string[]>(
-    (tagIds) =>
-      kind === "document"
-        ? krizakaFetch("/api/organize/document/tags/set", { method: "PUT", json: { id, tagIds } })
-        : krizakaFetch("/api/tags/assign", { method: "PUT", json: { kind, id, tagIds } }),
+    (tagIds) => krizakaFetch(`/api/organize/${kind}/tags/set`, { method: "PUT", json: { id, tagIds } }),
     onClose,
   );
+  const title = say("organisation.editTags");
   return (
-    <Frame open onOpenChange={onClose} title={say("organisation.editTags")}>
-      {tags.length === 0 ? (
-        <p className="m-0 text-sm text-fg-secondary">{say("organisation.noTags")}</p>
-      ) : (
-        <TagSelector
-          label={say("organisation.editTags")}
-          options={tags.map((t) => ({ value: t.id, label: t.name }))}
-          value={value}
-          onValueChange={setValue}
-          max={20}
-        />
-      )}
-      {save.problem ? <Alert tone="danger">{save.problem}</Alert> : null}
-      <div className="flex flex-wrap gap-3">
+    <Frame open onOpenChange={onClose} title={title}>
+      <TagSelector
+        creatable
+        label={title}
+        options={[...tags, ...created].map((t) => ({ value: t.id, label: t.name, marker: t.color }))}
+        value={value}
+        onValueChange={setValue}
+        max={20}
+        countLabel={(count, max) => say("organisation.tagsCount", { count, max })}
+        onCreate={(name, marker) => void addTag(name, marker)}
+        inputLabel={say("organisation.tagsInputLabel")}
+        placeholder={say("organisation.tagsPlaceholder")}
+        createLabel={(name) => say("organisation.tagsCreate", { name })}
+        markerNames={markerNames(say)}
+        showMarkerNames
+        markerLabel={say("organisation.tagsMarkerLabel")}
+        emptyLabel={say("organisation.tagsEmpty")}
+      />
+      {(problem ?? save.problem) ? <Alert tone="danger">{problem ?? save.problem}</Alert> : null}
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <Link href={`/${locale}/app/settings/signets`} className="text-sm text-fg-accent hover:underline">
+          {say("organisation.manageTags")}
+        </Link>
         <Button size="md" loading={save.pending} onClick={() => save.go(value)}>
           {say("organisation.save")}
         </Button>
-        <CreateButton kind="tag" variant="ghost" tagsOf={kind === "document" ? "document" : undefined} />
       </div>
     </Frame>
   );

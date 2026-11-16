@@ -188,12 +188,10 @@ describe.runIf(enabled)("organisation (ADR-0007)", () => {
     expect(await where(d)).toEqual({ collection_id: c2.id, folder_id: f.id });
   });
 
-  it("tags: per owner, unique by name, many to many, and the filter needs all of them (a document's tags are the workspace's, a collection's the first layer's)", async () => {
+  it("tags: per owner, unique by name, many to many, and the filter needs all of them (one list for a document and a collection, krizaka-internal#3994)", async () => {
     const owner = await account();
     const lib = await org.ensureLibrary(query, owner, "L");
     const c = await org.createCollection(query, owner, lib.id, "C");
-    const done = await org.createTag(query, owner, "Fait", "green");
-    await expect(org.createTag(query, owner, "fait", "blue")).rejects.toMatchObject({ status: 409 });
     const w = workspaceFor({ clock: { now: () => new Date() } });
     const actor = { id: owner, label: "eric@verikora.test", role: OWNER_ROLE };
     const urgent = await w.tags.create(owner, actor, KIND.document, { name: "Urgent", marker: "red" });
@@ -207,7 +205,7 @@ describe.runIf(enabled)("organisation (ADR-0007)", () => {
     await org.placeDocument(query, owner, d2, { collectionId: c.id, folderId: null });
     await w.tags.set(owner, actor, KIND.document, d1, [urgent.id, fait.id]);
     await w.tags.set(owner, actor, KIND.document, d2, [urgent.id]);
-    await org.setTags(query, owner, { kind: "collection", id: c.id }, [done.id]);
+    await w.tags.set(owner, actor, KIND.collection, c.id, [fait.id]);
     expect((await org.browse(query, owner, { collectionId: c.id, tagIds: [urgent.id] })).documentIds.sort()).toEqual(
       [d1, d2].sort(),
     );
@@ -221,7 +219,8 @@ describe.runIf(enabled)("organisation (ADR-0007)", () => {
         .sort(),
     ).toEqual(["Fait", "Urgent"]);
     const other = await account();
-    await expect(org.setTags(query, other, { kind: "collection", id: c.id }, [done.id])).rejects.toMatchObject({
+    const otherActor = { id: other, label: "other@verikora.test", role: OWNER_ROLE };
+    await expect(w.tags.set(other, otherActor, KIND.collection, c.id, [fait.id])).rejects.toMatchObject({
       status: 404,
     });
     await w.tags.remove(owner, actor, KIND.document, urgent.id);

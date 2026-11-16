@@ -19,14 +19,14 @@ import {
   createCollection,
   createFolder,
   createLibrary,
-  createTag,
   defaultCollectionId,
   ensureLibrary,
   ownedCollection,
 } from "../organisation/store";
 import { createGrant } from "../report-access";
 import { createSession, SESSION_COOKIE } from "../session";
-import { seedWorkspace } from "../workspace/service";
+import { KIND, OWNER_ROLE } from "../workspace/decl";
+import { seedWorkspace, workspaceFor } from "../workspace/service";
 import { CASES, type IsolationCase, LISTS, type OwnIds, type RouteKey, type TheirIds } from "./cases";
 
 /**
@@ -198,7 +198,12 @@ describe.runIf(enabled)("customer isolation: B never reaches A's rows (krizaka-i
     const library = await createLibrary(query, a.id, `Bibliothèque A ${stamp}`);
     const collection = await createCollection(query, a.id, library.id, `Collection A ${stamp}`);
     const folder = await createFolder(query, a.id, collection.id, `Dossier A ${stamp}`);
-    const tag = await createTag(query, a.id, `Étiquette A ${stamp}`, TAG_COLORS[0]);
+    const tag = await workspaceFor({ clock: { now: () => new Date() } }).tags.create(
+      a.id,
+      { id: a.id, label: `a-${stamp}@verikora.test`, role: OWNER_ROLE },
+      KIND.document,
+      { name: `Étiquette A ${stamp}`, marker: TAG_COLORS[0] },
+    );
     const [webhook] = await query<{ id: string }>(
       "INSERT INTO webhook_endpoints (id, owner_id, url, secret_sealed, events, created_at) VALUES (gen_random_uuid(), $1, 'https://hooks.exemple.test/a', 'sealed', ARRAY['check.finished'], now()) RETURNING id",
       [a.id],

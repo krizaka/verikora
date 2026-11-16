@@ -54,4 +54,18 @@ export const DEFAULT_CONFIGS: Record<Kind, KindConfig> = {
     status: null,
     views: [],
   },
+  // A collection and a folder wear the document list (`tagList`): the layer still reads the writers and the cap from their own row,
+  // so they are seeded with the document's tag rules. The administration edits the two lists' kinds (`LIST_KINDS`), never these.
+  [KIND.collection]: {
+    kind: KIND.collection,
+    tags: { ...tags, writers: [...tags.writers], presets: { default: [] } },
+    status: null,
+    views: [],
+  },
+  [KIND.folder]: {
+    kind: KIND.folder,
+    tags: { ...tags, writers: [...tags.writers], presets: { default: [] } },
+    status: null,
+    views: [],
+  },
 };

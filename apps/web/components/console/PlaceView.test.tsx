@@ -53,7 +53,6 @@ const render = (props: Props = {}, locale: "en" | "fr" = "fr") =>
           folders={[folder("f1", "Baux", 3), folder("f2", "Factures", 1)]}
           documents={[doc(1), doc(2)]}
           tags={[]}
-          documentTags={[]}
           view={parseLibraryView({})}
           tagsByDocument={{}}
           collections={[{ id: "c1", name: "Rosemont", avatar: null }]}
@@ -116,7 +115,7 @@ describe("a collection (the UX review's Y7)", () => {
       { id: T1, name: "Urgent", color: "red" },
       { id: T2, name: "2026", color: "blue" },
     ] as never;
-    const html = render({ documentTags: tags, view: parseLibraryView({ tags: T1 }) });
+    const html = render({ tags, view: parseLibraryView({ tags: T1 }) });
     expect(html).toContain('data-testid="place-filters"');
     const text = readable(html);
     expect(text).toContain("Urgent");

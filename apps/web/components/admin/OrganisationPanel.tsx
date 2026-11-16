@@ -16,7 +16,7 @@ import { z } from "zod";
 
 import { errorKey } from "@/lib/client";
 import { useSay } from "@/lib/i18n-client";
-import { type Kind, KINDS, OWNER_ROLE } from "@/lib/workspace/decl";
+import { LIST_KINDS, type ListKind, OWNER_ROLE } from "@/lib/workspace/decl";
 
 const storedConfig = z.object({ config: z.custom<KindConfig>(), version: z.number().int().min(1) });
 const stored = z.object({ configuration: storedConfig.nullable() });
@@ -96,7 +96,11 @@ function editorLabels(say: Say): { tags: Partial<TagSetEditorLabels>; status: Pa
   };
 }
 
-function KindEditor({ kind, initial, version: first }: Readonly<{ kind: Kind; initial: KindConfig; version: number }>) {
+function KindEditor({
+  kind,
+  initial,
+  version: first,
+}: Readonly<{ kind: ListKind; initial: KindConfig; version: number }>) {
   const { say, locale } = useSay();
   const [config, setConfig] = useState(initial);
   const [version, setVersion] = useState(first);
@@ -160,7 +164,7 @@ function KindEditor({ kind, initial, version: first }: Readonly<{ kind: Kind; in
   );
 }
 
-function KindSection({ kind }: Readonly<{ kind: Kind }>) {
+function KindSection({ kind }: Readonly<{ kind: ListKind }>) {
   const { say } = useSay();
   const config = useQuery({
     queryKey: ["admin-organize-config", kind],
@@ -176,7 +180,7 @@ function KindSection({ kind }: Readonly<{ kind: Kind }>) {
 export function OrganisationPanel() {
   return (
     <div className="flex flex-col gap-10" data-testid="organisation-panel">
-      {KINDS.map((kind) => (
+      {LIST_KINDS.map((kind) => (
         <KindSection key={kind} kind={kind} />
       ))}
     </div>

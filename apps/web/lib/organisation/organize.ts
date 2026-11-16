@@ -15,8 +15,10 @@ import type { Query } from "./store";
 
 /**
  * « organize » for Verikora (ADR-006, `@krizaka/organize`): the collections' default and avatar, and the tags, come from the package.
- * Libraries, folders, where a document sits and the counts stay Verikora's own levels on top. The documents' tags are the workspace's
- * (`lib/workspace`, verikora#324): markers, bulk tagging and the filter live there; this layer keeps the collections' and folders'.
+ * Libraries, folders, where a document sits and the counts stay Verikora's own levels on top. Tags are the workspace's
+ * (`lib/workspace`, verikora#324; one list for documents, collections and folders since krizaka-internal#3994): markers, bulk tagging
+ * and the filter live there. `collections_tags` and `folder_tags` below are the old, copied tables, read by no one but the account export
+ * until the follow-up drops them.
  */
 export const ORGANIZE_SCHEMA: OrganizeSchema = {
   collectionTags: "collections_tags",

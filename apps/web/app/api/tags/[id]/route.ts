@@ -1,22 +1,29 @@
 import { z } from "zod";
 
 import { readJson } from "@/lib/http";
-import { act, type Params } from "@/lib/organisation/api";
 import { TAG_COLORS } from "@/lib/organisation/rules";
-import { deleteTag, updateTag } from "@/lib/organisation/store";
+import { workspaceAct } from "@/lib/workspace/api";
+import { KIND } from "@/lib/workspace/decl";
+import { asTag } from "@/lib/workspace/tags";
 
 export const dynamic = "force-dynamic";
 
+type Params = { params: Promise<{ id: string }> };
+const LIST = Promise.resolve({ kind: KIND.document });
+
 export const PATCH = (req: Request, { params }: Params) =>
-  act(req, async ({ owner, q }) => ({
-    tag: await updateTag(
-      q,
-      owner,
-      (await params).id,
-      await readJson(req, z.object({ name: z.string().optional(), color: z.enum(TAG_COLORS).optional() })),
-    ),
-  }));
+  workspaceAct(req, LIST, async ({ account, actor, workspace }) => {
+    const { name, color } = await readJson(
+      req,
+      z.object({ name: z.string().optional(), color: z.enum(TAG_COLORS).optional() }),
+    );
+    const tag = await workspace.tags.update(account.id, actor, KIND.document, (await params).id, {
+      name,
+      marker: color,
+    });
+    return { tag: asTag(tag) };
+  });
 export const DELETE = (req: Request, { params }: Params) =>
-  act(req, async ({ owner, q }) => {
-    await deleteTag(q, owner, (await params).id);
+  workspaceAct(req, LIST, async ({ account, actor, workspace }) => {
+    await workspace.tags.remove(account.id, actor, KIND.document, (await params).id);
   });

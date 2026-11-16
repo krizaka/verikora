@@ -1,6 +1,6 @@
 import type { WorkspaceTag } from "@krizaka/organize/contract";
 
-import type { Tag } from "../organisation/store";
+import type { Tag } from "../organisation/tag";
 
 /** The workspace's tag as the organisation screens read a tag: its marker is the colour name they already draw. */
 export const asTag = (tag: Pick<WorkspaceTag, "id" | "name" | "marker">): Tag => ({

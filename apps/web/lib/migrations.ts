@@ -7,6 +7,8 @@
  * screening providers, check types, compliance gates) are NOT here: they are seeded from code, `lib/config-seed.ts`.
  * A change of schema from now on is a NEW entry after this one; regenerate the baseline only by rebuilding a dev database.
  */
+import { TAG_LIST_SQL } from "./workspace/migration";
+
 export interface Migration {
   version: string;
   sql: string;
@@ -2067,5 +2069,10 @@ CREATE TABLE storage.tenant_key (
 INSERT INTO public.krizaka_module_versions (module, version, checksum) VALUES
   ('storage', 2, 'cfeb6a949a22acfd34d10ee61a2812e2d9c0556aa7bccb3e904703f91b1d2f1d')
 ON CONFLICT (module, version) DO NOTHING;`,
+  },
+  {
+    // krizaka-internal#3994: one tag list for collections, folders and documents (expand: the old tables stay). See workspace/migration.ts.
+    version: "0010_one_tag_list",
+    sql: TAG_LIST_SQL,
   },
 ];

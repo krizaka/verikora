@@ -133,7 +133,7 @@ export function workspaceFor(options: WorkspaceOptions): Workspace {
   });
 }
 
-/** Seeds the defaults of both kinds, once: afterwards the database is the source of truth and only the administration changes it. */
+/** Seeds the defaults of every kind, once: afterwards the database is the source of truth and only the administration changes it. */
 export async function seedWorkspace(clock: Clock): Promise<string[]> {
   const workspace = workspaceFor({ clock });
   const seeded: string[] = [];
