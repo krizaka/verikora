@@ -12,6 +12,23 @@ export interface ReadText {
   pages: number | null;
 }
 
+const LAYOUT_CONTROLS = new Set(["\n", "\r", "\t", "\f", "\v"]);
+const WORD_CHAR = /[\p{L}\p{N}]/u;
+
+/**
+ * What a control character becomes: layout whitespace stays (the next rules fold it); U+0000, an unmapped glyph, was a hyphen between
+ * two letters or digits (« 97R2MDRH-0017 ») and a space elsewhere; every other control character is dropped.
+ */
+function controlOf(c: string, at: number, whole: string): string {
+  if (LAYOUT_CONTROLS.has(c)) {
+    return c;
+  }
+  if (c !== String.fromCodePoint(0)) {
+    return "";
+  }
+  return WORD_CHAR.test(whole.charAt(at - 1)) && WORD_CHAR.test(whole.charAt(at + 1)) ? "-" : " ";
+}
+
 /** Collapses the PDF's layout whitespace, keeps line breaks (a clause stays on its line). */
 export function normaliseText(raw: string): string {
   return (
@@ -20,6 +37,8 @@ export function normaliseText(raw: string): string {
       .normalize("NFC")
       // Presentation ligatures (ﬁ ﬂ ﬀ ﬃ ﬄ…) are glyph shortcuts: as letters the text can be searched and quoted.
       .replace(/[\uFB00-\uFB06]/g, (c) => c.normalize("NFKC"))
+      // A glyph the font does not map comes out as U+0000, which Postgres refuses in a text column (krizaka-internal#4028).
+      .replace(/\p{Cc}/gu, controlOf)
       // Zero-width characters split words invisibly.
       .replace(/[\u200B-\u200D\u2060\uFEFF]/g, "")
       .replace(/\r\n?/g, "\n")

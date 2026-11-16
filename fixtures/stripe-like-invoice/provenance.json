@@ -1,0 +1,16 @@
+{
+  "fictitious": true,
+  "purpose": "A Stripe-style foreign SaaS invoice in USD that charges QST and GST without registration numbers (krizaka-internal#4028).",
+  "noRealPerson": "Supplier, address and bill-to are invented. The real invoice that exposed the fault is never committed.",
+  "madeBy": "node scripts/stripe-like-invoice/build.mjs",
+  "file": "invoice-synthetic-usd.pdf",
+  "sha256": "69889565a7f04a0e3ddbb21a514a324ab0405898d5afc0ab0aebe003c23f540f",
+  "facts": {
+    "subtotal": "50.00",
+    "qst": "4.99",
+    "gst": "2.50",
+    "total": "57.49",
+    "currency": "USD",
+    "registrationNumbers": "none printed"
+  }
+}
