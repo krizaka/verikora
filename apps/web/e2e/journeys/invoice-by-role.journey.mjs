@@ -14,6 +14,7 @@ const JOURNEY = JSON.parse(readFileSync(new URL("./journeys.json", import.meta.u
 const DESKTOP = SCREENS[0];
 
 async function dropInvoice(page) {
+  await page.waitForLoadState("networkidle"); // the page is hydrated: a file given before would reach no handler
   const invoice = await generateDocument("facture-2026-01");
   await page
     .locator("input[type=file]")
@@ -25,34 +26,39 @@ async function dropInvoice(page) {
 // Each run drops an invoice of its own (a seed of its own), so the file is new and never a duplicate of an earlier run.
 async function dropInvoiceOnLibrary(page) {
   const invoice = await generateDocument("facture-2026-01", DEFAULT_SEED + 1 + (Date.now() % 1_000_000));
-  const bytes = Array.from(invoice.bytes);
   await page.evaluate(
-    ({ name, bytes: data }) => {
+    ({ name, bytes }) => {
       const transfer = new DataTransfer();
-      transfer.items.add(new File([new Uint8Array(data)], name, { type: "application/pdf" }));
+      transfer.items.add(new File([new Uint8Array(bytes)], name, { type: "application/pdf" }));
       for (const type of ["dragenter", "dragover", "drop"]) {
         globalThis.dispatchEvent(new DragEvent(type, { dataTransfer: transfer, bubbles: true, cancelable: true }));
       }
     },
-    { name: invoice.filename, bytes },
+    { name: invoice.filename, bytes: Array.from(invoice.bytes) },
   );
-  return invoice.filename;
 }
 
-/** The newest document of the signed-in account with this file name, once the library's upload landed. */
-async function newestDocumentId(page, filename) {
-  let id = null;
+const documentIds = async (page) =>
+  (await (await page.request.get(new URL("/api/documents", BASE).toString())).json()).documents.map((d) => d.id);
+
+/** Drops an invoice anywhere on the library and returns the id of the document that landed (the one the account did not hold before). */
+async function dropAndFind(page) {
+  await page.waitForLoadState("networkidle");
+  const before = new Set(await documentIds(page));
+  await dropInvoiceOnLibrary(page);
+  let landed = null;
   await expect
     .poll(
       async () => {
-        const body = await (await page.request.get(new URL("/api/documents", BASE).toString())).json();
-        id = body.documents.find((d) => d.filename === filename)?.id ?? null;
-        return id;
+        landed = (await documentIds(page)).find((id) => !before.has(id)) ?? null;
+        return landed;
       },
       { timeout: 60_000 },
     )
     .not.toBeNull();
-  return id;
+  // The tray says « terminée » once the check was started (or refused): leaving the page earlier would cut that step short.
+  await expect(page.getByTestId("upload-tray")).toContainText(/1 terminée/, { timeout: 60_000 });
+  return landed;
 }
 
 async function openCheckAs(browser, info, perspective) {
@@ -111,10 +117,13 @@ test("a landlord drops an invoice on the library: the check starts on its own an
     videoContextOptions,
     path: "/fr/app",
   });
-  const id = await newestDocumentId(page, await dropInvoiceOnLibrary(page));
-  await page.goto(`/fr/app/documents/${id}/rapport`);
+  const id = await dropAndFind(page);
+  // The check runs after the upload answered: the report page is opened again until it holds its findings.
+  await expect(async () => {
+    await page.goto(`/fr/app/documents/${id}/rapport`);
+    await expect(page.getByText("À regarder").first(), "the report holds its findings").toBeVisible({ timeout: 3000 });
+  }).toPass({ timeout: 60_000 });
   await expect(page.getByTestId("check-not-offered")).toHaveCount(0);
-  await expect(page.getByText("À regarder").first(), "the report holds its findings").toBeVisible({ timeout: 60_000 });
   await page.context().close();
 });
 
@@ -131,10 +140,13 @@ test("a tenant drops the invoice on the library: no check is started, the page s
     videoContextOptions,
     path: "/fr/app",
   });
-  const id = await newestDocumentId(page, await dropInvoiceOnLibrary(page));
-  await page.goto(`/fr/app/documents/${id}/rapport`);
+  const id = await dropAndFind(page);
   const notOffered = page.getByTestId("check-not-offered");
-  await expect(notOffered).toContainText("Entreprise", { timeout: 60_000 });
+  await expect(async () => {
+    await page.goto(`/fr/app/documents/${id}/rapport`);
+    await expect(notOffered).toContainText("Entreprise", { timeout: 3000 });
+  }).toPass({ timeout: 60_000 });
   await expect(notOffered.getByRole("link", { name: "Changer de rôle" })).toBeVisible();
+  await expect(page.getByText("À regarder"), "no check was launched: no finding").toHaveCount(0);
   await page.context().close();
 });
