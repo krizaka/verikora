@@ -55,7 +55,8 @@ const offsets = objects.map((body, i) => {
   return at;
 });
 const xref = out.length;
-out += `xref\n0 ${objects.length + 1}\n0000000000 65535 f \n${offsets.map((o) => `${String(o).padStart(10, "0")} 00000 n \n`).join("")}`;
+const entries = offsets.map((o) => String(o).padStart(10, "0") + " 00000 n \n").join("");
+out += `xref\n0 ${objects.length + 1}\n0000000000 65535 f \n${entries}`;
 out += `trailer\n<< /Size ${objects.length + 1} /Root 1 0 R >>\nstartxref\n${xref}\n%%EOF\n`;
 
 const bytes = Buffer.from(out, "latin1");
