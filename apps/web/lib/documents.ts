@@ -27,6 +27,7 @@ import { query } from "./db";
 import { ExtractionError } from "./extraction/isolated";
 import { isGenericName } from "./generic-name";
 import { HttpError, refuse } from "./http";
+import { logError } from "./log";
 import { readText } from "./pdf-text";
 import { personalInfo } from "./pii";
 import { createInspector } from "./preflight/inspector";
@@ -68,10 +69,10 @@ export interface AnalysisRow {
   finished_at: Date | null;
 }
 
-/** Whether a report asks for attention: a failed blocking rule, or a signal Sovkora calls incoherent. */
+/** Whether a report asks for attention: any failed rule (the report page lists them all as « À regarder »), or a signal Sovkora calls incoherent. */
 export function needsAttention(report: ComplianceReport | AuthenticityReport | null): boolean {
   if (!report) return false;
-  if ("findings" in report) return report.findings.some((f) => f.verdict === "FAIL" && f.severity === "BLOCKING");
+  if ("findings" in report) return report.findings.some((f) => f.verdict === "FAIL");
   return report.signals.some((s) => s.level === "incohérent");
 }
 
@@ -641,6 +642,8 @@ export async function finishExtraction(args: {
     );
   } catch (error) {
     const code = error instanceof ExtractionError ? String(extractionRefusal(error).body.code) : "UNREADABLE_FILE";
+    // The page only says « unreadable »: the cause (a worker failure, a value the database refused) is read here, by document id (krizaka-internal#4028).
+    logError(`document ${id}: extraction failed as ${code}`, error);
     await query(
       "UPDATE documents SET extraction = 'failed', extraction_error = $3, extraction_at = now() WHERE owner_id = $1 AND id = $2 AND extraction IN ('queued', 'running')",
       [ownerId, id, code],
