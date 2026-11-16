@@ -154,12 +154,15 @@ export function LibraryDrop({
   zone = false,
   examples,
   jurisdictions = ["QC"],
+  offeredRulesets = null,
   placement,
   children,
 }: Readonly<{
   zone?: boolean;
   examples?: (add: (files: File[]) => void) => ReactNode;
   jurisdictions?: readonly Jurisdiction[];
+  /** The rulesets the account's flows run: a check outside them is never launched, as on the task page. */
+  offeredRulesets?: readonly string[] | null;
   placement?: Placement;
   children?: ReactNode;
 }>) {
@@ -195,7 +198,7 @@ export function LibraryDrop({
       }
       // A file dropped on the library is checked like one dropped on the task page: at once when its kind is sure (the review's Y4).
       if (!stored.duplicate) {
-        await startIfSure(stored.document.id, "auto", jurisdictions, new Date());
+        await startIfSure(stored.document.id, "auto", jurisdictions, new Date(), undefined, offeredRulesets);
       }
       router.refresh();
     },

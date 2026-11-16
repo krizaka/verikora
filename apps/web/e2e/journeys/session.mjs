@@ -5,6 +5,8 @@ import { join } from "node:path";
 import { personaSessions, seededPersona } from "@krizaka/page-audit/journey";
 import pg from "pg";
 
+import { pgClientOptions } from "../../scripts/pg-client-options.mjs";
+
 export const BASE = process.env.VISUAL_BASE_URL ?? "http://localhost:3000";
 // CI-only credentials of the seeded cast (scripts/ci-visual-start.sh), never a real account.
 const CAST = {
@@ -32,7 +34,7 @@ export async function resetToNewAccount(id) {
 export async function setPerspective(id, perspective) {
   const url = process.env.DATABASE_URL;
   if (!url) throw new Error("DATABASE_URL is required: the first-run journey resets its account before each test");
-  const client = new pg.Client({ connectionString: url });
+  const client = new pg.Client(pgClientOptions());
   await client.connect();
   try {
     const { rowCount } = await client.query("UPDATE accounts SET perspective = $2 WHERE email = $1", [
@@ -52,7 +54,7 @@ export async function setPerspective(id, perspective) {
 export async function markSeededCheck(titlePart, seeded) {
   const url = process.env.DATABASE_URL;
   if (!url) throw new Error("DATABASE_URL is required: the share journey marks its document's check");
-  const client = new pg.Client({ connectionString: url });
+  const client = new pg.Client(pgClientOptions());
   await client.connect();
   try {
     const { rowCount } = await client.query(

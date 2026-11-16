@@ -177,7 +177,9 @@
       "see the report open",
       "switch Eric to tenant",
       "drop the same invoice",
-      "read which roles offer the check and the link to change role"
+      "read which roles offer the check and the link to change role",
+      "drop an invoice anywhere on the library as a landlord and read its report",
+      "drop one as a tenant and read which roles offer the check"
     ],
     "video": false,
     "budgetSeconds": 90,

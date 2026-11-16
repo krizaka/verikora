@@ -126,13 +126,12 @@ describe("a collection (the UX review's Y7)", () => {
 
   it("a dropped file is checked under the account's offer, and a folder's menu leads somewhere valid once the folder is deleted or moved", () => {
     const page = readFileSync(new URL("./PlacePage.tsx", import.meta.url), "utf8");
-    expect(page).toContain(
-      "offerFor(await availableFlows(appEnvironment()), session.account.perspective).jurisdictions",
-    );
-    expect(page).toContain("jurisdictions={jurisdictions}");
+    expect(page).toContain("offerFor(await availableFlows(appEnvironment()), session.account.perspective)");
+    expect(page).toContain("jurisdictions={offer.jurisdictions}");
+    expect(page).toContain("offeredRulesets={offer.rulesets}");
     expect(page).toContain("libraryId: l.id");
     const view = readFileSync(new URL("./PlaceView.tsx", import.meta.url), "utf8");
-    expect(view).toMatch(/jurisdictions=\{jurisdictions\}\s*>/);
+    expect(view).toMatch(/offeredRulesets=\{offeredRulesets\}\s*>/);
     expect(view).toContain("afterDelete={libraryPath(locale, library.id, collection.id)}");
     expect(view).toContain("afterMove={movedFolderHrefs(locale, collections, folder.id)}");
     const actions = readFileSync(new URL("./OrganisationActions.tsx", import.meta.url), "utf8");

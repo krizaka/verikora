@@ -40,6 +40,7 @@ export function PlaceView({
   collectionTags,
   path,
   jurisdictions,
+  offeredRulesets,
 }: Readonly<{
   locale: "en" | "fr";
   t: Say;
@@ -60,6 +61,8 @@ export function PlaceView({
   path: string;
   /** The jurisdictions the account is offered: a dropped file is checked at once only when one is possible (Y4). */
   jurisdictions?: readonly Jurisdiction[];
+  /** The rulesets the account's flows run: a dropped file is checked only when its ruleset is among them. */
+  offeredRulesets?: readonly string[] | null;
 }>) {
   const crumbs = [
     { href: `/${locale}/app`, label: t.library },
@@ -87,6 +90,7 @@ export function PlaceView({
     <LibraryDrop
       placement={{ collectionId: collection.id, folderId: folder?.id ?? null }}
       jurisdictions={jurisdictions}
+      offeredRulesets={offeredRulesets}
     >
       <div className="flex flex-col gap-6">
         <PageHeader

@@ -39,8 +39,7 @@ export async function PlacePage({ params, searchParams }: Readonly<Props>) {
     l.collections.map((c) => ({ id: c.id, name: c.name, avatar: c.avatar, libraryId: l.id })),
   );
   // The account's offer: a dropped file is checked at once only when one jurisdiction is possible (Y4), as on the library's home.
-  const jurisdictions = offerFor(await availableFlows(appEnvironment()), session.account.perspective).jurisdictions;
-
+  const offer = offerFor(await availableFlows(appEnvironment()), session.account.perspective);
   if (!isId(p.library) || !isId(p.collection)) notFound();
   const collection = await org.ownedCollection(query, owner, p.collection).catch(() => null);
   if (!collection || collection.library_id !== p.library) notFound();
@@ -71,7 +70,8 @@ export async function PlacePage({ params, searchParams }: Readonly<Props>) {
       tags={tags}
       documentTags={documentTags}
       view={view}
-      jurisdictions={jurisdictions}
+      jurisdictions={offer.jurisdictions}
+      offeredRulesets={offer.rulesets}
       tagsByDocument={byDoc}
       folderTags={Object.fromEntries(folders.map((f) => [f.id, f.tags.map((x) => x.id)]))}
       collections={collections}
