@@ -87,6 +87,30 @@ test("a landlord drops a supplier invoice and the check is started: the report o
   await page.context().close();
 });
 
+// krizaka-internal#4028: a foreign SaaS invoice (Stripe layout, USD, QST and GST charged, no registration numbers) whose text layer holds
+// U+0000 was stored as « unreadable ». It is read, and its report opens with the findings.
+test("a landlord drops a Stripe-style USD invoice: it is read and the report holds its findings", async ({
+  browser,
+}, info) => {
+  const page = await openCheckAs(browser, info, "landlord");
+  await page.waitForLoadState("networkidle");
+  await page
+    .locator("input[type=file]")
+    .first()
+    .setInputFiles({
+      name: "invoice-synthetic-usd.pdf",
+      mimeType: "application/pdf",
+      buffer: readFileSync(
+        new URL("../../../../fixtures/stripe-like-invoice/invoice-synthetic-usd.pdf", import.meta.url),
+      ),
+    });
+  await expect(page, "the report opens").toHaveURL(/\/app\/documents\/[^/]+\/rapport/, { timeout: 60_000 });
+  expect(page.url(), "no refusal is carried in the address").not.toContain("refused=");
+  await expect(page.getByText(/endommagé|n’est pas un document valide/), "the file is read").toHaveCount(0);
+  await expect(page.getByText("À regarder").first(), "the report holds its findings").toBeVisible({ timeout: 60_000 });
+  await page.context().close();
+});
+
 test("a tenant drops the same invoice: no check is launched, the page says which roles offer it", async ({
   browser,
 }, info) => {

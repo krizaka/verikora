@@ -27,6 +27,7 @@ import { query } from "./db";
 import { ExtractionError } from "./extraction/isolated";
 import { isGenericName } from "./generic-name";
 import { HttpError, refuse } from "./http";
+import { logError } from "./log";
 import { readText } from "./pdf-text";
 import { personalInfo } from "./pii";
 import { createInspector } from "./preflight/inspector";
@@ -641,6 +642,8 @@ export async function finishExtraction(args: {
     );
   } catch (error) {
     const code = error instanceof ExtractionError ? String(extractionRefusal(error).body.code) : "UNREADABLE_FILE";
+    // The page only says « unreadable »: the cause (a worker failure, a value the database refused) is read here, by document id (krizaka-internal#4028).
+    logError(`document ${id}: extraction failed as ${code}`, error);
     await query(
       "UPDATE documents SET extraction = 'failed', extraction_error = $3, extraction_at = now() WHERE owner_id = $1 AND id = $2 AND extraction IN ('queued', 'running')",
       [ownerId, id, code],
