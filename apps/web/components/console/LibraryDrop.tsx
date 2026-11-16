@@ -16,6 +16,7 @@ import { useAppConfig } from "@/lib/app-config-client";
 import { useSay } from "@/lib/i18n-client";
 import { pluralKey } from "@/lib/plural";
 
+import { BROWSE_BUTTON_TARGET } from "./phone-targets";
 import { startIfSure } from "./start-check";
 import { ACCEPT, ACCEPT_RULES, isPhotoFile, type Placement, refusalCode, send, translated } from "./upload";
 
@@ -219,6 +220,7 @@ export function LibraryDrop({
     () => (
       <div data-testid="library-dropzone">
         <Dropzone
+          className={BROWSE_BUTTON_TARGET}
           title={say("library.dropTitle")}
           browseLabel={say("library.browse")}
           inputLabel={say("library.inputLabel")}

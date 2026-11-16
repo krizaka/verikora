@@ -199,7 +199,7 @@ export function DocumentView({
     },
   };
   const startProps = { doc, perspective, offer, examinable: facts.examinable, running: facts.running };
-  const startCards = <StartCards {...startProps} />;
+  const startCards = <StartCards {...startProps} afterFailure={facts.failure !== null} />;
   const placeName = place ? collectionLabel(place.name, place.isDefault, say("organisation.defaultName")) : null;
   const retention = retentionText(doc, say, locale);
   const kindName = say(`kinds.${doc.kind}`);

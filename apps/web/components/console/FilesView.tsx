@@ -32,6 +32,7 @@ import type { ResolvedView } from "@/lib/workspace/view";
 import { BulkActions } from "../organise/BulkActions";
 import { useSavedViews } from "../organise/useSavedViews";
 import { DISPLAY_TIME_ZONE, INTL } from "./format";
+import { EXPAND_BUTTON_TARGET } from "./phone-targets";
 import { type AskableType, RequestDocuments } from "./RequestDocuments";
 import { tableLabels } from "./table-labels";
 import { TagChips } from "./TagChips";
@@ -378,6 +379,7 @@ function FilesBody({
       rowLabel={(f) => f.candidateName}
       pageSize={12}
       labels={labels}
+      className={EXPAND_BUTTON_TARGET}
       phone="list"
       {...(table
         ? {

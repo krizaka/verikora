@@ -55,7 +55,9 @@ function StartCompliance({
   jurisdictions,
   options,
   initialType,
+  afterFailure = false,
 }: Readonly<{
+  afterFailure?: boolean;
   documentId: string;
   disabled: boolean;
   initialType: CheckKind;
@@ -131,7 +133,9 @@ function StartCompliance({
       {paywall ? <Paywall reason={paywall} /> : null}
       {reused ? <Alert tone="info">{say("analysis.reused")}</Alert> : null}
       {problem ? <Alert tone="danger">{problem}</Alert> : null}
-      <form.Submit disabled={disabled}>{say("analysis.run")}</form.Submit>
+      <form.Submit variant={afterFailure ? "secondary" : "primary"} disabled={disabled} className="min-h-11">
+        {say("analysis.run")}
+      </form.Submit>
     </form.Form>
   );
 }
@@ -180,7 +184,7 @@ function StartAuthenticity({ documentId, disabled }: Readonly<{ documentId: stri
       {paywall ? <Paywall reason={paywall} /> : null}
       {reused ? <Alert tone="info">{say("analysis.reused")}</Alert> : null}
       {problem ? <Alert tone="danger">{problem}</Alert> : null}
-      <form.Submit variant="secondary" disabled={disabled}>
+      <form.Submit variant="secondary" disabled={disabled} className="min-h-11">
         {say("analysis.run")}
       </form.Submit>
     </form.Form>
@@ -193,6 +197,8 @@ type StartProps = {
   offer: { studios: readonly Studio[]; jurisdictions: readonly Jurisdiction[]; rulesets: readonly string[] };
   examinable: boolean;
   running: (studio: Studio) => boolean;
+  /** The newest check did not finish: « Try again » leads the page, so this form is not a second filled button. */
+  afterFailure?: boolean;
 };
 
 /** The Studios a document can start, in the order the person's perspective puts first, only those their flows offer. */
@@ -216,7 +222,12 @@ function AuthenticityBody({ doc, examinable, running }: Readonly<Pick<StartProps
   return <StartAuthenticity documentId={doc.id} disabled={running("document-authenticity")} />;
 }
 
-function ComplianceBody({ doc, offer, running }: Readonly<Pick<StartProps, "doc" | "offer" | "running">>) {
+function ComplianceBody({
+  doc,
+  offer,
+  running,
+  afterFailure,
+}: Readonly<Pick<StartProps, "doc" | "offer" | "running" | "afterFailure">>) {
   const { say } = useSay();
   const detectedKind = doc.insight?.understanding.check?.documentType ?? null;
   const compliancePlan = planCheck({
@@ -243,6 +254,7 @@ function ComplianceBody({ doc, offer, running }: Readonly<Pick<StartProps, "doc"
         documentId={doc.id}
         initialType={isCheckKind(doc.kind) ? doc.kind : (detectedKind ?? "lease")}
         disabled={running("compliance-check")}
+        afterFailure={afterFailure}
         jurisdictions={offer.jurisdictions}
         options={options}
       />
@@ -251,10 +263,17 @@ function ComplianceBody({ doc, offer, running }: Readonly<Pick<StartProps, "doc"
 }
 
 /** What starting one check holds: the compliance form (the kind declared and the one Verikora read select the ruleset, ADR-089; a mismatch is shown and confirmed in the form) or the authenticity form — or why it cannot run. */
-function StartBody({ studio, doc, offer, examinable, running }: Omit<StartProps, "perspective"> & { studio: Studio }) {
+function StartBody({
+  studio,
+  doc,
+  offer,
+  examinable,
+  running,
+  afterFailure,
+}: Omit<StartProps, "perspective"> & { studio: Studio }) {
   if (studio === "document-authenticity")
     return <AuthenticityBody doc={doc} examinable={examinable} running={running} />;
-  return <ComplianceBody doc={doc} offer={offer} running={running} />;
+  return <ComplianceBody doc={doc} offer={offer} running={running} afterFailure={afterFailure} />;
 }
 
 const TITLE: Record<Studio, string> = {
@@ -275,6 +294,7 @@ export function StartCards(props: Readonly<StartProps>) {
             offer={props.offer}
             examinable={props.examinable}
             running={props.running}
+            afterFailure={props.afterFailure}
             studio={studio}
           />
         </Card.Root>

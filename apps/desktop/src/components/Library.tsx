@@ -258,6 +258,7 @@ export function Library({
         {folder === null ? (
           <EmptyState
             icon={<LocalIcon size={28} />}
+            className="border-0"
             title={t("library.drop")}
             description={(granted.data ?? []).length ? t("library.dropHint") : t("library.emptyFolders")}
           />

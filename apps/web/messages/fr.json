@@ -384,6 +384,8 @@
       "groupedUploaded": "{count} photos forment un seul document dans votre bibliothèque.",
       "photoNotice": "Les photos sont redressées et recadrées, puis leur texte est lu sur place. Les données de la photo (position, appareil) sont retirées.",
       "table": {
+        "details": "Détails",
+        "expandRow": "Afficher les détails de {name}",
         "empty": "Aucun document ne correspond.",
         "results": "{count} documents",
         "filters": "Filtrer les documents",

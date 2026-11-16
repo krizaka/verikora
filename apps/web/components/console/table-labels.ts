@@ -5,6 +5,8 @@ type Say = (key: string, vars?: Record<string, string | number>) => string;
 /** The words of every table of the console (search, filters, pagination), read once from the messages. */
 export const tableLabels = (say: Say): Partial<DataTableLabels> => ({
   empty: say("library.table.empty"),
+  details: say("library.table.details"),
+  expandRow: (name) => say("library.table.expandRow", { name }),
   results: (count) => say("library.table.results", { count }),
   filters: say("library.table.filters"),
   clearFilters: say("library.table.clear"),

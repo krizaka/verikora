@@ -22,6 +22,7 @@ import { KIND } from "@/lib/workspace/decl";
 import { BulkActions } from "../organise/BulkActions";
 import { formatBytes, formatDate } from "./format";
 import { ItemMenu, type Option, type TagOption } from "./OrganisationActions";
+import { EXPAND_BUTTON_TARGET } from "./phone-targets";
 import { RowBookmarks } from "./RowBookmarks";
 import { tableLabels } from "./table-labels";
 import { TagChips } from "./TagChips";
@@ -280,6 +281,7 @@ export function DocumentTable({
       }}
       toolbar={<DataTableFilters />}
       labels={labels}
+      className={EXPAND_BUTTON_TARGET}
       phone="list"
       {...bulk}
     />

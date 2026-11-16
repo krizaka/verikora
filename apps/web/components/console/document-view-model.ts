@@ -32,6 +32,8 @@ export interface DocumentFacts {
   /** The face's compliance report, when it has findings. */
   latestReport: ComplianceReport | null;
   failures: Analysis[];
+  /** The newest check, when it did not finish and left no report (nothing runs): the failure said once, with its way out. */
+  failure: Analysis | null;
   running: (studio: Studio) => boolean;
   /** The Studio whose run is followed at the top of the report (its steps). */
   runningStudio: (typeof STUDIOS_SHOWN_RUNNING)[number] | null;
@@ -62,6 +64,9 @@ export function documentFacts(
   const running = (studio: Studio) =>
     doc.analyses.some((a) => a.studio === studio && a.status === ANALYSIS_STATUS.running);
   const isPdf = doc.mimeType === "application/pdf";
+  const failures = doc.analyses.filter((a) => a.error);
+  const newest = doc.analyses[0];
+  const runningStudio = STUDIOS_SHOWN_RUNNING.find((s) => running(s)) ?? null;
   const latestReport =
     latestCompliance?.report && "findings" in latestCompliance.report ? latestCompliance.report : null;
   return {
@@ -73,9 +78,10 @@ export function documentFacts(
       ...(latestReport ? (["compliance-check"] as const) : []),
       ...(latestAuthenticity ? (["document-authenticity"] as const) : []),
     ],
-    failures: doc.analyses.filter((a) => a.error),
+    failures,
+    failure: newest && failures.includes(newest) && !newest.report && !runningStudio ? newest : null,
     running,
-    runningStudio: STUDIOS_SHOWN_RUNNING.find((s) => running(s)) ?? null,
+    runningStudio,
     isPdf,
     examinable: isPdf || doc.mimeType === DOCX_MIME || doc.mimeType === ODT_MIME,
     certifiable: !!latestCompliance && !isSeededCheck(latestCompliance),

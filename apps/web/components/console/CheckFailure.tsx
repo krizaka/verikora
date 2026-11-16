@@ -42,6 +42,7 @@ export function CheckFailure({ doc, failed }: Readonly<{ doc: DocumentView; fail
       <div className="flex flex-wrap gap-2">
         <Button
           variant="primary"
+          className="min-h-11"
           disabled={retry.isPending}
           onClick={() => {
             setProblem(null);
@@ -50,7 +51,7 @@ export function CheckFailure({ doc, failed }: Readonly<{ doc: DocumentView; fail
         >
           {say(retry.isPending ? "checkFailure.retrying" : "checkFailure.retry")}
         </Button>
-        <ButtonLink href={`/${locale}${CONSOLE_ROUTES.check}`} variant="secondary">
+        <ButtonLink href={`/${locale}${CONSOLE_ROUTES.check}`} variant="secondary" className="min-h-11">
           {say("checkFailure.chooseFile")}
         </ButtonLink>
       </div>
