@@ -153,7 +153,9 @@ describe.runIf(enabled)("flows in the database", () => {
 
   it("enforces a required consent: CONSENT_REQUIRED until it is granted, then the flow runs, then withdrawn it is refused again", async () => {
     const consentFree = await flowId("lease-check-landlord");
-    await setEnvironment(admin, consentFree, "dev", false); // the landlord's only consent-free offer is off for this test
+    await setEnvironment(admin, consentFree, "dev", false); // the landlord's consent-free offers (the lease check and the invoices they receive) are off for this test
+    const invoices = await flowId("file-check-business");
+    await setEnvironment(admin, invoices, "dev", false);
     const key = `screening-${stamp}`;
     const { id } = await createFlow(admin, key, { ...SEED_FLOWS[1]!.definition, consents: ["tenant-screening"] });
     const [v] = await query<{ id: string }>("SELECT id FROM flow_versions WHERE flow_id = $1 AND version = 1", [id]);
@@ -179,6 +181,7 @@ describe.runIf(enabled)("flows in the database", () => {
 
     await setEnvironment(admin, id, "dev", false);
     await setEnvironment(admin, consentFree, "dev", true);
+    await setEnvironment(admin, invoices, "dev", true);
   });
 
   it("refuses a Studio nothing offers: a disabled flow cannot be started (FLOW_NOT_OFFERED)", async () => {
