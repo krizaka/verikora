@@ -22,6 +22,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useRef, useState } from "react";
 import { z } from "zod";
 
+import type { RolesByKind } from "@/lib/check-offer";
 import { type DocumentTab } from "@/lib/console-nav";
 import { displayTitle } from "@/lib/document-face";
 import { useSay } from "@/lib/i18n-client";
@@ -146,7 +147,12 @@ export function DocumentView({
   bundle?: LeaseBundle | null;
   registry?: RegistryReport | null;
   answers?: Record<string, Answer>;
-  offer: { studios: readonly Studio[]; jurisdictions: readonly Jurisdiction[]; rulesets: readonly string[] };
+  offer: {
+    studios: readonly Studio[];
+    jurisdictions: readonly Jurisdiction[];
+    rulesets: readonly string[];
+    rolesByKind?: RolesByKind;
+  };
 }>) {
   const { say, locale } = useSay();
   const router = useRouter();

@@ -20,6 +20,7 @@ export default async function CheckPage() {
   return (
     <CheckView
       jurisdictions={offer.jurisdictions}
+      offeredRulesets={offer.rulesets}
       catalogue={catalogueOf(offer, session?.account.territory ?? null)}
       credits={session ? await creditsOf(session.account.id, now) : null}
     />

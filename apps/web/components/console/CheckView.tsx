@@ -138,7 +138,10 @@ export function CheckView({
   jurisdictions = ["QC"],
   catalogue = [],
   credits = null,
+  offeredRulesets = null,
 }: Readonly<{
+  /** The rulesets the account's flows run: a check outside them is never launched (the report tab says why). */
+  offeredRulesets?: readonly string[] | null;
   jurisdictions?: readonly Jurisdiction[];
   catalogue?: readonly CatalogueItem[];
   credits?: CreditsFigure | null;
@@ -154,7 +157,7 @@ export function CheckView({
   const [rows, dispatch] = useReducer(checkRows, []);
   const dropped = useRef(0);
   const follow = async (id: string, requested: DocumentKind | "auto") => {
-    const outcome = await startIfSure(id, requested, jurisdictions, new Date());
+    const outcome = await startIfSure(id, requested, jurisdictions, new Date(), undefined, offeredRulesets);
     dispatch({ type: "outcome", id, outcome, requested });
     // A refusal (an entitlement, a rule) travels to the report tab, which says it above its own form.
     if (opensAtOnce(dropped.current) && (outcome.started || outcome.refused || requested !== "auto"))

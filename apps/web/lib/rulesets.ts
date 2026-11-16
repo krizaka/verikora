@@ -32,6 +32,9 @@ const QC_RULESETS: Partial<Record<CheckKind, readonly RulesetVersion[]>> = {
   "premises-condition": [{ effectiveFrom: "2026-10-24", ref: "qc-premises-condition" }],
 };
 
+/** A dated ruleset (`qc-residential-lease/2026-10-24`) is its ruleset (`qc-residential-lease`): what a flow names. */
+export const rulesetId = (ruleset: string): string => ruleset.split("/")[0] ?? ruleset;
+
 /** The version in force on `asOf` (ISO yyyy-mm-dd): the latest one that has come into force by then, or none. */
 export function versionInForce(versions: readonly RulesetVersion[], asOf: string): RulesetVersion | null {
   let current: RulesetVersion | null = null;

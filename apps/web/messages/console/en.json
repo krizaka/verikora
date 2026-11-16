@@ -690,6 +690,11 @@
             "askFor": "Ask the issuer for the current registration."
           }
         }
+      },
+      "notOffered": {
+        "text": "This document reads as {kind}. That check is offered with the role: {roles}. Your current role does not offer it.",
+        "none": "No role offers the check of {kind} yet.",
+        "action": "Change role"
       }
     },
     "search": {

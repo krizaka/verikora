@@ -121,6 +121,7 @@ const render = (
   locale: "en" | "fr" = "fr",
   place: { libraryId: string; collectionId: string; name: string; isDefault: boolean } | null = null,
   registry: RegistryReport | null = null,
+  offer: Record<string, unknown> = { rulesets: [] },
 ) =>
   renderToStaticMarkup(
     <I18nProvider locale={locale} messages={MESSAGES[locale] as never}>
@@ -131,7 +132,13 @@ const render = (
           place={place}
           registry={registry}
           perspective="landlord"
-          offer={{ studios: ["compliance-check", "document-authenticity"], jurisdictions: ["QC"], rulesets: [] }}
+          offer={
+            {
+              studios: ["compliance-check", "document-authenticity"],
+              jurisdictions: ["QC"],
+              ...offer,
+            } as never
+          }
         />
       </KrizakaQueryProvider>
     </I18nProvider>,
@@ -314,6 +321,30 @@ describe("the document on DetailLayout (the UX review's Y5)", () => {
     expect(readable(render(document([])))).toContain(fr.console.errors.RATE_LIMITED ?? fr.console.errors.UNKNOWN);
     nav.search = "";
     expect(readable(render(document([]), "rapport", "en"))).toContain(en.console.reportFace.notChecked);
+  });
+});
+
+describe("a check the account is not offered (krizaka-internal#3979)", () => {
+  const notOffered = {
+    rulesets: ["qc-residential-lease"],
+    rolesByKind: { invoice: ["landlord", "freelancer", "business"] },
+  };
+  it("says which roles offer it and links to the role, with no « start » button that can only fail", () => {
+    nav.search = "refused=FLOW_NOT_OFFERED";
+    const html = render(document([], { kind: "invoice" }), "rapport", "fr", null, null, notOffered);
+    expect(html).toContain('data-testid="check-not-offered"');
+    expect(readable(html)).toContain("Propriétaire (locateur), Travailleur autonome ou Entreprise");
+    expect(html).toContain('href="/fr/app/settings/profil"');
+    expect(readable(html)).toContain(fr.console.analysis.notOffered.action);
+    expect(html).not.toContain(`aria-label="${fr.console.analysis.complianceTitle}"`);
+    nav.search = "";
+  });
+  it("starts offering the form once the role offers the kind", () => {
+    const html = render(document([], { kind: "invoice" }), "rapport", "fr", null, null, {
+      rulesets: ["qc-residential-lease", "qc-invoice"],
+      rolesByKind: { invoice: ["landlord"] },
+    });
+    expect(html).not.toContain('data-testid="check-not-offered"');
   });
 });
 

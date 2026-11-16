@@ -96,10 +96,11 @@ describe("the catalogue is filtered by the account's territory (krizaka-internal
       "qc-premises-condition",
     ]);
   });
-  it("a Québec landlord sees the same four, in the ticket's order", () => {
+  it("a Québec landlord sees the lease, the notices and the supplier invoice they receive (krizaka-internal#3979)", () => {
     expect(ids(catalogueOf(offerFor("landlord"), "QC"))).toEqual([
       "qc-residential-lease",
       "authenticity",
+      "qc-invoice",
       "qc-visit-notice",
       "qc-premises-condition",
     ]);

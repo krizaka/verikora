@@ -690,6 +690,11 @@
             "askFor": "Demandez à l'émetteur son inscription actuelle."
           }
         }
+      },
+      "notOffered": {
+        "text": "Ce document se lit comme {kind}. Cette vérification est offerte avec le rôle : {roles}. Votre rôle actuel ne l'offre pas.",
+        "none": "Aucun rôle n'offre encore la vérification de {kind}.",
+        "action": "Changer de rôle"
       }
     },
     "search": {

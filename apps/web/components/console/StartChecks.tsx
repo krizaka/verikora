@@ -20,10 +20,13 @@ import { useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { z } from "zod";
 
+import { ButtonLink } from "@/components/ButtonLink";
 import { Paywall } from "@/components/console/Paywall";
 import { noTextKeyOf } from "@/lib/check-failure";
 import { planCheck, rulesFor } from "@/lib/check-flow";
+import type { RolesByKind } from "@/lib/check-offer";
 import { errorKey } from "@/lib/client";
+import { CONSOLE_ROUTES } from "@/lib/console-nav";
 import { useSay } from "@/lib/i18n-client";
 import { firstCheck } from "@/lib/perspective-defaults";
 import { CHECK_KINDS, type CheckKind, isCheckKind, LAW_TIME_ZONE } from "@/lib/rulesets";
@@ -194,7 +197,13 @@ function StartAuthenticity({ documentId, disabled }: Readonly<{ documentId: stri
 type StartProps = {
   doc: DocumentView;
   perspective: Audience | null;
-  offer: { studios: readonly Studio[]; jurisdictions: readonly Jurisdiction[]; rulesets: readonly string[] };
+  offer: {
+    studios: readonly Studio[];
+    jurisdictions: readonly Jurisdiction[];
+    rulesets: readonly string[];
+    /** The roles that run each kind of check, to say where a check not offered here can be run. */
+    rolesByKind?: RolesByKind;
+  };
   examinable: boolean;
   running: (studio: Studio) => boolean;
   /** The newest check did not finish: « Try again » leads the page, so this form is not a second filled button. */
@@ -222,6 +231,28 @@ function AuthenticityBody({ doc, examinable, running }: Readonly<Pick<StartProps
   return <StartAuthenticity documentId={doc.id} disabled={running("document-authenticity")} />;
 }
 
+/** A check this account is not offered: said in words with the roles that run it and the way to change role — never a button that can only fail. */
+function CheckNotOffered({ kind, roles }: Readonly<{ kind: CheckKind; roles: readonly Audience[] }>) {
+  const { say, locale } = useSay();
+  const names = new Intl.ListFormat(locale, { type: "disjunction" }).format(roles.map((r) => say(`profile.${r}`)));
+  return (
+    <div className="flex flex-col gap-3" data-testid="check-not-offered">
+      <Alert tone="info">
+        {roles.length
+          ? say("analysis.notOffered.text", { kind: say(`analysis.kindWords.${kind}`), roles: names })
+          : say("analysis.notOffered.none", { kind: say(`analysis.kindWords.${kind}`) })}
+      </Alert>
+      {roles.length ? (
+        <div>
+          <ButtonLink href={`/${locale}${CONSOLE_ROUTES.account}/profil`} variant="secondary" size="md">
+            {say("analysis.notOffered.action")}
+          </ButtonLink>
+        </div>
+      ) : null}
+    </div>
+  );
+}
+
 function ComplianceBody({
   doc,
   offer,
@@ -235,7 +266,12 @@ function ComplianceBody({
     detected: detectedKind,
     asOf: localDay(new Date(), LAW_TIME_ZONE),
   });
-  const options = complianceOptions(compliancePlan.mismatch, offeredKinds(offer.rulesets), doc.kind);
+  const offered = offeredKinds(offer.rulesets);
+  const wanted = isCheckKind(doc.kind) ? doc.kind : detectedKind;
+  if (wanted && !offered.includes(wanted) && offer.rolesByKind) {
+    return <CheckNotOffered kind={wanted} roles={offer.rolesByKind[wanted] ?? []} />;
+  }
+  const options = complianceOptions(compliancePlan.mismatch, offered, doc.kind);
   if (doc.insight?.understanding.nature && !doc.insight.understanding.check)
     return <Alert tone="info">{say("insight.noCheck")}</Alert>;
   if (!doc.hasText) return <Alert tone="info">{say(noTextKeyOf(doc.mimeType))}</Alert>;

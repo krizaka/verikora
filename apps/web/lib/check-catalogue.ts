@@ -3,6 +3,7 @@ import { type Jurisdiction, JURISDICTIONS, type Studio } from "@verikora/core";
 import { CONSOLE_ROUTES } from "./console-nav";
 import type { CreditsFigure } from "./home-b2";
 import { CATALOGUE_GROUPS, type CheckKind, ROUTE_STATES } from "./route-state";
+import { rulesetId } from "./rulesets";
 
 /*
  * « Vérifier un document », B2 (verikora#333, design § 5.4/5.6): the catalogue of the checks Verikora runs, its chips with their
@@ -64,9 +65,6 @@ export function catalogueOf(
   }
   return authenticity ? [...ordered, authenticity] : ordered;
 }
-
-/** A dated ruleset (`qc-residential-lease/2026-10-24`) is its lease (the same rule as `rulesetId` of lib/flows, which reads the database: not imported into the browser). */
-const rulesetId = (ruleset: string): string => ruleset.split("/")[0] ?? ruleset;
 
 const plain = (text: string) =>
   text

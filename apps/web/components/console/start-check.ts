@@ -10,7 +10,7 @@ import {
 import { z } from "zod";
 
 import { afterUpload } from "@/lib/check-flow";
-import { LAW_TIME_ZONE } from "@/lib/rulesets";
+import { LAW_TIME_ZONE, rulesetId } from "@/lib/rulesets";
 
 import { refusalCode } from "./upload";
 
@@ -31,6 +31,7 @@ export async function startIfSure(
   jurisdictions: readonly Jurisdiction[],
   now: Date,
   fetcher: typeof krizakaFetch = krizakaFetch,
+  offered: readonly string[] | null = null,
 ): Promise<StartOutcome> {
   let start = null;
   try {
@@ -49,6 +50,11 @@ export async function startIfSure(
     if (error instanceof ExtractionNotReady && error.reason) return { started: false, refused: error.reason };
   }
   if (!start) return { started: false, refused: null };
+  // A check the account is not offered is never launched (it can only fail): the report tab says which roles offer it.
+  const ruleset = "ruleset" in start ? start.ruleset : undefined;
+  if (offered && ruleset && !offered.map(rulesetId).includes(rulesetId(ruleset))) {
+    return { started: false, refused: "FLOW_NOT_OFFERED" };
+  }
   try {
     await fetcher(`/api/documents/${id}`, { method: "POST", json: start });
     return { started: true, refused: null };

@@ -45,6 +45,24 @@ describe("starting the check once a file landed", () => {
   });
 });
 
+describe("a check the account is not offered is never launched", () => {
+  it("says FLOW_NOT_OFFERED without calling the engine when the flows do not run the kind's ruleset", async () => {
+    const fetcher = vi.fn().mockResolvedValueOnce(detail("high", "invoice"));
+    expect(await startIfSure("d1", "auto", ["QC"], NOON, fetcher as never, ["qc-residential-lease"])).toEqual({
+      started: false,
+      refused: "FLOW_NOT_OFFERED",
+    });
+    expect(fetcher).toHaveBeenCalledTimes(1);
+  });
+  it("starts it when the ruleset is offered", async () => {
+    const fetcher = vi.fn().mockResolvedValueOnce(detail("high", "invoice")).mockResolvedValueOnce({ analysis: {} });
+    expect(await startIfSure("d1", "auto", ["QC"], NOON, fetcher as never, ["qc-invoice"])).toEqual({
+      started: true,
+      refused: null,
+    });
+  });
+});
+
 describe("the text is read after the upload answered (202 Accepted)", () => {
   const reading = (extraction: "queued" | "running" | "done" | "failed", extractionError?: string) => {
     const d = detail("high", "invoice");

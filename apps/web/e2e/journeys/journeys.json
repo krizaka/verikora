@@ -165,5 +165,22 @@
     "video": true,
     "budgetSeconds": 90,
     "tags": ["critical"]
+  },
+  {
+    "id": "invoice-by-role",
+    "promise": "A landlord drops a supplier invoice and gets a report; a tenant is told which roles offer the check, with no check launched for them",
+    "persona": "eric",
+    "platforms": ["web"],
+    "steps": [
+      "sign in as Eric (landlord)",
+      "drop a demo invoice on Check a document",
+      "see the report open",
+      "switch Eric to tenant",
+      "drop the same invoice",
+      "read which roles offer the check and the link to change role"
+    ],
+    "video": false,
+    "budgetSeconds": 90,
+    "tags": []
   }
 ]
