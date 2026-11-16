@@ -61,29 +61,23 @@ out += `trailer\n<< /Size ${objects.length + 1} /Root 1 0 R >>\nstartxref\n${xre
 const bytes = Buffer.from(out, "latin1");
 const dir = new URL("../../fixtures/stripe-like-invoice/", import.meta.url);
 writeFileSync(new URL("invoice-synthetic-usd.pdf", dir), bytes);
-writeFileSync(
-  new URL("provenance.json", dir),
-  `${JSON.stringify(
-    {
-      fictitious: true,
-      purpose:
-        "A Stripe-style foreign SaaS invoice in USD that charges QST and GST without registration numbers (krizaka-internal#4028).",
-      noRealPerson:
-        "Supplier, address and bill-to are invented. The real invoice that exposed the fault is never committed.",
-      madeBy: "node scripts/stripe-like-invoice/build.mjs",
-      file: "invoice-synthetic-usd.pdf",
-      sha256: createHash("sha256").update(bytes).digest("hex"),
-      facts: {
-        subtotal: "50.00",
-        qst: "4.99",
-        gst: "2.50",
-        total: "57.49",
-        currency: "USD",
-        registrationNumbers: "none printed",
-      },
-    },
-    null,
-    2,
-  )}\n`,
-);
+const provenance = {
+  fictitious: true,
+  purpose:
+    "A Stripe-style foreign SaaS invoice in USD that charges QST and GST without registration numbers (krizaka-internal#4028).",
+  noRealPerson:
+    "Supplier, address and bill-to are invented. The real invoice that exposed the fault is never committed.",
+  madeBy: "node scripts/stripe-like-invoice/build.mjs",
+  file: "invoice-synthetic-usd.pdf",
+  sha256: createHash("sha256").update(bytes).digest("hex"),
+  facts: {
+    subtotal: "50.00",
+    qst: "4.99",
+    gst: "2.50",
+    total: "57.49",
+    currency: "USD",
+    registrationNumbers: "none printed",
+  },
+};
+writeFileSync(new URL("provenance.json", dir), JSON.stringify(provenance, null, 2) + "\n");
 console.log("written", bytes.length, "bytes");
