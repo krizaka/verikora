@@ -63,6 +63,7 @@ export default async function LibraryPage({
   ]);
   const documents = libraries.reduce((n, l) => n + l.collections.reduce((m, c) => m + c.files, 0), 0);
   const paid = paymentReturnOf(search[PAID_KEY]);
+  const offer = offerFor(flows, perspective);
   const view = (
     <LibraryView
       libraries={libraries}
@@ -72,7 +73,8 @@ export default async function LibraryPage({
       perspective={perspective}
       screening={screeningOffered}
       examples={SAMPLES}
-      jurisdictions={offerFor(flows, perspective).jurisdictions}
+      jurisdictions={offer.jurisdictions}
+      offeredRulesets={offer.rulesets}
       credits={credits}
     />
   );

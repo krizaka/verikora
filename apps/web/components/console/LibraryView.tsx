@@ -46,6 +46,7 @@ export function LibraryView({
   screening = false,
   examples,
   jurisdictions = ["QC"],
+  offeredRulesets = null,
   credits = null,
 }: Readonly<{
   libraries: LibraryOverview[];
@@ -57,6 +58,8 @@ export function LibraryView({
   screening?: boolean;
   examples?: ExampleDocuments;
   jurisdictions?: readonly Jurisdiction[];
+  /** The rulesets the account's flows run: a dropped file is checked only when its ruleset is among them. */
+  offeredRulesets?: readonly string[] | null;
   credits?: CreditsFigure | null;
 }>) {
   const { say, locale } = useSay();
@@ -73,7 +76,13 @@ export function LibraryView({
     return (
       <div className="flex flex-col gap-8">
         {header}
-        <LibraryEmpty jurisdictions={jurisdictions} examples={examples} order={order} credits={credits} />
+        <LibraryEmpty
+          jurisdictions={jurisdictions}
+          offeredRulesets={offeredRulesets}
+          examples={examples}
+          order={order}
+          credits={credits}
+        />
       </div>
     );
   }
@@ -102,7 +111,7 @@ export function LibraryView({
       </div>
       {credits ? <UsageLine figure={credits} /> : null}
       {/* Drop anywhere stays (the overlay); the page has no drop zone and no second primary: « Vérifier un document » is the header's. */}
-      <LibraryDrop jurisdictions={jurisdictions} />
+      <LibraryDrop jurisdictions={jurisdictions} offeredRulesets={offeredRulesets} />
     </div>
   );
 }
@@ -240,11 +249,13 @@ const examplesSlot = (
 /** Nothing at all yet: the owl, one sentence, the only drop zone, and two examples. */
 function LibraryEmpty({
   jurisdictions,
+  offeredRulesets = null,
   examples,
   order,
   credits = null,
 }: Readonly<{
   jurisdictions: readonly Jurisdiction[];
+  offeredRulesets?: readonly string[] | null;
   examples?: ExampleDocuments;
   order: readonly ("tenant" | "landlord")[];
   credits?: CreditsFigure | null;
@@ -261,7 +272,12 @@ function LibraryEmpty({
         title={say("library.emptyTitle")}
         description={say("library.emptyPitch")}
       />
-      <LibraryDrop zone jurisdictions={jurisdictions} examples={examplesSlot(examples, order, say)} />
+      <LibraryDrop
+        zone
+        jurisdictions={jurisdictions}
+        offeredRulesets={offeredRulesets}
+        examples={examplesSlot(examples, order, say)}
+      />
       <p className="m-0 text-center text-sm text-fg-secondary" data-testid="library-empty-dossiers">
         {say("library.emptyDossiers")}
       </p>
