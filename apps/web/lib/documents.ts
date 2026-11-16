@@ -69,10 +69,10 @@ export interface AnalysisRow {
   finished_at: Date | null;
 }
 
-/** Whether a report asks for attention: a failed blocking rule, or a signal Sovkora calls incoherent. */
+/** Whether a report asks for attention: any failed rule (the report page lists them all as « À regarder »), or a signal Sovkora calls incoherent. */
 export function needsAttention(report: ComplianceReport | AuthenticityReport | null): boolean {
   if (!report) return false;
-  if ("findings" in report) return report.findings.some((f) => f.verdict === "FAIL" && f.severity === "BLOCKING");
+  if ("findings" in report) return report.findings.some((f) => f.verdict === "FAIL");
   return report.signals.some((s) => s.level === "incohérent");
 }
 
