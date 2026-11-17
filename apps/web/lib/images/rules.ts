@@ -16,6 +16,7 @@ export const VERIKORA_IMAGE_RULES: ImageRules = {
     maxEdgeInk: 0.02,
     edgeBand: 0.02,
     inkLevel: 100,
+    barInkShare: 0.75,
     rim: 0.015,
   },
 };
