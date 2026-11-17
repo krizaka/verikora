@@ -1,6 +1,9 @@
 /** Addresses of the site — structure, not words (the words are in messages/). */
 export const SITE_URL = "https://www.verikora.com";
 export const REPO_URL = "https://github.com/krizaka/verikora";
+/** The one licence the pages name: the file's own (krizaka-internal#4148). */
+export const LICENSE_ID = "FSL-1.1-ALv2";
+export const LICENSE_URL = `${REPO_URL}/blob/main/LICENSE.md`;
 /** Krizaka, the publisher: named only in the footer and the legal mentions (the products are independent). */
 export const KRIZAKA_URL = "https://www.krizaka.com";
 export const PRIVACY_UPDATED = "2026-11-13";

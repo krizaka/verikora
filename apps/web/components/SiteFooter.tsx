@@ -8,7 +8,7 @@ import { publicBuild } from "@/lib/build-target";
 import { type Locale, translator } from "@/lib/i18n";
 import { indexable } from "@/lib/indexing";
 import { isListed } from "@/lib/listed";
-import { APP_VERSION, contactHref, pagePath, REPO_URL } from "@/lib/site";
+import { APP_VERSION, contactHref, LICENSE_URL, pagePath, REPO_URL } from "@/lib/site";
 
 /**
  * The footer is @krizaka/ui's SiteFooter in product mode (`family={false}`): the product's pages, its source and contact,
@@ -56,6 +56,7 @@ export function ProductFooter({ locale }: Readonly<{ locale: Locale }>) {
           </SiteFooterLink>
         ) : null}
         <SiteFooterLink href={REPO_URL}>{t("chrome.sourceCode")}</SiteFooterLink>
+        <SiteFooterLink href={LICENSE_URL}>{t("chrome.license")}</SiteFooterLink>
         <SiteFooterLink asChild>
           <Link href={pagePath(locale, "contact")}>{t("chrome.contact")}</Link>
         </SiteFooterLink>

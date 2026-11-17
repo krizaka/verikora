@@ -17,11 +17,28 @@ export function ruleTitle(ruleId: string, lang: Lang, fallback: string | null | 
   return t ? say(t, lang) : (fallback ?? ruleId);
 }
 
+/** The engine's raw sentence for a judgement it could not use (krizaka-internal#4148): shown as a readable label, never as is. */
+const UNUSABLE_JUDGMENT_ENGINE_TEXT = "Le modèle n'a pas rendu de verdict exploitable pour cette règle.";
+const UNUSABLE_JUDGMENT_LABEL: Record<Lang, string> = {
+  fr: "Le document ne permet pas de conclure sur cette règle.",
+  en: "The document does not allow a conclusion on this rule.",
+};
+
+const isUnusableJudgment = (text: string) =>
+  text.trim() === UNUSABLE_JUDGMENT_ENGINE_TEXT || text.trim() === UNUSABLE_JUDGMENT_LABEL.fr;
+
+/** The engine's text with the raw « no usable verdict » sentence swapped for its French label (the page then reads it in either language). */
+export const readableEngineText = (text: string): string =>
+  text.trim() === UNUSABLE_JUDGMENT_ENGINE_TEXT ? UNUSABLE_JUDGMENT_LABEL.fr : text;
+
 /**
  * The finding's explanation in `lang`. French is the engine's own text, always kept exact. English is the pack's sentence only when the
  * engine's French equals the pack's French word for word (so nothing specific, a name or an amount, is lost); otherwise the engine's text stays.
  */
 export function ruleExplanation(ruleId: string, lang: Lang, fallback: string, english?: string): string {
+  if (isUnusableJudgment(fallback)) {
+    return UNUSABLE_JUDGMENT_LABEL[lang];
+  }
   if (lang === "fr") return fallback;
   if (english) return english;
   const plain = allCompliancePacks().find((p) => ruleId in p.rules)?.rules[ruleId];

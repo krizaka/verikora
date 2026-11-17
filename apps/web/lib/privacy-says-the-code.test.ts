@@ -22,7 +22,9 @@ const CONSOLE = { en: consoleEn, fr: consoleFr } as const;
 
 const sectionOf = (locale: (typeof LOCALES)[number], id: string) => {
   const s = getDictionary(locale).privacy.sections.find((x) => x.id === id);
-  if (!s) throw new Error(`no section « ${id} » in ${locale}`);
+  if (!s) {
+    throw new Error(`no section « ${id} » in ${locale}`);
+  }
   return `${s.h} ${s.p}`;
 };
 const allText = (locale: (typeof LOCALES)[number]) => JSON.stringify(getDictionary(locale).privacy);
@@ -41,7 +43,9 @@ describe("the privacy page says what the code does (krizaka-internal#3308)", () 
     const ids = (locale: (typeof LOCALES)[number]) => getDictionary(locale).privacy.sections.map((s) => s.id);
     expect(ids("fr")).toEqual(ids("en"));
     expect(new Set(ids("en")).size).toBe(ids("en").length);
-    for (const id of ids("en")) expect(id).toMatch(/^[a-z][a-z-]*$/);
+    for (const id of ids("en")) {
+      expect(id).toMatch(/^[a-z][a-z-]*$/);
+    }
   });
 
   it("the page renders each section with its anchor", () => {
@@ -101,7 +105,9 @@ describe("the privacy page says what the code does (krizaka-internal#3308)", () 
     "%s: where a kept document lives — a development store for fictional data today, Canada in production",
     (locale, ...words) => {
       const s = sectionOf(locale, "where");
-      for (const w of words) expect(s).toMatch(w);
+      for (const w of words) {
+        expect(s).toMatch(w);
+      }
       // the panel's own words for the development store (messages/console … storage.devOnly)
       expect(JSON.stringify(CONSOLE[locale])).toMatch(
         locale === "fr" ? /données fictives seulement/ : /fictional data only/,
