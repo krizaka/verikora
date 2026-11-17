@@ -1,7 +1,7 @@
 // The export check of the public build (krizaka-internal#4148): lists the exported HTML pages and fails on any route outside
 // lib/public-build/routes.mjs, any missing route, and any sign-in, /api/, dev host or session cookie code in the output.
 import { readdirSync, readFileSync, statSync } from "node:fs";
-import { dirname, join, relative, resolve } from "node:path";
+import { dirname, isAbsolute, join, relative, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 import { PUBLIC_ROUTES } from "../lib/public-build/routes.mjs";
@@ -61,8 +61,16 @@ export function checkExport(dir) {
   return problems;
 }
 
+/** The export folder named on the command line, bounded to the app: a path that leaves it is refused, never read. */
+export function exportDirOf(arg, appDir) {
+  const dir = resolve(appDir, arg ?? "out-public");
+  const rel = relative(appDir, dir);
+  if (rel.startsWith("..") || isAbsolute(rel)) throw new Error(`export folder outside the app: ${arg}`);
+  return dir;
+}
+
 if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
-  const dir = resolve(process.argv[2] ?? join(dirname(fileURLToPath(import.meta.url)), "..", "out-public"));
+  const dir = exportDirOf(process.argv[2], resolve(dirname(fileURLToPath(import.meta.url)), ".."));
   const problems = checkExport(dir);
   if (problems.length) {
     console.error(problems.map((p) => `✗ ${p}`).join("\n"));

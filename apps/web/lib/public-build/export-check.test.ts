@@ -4,7 +4,7 @@ import { dirname, join } from "node:path";
 
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 
-import { checkExport, routeOf } from "../../scripts/check-public-export.mjs";
+import { checkExport, exportDirOf, routeOf } from "../../scripts/check-public-export.mjs";
 import { PUBLIC_ROUTES } from "./routes.mjs";
 
 /** The export check of the public build (krizaka-internal#4148): a clean export passes; each way out of the list fails. */
@@ -94,5 +94,19 @@ describe("the export check", () => {
     put("_next/static/chunks/app.js", "ok");
     put("en/contact/index.html", "https://dev.verikora.com");
     expect(checkExport(dir)).toContain("dev. host in en/contact/index.html");
+  });
+});
+
+describe("exportDirOf", () => {
+  const app = "/repo/apps/web";
+  it("defaults to out-public in the app", () => {
+    expect(exportDirOf(undefined, app)).toBe("/repo/apps/web/out-public");
+  });
+  it("accepts a folder inside the app", () => {
+    expect(exportDirOf("out-public", app)).toBe("/repo/apps/web/out-public");
+  });
+  it("refuses a folder outside the app", () => {
+    expect(() => exportDirOf("../../etc", app)).toThrow(/outside/);
+    expect(() => exportDirOf("/etc", app)).toThrow(/outside/);
   });
 });
