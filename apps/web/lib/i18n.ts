@@ -1,5 +1,6 @@
 import { createI18n, type MessageKey as KeyOf } from "@krizaka/i18n";
 
+import { publicOverlay } from "@/lib/public-overlay";
 import consoleEn from "@/messages/console/en.json";
 import consoleFr from "@/messages/console/fr.json";
 import documentsEn from "@/messages/documents/en.json";
@@ -21,8 +22,27 @@ import siteFr from "@/messages/site/fr.json";
  */
 export type Locale = "en" | "fr";
 
-const en = { ...siteEn, ...legalEn, ...marketingEn, ...screeningEn, ...consoleEn, ...documentsEn };
-const fr = { ...siteFr, ...legalFr, ...marketingFr, ...screeningFr, ...consoleFr, ...documentsFr };
+const isEntries = (value: unknown): value is Record<string, unknown> =>
+  typeof value === "object" && value !== null && !Array.isArray(value);
+
+/** A catalogue with the target's overlay on top: objects merge entry by entry (the overlay wins), a list or a string is replaced. */
+const overlaid = <T extends object>(base: T, overlay: Record<string, unknown>): T => {
+  const merged: Record<string, unknown> = { ...(base as Record<string, unknown>) };
+  for (const [key, value] of Object.entries(overlay)) {
+    const current = merged[key];
+    merged[key] = isEntries(current) && isEntries(value) ? overlaid(current, value) : value;
+  }
+  return merged as T;
+};
+
+const en = overlaid(
+  { ...siteEn, ...legalEn, ...marketingEn, ...screeningEn, ...consoleEn, ...documentsEn },
+  publicOverlay.en,
+);
+const fr = overlaid(
+  { ...siteFr, ...legalFr, ...marketingFr, ...screeningFr, ...consoleFr, ...documentsFr },
+  publicOverlay.fr,
+);
 
 export type Messages = typeof en;
 export type MessageKey = KeyOf<Messages>;

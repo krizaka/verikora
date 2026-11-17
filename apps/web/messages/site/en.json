@@ -2,7 +2,7 @@
   "meta": {
     "siteName": "Verikora",
     "titleTemplate": "{title} · Verikora",
-    "description": "For property managers in Québec: Verikora reads the documents an applicant sends and your lease template, and ties every finding to its line and its article of law."
+    "description": "Check the file before you offer the unit. For property managers in Québec: Verikora reads the documents an applicant sends and your lease template, and ties every finding to its line and its article of law."
   },
   "chrome": {
     "brandHome": "Verikora, home",
@@ -19,6 +19,7 @@
     "languageLabel": "Language",
     "footerLabel": "Site footer",
     "sourceCode": "Source code",
+    "license": "License FSL-1.1-ALv2",
     "contact": "Contact",
     "support": "Support",
     "legal": "Privacy",

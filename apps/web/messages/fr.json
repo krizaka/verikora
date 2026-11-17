@@ -4396,7 +4396,7 @@
   "meta": {
     "siteName": "Verikora",
     "titleTemplate": "{title} · Verikora",
-    "description": "Pour les gestionnaires d'immeubles au Québec : Verikora lit les pièces envoyées par le candidat et votre modèle de bail, et relie chaque constat à sa ligne et à son article de loi."
+    "description": "Vérifiez le dossier avant d'offrir le logement. Pour les gestionnaires d'immeubles au Québec : Verikora lit les pièces envoyées par le candidat et votre modèle de bail, et relie chaque constat à sa ligne et à son article de loi."
   },
   "chrome": {
     "brandHome": "Verikora, accueil",
@@ -4413,6 +4413,7 @@
     "languageLabel": "Langue",
     "footerLabel": "Pied de page",
     "sourceCode": "Code source",
+    "license": "Licence FSL-1.1-ALv2",
     "contact": "Contact",
     "support": "Soutien",
     "legal": "Confidentialité",
