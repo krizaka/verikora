@@ -63,6 +63,37 @@ describe("can this photo be read? (verikora#8)", () => {
   });
 });
 
+/** A phone screenshot: the page on white, a solid dark toolbar with light icons under it (the icons keep the page from being cropped). */
+async function underToolbar(page: Buffer, width: number, height: number) {
+  const bar = 70;
+  const icon = (x: number) => `<rect x="${x}" y="20" width="60" height="${bar - 40}" fill="#eeeeee"/>`;
+  const toolbar = Buffer.from(
+    `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${bar}"><rect width="${width}" height="${bar}" fill="#555555"/>${[100, 320, 540].map(icon).join("")}</svg>`,
+  );
+  return jpeg(
+    sharp({ create: { width, height: height + bar, channels: 3, background: "white" } }).composite([
+      { input: page, left: 0, top: 0 },
+      { input: toolbar, left: 0, top: height },
+    ]),
+  );
+}
+
+describe("a phone screenshot is not a cut page (krizaka-internal#4132)", () => {
+  it("lets a whole page through under a solid dark toolbar", async () => {
+    const shot = await underToolbar(await sharp(pageSvg()).png().toBuffer(), 1200, 520);
+    const { page } = await cleaner.clean({ bytes: shot, kind: "jpeg" });
+    expect(page.steps.cropped).toBe(false);
+    expect(qualityProblem(page.quality, rules)).toBeNull();
+  });
+
+  it("still refuses a page the frame cuts off, under the same toolbar", async () => {
+    const cut = await sharp(pageSvg()).extract({ left: 20, top: 0, width: 700, height: 520 }).png().toBuffer();
+    const { page } = await cleaner.clean({ bytes: await underToolbar(cut, 700, 520), kind: "jpeg" });
+    expect(page.steps.cropped).toBe(false);
+    expect(qualityProblem(page.quality, rules)).toBe("CUT_OFF");
+  });
+});
+
 describe("the measures", () => {
   it("a flat bitmap has no sharpness; edges have", () => {
     const flat = { data: new Uint8Array(100).fill(200), width: 10, height: 10 };

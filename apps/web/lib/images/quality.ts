@@ -30,6 +30,8 @@ export interface QualityRules {
   edgeBand: number;
   /** A pixel below this level is ink. */
   inkLevel: number;
+  /** A row of the frame with at least this share of ink is part of a solid bar (a phone's toolbar), not text, and is not part of the page. */
+  barInkShare: number;
   /** The rim of the cleaned page, as a share of its side, left out of every measure (the crop's last pixels, a shadow). */
   rim: number;
 }
@@ -73,16 +75,46 @@ function glareShare(gray: Gray, rules: QualityRules): number {
   return washed / gray.data.length;
 }
 
-/** The ink share of the thin band along each edge; the largest. */
-function edgeInk(gray: Gray, rules: QualityRules): number {
+/** The rows of the frame left once the solid dark bars along its top and bottom (a phone screenshot's toolbar) are peeled off. */
+function pageRows(gray: Gray, rules: QualityRules): { y0: number; y1: number } {
   const { data, width, height } = gray;
+  const solid = (y: number) => {
+    let ink = 0;
+    for (let x = 0; x < width; x++) {
+      if (data[y * width + x]! < rules.inkLevel) {
+        ink++;
+      }
+    }
+    return ink >= width * rules.barInkShare;
+  };
+  const seam = Math.max(1, Math.round(height * rules.rim)); // the bar's antialiased edge is not the page
+  let [y0, y1] = [0, height];
+  while (y0 < y1 && solid(y0)) {
+    y0++;
+  }
+  while (y1 > y0 && solid(y1 - 1)) {
+    y1--;
+  }
+  if (y0 > 0) {
+    y0 += seam;
+  }
+  if (y1 < height) {
+    y1 -= seam;
+  }
+  return y1 > y0 ? { y0, y1 } : { y0: 0, y1: height };
+}
+
+/** The ink share of the thin band along each edge of the page (inside its bars); the largest. */
+function edgeInk(gray: Gray, rules: QualityRules): number {
+  const { data, width } = gray;
+  const { y0, y1 } = pageRows(gray, rules);
   const bandX = Math.max(1, Math.round(width * rules.edgeBand));
-  const bandY = Math.max(1, Math.round(height * rules.edgeBand));
-  const share = (x0: number, x1: number, y0: number, y1: number) => {
+  const bandY = Math.max(1, Math.round((y1 - y0) * rules.edgeBand));
+  const share = (xa: number, xb: number, ya: number, yb: number) => {
     let ink = 0;
     let total = 0;
-    for (let y = y0; y < y1; y++) {
-      for (let x = x0; x < x1; x++) {
+    for (let y = ya; y < yb; y++) {
+      for (let x = xa; x < xb; x++) {
         total++;
         if (data[y * width + x]! < rules.inkLevel) ink++;
       }
@@ -90,10 +122,10 @@ function edgeInk(gray: Gray, rules: QualityRules): number {
     return total ? ink / total : 0;
   };
   return Math.max(
-    share(0, bandX, 0, height),
-    share(width - bandX, width, 0, height),
-    share(0, width, 0, bandY),
-    share(0, width, height - bandY, height),
+    share(0, bandX, y0, y1),
+    share(width - bandX, width, y0, y1),
+    share(0, width, y0, y0 + bandY),
+    share(0, width, y1 - bandY, y1),
   );
 }
 
