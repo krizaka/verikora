@@ -4,6 +4,7 @@ import { orgFamilyLabels } from "@krizaka/ui/sites";
 import Link from "next/link";
 
 import { BRAND_ID, PRODUCT_NAME } from "@/lib/brand";
+import { publicBuild } from "@/lib/build-target";
 import { type Locale, translator } from "@/lib/i18n";
 import { indexable } from "@/lib/indexing";
 import { isListed } from "@/lib/listed";
@@ -28,14 +29,16 @@ export function ProductFooter({ locale }: Readonly<{ locale: Locale }>) {
           <SiteFooterLink asChild>
             <Link href={pagePath(locale, "privacy")}>{t("chrome.legal")}</Link>
           </SiteFooterLink>
-          <SiteFooterLink asChild>
-            <Link href={pagePath(locale, "terms")}>{t("chrome.terms")}</Link>
-          </SiteFooterLink>
+          {isListed("terms") ? (
+            <SiteFooterLink asChild>
+              <Link href={pagePath(locale, "terms")}>{t("chrome.terms")}</Link>
+            </SiteFooterLink>
+          ) : null}
         </>
       }
       version={APP_VERSION}
       aria-label={t("chrome.footerLabel")}
-      env={indexable() ? undefined : "DEV"}
+      env={publicBuild || indexable() ? undefined : "DEV"}
       data-testid="app-version"
     >
       <SiteFooterColumn title={PRODUCT_NAME}>
