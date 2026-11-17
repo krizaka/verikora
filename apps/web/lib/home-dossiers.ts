@@ -1,7 +1,10 @@
 import type { FileSummary } from "./applicant-file";
 import { collectionLabel } from "./organisation/display";
 import { libraryPath } from "./organisation/rules";
-import type { LibraryOverview } from "./organisation/store";
+import type { LibraryOverview, Tag } from "./organisation/store";
+
+/** How many of a collection's tags the home row names; the rest is a « +N ». */
+const HOME_TAGS_SHOWN = 2;
 
 /**
  * « My dossiers » (krizaka-internal#1898): a dossier is a binder collection or an applicant file, one list for both, newest
@@ -19,6 +22,9 @@ export type DossierRow =
       status: "stored" | "analysing" | "checked" | "attention" | "failed" | null;
       at: string | null;
       href: string;
+      /** The collection's first tags (at most `HOME_TAGS_SHOWN`) and how many more it wears. */
+      tags: Tag[];
+      moreTags: number;
     }
   | {
       kind: "applicantFile";
@@ -48,6 +54,8 @@ export function dossiersOf(
       status: c.lastCheck?.status ?? null,
       at: c.lastCheck?.at ?? null,
       href: libraryPath(locale, l.id, c.id),
+      tags: c.tags.slice(0, HOME_TAGS_SHOWN),
+      moreTags: Math.max(0, c.tags.length - HOME_TAGS_SHOWN),
     })),
   );
   const applicants: DossierRow[] = files.map((f) => ({

@@ -107,8 +107,33 @@ describe("a collection (the UX review's Y7)", () => {
     expect(text).toContain("Factures · 1 fichier");
   });
 
-  it("the documents' tags are a filter bar with the ones in force as chips; absent when the account has no document tag", () => {
-    expect(render()).not.toContain('data-testid="place-filters"');
+  it("the tag filter shows on every collection with documents, also before any tag exists; hidden on an empty one", () => {
+    expect(render({ tags: [] })).toContain('data-testid="place-filters"');
+    expect(render({ documents: [] })).not.toContain('data-testid="place-filters"');
+  });
+
+  it("the header names every tag of the collection, has an « Étiquettes » button, and the mark takes the first tag's text colour", () => {
+    const tags = [
+      { id: "t1", name: "qa-urgent", color: "red" },
+      { id: "t2", name: "montreal", color: "blue" },
+      { id: "t3", name: "autre", color: "green" },
+    ] as never;
+    const html = render({ tags, collectionTags: ["t1", "t2", "t3"] });
+    const chips = html.slice(html.indexOf('data-testid="place-tags"'));
+    for (const name of ["qa-urgent", "montreal", "autre"]) expect(readable(chips)).toContain(name);
+    expect(readable(html)).toContain(fr.console.organisation.tagsButton);
+    expect(html).toContain("color:var(--kz-tag-red-text)");
+    expect(html).toMatch(/aria-hidden="true"[^>]*data-testid="place-mark"/);
+  });
+
+  it("without a tag the mark is fg-secondary and no tag row shows", () => {
+    const html = render();
+    expect(html).not.toContain('data-testid="place-tags"');
+    expect(html).toContain("text-fg-secondary");
+    expect(html).not.toContain("--kz-tag-");
+  });
+
+  it("the documents' tags are a filter bar with the ones in force as chips", () => {
     const T1 = "11111111-1111-4111-8111-111111111111";
     const T2 = "22222222-2222-4222-8222-222222222222";
     const tags = [

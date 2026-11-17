@@ -231,4 +231,31 @@ describe("the home (krizaka-internal#1898)", () => {
     expect(html).not.toContain('data-testid="library-empty"');
     expect(readable(html)).toContain("Immeuble Laurier");
   });
+
+  it("names a collection's first two tags on its home row, then « +N », each beside its marker", () => {
+    const tag = (id: string, name: string, color: string) => ({ id, name, color });
+    const html = render({
+      libraries: [
+        {
+          id: "l1",
+          name: "L",
+          collections: [
+            collection({
+              tags: [tag("a", "qa-urgent", "red"), tag("b", "montreal", "blue"), tag("c", "autre", "green")],
+            }),
+          ],
+        },
+      ],
+    });
+    const section = html.slice(html.indexOf('data-testid="home-dossiers"'));
+    expect(readable(section)).toContain("qa-urgent");
+    expect(readable(section)).toContain("montreal");
+    expect(readable(section)).not.toContain("autre");
+    expect(readable(section)).toContain("+1");
+  });
+
+  it("shows no tag chip on a row whose collection wears none", () => {
+    const section = render({}).slice(render({}).indexOf('data-testid="home-dossiers"'));
+    expect(section).not.toContain("+1");
+  });
 });

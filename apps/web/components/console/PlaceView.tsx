@@ -8,8 +8,9 @@ import Link from "next/link";
 import { CollectionMark } from "@/components/console/CollectionMark";
 import { DocumentTable } from "@/components/console/DocumentTable";
 import { AddFilesButton, DropZone, LibraryDrop } from "@/components/console/LibraryDrop";
-import { CreateButton, ItemMenu } from "@/components/console/OrganisationActions";
+import { CreateButton, ITEM_KIND, ItemMenu, TagsButton } from "@/components/console/OrganisationActions";
 import { PlaceFilters } from "@/components/console/PlaceFilters";
+import { TagChips } from "@/components/console/TagChips";
 import type { Messages } from "@/lib/i18n";
 import { libraryPath, movedFolderHrefs, type ViewState } from "@/lib/organisation/rules";
 import type { Folder, Tag } from "@/lib/organisation/store";
@@ -61,6 +62,11 @@ export function PlaceView({
   /** The rulesets the account's flows run: a dropped file is checked only when its ruleset is among them. */
   offeredRulesets?: readonly string[] | null;
 }>) {
+  const placeKind = folder ? ITEM_KIND.folder : ITEM_KIND.collection;
+  const placeId = folder?.id ?? collection.id;
+  const placeCurrent = folder ? (folderTags?.[folder.id] ?? []) : collectionTags;
+  const placeTags = placeCurrent.flatMap((id) => tags.find((t) => t.id === id) ?? []);
+  const markTag = placeTags[0]?.color ?? null;
   const crumbs = [
     { href: `/${locale}/app`, label: t.library },
     {
@@ -73,6 +79,7 @@ export function PlaceView({
           name={collection.name}
           avatar={collection.avatar}
           size="sm"
+          tag={markTag}
         />
       ),
     },
@@ -112,7 +119,7 @@ export function PlaceView({
           }
           title={
             <span className="flex items-center gap-3">
-              <CollectionMark id={collection.id} name={collection.name} avatar={collection.avatar} />
+              <CollectionMark id={collection.id} name={collection.name} avatar={collection.avatar} tag={markTag} />
               {folder?.name ?? collection.name}
             </span>
           }
@@ -120,6 +127,7 @@ export function PlaceView({
           actions={
             <>
               <AddFilesButton>{t.addDocuments}</AddFilesButton>
+              <TagsButton kind={placeKind} id={placeId} tags={tags} current={placeCurrent} />
               {folder ? (
                 <ItemMenu
                   kind="folder"
@@ -151,6 +159,11 @@ export function PlaceView({
             </>
           }
         />
+        {placeTags.length > 0 ? (
+          <div data-testid="place-tags">
+            <TagChips tags={placeTags} />
+          </div>
+        ) : null}
         {!folder && folders.length > 0 ? (
           <nav aria-label={t.foldersIn} className="flex flex-wrap items-center gap-2" data-testid="folder-chips">
             {folders.map((f) => (
@@ -162,8 +175,15 @@ export function PlaceView({
             ))}
           </nav>
         ) : null}
-        {tags.length > 0 ? (
-          <PlaceFilters tags={tags} selected={view.tags} path={path} view={view} count={documents.length} />
+        {documents.length > 0 || view.tags.length > 0 ? (
+          <PlaceFilters
+            tags={tags}
+            selected={view.tags}
+            path={path}
+            view={view}
+            count={documents.length}
+            place={{ kind: placeKind, id: placeId, tags, current: placeCurrent }}
+          />
         ) : null}
         <section aria-label={t.filesIn} className="flex flex-col gap-3">
           {documents.length > 0 ? (

@@ -4,12 +4,18 @@ import type { FileSummary } from "./applicant-file";
 import { dossiersOf } from "./home-dossiers";
 import type { LibraryOverview } from "./organisation/store";
 
-const col = (id: string, name: string, lastAt: string | null, files = 2) => ({
+const col = (
+  id: string,
+  name: string,
+  lastAt: string | null,
+  files = 2,
+  tags: { id: string; name: string; color: string }[] = [],
+) => ({
   id,
   name,
   files,
   folders: 0,
-  tags: [],
+  tags,
   isDefault: false,
   avatar: null,
   description: null,
@@ -34,5 +40,21 @@ describe("dossiersOf", () => {
   it("gives each row the address that opens it, with the language", () => {
     const rows = dossiersOf(libs(col("c1", "A", null)), [file("f1", "B", "2026-10-25T10:00:00.000Z")], "en", "My");
     expect(rows.map((r) => r.href)).toEqual(["/en/app/dossiers/f1", "/en/app/library/l1/c1"]);
+  });
+
+  it("carries a collection's tags, two at most, with the count of the rest", () => {
+    const tag = (id: string, color: string) => ({ id, name: `t-${id}`, color });
+    const [row] = dossiersOf(
+      libs(col("c1", "Rosemont", null, 2, [tag("a", "red"), tag("b", "blue"), tag("c", "green"), tag("d", "gray")])),
+      [],
+      "fr",
+      "Mes documents",
+    );
+    expect(row).toMatchObject({ kind: "collection", tags: [tag("a", "red"), tag("b", "blue")], moreTags: 2 });
+  });
+
+  it("carries no tag and no count for a collection without tags", () => {
+    const [row] = dossiersOf(libs(col("c1", "A", null)), [], "fr", "Mes documents");
+    expect(row).toMatchObject({ tags: [], moreTags: 0 });
   });
 });

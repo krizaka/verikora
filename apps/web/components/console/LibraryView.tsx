@@ -26,6 +26,7 @@ import { formatDate } from "./format";
 import { LatestChecks, ToTreat, UsageLine } from "./HomeSections";
 import { LibraryDrop } from "./LibraryDrop";
 import { CreateButton } from "./OrganisationActions";
+import { TagChips } from "./TagChips";
 
 export type ExampleDocuments = Record<"tenant" | "landlord", { title: string; filename: string; text: string }>;
 
@@ -188,19 +189,39 @@ function DocumentsList({ rows, firstId }: Readonly<{ rows: readonly DossierRow[]
         row={(r) => ({
           title: r.name,
           href: r.href,
-          description: [
-            say(pluralKey("organisation.files", r.count), { count: r.count }),
-            r.at ? say("home.dossiers.moved", { date: formatDate(r.at, locale) }) : say("home.dossiers.never"),
-          ].join(" · "),
-          meta: r.status ? (
-            <Badge tone={rowTone(r)} dot size="sm">
-              {say(`statuses.${r.status}`)}
-            </Badge>
-          ) : undefined,
+          description: (
+            <span className="flex flex-col gap-1.5">
+              {[
+                say(pluralKey("organisation.files", r.count), { count: r.count }),
+                r.at ? say("home.dossiers.moved", { date: formatDate(r.at, locale) }) : say("home.dossiers.never"),
+              ].join(" · ")}
+              {r.kind === "collection" && r.tags.length > 0 ? (
+                <span className="md:hidden">{rowTags(r, say)}</span>
+              ) : null}
+            </span>
+          ),
+          meta:
+            r.status || (r.kind === "collection" && r.tags.length > 0) ? (
+              <span className="flex items-center gap-3">
+                {r.kind === "collection" && r.tags.length > 0 ? (
+                  <span className="hidden md:inline">{rowTags(r, say)}</span>
+                ) : null}
+                {r.status ? (
+                  <Badge tone={rowTone(r)} dot size="sm">
+                    {say(`statuses.${r.status}`)}
+                  </Badge>
+                ) : null}
+              </span>
+            ) : undefined,
         })}
       />
     </section>
   );
+}
+
+/** A collection's tags on its home row: two at most, then « +N ». */
+function rowTags(r: Extract<DossierRow, { kind: "collection" }>, say: ReturnType<typeof useSay>["say"]) {
+  return <TagChips tags={r.tags} more={r.moreTags} moreLabel={(count) => say("organisation.moreTags", { count })} />;
 }
 
 /** « 2 sur 3 reçus »; nothing when no document was asked for. */
