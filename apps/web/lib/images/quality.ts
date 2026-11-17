@@ -80,15 +80,25 @@ function pageRows(gray: Gray, rules: QualityRules): { y0: number; y1: number } {
   const { data, width, height } = gray;
   const solid = (y: number) => {
     let ink = 0;
-    for (let x = 0; x < width; x++) if (data[y * width + x]! < rules.inkLevel) ink++;
+    for (let x = 0; x < width; x++) {
+      if (data[y * width + x]! < rules.inkLevel) ink++;
+    }
     return ink >= width * rules.barInkShare;
   };
   const seam = Math.max(1, Math.round(height * rules.rim)); // the bar's antialiased edge is not the page
   let [y0, y1] = [0, height];
-  while (y0 < y1 && solid(y0)) y0++;
-  while (y1 > y0 && solid(y1 - 1)) y1--;
-  if (y0 > 0) y0 += seam;
-  if (y1 < height) y1 -= seam;
+  while (y0 < y1 && solid(y0)) {
+    y0++;
+  }
+  while (y1 > y0 && solid(y1 - 1)) {
+    y1--;
+  }
+  if (y0 > 0) {
+    y0 += seam;
+  }
+  if (y1 < height) {
+    y1 -= seam;
+  }
   return y1 > y0 ? { y0, y1 } : { y0: 0, y1: height };
 }
 
