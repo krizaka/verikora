@@ -16,7 +16,7 @@
   },
   "dependencies": {
     "@krizaka/organize": "0.6.0",
-    "@krizaka/storage": "0.11.5",
+    "@krizaka/storage": "0.12.0",
     "zod": "^4.6.5"
   },
   "devDependencies": {
