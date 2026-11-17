@@ -81,7 +81,9 @@ function pageRows(gray: Gray, rules: QualityRules): { y0: number; y1: number } {
   const solid = (y: number) => {
     let ink = 0;
     for (let x = 0; x < width; x++) {
-      if (data[y * width + x]! < rules.inkLevel) ink++;
+      if (data[y * width + x]! < rules.inkLevel) {
+        ink++;
+      }
     }
     return ink >= width * rules.barInkShare;
   };
