@@ -7,6 +7,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
+    "build:public": "node scripts/build-public.mjs",
+    "check:public": "node scripts/check-public-export.mjs",
     "lint": "eslint . --max-warnings 21 && krizaka-server-client-boundary && krizaka-ratchet && krizaka-known-violations check app components lib proxy.ts instrumentation.ts instrumentation-node.ts",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",

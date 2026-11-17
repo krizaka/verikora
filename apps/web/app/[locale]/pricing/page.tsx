@@ -4,16 +4,11 @@ import { notFound, redirect } from "next/navigation";
 import { PricingContent } from "@/components/pricing/PricingContent";
 import { SiteHeader } from "@/components/SiteChrome";
 import { ProductFooter } from "@/components/SiteFooter";
-import { pageSession } from "@/lib/access";
-import { CONSOLE_ROUTES } from "@/lib/console-nav";
 import { asLocale, getDictionary } from "@/lib/i18n";
-import { pricingView } from "@/lib/prices/pricing-view";
+import { pricingPageView } from "@/lib/prices/pricing-page-view";
 import { PRICING_PUBLISHED } from "@/lib/prices/publication";
 import { statusLine } from "@/lib/product-status";
 import { pageMetadata, siteJsonLd } from "@/lib/seo";
-
-/** The prices are data an administrator schedules (ADR-009): the page is read at each request, never frozen at build. */
-export const dynamic = "force-dynamic";
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
   return pageMetadata(asLocale((await params).locale), "pricing");
@@ -21,15 +16,14 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
 
 /**
  * The prices, read from the catalogue in force (`publicCatalogue`: never an internal entry, an entry in preparation without its
- * figure — ADR-009). HELD behind `PRICING_PUBLISHED` until Oussama approves the grid (verikora#300): a 404 until then.
+ * figure — ADR-009), through `pricingPageView`: read at each request in the dev app, once at build in the public export (one card). HELD behind `PRICING_PUBLISHED` until Oussama approves the grid (verikora#300): a 404 until then.
  */
 export default async function Pricing({ params }: Readonly<{ params: Promise<{ locale: string }> }>) {
   if (!PRICING_PUBLISHED) notFound();
   const locale = asLocale((await params).locale);
-  const view = await pricingView(locale, new Date());
-  const session = await pageSession();
-  if (session) {
-    redirect(`/${locale}${CONSOLE_ROUTES.plans}`);
+  const view = await pricingPageView(locale, new Date());
+  if (view.redirectTo) {
+    redirect(view.redirectTo);
   }
   return (
     <>
