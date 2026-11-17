@@ -3,6 +3,7 @@ import { Card } from "@krizaka/ui/card";
 import { DescriptionList } from "@krizaka/ui/description-list";
 
 import { formatDate } from "@/components/console/format";
+import { requirePageAdmin } from "@/lib/access";
 import { overview } from "@/lib/admin";
 import { query } from "@/lib/db";
 import { readEnv } from "@/lib/env";
@@ -20,6 +21,7 @@ async function reachable(run: () => Promise<unknown>): Promise<boolean> {
 
 /** Health and version, then the counts — read on the server at each visit. */
 export default async function AdminOverview({ params }: Readonly<{ params: Promise<{ locale: string }> }>) {
+  await requirePageAdmin();
   const locale = asLocale((await params).locale);
   const t = getDictionary(locale).console.adminConsole.overview;
   const [o, db, edge] = await Promise.all([
