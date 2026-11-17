@@ -482,7 +482,7 @@ const markerNames = (say: ReturnType<typeof useSay>["say"]) =>
  * The tags of a collection, a folder or a document: ONE dialog on the library's one tag list (krizaka-internal#3994). Coloured chips
  * (marker and name), a tick on the chosen ones, a new tag created inline with its colour, « Enregistrer » the primary on the right.
  */
-function TagsDialog({
+export function TagsDialog({
   kind,
   id,
   tags,
@@ -543,6 +543,25 @@ function TagsDialog({
         </Button>
       </div>
     </Frame>
+  );
+}
+
+/** « Étiquettes »: the secondary button of a place's header that opens the tags dialog of that collection or folder. */
+export function TagsButton({
+  kind,
+  id,
+  tags,
+  current,
+}: Readonly<{ kind: ItemKind; id: string; tags: TagOption[]; current: string[] }>) {
+  const { say } = useSay();
+  const [open, setOpen] = useState(false);
+  return (
+    <>
+      <Button variant="secondary" size="md" onClick={() => setOpen(true)} data-testid="place-tags-button">
+        {say("organisation.tagsButton")}
+      </Button>
+      {open ? <TagsDialog kind={kind} id={id} tags={tags} current={current} onClose={() => setOpen(false)} /> : null}
+    </>
   );
 }
 
