@@ -5,7 +5,7 @@ import type { Metadata } from "next";
 import { ENGINE_NAME, PRODUCT_NAME } from "./brand";
 import { getDictionary, type Locale } from "./i18n";
 import { isListed } from "./listed";
-import { contactHref, KRIZAKA_URL, type PageId, pagePath, REPO_URL, SITE_URL } from "./site";
+import { contactHref, KRIZAKA_URL, LICENSE_ID, LICENSE_URL, type PageId, pagePath, REPO_URL, SITE_URL } from "./site";
 
 export const ORG_ID = `${KRIZAKA_URL}/#organization`;
 const ORG = { "@type": "Organization", "@id": ORG_ID, name: "Krizaka", url: KRIZAKA_URL };
@@ -88,7 +88,7 @@ export function siteJsonLd(locale: Locale) {
         applicationCategory: "BusinessApplication",
         operatingSystem: "Web",
         isAccessibleForFree: true,
-        license: "https://www.apache.org/licenses/LICENSE-2.0",
+        license: LICENSE_URL,
         codeRepository: REPO_URL,
         publisher: ORG,
         isPartOf: { "@id": `${SITE_URL}/#website` },
@@ -114,11 +114,11 @@ ${isListed("pricing") ? `- [${getDictionary("fr").pricing.title}](${SITE_URL}/fr
 - [Support](${contactHref("verikora-llms", "en")}): Krizaka's contact form, the one way to reach the team
 ## Source
 
-- [${PRODUCT_NAME} repository](${REPO_URL}): the app, its BFF and its contracts (Apache-2.0)
+- [${PRODUCT_NAME} repository](${REPO_URL}): the app, its BFF and its contracts. Licence: [${LICENSE_ID}](${LICENSE_URL})
 
 ## Publisher
 
-- [Krizaka](${KRIZAKA_URL}): the company, an open-source software studio in Montréal
+- [Krizaka](${KRIZAKA_URL}): the company, a software studio in Montréal
 
 Languages: French and English. Sitemap: ${SITE_URL}/sitemap.xml
 `;

@@ -8,7 +8,7 @@ import { LANGS } from "./closing-note/vocabulary";
 import { pickReportLang } from "./owner-report-lang";
 import { buildPayload, renderBody, sha256 } from "./report";
 import { reportLabels } from "./report-labels";
-import { missingRuleTexts, ruleExplanation, ruleTitle } from "./rule-text";
+import { missingRuleTexts, readableEngineText, ruleExplanation, ruleTitle } from "./rule-text";
 
 const lease = allCompliancePacks().find((p) => p.pack === "qc-residential-lease")!;
 const okFr = lease.rules["QC-LEASE-003"]!.ok.fr;
@@ -65,6 +65,16 @@ describe("the rules' words in both languages", () => {
     expect(ruleTitle("QC-LEASE-004", "en", "Titre du moteur")).toBe(lease.ruleTitles["QC-LEASE-004"]!.en);
     expect(ruleExplanation("QC-LEASE-003", "fr", okFr)).toBe(okFr);
     expect(ruleExplanation("QC-LEASE-003", "en", okFr)).toBe(lease.rules["QC-LEASE-003"]!.ok.en);
+  });
+
+  it("shows a readable label instead of the engine's raw 'no usable verdict' sentence", () => {
+    const raw = "Le modèle n'a pas rendu de verdict exploitable pour cette règle.";
+    expect(ruleExplanation("QC-LEASE-011", "fr", raw)).toBe("Le document ne permet pas de conclure sur cette règle.");
+    expect(ruleExplanation("QC-LEASE-011", "en", raw)).toBe("The document does not allow a conclusion on this rule.");
+    expect(readableEngineText(raw)).toBe("Le document ne permet pas de conclure sur cette règle.");
+    expect(ruleExplanation("QC-LEASE-011", "en", readableEngineText(raw))).toBe(
+      "The document does not allow a conclusion on this rule.",
+    );
   });
 
   it("never invents a translation: a text the data does not match word for word stays as the engine wrote it", () => {

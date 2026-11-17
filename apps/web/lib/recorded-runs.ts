@@ -11,6 +11,7 @@ import landlord from "@/content/recorded-runs/landlord.json";
 import tenant from "@/content/recorded-runs/tenant.json";
 
 import { type buildPayload, sha256 } from "./report";
+import { readableEngineText } from "./rule-text";
 import type { Showcase } from "./showcase";
 
 /**
@@ -55,9 +56,14 @@ export function readRecording(
     throw fail("The engine did not return a finished run");
   const run = parsed.data;
   const finishedAt = run.finishedAt!; // checked just above
-  const report = reportOf("compliance-check", run.outputs) as ComplianceReport | null;
-  if (!report || !("findings" in report) || report.findings.length === 0)
+  const engineReport = reportOf("compliance-check", run.outputs) as ComplianceReport | null;
+  if (!engineReport || !("findings" in engineReport) || engineReport.findings.length === 0)
     throw fail("The engine's answer holds no compliance report");
+  // The page ships this report to the browser: the engine's raw « no usable verdict » sentence never leaves, a readable label does (#4148).
+  const report: ComplianceReport = {
+    ...engineReport,
+    findings: engineReport.findings.map((f) => ({ ...f, explanation: readableEngineText(f.explanation) })),
+  };
   const bytes = new TextEncoder().encode(file.document.text);
   const document = {
     sha256: sha256(bytes),
