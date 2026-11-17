@@ -50,7 +50,7 @@
     "date-fns": "^4.4.0",
     "exif-reader": "^2.0.3",
     "heic-decode": "^2.1.0",
-    "next": "^16.4.1",
+    "next": "^16.4.5",
     "opendal": "0.49.13",
     "pdf-lib": "1.17.1",
     "pdfjs-dist": "6.4.299",
