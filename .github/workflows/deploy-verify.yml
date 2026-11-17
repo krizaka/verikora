@@ -13,7 +13,7 @@ jobs:
   deploy-verify:
     permissions:
       contents: read
-    uses: krizaka/.github/.github/workflows/deploy-verify.yml@cf350d9958db51a9d1ce29b2b3eab57c10ddc7a4 # main
+    uses: krizaka/.github/.github/workflows/deploy-verify.yml@43f6462ceec04599ff2ef2c2967bf7202b6dacc5 # main
     with:
       app: verikora-dev
     secrets:
