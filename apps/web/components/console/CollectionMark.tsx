@@ -23,7 +23,9 @@ export function CollectionMark({
   size = "md",
   tag = null,
 }: Readonly<{ id: string; name: string; avatar: Avatar_ | null; size?: "sm" | "md" | "lg"; tag?: TagColor | null }>) {
-  if (avatar) return <CollectionAvatar id={id} name={name} avatar={avatar} size={size} />;
+  if (avatar) {
+    return <CollectionAvatar id={id} name={name} avatar={avatar} size={size} />;
+  }
   return (
     <span
       aria-hidden
