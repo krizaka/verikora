@@ -34,3 +34,7 @@ web-visual.log
 test-results/
 playwright-report/
 journey-diagnosis/
+
+# The public export (pnpm build:public): the staged project and the folder it produces
+apps/web/.public-build/
+apps/web/out-public/

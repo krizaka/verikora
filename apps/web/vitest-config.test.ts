@@ -19,6 +19,12 @@ describe("vitest projects", () => {
 
   it("every integration test file belongs to the database project, never to the parallel unit one", () => {
     expect(named("database").include).toContain("**/*.integration.test.ts");
-    expect(named("unit").exclude).toEqual(named("database").include);
+    expect(named("unit").exclude).toEqual(expect.arrayContaining(named("database").include));
+  });
+
+  it("neither project reads the public export's staged links, which point at the same test files", () => {
+    for (const name of ["unit", "database"]) {
+      expect(named(name).exclude).toContain(".public-build/**");
+    }
   });
 });

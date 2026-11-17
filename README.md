@@ -76,6 +76,24 @@ pnpm run check                             # lint · typecheck · tests (what th
 
 Before a push, `krizaka-precheck` runs the tests [`precheck.json`](precheck.json) declares for the paths you changed (prettier, lint, ast-grep, i18n, unit tests with coverage, desktop).
 
+## Public build
+
+`pnpm build:public` builds a **static export** of the pages a visitor may read on `www.verikora.com` while the product has no
+accounts there, into `apps/web/out-public/` (plain files: any static host serves them).
+
+- **What it contains**: `/fr` and `/en`, then `/docs` (without the API section), `/pricing` (one card, the price read at build
+  from the catalogue, the button to `/contact`), `/contact` and `/privacy`, each in both languages. Nothing else: no sign-in,
+  no `/download`, no `/terms`, no API route, no server action, no database read, no auth provider, at build or at run time.
+- **How**: the export is made from the **same page files** as the dev app. `apps/web/scripts/build-public.mjs` stages a Next
+  project (`apps/web/.public-build/`, ignored) whose `app/` links the files listed in
+  [`lib/public-build/routes.mjs`](apps/web/lib/public-build/routes.mjs), then runs `next build` with
+  [`next.config.public.mjs`](apps/web/next.config.public.mjs) (`output: "export"`). The few modules that differ — the bar's
+  session island, the pricing data, the dictionary the browser receives — are swapped by an alias of that config, and the
+  one-line differences read `lib/build-target.ts`. `pnpm build` and the dev app are unchanged.
+- **The check**: `build:public` ends with `scripts/check-public-export.mjs` (also `pnpm --filter @verikora/web check:public`),
+  covered by `lib/public-build/export-check.test.ts`. It lists the exported HTML pages and fails on any route outside the list,
+  on a missing one, and on any `sign-in`, `/api/`, `dev.` host or session cookie code in the output.
+
 ## Tests
 
 Unit tests (`pnpm test`), the page audit (`scripts/check-app-pages.mjs`) and the **page journeys** (`apps/web/e2e/visual/journeys.visual.mjs`, pixels of whole pages as the seeded cast, taken in CI only). To update a baseline run Actions > _Update visual baselines_ on your branch; how the layers work and how to read a diff: [krizaka/.github docs/standards/ui-testing.md](https://github.com/krizaka/.github/blob/main/docs/standards/ui-testing.md).

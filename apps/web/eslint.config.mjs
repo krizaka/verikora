@@ -22,7 +22,8 @@ const config = [
     ],
   }),
   { files: [".dependency-cruiser.cjs"], rules: { "@typescript-eslint/no-require-imports": "off" } },
-  { ignores: [".next/**", "next-env.d.ts"] },
+  // The public export is generated (scripts/build-public.mjs): the staged project links the sources, which are linted where they are.
+  { ignores: [".next/**", ".public-build/**", "out-public/**", "next-env.d.ts"] },
 ];
 
 export default config;
