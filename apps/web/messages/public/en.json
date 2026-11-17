@@ -1,0 +1,66 @@
+{
+  "privacy": {
+    "title": "Privacy",
+    "updated": "Updated {date}",
+    "body": "This site has no account and asks you for nothing: no document, no sign-up. Your message is read only to answer you, and never sold.",
+    "officer": {
+      "label": "Privacy officer",
+      "sep": ": ",
+      "title": "President, Technologies Krizaka Inc."
+    },
+    "sections": [
+      {
+        "id": "who",
+        "h": "Who is responsible",
+        "p": "Krizaka, a company based in Montréal, publishes Verikora. The person responsible for the protection of personal information (Law 25) is named at the top of this page, with the officer's role address."
+      },
+      {
+        "id": "collected",
+        "h": "What we collect and why",
+        "p": "This site creates no account and asks you for no information. If you write to us, Krizaka's contact form (krizaka.com/contact) receives what you enter, including the e-mail address where we answer you."
+      },
+      {
+        "id": "documents",
+        "h": "No document",
+        "p": "This site receives no document: no check can be started here. The report you see is a recorded example on a fictional lease."
+      },
+      {
+        "id": "use",
+        "h": "What we do with it",
+        "p": "We read your message to answer it. We do not sell your information and do not use it to train a model."
+      },
+      {
+        "id": "rights",
+        "h": "Your rights",
+        "p": "You can access, correct or have your information deleted, and withdraw your consent, by writing to the privacy officer, through the contact form or at the role address shown at the top of this page."
+      },
+      {
+        "id": "complaints",
+        "h": "Filing a complaint",
+        "p": "To file a complaint about your personal information, write through the contact form on krizaka.com (krizaka.com/contact). The privacy officer reads it and answers within 30 days. You can also turn to the Commission d'accès à l'information du Québec."
+      },
+      {
+        "id": "incidents",
+        "h": "Incidents",
+        "p": "If a confidentiality incident carries a risk of serious harm, we notify the Commission d'accès à l'information and the people concerned, as the law requires."
+      },
+      {
+        "id": "contact",
+        "h": "Contact us",
+        "p": "To ask a question or exercise your rights, write through the contact form on krizaka.com. The privacy officer answers."
+      }
+    ]
+  },
+  "docs": {
+    "lead": "How a check works, and what this site does with your data.",
+    "check": {
+      "guaranteesLead": "A report is signed, and can be checked against the signing key:"
+    },
+    "data": {
+      "intro": "This site has no account and receives no document: no check can be started here. The report you see is a recorded example on a fictional lease.",
+      "retention": "If you write to us through Krizaka's contact form, your message is read only to answer you.",
+      "sovkora": "Nothing is sold, shared or used to train a model.",
+      "privacy": "Read the privacy notice"
+    }
+  }
+}

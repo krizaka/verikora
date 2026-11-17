@@ -25,6 +25,8 @@ const nextConfig = {
       "@/components/BarSession": "./components/public-build/BarSession.tsx",
       // The bar is a client component: in the browser it gets its own words only, not every catalogue of the app.
       "@/lib/i18n": { browser: "./lib/public-build/chrome-i18n.ts" },
+      // What the public site says differently (no account, no document): the overlay over the dictionary.
+      "@/lib/public-overlay": "./lib/public-build/overlay.ts",
       "@/lib/prices/pricing-page-view": "./lib/prices/pricing-page-view.public.ts",
     },
   },

@@ -1,0 +1,66 @@
+{
+  "privacy": {
+    "title": "Confidentialité",
+    "updated": "Mis à jour le {date}",
+    "body": "Ce site n’a pas de compte et ne vous demande rien : pas de document, pas d’inscription. Votre message n’est lu que pour vous répondre, jamais vendu.",
+    "officer": {
+      "label": "Responsable de la protection des renseignements personnels",
+      "sep": " : ",
+      "title": "Président, Technologies Krizaka Inc."
+    },
+    "sections": [
+      {
+        "id": "who",
+        "h": "Qui est responsable",
+        "p": "Krizaka, une entreprise établie à Montréal, publie Verikora. La personne responsable de la protection des renseignements personnels (Loi 25) est nommée en haut de cette page, avec l’adresse de rôle du responsable."
+      },
+      {
+        "id": "collected",
+        "h": "Ce que nous recueillons et pourquoi",
+        "p": "Ce site ne crée pas de compte et ne vous demande aucun renseignement. Si vous nous écrivez, le formulaire de contact de Krizaka (krizaka.com/contact) reçoit ce que vous y inscrivez, dont l’adresse courriel où nous vous répondons."
+      },
+      {
+        "id": "documents",
+        "h": "Aucun document",
+        "p": "Ce site ne reçoit aucun document : aucune vérification ne s’y lance. Le rapport que vous y voyez est un exemple enregistré sur un bail fictif."
+      },
+      {
+        "id": "use",
+        "h": "Ce que nous en faisons",
+        "p": "Nous lisons votre message pour y répondre. Nous ne vendons pas vos renseignements et ne les utilisons pas pour entraîner un modèle."
+      },
+      {
+        "id": "rights",
+        "h": "Vos droits",
+        "p": "Vous pouvez accéder à vos renseignements, les corriger ou les faire supprimer, et retirer votre consentement, en écrivant à la personne responsable, par le formulaire de contact ou à l’adresse de rôle indiquée en haut de cette page."
+      },
+      {
+        "id": "complaints",
+        "h": "Déposer une plainte",
+        "p": "Pour déposer une plainte sur vos renseignements personnels, écrivez par le formulaire de contact de krizaka.com (krizaka.com/contact). La personne responsable la lit et répond dans un délai de 30 jours. Vous pouvez aussi vous adresser à la Commission d’accès à l’information du Québec."
+      },
+      {
+        "id": "incidents",
+        "h": "Incidents",
+        "p": "Si un incident de confidentialité présente un risque de préjudice sérieux, nous avisons la Commission d’accès à l’information et les personnes concernées, comme la loi l’exige."
+      },
+      {
+        "id": "contact",
+        "h": "Nous joindre",
+        "p": "Pour poser une question ou exercer vos droits, écrivez par le formulaire de contact de krizaka.com. La personne responsable de la protection des renseignements personnels vous répond."
+      }
+    ]
+  },
+  "docs": {
+    "lead": "Comment fonctionne une vérification, et ce que ce site fait de vos données.",
+    "check": {
+      "guaranteesLead": "Un rapport est signé, et se vérifie avec la clé de signature :"
+    },
+    "data": {
+      "intro": "Ce site n'a pas de compte et ne reçoit aucun document : aucune vérification ne s'y lance. Le rapport que vous y voyez est un exemple enregistré sur un bail fictif.",
+      "retention": "Si vous nous écrivez par le formulaire de contact de Krizaka, votre message n'est lu que pour vous répondre.",
+      "sovkora": "Rien n'est vendu, partagé ni utilisé pour entraîner un modèle.",
+      "privacy": "Lire l'avis de confidentialité"
+    }
+  }
+}
