@@ -64,7 +64,13 @@ describe.runIf(enabled)("a person's own S3 in the registry (ADR-005)", () => {
     clock: { now: () => NOW },
     newId: () => crypto.randomUUID(),
     audit: async () => undefined,
-    open: { runtime: "server", environment: "prod", fetch: bucket.fetchLike, clock: { now: () => NOW } },
+    open: {
+      runtime: "server",
+      environment: "prod",
+      fetch: bucket.fetchLike,
+      endpointFetch: bucket.fetchLike,
+      clock: { now: () => NOW },
+    },
     probeId: () => crypto.randomUUID(),
     references: async (id) =>
       Number(
