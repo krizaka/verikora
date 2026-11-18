@@ -18,6 +18,7 @@ import { VERIKORA_RULES } from "@/lib/preflight/rules";
 import { recordPreflight } from "@/lib/preflight-events";
 import { preflightRulesFrom } from "@/lib/settings/boundary";
 import { assertFeature, settingsFor } from "@/lib/settings/guards";
+import { assertAnnouncedSize, assertPhotoCount, readBoundedForm, requestCeiling } from "@/lib/upload-bounds";
 
 export const dynamic = "force-dynamic";
 
@@ -116,8 +117,12 @@ export function POST(req: Request) {
     const session = await requireSession(req);
     const accountId = session.account.id;
     await limit("upload", req, accountId);
-    const form = await req.formData().catch(() => null);
+    // The request is bounded before it is read: the announced size, then the bytes counted while streaming.
+    const ceiling = requestCeiling(preflightRulesFrom(VERIKORA_RULES, await settingsFor(accountId)).maxBytes);
+    assertAnnouncedSize(req, ceiling);
+    const form = await readBoundedForm(req, ceiling);
     const files = (form?.getAll("file") ?? []).filter((f): f is File => f instanceof File);
+    assertPhotoCount(files.length);
     const file = files[0];
     if (!file) throw refuse(400, "BAD_REQUEST", "A file is expected in the field `file`");
     const kind = documentKind

@@ -32,6 +32,9 @@ import { query } from "./db";
 import { type AnalysisRow, declaredKindOf, isUuid, needsAttention, readBytes, toAnalysis } from "./documents";
 import { refuse } from "./http";
 import { withLines } from "./lease-lines";
+import type { TextSource } from "./ocr/port";
+import { readingProblem } from "./ocr/reading-check";
+import { VERIKORA_OCR_RULES } from "./ocr/rules";
 import { refusedWords } from "./refused-words";
 import { checkReportOutput } from "./report-contract";
 import { purgeIfDone } from "./retention";
@@ -72,12 +75,21 @@ function studioRuleset(ruleset: string | undefined): Record<string, string> {
 
 export function runInputs(
   request: StartAnalysis,
-  doc: { mimeType: string; text: string; content: Buffer },
+  doc: { mimeType: string; text: string; content: Buffer; textSource?: TextSource | null },
   today = new Date(),
 ): Record<string, string> {
   if (request.studio === "compliance-check") {
     if (!doc.text.trim()) {
       throw refuse(422, "NO_TEXT", "This document has no text layer to check");
+    }
+    // The reading gate (ADR VER-019): a text read from an image that fails its check is never given to the rules, so no « absent » is
+    // reported about a page that was not read.
+    const unread = readingProblem(
+      { text: doc.text, source: doc.textSource, mimeType: doc.mimeType },
+      VERIKORA_OCR_RULES,
+    );
+    if (unread) {
+      throw refuse(422, "TEXT_NOT_READ", "The text of this document could not be read reliably", { reading: unread });
     }
     if (doc.text.length > COMPLIANCE_MAX_CHARS) {
       throw refuse(422, "TEXT_TOO_LONG", "This document is longer than the compliance check reads");
@@ -146,8 +158,9 @@ export async function startAnalysis(
     screening_id: string | null;
     extraction: ExtractionStatus;
     extraction_error: string | null;
+    text_source: TextSource | null;
   }>(
-    "SELECT mime_type, text, content, storage, object_key, screening_id, extraction, extraction_error FROM documents WHERE owner_id = $1 AND id = $2",
+    "SELECT mime_type, text, content, storage, object_key, screening_id, extraction, extraction_error, text_source FROM documents WHERE owner_id = $1 AND id = $2",
     [ownerId, documentId],
   );
   if (!doc) {
@@ -183,7 +196,7 @@ export async function startAnalysis(
   }
   // The text is validated first (NO_TEXT, TEXT_TOO_LONG); only then the kind: a kind with no ruleset in force is said so, and the
   // lease's rules are never the fallback for it (ADR-089).
-  const inputs = runInputs(request, { mimeType: doc.mime_type, text: doc.text, content });
+  const inputs = runInputs(request, { mimeType: doc.mime_type, text: doc.text, content, textSource: doc.text_source });
   if (
     request.studio === "compliance-check" &&
     !request.ruleset &&
