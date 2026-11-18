@@ -753,6 +753,7 @@
       "EMPTY_FILE": "Le fichier est vide.",
       "UNREADABLE_FILE": "Ce fichier ne peut pas être ouvert : il est endommagé ou n’est pas un document valide.",
       "NO_TEXT": "Ce document n'a pas de couche texte à vérifier.",
+      "TEXT_NOT_READ": "Le texte de ce document n'a pas pu être lu de façon fiable (montants manquants ou qui ne s'additionnent pas) : aucune vérification n'a été faite pour ne rien affirmer à tort. Reprenez la photo en cadrant toute la page, ou envoyez le PDF d'origine.",
       "TEXT_TOO_LONG": "Ce document dépasse ce que la vérification lit (60 000 caractères).",
       "NOT_A_PDF": "Verikora examine les fichiers PDF, Word (.docx) et OpenDocument (.odt).",
       "PDF_TOO_LARGE": "Verikora examine les fichiers jusqu'à 5 Mo.",

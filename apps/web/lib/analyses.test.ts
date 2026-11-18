@@ -10,6 +10,39 @@ import { normaliseQuery, passageHtml } from "./search";
 const LEASE = "CONTRAT DE LOCATION\nDépôt de garantie : 2 550 €.";
 const pdf = (n: number) => Buffer.concat([Buffer.from("%PDF-1.7\n"), Buffer.alloc(n)]);
 
+describe("an image-only invoice is never checked on a guess (krizaka-internal#4133)", () => {
+  const request = { studio: "compliance-check", jurisdiction: "QC" } as const;
+  const photo = {
+    kind: "ocr",
+    engine: "tesseract",
+    confidence: 78,
+    photos: 1,
+    lowConfidence: false,
+    origin: null,
+  } as const;
+  const base = { mimeType: "application/pdf", content: pdf(10) };
+
+  it("stops with TEXT_NOT_READ when the amounts of a photo were lost, instead of reporting « taxes absent »", () => {
+    const text =
+      "Runway AI receipt\nDate paid: Nov 14, 2026\nSubtotal\nQST (9.975%)\nGST (5%)\nTotal USD\nThank you for your business";
+    expect(() => runInputs(request, { ...base, text, textSource: photo })).toThrow(
+      expect.objectContaining({ body: expect.objectContaining({ code: "TEXT_NOT_READ" }) }),
+    );
+  });
+
+  it("stops with TEXT_NOT_READ on a PDF with a few stray characters and no real text layer", () => {
+    expect(() => runInputs(request, { ...base, text: "1" })).toThrow(
+      expect.objectContaining({ body: expect.objectContaining({ code: "TEXT_NOT_READ" }) }),
+    );
+  });
+
+  it("runs the rules on a photo whose amounts add up", () => {
+    const text =
+      "Runway AI receipt\nDate paid: Nov 14, 2026\nSubtotal $50.00\nQST (9.975%) $4.99\nGST (5%) $2.50\nTotal $57.49 USD";
+    expect(runInputs(request, { ...base, text, textSource: photo })).toMatchObject({ document: text });
+  });
+});
+
 describe("what Verikora sends to Sovkora", () => {
   it("sends the named ruleset only when one was asked for, and never for another jurisdiction", () => {
     const doc = { mimeType: "application/pdf", text: LEASE, content: pdf(10) };
