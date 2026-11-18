@@ -222,7 +222,7 @@ describe.runIf(enabled)("the applicant file (verikora#127)", () => {
 
   it("a pay stub runs its authenticity check; its compliance check is skipped as KIND_NOT_VERIFIED (no lease ruleset), and the purge runs once the check ends", async () => {
     const made = await askWithConsent(["pay-stub"]);
-    const sent = await uploadApplicantDocument(made.token, "pay-stub", await pdf("PAY CHECKED"), ctx(), NOW);
+    const sent = await uploadApplicantDocument(made.token, "pay-stub", await pdf("PAY STUB CHECKED: gross pay for the period, deductions and net pay, as printed by the employer"), ctx(), NOW);
     // A pay stub has no compliance ruleset (ADR-089): the lease's rules are never its fallback, so that skip is visible, and the authenticity check runs.
     expect(sent.checks.started).toEqual(["document-authenticity"]);
     expect(sent.checks.skipped).toEqual([{ studio: "compliance-check", code: "KIND_NOT_VERIFIED" }]);
