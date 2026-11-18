@@ -38,7 +38,7 @@ SELECT ft.folder_id, o.id
 ON CONFLICT DO NOTHING;`;
 
 /** The tables the new kinds need, as the package emits them (a changed emitter fails `migrations.test.ts`, never silently). */
-export const TAG_LIST_DDL = String.raw`CREATE TABLE organize.collection_tag (
+export const TAG_LIST_DDL = `CREATE TABLE organize.collection_tag (
   entity_id uuid NOT NULL REFERENCES collections(id) ON DELETE CASCADE,
   tag_id    uuid NOT NULL,
   kind      text NOT NULL DEFAULT 'document' CHECK (kind = 'document'),
