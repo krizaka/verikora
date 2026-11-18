@@ -1,9 +1,5 @@
 {
-  "globs": [
-    "app/**/*.tsx",
-    "components/**/*.tsx",
-    "src/**/*.tsx"
-  ],
+  "globs": ["app/**/*.tsx", "components/**/*.tsx", "src/**/*.tsx"],
   "stackGlobs": [
     "app/**/*.{js,jsx,mjs,ts,tsx,mts}",
     "components/**/*.{js,jsx,mjs,ts,tsx,mts}",
