@@ -202,5 +202,21 @@
     "video": false,
     "budgetSeconds": 90,
     "tags": []
+  },
+  {
+    "id": "visitor-to-sign-in",
+    "promise": "A visitor reads the prices, chooses « Se connecter » and signs in to reach the app",
+    "persona": "eric",
+    "platforms": ["web"],
+    "steps": [
+      "open the home as a visitor",
+      "open the prices from the bar",
+      "see the prices page",
+      "choose « Se connecter »",
+      "sign in as Eric and reach the app"
+    ],
+    "video": true,
+    "budgetSeconds": 60,
+    "tags": ["critical"]
   }
 ]
