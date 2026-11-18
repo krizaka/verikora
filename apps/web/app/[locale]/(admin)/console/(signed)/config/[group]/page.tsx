@@ -8,6 +8,7 @@ import { OrganisationPanel } from "@/components/admin/OrganisationPanel";
 import { PriceCatalogueView } from "@/components/admin/PriceCatalogueView";
 import { RefusedWordsView } from "@/components/admin/RefusedWordsView";
 import { RouteTabs } from "@/components/RouteTabs";
+import { requirePageAdmin } from "@/lib/access";
 import { appEnvironment } from "@/lib/env";
 import { listAdminFlows } from "@/lib/flows";
 import { asLocale, getDictionary } from "@/lib/i18n";
@@ -26,6 +27,7 @@ export default async function ConfigPage({
   params: Promise<{ locale: string; group: string }>;
   searchParams: Promise<{ scope?: string; id?: string }>;
 }>) {
+  await requirePageAdmin();
   const { locale: raw, group } = await params;
   if (!isConfigPage(group)) notFound();
   const locale = asLocale(raw);

@@ -5,6 +5,7 @@ import {
   sessionTokenOf as tokenOf,
 } from "@krizaka/auth";
 import { cookies, headers } from "next/headers";
+import { notFound } from "next/navigation";
 
 import { clientAddress } from "./client-address";
 import { consoleAllowedIps } from "./env";
@@ -76,4 +77,14 @@ export async function pageAdmin(): Promise<Session | null> {
   return adminGate({ session, ip: clientAddress(await headers()), allowedIps: consoleAllowedIps(), surface: "page" }).ok
     ? session
     : null;
+}
+
+/**
+ * The first line of every signed console page: the administrator, or a 404. The layout checks too, but a page must never rely on it
+ * (a page segment can be rendered without its layout); `admin-gate.test.ts` requires it of every page.
+ */
+export async function requirePageAdmin(): Promise<Session> {
+  const session = await pageAdmin();
+  if (!session) notFound();
+  return session;
 }
