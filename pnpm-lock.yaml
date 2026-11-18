@@ -329,8 +329,8 @@ importers:
         specifier: ^1.0.0
         version: 1.0.0
       '@krizaka/storage':
-        specifier: 0.11.5
-        version: 0.11.5(opendal@0.49.13)(vitest@4.1.12)(zod@4.6.7)
+        specifier: 0.12.0
+        version: 0.12.0(opendal@0.49.13)(vitest@4.1.12)(zod@4.6.7)
       '@krizaka/tailwind':
         specifier: ^4.16.0
         version: 4.16.0(@krizaka/tokens@4.16.0)(@krizaka/ui@4.16.0)(tailwindcss@4.3.3)
@@ -447,8 +447,8 @@ importers:
   deploy/backup:
     dependencies:
       '@krizaka/storage':
-        specifier: 0.11.5
-        version: 0.11.5(opendal@0.49.13)(vitest@4.1.12)(zod@4.6.7)
+        specifier: 0.12.0
+        version: 0.12.0(opendal@0.49.13)(vitest@4.1.12)(zod@4.6.7)
       date-fns:
         specifier: ^4.4.0
         version: 4.4.0
@@ -488,8 +488,8 @@ importers:
         specifier: 0.6.0
         version: 0.6.0(vitest@4.1.12)
       '@krizaka/storage':
-        specifier: 0.11.5
-        version: 0.11.5(opendal@0.49.13)(vitest@4.1.12)(zod@4.6.7)
+        specifier: 0.12.0
+        version: 0.12.0(opendal@0.49.13)(vitest@4.1.12)(zod@4.6.7)
       zod:
         specifier: 4.6.7
         version: 4.6.7
@@ -2156,6 +2156,11 @@ packages:
     resolution: {integrity: sha512-mxk3T8OBwdHYC2nJMUDqNzts3mu2gcvdcqZ7qBFRq64D8cfxqR1d3hTy6lYpMjyCnxmsuBBZ6ACrc1+tlnjB8g==}
     engines: {node: '>=22'}
 
+  '@krizaka/org@1.12.0':
+    resolution: {integrity: sha512-oIiP+gR84G7OHLaTToJHA/QAZCCgkLn9A7wqRSieb1yB1lPiVgjIPK8++lWGSHo7dlGXppq4e6xcs8oRZY6kpg==}
+    engines: {node: '>=22'}
+    hasBin: true
+
   '@krizaka/org@1.6.0':
     resolution: {integrity: sha512-bTMhJIOdsdmHnVXUkOTCeMUWJk/F5muDJX0D3H1yJ5X1gMCIec9cbsaxcdUYF1MURiSS7ZkiylAOK+Pv+Fb6mg==}
     engines: {node: '>=22'}
@@ -2264,12 +2269,18 @@ packages:
     peerDependencies:
       zod: 4.6.7
 
+  '@krizaka/settings@0.7.1':
+    resolution: {integrity: sha512-gtjTzInohdwmjgnbeE6UPCoiYuwS6l2hYgBjKFXFHA+tQPOZBDkn+TSrydbGUSG1iipVJOt0M4gxF1fKuxVTJA==}
+    engines: {node: '>=22'}
+    peerDependencies:
+      zod: 4.6.7
+
   '@krizaka/sovkora-client@1.0.0':
     resolution: {integrity: sha512-KpJL34PrMpbV9G3mYYkoa+cJOGM/jSg3ae9JknFDCcFF+F3h3ZP3p0b0mxbuP7u1lb0p6G+N49mwCLu3Zrvdyw==}
     engines: {node: '>=22'}
 
-  '@krizaka/storage@0.11.5':
-    resolution: {integrity: sha512-bOMMEh/oN9ChhJCdPq+us1qDI8xFXTwA8usZCodAatCZDPPwh1LiiTp66T6Q41QYduxovS91o9+SvGcS2OWc3Q==}
+  '@krizaka/storage@0.12.0':
+    resolution: {integrity: sha512-G7HNzh7NT7yGEaVQYpd5qUGdhJasMeRS0CGzkS0Rn962X+RRlGUZJvqIRMR/pBqwpSjObDIgWUIutDY/icdO5A==}
     engines: {node: '>=22'}
     peerDependencies:
       opendal: '>=0.49.13 <0.50'
@@ -11004,6 +11015,8 @@ snapshots:
 
   '@krizaka/intl@0.4.1': {}
 
+  '@krizaka/org@1.12.0': {}
+
   '@krizaka/org@1.6.0': {}
 
   '@krizaka/organize@0.4.0(vitest@4.1.12)':
@@ -11129,14 +11142,20 @@ snapshots:
       '@krizaka/org': 1.6.0
       zod: 4.6.7
 
+  '@krizaka/settings@0.7.1(zod@4.6.7)':
+    dependencies:
+      '@krizaka/db': 0.3.1
+      '@krizaka/org': 1.12.0
+      zod: 4.6.7
+
   '@krizaka/sovkora-client@1.0.0':
     dependencies:
       date-fns: 4.4.0
 
-  '@krizaka/storage@0.11.5(opendal@0.49.13)(vitest@4.1.12)(zod@4.6.7)':
+  '@krizaka/storage@0.12.0(opendal@0.49.13)(vitest@4.1.12)(zod@4.6.7)':
     dependencies:
       '@krizaka/db': 0.3.1
-      '@krizaka/settings': 0.7.0(zod@4.6.7)
+      '@krizaka/settings': 0.7.1(zod@4.6.7)
       arctic: 3.7.0
     optionalDependencies:
       opendal: 0.49.13
