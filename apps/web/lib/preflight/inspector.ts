@@ -287,7 +287,9 @@ function inspectOther(bytes: Uint8Array, detected: FileKind, sha256: string, rul
   });
   if (IMAGE_KINDS.has(detected)) {
     const size = imageSize(bytes);
-    return size && size.width * size.height > rules.maxImagePixels
+    // Fail closed: a header that declares no readable size is refused, never accepted unbounded.
+    if (!size || size.width <= 0 || size.height <= 0) return reject("CORRUPT", "image size unknown");
+    return size.width * size.height > rules.maxImagePixels
       ? reject("IMAGE_TOO_LARGE", `${size.width}x${size.height}`)
       : accepted(detected);
   }

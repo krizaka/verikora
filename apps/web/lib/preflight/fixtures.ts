@@ -72,9 +72,26 @@ export async function imageOf(kind: "png" | "jpeg"): Promise<Uint8Array> {
   return new Uint8Array(await (kind === "png" ? base.png() : base.jpeg()).toBuffer());
 }
 
-/** The signature of an HEIC file (an ISO base media « ftyp » box, brand heic): enough for the pre-flight, which never decodes. */
+const isoBox = (type: string, ...payload: Buffer[]): Buffer => {
+  const body = Buffer.concat(payload);
+  const size = Buffer.alloc(4);
+  size.writeUInt32BE(body.length + 8);
+  return Buffer.concat([size, Buffer.from(type), body]);
+};
+
+/** The signature of an HEIC file that declares no size (an « ftyp » box, brand heic, no « ispe »): the pre-flight refuses it. */
 export const heicBytes = (): Uint8Array =>
   Buffer.concat([Buffer.from([0, 0, 0, 24]), Buffer.from("ftypheic"), Buffer.alloc(80)]);
+
+/** A HEIC header (ftyp, meta > iprp > ipco > ispe) that claims these dimensions: the pixel guard reads it, it never decodes. */
+export function heicWithSize(width: number, height: number): Uint8Array {
+  const dims = Buffer.alloc(8);
+  dims.writeUInt32BE(width, 0);
+  dims.writeUInt32BE(height, 4);
+  const ispe = isoBox("ispe", Buffer.alloc(4), dims);
+  const meta = isoBox("meta", Buffer.alloc(4), isoBox("iprp", isoBox("ipco", ispe)));
+  return Buffer.concat([isoBox("ftyp", Buffer.from("heic"), Buffer.alloc(4)), meta]);
+}
 
 /** A PNG header that claims these dimensions (IHDR only): the pixel guard reads the header, it never decodes. */
 export function pngWithSize(width: number, height: number): Uint8Array {
@@ -89,6 +106,7 @@ export function pngWithSize(width: number, height: number): Uint8Array {
   ]);
 }
 
+/** A PNG signature with no IHDR: its size is unknown. */
 export const pngBytes = (): Uint8Array =>
   Buffer.concat([Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]), Buffer.alloc(64)]);
 
