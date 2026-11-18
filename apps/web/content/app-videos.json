@@ -5,67 +5,67 @@
     {
       "platform": "android",
       "flow": "documents-en",
-      "seconds": 6.6,
-      "capturedAt": "2026-11-17T14:38:25.603Z",
+      "seconds": 6.5,
+      "capturedAt": "2026-11-18T14:10:53.048Z",
       "files": {
-        "webm": "sites/verikora/download/android-documents-en.11950640ec.webm",
-        "mp4": "sites/verikora/download/android-documents-en.486b33d6b6.mp4",
-        "poster": "sites/verikora/download/android-documents-en.2a48c499c5.jpg"
+        "webm": "sites/verikora/download/android-documents-en.2fe814f67e.webm",
+        "mp4": "sites/verikora/download/android-documents-en.9c23e7cd77.mp4",
+        "poster": "sites/verikora/download/android-documents-en.4e3b0b6072.jpg"
       }
     },
     {
       "platform": "mac",
       "flow": "library-fr",
       "seconds": 5.7,
-      "capturedAt": "2026-11-17T14:38:31.735Z",
+      "capturedAt": "2026-11-18T14:10:56.736Z",
       "files": {
-        "webm": "sites/verikora/download/mac-library-fr.5e745fc3ef.webm",
-        "mp4": "sites/verikora/download/mac-library-fr.a63f7206f5.mp4",
-        "poster": "sites/verikora/download/mac-library-fr.436b669199.jpg"
+        "webm": "sites/verikora/download/mac-library-fr.f0a6694412.webm",
+        "mp4": "sites/verikora/download/mac-library-fr.837f3d64e4.mp4",
+        "poster": "sites/verikora/download/mac-library-fr.3fd8e656e2.jpg"
       }
     },
     {
       "platform": "web",
       "flow": "binder-en",
-      "seconds": 4.9,
-      "capturedAt": "2026-11-17T14:38:02.806Z",
+      "seconds": 4.8,
+      "capturedAt": "2026-11-18T14:10:37.036Z",
       "files": {
-        "webm": "sites/verikora/download/web-binder-en.3e775c7262.webm",
-        "mp4": "sites/verikora/download/web-binder-en.75465c1405.mp4",
-        "poster": "sites/verikora/download/web-binder-en.23ebe0ae93.jpg"
+        "webm": "sites/verikora/download/web-binder-en.46d64dfb45.webm",
+        "mp4": "sites/verikora/download/web-binder-en.fffcb494fe.mp4",
+        "poster": "sites/verikora/download/web-binder-en.3a0735d832.jpg"
       }
     },
     {
       "platform": "web",
       "flow": "binder-fr",
-      "seconds": 4.8,
-      "capturedAt": "2026-11-17T14:38:08.014Z",
+      "seconds": 4.6,
+      "capturedAt": "2026-11-18T14:10:40.875Z",
       "files": {
-        "webm": "sites/verikora/download/web-binder-fr.1c9ab17e9e.webm",
-        "mp4": "sites/verikora/download/web-binder-fr.a86c0080a3.mp4",
-        "poster": "sites/verikora/download/web-binder-fr.b5e3adc288.jpg"
+        "webm": "sites/verikora/download/web-binder-fr.1f0e7fbe3f.webm",
+        "mp4": "sites/verikora/download/web-binder-fr.bf10e8643d.mp4",
+        "poster": "sites/verikora/download/web-binder-fr.8476adee01.jpg"
       }
     },
     {
       "platform": "web",
       "flow": "report-en",
-      "seconds": 2.8,
-      "capturedAt": "2026-11-17T14:38:11.417Z",
+      "seconds": 2.9,
+      "capturedAt": "2026-11-18T14:10:43.534Z",
       "files": {
-        "webm": "sites/verikora/download/web-report-en.82b9525a0a.webm",
-        "mp4": "sites/verikora/download/web-report-en.3af87b46bb.mp4",
-        "poster": "sites/verikora/download/web-report-en.08e7faf6bc.jpg"
+        "webm": "sites/verikora/download/web-report-en.5564a85f2e.webm",
+        "mp4": "sites/verikora/download/web-report-en.4177c9865e.mp4",
+        "poster": "sites/verikora/download/web-report-en.34c1663f33.jpg"
       }
     },
     {
       "platform": "web",
       "flow": "report-fr",
       "seconds": 2.6,
-      "capturedAt": "2026-11-17T14:38:14.310Z",
+      "capturedAt": "2026-11-18T14:10:46.245Z",
       "files": {
-        "webm": "sites/verikora/download/web-report-fr.e8cfc10a61.webm",
-        "mp4": "sites/verikora/download/web-report-fr.3ca4ae9b6d.mp4",
-        "poster": "sites/verikora/download/web-report-fr.12e4bdce18.jpg"
+        "webm": "sites/verikora/download/web-report-fr.ccac4b6882.webm",
+        "mp4": "sites/verikora/download/web-report-fr.2fd7cf8a86.mp4",
+        "poster": "sites/verikora/download/web-report-fr.50c664ba3f.jpg"
       }
     }
   ]
