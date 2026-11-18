@@ -9,7 +9,7 @@ import { pgClientOptions } from "../../scripts/pg-client-options.mjs";
 
 export const BASE = process.env.VISUAL_BASE_URL ?? "http://localhost:3000";
 // CI-only credentials of the seeded cast (scripts/ci-visual-start.sh), never a real account.
-const CAST = {
+export const CAST = {
   eric: {
     email: process.env.E2E_EMAIL ?? "eric@demo.verikora.test",
     password: process.env.E2E_PASSWORD ?? "ci-only-demo-password-0123",
