@@ -17,7 +17,7 @@
   },
   "dependencies": {
     "@krizaka/api-keys": "0.3.1",
-    "@krizaka/app-config": "^0.2.2",
+    "@krizaka/app-config": "^0.2.3",
     "@krizaka/audit": "0.1.7",
     "@krizaka/auth": "^0.14.0",
     "@krizaka/brief": "^0.1.1",
@@ -25,7 +25,7 @@
     "@krizaka/coupons": "0.1.5",
     "@krizaka/credits": "0.1.5",
     "@krizaka/db": "0.3.1",
-    "@krizaka/email": "^1.2.2",
+    "@krizaka/email": "^1.2.3",
     "@krizaka/fonts": "0.5.4",
     "@krizaka/i18n": "^0.2.9",
     "@krizaka/icons": "^0.11.0",

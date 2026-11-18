@@ -15,7 +15,7 @@
   },
   "dependencies": {
     "@krizaka/app-client": "^0.3.2",
-    "@krizaka/app-config": "^0.2.2",
+    "@krizaka/app-config": "^0.2.3",
     "@krizaka/discovery": "^0.1.4",
     "@krizaka/i18n": "^0.2.9",
     "@krizaka/icons": "^0.11.0",

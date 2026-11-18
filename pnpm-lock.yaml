@@ -148,8 +148,8 @@ importers:
         specifier: ^0.3.2
         version: 0.3.2(react@19.3.1)
       '@krizaka/app-config':
-        specifier: ^0.2.2
-        version: 0.2.2(react@19.3.1)
+        specifier: ^0.2.3
+        version: 0.2.3(react@19.3.1)
       '@krizaka/discovery':
         specifier: ^0.1.4
         version: 0.1.4(react@19.3.1)
@@ -266,8 +266,8 @@ importers:
         specifier: 0.3.1
         version: 0.3.1(vitest@4.1.12)
       '@krizaka/app-config':
-        specifier: ^0.2.2
-        version: 0.2.2(react@19.3.1)
+        specifier: ^0.2.3
+        version: 0.2.3(react@19.3.1)
       '@krizaka/audit':
         specifier: 0.1.7
         version: 0.1.7(vitest@4.1.12)(zod@4.6.7)
@@ -290,8 +290,8 @@ importers:
         specifier: 0.3.1
         version: 0.3.1
       '@krizaka/email':
-        specifier: ^1.2.2
-        version: 1.2.2(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(typescript@5.9.3)
+        specifier: ^1.2.3
+        version: 1.2.3(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(typescript@5.9.3)
       '@krizaka/fonts':
         specifier: 0.5.4
         version: 0.5.4
@@ -2001,8 +2001,8 @@ packages:
       react:
         optional: true
 
-  '@krizaka/app-config@0.2.2':
-    resolution: {integrity: sha512-00vEDA7g2fmaYLi41FMjX1YXHsF207kDHrtLWMpVIOi+Cmb4cOSMqN9CT5T+s1zv2Ob5m80S0ej+QYcg2F9NGQ==}
+  '@krizaka/app-config@0.2.3':
+    resolution: {integrity: sha512-WwpFImKoU7kQJGlKURYMQj8Luo0clwnp63mnJEbj4NY8X1u9znHRpAyB58HPnDUJvZfMP654ml8xq+fUEBRDRA==}
     engines: {node: '>=22'}
     peerDependencies:
       react: '>=18'
@@ -2109,8 +2109,8 @@ packages:
       react:
         optional: true
 
-  '@krizaka/email@1.2.2':
-    resolution: {integrity: sha512-/3GghAl2BznX7tqQml99/5os74mJXVMLHPdXiujKShzcGqgS9lccE46scJgslfVuyYPS5/RK2nbPEU6EgYIQkg==}
+  '@krizaka/email@1.2.3':
+    resolution: {integrity: sha512-OWUUJoBsIH6oOlhtQ7lSlyxMka271M+WfKqLkYDAcg3StHraEpo0Pyj7CXGevKOI9csO81GM3RRGlaWHLPLv/g==}
     engines: {node: '>=22'}
     peerDependencies:
       react: '>=19'
@@ -10823,7 +10823,7 @@ snapshots:
     optionalDependencies:
       react: 19.3.1
 
-  '@krizaka/app-config@0.2.2(react@19.3.1)':
+  '@krizaka/app-config@0.2.3(react@19.3.1)':
     optionalDependencies:
       react: 19.3.1
 
@@ -10951,7 +10951,7 @@ snapshots:
     optionalDependencies:
       react: 19.3.1
 
-  '@krizaka/email@1.2.2(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(typescript@5.9.3)':
+  '@krizaka/email@1.2.3(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(typescript@5.9.3)':
     dependencies:
       '@krizaka/i18n': 0.2.9(react@19.3.1)(typescript@5.9.3)
       '@react-email/body': 0.3.0(react@19.3.1)
