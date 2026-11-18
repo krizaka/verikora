@@ -753,6 +753,7 @@
       "EMPTY_FILE": "The file is empty.",
       "UNREADABLE_FILE": "This file cannot be opened: it is damaged or not a valid document.",
       "NO_TEXT": "This document has no text layer to check.",
+      "TEXT_NOT_READ": "The text of this document could not be read reliably (amounts missing or not adding up), so no check was run rather than state something wrong. Retake the photo with the whole page in frame, or send the original PDF.",
       "TEXT_TOO_LONG": "This document is longer than the check reads (60 000 characters).",
       "NOT_A_PDF": "Verikora examines PDF, Word (.docx) and OpenDocument (.odt) files.",
       "PDF_TOO_LARGE": "Verikora examines files up to 5 MB.",
