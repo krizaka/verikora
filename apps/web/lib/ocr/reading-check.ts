@@ -31,7 +31,9 @@ const cents = (raw: string): number => {
 function valueOf(lines: readonly string[], at: number): number | null {
   for (const line of [lines[at], lines.slice(at + 1).find((l) => l.trim() !== "")]) {
     const found = line?.match(AMOUNT)?.[0];
-    if (found) return cents(found);
+    if (found) {
+      return cents(found);
+    }
   }
   return null;
 }
@@ -47,19 +49,27 @@ function labelled(text: string): Labelled[] {
   lines.forEach((line, at) => {
     const kind = (Object.keys(LABEL) as (keyof typeof LABEL)[]).find((k) => LABEL[k].test(line));
     // « Total » inside « Subtotal » is the subtotal; a long sentence that merely says « tax » is prose, not a figure line.
-    if (kind && line.trim().length <= 60) out.push({ kind, value: valueOf(lines, at) });
+    if (kind && line.trim().length <= 60) {
+      out.push({ kind, value: valueOf(lines, at) });
+    }
   });
   return out;
 }
 
 function arithmeticProblem(text: string): ReadingFailure | null {
   const rows = labelled(text);
-  if (rows.length === 0) return null;
-  if (rows.some((r) => r.value === null)) return READING_FAILURE.amountsMissing;
+  if (rows.length === 0) {
+    return null;
+  }
+  if (rows.some((r) => r.value === null)) {
+    return READING_FAILURE.amountsMissing;
+  }
   const one = (kind: Labelled["kind"]) => rows.filter((r) => r.kind === kind).map((r) => r.value as number);
   const [subtotal] = one("subtotal");
   const total = one("total").at(-1);
-  if (subtotal === undefined || total === undefined) return null;
+  if (subtotal === undefined || total === undefined) {
+    return null;
+  }
   const sum = subtotal + one("tax").reduce((a, b) => a + b, 0);
   return Math.abs(sum - total) > 1 ? READING_FAILURE.totalsDoNotAdd : null;
 }
@@ -70,9 +80,17 @@ export function readingProblem(
   rules: OcrRules,
 ): ReadingFailure | null {
   const fromImage = doc.source != null;
-  if (!fromImage && doc.mimeType !== "application/pdf") return null;
-  if (!fromImage && doc.text.trim().length > rules.minChars) return null;
-  if (doc.text.replace(/\s/g, "").length < rules.minChars) return READING_FAILURE.tooLittle;
-  if (doc.source?.kind === TEXT_SOURCE.ocr && doc.source.lowConfidence) return READING_FAILURE.lowConfidence;
+  if (!fromImage && doc.mimeType !== "application/pdf") {
+    return null;
+  }
+  if (!fromImage && doc.text.trim().length > rules.minChars) {
+    return null;
+  }
+  if (doc.text.replace(/\s/g, "").length < rules.minChars) {
+    return READING_FAILURE.tooLittle;
+  }
+  if (doc.source?.kind === TEXT_SOURCE.ocr && doc.source.lowConfidence) {
+    return READING_FAILURE.lowConfidence;
+  }
   return fromImage ? arithmeticProblem(doc.text) : null;
 }
