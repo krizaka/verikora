@@ -42,14 +42,17 @@ describe("pre-flight: what the bytes are", () => {
   it("accepts photos by their bytes: PNG, JPEG and HEIC", async () => {
     expect(await why(await fx.imageOf("png"), { name: "scan.png", type: "image/png" })).toBe("accepted");
     expect(await why(await fx.imageOf("jpeg"), { name: "IMG_2041.JPG", type: "image/jpeg" })).toBe("accepted");
-    expect(await why(fx.heicBytes(), { name: "IMG_2041.HEIC", type: "image/heic" })).toBe("accepted");
+    expect(await why(fx.heicWithSize(4032, 3024), { name: "IMG_2041.HEIC", type: "image/heic" })).toBe("accepted");
     expect(sniff(fx.heicBytes())).toBe("heic");
     // an iPhone sometimes names it .heif or declares nothing: the bytes decide
-    expect(await why(fx.heicBytes(), { name: "photo.heif", type: "" })).toBe("accepted");
+    expect(await why(fx.heicWithSize(4032, 3024), { name: "photo.heif", type: "" })).toBe("accepted");
   });
   it("refuses a photo whose declared type is not what the bytes are, and one with too many pixels", async () => {
     expect(await why(await fx.imageOf("jpeg"), { name: "scan.png", type: "image/png" })).toBe("TYPE_MISMATCH");
     expect(await why(fx.pngWithSize(9000, 9000), { name: "huge.png", type: "image/png" })).toBe("IMAGE_TOO_LARGE");
+    expect(await why(fx.heicWithSize(9000, 9000), { name: "huge.heic", type: "image/heic" })).toBe("IMAGE_TOO_LARGE");
+    expect(await why(fx.heicBytes(), { name: "nosize.heic", type: "image/heic" })).toBe("CORRUPT");
+    expect(await why(fx.pngBytes(), { name: "nosize.png", type: "image/png" })).toBe("CORRUPT");
   });
   it("recognises a Word file and accepts it (verikora#229); a workspace that allows no Word files still refuses it", async () => {
     expect(sniff(fx.docx())).toBe("docx");
@@ -109,6 +112,6 @@ describe("pre-flight: the rules are data", () => {
     const strict = createInspector({ ...VERIKORA_RULES, maxBytes: 100 });
     expect((await strict.inspect(await fx.cleanPdf(), pdf())).kind).toBe("rejected");
     const wide = createInspector({ ...VERIKORA_RULES, allowedKinds: ["pdf", "text", "png"] });
-    expect((await wide.inspect(fx.pngBytes(), { name: "s.png", type: "image/png" })).kind).toBe("accepted");
+    expect((await wide.inspect(fx.pngWithSize(64, 48), { name: "s.png", type: "image/png" })).kind).toBe("accepted");
   });
 });

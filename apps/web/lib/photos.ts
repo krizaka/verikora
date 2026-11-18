@@ -1,7 +1,7 @@
 import type { DocumentKind, DocumentSummary, PhotoOrigin } from "@verikora/core";
 
 import { inspectUpload, type StoragePolicy, storeDocument } from "./documents";
-import { refuse } from "./http";
+import { HttpError, refuse } from "./http";
 import {
   createImageCleaner,
   type ImageCleaner,
@@ -56,6 +56,24 @@ export const defaultPhotoDeps = (): PhotoDeps => ({
   imageRules: VERIKORA_IMAGE_RULES,
 });
 
+/** The pre-flight reasons that have a photo-specific code. */
+const PHOTO_CODE_OF_REASON: Partial<Record<string, string>> = { CORRUPT: "UNREADABLE_IMAGE" };
+
+/** The pre-flight for one photo: a damaged photo keeps the photo code the page translates, not the generic file one. */
+async function inspectPhoto(
+  file: { name: string; type: string; bytes: Uint8Array },
+  rules: PreflightRules,
+): ReturnType<typeof inspectUpload> {
+  try {
+    return await inspectUpload({ name: file.name, type: file.type, size: file.bytes.length }, file.bytes, rules);
+  } catch (error) {
+    const reason = error instanceof HttpError ? String(error.body.reason) : "";
+    const photoCode = PHOTO_CODE_OF_REASON[reason];
+    if (photoCode) throw refuse(422, photoCode, "This photo cannot be read", { reason });
+    throw error;
+  }
+}
+
 /** The code the page translates (messages `console.errors.*`) for each thing a photo can be refused for. */
 export const PHOTO_QUALITY_CODE: Record<QualityProblem, string> = {
   BLURRY: "PHOTO_BLURRY",
@@ -96,11 +114,7 @@ export async function storePhotos(
 
   const cleaned: Awaited<ReturnType<ImageCleaner["clean"]>>[] = [];
   for (const [index, file] of files.entries()) {
-    const { fileKind } = await inspectUpload(
-      { name: file.name, type: file.type, size: file.bytes.length },
-      file.bytes,
-      rules,
-    );
+    const { fileKind } = await inspectPhoto(file, rules);
     if (!IMAGE_KINDS.has(fileKind))
       throw refuse(415, "UNSUPPORTED_TYPE", "Photos only: a PDF or a text file is sent on its own");
     try {
