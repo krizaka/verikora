@@ -6,7 +6,8 @@ import { fileURLToPath } from "node:url";
 
 import { pgClientOptions } from "../apps/web/scripts/pg-client-options.mjs";
 
-export const BYTES_QUERY = "SELECT id, octet_length(content) AS bytes FROM documents WHERE octet_length(content) > 0 ORDER BY created_at LIMIT 20";
+export const BYTES_QUERY =
+  "SELECT id, octet_length(content) AS bytes FROM documents WHERE octet_length(content) > 0 ORDER BY created_at LIMIT 20";
 
 /** The message of the check for the rows it found: null when the database keeps no bytes. */
 export function problemOf(rows) {
