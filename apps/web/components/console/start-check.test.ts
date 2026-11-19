@@ -45,6 +45,22 @@ describe("starting the check once a file landed", () => {
   });
 });
 
+describe("the person named the kind (« Quel document ? », krizaka-internal#3981): the check starts", () => {
+  it("starts it although Verikora's own reading was unsure and said another kind", async () => {
+    const fetcher = vi.fn().mockResolvedValueOnce(detail("low", "invoice")).mockResolvedValueOnce({ analysis: {} });
+    expect(await startIfSure("d1", "lease", ["QC"], NOON, fetcher as never)).toEqual({ started: true, refused: null });
+    expect(fetcher.mock.calls[1]![1]).toMatchObject({ method: "POST", json: { studio: "compliance-check" } });
+  });
+  it("starts it when the detail cannot be read at all: the person's word is enough", async () => {
+    const fetcher = vi.fn().mockRejectedValueOnce(new Error("offline")).mockResolvedValueOnce({ analysis: {} });
+    expect(await startIfSure("d1", "lease", ["QC"], NOON, fetcher as never)).toEqual({ started: true, refused: null });
+  });
+  it("still asks when a sure reading contradicts what the person named", async () => {
+    const fetcher = vi.fn().mockResolvedValueOnce(detail("high", "invoice"));
+    expect(await startIfSure("d1", "lease", ["QC"], NOON, fetcher as never)).toEqual({ started: false, refused: null });
+  });
+});
+
 describe("a check the account is not offered is never launched", () => {
   it("says FLOW_NOT_OFFERED without calling the engine when the flows do not run the kind's ruleset", async () => {
     const fetcher = vi.fn().mockResolvedValueOnce(detail("high", "invoice"));
