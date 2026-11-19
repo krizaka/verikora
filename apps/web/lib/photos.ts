@@ -1,4 +1,4 @@
-import type { DocumentKind, DocumentSummary, PhotoOrigin } from "@verikora/core";
+import type { DocumentKind, PhotoOrigin } from "@verikora/core";
 
 import { inspectUpload, type StoragePolicy, storeDocument } from "./documents";
 import { HttpError, refuse } from "./http";
@@ -100,19 +100,27 @@ function originOf(all: readonly PhotoFacts[]): PhotoOrigin | null {
   return origin.software || origin.device || origin.takenAt || origin.modifiedAt || origin.hadGps ? origin : null;
 }
 
-export async function storePhotos(
-  ownerId: string,
-  files: readonly PhotoFile[],
-  requested: DocumentKind | "auto",
-  options: { policy?: StoragePolicy; deps?: PhotoDeps } = {},
-): Promise<{ summary: DocumentSummary; duplicate: boolean }> {
-  const deps = options.deps ?? defaultPhotoDeps();
-  const rules: PreflightRules = options.policy?.rules ?? VERIKORA_RULES;
-  if (files.length === 0) throw refuse(400, "BAD_REQUEST", "At least one photo is expected");
-  if (files.length > deps.imageRules.maxPhotos)
-    throw refuse(422, "TOO_MANY_PHOTOS", `At most ${deps.imageRules.maxPhotos} photos make one document`);
+/** Runs the cleaning of the photos within the time the request has: past it, the photo is refused with its reason (PHOTO_TOO_SLOW), not left to the proxy's silent 504. */
+async function withinBudget<T>(work: Promise<T>, budgetMs: number): Promise<T> {
+  let timer: ReturnType<typeof setTimeout> | undefined;
+  const late = new Promise<never>((_, reject) => {
+    timer = setTimeout(
+      () => reject(refuse(422, "PHOTO_TOO_SLOW", "The photos took too long to prepare", { budgetMs })),
+      budgetMs,
+    );
+  });
+  try {
+    return await Promise.race([work, late]);
+  } finally {
+    clearTimeout(timer);
+  }
+}
 
-  const cleaned: Awaited<ReturnType<ImageCleaner["clean"]>>[] = [];
+type Cleaned = Awaited<ReturnType<ImageCleaner["clean"]>>;
+
+/** Each photo checked, cleaned and held to the quality gate, in order. */
+async function cleanPhotos(files: readonly PhotoFile[], rules: PreflightRules, deps: PhotoDeps): Promise<Cleaned[]> {
+  const cleaned: Cleaned[] = [];
   for (const [index, file] of files.entries()) {
     const { fileKind } = await inspectPhoto(file, rules);
     if (!IMAGE_KINDS.has(fileKind))
@@ -129,6 +137,22 @@ export async function storePhotos(
         photo: index + 1,
       });
   }
+  return cleaned;
+}
+
+export async function storePhotos(
+  ownerId: string,
+  files: readonly PhotoFile[],
+  requested: DocumentKind | "auto",
+  options: { policy?: StoragePolicy; deps?: PhotoDeps; defer?: boolean } = {},
+): Promise<Awaited<ReturnType<typeof storeDocument>>> {
+  const deps = options.deps ?? defaultPhotoDeps();
+  const rules: PreflightRules = options.policy?.rules ?? VERIKORA_RULES;
+  if (files.length === 0) throw refuse(400, "BAD_REQUEST", "At least one photo is expected");
+  if (files.length > deps.imageRules.maxPhotos)
+    throw refuse(422, "TOO_MANY_PHOTOS", `At most ${deps.imageRules.maxPhotos} photos make one document`);
+
+  const cleaned = await withinBudget(cleanPhotos(files, rules, deps), deps.imageRules.cleanBudgetMs);
 
   const pdf = await pagesToPdf(cleaned.map((c) => c.page));
   const origin = originOf(cleaned.map((c) => c.facts));
@@ -168,5 +192,7 @@ export async function storePhotos(
         throw refuse(422, "OCR_FAILED", "The text of this photo could not be read");
       }
     },
+    // The reading (Tesseract, up to its own 90 s) is the slow part: the upload route has it run after the 202 (krizaka-internal#4056).
+    { defer: options.defer === true },
   );
 }

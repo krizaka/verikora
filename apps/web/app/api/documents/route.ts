@@ -82,7 +82,7 @@ async function storeUpload(
             })),
           ),
           kind,
-          { policy },
+          { policy, defer: true },
         )
       : await storeDocument(
           accountId,
@@ -159,5 +159,5 @@ export function POST(req: Request) {
       return Response.json({ document: summary, duplicate, status: "QUEUED" }, { status: 202 });
     }
     return Response.json({ document: summary, duplicate }, { status: duplicate ? 200 : 201 });
-  });
+  }, req);
 }

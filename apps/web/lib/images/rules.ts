@@ -4,6 +4,7 @@ import type { ImageRules } from "./port";
 export const VERIKORA_IMAGE_RULES: ImageRules = {
   maxSide: 2400,
   jpegQuality: 85,
+  cleanBudgetMs: 25_000,
   maxPhotos: 12,
   deskewMaxDegrees: 12,
   deskewStepDegrees: 0.5,
