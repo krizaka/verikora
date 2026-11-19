@@ -1,5 +1,7 @@
 import { describe, expect, it } from "vitest";
 
+import { DOCX_MIME, ODT_MIME } from "@verikora/core";
+
 import { availableChecks } from "./checks";
 
 const doc = { kind: "lease", hasText: true, mimeType: "application/pdf" } as const;
@@ -31,6 +33,10 @@ describe("what a document can be checked for", () => {
 
   it("offers no compliance check for another kind: no ruleset is in force for it, and the lease's rules are never its fallback", () => {
     expect(availableChecks({ ...doc, kind: "other" })).toEqual([{ studio: "document-authenticity" }]);
+  });
+
+  it.each([DOCX_MIME, ODT_MIME] as const)("offers the authenticity check on %s, as the web does", (mimeType) => {
+    expect(availableChecks({ ...doc, mimeType })).toContainEqual({ studio: "document-authenticity" });
   });
 
   it("offers nothing for a text file without text", () => {

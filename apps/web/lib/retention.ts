@@ -1,4 +1,4 @@
-import { STORAGE_KIND, type StorageKind } from "@verikora/core";
+import { STORAGE_KIND, type StorageKind, storedExtension } from "@verikora/core";
 import { addHours } from "date-fns";
 import type { QueryResultRow } from "pg";
 
@@ -32,8 +32,6 @@ export function storageFor(keep: boolean, active: DocumentStoreDescriptor): Stor
   return EXTERNAL.has(active.kind) ? active.kind : STORAGE_KIND.database;
 }
 
-const EXTENSION: Record<string, string> = { "application/pdf": "pdf", "text/plain": "txt" };
-
 /**
  * The object key of a new document, in the Kridoc space layout: `tenants/<tenant>/users/<owner>/documents/<document>/original.<ext>`.
  * The only function that builds a key; the tenant is the installation's setting (`documentsTenant`), never a request's value.
@@ -42,12 +40,12 @@ export const objectKey = (tenant: string, owner: string, document: string, mimeT
   if (!TENANT_ID.test(tenant)) {
     throw new Error("The documents tenant id is not valid");
   }
-  return `tenants/${tenant}/users/${owner}/documents/${document}/original.${EXTENSION[mimeType] ?? "bin"}`.toLowerCase();
+  return `tenants/${tenant}/users/${owner}/documents/${document}/original.${storedExtension(mimeType)}`.toLowerCase();
 };
 
 /** The key a document kept before the Kridoc layout has (`<owner>/<document>/original.<ext>`): for rows that hold no `object_key` only, never for a new document. */
 export const legacyObjectKey = (owner: string, document: string, mimeType: string) =>
-  `${owner}/${document}/original.${EXTENSION[mimeType] ?? "bin"}`.toLowerCase();
+  `${owner}/${document}/original.${storedExtension(mimeType)}`.toLowerCase();
 
 /** When a not-kept document that was never checked is purged. */
 export const purgeDeadline = (now: Date, hours: number): Date => addHours(now, hours);

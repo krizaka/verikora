@@ -1,7 +1,7 @@
 import crypto from "node:crypto";
 import { inflateRawSync } from "node:zlib";
 
-import { ODT_MIME } from "@verikora/core";
+import { formatOfMime, formatOfName, ODT_MIME } from "@verikora/core";
 import { EncryptedPDFError, PDFArray, PDFDict, PDFDocument, PDFName, type PDFPage } from "pdf-lib";
 
 import { imageSize, isHeif } from "./image-size";
@@ -56,40 +56,9 @@ export function sniff(bytes: Uint8Array): FileKind {
   }
 }
 
-const EXTENSIONS: Record<FileKind, readonly string[]> = {
-  pdf: ["pdf"],
-  text: ["txt", "text", "md"],
-  png: ["png"],
-  jpeg: ["jpg", "jpeg"],
-  heic: ["heic", "heif"],
-  docx: ["docx"],
-  odt: ["odt"],
-  zip: ["zip"],
-  executable: [],
-  unknown: [],
-};
-const MIME: Record<string, FileKind> = {
-  "application/pdf": "pdf",
-  "text/plain": "text",
-  "image/png": "png",
-  "image/jpeg": "jpeg",
-  "image/heic": "heic",
-  "image/heif": "heic",
-  "application/vnd.openxmlformats-officedocument.wordprocessingml.document": "docx",
-  [ODT_MIME]: "odt",
-  "application/zip": "zip",
-};
-
 /** The kind the client claims (extension first, then MIME type), or null when it claims nothing we know. */
-function claimed(declared: { name: string; type: string }): FileKind | null {
-  const ext = /\.([a-z0-9]+)$/i.exec(declared.name)?.[1]?.toLowerCase();
-  for (const [kind, exts] of Object.entries(EXTENSIONS)) {
-    if (ext && exts.includes(ext)) {
-      return kind as FileKind;
-    }
-  }
-  return MIME[declared.type] ?? null;
-}
+const claimed = (declared: { name: string; type: string }): FileKind | null =>
+  formatOfName(declared.name) ?? formatOfMime(declared.type) ?? null;
 
 interface ZipEntry {
   name: string;

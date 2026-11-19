@@ -1,4 +1,4 @@
-import { DOCX_MIME, ODT_MIME, type StartAnalysis } from "@verikora/core";
+import { FILE_FAMILY, FILE_FORMATS, formatOfMime, type StartAnalysis } from "@verikora/core";
 
 import { isReportCode } from "./report-contract";
 
@@ -78,10 +78,11 @@ export function causeOf(error: string | null | undefined): FailureCause {
 
 /** The family of a file: a PDF with no text layer is a scan, said as such. */
 export function familyOf({ mimeType, hasText }: Readonly<{ mimeType: string; hasText: boolean }>): FileFamily {
-  if (mimeType === "application/pdf") {
+  const kind = formatOfMime(mimeType);
+  if (kind === "pdf") {
     return hasText ? "pdf" : "scan";
   }
-  if (mimeType === DOCX_MIME || mimeType === ODT_MIME) {
+  if (kind && FILE_FORMATS[kind].family === FILE_FAMILY.word) {
     return "office";
   }
   if (mimeType.startsWith("text/")) {

@@ -1,3 +1,4 @@
+import { DOCX_MIME, ODT_MIME } from "@verikora/core";
 import { describe, expect, it } from "vitest";
 
 import { legacyObjectKey, objectKey, purgeDeadline, storageFor } from "./retention";
@@ -31,6 +32,12 @@ describe("object keys and the purge deadline", () => {
       "tenants/verikora-dev/users/aaa/documents/bbb/original.pdf",
     );
     expect(objectKey("t", "a", "b", "text/plain")).toBe("tenants/t/users/a/documents/b/original.txt");
+  });
+  it("a Word or an OpenDocument file keeps its own extension, never original.bin", () => {
+    expect(objectKey("t", "a", "b", DOCX_MIME)).toBe("tenants/t/users/a/documents/b/original.docx");
+    expect(objectKey("t", "a", "b", ODT_MIME)).toBe("tenants/t/users/a/documents/b/original.odt");
+    expect(legacyObjectKey("a", "b", DOCX_MIME)).toBe("a/b/original.docx");
+    expect(objectKey("t", "a", "b", "application/x-unknown")).toBe("tenants/t/users/a/documents/b/original.bin");
   });
   it("two owners or two tenants never share a prefix, and every key starts with its space", () => {
     const a = objectKey("verikora-dev", "owner-1", "d", "text/plain");

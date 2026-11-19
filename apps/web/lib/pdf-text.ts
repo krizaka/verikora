@@ -1,4 +1,4 @@
-import { type AcceptedType, DOCX_MIME, ODT_MIME } from "@verikora/core";
+import { type AcceptedType, DOCX_MIME, formatOfMime, ODT_MIME } from "@verikora/core";
 
 import { docxText, odtText } from "./docx-text";
 import { extractPdfText } from "./extraction/isolated";
@@ -58,7 +58,7 @@ export async function readText(mimeType: AcceptedType, bytes: Uint8Array): Promi
   if (mimeType === ODT_MIME) {
     return { text: normaliseText(odtText(bytes)), pages: null };
   }
-  if (mimeType === "text/plain") {
+  if (formatOfMime(mimeType) === "text") {
     return { text: normaliseText(new TextDecoder("utf-8", { fatal: false }).decode(bytes)), pages: null };
   }
   // Off the web process: an isolated worker with its own heap, deadline and page ceiling (verikora#21).

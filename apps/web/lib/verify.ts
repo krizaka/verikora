@@ -1,3 +1,5 @@
+import { formatOfMime } from "@verikora/core";
+
 import { refuse } from "./http";
 
 export const MAX_REPORT_BYTES = 2 * 1024 * 1024;
@@ -8,7 +10,7 @@ export const MAX_BODY_BYTES = MAX_REPORT_BYTES + MAX_DOCUMENT_BYTES + 64 * 1024;
 
 const isHtmlReport = (file: File) => /\.html?$/i.test(file.name) || file.type === "text/html";
 const isJsonReceipt = (file: File) => /\.json$/i.test(file.name) || file.type === "application/json";
-const isPdfReport = (file: File) => /\.pdf$/i.test(file.name) || file.type === "application/pdf";
+const isPdfReport = (file: File) => /\.pdf$/i.test(file.name) || formatOfMime(file.type) === "pdf";
 
 /** The report: a file (.pdf or .html) or pasted text, within its bound. */
 async function readReport(form: FormData): Promise<{ text: string; pdf: Uint8Array | null }> {

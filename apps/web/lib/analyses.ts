@@ -1,18 +1,17 @@
 import { localDay } from "@krizaka/intl";
 import {
+  isExaminable,
   type Analysis,
   AUTHENTICITY_MAX_BYTES,
   type AuthenticityReport,
   COMPLIANCE_MAX_CHARS,
   type ComplianceReport,
   DATED_LEASE_RULESET,
-  DOCX_MIME,
   type ExtractionStatus,
   fromRunStatus,
   isExtracting,
   isOver,
   landlordSignals,
-  ODT_MIME,
   reportOf,
   type RunPayload,
   type StartAnalysis,
@@ -51,7 +50,6 @@ import type { DocumentStore } from "./storage/port";
  * words a search should find in it). Verikora adds no verdict of its own.
  */
 /** What the authenticity Studio examines as a file (document-authenticity 1.3.0 reads PDF, images and office files; a photo document is read at upload instead, ADR-0010). */
-const AUTHENTICITY_TYPES: ReadonlySet<string> = new Set(["application/pdf", DOCX_MIME, ODT_MIME]);
 
 /**
  * What the Studio's input schema takes for a ruleset (sovkora-packs `compliance-check`, enforced by the engine: 400 outside it, which
@@ -101,7 +99,7 @@ export function runInputs(
       ...studioRuleset(request.ruleset),
     };
   }
-  if (!AUTHENTICITY_TYPES.has(doc.mimeType)) {
+  if (!isExaminable(doc.mimeType)) {
     throw refuse(422, "NOT_A_PDF", "The authenticity check reads PDF and Word files");
   }
   if (doc.content.length > AUTHENTICITY_MAX_BYTES) {
