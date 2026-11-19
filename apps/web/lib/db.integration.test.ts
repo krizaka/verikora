@@ -107,7 +107,8 @@ describe.runIf(enabled)("database", () => {
       [doc!.id, JSON.stringify(report), "FR-LEASE-005 Le dépôt de garantie excède un mois de loyer."],
     );
     const detail = await getDocument(owner!.id, doc!.id);
-    expect(detail.status).toBe("attention");
+    // a failed BLOCKING rule: the header says « À corriger » like the report body (krizaka-internal#4134)
+    expect(detail.status).toBe("blocking");
     expect(detail.analyses[0]).toMatchObject({ runId: "8f6b1c2e-1d2c-4b8a-9a55-0d1e2f3a4b5c", status: "succeeded" });
     expect(detail.analyses[0]!.report).not.toHaveProperty("attention");
     const hits = await search(owner!.id, "excède");
