@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { dividers, knownBookmarks, wearingAll, withBookmark } from "./bookmarks";
+import { dividers, knownBookmarks, wearingAll, withBookmark, withInherited } from "./bookmarks";
 
 const by = { d1: [{ id: "a" }, { id: "b" }], d2: [{ id: "a" }], d3: [] };
 
@@ -65,5 +65,26 @@ describe("the bookmarks as binder dividers", () => {
   });
   it("gives a tone with the colour, never the colour alone", () => {
     expect(dividers({ ...input, selected: [] }).map((t) => t.hue)).toEqual(["accent", "danger", "success"]);
+  });
+});
+
+describe("the bookmarks a document inherits from its collection and folder", () => {
+  const own = { d1: [{ id: "a" }], d2: [], d3: [{ id: "r" }] };
+  const place = { d1: { collectionId: "c1", folderId: null }, d2: { collectionId: "c1", folderId: "f1" }, d3: { collectionId: "c2", folderId: null } };
+  const onPlace = { c1: [{ id: "r" }], f1: [{ id: "f" }] };
+  it("adds the tags of the collection and of the folder to the document's own", () => {
+    const all = withInherited(own, place, onPlace);
+    expect(all.d1.map((t) => t.id)).toEqual(["a", "r"]);
+    expect(all.d2.map((t) => t.id)).toEqual(["r", "f"]);
+  });
+  it("never lists a tag twice, so a count is not doubled", () => {
+    expect(withInherited({ d1: [{ id: "r" }] }, { d1: place.d1 }, onPlace).d1.map((t) => t.id)).toEqual(["r"]);
+  });
+  it("makes a document of a tagged collection match the filter, once", () => {
+    const all = withInherited(own, place, onPlace);
+    expect(wearingAll(["d1", "d2", "d3"], all, ["r"])).toEqual(["d1", "d2", "d3"]);
+  });
+  it("leaves a document with no place as it is", () => {
+    expect(withInherited({ d9: [{ id: "a" }] }, {}, onPlace).d9).toEqual([{ id: "a" }]);
   });
 });

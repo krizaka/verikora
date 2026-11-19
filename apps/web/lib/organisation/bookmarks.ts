@@ -79,3 +79,24 @@ export function dividers(input: {
     })),
   ];
 }
+
+export type Placement = { collectionId: string; folderId: string | null };
+
+/**
+ * The tags each document counts for the filter (krizaka-internal#3996): its own, then those of its collection and of its folder, each
+ * once, in that order. `placeTags` is keyed by collection or folder id. The input is not changed; a document with no place keeps its own.
+ */
+export function withInherited<T extends BookmarkRef>(
+  own: Readonly<Record<string, readonly T[]>>,
+  placeOf: Readonly<Record<string, Placement>>,
+  placeTags: Readonly<Record<string, readonly T[]>>,
+): Record<string, T[]> {
+  const out: Record<string, T[]> = {};
+  for (const [id, tags] of Object.entries(own)) {
+    const place = placeOf[id];
+    const inherited = place ? [...(placeTags[place.collectionId] ?? []), ...(place.folderId ? (placeTags[place.folderId] ?? []) : [])] : [];
+    const seen = new Set<string>();
+    out[id] = [...tags, ...inherited].filter((t) => !seen.has(t.id) && seen.add(t.id));
+  }
+  return out;
+}

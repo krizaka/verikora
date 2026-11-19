@@ -437,3 +437,13 @@ export async function recentIds(q: Query, owner: string, limit: number): Promise
 /** A collection's description (at most 500 characters; empty or `null` clears it). */
 export const describeCollection = (q: Query, owner: string, id: string, text: string | null) =>
   guard(() => organizeOver(q).collections.describe(owner, id, text));
+
+/** Where each of these documents sits (its collection and folder), by document id: what the tag filter inherits from. */
+export async function placementsOf(q: Query, owner: string, ids: readonly string[]): Promise<Record<string, { collectionId: string; folderId: string | null }>> {
+  if (ids.length === 0) return {};
+  const rows = await q<{ id: string; collection_id: string; folder_id: string | null }>(
+    "SELECT id, collection_id, folder_id FROM documents WHERE owner_id = $1 AND id = ANY($2::uuid[])",
+    [owner, ids],
+  );
+  return Object.fromEntries(rows.map((r) => [r.id, { collectionId: r.collection_id, folderId: r.folder_id }]));
+}
