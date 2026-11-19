@@ -50,7 +50,7 @@ describe("the sentence under the heading: figures that are links, plurals right 
     const parts = leadParts({ toReview: 6, toDecide: 2, openLinks: 1 }, "fr", translator("fr"));
     const links = parts.filter((p) => p.href);
     expect(links.map((l) => l.href)).toEqual([
-      "/fr/app/verifications?result=attention%2Cfailed",
+      "/fr/app/verifications?result=attention%2Cblocking%2Cfailed",
       "/fr/app/dossiers?state=used",
       "/fr/app/dossiers?state=open",
     ]);

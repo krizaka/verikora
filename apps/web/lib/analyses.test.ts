@@ -203,6 +203,20 @@ describe("reports", () => {
     ).toBe("checked");
     expect(documentStatus([{ status: "failed", attention: false }])).toBe("failed");
   });
+  // krizaka-internal#4134: the body said « À corriger · 1 Bloquant » under an « À regarder » header, library row and home row.
+  it("reads « À corriger » when a latest report holds a failed blocking rule, before any point to look at", () => {
+    expect(documentStatus([{ status: "succeeded", attention: true, blocking: true }])).toBe("blocking");
+    expect(
+      documentStatus([
+        { status: "succeeded", attention: true, blocking: false },
+        { status: "succeeded", attention: true, blocking: true },
+      ]),
+    ).toBe("blocking");
+    expect(documentStatus([{ status: "succeeded", attention: true, blocking: false }])).toBe("attention");
+    expect(documentStatus([{ status: "running", attention: true, blocking: true }])).toBe("analysing");
+    // a failed run's stale report never makes it blocking
+    expect(documentStatus([{ status: "failed", attention: false, blocking: true }])).toBe("failed");
+  });
 });
 
 describe("uploads", () => {

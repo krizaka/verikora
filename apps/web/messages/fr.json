@@ -424,6 +424,7 @@
       "analysing": "En lecture",
       "checked": "Vérifié",
       "attention": "À regarder",
+      "blocking": "À corriger",
       "failed": "Échec de la vérification"
     },
     "document": {

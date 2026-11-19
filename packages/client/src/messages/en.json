@@ -43,6 +43,7 @@
       "analysing": "Running",
       "checked": "Checked",
       "attention": "To review",
+      "blocking": "To fix",
       "failed": "Failed"
     }
   },

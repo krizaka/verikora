@@ -3,6 +3,7 @@ import { beforeAll, describe, expect, it } from "vitest";
 import { readCheckFilters } from "./check-filters";
 import { listChecks } from "./checks";
 import { migrate, query } from "./db";
+import { listDocuments } from "./documents";
 import { activity, activityStrip, filesToDecide, toDo } from "./home";
 import { toDoLinks } from "./home-figures";
 
@@ -60,6 +61,32 @@ describe.runIf(enabled)("the home's figures", () => {
     const shown = (await listChecks(query, owner)).filter((c) => filter.result.includes(c.result));
     expect(figures).toEqual({ toReview: 3, toDecide: null, openLinks: null, nextExpiry: null });
     expect(shown).toHaveLength(figures.toReview);
+  });
+
+  // krizaka-internal#4134: a failed blocking rule read « À corriger » in the body and « À regarder » on the header, the library and the home.
+  it("reads « À corriger » on the library and the checks for a report with a failed blocking rule, old reports included", async () => {
+    const owner = await account();
+    const finding = (severity: string, verdict: string) => ({ ruleId: "QC-LEASE-001", severity, verdict });
+    const blocked = await document(owner);
+    await query(
+      "INSERT INTO analyses (document_id, studio, status, run_id, report, finished_at) VALUES ($1, 'compliance-check', 'succeeded', 'run_blocked', $2, '2026-10-23T10:00:00Z')",
+      // no `blocking` key: a report stored before this rule still reads from its findings
+      [blocked, JSON.stringify({ attention: true, findings: [finding("MAJOR", "PASS"), finding("BLOCKING", "FAIL")] })],
+    );
+    const looked = await document(owner);
+    await query(
+      "INSERT INTO analyses (document_id, studio, status, run_id, report, finished_at) VALUES ($1, 'compliance-check', 'succeeded', 'run_looked', $2, '2026-10-23T10:00:00Z')",
+      [looked, JSON.stringify({ attention: true, findings: [finding("MAJOR", "FAIL"), finding("BLOCKING", "PASS")] })],
+    );
+    const statusOf = new Map((await listDocuments(owner)).map((d) => [d.id, d.status]));
+    expect(statusOf.get(blocked)).toBe("blocking");
+    expect(statusOf.get(looked)).toBe("attention");
+    const results = new Map((await listChecks(query, owner)).map((c) => [c.documentId, c.result]));
+    expect(results.get(blocked)).toBe("blocking");
+    expect(results.get(looked)).toBe("attention");
+    // the home counts it among the checks to look at, and its link shows it
+    expect((await toDo(query, owner, NOW, { applicantFiles: false })).toReview).toBe(2);
+    expect(readCheckFilters(new URL(toDoLinks("fr").toReview, "https://x.test").search).result).toContain("blocking");
   });
 
   it("counts the files to decide (sent, not closed) and the open links, with the first expiry", async () => {

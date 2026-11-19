@@ -15,7 +15,7 @@ import type { CheckSummary } from "./checks";
 export const HOME_ROWS = 5;
 
 /** The checks the manager has to look at: the same states Vérifications lists under « To look at » (a failed run or a report asking for attention). */
-const NEEDS_A_LOOK: ReadonlySet<DocumentStatus> = new Set<DocumentStatus>(["attention", "failed"]);
+const NEEDS_A_LOOK: ReadonlySet<DocumentStatus> = new Set<DocumentStatus>(["blocking", "attention", "failed"]);
 
 export type ToTreatRow =
   | { kind: "file"; id: string; name: string; at: string; href: string }

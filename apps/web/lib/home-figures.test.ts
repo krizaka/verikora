@@ -13,10 +13,10 @@ import {
 
 /** The home's figures (verikora#325, P8 of the design direction): each one a door to the view it counts. */
 describe("« À traiter »: each figure's link carries its view's filter", () => {
-  it("the checks to look at open Vérifications filtered on what needs a look (attention, failed)", () => {
+  it("the checks to look at open Vérifications filtered on what needs a look (attention, blocking, failed)", () => {
     const link = new URL(toDoLinks("fr").toReview, "https://x.test");
     expect(link.pathname).toBe("/fr/app/verifications");
-    expect(readCheckFilters(link.search).result).toEqual(["attention", "failed"]);
+    expect(readCheckFilters(link.search).result).toEqual(["attention", "blocking", "failed"]);
   });
   it("the files to decide and the open links open « Dossiers » filtered on that link state", () => {
     const decide = new URL(toDoLinks("en").toDecide, "https://x.test");

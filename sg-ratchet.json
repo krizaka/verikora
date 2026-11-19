@@ -4,7 +4,7 @@
     "no-bare-skip": 0,
     "no-db-in-service-or-rules": 0,
     "no-direct-organize-write": 0,
-    "no-enum-string-compare": 9,
+    "no-enum-string-compare": 8,
     "no-env-in-domain": 5,
     "no-fail-open-secret": 0,
     "no-get-time-arithmetic": 0,

@@ -15,7 +15,7 @@ import { overageBiller } from "../app/overage-biller";
 import { getAnalysis, startAnalysis } from "./analyses";
 import { type AuditVia, releaseAudit, reserveAudit } from "./billing";
 import { query } from "./db";
-import { documentStatus, isPhotoDocument } from "./documents";
+import { blockingSql, documentStatus, isPhotoDocument } from "./documents";
 import { resolveStart } from "./flows";
 import { refuse } from "./http";
 import type { Query } from "./organisation/store";
@@ -103,6 +103,7 @@ interface CheckRow {
   studio: Studio;
   status: AnalysisStatus;
   attention: boolean;
+  blocking: boolean;
   run_id: string | null;
   at: Date;
 }
@@ -110,7 +111,7 @@ interface CheckRow {
 /** Every check of the owner, newest first — the Vérifications destination (filters in the address come with Y6). */
 export async function listChecks(q: Query, owner: string, limit = 500): Promise<CheckSummary[]> {
   const rows = await q<CheckRow>(
-    `SELECT a.id, a.document_id, d.title, d.kind, a.studio, a.status, coalesce((a.report->>'attention')::boolean, false) AS attention, a.run_id,
+    `SELECT a.id, a.document_id, d.title, d.kind, a.studio, a.status, coalesce((a.report->>'attention')::boolean, false) AS attention, ${blockingSql("a")} AS blocking, a.run_id,
             coalesce(a.finished_at, a.created_at) AS at
        FROM analyses a JOIN documents d ON d.id = a.document_id
       WHERE d.owner_id = $1
@@ -124,7 +125,7 @@ export async function listChecks(q: Query, owner: string, limit = 500): Promise<
     title: r.title,
     kind: r.kind,
     studio: r.studio,
-    result: documentStatus([{ status: r.status, attention: r.attention }]),
+    result: documentStatus([{ status: r.status, attention: r.attention, blocking: r.blocking }]),
     runId: r.run_id,
     at: r.at.toISOString(),
   }));

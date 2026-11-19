@@ -25,7 +25,7 @@ export interface ToDo {
 }
 
 /** The results a check « to look at » has: the same words as the Vérifications filter it opens. */
-export const TO_REVIEW_RESULTS = ["attention", "failed"] as const;
+export const TO_REVIEW_RESULTS = ["attention", "blocking", "failed"] as const;
 
 /** « Dossiers »'s filter in the address: `?state=open,used` (the link's state, a system fact). */
 export const FILE_STATE_KEY = "state";
