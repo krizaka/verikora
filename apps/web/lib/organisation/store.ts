@@ -444,7 +444,9 @@ export async function placementsOf(
   owner: string,
   ids: readonly string[],
 ): Promise<Record<string, { collectionId: string; folderId: string | null }>> {
-  if (ids.length === 0) return {};
+  if (ids.length === 0) {
+    return {};
+  }
   const rows = await q<{ id: string; collection_id: string; folder_id: string | null }>(
     "SELECT id, collection_id, folder_id FROM documents WHERE owner_id = $1 AND id = ANY($2::uuid[])",
     [owner, ids],
