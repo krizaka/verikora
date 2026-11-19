@@ -1,4 +1,4 @@
-import type { DocumentKind, DocumentSummary, StartAnalysis } from "@verikora/core";
+import { type DocumentKind, type DocumentSummary, isExaminable, type StartAnalysis } from "@verikora/core";
 
 /** The rules each kind of document is checked against: a lease has the jurisdiction's own, the others a named Québec ruleset. */
 const RULESET_OF_KIND: Record<DocumentKind, "qc-invoice" | "qc-service-contract" | undefined> = {
@@ -23,8 +23,5 @@ export function availableChecks(doc: Pick<DocumentSummary, "kind" | "hasText" | 
   const authenticity: StartAnalysis = { studio: CHECK.authenticity };
   // Another kind has no ruleset in force: the lease's rules are never its fallback (ADR-089), so no compliance check is offered.
   const verifiable = doc.kind !== UNVERIFIED_KIND;
-  return [
-    ...(doc.hasText && verifiable ? [compliance] : []),
-    ...(doc.mimeType === "application/pdf" ? [authenticity] : []),
-  ];
+  return [...(doc.hasText && verifiable ? [compliance] : []), ...(isExaminable(doc.mimeType) ? [authenticity] : [])];
 }

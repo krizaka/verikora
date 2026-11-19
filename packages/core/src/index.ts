@@ -1,6 +1,7 @@
 import { z } from "zod";
 
 import { extractionStatus } from "./extraction";
+import { ACCEPTED_TYPES } from "./file-formats";
 import { DOCUMENT_KINDS, DOCUMENT_STATUSES } from "./vocabulary";
 
 export {
@@ -24,11 +25,8 @@ export const MAX_FILE_BYTES = 10 * 1024 * 1024;
 export const AUTHENTICITY_MAX_BYTES = 5_000_000;
 /** The longest text Sovkora's compliance Studio reads (its `document` input). */
 export const COMPLIANCE_MAX_CHARS = 60_000;
-/** What can be uploaded: a PDF (its text layer is read) or plain text. */
-/** A Word file (.docx), accepted since verikora#229: its text is read for the checks, the file itself is examined for authenticity. */
-export const DOCX_MIME = "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
-export const ODT_MIME = "application/vnd.oasis.opendocument.text";
-export const ACCEPTED_TYPES = ["application/pdf", "text/plain", DOCX_MIME, ODT_MIME] as const;
+/** What can be uploaded: the accepted formats of the table (file-formats.ts). */
+export * from "./file-formats";
 export const acceptedType = z.enum(ACCEPTED_TYPES);
 export type AcceptedType = z.infer<typeof acceptedType>;
 

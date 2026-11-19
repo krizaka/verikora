@@ -12,6 +12,7 @@ import { errorKey } from "@/lib/client";
 import { useSay } from "@/lib/i18n-client";
 
 import { formatBytes, formatDate } from "../console/format";
+import { documentTypeLabel } from "./document-type-label";
 
 type Say = ReturnType<typeof useSay>["say"];
 type Lang = ReturnType<typeof useSay>["locale"];
@@ -158,7 +159,7 @@ function documentColumns(say: Say, locale: Lang): DataTableColumn<AdminDocument>
     {
       id: "type",
       header: say("adminConsole.documents.type"),
-      value: (d) => (d.mimeType === "application/pdf" ? "PDF" : "TXT"),
+      value: (d) => documentTypeLabel(d.mimeType),
     },
     {
       id: "size",

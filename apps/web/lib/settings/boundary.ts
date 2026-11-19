@@ -1,6 +1,6 @@
-import { type DocumentInsight, MAX_FILE_BYTES } from "@verikora/core";
+import { type DocumentInsight, kindsOfFamily, MAX_FILE_BYTES } from "@verikora/core";
 
-import type { FileKind, PreflightRules } from "../preflight/port";
+import type { PreflightRules } from "../preflight/port";
 import type { SettingKey } from "./registry";
 import type { Resolved } from "./resolve";
 
@@ -9,13 +9,6 @@ export type Snapshot = Record<SettingKey, Resolved>;
 const value = <T>(s: Snapshot, key: SettingKey) => s[key].value as T;
 
 const MB = 1024 * 1024;
-/** The file kinds the pre-flight knows by the names the settings use. */
-const KINDS_OF: Record<string, FileKind[]> = {
-  pdf: ["pdf"],
-  text: ["text"],
-  image: ["png", "jpeg", "heic"],
-  word: ["docx", "odt"],
-};
 
 /** The pre-flight rules as set in the configuration: the product's rules with the limits an administrator changed. */
 export function preflightRulesFrom(base: PreflightRules, s: Snapshot): PreflightRules {
@@ -23,7 +16,7 @@ export function preflightRulesFrom(base: PreflightRules, s: Snapshot): Preflight
     ...base,
     maxBytes: Math.min(MAX_FILE_BYTES, value<number>(s, "limits.maxFileMb") * MB),
     maxPages: value<number>(s, "limits.maxPages"),
-    allowedKinds: value<string[]>(s, "limits.allowedTypes").flatMap((t) => KINDS_OF[t] ?? []),
+    allowedKinds: value<string[]>(s, "limits.allowedTypes").flatMap((family) => kindsOfFamily(family)),
   };
 }
 

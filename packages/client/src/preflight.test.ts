@@ -1,3 +1,4 @@
+import { DOCX_MIME, ODT_MIME } from "@verikora/core";
 import { describe, expect, it } from "vitest";
 
 import {
@@ -18,12 +19,21 @@ describe("the limits the server answers", () => {
       allowedTypes: ["application/pdf", "text/plain"],
     });
   });
+
+  it("accepts a .docx the server's `word` family allows, as the web does", () => {
+    const limits = limitsFromConfig({ maxFileBytes: 1_000_000, allowedTypes: ["pdf", "word"] });
+    const docx: PickedFile = { uri: "file:///bail.docx", name: "bail.docx", mimeType: null, size: 1000 };
+    expect(preflight(docx, limits)).toEqual({ ok: true, file: { ...docx, mimeType: DOCX_MIME } });
+    expect(limits.allowedTypes).toContain(ODT_MIME);
+  });
 });
 
 describe("the type of a file the picker did not type", () => {
   it.each([
     ["Bail.PDF", null, "application/pdf"],
     ["notes.txt", null, "text/plain"],
+    ["a.docx", null, DOCX_MIME],
+    ["a.odt", null, ODT_MIME],
     ["scan.heic", null, null],
     ["noext", null, null],
     ["a.pdf", "text/plain", "text/plain"],
