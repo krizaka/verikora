@@ -48,6 +48,9 @@ export async function startIfSure(
   } catch (error) {
     // A text that could not be read says why; otherwise nothing is sure: the report tab asks for the kind itself.
     if (error instanceof ExtractionNotReady && error.reason) return { started: false, refused: error.reason };
+    // The person named the kind: their word is enough when the reading is not there (krizaka-internal#3981).
+    if (requested !== "auto")
+      start = afterUpload({ requested, insight: null, jurisdictions, asOf: localDay(now, LAW_TIME_ZONE) }).start;
   }
   if (!start) return { started: false, refused: null };
   // A check the account is not offered is never launched (it can only fail): the report tab says which roles offer it.
