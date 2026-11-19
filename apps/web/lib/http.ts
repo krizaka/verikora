@@ -1,4 +1,6 @@
-import { logError } from "./log";
+import { randomUUID } from "node:crypto";
+
+import { logError, logWarn } from "./log";
 
 /** An error the API answers with: a status, a stable code (the client translates it), a message for logs. */
 export class HttpError extends Error {
@@ -26,21 +28,41 @@ export const codeOf = (error: HttpError, fallback: string): string =>
 export const refuse = (status: number, code: string, message: string, extra: Record<string, unknown> = {}) =>
   new HttpError(status, message, { code, ...extra });
 
-/** Runs a route handler: an HttpError becomes its JSON answer; anything else is a 500 that leaks nothing. */
-export async function handle(run: () => Promise<Response>): Promise<Response> {
+/** The id a request is followed by in the logs and in its error: the proxy's own when it sent one, else a fresh one. */
+export const requestIdOf = (req: Request): string => {
+  const sent = req.headers.get("x-request-id") ?? "";
+  return /^[\w.-]{8,64}$/.test(sent) ? sent : randomUUID();
+};
+
+/** The refusal of a request that has an id, in the log: the line a person quotes the id against. */
+function logRefusal(requestId: string | null, error: HttpError, code: string): void {
+  if (requestId) {
+    logWarn(`api: request ${requestId} refused ${error.status} ${code}: ${error.message}`);
+  }
+}
+
+/** Runs a route handler: an HttpError becomes its JSON answer; anything else is a 500 that leaks nothing. With the request, every error carries its request id (body, header and log line). */
+export async function handle(run: () => Promise<Response>, req?: Request): Promise<Response> {
+  const requestId = req ? requestIdOf(req) : null;
+  const ids = requestId ? { requestId } : {};
+  const idHeader: Record<string, string> = requestId ? { "X-Request-Id": requestId } : {};
   try {
     return await run();
   } catch (error) {
     if (error instanceof HttpError) {
       // The code also rides in a header: the DigitalOcean ingress replaces a 502's body with its own page and keeps the headers (krizaka-internal#3214).
       const code = codeOf(error, "");
+      logRefusal(requestId, error, code);
       return Response.json(
-        { error: error.message, ...error.body },
-        { status: error.status, headers: { ...error.headers, ...(code ? { "X-Error-Code": code } : {}) } },
+        { error: error.message, ...error.body, ...ids },
+        { status: error.status, headers: { ...error.headers, ...idHeader, ...(code ? { "X-Error-Code": code } : {}) } },
       );
     }
-    logError("api: unexpected error", error);
-    return Response.json({ error: "Something went wrong", code: "INTERNAL" }, { status: 500 });
+    logError(requestId ? `api: unexpected error (request ${requestId})` : "api: unexpected error", error);
+    return Response.json(
+      { error: "Something went wrong", code: "INTERNAL", ...ids },
+      { status: 500, headers: idHeader },
+    );
   }
 }
 

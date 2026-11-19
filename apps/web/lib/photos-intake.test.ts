@@ -14,6 +14,7 @@ const stored = vi.hoisted(() => ({
     requested: string;
     policy: { rules?: { allowedKinds: readonly string[] } } | undefined;
     textOf: (() => Promise<{ text: string; source: unknown; file?: Uint8Array }>) | undefined;
+    defer: boolean | undefined;
   }[],
 }));
 
@@ -28,8 +29,9 @@ vi.mock("./documents", async (importOriginal) => {
       requested: string,
       policy: { rules?: { allowedKinds: readonly string[] } } | undefined,
       textOf: (() => Promise<{ text: string; source: unknown; file?: Uint8Array }>) | undefined,
+      options?: { defer?: boolean },
     ) => {
-      stored.calls.push({ file, bytes, requested, policy, textOf });
+      stored.calls.push({ file, bytes, requested, policy, textOf, defer: options?.defer });
       return { summary: { id: "doc-1" }, duplicate: false };
     },
   };
@@ -103,6 +105,26 @@ describe("what counts as a photo", () => {
 
   it("maps each quality problem to the code the page translates", () => {
     expect(PHOTO_QUALITY_CODE).toEqual({ BLURRY: "PHOTO_BLURRY", GLARE: "PHOTO_GLARE", CUT_OFF: "PHOTO_CUT_OFF" });
+  });
+});
+
+describe("a large phone photo never ends in a silent proxy timeout (krizaka-internal#4056)", () => {
+  it("is refused with its reason when the cleaning outlasts the request's budget", async () => {
+    const slow: PhotoDeps["cleaner"]["clean"] = () => new Promise(() => undefined);
+    const rules = { ...VERIKORA_IMAGE_RULES, cleanBudgetMs: 50 };
+    const file = await photo();
+    const started = Date.now();
+    const error = await refusal(() => storePhotos("owner", [file], "auto", { deps: depsWith(slow, {}, rules) }));
+    expect(Date.now() - started).toBeLessThan(2000);
+    expect(error?.status).toBe(422);
+    expect(error?.body.code).toBe("PHOTO_TOO_SLOW");
+    expect(stored.calls).toHaveLength(0);
+  });
+
+  it("hands the slow text reading to the deferred path, so the answer does not wait for it", async () => {
+    const clean: PhotoDeps["cleaner"]["clean"] = async () => ({ page: await pageOf(), facts: NO_FACTS });
+    await storePhotos("owner", [await photo()], "auto", { deps: depsWith(clean), defer: true });
+    expect(stored.calls[0]?.defer).toBe(true);
   });
 });
 

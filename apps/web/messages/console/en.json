@@ -836,6 +836,7 @@
       "PHOTO_BLURRY": "This photo is blurred: the text cannot be read. Hold the phone steady, let it focus, and take it again.",
       "PHOTO_GLARE": "A glare hides part of this page. Move away from the light or the window, tilt the page a little, and take it again.",
       "PHOTO_CUT_OFF": "The page is cut off by the edge of the photo. Take it again with the whole page in view.",
+      "PHOTO_TOO_SLOW": "This photo took too long to prepare. Take it again at a lower resolution (or send fewer photos at once).",
       "OCR_FAILED": "The text of this photo could not be read. Take it again, well lit and flat.",
       "PHOTO_AUTHENTICITY": "This document comes from photos: its authenticity cannot be judged from a file.",
       "DEFAULT_COLLECTION": "The default collection cannot be deleted. Make another collection the default first.",
