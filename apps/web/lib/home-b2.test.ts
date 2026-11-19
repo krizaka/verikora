@@ -67,7 +67,7 @@ describe("« Le classeur »: the collections as tabs with their counts", () => {
   const c = (
     id: string,
     files: number,
-    last: "checked" | "attention" | "failed" | null,
+    last: "checked" | "attention" | "blocking" | "failed" | null,
     extra: Record<string, unknown> = {},
   ) => ({
     id,
@@ -80,7 +80,7 @@ describe("« Le classeur »: the collections as tabs with their counts", () => {
   const href = (id: string) => `/fr/app?collection=${id}`;
   it("one tab per collection with its file count and the address that opens it; the colour follows the last check, and the words always say it", () => {
     const { tabs } = binderOf(
-      [c("a", 3, "attention"), c("b", 0, null), c("c", 5, "checked"), c("d", 1, "failed")],
+      [c("a", 3, "attention"), c("b", 0, null), c("c", 5, "checked"), c("d", 1, "failed"), c("e", 2, "blocking")],
       "b",
       href,
     );
@@ -89,6 +89,8 @@ describe("« Le classeur »: the collections as tabs with their counts", () => {
       ["b", 0, "neutral", "/fr/app?collection=b"],
       ["c", 5, "success", "/fr/app?collection=c"],
       ["d", 1, "danger", "/fr/app?collection=d"],
+      // krizaka-internal#4134: a failed blocking rule is « À corriger », the danger colour
+      ["e", 2, "danger", "/fr/app?collection=e"],
     ]);
   });
   it("the address chooses the selected tab; without it (or with a stale one) the default collection, else the first", () => {

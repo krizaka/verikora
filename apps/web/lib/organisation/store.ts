@@ -2,6 +2,7 @@ import { filterSql } from "@krizaka/organize";
 import type { CollectionAvatar } from "@verikora/core";
 import type { QueryResultRow } from "pg";
 
+import { blockingSql } from "../documents";
 import { refuse } from "../http";
 import { KIND, WORKSPACE } from "../workspace/decl";
 import { guard, organizeOver } from "./organize";
@@ -132,7 +133,7 @@ export interface LibraryOverview extends Library {
 /** The latest finished check of a collection's files: when, and its result (the document status vocabulary). */
 export interface LastCheck {
   at: string;
-  status: "checked" | "attention" | "failed";
+  status: "checked" | "attention" | "blocking" | "failed";
 }
 
 /** Every library of the owner with its collections, file counts and tags. */
@@ -154,7 +155,7 @@ export async function overview(q: Query, owner: string): Promise<LibraryOverview
             (SELECT count(*) FROM documents d WHERE d.collection_id = c.id) AS files,
             (SELECT count(*) FROM folders f WHERE f.collection_id = c.id) AS folders,
             coalesce(la.finished_at, la.created_at) AS last_at,
-            CASE WHEN la.status = 'failed' THEN 'failed' WHEN coalesce((la.report->>'attention')::boolean, false) THEN 'attention' WHEN la.id IS NOT NULL THEN 'checked' END AS last_status
+            CASE WHEN la.status = 'failed' THEN 'failed' WHEN ${blockingSql("la")} THEN 'blocking' WHEN coalesce((la.report->>'attention')::boolean, false) THEN 'attention' WHEN la.id IS NOT NULL THEN 'checked' END AS last_status
        FROM collections c JOIN libraries l ON l.id = c.library_id
        LEFT JOIN LATERAL (SELECT a.id, a.status, a.report, a.created_at, a.finished_at FROM analyses a JOIN documents d ON d.id = a.document_id
                            WHERE d.collection_id = c.id AND a.status IN ('succeeded', 'failed') ORDER BY coalesce(a.finished_at, a.created_at) DESC LIMIT 1) la ON true

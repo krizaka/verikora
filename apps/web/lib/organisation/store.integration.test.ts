@@ -52,6 +52,7 @@ describe.runIf(enabled)("organisation (ADR-0007)", () => {
     const checked = await org.createCollection(query, owner, library.id, "Checked");
     const attention = await org.createCollection(query, owner, library.id, "Attention");
     const failed = await org.createCollection(query, owner, library.id, "Failed");
+    const blocking = await org.createCollection(query, owner, library.id, "Blocking");
     const outOfOrder = await org.createCollection(query, owner, library.id, "Out of order");
     const other = await org.createCollection(query, stranger, otherLibrary.id, "Other owner");
     const documentIn = async (accountId: string, collectionId: string) => {
@@ -89,6 +90,13 @@ describe.runIf(enabled)("organisation (ADR-0007)", () => {
       attention: true,
     });
 
+    // krizaka-internal#4134: a failed blocking rule, in a report stored without any `blocking` key
+    const blockingDocument = await documentIn(owner, blocking.id);
+    await addAnalysis(blockingDocument, "succeeded", "2026-10-01T10:00:00Z", "2026-10-06T10:00:00Z", {
+      attention: true,
+      findings: [{ ruleId: "QC-LEASE-001", severity: "BLOCKING", verdict: "FAIL" }],
+    });
+
     const failedDocument = await documentIn(owner, failed.id);
     await addAnalysis(failedDocument, "failed", "2026-10-05T10:00:00Z", null);
 
@@ -107,6 +115,7 @@ describe.runIf(enabled)("organisation (ADR-0007)", () => {
     expect(lastCheck(checked.id)).toEqual({ at: "2026-10-02T10:00:00.000Z", status: "checked" });
     expect(lastCheck(attention.id)).toEqual({ at: "2026-10-04T10:00:00.000Z", status: "attention" });
     expect(lastCheck(failed.id)).toEqual({ at: "2026-10-05T10:00:00.000Z", status: "failed" });
+    expect(lastCheck(blocking.id)).toEqual({ at: "2026-10-06T10:00:00.000Z", status: "blocking" });
     expect(lastCheck(outOfOrder.id)).toEqual({ at: "2026-10-20T10:00:00.000Z", status: "failed" });
     expect(ownerCollections.some((collection) => collection.id === other.id)).toBe(false);
   });

@@ -43,9 +43,10 @@ export function leadParts(todo: ToDo, locale: Locale, say: Say): LeadPart[] {
 }
 
 export type BinderHue = "accent" | "success" | "warning" | "danger" | "neutral";
-const HUE_OF_LAST_CHECK: Record<"checked" | "attention" | "failed", BinderHue> = {
+const HUE_OF_LAST_CHECK: Record<"checked" | "attention" | "blocking" | "failed", BinderHue> = {
   checked: "success",
   attention: "warning",
+  blocking: "danger",
   failed: "danger",
 };
 
@@ -68,7 +69,7 @@ export function binderOf<
     name: string;
     files: number;
     isDefault: boolean;
-    lastCheck: { status: "checked" | "attention" | "failed" } | null;
+    lastCheck: { status: "checked" | "attention" | "blocking" | "failed" } | null;
   },
 >(
   collections: readonly C[],
