@@ -26,7 +26,7 @@ import {
 import { query } from "./db";
 import { ExtractionError } from "./extraction/isolated";
 import { isGenericName } from "./generic-name";
-import { HttpError, refuse } from "./http";
+import { codeOf, HttpError, refuse } from "./http";
 import { logError } from "./log";
 import { readText } from "./pdf-text";
 import { personalInfo } from "./pii";
@@ -568,7 +568,7 @@ export async function storeDocument(
   const filename = safeFilename(file.name);
   const deadline = where === "none" && policy ? purgeDeadline(policy.now, policy.purgeAfterHours) : null;
   // Deferred (the upload route): the row is saved at once with its text still to read — an isolated worker reads it after the answer (verikora#21).
-  const deferred = options.defer === true && !textOf;
+  const deferred = options.defer === true;
   const {
     read,
     source,
@@ -608,9 +608,46 @@ export async function storeDocument(
     summary: summary(row),
     duplicate: false,
     ...(deferred
-      ? { finish: () => finishExtraction({ ownerId, id: row.id, filename, mimeType, requested, bytes }) }
+      ? {
+          finish: () =>
+            finishExtraction({
+              ownerId,
+              id: row.id,
+              filename,
+              mimeType,
+              requested,
+              bytes,
+              pages,
+              ...(textOf ? { textOf, keptIn: { store: target, key } } : {}),
+            }),
+        }
       : {}),
   };
+}
+
+/** The code a failed deferred reading keeps on the row: a reader's own refusal (OCR_FAILED), the PDF worker's, else « unreadable ». */
+function failureCode(error: unknown): string {
+  const refusal = error instanceof ExtractionError ? extractionRefusal(error) : error;
+  return refusal instanceof HttpError ? codeOf(refusal, "UNREADABLE_FILE") : "UNREADABLE_FILE";
+}
+
+/** The text of a deferred document: its reader's (photos; the richer file it made replaces the stored one), else the isolated PDF worker's. */
+async function readDeferred(
+  args: Parameters<typeof finishExtraction>[0],
+): Promise<{ text: string; pages: number | null; source: TextSource | null }> {
+  const { ownerId, id, mimeType, bytes, textOf, keptIn } = args;
+  if (!textOf) {
+    return { ...(await readText(mimeType, bytes)), source: null };
+  }
+  const recognised = await textOf();
+  if (recognised.file && keptIn) {
+    await keptIn.store.put(keptIn.key, recognised.file, { contentType: mimeType });
+    await query(
+      "UPDATE documents SET size_bytes = $3, source_sha256 = sha256, sha256 = $4 WHERE owner_id = $1 AND id = $2",
+      [ownerId, id, recognised.file.length, createHash("sha256").update(recognised.file).digest("hex")],
+    );
+  }
+  return { text: recognised.text, pages: args.pages ?? null, source: recognised.source };
 }
 
 /**
@@ -624,24 +661,28 @@ export async function finishExtraction(args: {
   mimeType: AcceptedType;
   requested: DocumentKind | "auto";
   bytes: Uint8Array;
+  /** Photos: the reader of their text (it replaces the PDF reader), the pages already known, and where the richer file it may make replaces the stored one. */
+  pages?: number | null;
+  textOf?: TextReader;
+  keptIn?: { store: DocumentStore; key: string };
 }): Promise<void> {
-  const { ownerId, id, filename, mimeType, requested, bytes } = args;
+  const { ownerId, id, filename, requested } = args;
   await query(
     "UPDATE documents SET extraction = 'running', extraction_at = now() WHERE owner_id = $1 AND id = $2 AND extraction = 'queued'",
     [ownerId, id],
   );
   try {
-    const read = await readText(mimeType, bytes);
+    const read = await readDeferred(args);
     const kind =
       requested === "auto"
         ? kindFromNature(understanding.understand(read.text, { pages: read.pages }).nature?.id ?? null)
         : requested;
     await query(
-      "UPDATE documents SET text = $3, pages = $4, kind = $5, title = $6, extraction = 'done', extraction_error = NULL, extraction_at = now() WHERE owner_id = $1 AND id = $2 AND extraction IN ('queued', 'running')",
-      [ownerId, id, read.text, read.pages, kind, titleFor(filename, read.text)],
+      "UPDATE documents SET text = $3, pages = $4, kind = $5, title = $6, text_source = COALESCE($7, text_source), extraction = 'done', extraction_error = NULL, extraction_at = now() WHERE owner_id = $1 AND id = $2 AND extraction IN ('queued', 'running')",
+      [ownerId, id, read.text, read.pages, kind, titleFor(filename, read.text), read.source],
     );
   } catch (error) {
-    const code = error instanceof ExtractionError ? String(extractionRefusal(error).body.code) : "UNREADABLE_FILE";
+    const code = failureCode(error);
     // The page only says « unreadable »: the cause (a worker failure, a value the database refused) is read here, by document id (krizaka-internal#4028).
     logError(`document ${id}: extraction failed as ${code}`, error);
     await query(

@@ -57,3 +57,19 @@ describe("handle: the retry hint rides in the headers too (the ingress keeps the
     expect(res.headers.get("x-error-code")).toBe("SOVKORA_UNAVAILABLE");
   });
 });
+
+describe("handle: a request id follows the request into its error (krizaka-internal#4056)", () => {
+  it("puts the proxy's id, or a fresh one, in the body and the header of a refusal", async () => {
+    const sent = new Request("http://x/api", { headers: { "x-request-id": "proxy-id-12345" } });
+    const res = await handle(async () => {
+      throw new HttpError(422, "slow", { code: "PHOTO_TOO_SLOW" });
+    }, sent);
+    expect(res.headers.get("x-request-id")).toBe("proxy-id-12345");
+    expect(await res.json()).toMatchObject({ code: "PHOTO_TOO_SLOW", requestId: "proxy-id-12345" });
+    const fresh = await handle(async () => {
+      throw new Error("boom");
+    }, new Request("http://x/api"));
+    expect(fresh.status).toBe(500);
+    expect((await fresh.json()).requestId).toBe(fresh.headers.get("x-request-id"));
+  });
+});

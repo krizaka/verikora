@@ -19,6 +19,8 @@ export interface ImageRules {
   /** The longest side after cleaning, in pixels: enough for OCR, small enough for memory. */
   maxSide: number;
   jpegQuality: number;
+  /** The time the cleaning of all the photos of one upload may take inside the request, in ms: past it the upload is refused with its reason, before the proxy cuts it with no word (krizaka-internal#4056). */
+  cleanBudgetMs: number;
   /** Photos that make one document. */
   maxPhotos: number;
   /** The largest skew corrected, in degrees, and the search step. */

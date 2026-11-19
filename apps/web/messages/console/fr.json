@@ -835,6 +835,7 @@
       "PHOTO_BLURRY": "Cette photo est floue : le texte ne peut pas être lu. Tenez le téléphone stable, laissez la mise au point se faire et reprenez-la.",
       "PHOTO_GLARE": "Un reflet cache une partie de la page. Éloignez-vous de la lumière ou de la fenêtre, inclinez un peu la page et reprenez la photo.",
       "PHOTO_CUT_OFF": "La page est coupée par le bord de la photo. Reprenez-la avec toute la page dans le cadre.",
+      "PHOTO_TOO_SLOW": "Cette photo a pris trop de temps à préparer. Reprenez-la à une résolution plus basse (ou envoyez moins de photos à la fois).",
       "OCR_FAILED": "Le texte de cette photo n'a pas pu être lu. Reprenez la photo, bien éclairée et à plat.",
       "PHOTO_AUTHENTICITY": "Ce document vient de photos : son authenticité ne peut pas se juger sur un fichier.",
       "DEFAULT_COLLECTION": "La collection par défaut ne peut pas être supprimée. Choisissez-en une autre comme collection par défaut d'abord.",
