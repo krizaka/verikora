@@ -43,6 +43,7 @@
       "analysing": "En cours",
       "checked": "Vérifié",
       "attention": "À examiner",
+      "blocking": "À corriger",
       "failed": "Échec"
     }
   },

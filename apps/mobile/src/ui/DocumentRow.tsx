@@ -8,6 +8,16 @@ import { routes } from "@/domain/links";
 import { useI18n } from "@/i18n";
 import { useLocale } from "@/use-locale";
 
+/** A row's badge: a point to look at warns, a failed blocking rule (« À corriger », krizaka-internal#4134) is danger, the rest stays calm. */
+const STATUS_TONE: Record<DocumentSummary["status"], "neutral" | "warning" | "danger"> = {
+  stored: "neutral",
+  analysing: "neutral",
+  checked: "neutral",
+  attention: "warning",
+  blocking: "danger",
+  failed: "neutral",
+};
+
 /** A document in a list: its title, what it is and where it stands, the whole row one link to its page. */
 export function DocumentRow({ document }: Readonly<{ document: DocumentSummary }>) {
   const { t } = useI18n();
@@ -20,7 +30,7 @@ export function DocumentRow({ document }: Readonly<{ document: DocumentSummary }
           {document.title}
         </Txt>
         <View style={{ flexDirection: "row", gap: 8, alignItems: "center" }}>
-          <Badge tone={document.status === "attention" ? "warning" : "neutral"}>
+          <Badge tone={STATUS_TONE[document.status]}>
             {t(`document.status.${document.status}`)}
           </Badge>
           <Txt tone="muted" variant="caption">
