@@ -33,7 +33,7 @@ export type Preflight =
 export function limitsFromConfig(config: { maxFileBytes: number; allowedTypes: readonly string[] }): PreflightLimits {
   return {
     maxFileBytes: config.maxFileBytes,
-    allowedTypes: config.allowedTypes.flatMap(acceptedMimesOfFamily),
+    allowedTypes: config.allowedTypes.flatMap((family) => acceptedMimesOfFamily(family)),
   };
 }
 

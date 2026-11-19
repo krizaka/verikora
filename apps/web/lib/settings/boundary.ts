@@ -16,7 +16,7 @@ export function preflightRulesFrom(base: PreflightRules, s: Snapshot): Preflight
     ...base,
     maxBytes: Math.min(MAX_FILE_BYTES, value<number>(s, "limits.maxFileMb") * MB),
     maxPages: value<number>(s, "limits.maxPages"),
-    allowedKinds: value<string[]>(s, "limits.allowedTypes").flatMap(kindsOfFamily),
+    allowedKinds: value<string[]>(s, "limits.allowedTypes").flatMap((family) => kindsOfFamily(family)),
   };
 }
 
