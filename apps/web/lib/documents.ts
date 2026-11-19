@@ -2,6 +2,7 @@ import { createHash, randomUUID } from "node:crypto";
 
 import {
   type AcceptedType,
+  acceptedMimeOfKind,
   type Analysis,
   ANALYSIS_STATUS,
   type AnalysisStatus,
@@ -13,10 +14,8 @@ import {
   type DocumentKind,
   type DocumentStatus,
   type DocumentSummary,
-  DOCX_MIME,
   type ExtractionStatus,
   landlordSignals,
-  ODT_MIME,
   type Signal,
   type StorageKind,
   type Studio,
@@ -354,24 +353,16 @@ export async function inspectUpload(
   return { fileKind: outcome.fileKind, sha256: outcome.sha256, pages: outcome.pages };
 }
 
-/** A PDF or a text file (photos go through lib/photos, which hands the pre-flight a PDF made of them). */
-/** The stored type of each kind a file upload accepts. */
-const MIME_OF = {
-  pdf: "application/pdf",
-  text: "text/plain",
-  docx: DOCX_MIME,
-  odt: ODT_MIME,
-} as const satisfies Record<string, AcceptedType>;
-
+/** A PDF, a text, a Word or an OpenDocument file (photos go through lib/photos, which hands the pre-flight a PDF made of them). */
 export async function checkUpload(
   file: { name: string; type: string; size: number },
   bytes: Uint8Array,
   rules?: PreflightRules,
 ): Promise<{ mimeType: AcceptedType; sha256: string; pages: number | null }> {
   const { fileKind, sha256, pages } = await inspectUpload(file, bytes, rules);
-  if (fileKind !== "pdf" && fileKind !== "text" && fileKind !== "docx" && fileKind !== "odt")
-    throw refuse(415, "UNSUPPORTED_TYPE", "Photos are sent as photos, not as a file");
-  return { mimeType: MIME_OF[fileKind], sha256, pages };
+  const mimeType = acceptedMimeOfKind(fileKind);
+  if (!mimeType) throw refuse(415, "UNSUPPORTED_TYPE", "Photos are sent as photos, not as a file");
+  return { mimeType, sha256, pages };
 }
 
 export const titleOf = (filename: string) =>

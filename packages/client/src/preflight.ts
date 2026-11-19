@@ -1,4 +1,11 @@
-import { ACCEPTED_TYPES, type AcceptedType, MAX_FILE_BYTES } from "@verikora/core";
+import {
+  ACCEPTED_TYPES,
+  type AcceptedType,
+  acceptedMimeOfKind,
+  acceptedMimesOfFamily,
+  formatOfName,
+  MAX_FILE_BYTES,
+} from "@verikora/core";
 
 /** Why a file is refused before it leaves the phone: the same limits as the web's pre-flight, read from `/api/me/app`. */
 export const PREFLIGHT_REASON = { empty: "empty", tooLarge: "tooLarge", unsupportedType: "unsupportedType" } as const;
@@ -22,21 +29,19 @@ export const DEFAULT_LIMITS: PreflightLimits = { maxFileBytes: MAX_FILE_BYTES, a
 export type Preflight =
   { ok: true; file: PickedFile & { mimeType: AcceptedType } } | { ok: false; reason: PreflightReason };
 
-/** `/api/me/app` names the types it accepts by family (`pdf`, `text`); the picker reports MIME types. */
-const MIME_OF_FAMILY: Record<string, AcceptedType> = { pdf: "application/pdf", text: "text/plain" };
-
+/** `/api/me/app` names the types it accepts by family (`pdf`, `text`, `word`); the picker reports MIME types. */
 export function limitsFromConfig(config: { maxFileBytes: number; allowedTypes: readonly string[] }): PreflightLimits {
   return {
     maxFileBytes: config.maxFileBytes,
-    allowedTypes: config.allowedTypes.flatMap((family) => MIME_OF_FAMILY[family] ?? []),
+    allowedTypes: config.allowedTypes.flatMap((family) => acceptedMimesOfFamily(family)),
   };
 }
 
 /** What the system picker reports is not always set: the file's extension says it too. */
-const TYPE_OF_EXTENSION: Record<string, AcceptedType> = { pdf: "application/pdf", txt: "text/plain" };
-
-export const mimeTypeOf = (name: string, reported: string | null): string | null =>
-  reported ?? TYPE_OF_EXTENSION[/\.([a-z0-9]+)$/i.exec(name)?.[1]?.toLowerCase() ?? ""] ?? null;
+export const mimeTypeOf = (name: string, reported: string | null): string | null => {
+  const kind = formatOfName(name);
+  return reported ?? (kind ? acceptedMimeOfKind(kind) : undefined) ?? null;
+};
 
 export function preflight(file: PickedFile, limits: PreflightLimits = DEFAULT_LIMITS): Preflight {
   if (file.size === 0) return { ok: false, reason: PREFLIGHT_REASON.empty };

@@ -1,14 +1,14 @@
 import type { Located } from "@krizaka/ui/document-viewer";
 import {
+  formatOfMime,
+  isExaminable,
   type Analysis,
   ANALYSIS_STATUS,
   type ComplianceReport,
   DOCUMENT_TABS,
   type DocumentKind,
   type DocumentView,
-  DOCX_MIME,
   isSeededCheck,
-  ODT_MIME,
   type Studio,
 } from "@verikora/core";
 
@@ -63,7 +63,7 @@ export function documentFacts(
   );
   const running = (studio: Studio) =>
     doc.analyses.some((a) => a.studio === studio && a.status === ANALYSIS_STATUS.running);
-  const isPdf = doc.mimeType === "application/pdf";
+  const isPdf = formatOfMime(doc.mimeType) === "pdf";
   const failures = doc.analyses.filter((a) => a.error);
   const newest = doc.analyses[0];
   const runningStudio = STUDIOS_SHOWN_RUNNING.find((s) => running(s)) ?? null;
@@ -83,7 +83,7 @@ export function documentFacts(
     running,
     runningStudio,
     isPdf,
-    examinable: isPdf || doc.mimeType === DOCX_MIME || doc.mimeType === ODT_MIME,
+    examinable: isExaminable(doc.mimeType),
     certifiable: !!latestCompliance && !isSeededCheck(latestCompliance),
     reportHref: latestCompliance
       ? `/api/documents/${doc.id}/analyses/${latestCompliance.id}/report?lang=${locale}`

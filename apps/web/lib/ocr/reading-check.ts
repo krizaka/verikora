@@ -1,4 +1,4 @@
-import { TEXT_SOURCE } from "@verikora/core";
+import { formatOfMime, TEXT_SOURCE } from "@verikora/core";
 
 import type { OcrRules, TextSource } from "./port";
 
@@ -80,7 +80,7 @@ export function readingProblem(
   rules: OcrRules,
 ): ReadingFailure | null {
   const fromImage = doc.source != null;
-  if (!fromImage && doc.mimeType !== "application/pdf") {
+  if (!fromImage && formatOfMime(doc.mimeType) !== "pdf") {
     return null;
   }
   if (!fromImage && doc.text.trim().length > rules.minChars) {
