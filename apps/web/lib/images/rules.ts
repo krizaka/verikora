@@ -9,6 +9,7 @@ export const VERIKORA_IMAGE_RULES: ImageRules = {
   deskewMaxDegrees: 12,
   deskewStepDegrees: 0.5,
   minPageShare: 0.25,
+  pageFinder: { sampleWidth: 400, whiteLevel: 250, minLineShare: 0.6, gapShare: 0.08, minPageShare: 0.15 },
   quality: {
     minSharpness: 100,
     maxGlareShare: 0.08,

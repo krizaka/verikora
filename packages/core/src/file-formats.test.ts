@@ -33,6 +33,7 @@ describe("the file-format table", () => {
     [DOCX_MIME, "docx"],
     [ODT_MIME, "odt"],
     ["image/heif", "heic"],
+    ["image/webp", "webp"],
     ["application/zip", "zip"],
     ["application/x-unknown", undefined],
   ])("reads the media type %s as %s", (mime, kind) => expect(formatOfMime(mime)).toBe(kind));
@@ -48,7 +49,7 @@ describe("the file-format table", () => {
 
   it("names the kinds of a setting family, and the media types an upload accepts from it", () => {
     expect(kindsOfFamily("word")).toEqual(["docx", "odt"]);
-    expect(kindsOfFamily("image")).toEqual(["png", "jpeg", "heic"]);
+    expect(kindsOfFamily("image")).toEqual(["png", "jpeg", "heic", "webp"]);
     expect(acceptedMimesOfFamily("word")).toEqual([DOCX_MIME, ODT_MIME]);
     expect(acceptedMimesOfFamily("image")).toEqual([]);
     expect(acceptedMimesOfFamily("nope")).toEqual([]);

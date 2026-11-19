@@ -97,7 +97,7 @@ export function imageSize(bytes: Uint8Array): Size | null {
   if (isHeif(bytes)) {
     return heifSize(bytes, view);
   }
-  if (bytes.length >= 12 && fourcc(bytes, 0) === "RIFF" && fourcc(bytes, 8) === "WEBP") {
+  if (isWebp(bytes)) {
     return webpSize(bytes, view);
   }
   return null;
@@ -112,3 +112,7 @@ export function isHeif(bytes: Uint8Array): boolean {
     HEIF_BRANDS.has(Buffer.from(bytes.subarray(8, 12)).toString("latin1"))
   );
 }
+
+/** WebP is a RIFF container whose form type is « WEBP » (`RIFF`, 4 size bytes, `WEBP`). */
+export const isWebp = (bytes: Uint8Array): boolean =>
+  bytes.length >= 12 && fourcc(bytes, 0) === "RIFF" && fourcc(bytes, 8) === "WEBP";

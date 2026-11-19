@@ -47,6 +47,14 @@ describe("pre-flight: what the bytes are", () => {
     // an iPhone sometimes names it .heif or declares nothing: the bytes decide
     expect(await why(fx.heicWithSize(4032, 3024), { name: "photo.heif", type: "" })).toBe("accepted");
   });
+  it("accepts a WebP by its RIFF/WEBP bytes, and refuses a RIFF that is not one", async () => {
+    const webp = await fx.imageOf("webp");
+    expect(sniff(webp)).toBe("webp");
+    expect(await why(webp, { name: "shot.webp", type: "image/webp" })).toBe("accepted");
+    expect(await why(webp, { name: "shot.png", type: "image/png" })).toBe("TYPE_MISMATCH");
+    const wav = Buffer.concat([Buffer.from("RIFF"), Buffer.alloc(4), Buffer.from("WAVEfmt "), Buffer.alloc(40)]);
+    expect(sniff(wav)).not.toBe("webp");
+  });
   it("refuses a photo whose declared type is not what the bytes are, and one with too many pixels", async () => {
     expect(await why(await fx.imageOf("jpeg"), { name: "scan.png", type: "image/png" })).toBe("TYPE_MISMATCH");
     expect(await why(fx.pngWithSize(9000, 9000), { name: "huge.png", type: "image/png" })).toBe("IMAGE_TOO_LARGE");

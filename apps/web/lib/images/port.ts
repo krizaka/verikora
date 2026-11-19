@@ -1,12 +1,13 @@
+import type { PageFinderRules } from "./page-finder";
 import type { PhotoQuality, QualityRules } from "./quality";
 
 /**
  * The PHOTO CLEANING port (ADR-0010). Generic on purpose — no import from this app, so another Krizaka product can lift the
- * folder. A photo of a document (PNG, JPEG, HEIC) goes in; a clean, upright, cropped page comes out, with its metadata
+ * folder. A photo of a document (PNG, JPEG, HEIC, WebP) goes in; a clean, upright, cropped page comes out, with its metadata
  * STRIPPED (Loi 25: GPS and device data never leave the intake) and only a few facts kept — whether a camera or an editor made it.
  * Deterministic, in-process, for nothing: no model, no network.
  */
-export const PHOTO_KIND = { png: "png", jpeg: "jpeg", heic: "heic" } as const;
+export const PHOTO_KIND = { png: "png", jpeg: "jpeg", heic: "heic", webp: "webp" } as const;
 export type PhotoKind = (typeof PHOTO_KIND)[keyof typeof PHOTO_KIND];
 
 export interface PhotoInput {
@@ -28,6 +29,8 @@ export interface ImageRules {
   deskewStepDegrees: number;
   /** A crop is applied only when the page fills at least this share of the frame (else the photo is left whole). */
   minPageShare: number;
+  /** The page finder for a rendered page (a phone screenshot of a document), tried before the photo crop (lib/images/page-finder.ts). */
+  pageFinder: PageFinderRules;
   /** The gate: when a photo is too blurred, glared or cut off to be read (lib/images/quality.ts). */
   quality: QualityRules;
 }

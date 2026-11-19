@@ -81,9 +81,9 @@ export const PHOTO_QUALITY_CODE: Record<QualityProblem, string> = {
   CUT_OFF: "PHOTO_CUT_OFF",
 };
 
-const IMAGE_KINDS = new Set<string>(["png", "jpeg", "heic"]);
+const IMAGE_KINDS = new Set<string>(["png", "jpeg", "heic", "webp"]);
 
-/** Whether the bytes are a photo (PNG, JPEG, HEIC) — by their signature, never the name or the type the browser declared. */
+/** Whether the bytes are a photo (PNG, JPEG, HEIC, WebP) — by their signature, never the name or the type the browser declared. */
 export const isPhoto = (bytes: Uint8Array): boolean => IMAGE_KINDS.has(sniff(bytes));
 
 /** Where the photos come from, as one record: the first value found on any photo, GPS if any carried it. */

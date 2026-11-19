@@ -6,7 +6,8 @@ import { describe, expect, it } from "vitest";
 
 import { createImageCleaner } from "./clean";
 import { estimateSkew } from "./deskew";
-import { photoOfPage } from "./fixtures";
+import { photoOfPage, SCREENSHOT_TWIN, screenshotOfInvoice } from "./fixtures";
+import { qualityProblem } from "./quality";
 import { pagesToPdf } from "./pdf";
 import { ImageError } from "./port";
 import { VERIKORA_IMAGE_RULES } from "./rules";
@@ -71,6 +72,24 @@ describe("cleaning a photo", () => {
       cleaner.clean({ bytes: new Uint8Array([0xff, 0xd8, 0xff, 1, 2, 3, 4]), kind: "jpeg" }),
     ).rejects.toMatchObject({ code: "UNREADABLE_IMAGE" });
     await expect(cleaner.clean({ bytes: new Uint8Array(40), kind: "heic" })).rejects.toBeInstanceOf(ImageError);
+  });
+});
+
+describe("a phone screenshot of a page", () => {
+  it("is cropped to its page, passes the gate and keeps no phone bar", async () => {
+    const { page } = await cleaner.clean({ bytes: await screenshotOfInvoice(), kind: "png" });
+    expect(page.steps.cropped).toBe(true);
+    expect(qualityProblem(page.quality, VERIKORA_IMAGE_RULES.quality)).toBeNull();
+    expect(page.width).toBeLessThanOrEqual(SCREENSHOT_TWIN.pageWidth + 10);
+    expect(page.height).toBeLessThanOrEqual(SCREENSHOT_TWIN.pageHeight + 10);
+    expect(page.height).toBeGreaterThan(SCREENSHOT_TWIN.pageHeight - 10);
+    expect((await sharp(page.jpeg).metadata()).exif).toBeUndefined();
+  });
+
+  it("is cleaned the same from a WebP", async () => {
+    const png = await cleaner.clean({ bytes: await screenshotOfInvoice(), kind: "png" });
+    const webp = await cleaner.clean({ bytes: await screenshotOfInvoice("webp"), kind: "webp" });
+    expect([webp.page.width, webp.page.height]).toEqual([png.page.width, png.page.height]);
   });
 });
 

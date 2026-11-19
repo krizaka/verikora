@@ -82,6 +82,14 @@ export const FILE_FORMATS = {
     storedAs: "heic",
     accepted: false,
   },
+  webp: {
+    mimes: ["image/webp"],
+    extensions: ["webp"],
+    family: FILE_FAMILY.image,
+    examinable: false,
+    storedAs: "webp",
+    accepted: false,
+  },
   zip: {
     mimes: ["application/zip"],
     extensions: ["zip"],
