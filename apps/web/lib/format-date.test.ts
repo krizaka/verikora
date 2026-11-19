@@ -27,4 +27,11 @@ describe("formatDate", () => {
     expect(formatDate(instant, "en")).toContain("18");
     expect(formatDate(instant, "fr")).toContain("18");
   });
+  it("writes a date-only value as the calendar day it names, in every time zone (krizaka-internal#3984)", () => {
+    for (const zone of ["America/Montreal", "UTC", "Asia/Tokyo"]) {
+      process.env.TZ = zone;
+      expect(formatDate("2026-11-16", "en")).toContain("16");
+      expect(formatDate("2026-11-16", "fr")).toContain("16");
+    }
+  });
 });

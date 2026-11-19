@@ -278,8 +278,8 @@ importers:
         specifier: ^0.1.1
         version: 0.1.1
       '@krizaka/charts':
-        specifier: 1.0.2
-        version: 1.0.2(@krizaka/ui@5.0.0)(react-dom@19.3.1(react@19.3.1))(react-native-svg@15.16.0(react-native@0.88.0(@babel/core@7.29.13)(@react-native/metro-config@0.88.0(@babel/core@7.29.13))(@types/react@19.3.0)(react@19.3.1))(react@19.3.1))(react-native@0.88.0(@babel/core@7.29.13)(@react-native/metro-config@0.88.0(@babel/core@7.29.13))(@types/react@19.3.0)(react@19.3.1))(react@19.3.1)
+        specifier: 1.0.3
+        version: 1.0.3(@krizaka/ui@5.0.0)(react-dom@19.3.1(react@19.3.1))(react-native-svg@15.16.0(react-native@0.88.0(@babel/core@7.29.13)(@react-native/metro-config@0.88.0(@babel/core@7.29.13))(@types/react@19.3.0)(react@19.3.1))(react@19.3.1))(react-native@0.88.0(@babel/core@7.29.13)(@react-native/metro-config@0.88.0(@babel/core@7.29.13))(@types/react@19.3.0)(react@19.3.1))(react@19.3.1)
       '@krizaka/coupons':
         specifier: 0.1.5
         version: 0.1.5(vitest@4.1.12)(zod@4.6.7)
@@ -2040,11 +2040,11 @@ packages:
     resolution: {integrity: sha512-G4btD86XyRA4fe59H1KpV1uf7ZHYlIQSe4CDTbRrBvN3Y4i4dtIrMfgOW6G3N4sP6GfkwvVZdmya3aqUjfgaTw==}
     engines: {node: '>=22'}
 
-  '@krizaka/charts@1.0.2':
-    resolution: {integrity: sha512-B/e52uV32ZR0Cbag/TIQO5LGJwNF8P4/oiV86rC/sMq+0kBaQ4MmPIRkGhpAOMW6rZ3UJHOXVkiPwa9/r0L1vw==}
+  '@krizaka/charts@1.0.3':
+    resolution: {integrity: sha512-B9cEvSz1BHXXGWeMoH3hTdp1FohtqL+4LnCxEdyv498S1NmglKOctnYgj/jbmTMX1W4hkVWpIXTYgZ2s74Lyug==}
     engines: {node: '>=22'}
     peerDependencies:
-      '@krizaka/ui': ^4.14.0
+      '@krizaka/ui': ^5.0.0
       react: '>=19'
       react-dom: '>=19'
       react-native: '>=0.76'
@@ -10857,7 +10857,7 @@ snapshots:
       '@krizaka/intl': 0.4.1
       date-fns: 4.4.0
 
-  '@krizaka/charts@1.0.2(@krizaka/ui@5.0.0)(react-dom@19.3.1(react@19.3.1))(react-native-svg@15.16.0(react-native@0.88.0(@babel/core@7.29.13)(@react-native/metro-config@0.88.0(@babel/core@7.29.13))(@types/react@19.3.0)(react@19.3.1))(react@19.3.1))(react-native@0.88.0(@babel/core@7.29.13)(@react-native/metro-config@0.88.0(@babel/core@7.29.13))(@types/react@19.3.0)(react@19.3.1))(react@19.3.1)':
+  '@krizaka/charts@1.0.3(@krizaka/ui@5.0.0)(react-dom@19.3.1(react@19.3.1))(react-native-svg@15.16.0(react-native@0.88.0(@babel/core@7.29.13)(@react-native/metro-config@0.88.0(@babel/core@7.29.13))(@types/react@19.3.0)(react@19.3.1))(react@19.3.1))(react-native@0.88.0(@babel/core@7.29.13)(@react-native/metro-config@0.88.0(@babel/core@7.29.13))(@types/react@19.3.0)(react@19.3.1))(react@19.3.1)':
     dependencies:
       '@krizaka/intl': 0.4.1
       '@krizaka/ui': 5.0.0(@krizaka/query@0.3.1(@types/react@19.3.0)(csstype@3.2.3)(next@16.4.6(@babel/core@7.29.13)(@playwright/test@1.64.0)(@types/node@24.19.2)(babel-plugin-react-compiler@1.0.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1))(pg@8.23.1)(react@19.3.1))(@krizaka/tailwind@5.0.0)(@shopify/flash-list@2.3.2(@babel/runtime@7.29.14)(react-native@0.88.0(@babel/core@7.29.13)(@react-native/metro-config@0.88.0(@babel/core@7.29.13))(@types/react@19.3.0)(react@19.3.1))(react@19.3.1))(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(expo-image-picker@58.0.10(expo@58.0.17))(pdfjs-dist@6.4.299)(react-dom@19.3.1(react@19.3.1))(react-native-svg@15.16.0(react-native@0.88.0(@babel/core@7.29.13)(@react-native/metro-config@0.88.0(@babel/core@7.29.13))(@types/react@19.3.0)(react@19.3.1))(react@19.3.1))(react-native@0.88.0(@babel/core@7.29.13)(@react-native/metro-config@0.88.0(@babel/core@7.29.13))(@types/react@19.3.0)(react@19.3.1))(react@19.3.1)(tailwindcss@4.3.3)(vitest@4.1.12)
