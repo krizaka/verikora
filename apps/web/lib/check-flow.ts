@@ -93,7 +93,8 @@ export function afterUpload({
   const confirmed = sure ? recognised : null;
   return planCheck({
     declared: requested,
-    detected: requested === "auto" ? confirmed : recognised,
+    // Only a sure reading can contradict what the person named: an unsure one never blocks their answer (krizaka-internal#3981).
+    detected: confirmed,
     jurisdictions,
     asOf,
   });

@@ -21,7 +21,7 @@
     "@krizaka/audit": "0.1.7",
     "@krizaka/auth": "^0.14.0",
     "@krizaka/brief": "^0.1.1",
-    "@krizaka/charts": "1.0.2",
+    "@krizaka/charts": "1.0.3",
     "@krizaka/coupons": "0.1.5",
     "@krizaka/credits": "0.1.5",
     "@krizaka/db": "0.3.1",

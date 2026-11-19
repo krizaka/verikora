@@ -14,12 +14,17 @@ export function formatBytes(bytes: number, locale: "en" | "fr"): string {
   return `${new Intl.NumberFormat(INTL[locale], { maximumFractionDigits: unit === 0 ? 0 : 1 }).format(value)} ${units[unit]}`;
 }
 
+/** A calendar day (`2026-11-16`), not an instant: it names no time of day. */
+const isDateOnly = (iso: string): boolean => iso.length === 10 && iso[4] === "-" && iso[7] === "-";
+
 export function formatDate(iso: string | null | undefined, locale: "en" | "fr", withTime = false): string {
   if (!iso) return "";
+  // A calendar day is read in UTC, so its midnight does not slide to the day before in Montréal.
+  const dayOnly = isDateOnly(iso);
   return new Date(iso).toLocaleString(
     INTL[locale],
-    withTime
+    withTime && !dayOnly
       ? { dateStyle: "medium", timeStyle: "short", timeZone: DISPLAY_TIME_ZONE }
-      : { dateStyle: "medium", timeZone: DISPLAY_TIME_ZONE },
+      : { dateStyle: "medium", timeZone: dayOnly ? "UTC" : DISPLAY_TIME_ZONE },
   );
 }
