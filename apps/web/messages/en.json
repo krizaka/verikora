@@ -424,6 +424,7 @@
       "analysing": "Being read",
       "checked": "Checked",
       "attention": "To look at",
+      "blocking": "To fix",
       "failed": "Check failed"
     },
     "document": {

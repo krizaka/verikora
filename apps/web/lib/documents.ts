@@ -51,7 +51,7 @@ interface DocumentRow {
   has_text: boolean;
   created_at: Date;
   extraction: ExtractionStatus;
-  statuses: { studio: Studio; status: AnalysisStatus; attention: boolean }[] | null;
+  statuses: ({ studio: Studio } & LatestAnalysis)[] | null;
 }
 
 export interface AnalysisRow {
@@ -76,20 +76,36 @@ export function needsAttention(report: ComplianceReport | AuthenticityReport | n
   return report.signals.some((s) => s.level === "incohérent");
 }
 
-/** A document's state from its latest analysis per Studio. */
-export function documentStatus(latest: { status: AnalysisStatus; attention: boolean }[]): DocumentStatus {
+/**
+ * Whether a stored report holds a failed blocking rule, in SQL over `analyses` aliased `alias` (krizaka-internal#4134): read from the
+ * findings themselves, so a report written before this flag existed reads the same as a new one. The report body says « À corriger »
+ * on the same rule (`verdictOf`: any blocking failure makes the tone « danger »).
+ */
+export const blockingSql = (alias: string) =>
+  `jsonb_path_exists(coalesce(${alias}.report, '{}'::jsonb), '$.findings[*] ? (@.verdict == "FAIL" && @.severity == "BLOCKING")')`;
+
+/** One analysis as the state reads it: `blocking` is a failed blocking rule (absent: none). */
+export interface LatestAnalysis {
+  status: AnalysisStatus;
+  attention: boolean;
+  blocking?: boolean;
+}
+
+/** A document's state from its latest analysis per Studio: a failed blocking rule reads « À corriger » before any point to look at. */
+export function documentStatus(latest: LatestAnalysis[]): DocumentStatus {
   if (latest.length === 0) return "stored";
   if (latest.some((a) => a.status === "running")) return "analysing";
-  if (latest.some((a) => a.status === "succeeded" && a.attention)) return "attention";
-  if (latest.every((a) => a.status !== "succeeded")) return "failed";
-  return "checked";
+  const read = latest.filter((a) => a.status === "succeeded");
+  if (read.some((a) => a.blocking)) return "blocking";
+  if (read.some((a) => a.attention)) return "attention";
+  return read.length === 0 ? "failed" : "checked";
 }
 
 // A reading that was queued or running and never ended (the process restarted) is shown as failed after a few minutes, never as an endless wait.
 const SUMMARY_COLUMNS = `d.id, d.title, d.filename, d.mime_type, d.kind, d.size_bytes, d.pages, d.text <> '' AS has_text, d.created_at,
   CASE WHEN d.extraction IN ('queued', 'running') AND d.extraction_at < now() - interval '3 minutes' THEN 'failed' ELSE d.extraction END AS extraction,
-  (SELECT json_agg(json_build_object('studio', l.studio, 'status', l.status, 'attention', l.attention))
-     FROM (SELECT DISTINCT ON (a.studio) a.studio, a.status, coalesce((a.report->>'attention')::boolean, false) AS attention
+  (SELECT json_agg(json_build_object('studio', l.studio, 'status', l.status, 'attention', l.attention, 'blocking', l.blocking))
+     FROM (SELECT DISTINCT ON (a.studio) a.studio, a.status, coalesce((a.report->>'attention')::boolean, false) AS attention, ${blockingSql("a")} AS blocking
              FROM analyses a WHERE a.document_id = d.id ORDER BY a.studio, a.created_at DESC) l) AS statuses`;
 
 function summary(row: DocumentRow): DocumentSummary {

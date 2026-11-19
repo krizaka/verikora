@@ -177,6 +177,7 @@ export const STATUS_TONE = {
   analysing: "accent",
   checked: "success",
   attention: "warning",
+  blocking: "danger",
   failed: "danger",
 } as const;
 
