@@ -19,7 +19,7 @@ export type DossierRow =
       count: number;
       /** How many documents were asked for (applicant files only). */
       requested: number;
-      status: "stored" | "analysing" | "checked" | "attention" | "failed" | null;
+      status: "stored" | "analysing" | "checked" | "attention" | "blocking" | "failed" | null;
       at: string | null;
       href: string;
       /** The collection's first tags (at most `HOME_TAGS_SHOWN`) and how many more it wears. */
