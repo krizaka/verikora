@@ -7,9 +7,9 @@ import { pageSession } from "@/lib/access";
 import { query } from "@/lib/db";
 import { documentsByIds } from "@/lib/documents";
 import { asLocale, getDictionary } from "@/lib/i18n";
-import { dividers, knownBookmarks, wearingAll } from "@/lib/organisation/bookmarks";
+import { dividers, knownBookmarks, wearingAll, withInherited } from "@/lib/organisation/bookmarks";
 import { parseLibraryView } from "@/lib/organisation/rules";
-import { recentIds } from "@/lib/organisation/store";
+import { placementsOf, recentIds } from "@/lib/organisation/store";
 import { KIND } from "@/lib/workspace/decl";
 import { workspaceFor } from "@/lib/workspace/service";
 import { asTag, asTags } from "@/lib/workspace/tags";
@@ -37,7 +37,16 @@ export default async function DocumentsPage({
   const bookmarks = (await workspace.tags.list(owner, KIND.document)).map(asTag);
   const selected = knownBookmarks(parseLibraryView(await searchParams).tags, bookmarks);
   const recent = await recentIds(query, owner, MOST_DOCUMENTS);
-  const byDocument = asTags(await workspace.tags.of(owner, KIND.document, recent));
+  const own = asTags(await workspace.tags.of(owner, KIND.document, recent));
+  // A document also counts for the tags of its collection and of its folder (krizaka-internal#3996).
+  const places = await placementsOf(query, owner, recent);
+  const collections = [...new Set(Object.values(places).map((p) => p.collectionId))];
+  const folders = [...new Set(Object.values(places).flatMap((p) => (p.folderId ? [p.folderId] : [])))];
+  const onPlace = {
+    ...asTags(await workspace.tags.of(owner, KIND.collection, collections)),
+    ...asTags(await workspace.tags.of(owner, KIND.folder, folders)),
+  };
+  const byDocument = withInherited(own, places, onPlace);
   const path = `/${locale}/app/documents`;
   const documents = await documentsByIds(owner, wearingAll(recent, byDocument, selected));
   return (
