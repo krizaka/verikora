@@ -70,7 +70,11 @@ describe("the bookmarks as binder dividers", () => {
 
 describe("the bookmarks a document inherits from its collection and folder", () => {
   const own = { d1: [{ id: "a" }], d2: [], d3: [{ id: "r" }] };
-  const place = { d1: { collectionId: "c1", folderId: null }, d2: { collectionId: "c1", folderId: "f1" }, d3: { collectionId: "c2", folderId: null } };
+  const place = {
+    d1: { collectionId: "c1", folderId: null },
+    d2: { collectionId: "c1", folderId: "f1" },
+    d3: { collectionId: "c2", folderId: null },
+  };
   const onPlace = { c1: [{ id: "r" }], f1: [{ id: "f" }] };
   it("adds the tags of the collection and of the folder to the document's own", () => {
     const all = withInherited(own, place, onPlace);

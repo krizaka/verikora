@@ -94,7 +94,9 @@ export function withInherited<T extends BookmarkRef>(
   const out: Record<string, T[]> = {};
   for (const [id, tags] of Object.entries(own)) {
     const place = placeOf[id];
-    const inherited = place ? [...(placeTags[place.collectionId] ?? []), ...(place.folderId ? (placeTags[place.folderId] ?? []) : [])] : [];
+    const inherited = place
+      ? [...(placeTags[place.collectionId] ?? []), ...(place.folderId ? (placeTags[place.folderId] ?? []) : [])]
+      : [];
     const seen = new Set<string>();
     out[id] = [...tags, ...inherited].filter((t) => !seen.has(t.id) && seen.add(t.id));
   }
