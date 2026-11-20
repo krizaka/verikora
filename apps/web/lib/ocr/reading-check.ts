@@ -56,7 +56,7 @@ function labelled(text: string): Labelled[] {
     const kind = (Object.keys(LABEL) as (keyof typeof LABEL)[]).find((k) => LABEL[k].test(line));
     // « Total » inside « Subtotal » is the subtotal; a long sentence that merely says « tax » is prose, not a figure line.
     if (kind && line.trim().length <= 60) {
-      const pct = line.match(/(\d+(?:[.,]\d+)?)\s*%/)?.[1];
+      const pct = line.match(/(\d[\d.,]{0,8}) ?%/)?.[1];
       out.push({ kind, value: valueOf(lines, at), rate: pct ? Number(pct.replace(",", ".")) : null });
     }
   });
