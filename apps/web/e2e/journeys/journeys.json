@@ -135,6 +135,23 @@
     "tags": []
   },
   {
+    "id": "applicant-withdraw-erase",
+    "promise": "An applicant opens the link a manager handed over, consents, withdraws a consent, then erases the file: the documents and the result are gone from the database",
+    "persona": "applicant",
+    "platforms": ["web"],
+    "steps": [
+      "open the applicant link (no account)",
+      "see the document received",
+      "consent to the check and to the keeping",
+      "withdraw the consent to keep",
+      "ask for the erasure and confirm",
+      "see the file gone: no document, no check, no name"
+    ],
+    "video": true,
+    "budgetSeconds": 60,
+    "tags": ["critical"]
+  },
+  {
     "id": "deletion-receipt",
     "promise": "A property manager closes an applicant file, downloads the signed deletion receipt from its page and verifies it with the report's key",
     "persona": "eric",
