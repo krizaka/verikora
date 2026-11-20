@@ -16,7 +16,8 @@ const text = (value: unknown) =>
  */
 export async function readFacts(input: PhotoInput): Promise<PhotoFacts> {
   try {
-    const exif = input.kind === PHOTO_KIND.heic ? heicExif(input.bytes) : (await sharp(Buffer.from(input.bytes)).metadata()).exif;
+    const exif =
+      input.kind === PHOTO_KIND.heic ? heicExif(input.bytes) : (await sharp(Buffer.from(input.bytes)).metadata()).exif;
     if (!exif) return NONE;
     const tags = exifReader(exif);
     const [make, model] = [text(tags.Image?.Make), text(tags.Image?.Model)];

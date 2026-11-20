@@ -26,7 +26,13 @@ function boxes(buf: Buffer, from: number, to: number): Box[] {
 }
 
 const uint = (buf: Buffer, at: number, size: number): number =>
-  size === 0 ? 0 : size === 4 ? buf.readUInt32BE(at) : size === 8 ? Number(buf.readBigUInt64BE(at)) : buf.readUIntBE(at, size);
+  size === 0
+    ? 0
+    : size === 4
+      ? buf.readUInt32BE(at)
+      : size === 8
+        ? Number(buf.readBigUInt64BE(at))
+        : buf.readUIntBE(at, size);
 
 /** The id of the item whose type is `Exif`, from the `iinf` box. */
 function exifItemId(buf: Buffer, iinf: Box): number | null {
@@ -48,7 +54,12 @@ function locate(buf: Buffer, iloc: Box, wanted: number): { offset: number; lengt
   const version = buf[iloc.body]!;
   let at = iloc.body + 4;
   const sizes = buf[at]!;
-  const [offsetSize, lengthSize, baseSize, indexSize] = [sizes >> 4, sizes & 15, buf[at + 1]! >> 4, version > 0 ? buf[at + 1]! & 15 : 0];
+  const [offsetSize, lengthSize, baseSize, indexSize] = [
+    sizes >> 4,
+    sizes & 15,
+    buf[at + 1]! >> 4,
+    version > 0 ? buf[at + 1]! & 15 : 0,
+  ];
   at += 2;
   const count = version < 2 ? buf.readUInt16BE(at) : buf.readUInt32BE(at);
   at += version < 2 ? 2 : 4;
