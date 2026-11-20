@@ -52,4 +52,18 @@ describe("the reading check of a document read from an image", () => {
     expect(check(`${RECEIPT.replace("$57.49", "$51.49")}`, null)).toBeNull();
     expect(check("Bail", null, "text/plain")).toBeNull();
   });
+
+  it("refuses a tax that is not its stated rate of the subtotal, even when the total was read to match", () => {
+    const wrong = RECEIPT.replace("$4.99", "$9.99").replace("$57.49", "$62.49");
+    expect(check(wrong, ocr())).toBe(READING_FAILURE.taxNotRateOfBase);
+  });
+
+  it("refuses a due date before the issue date", () => {
+    expect(check(`${RECEIPT}\nDue date: Oct 01, 2026`, ocr())).toBe(READING_FAILURE.dueBeforeIssue);
+    expect(check(`${RECEIPT}\nDue date: Dec 01, 2026`, ocr())).toBeNull();
+  });
+
+  it("refuses a page that names two currencies", () => {
+    expect(check(`${RECEIPT}\nPaid in CAD`, ocr())).toBe(READING_FAILURE.mixedCurrencies);
+  });
 });

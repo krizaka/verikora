@@ -13,10 +13,14 @@ export const READING_FAILURE = {
   lowConfidence: "LOW_CONFIDENCE",
   amountsMissing: "AMOUNTS_MISSING",
   totalsDoNotAdd: "TOTALS_DO_NOT_ADD",
+  taxNotRateOfBase: "TAX_NOT_RATE_OF_BASE",
+  dueBeforeIssue: "DUE_BEFORE_ISSUE",
+  mixedCurrencies: "MIXED_CURRENCIES",
 } as const;
 export type ReadingFailure = (typeof READING_FAILURE)[keyof typeof READING_FAILURE];
 
 const AMOUNT = /(?<![\d.,])\d{1,3}(?:[\s,]\d{3})*[.,]\d{2}(?![\d%]|\s*%)/;
+const LABEL_TAX = "tax";
 const LABEL = {
   subtotal: /sub-?total|sous-?total/i,
   total: /\btotal\b|montant d[ûu]/i,
@@ -41,6 +45,8 @@ function valueOf(lines: readonly string[], at: number): number | null {
 interface Labelled {
   kind: keyof typeof LABEL;
   value: number | null;
+  /** The percentage the label states (« QST (9.975%) »), when it does. */
+  rate: number | null;
 }
 
 function labelled(text: string): Labelled[] {
@@ -50,10 +56,18 @@ function labelled(text: string): Labelled[] {
     const kind = (Object.keys(LABEL) as (keyof typeof LABEL)[]).find((k) => LABEL[k].test(line));
     // « Total » inside « Subtotal » is the subtotal; a long sentence that merely says « tax » is prose, not a figure line.
     if (kind && line.trim().length <= 60) {
-      out.push({ kind, value: valueOf(lines, at) });
+      const pct = line.match(/(\d+(?:[.,]\d+)?)\s*%/)?.[1];
+      out.push({ kind, value: valueOf(lines, at), rate: pct ? Number(pct.replace(",", ".")) : null });
     }
   });
   return out;
+}
+
+/** A tax whose label states a rate: its figure is that rate of the subtotal to the cent (rate in thousandths of a percent, so no float). */
+function taxOffItsRate(row: Labelled, subtotal: number): boolean {
+  if (row.kind !== LABEL_TAX || row.rate === null || row.value === null) return false;
+  const scale = 100_000;
+  return Math.abs(subtotal * Math.round(row.rate * 1000) - row.value * scale) > scale;
 }
 
 function arithmeticProblem(text: string): ReadingFailure | null {
@@ -70,8 +84,35 @@ function arithmeticProblem(text: string): ReadingFailure | null {
   if (subtotal === undefined || total === undefined) {
     return null;
   }
+  if (rows.some((r) => taxOffItsRate(r, subtotal))) {
+    return READING_FAILURE.taxNotRateOfBase;
+  }
   const sum = subtotal + one("tax").reduce((a, b) => a + b, 0);
   return Math.abs(sum - total) > 1 ? READING_FAILURE.totalsDoNotAdd : null;
+}
+
+const MONTHS = ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"];
+/** A day written `2026-11-14` or `Nov 14, 2026`, as a sortable number; null when the line carries none. */
+function dayOf(line: string): number | null {
+  const iso = line.match(/(\d{4})-(\d{2})-(\d{2})/);
+  if (iso) return Number(iso[1]) * 10000 + Number(iso[2]) * 100 + Number(iso[3]);
+  const en = line.match(/\b([A-Za-z]{3})[a-z]*\.? (\d{1,2}),? (\d{4})/);
+  const month = en ? MONTHS.indexOf(en[1]!.toLowerCase()) : -1;
+  return en && month >= 0 ? Number(en[3]) * 10000 + (month + 1) * 100 + Number(en[2]) : null;
+}
+
+function dueBeforeIssue(text: string): boolean {
+  const lines = text.split("\n");
+  const find = (label: RegExp) => lines.filter((l) => label.test(l)).map(dayOf).find((d) => d !== null) ?? null;
+  const issued = find(/\b(?:date|issued?|[ée]mis(?:e|ion)?|paid)\b(?!.*\b(?:due|d['’]?[ée]ch[ée]ance)\b)/i);
+  const due = find(/\b(?:due|[ée]ch[ée]ance)\b/i);
+  return issued !== null && due !== null && due < issued;
+}
+
+/** More than one currency named on the page: an amount of another currency is not added to these. */
+function mixedCurrencies(text: string): boolean {
+  const named = new Set(text.match(/\b(?:USD|CAD|EUR|GBP)\b/g));
+  return named.size > 1;
 }
 
 /** Why the text of this document cannot be trusted for a check, or null when it can (or when it is a text layer, which is not second-guessed). */
@@ -92,5 +133,10 @@ export function readingProblem(
   if (doc.source?.kind === TEXT_SOURCE.ocr && doc.source.lowConfidence) {
     return READING_FAILURE.lowConfidence;
   }
-  return fromImage ? arithmeticProblem(doc.text) : null;
+  if (!fromImage) return null;
+  return (
+    arithmeticProblem(doc.text) ??
+    (dueBeforeIssue(doc.text) ? READING_FAILURE.dueBeforeIssue : null) ??
+    (mixedCurrencies(doc.text) ? READING_FAILURE.mixedCurrencies : null)
+  );
 }
