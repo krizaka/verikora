@@ -9,7 +9,9 @@ const API = path.join(__dirname, "..", "app", "api");
 const ROUTES_WITHOUT_CONTRACT_TEST = 141;
 
 function walk(dir: string): string[] {
-  return readdirSync(dir, { withFileTypes: true }).flatMap((e) => (e.isDirectory() ? walk(path.join(dir, e.name)) : [path.join(dir, e.name)]));
+  return readdirSync(dir, { withFileTypes: true }).flatMap((e) =>
+    e.isDirectory() ? walk(path.join(dir, e.name)) : [path.join(dir, e.name)],
+  );
 }
 
 describe("route-has-contract-test", () => {
@@ -22,6 +24,8 @@ describe("route-has-contract-test", () => {
         .map((f) => path.dirname(f)),
     );
     const missing = routes.filter((r) => !covered.has(path.dirname(r))).length;
-    expect(missing, "the count moved: lower ROUTES_WITHOUT_CONTRACT_TEST (never raise it)").toBe(ROUTES_WITHOUT_CONTRACT_TEST);
+    expect(missing, "the count moved: lower ROUTES_WITHOUT_CONTRACT_TEST (never raise it)").toBe(
+      ROUTES_WITHOUT_CONTRACT_TEST,
+    );
   });
 });
