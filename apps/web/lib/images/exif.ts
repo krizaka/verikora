@@ -9,6 +9,13 @@ const iso = (value: unknown) => (value instanceof Date && !Number.isNaN(value.ge
 const text = (value: unknown) =>
   typeof value === "string" && value.trim() ? value.replaceAll("\0", "").trim().slice(0, 80) : null;
 
+async function exifBlock(input: PhotoInput): Promise<Buffer | Uint8Array | undefined | null> {
+  if (input.kind === PHOTO_KIND.heic) {
+    return heicExif(input.bytes);
+  }
+  return (await sharp(Buffer.from(input.bytes)).metadata()).exif;
+}
+
 /**
  * What the photo's own metadata says about its origin, read BEFORE the metadata is dropped: the software that last saved it,
  * the device (make and model, as a label), when it was taken and last modified, and whether it carried a GPS position (never the
