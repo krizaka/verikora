@@ -103,7 +103,11 @@ function dayOf(line: string): number | null {
 
 function dueBeforeIssue(text: string): boolean {
   const lines = text.split("\n");
-  const find = (label: RegExp) => lines.filter((l) => label.test(l)).map(dayOf).find((d) => d !== null) ?? null;
+  const find = (label: RegExp) =>
+    lines
+      .filter((l) => label.test(l))
+      .map(dayOf)
+      .find((d) => d !== null) ?? null;
   const issued = find(/\b(?:date|issued?|[ée]mis(?:e|ion)?|paid)\b(?!.*\b(?:due|d['’]?[ée]ch[ée]ance)\b)/i);
   const due = find(/\b(?:due|[ée]ch[ée]ance)\b/i);
   return issued !== null && due !== null && due < issued;
