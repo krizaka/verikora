@@ -50,7 +50,9 @@ for (const screen of SCREENS) {
     expect(held.activeConsents, "no consent stays active").toBe(0);
     expect(held.receipts, "a receipt of the deletion is kept").toBe(1);
     expect(held.screening.status).toBe("erased");
-    expect(`${held.screening.tenant_name}${held.screening.tenant_email}`, "no name stays").not.toMatch(/Noa|Fictif|noa@/i);
+    expect(`${held.screening.tenant_name}${held.screening.tenant_email}`, "no name stays").not.toMatch(
+      /Noa|Fictif|noa@/i,
+    );
     await context.close();
   });
 }

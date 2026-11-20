@@ -11,7 +11,8 @@ const TOKEN = "journey-applicant-withdraw-erase-0123456789abcdef";
 
 /** Opens a client on the CI database, or fails: a journey never runs on a stale state. */
 export async function connect() {
-  if (!process.env.DATABASE_URL) throw new Error("DATABASE_URL is required: the applicant journey prepares and reads rows");
+  if (!process.env.DATABASE_URL)
+    throw new Error("DATABASE_URL is required: the applicant journey prepares and reads rows");
   const client = new pg.Client(pgClientOptions());
   await client.connect();
   return client;
@@ -62,7 +63,8 @@ export async function heldOf(id) {
         "SELECT count(*) AS n FROM application_consents WHERE screening_id = $1 AND withdrawn_at IS NULL",
       ),
       receipts: await count("SELECT count(*) AS n FROM deletion_receipts WHERE screening_id = $1"),
-      screening: (await client.query("SELECT status, tenant_name, tenant_email FROM screenings WHERE id = $1", [id])).rows[0],
+      screening: (await client.query("SELECT status, tenant_name, tenant_email FROM screenings WHERE id = $1", [id]))
+        .rows[0],
     };
   } finally {
     await client.end();
@@ -74,7 +76,10 @@ export async function activePurposes(id) {
   const client = await connect();
   try {
     const rows = (
-      await client.query("SELECT purpose FROM application_consents WHERE screening_id = $1 AND withdrawn_at IS NULL ORDER BY purpose", [id])
+      await client.query(
+        "SELECT purpose FROM application_consents WHERE screening_id = $1 AND withdrawn_at IS NULL ORDER BY purpose",
+        [id],
+      )
     ).rows;
     return rows.map((r) => r.purpose);
   } finally {
