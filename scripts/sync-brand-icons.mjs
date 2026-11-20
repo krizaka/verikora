@@ -21,6 +21,8 @@ export const ICONS = {
   "apple-touch-icon.png": "apps/web/app/apple-icon.png",
   "icon-192.png": "apps/web/app/icon2.png",
   "icon-512.png": "apps/web/app/icon3.png",
+  // The social card (app/og.png) draws this one: read from the repository at build, never fetched (#1998).
+  "logo-dark.svg": "apps/web/lib/og-logo-dark.svg",
 };
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 /** The CDN manifest's entries for this brand, as of the last sync: what the offline test checks the icons against. */
