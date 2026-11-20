@@ -92,24 +92,31 @@ function arithmeticProblem(text: string): ReadingFailure | null {
 }
 
 const MONTHS = ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"];
+const ISO_DAY = /(\d{4})-(\d{2})-(\d{2})/;
+const WORD_DAY = /([A-Za-z]{3})[a-z]*\.? (\d{1,2}),? (\d{4})/;
+const DUE = /\b(?:due|[ée]ch[ée]ance)\b/i;
+const ISSUED = /\b(?:date|issued?|[ée]mis|[ée]mission|paid)\b/i;
+const sortable = (y: string, m: number, d: string): number => Number(y) * 10000 + m * 100 + Number(d);
+
 /** A day written `2026-11-14` or `Nov 14, 2026`, as a sortable number; null when the line carries none. */
 function dayOf(line: string): number | null {
-  const iso = line.match(/(\d{4})-(\d{2})-(\d{2})/);
-  if (iso) return Number(iso[1]) * 10000 + Number(iso[2]) * 100 + Number(iso[3]);
-  const en = line.match(/\b([A-Za-z]{3})[a-z]*\.? (\d{1,2}),? (\d{4})/);
-  const month = en ? MONTHS.indexOf(en[1]!.toLowerCase()) : -1;
-  return en && month >= 0 ? Number(en[3]) * 10000 + (month + 1) * 100 + Number(en[2]) : null;
+  const iso = ISO_DAY.exec(line);
+  if (iso) {
+    return sortable(iso[1]!, Number(iso[2]), iso[3]!);
+  }
+  const word = WORD_DAY.exec(line);
+  const month = word ? MONTHS.indexOf(word[1]!.toLowerCase()) : -1;
+  return word && month >= 0 ? sortable(word[3]!, month + 1, word[2]!) : null;
+}
+
+function firstDay(lines: readonly string[]): number | null {
+  return lines.map(dayOf).find((d) => d !== null) ?? null;
 }
 
 function dueBeforeIssue(text: string): boolean {
   const lines = text.split("\n");
-  const find = (label: RegExp) =>
-    lines
-      .filter((l) => label.test(l))
-      .map(dayOf)
-      .find((d) => d !== null) ?? null;
-  const issued = find(/\b(?:date|issued?|[ée]mis(?:e|ion)?|paid)\b(?!.*\b(?:due|d['’]?[ée]ch[ée]ance)\b)/i);
-  const due = find(/\b(?:due|[ée]ch[ée]ance)\b/i);
+  const issued = firstDay(lines.filter((l) => ISSUED.test(l) && !DUE.test(l)));
+  const due = firstDay(lines.filter((l) => DUE.test(l)));
   return issued !== null && due !== null && due < issued;
 }
 
@@ -137,7 +144,9 @@ export function readingProblem(
   if (doc.source?.kind === TEXT_SOURCE.ocr && doc.source.lowConfidence) {
     return READING_FAILURE.lowConfidence;
   }
-  if (!fromImage) return null;
+  if (!fromImage) {
+    return null;
+  }
   return (
     arithmeticProblem(doc.text) ??
     (dueBeforeIssue(doc.text) ? READING_FAILURE.dueBeforeIssue : null) ??
