@@ -65,7 +65,9 @@ function labelled(text: string): Labelled[] {
 
 /** A tax whose label states a rate: its figure is that rate of the subtotal to the cent (rate in thousandths of a percent, so no float). */
 function taxOffItsRate(row: Labelled, subtotal: number): boolean {
-  if (row.kind !== LABEL_TAX || row.rate === null || row.value === null) return false;
+  if (row.kind !== LABEL_TAX || row.rate === null || row.value === null) {
+    return false;
+  }
   const scale = 100_000;
   return Math.abs(subtotal * Math.round(row.rate * 1000) - row.value * scale) > scale;
 }
@@ -93,7 +95,7 @@ function arithmeticProblem(text: string): ReadingFailure | null {
 
 const MONTHS = ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"];
 const ISO_DAY = /(\d{4})-(\d{2})-(\d{2})/;
-const WORD_DAY = /([A-Za-z]{3})[a-z]*\.? (\d{1,2}),? (\d{4})/;
+const WORD_DAY = /([A-Za-z]{3})[a-z]{0,6}\.? (\d{1,2}),? (\d{4})/;
 const DUE = /\b(?:due|[ée]ch[ée]ance)\b/i;
 const ISSUED = /\b(?:date|issued?|[ée]mis|[ée]mission|paid)\b/i;
 const sortable = (y: string, m: number, d: string): number => Number(y) * 10000 + m * 100 + Number(d);
