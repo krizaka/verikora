@@ -3,6 +3,7 @@ import sharp, { type Sharp } from "sharp";
 import { estimateSkew, type Gray, pageBox } from "./deskew";
 import { readFacts } from "./exif";
 import { type ImageCleaner, ImageError, type ImageRules, PHOTO_KIND, type PhotoInput } from "./port";
+import { findPage } from "./page-finder";
 import { assessQuality } from "./quality";
 
 /** HEIC is decoded in WebAssembly (the prebuilt image library has no HEIC codec: its patents). The decoder applies the camera's rotation itself. */
@@ -70,9 +71,9 @@ export function createImageCleaner(rules: ImageRules): ImageCleaner {
           skewDegrees = angle;
         }
 
-        // 3. crop to the page, when there is a page distinct from its surroundings.
-        const small = await grayOf(image, 400);
-        const box = pageBox(small, rules.minPageShare);
+        // 3. crop to the page: a rendered page (a phone screenshot) first, else a sheet distinct from its surroundings (a photo).
+        const small = await grayOf(image, rules.pageFinder.sampleWidth);
+        const box = findPage(small, rules.pageFinder) ?? pageBox(small, rules.minPageShare);
         let cropped = false;
         if (box) {
           const meta = await image.metadata();

@@ -2,12 +2,12 @@ import type { DocumentKind, DocumentSummary } from "@verikora/core";
 
 /** What the drop zones offer: PDF, office text and photos. A HEIC is named by extension too (a browser often gives it no type). */
 export const ACCEPT =
-  "application/pdf,text/plain,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.oasis.opendocument.text,image/png,image/jpeg,image/heic,image/heif,.pdf,.txt,.docx,.odt,.png,.jpg,.jpeg,.heic,.heif";
+  "application/pdf,text/plain,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.oasis.opendocument.text,image/png,image/jpeg,image/heic,image/heif,image/webp,.pdf,.txt,.docx,.odt,.png,.jpg,.jpeg,.heic,.heif,.webp";
 /** The same, as the rules `DropOverlay` takes. */
 export const ACCEPT_RULES: readonly string[] = ACCEPT.split(",");
 
 export const isPhotoFile = (file: { name: string; type?: string }) =>
-  /^image\/(png|jpeg|heic|heif)$/.test(file.type ?? "") || /\.(png|jpe?g|heic|heif)$/i.test(file.name);
+  /^image\/(png|jpeg|heic|heif|webp)$/.test(file.type ?? "") || /\.(png|jpe?g|heic|heif|webp)$/i.test(file.name);
 
 /** Where a dropped file lands: a collection, a folder of it, or the default collection (nothing). */
 export interface Placement {

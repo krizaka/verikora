@@ -4,7 +4,8 @@
  * real type by magic bytes, integrity, safety, cheap metadata. Deduplication (a run already exists) is the application's
  * `ReuseStore`, because it needs its data. Nothing here executes or renders a file.
  */
-export type FileKind = "pdf" | "text" | "png" | "jpeg" | "heic" | "docx" | "odt" | "zip" | "executable" | "unknown";
+export type FileKind =
+  "pdf" | "text" | "png" | "jpeg" | "heic" | "webp" | "docx" | "odt" | "zip" | "executable" | "unknown";
 
 /** The rules, as DATA (lib/preflight/rules.ts): what is allowed and how big, never typed into the code that applies them. */
 export interface PreflightRules {

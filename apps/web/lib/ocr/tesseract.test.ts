@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import { createImageCleaner } from "../images/clean";
-import { photoOfPage } from "../images/fixtures";
+import { INVOICE_LINES, photoOfPage, screenshotOfInvoice } from "../images/fixtures";
 import { VERIKORA_IMAGE_RULES } from "../images/rules";
 import { OcrError } from "./port";
 import { VERIKORA_OCR_RULES } from "./rules";
@@ -21,6 +21,17 @@ describe("tesseract engine", () => {
     expect(r.text).toMatch(/1\s?150,00/);
     expect(r.confidence).toBeGreaterThan(80);
     expect(r.pages).toHaveLength(1);
+  }, 60_000);
+  it("reads a phone screenshot as its invoice, without the phone's time, file name or buttons", async () => {
+    const { page } = await createImageCleaner(VERIKORA_IMAGE_RULES).clean({
+      bytes: await screenshotOfInvoice(),
+      kind: "png",
+    });
+    const r = await engine.read([page.jpeg], VERIKORA_OCR_RULES.languages);
+    expect(r.text).toContain(INVOICE_LINES[0]);
+    expect(r.text).toMatch(/1\s?149,75/);
+    expect(r.text).toMatch(/99,75/);
+    expect(r.text).not.toMatch(/9:41|facture\.pdf|Share/);
   }, 60_000);
   it("reads several pages in order", async () => {
     const cleaner = createImageCleaner(VERIKORA_IMAGE_RULES);

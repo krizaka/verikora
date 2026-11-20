@@ -67,9 +67,10 @@ export const windowsExecutable = (): Uint8Array =>
 import sharp from "sharp";
 
 /** A real, tiny PNG or JPEG (white page): the cleaner decodes these. */
-export async function imageOf(kind: "png" | "jpeg"): Promise<Uint8Array> {
+export async function imageOf(kind: "png" | "jpeg" | "webp"): Promise<Uint8Array> {
   const base = sharp({ create: { width: 64, height: 48, channels: 3, background: "#ffffff" } });
-  return new Uint8Array(await (kind === "png" ? base.png() : base.jpeg()).toBuffer());
+  const encode = { png: () => base.png(), jpeg: () => base.jpeg(), webp: () => base.webp() };
+  return new Uint8Array(await encode[kind]().toBuffer());
 }
 
 const isoBox = (type: string, ...payload: Buffer[]): Buffer => {

@@ -4,7 +4,7 @@ import { inflateRawSync } from "node:zlib";
 import { formatOfMime, formatOfName, ODT_MIME } from "@verikora/core";
 import { EncryptedPDFError, PDFArray, PDFDict, PDFDocument, PDFName, type PDFPage } from "pdf-lib";
 
-import { imageSize, isHeif } from "./image-size";
+import { imageSize, isHeif, isWebp } from "./image-size";
 import type { DocumentPreflight, FileKind, Inspection, PdfFacts, PreflightRules, RejectReason } from "./port";
 
 /**
@@ -38,6 +38,9 @@ export function sniff(bytes: Uint8Array): FileKind {
   }
   if (isHeif(bytes)) {
     return "heic";
+  }
+  if (isWebp(bytes)) {
+    return "webp";
   }
   if (startsWith(bytes, [0x50, 0x4b, 0x03, 0x04])) {
     if (zipEntryBytes(bytes, "mimetype", ODT_MIME.length)?.toString("utf8") === ODT_MIME) {
@@ -200,7 +203,7 @@ const reject = (reason: RejectReason, detail?: string): Inspection => ({
   ...(detail ? { detail } : {}),
 });
 const ARCHIVE_KINDS: ReadonlySet<FileKind> = new Set<FileKind>(["zip", "docx", "odt"]);
-const IMAGE_KINDS: ReadonlySet<FileKind> = new Set<FileKind>(["png", "jpeg", "heic"]);
+const IMAGE_KINDS: ReadonlySet<FileKind> = new Set<FileKind>(["png", "jpeg", "heic", "webp"]);
 
 /** Size limits, before anything reads the bytes. */
 function sizeRejection(bytes: Uint8Array, rules: PreflightRules): Inspection | null {
