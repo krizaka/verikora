@@ -11,11 +11,11 @@ export type CheckStepId = (typeof CHECK_STEP)[keyof typeof CHECK_STEP];
 export const CHECK_STEP_IDS = [CHECK_STEP.read, CHECK_STEP.preflight, CHECK_STEP.rules, CHECK_STEP.report] as const;
 
 export const STEP_STATE = { done: "done", current: "current", upcoming: "upcoming", failed: "failed" } as const;
-export type StepState = (typeof STEP_STATE)[keyof typeof STEP_STATE];
+export type CheckStepState = (typeof STEP_STATE)[keyof typeof STEP_STATE];
 
 export interface CheckStep {
   id: CheckStepId;
-  state: StepState;
+  state: CheckStepState;
   /** The Studio whose work the « rules » step is (its name differs: rules for a compliance check, the file for an authenticity check). */
   studio: Studio;
 }
@@ -34,13 +34,13 @@ export function checkSteps({ hasText, analysis, studio }: CheckProgress): CheckS
   const needsText = kind === "compliance-check";
   const readFailed = needsText && !hasText;
   const run = analysis?.status;
-  const ruleState = (): StepState => {
+  const ruleState = (): CheckStepState => {
     if (readFailed || run === undefined) return STEP_STATE.upcoming;
     if (run === "running") return STEP_STATE.current;
     return run === "succeeded" ? STEP_STATE.done : STEP_STATE.failed;
   };
   const rules = ruleState();
-  const state: Record<CheckStepId, StepState> = {
+  const state: Record<CheckStepId, CheckStepState> = {
     read: readFailed ? STEP_STATE.failed : STEP_STATE.done,
     preflight: readFailed ? STEP_STATE.upcoming : STEP_STATE.done,
     rules,
