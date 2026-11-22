@@ -92,6 +92,12 @@ describe("the shared export guard", () => {
     const args = guardArgs(relative(appDir, folder), org);
     return spawnSync(process.execPath, [GUARD_BIN, ...args], { cwd: appDir, encoding: "utf8" });
   };
+  it("refuses a folder that could read as an option or leave the app", async () => {
+    const org = await import("@krizaka/org");
+    expect(() => guardArgs("--help", org)).toThrow(/plain relative path/);
+    expect(() => guardArgs("a b; rm", org)).toThrow(/plain relative path/);
+    expect(guardArgs("out-public", org)[0]).toBe("./out-public");
+  });
   let inside: string;
   beforeEach(() => {
     inside = mkdtempSync(join(appDir, "guard-fixture-"));

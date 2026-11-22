@@ -55,10 +55,12 @@ export const GUARD_BIN = resolve(
 
 /** The argv of `krizaka-export-guard` for Verikora: its status and retired code names come from @krizaka/org (the bin cannot import that ESM-only package itself). */
 export function guardArgs(dir, orgModule) {
+  // The folder is a path inside the app, never an option: only path characters, and `./` in front so a name never reads as a flag.
+  if (!/^[\w.][\w.-]*(?:\/[\w.-]+)*$/.test(dir)) throw new Error(`export folder is not a plain relative path: ${dir}`);
   const status = orgModule.org.products.find((p) => p.id === "verikora")?.status;
   if (!status) throw new Error("verikora has no status in @krizaka/org");
   const codeNames = Object.keys(orgModule.CODE_NAMES).flatMap((name) => ["--code-name", name]);
-  return [dir, "--product", "verikora", "--status", status, ...codeNames];
+  return [`./${dir}`, "--product", "verikora", "--status", status, ...codeNames];
 }
 
 if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
