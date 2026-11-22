@@ -10,7 +10,7 @@ import { STORAGE_KIND } from "@verikora/core";
 import { logError } from "../log";
 import { documentStoreOver } from "./adapter";
 import { dualObjectStore } from "./dual-read";
-import type { DocumentStore } from "./port";
+import type { DocumentFileStore } from "./port";
 import { asDescriptor } from "./where";
 
 /** The scope of the deployment's providers (ADR-005): the admin's, not a user's. */
@@ -141,14 +141,14 @@ export const bootstrapStorage = (service: ProviderService, e: ProviderEnv): Prom
   service.bootstrap(envProvider(e));
 
 /**
- * The store of the default provider for a kind of data, as the product's `DocumentStore` (its descriptor says where it is, from the
+ * The store of the default provider for a kind of data, as the product's `DocumentFileStore` (its descriptor says where it is, from the
  * provider's own coordinates), or null when none is set or the provider is not usable: nothing is kept (ADR-0012, 503 STORAGE_NOT_CONFIGURED).
  */
 export async function documentsStoreOver(
   service: ProviderService,
   providers: Pick<ProviderStore, "defaultFor">,
   dataKind: string = DATA_KIND.documents,
-): Promise<{ id: string; store: DocumentStore } | null> {
+): Promise<{ id: string; store: DocumentFileStore } | null> {
   const id = await providers.defaultFor(ORG_SCOPE, dataKind);
   if (!id) {
     return null;

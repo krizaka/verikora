@@ -34,8 +34,8 @@ jobs:
           cache: pnpm
       - run: pnpm install --frozen-lockfile --prefer-offline
       - run: pnpm build:public
-      # Report-only for now: the guard finds real content in main's export (a retired code name, a price, « Soon » on the pricing page,
-      # the Apache-2.0 org data in the page payload, the `$n` React references read as amounts). The step turns blocking once those
-      # are fixed (krizaka-internal#4623). The fixture tests (export-check.test.ts) hold the guard red on a sign-in link meanwhile.
+      # Report-only until @krizaka/config reads the React flight references that carry a path (`"$25:props:org:footer…"`) as
+      # references, not amounts: they are the only findings left (the copy findings are fixed, krizaka-internal#4627). Then remove
+      # `continue-on-error`. The fixture tests (export-check.test.ts) hold the guard red on a sign-in link meanwhile.
       - run: pnpm --filter @verikora/web check:public
         continue-on-error: true

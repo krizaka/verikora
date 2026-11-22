@@ -1,10 +1,10 @@
 import { type ObjectStore, STORAGE_CODE, StorageError as PackageError } from "@krizaka/storage";
 
-import type { DocumentStore, DocumentStoreDescriptor } from "./port";
+import type { DocumentFileStore, DocumentStoreDescriptor } from "./port";
 import { assertDocumentKey, DocumentStoreError } from "./port";
 
 /**
- * Verikora's DocumentStore (`@verikora/core`, shared with the Mac and the phone) over a `@krizaka/storage` ObjectStore: the same
+ * Verikora's DocumentFileStore (`@verikora/core`, shared with the Mac and the phone) over a `@krizaka/storage` ObjectStore: the same
  * keys, put/get/delete/signedUrl one for one. What the package refuses (a provider that answers an error) becomes the 502 the routes
  * already answer; the descriptor is the one the product says (where it is, whose it is), computed from the configuration. A signed link never outlives `maxTtlSeconds`, whatever a caller asks.
  */
@@ -12,7 +12,7 @@ export function documentStoreOver(
   objects: ObjectStore,
   descriptor: DocumentStoreDescriptor,
   maxTtlSeconds: number,
-): DocumentStore {
+): DocumentFileStore {
   const guard = async <T>(run: () => Promise<T>): Promise<T> => {
     try {
       return await run();

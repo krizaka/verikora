@@ -6,7 +6,7 @@ import type { QueryResultRow } from "pg";
 
 import { refuse } from "../http";
 import { documentStoreOver } from "./adapter";
-import type { DocumentStore, DocumentStoreDescriptor } from "./port";
+import type { DocumentFileStore, DocumentStoreDescriptor } from "./port";
 import { DATA_KIND, MAX_SIGNED_URL_SECONDS } from "./providers";
 import { asDescriptor } from "./where";
 
@@ -39,7 +39,7 @@ export async function ownBucketStore(
   own: Pick<OwnProviders, "service">,
   providerId: string,
   where: { endpoint: string; region: string },
-): Promise<DocumentStore> {
+): Promise<DocumentFileStore> {
   const objects = await own.service.open(providerId);
   return documentStoreOver(
     objects,
@@ -231,7 +231,7 @@ export async function cloudBucketStore(
   own: Pick<OwnProviders, "service">,
   providerId: string,
   connector: string,
-): Promise<DocumentStore> {
+): Promise<DocumentFileStore> {
   const objects = await own.service.open(providerId);
   return documentStoreOver(objects, cloudDescriptor(connector), MAX_SIGNED_URL_SECONDS);
 }
@@ -250,7 +250,7 @@ const cloudDescriptor = (connector: string): DocumentStoreDescriptor => ({
  * What stands in for a cloud the person disconnected: a read says `STORAGE_DISCONNECTED` (409, the page offers to connect again), nothing
  * is written, and a delete is a no-op because the file is in their cloud: an erasure or a purge never waits for a cloud we cannot reach.
  */
-export function disconnectedStore(connector: string): DocumentStore {
+export function disconnectedStore(connector: string): DocumentFileStore {
   const gone = () =>
     refuse(
       409,

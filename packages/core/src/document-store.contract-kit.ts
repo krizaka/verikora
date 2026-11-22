@@ -1,4 +1,4 @@
-import type { DocumentStore } from "./document-store";
+import type { DocumentFileStore } from "./document-store";
 
 /**
  * The test harness the contract runs in: `it` and `expect` of Vitest (the web, the Mac) or of Jest (the phone). Injected, so this file
@@ -10,10 +10,10 @@ export interface ContractHarness {
   expect: (actual: unknown) => any;
 }
 
-/** What every DocumentStore adapter must do (ADR-0007): the same behaviour behind the same port. */
+/** What every DocumentFileStore adapter must do (ADR-0007): the same behaviour behind the same port. */
 export function documentStoreContractWith(
   name: string,
-  make: () => DocumentStore | Promise<DocumentStore>,
+  make: () => DocumentFileStore | Promise<DocumentFileStore>,
   { it, expect }: ContractHarness,
 ): void {
   const id = () => `contract/${Math.random().toString(36).slice(2)}/doc.pdf`;

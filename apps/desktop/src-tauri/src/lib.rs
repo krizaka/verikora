@@ -48,7 +48,7 @@ fn save_report(
     documents::save_report(file.as_path(), &name, &data).map(|p| p.display().to_string())
 }
 
-/// The Mac's DocumentStore (ADR-0007): documents kept on this Mac, in the app's own folder. Errors start with the status
+/// The Mac's DocumentFileStore (ADR-0007): documents kept on this Mac, in the app's own folder. Errors start with the status
 /// the page's adapter maps (`400:` a key that is not the port's).
 #[tauri::command]
 fn store_put(

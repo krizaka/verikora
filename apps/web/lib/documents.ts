@@ -34,7 +34,7 @@ import { type FileKind, OUTCOME, type PreflightRules, type RejectReason } from "
 import { VERIKORA_RULES } from "./preflight/rules";
 import { EXTERNAL, legacyObjectKey, objectKey, purgeDeadline, storageFor } from "./retention";
 import { localStore } from "./storage/local";
-import type { DocumentStore, DocumentStoreDescriptor } from "./storage/port";
+import type { DocumentFileStore, DocumentStoreDescriptor } from "./storage/port";
 import { storedAs } from "./storage/where";
 import { DEV_TENANT } from "./tenant";
 import { understanding } from "./understanding";
@@ -239,7 +239,7 @@ export async function documentStorage(
 export async function readBytes(
   row: { mime_type: string; content: Buffer; storage: StorageKind; object_key?: string | null },
   ids: { ownerId: string; id: string },
-  store?: DocumentStore,
+  store?: DocumentFileStore,
 ): Promise<Buffer> {
   if (row.object_key) {
     if (!store) throw refuse(409, "STORAGE_UNAVAILABLE", "The storage that holds this document is not available");
@@ -262,7 +262,7 @@ export async function readBytes(
 export async function getFile(
   ownerId: string,
   id: string,
-  store?: DocumentStore,
+  store?: DocumentFileStore,
 ): Promise<{ filename: string; mimeType: string; content: Buffer }> {
   if (!isUuid(id)) throw refuse(404, "NOT_FOUND", "No such document");
   const [row] = await query<{
@@ -280,7 +280,7 @@ export async function getFile(
 }
 
 /** Deletes a document at once: its file on the store first, then the row (its reports go with it). */
-export async function deleteDocument(ownerId: string, id: string, store?: DocumentStore): Promise<void> {
+export async function deleteDocument(ownerId: string, id: string, store?: DocumentFileStore): Promise<void> {
   if (!isUuid(id)) throw refuse(404, "NOT_FOUND", "No such document");
   const [row] = await query<{ mime_type: string; storage: StorageKind; object_key: string | null }>(
     "SELECT mime_type, storage, object_key FROM documents WHERE owner_id = $1 AND id = $2",
@@ -393,9 +393,9 @@ export const safeFilename = (name: string) =>
 export interface StoragePolicy {
   keep: boolean;
   /** Where a KEPT document goes (nothing, Krizaka's or the owner's own cloud). */
-  store: DocumentStore;
+  store: DocumentFileStore;
   /** Where the bytes of every other document wait for their purge (ADR-0012): null when the deployment has none (production without a store: uploads are refused, 503). A folder when absent (tests, laptops). */
-  working?: DocumentStore | null;
+  working?: DocumentFileStore | null;
   now: Date;
   purgeAfterHours: number;
   /** The installation's tenant id (`documentsTenant()`, read at the edge): the first segment of every new object key. */
@@ -502,7 +502,7 @@ async function saveDocumentRow(args: {
 
 /** Puts the bytes in their store under the row's key; if it does not answer, the new row goes away (a restored one goes back to purged) and the upload is refused (502). */
 async function putBytes(
-  target: DocumentStore,
+  target: DocumentFileStore,
   doc: { id: string; key: string; mimeType: AcceptedType; bytes: Uint8Array; existing: boolean },
 ): Promise<void> {
   try {
@@ -546,7 +546,7 @@ function chooseKind(
 }
 
 /** Every document's bytes live in a store from the first moment (ADR-0012): the owner's or Krizaka's for a kept one, the working store otherwise. Production without one refuses. */
-function storeForBytes(policy: StoragePolicy | undefined, where: StorageKind): DocumentStore {
+function storeForBytes(policy: StoragePolicy | undefined, where: StorageKind): DocumentFileStore {
   const working = policy?.working === undefined ? localStore() : policy.working;
   const target = EXTERNAL.has(where) && policy ? policy.store : working;
   if (!target) throw refuse(503, "STORAGE_UNAVAILABLE", "No storage is configured for documents");
@@ -671,7 +671,7 @@ export async function finishExtraction(args: {
   /** Photos: the reader of their text (it replaces the PDF reader), the pages already known, and where the richer file it may make replaces the stored one. */
   pages?: number | null;
   textOf?: TextReader;
-  keptIn?: { store: DocumentStore; key: string };
+  keptIn?: { store: DocumentFileStore; key: string };
 }): Promise<void> {
   const { ownerId, id, filename, requested } = args;
   await query(

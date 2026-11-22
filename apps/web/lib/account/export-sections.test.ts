@@ -2,7 +2,7 @@ import type { CloudOwner, StorageKind } from "@verikora/core";
 import type { QueryResultRow } from "pg";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-import type { DocumentStore } from "../storage/port";
+import type { DocumentFileStore } from "../storage/port";
 
 const working = vi.hoisted(() => ({ store: null as unknown }));
 
@@ -80,7 +80,7 @@ const doc = (id: string, over: QueryResultRow = {}): QueryResultRow => ({
   ...over,
 });
 
-const heldStore = (kind: StorageKind, files: Record<string, Uint8Array>, gets: string[] = []): DocumentStore => ({
+const heldStore = (kind: StorageKind, files: Record<string, Uint8Array>, gets: string[] = []): DocumentFileStore => ({
   put: async () => undefined,
   get: async (key) => {
     gets.push(key);
@@ -357,7 +357,7 @@ describe("the kept file of a document", () => {
   });
 
   it("says nothing of a file in a cloud the person disconnected, instead of failing the whole export", async () => {
-    const disconnected: DocumentStore = {
+    const disconnected: DocumentFileStore = {
       ...heldStore("cloud", {}),
       get: async () => {
         throw Object.assign(new Error("disconnected"), { body: { code: "STORAGE_DISCONNECTED" } });
@@ -376,7 +376,7 @@ describe("the kept file of a document", () => {
   });
 
   it("fails the export for any other read failure, rather than leave a file out silently", async () => {
-    const broken: DocumentStore = {
+    const broken: DocumentFileStore = {
       ...heldStore("s3", {}),
       get: async () => {
         throw new Error("network down");

@@ -12,7 +12,7 @@ The same account and the same API as the web; the logic every Krizaka Expo app s
 | Settings | `/fr/app/settings` |
 
 **Documents stay on the device** (ADR-0007): the picked file is kept in the app's sandbox (`src/data/device-store.ts`, the
-`DocumentStore` port); only what a check needs goes to the server, which purges it.
+`DocumentFileStore` port); only what a check needs goes to the server, which purges it.
 
 ```bash
 pnpm install            # at the repository root
@@ -27,7 +27,7 @@ pnpm exec expo start    # a development build; EXPO_PUBLIC_APP_URL points it at 
 `APP_ANDROID_CERT_SHA256`, the signing certificate's fingerprint) — and answers 404 until what signs the app is known. `pnpm check:app-links`
 (at the root) checks that `app.json` and those files say the same thing.
 
-**The store** is a `DocumentStore` like the web's and the Mac's (`src/data/device-store.ts`): it passes the shared contract
+**The store** is a `DocumentFileStore` like the web's and the Mac's (`src/data/device-store.ts`): it passes the shared contract
 (`@verikora/core/document-store/contract-kit`, run here by Jest).
 
 Not in this app yet, tracked in krizaka/verikora#155: the update and maintenance gates, push, the Android build in CI.

@@ -15,7 +15,7 @@ function fakeNative(): StoreInvoke {
   };
 }
 
-describe("the Mac's DocumentStore", () => {
+describe("the Mac's DocumentFileStore", () => {
   documentStoreContract("mac folder", () => createMacStore(fakeNative()));
 
   it("says the documents live on this Mac", () => {

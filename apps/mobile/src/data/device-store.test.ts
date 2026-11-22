@@ -61,8 +61,8 @@ describe("the document store of the device", () => {
   ])("reads the extension of %s as %s", (name, ext) => expect(extensionOf(name)).toBe(ext));
 });
 
-// The phone's adapter is a DocumentStore like the web's and the Mac's: it passes the same contract (verikora#155, ADR-0007).
-describe("the phone's DocumentStore", () => {
+// The phone's adapter is a DocumentFileStore like the web's and the Mac's: it passes the same contract (verikora#155, ADR-0007).
+describe("the phone's DocumentFileStore", () => {
   documentStoreContractWith("phone sandbox", () => createPhoneStore(memoryFiles().port, "file:///sandbox"), {
     it,
     expect,

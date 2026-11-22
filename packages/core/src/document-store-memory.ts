@@ -1,9 +1,9 @@
-import { assertDocumentKey, type DocumentStore, type StoredObject } from "./document-store";
+import { assertDocumentKey, type DocumentFileStore, type StoredObject } from "./document-store";
 
 /** An in-memory store: the reference behaviour every adapter's contract test is written against, and a test double. */
 export function memoryStore(
-  descriptor: Partial<ReturnType<DocumentStore["describe"]>> = {},
-): DocumentStore & { size(): number } {
+  descriptor: Partial<ReturnType<DocumentFileStore["describe"]>> = {},
+): DocumentFileStore & { size(): number } {
   const objects = new Map<string, StoredObject>();
   return {
     async put(key, bytes, meta) {

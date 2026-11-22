@@ -1,5 +1,5 @@
 /**
- * The DocumentStore PORT (ADR-0007), shared by every Verikora app: the application keeps a document through it and never
+ * The DocumentFileStore PORT (ADR-0007), shared by every Verikora app: the application keeps a document through it and never
  * names a vendor. The web chooses its adapter in configuration (apps/web/lib/storage/providers.ts) — nothing kept (the default),
  * Bunny (development and fictional data only), any S3-compatible provider —; the Mac keeps documents in a folder of its own
  * (apps/desktop), the phone in its sandbox. Every adapter passes `documentStoreContract` (`@verikora/core/document-store/contract`).
@@ -24,7 +24,7 @@ export interface DocumentStoreDescriptor {
   devOnly: boolean;
 }
 
-export interface DocumentStore {
+export interface DocumentFileStore {
   put(key: string, bytes: Uint8Array, meta: { contentType: string }): Promise<void>;
   /** The object, or null when there is none. */
   get(key: string): Promise<StoredObject | null>;

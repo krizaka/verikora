@@ -62,7 +62,7 @@ export function avatarProcessor(maxBytes: number, size: number): AvatarProcessor
 export const legacyAvatarKey = (_kind: string, owner: string, id: string, version: number) =>
   `${owner}/${id}/${version}.jpg`;
 
-/** The store is the product's (`DocumentStore`); the image maker is built for the limits of the call. */
+/** The store is the product's (`DocumentFileStore`); the image maker is built for the limits of the call. */
 export function organizeOver(q: Query, images?: { store: ObjectStore }, maxBytes = 0, size = 256) {
   return createOrganize({
     query: (sql, params) => q(sql, params) as Promise<never>,
