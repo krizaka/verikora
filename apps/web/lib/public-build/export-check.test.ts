@@ -5,7 +5,7 @@ import { dirname, join, relative } from "node:path";
 
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 
-import { checkRoutes, exportDirOf, guardArgs, routeOf } from "../../scripts/check-public-export.mjs";
+import { checkRoutes, exportDirOf, GUARD_BIN, guardArgs, routeOf } from "../../scripts/check-public-export.mjs";
 import { PUBLIC_ROUTES } from "./routes.mjs";
 
 /** The export check of the public build (krizaka-internal#4148): a clean export passes; each way out of the list fails. */
@@ -90,7 +90,7 @@ describe("the shared export guard", () => {
   const guard = async (folder: string) => {
     const org = await import("@krizaka/org");
     const args = guardArgs(relative(appDir, folder), org);
-    return spawnSync("pnpm", ["exec", "krizaka-export-guard", ...args], { cwd: appDir, encoding: "utf8" });
+    return spawnSync(process.execPath, [GUARD_BIN, ...args], { cwd: appDir, encoding: "utf8" });
   };
   let inside: string;
   beforeEach(() => {

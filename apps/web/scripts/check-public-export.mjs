@@ -47,6 +47,12 @@ export function exportDirOf(arg, appDir) {
   return dir;
 }
 
+/** The shared guard's bin, in the app's dependencies: run by this node, never looked up on the PATH. */
+export const GUARD_BIN = resolve(
+  dirname(fileURLToPath(import.meta.url)),
+  "../node_modules/@krizaka/config/bin/krizaka-export-guard.mjs",
+);
+
 /** The argv of `krizaka-export-guard` for Verikora: its status and retired code names come from @krizaka/org (the bin cannot import that ESM-only package itself). */
 export function guardArgs(dir, orgModule) {
   const status = orgModule.org.products.find((p) => p.id === "verikora")?.status;
@@ -65,7 +71,7 @@ if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.ur
   }
   const org = await import("@krizaka/org");
   // The bin reads a folder inside its working directory: the app.
-  const run = spawnSync("pnpm", ["exec", "krizaka-export-guard", ...guardArgs(relative(appDir, dir), org)], {
+  const run = spawnSync(process.execPath, [GUARD_BIN, ...guardArgs(relative(appDir, dir), org)], {
     cwd: appDir,
     stdio: "inherit",
   });
