@@ -1,0 +1,41 @@
+name: Public export
+# CI builds Verikora's public static export and checks it (krizaka-internal#4623, parent #4148): the routes against
+# lib/public-build/routes.mjs, then the shared guard of @krizaka/config (`krizaka-export-guard`). It reports on merge_group too.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  merge_group:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+permissions:
+  contents: read
+
+jobs:
+  public-export:
+    name: Public export
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: pnpm/action-setup@ea17c68df8912ef543352723c149a84f56e3d413 # v6.1.0
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile --prefer-offline
+      - run: pnpm build:public
+      # Report-only for now: the guard finds real content in main's export (a retired code name, a price, « Soon » on the pricing page,
+      # the Apache-2.0 org data in the page payload, the `$n` React references read as amounts). The step turns blocking once those
+      # are fixed (krizaka-internal#4623). The fixture tests (export-check.test.ts) hold the guard red on a sign-in link meanwhile.
+      - run: pnpm --filter @verikora/web check:public
+        continue-on-error: true
