@@ -7,7 +7,7 @@ import { dirname, join, relative, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 import { PUBLIC_SHARED_ENTRIES, stagedAppFiles } from "../lib/public-build/routes.mjs";
-import { checkExport } from "./check-public-export.mjs";
+import { checkRoutes } from "./check-public-export.mjs";
 
 const WEB = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const STAGE = join(WEB, ".public-build");
@@ -59,7 +59,7 @@ build();
 rmSync(OUT, { recursive: true, force: true });
 if (!existsSync(join(STAGE, "out"))) throw new Error("the export produced no out/ folder");
 cpSync(join(STAGE, "out"), OUT, { recursive: true });
-const problems = checkExport(OUT);
+const problems = checkRoutes(OUT);
 if (problems.length) {
   console.error(problems.map((p) => `✗ ${p}`).join("\n"));
   process.exit(1);
