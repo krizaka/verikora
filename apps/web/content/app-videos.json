@@ -5,67 +5,67 @@
     {
       "platform": "android",
       "flow": "documents-en",
-      "seconds": 6.5,
-      "capturedAt": "2026-11-21T13:43:58.704Z",
+      "seconds": 7.1,
+      "capturedAt": "2026-11-22T13:40:02.954Z",
       "files": {
-        "webm": "sites/verikora/download/android-documents-en.0b7b8d720c.webm",
-        "mp4": "sites/verikora/download/android-documents-en.ee5eaf29d5.mp4",
-        "poster": "sites/verikora/download/android-documents-en.9fd884f22b.jpg"
+        "webm": "sites/verikora/download/android-documents-en.4a551dd0ca.webm",
+        "mp4": "sites/verikora/download/android-documents-en.89a0b684b6.mp4",
+        "poster": "sites/verikora/download/android-documents-en.f2ba51dadf.jpg"
       }
     },
     {
       "platform": "mac",
       "flow": "library-fr",
-      "seconds": 6.4,
-      "capturedAt": "2026-11-21T13:44:03.310Z",
+      "seconds": 5.6,
+      "capturedAt": "2026-11-22T13:40:07.625Z",
       "files": {
-        "webm": "sites/verikora/download/mac-library-fr.66164e1b78.webm",
-        "mp4": "sites/verikora/download/mac-library-fr.923798dbc5.mp4",
-        "poster": "sites/verikora/download/mac-library-fr.e009b9a8b7.jpg"
+        "webm": "sites/verikora/download/mac-library-fr.3d478b6351.webm",
+        "mp4": "sites/verikora/download/mac-library-fr.5935bd5ce1.mp4",
+        "poster": "sites/verikora/download/mac-library-fr.3fd8e656e2.jpg"
       }
     },
     {
       "platform": "web",
       "flow": "binder-en",
-      "seconds": 4.6,
-      "capturedAt": "2026-11-21T13:43:37.602Z",
+      "seconds": 4.4,
+      "capturedAt": "2026-11-22T13:39:37.268Z",
       "files": {
-        "webm": "sites/verikora/download/web-binder-en.c9ab6d654b.webm",
-        "mp4": "sites/verikora/download/web-binder-en.51c4e5b9ca.mp4",
-        "poster": "sites/verikora/download/web-binder-en.d0179bf5e7.jpg"
+        "webm": "sites/verikora/download/web-binder-en.f4cf23105b.webm",
+        "mp4": "sites/verikora/download/web-binder-en.9abf3f12c4.mp4",
+        "poster": "sites/verikora/download/web-binder-en.70780a913c.jpg"
       }
     },
     {
       "platform": "web",
       "flow": "binder-fr",
-      "seconds": 4.9,
-      "capturedAt": "2026-11-21T13:43:42.481Z",
+      "seconds": 4.6,
+      "capturedAt": "2026-11-22T13:39:42.125Z",
       "files": {
-        "webm": "sites/verikora/download/web-binder-fr.0a41baa2cf.webm",
-        "mp4": "sites/verikora/download/web-binder-fr.de9092f4fc.mp4",
-        "poster": "sites/verikora/download/web-binder-fr.d37c8af957.jpg"
+        "webm": "sites/verikora/download/web-binder-fr.b6ed8434da.webm",
+        "mp4": "sites/verikora/download/web-binder-fr.b2fd3501f6.mp4",
+        "poster": "sites/verikora/download/web-binder-fr.c284ec2684.jpg"
       }
     },
     {
       "platform": "web",
       "flow": "report-en",
-      "seconds": 3.2,
-      "capturedAt": "2026-11-21T13:43:45.843Z",
+      "seconds": 2.9,
+      "capturedAt": "2026-11-22T13:39:46.034Z",
       "files": {
-        "webm": "sites/verikora/download/web-report-en.aeeee1df88.webm",
-        "mp4": "sites/verikora/download/web-report-en.e1cb71db51.mp4",
-        "poster": "sites/verikora/download/web-report-en.18876d52a0.jpg"
+        "webm": "sites/verikora/download/web-report-en.a354f8af9a.webm",
+        "mp4": "sites/verikora/download/web-report-en.e0026763bf.mp4",
+        "poster": "sites/verikora/download/web-report-en.3f4e07b6d2.jpg"
       }
     },
     {
       "platform": "web",
       "flow": "report-fr",
-      "seconds": 3.1,
-      "capturedAt": "2026-11-21T13:43:49.097Z",
+      "seconds": 3.3,
+      "capturedAt": "2026-11-22T13:39:51.893Z",
       "files": {
-        "webm": "sites/verikora/download/web-report-fr.d40bea7fc5.webm",
-        "mp4": "sites/verikora/download/web-report-fr.bfa6431adc.mp4",
-        "poster": "sites/verikora/download/web-report-fr.197a6baecb.jpg"
+        "webm": "sites/verikora/download/web-report-fr.5c940cf0e6.webm",
+        "mp4": "sites/verikora/download/web-report-fr.afdc0042ee.mp4",
+        "poster": "sites/verikora/download/web-report-fr.efaaca2ac6.jpg"
       }
     }
   ]
