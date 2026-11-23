@@ -6,66 +6,66 @@
       "platform": "android",
       "flow": "documents-en",
       "seconds": 7.1,
-      "capturedAt": "2026-11-22T13:40:02.954Z",
+      "capturedAt": "2026-11-23T16:13:31.185Z",
       "files": {
-        "webm": "sites/verikora/download/android-documents-en.4a551dd0ca.webm",
-        "mp4": "sites/verikora/download/android-documents-en.89a0b684b6.mp4",
-        "poster": "sites/verikora/download/android-documents-en.f2ba51dadf.jpg"
+        "webm": "sites/verikora/download/android-documents-en.c79c5b100e.webm",
+        "mp4": "sites/verikora/download/android-documents-en.80eca12133.mp4",
+        "poster": "sites/verikora/download/android-documents-en.2fbd3110d1.jpg"
       }
     },
     {
       "platform": "mac",
       "flow": "library-fr",
-      "seconds": 5.6,
-      "capturedAt": "2026-11-22T13:40:07.625Z",
+      "seconds": 6.8,
+      "capturedAt": "2026-11-23T16:13:36.522Z",
       "files": {
-        "webm": "sites/verikora/download/mac-library-fr.3d478b6351.webm",
-        "mp4": "sites/verikora/download/mac-library-fr.5935bd5ce1.mp4",
-        "poster": "sites/verikora/download/mac-library-fr.3fd8e656e2.jpg"
+        "webm": "sites/verikora/download/mac-library-fr.9638fd9901.webm",
+        "mp4": "sites/verikora/download/mac-library-fr.9125da01dd.mp4",
+        "poster": "sites/verikora/download/mac-library-fr.c75eda571b.jpg"
       }
     },
     {
       "platform": "web",
       "flow": "binder-en",
-      "seconds": 4.4,
-      "capturedAt": "2026-11-22T13:39:37.268Z",
+      "seconds": 4.6,
+      "capturedAt": "2026-11-23T16:13:00.228Z",
       "files": {
-        "webm": "sites/verikora/download/web-binder-en.f4cf23105b.webm",
-        "mp4": "sites/verikora/download/web-binder-en.9abf3f12c4.mp4",
-        "poster": "sites/verikora/download/web-binder-en.70780a913c.jpg"
+        "webm": "sites/verikora/download/web-binder-en.f3f56f0831.webm",
+        "mp4": "sites/verikora/download/web-binder-en.daa19de0f2.mp4",
+        "poster": "sites/verikora/download/web-binder-en.faac178805.jpg"
       }
     },
     {
       "platform": "web",
       "flow": "binder-fr",
-      "seconds": 4.6,
-      "capturedAt": "2026-11-22T13:39:42.125Z",
+      "seconds": 4.8,
+      "capturedAt": "2026-11-23T16:13:06.367Z",
       "files": {
-        "webm": "sites/verikora/download/web-binder-fr.b6ed8434da.webm",
-        "mp4": "sites/verikora/download/web-binder-fr.b2fd3501f6.mp4",
-        "poster": "sites/verikora/download/web-binder-fr.c284ec2684.jpg"
+        "webm": "sites/verikora/download/web-binder-fr.81d8709f09.webm",
+        "mp4": "sites/verikora/download/web-binder-fr.c7ad5ca822.mp4",
+        "poster": "sites/verikora/download/web-binder-fr.b1c36e04d7.jpg"
       }
     },
     {
       "platform": "web",
       "flow": "report-en",
-      "seconds": 2.9,
-      "capturedAt": "2026-11-22T13:39:46.034Z",
+      "seconds": 3,
+      "capturedAt": "2026-11-23T16:13:11.808Z",
       "files": {
-        "webm": "sites/verikora/download/web-report-en.a354f8af9a.webm",
-        "mp4": "sites/verikora/download/web-report-en.e0026763bf.mp4",
-        "poster": "sites/verikora/download/web-report-en.3f4e07b6d2.jpg"
+        "webm": "sites/verikora/download/web-report-en.c29959ed73.webm",
+        "mp4": "sites/verikora/download/web-report-en.a6641e3f72.mp4",
+        "poster": "sites/verikora/download/web-report-en.72f71002a6.jpg"
       }
     },
     {
       "platform": "web",
       "flow": "report-fr",
-      "seconds": 3.3,
-      "capturedAt": "2026-11-22T13:39:51.893Z",
+      "seconds": 2.7,
+      "capturedAt": "2026-11-23T16:13:19.641Z",
       "files": {
-        "webm": "sites/verikora/download/web-report-fr.5c940cf0e6.webm",
-        "mp4": "sites/verikora/download/web-report-fr.afdc0042ee.mp4",
-        "poster": "sites/verikora/download/web-report-fr.efaaca2ac6.jpg"
+        "webm": "sites/verikora/download/web-report-fr.4c50212e09.webm",
+        "mp4": "sites/verikora/download/web-report-fr.2462fd4e48.mp4",
+        "poster": "sites/verikora/download/web-report-fr.f5d4984ac3.jpg"
       }
     }
   ]
