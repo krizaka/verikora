@@ -113,5 +113,72 @@
   "stage": {
     "title": "Development version",
     "message": "Data can be reset at any time. This is not a commercial offer yet."
+  },
+  "productPage": {
+    "hero": {
+      "title": "Spot clauses to fix before you send.",
+      "lead": "Each finding shows the lease line and its article. You decide.",
+      "primary": "Book a demo",
+      "secondary": "See a report",
+      "sample": "Fictional sample",
+      "moment": "A lease clause, flagged with its article"
+    },
+    "scenes": {
+      "web-binder": {
+        "title": "The file, in order."
+      },
+      "web-report": {
+        "title": "The report, shared."
+      },
+      "mac-library": {
+        "title": "On the Mac too."
+      }
+    },
+    "limits": {
+      "title": "What it does not do.",
+      "items": {
+        "decide": "It does not decide. You do.",
+        "law": "It is not legal advice.",
+        "files": "It reads only what you upload."
+      }
+    },
+    "owl": {
+      "figure": "fig. 1",
+      "label": "the owl",
+      "promise": "reads, never rules."
+    },
+    "closing": {
+      "title": "See it on a lease."
+    },
+    "inner": {
+      "play": "Play",
+      "pause": "Pause"
+    },
+    "story": {
+      "label": "From file to decision",
+      "steps": {
+        "arrive": {
+          "title": "The file arrives."
+        },
+        "read": {
+          "title": "It reads every line."
+        },
+        "light": {
+          "title": "The clause lights up."
+        },
+        "attach": {
+          "title": "The article attaches."
+        },
+        "decide": {
+          "title": "You decide."
+        }
+      },
+      "review": "Review the clause",
+      "seal": "Decision noted",
+      "keep": "Keep as is"
+    },
+    "demo": {
+      "title": "Tap a clause."
+    }
   }
 }

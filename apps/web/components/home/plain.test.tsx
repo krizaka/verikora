@@ -11,6 +11,8 @@ vi.mock("next/navigation", () => ({
 }));
 
 import Home from "@/app/[locale]/page";
+import { heroFinding } from "@/lib/landing";
+import { ruleTitle } from "@/lib/rule-text";
 import en from "@/messages/en.json";
 import fr from "@/messages/fr.json";
 
@@ -31,7 +33,6 @@ const PUBLIC = [
   "app/[locale]/terms",
   "app/[locale]/(app)/app/verifications/report",
   "app/[locale]/verify-email",
-  "components/home",
   "components/screening",
   "components/BarSession.tsx",
   "components/ClosingNoteView.tsx",
@@ -54,18 +55,6 @@ function monoTags(markup: string): string[] {
   );
 }
 
-/** The bento's spans, row by row, on its six columns: `sm` 2, `md` 3, `lg` 4. A row left unfilled holds an orphan. */
-function bentoRows(sizes: readonly (string | undefined)[]): number[] {
-  const span = { lg: 4, md: 3 } as Record<string, number>;
-  const rows: number[] = [0];
-  for (const s of sizes) {
-    const w = span[s ?? ""] ?? 2;
-    if (rows[rows.length - 1]! + w > 6) rows.push(0);
-    rows[rows.length - 1] += w;
-  }
-  return rows;
-}
-
 describe("the public site, plain (P10)", () => {
   const files = PUBLIC.flatMap(sources);
 
@@ -73,7 +62,6 @@ describe("the public site, plain (P10)", () => {
     for (const name of [
       "app/[locale]/page.tsx",
       "app/[locale]/(app)/app/verifications/report/page.tsx",
-      "components/home/HeroFinding.tsx",
       "components/SiteChrome.tsx",
     ])
       expect(files.map((f) => f.name)).toContain(name);
@@ -98,63 +86,53 @@ describe("the public site, plain (P10)", () => {
     expect(files.filter((f) => /font-serif|Young Serif|Courier/.test(f.source)).map((f) => f.name)).toEqual([]);
   });
 
-  it("counts an orphan when a row of the bento is not full", () => {
-    expect(bentoRows(["md", "sm", "sm"])).toEqual([5, 2]);
-    expect(bentoRows([undefined, undefined, undefined])).toEqual([6]);
-    expect(bentoRows(["md", "md"])).toEqual([6]);
-  });
-
   it("keeps the storage sentence off the home: the privacy notice says where the data lives (krizaka-internal#2562)", () => {
     for (const d of [en, fr]) {
       expect(JSON.stringify(d.landing)).not.toMatch(/Toronto/);
     }
   });
 
-  describe("the home, rendered", async () => {
-    const html = renderToStaticMarkup(
-      <ThemeProvider>{await Home({ params: Promise.resolve({ locale: "fr" }) })}</ThemeProvider>,
-    );
+  describe("the home, rendered (the product page template, krizaka-internal#4692)", async () => {
+    const render = async (locale: "en" | "fr") =>
+      renderToStaticMarkup(<ThemeProvider>{await Home({ params: Promise.resolve({ locale }) })}</ThemeProvider>);
+    const pages = { en: await render("en"), fr: await render("fr") };
 
-    it("has no eyebrow above the promise and no figures row under the hero", () => {
-      expect(html).toContain("kz-hero-title");
-      expect(html).not.toContain("kz-eyebrow");
-      expect(html).not.toContain("kz-tpl-band");
+    it("draws the template: the promise, the recorded finding with its article, the journey, the clause demo, the limits, one way in", () => {
+      for (const html of Object.values(pages)) {
+        expect(html).toContain("kz-pp-hero");
+        expect(html).toContain("kz-story");
+        expect(html).toContain("kz-clause");
+        expect(html).toContain("kz-pp-limits");
+        expect(html).toContain("kz-pp-closing");
+        expect(html).toContain("art. 1936");
+        expect(html).toContain('id="proof"');
+        expect(html).toContain('id="what"');
+      }
     });
 
-    it("writes no mono caption: the window bar says « Un bail · exécution enregistrée » in the sans, and the owl's quote is not repeated (verikora#457)", () => {
-      expect(html).toMatch(
-        /<div class="kz-tpl-stage-bar" aria-hidden="true"><span>Un bail · exécution enregistrée<\/span><\/div>/,
-      );
-      expect(html).not.toMatch(/<figure class="kz-quote/);
+    it("keeps the company's status sentence and no date promise", () => {
+      expect(pages.en).toContain(en.landing.status.development);
+      expect(pages.fr).toContain(fr.landing.status.development.replace(/'/g, "&#x27;"));
+      for (const html of Object.values(pages)) {
+        expect(html).not.toMatch(/bientôt|soon|prochainement|coming/i);
+      }
     });
 
-    it("uses a mono only on code in its content (the bar is the family's NavBar, its language code is @krizaka/ui's)", () => {
-      const whole = html.slice(html.indexOf('<main id="content"'), html.indexOf("</main>"));
-      // The report is the app's own view (krizaka-internal#2562): the app's mono (a fingerprint, a run id) is its own, not the page's.
-      const main =
-        whole.slice(0, whole.indexOf('data-testid="real-report"')) + whole.slice(whole.indexOf('id="applicant"'));
-      expect(main.length).toBeGreaterThan(0);
-      expect(monoTags(main).filter((tag) => tag !== "code" && tag !== "pre")).toEqual([]);
-      // `Facts` are « a few mono words on one line » in the blocks: the lead already says who it is for, in the sans.
-      expect(main).not.toContain("kz-facts");
+    it("says what it does not do, in each language, and tutoies no one", () => {
+      expect(pages.en).toContain(en.productPage.limits.items.decide);
+      expect(pages.fr).toContain(fr.productPage.limits.items.decide.replace(/'/g, "&#x27;"));
+      expect(JSON.stringify(fr.productPage)).not.toMatch(/\b(tu|ton|ta|tes|toi|ttes)\b/i);
     });
 
-    it("lays the bento out without an orphan: every row of its six columns is full", () => {
-      const bento = html.match(/<ul class="kz-tpl-bento">(.*?)<\/ul>/s)?.[1] ?? "";
-      const sizes = [...bento.matchAll(/<li( data-size="(\w+)")?/g)].map((m) => m[2]);
-      expect(sizes.length).toBeGreaterThan(0);
-      expect(bentoRows(sizes).every((r) => r === 6)).toBe(true);
-    });
-
-    it("keeps what the product has: one finding of the recorded run, the engine line; one primary in the hero and the same in the closing, on a plain surface", () => {
-      expect(html).toContain('data-testid="hero-finding"');
-      expect(html).not.toContain('data-testid="before-after"');
-      expect(html).toContain('data-testid="hero-primary"');
-      expect(html).toContain('data-testid="closing-primary"');
-      expect(html).toContain('data-testid="closing-tenant"');
-      expect(html).not.toContain('data-testid="closing-data"');
-      expect(html).not.toMatch(/class="kz-cta\b/);
-      expect(html).toContain('data-testid="powered-by"');
+    it("never shows a French rule title on the /en page", () => {
+      const finding = heroFinding();
+      const [titleFr, titleEn] = [
+        ruleTitle(finding.ruleId, "fr", finding.title),
+        ruleTitle(finding.ruleId, "en", finding.title),
+      ];
+      expect(titleFr).not.toBe(titleEn);
+      expect(pages.en).toContain(titleEn);
+      expect(pages.en).not.toContain(titleFr.replace(/'/g, "&#x27;"));
     });
   });
 });

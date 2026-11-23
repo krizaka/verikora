@@ -4510,5 +4510,72 @@
   "stage": {
     "title": "Version de développement",
     "message": "Les données peuvent être réinitialisées à tout moment. Ce n'est pas encore une offre commerciale."
+  },
+  "productPage": {
+    "hero": {
+      "title": "Repérez des clauses à revoir avant l'envoi.",
+      "lead": "Chaque constat montre la ligne du bail et son article. Vous décidez.",
+      "primary": "Demander une démo",
+      "secondary": "Voir un rapport",
+      "sample": "Exemple fictif",
+      "moment": "Une clause du bail, relevée avec son article"
+    },
+    "scenes": {
+      "web-binder": {
+        "title": "Le dossier, rangé."
+      },
+      "web-report": {
+        "title": "Le rapport, partagé."
+      },
+      "mac-library": {
+        "title": "Aussi sur le Mac."
+      }
+    },
+    "limits": {
+      "title": "Ce qu'il ne fait pas.",
+      "items": {
+        "decide": "Il ne décide pas. Vous décidez.",
+        "law": "Il ne remplace pas un avis juridique.",
+        "files": "Il ne lit que ce que vous déposez."
+      }
+    },
+    "owl": {
+      "figure": "fig. 1",
+      "label": "la chouette",
+      "promise": "lit, ne tranche pas."
+    },
+    "closing": {
+      "title": "Voyez-le sur un bail."
+    },
+    "inner": {
+      "play": "Lecture",
+      "pause": "Pause"
+    },
+    "story": {
+      "label": "Du dossier à la décision",
+      "steps": {
+        "arrive": {
+          "title": "Le dossier arrive."
+        },
+        "read": {
+          "title": "Il lit chaque ligne."
+        },
+        "light": {
+          "title": "La clause s'allume."
+        },
+        "attach": {
+          "title": "L'article s'y attache."
+        },
+        "decide": {
+          "title": "Vous décidez."
+        }
+      },
+      "review": "Revoir la clause",
+      "seal": "Décision notée",
+      "keep": "Garder telle quelle"
+    },
+    "demo": {
+      "title": "Touchez une clause."
+    }
   }
 }
