@@ -48,66 +48,9 @@
   },
   "landing": {
     "title": "Vérifiez le dossier avant d'offrir le logement.",
-    "lead": "Pour les gestionnaires d'immeubles au Québec. Verikora lit les pièces d'un dossier de location et votre modèle de bail, et relie chaque constat à sa ligne et à son article de loi. Il trie ; la décision reste la vôtre.",
     "status": {
       "label": "Statut",
       "development": "En développement : les inscriptions sont fermées pendant nos essais sur de vrais baux québécois."
-    },
-    "hero": {
-      "primary": "Écrivez-nous pour l'essayer sur vos dossiers",
-      "seeReport": "Voir un vrai rapport",
-      "visualLabel": "Un bail · exécution enregistrée",
-      "findingCaption": "Ce que Verikora renvoie, avec sa source"
-    },
-    "what": {
-      "title": "Ce que Verikora vérifie",
-      "lead": "Trois choses, dans l'ordre de votre travail.",
-      "items": {
-        "documents": {
-          "title": "Les pièces du candidat",
-          "text": "Talon de paie, relevé bancaire, lettre d'emploi, pièce d'identité : chaque pièce est lue, et le fichier PDF est examiné en tant que fichier (logiciel d'origine, dates, enregistrements successifs). Une modification est signalée sur trois niveaux : observée, inhabituelle, incohérente."
-        },
-        "template": {
-          "title": "Votre modèle de bail",
-          "text": "Votre bail est vérifié avant l'envoi, selon les règles du Québec : chaque constat nomme la règle, cite l'article du Code civil et surligne la phrase du bail."
-        },
-        "report": {
-          "title": "Un rapport à partager",
-          "text": "Une page en lecture seule, par lien et avec une échéance : l'empreinte du document, les constats avec leurs articles et l'exécution qui les a produits."
-        }
-      }
-    },
-    "proof": {
-      "title": "Un vrai rapport",
-      "lead": "Un bail d'exemple, vérifié en développement et enregistré tel qu'il est revenu : chaque constat donne sa règle, sa ligne et son article de loi. Rien n'est tapé à la main ; les nombres sont lus dans l'exécution.",
-      "runLabel": "Numéro d'exécution",
-      "dateLabel": "Enregistrée le",
-      "rulesetLabel": "Règles du Québec",
-      "powered": "Propulsé par Sovkora.",
-      "owlLabel": "Ce que la chouette promet",
-      "details": "Détails de l'exécution"
-    },
-    "applicant": {
-      "title": "Le candidat accepte d'abord",
-      "lead": "Aucune vérification ne part sans l'accord du candidat, vérification par vérification. Il voit le résultat en premier, avant vous.",
-      "points": [
-        "Chaque vérification demandée a son propre consentement.",
-        "Le candidat voit le résultat avant qu'il ne vous soit transmis.",
-        "Verikora ne demande ni numéro d'assurance sociale ni casier judiciaire.",
-        "Un constat que le candidat conteste, il le dit à la personne qui lui a demandé ses pièces : Verikora ne décide pas du logement."
-      ]
-    },
-    "closing": {
-      "title": "Les dossiers de votre semaine ? Essayons-les ensemble.",
-      "tenant": "On vous a demandé vos pièces par Verikora ?"
-    },
-    "visual": {
-      "caption": "Une vraie vérification, enregistrée telle qu'elle est revenue"
-    },
-    "limits": {
-      "title": "Ce que Verikora ne fait pas",
-      "lead": "Chaque règle cite son article de loi. Les règles québécoises attendent encore la relecture d'un avocat, et l'écran le dit : il trie, il ne donne pas d'avis juridique.",
-      "text": "Quand un document ne permet pas de conclure, le rapport le dit (« Éléments insuffisants ») au lieu de deviner."
     }
   },
   "stage": {

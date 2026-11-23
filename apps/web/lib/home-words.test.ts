@@ -19,7 +19,7 @@ describe.each([
   ["fr", fr],
 ])("the %s home's hero, closing and description", (_name, m) => {
   // The whole `landing` catalogue, whatever section it holds, and the page's description.
-  const owned = [m.landing, m.meta];
+  const owned = [m.landing, m.productPage, m.meta];
 
   it("never use a word of the ticket's list", () => {
     expect(strings(owned).filter((s) => NEVER.test(s))).toEqual([]);
@@ -29,10 +29,10 @@ describe.each([
     expect(
       [
         m.landing.title,
-        m.landing.what.title,
-        m.landing.applicant.title,
-        m.landing.closing.title,
-        ...Object.values(m.landing.what.items).map((i) => i.title),
+        m.productPage.hero.title,
+        m.productPage.limits.title,
+        m.productPage.closing.title,
+        ...Object.values(m.productPage.scenes).map((s) => s.title),
       ].filter((s) => CODE_NAME.test(s)),
     ).toEqual([]);
   });
@@ -43,8 +43,13 @@ describe.each([
       (s): s is string => !!s,
     );
     expect(typed.length).toBeGreaterThan(0);
-    const all = [...strings(en.landing), ...strings(fr.landing)].join("\n");
+    const all = [
+      ...strings(en.landing),
+      ...strings(fr.landing),
+      ...strings(en.productPage),
+      ...strings(fr.productPage),
+    ].join("\n");
     expect(typed.filter((t) => all.includes(t))).toEqual([]);
-    expect(strings(m.landing.hero).filter((s) => /\bart(icle|\.)\s*\d/i.test(s))).toEqual([]);
+    expect(strings(m.productPage.hero).filter((s) => /\bart(icle|\.)\s*\d/i.test(s))).toEqual([]);
   });
 });

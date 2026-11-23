@@ -47,7 +47,7 @@ describe("plain words, in both languages", () => {
     ["en", en],
     ["fr", fr],
   ] as const) {
-    const copy = words([d.landing, d.meta, d.chrome, d.privacy, d.console.signIn]);
+    const copy = words([d.landing, d.productPage, d.meta, d.chrome, d.privacy, d.console.signIn]);
     it(`${name}: no em dash, no « AI-powered » hype in the public copy`, () => {
       expect(copy.filter((w) => /—/.test(w))).toEqual([]);
       expect(
@@ -56,9 +56,8 @@ describe("plain words, in both languages", () => {
         ),
       ).toEqual([]);
     });
-    it(`${name}: Verikora is the subject; Sovkora, the engine, is named once on the home, in the quiet line under the proof`, () => {
-      expect(words(d.landing).filter((w) => /sovkora/i.test(w))).toEqual([d.landing.proof.powered]);
-      expect(d.landing.proof.powered).toMatch(/^(Powered by|Propulsé par) Sovkora\.$/);
+    it(`${name}: Verikora is the subject; Sovkora, the engine, is not named on the home`, () => {
+      expect(words([d.landing, d.productPage]).filter((w) => /sovkora/i.test(w))).toEqual([]);
     });
     it(`${name}: the app says Checks, with the engine in small print`, () => {
       expect(d.console.document.checks).not.toMatch(/Sovkora/);
@@ -164,9 +163,11 @@ describe("the recorded report the home reads from, its figures read from the run
 
   it("types no count in the page's messages: no digit followed by rules, findings or articles, in either language", () => {
     for (const d of [en, fr]) {
-      expect(words(d.landing).filter((w) => /\d+\s*(rules?|règles?|findings?|constats?|articles?)/i.test(w))).toEqual(
-        [],
-      );
+      expect(
+        words([d.landing, d.productPage]).filter((w) =>
+          /\d+\s*(rules?|règles?|findings?|constats?|articles?)/i.test(w),
+        ),
+      ).toEqual([]);
     }
   });
 });

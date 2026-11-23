@@ -88,7 +88,7 @@ describe("the public site, plain (P10)", () => {
 
   it("keeps the storage sentence off the home: the privacy notice says where the data lives (krizaka-internal#2562)", () => {
     for (const d of [en, fr]) {
-      expect(JSON.stringify(d.landing)).not.toMatch(/Toronto/);
+      expect(JSON.stringify([d.landing, d.productPage])).not.toMatch(/Toronto/);
     }
   });
 
