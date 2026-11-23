@@ -1,6 +1,7 @@
 name: Public export
 # CI builds Verikora's public static export and checks it (krizaka-internal#4623, parent #4148): the routes against
-# lib/public-build/routes.mjs, then the shared guard of @krizaka/config (`krizaka-export-guard`). It reports on merge_group too.
+# lib/public-build/routes.mjs, then the shared guard of @krizaka/config (`krizaka-export-guard`), at 0 findings. It is a required
+# check and reports on pull_request and merge_group.
 
 on:
   push:
@@ -34,8 +35,4 @@ jobs:
           cache: pnpm
       - run: pnpm install --frozen-lockfile --prefer-offline
       - run: pnpm build:public
-      # Report-only until @krizaka/config reads the React flight references that carry a path (`"$25:props:org:footer…"`) as
-      # references, not amounts: they are the only findings left (the copy findings are fixed, krizaka-internal#4627). Then remove
-      # `continue-on-error`. The fixture tests (export-check.test.ts) hold the guard red on a sign-in link meanwhile.
       - run: pnpm --filter @verikora/web check:public
-        continue-on-error: true
