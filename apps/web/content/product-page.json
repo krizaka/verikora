@@ -1,0 +1,20 @@
+{
+  "$comment": "The product public page template (krizaka-internal#4692): structure only, no words (they are in messages/site, `productPage`). The scenes are the media the registry lists for `page`/`sceneRole`, in its order; the budget is the most words each section may say, held by lib/product-page.test.ts. The story is the one journey the page tells while it scrolls, step by step (STORY_STEPS); its bird is the guide that appears at each step.",
+  "page": "home",
+  "sceneRole": "scene",
+  "limits": ["decide", "law", "files"],
+  "budget": {
+    "hero.title": 8,
+    "hero.lead": 14,
+    "scene.title": 4,
+    "scene.line": 12,
+    "limit": 10,
+    "closing.title": 6,
+    "story.step": 5,
+    "demo.title": 4
+  },
+  "story": {
+    "steps": ["arrive", "read", "light", "attach", "decide"],
+    "bird": "owl"
+  }
+}

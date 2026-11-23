@@ -26,7 +26,8 @@ describe("every menu item resolves", () => {
   });
 
   it("each anchor is a section id of the home", () => {
-    const home = readFileSync(pageFile("home"), "utf8");
+    // The anchors are the ids of the sections `homePageData` hands the template (`id: "proof"`, `id: "what"`).
+    const home = readFileSync(join(ROOT, "lib/product-page-data.ts"), "utf8").replace(/\bid: "(\w+)"/g, 'id="$1"');
     expect(HOME_ANCHORS.length).toBeGreaterThan(0);
     for (const anchor of HOME_ANCHORS) expect(home, anchor).toContain(`id="${anchor}"`);
   });

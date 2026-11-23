@@ -55,3 +55,9 @@ header.sticky :is(a, button) {
   min-height: 2.75rem;
   min-width: 2.75rem;
 }
+
+/* The product page's story tilts a document file past the page's edge on a phone (+111 px at 390): clipped here, not scrolled (`clip`
+   makes no scroll container, so the sticky scene keeps working), until @krizaka/ui clips its own story (request to krizaka-ui). */
+.kz-story {
+  overflow-x: clip;
+}

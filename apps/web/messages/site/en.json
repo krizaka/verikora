@@ -48,70 +48,80 @@
   },
   "landing": {
     "title": "Check the file before you offer the unit.",
-    "lead": "For property managers in Québec. Verikora reads the documents in a rental file and your lease template, and ties every finding to its line and its article of law. It sorts; the decision stays yours.",
     "status": {
       "label": "Status",
       "development": "In development: sign-up is closed while we test it on real Québec leases."
-    },
-    "hero": {
-      "primary": "Write to us to try it on your files",
-      "seeReport": "See a real report",
-      "visualLabel": "A lease · recorded run",
-      "findingCaption": "What Verikora returns, with its source"
-    },
-    "what": {
-      "title": "What Verikora checks",
-      "lead": "Three things, in the order of your work.",
-      "items": {
-        "documents": {
-          "title": "The applicant's documents",
-          "text": "Pay stub, bank statement, employment letter, ID: each document is read, and the PDF is examined as a file (the software that made it, dates, successive saves). An edit is reported at three levels: observed, unusual, inconsistent."
-        },
-        "template": {
-          "title": "Your lease template",
-          "text": "Your lease is checked before you send it, against Québec's rules: each finding names the rule, quotes the Civil Code article and lights the sentence of the lease."
-        },
-        "report": {
-          "title": "A report to share",
-          "text": "A read-only page by link, with an expiry: the document's fingerprint, the findings with their articles and the run that produced them."
-        }
-      }
-    },
-    "proof": {
-      "title": "A real report",
-      "lead": "A sample lease, checked in development and recorded as it came back: each finding gives its rule, its line and its article of law. Nothing is typed by hand; the counts are read from the run.",
-      "runLabel": "Run id",
-      "dateLabel": "Recorded",
-      "rulesetLabel": "Québec rules",
-      "powered": "Powered by Sovkora.",
-      "owlLabel": "What the owl promises",
-      "details": "Run details"
-    },
-    "applicant": {
-      "title": "The applicant agrees first",
-      "lead": "No check goes ahead without the applicant's agreement, check by check. They see the result first, before you do.",
-      "points": [
-        "Each check asked for has its own consent.",
-        "The applicant sees the result before it is passed to you.",
-        "Verikora asks for neither a social insurance number nor a criminal history.",
-        "A finding the applicant disputes, they raise with the person who asked for their documents: Verikora does not decide on the unit."
-      ]
-    },
-    "closing": {
-      "title": "This week's files? Let's try them together.",
-      "tenant": "Asked for your documents through Verikora?"
-    },
-    "visual": {
-      "caption": "A real check, recorded as it came back"
-    },
-    "limits": {
-      "title": "What Verikora does not do",
-      "lead": "Every rule cites its article of law. The Québec rules are still waiting for a lawyer's review, and the screen says so: it sorts, it does not give legal advice.",
-      "text": "When a document does not allow a conclusion, the report says so (“Insufficient evidence”) instead of guessing."
     }
   },
   "stage": {
     "title": "Development version",
     "message": "Data can be reset at any time. This is not a commercial offer yet."
+  },
+  "productPage": {
+    "hero": {
+      "title": "Spot clauses to fix before you send.",
+      "lead": "Each finding shows the lease line and its article. You decide.",
+      "primary": "Book a demo",
+      "secondary": "See a report",
+      "sample": "Fictional sample",
+      "moment": "A lease clause, flagged with its article"
+    },
+    "scenes": {
+      "web-binder": {
+        "title": "The file, in order."
+      },
+      "web-report": {
+        "title": "The report, shared."
+      },
+      "mac-library": {
+        "title": "On the Mac too."
+      }
+    },
+    "limits": {
+      "title": "What it does not do.",
+      "items": {
+        "decide": "It does not decide. You do.",
+        "law": "It is not legal advice.",
+        "files": "It reads only what you upload."
+      }
+    },
+    "owl": {
+      "figure": "fig. 1",
+      "label": "the owl",
+      "promise": "reads, never rules."
+    },
+    "closing": {
+      "title": "See it on a lease."
+    },
+    "inner": {
+      "play": "Play",
+      "pause": "Pause"
+    },
+    "story": {
+      "label": "From file to decision",
+      "steps": {
+        "arrive": {
+          "title": "The file arrives."
+        },
+        "read": {
+          "title": "It reads every line."
+        },
+        "light": {
+          "title": "The clause lights up."
+        },
+        "attach": {
+          "title": "The article attaches."
+        },
+        "decide": {
+          "title": "You decide."
+        }
+      },
+      "review": "Review the clause",
+      "seal": "Decision noted",
+      "keep": "Keep as is"
+    },
+    "demo": {
+      "title": "Tap a clause."
+    }
   }
 }

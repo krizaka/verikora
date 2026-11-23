@@ -6,14 +6,44 @@
       "origin": "test",
       "owner": "verikora",
       "location": "content/app-videos.json",
-      "uses": [{ "page": "home", "role": "what" }]
+      "uses": [
+        {
+          "page": "home",
+          "role": "what"
+        },
+        {
+          "page": "home",
+          "role": "scene"
+        }
+      ]
     },
     {
       "id": "web-report",
       "origin": "test",
       "owner": "verikora",
       "location": "content/app-videos.json",
-      "uses": [{ "page": "docs", "role": "lead" }]
+      "uses": [
+        {
+          "page": "docs",
+          "role": "lead"
+        },
+        {
+          "page": "home",
+          "role": "scene"
+        }
+      ]
+    },
+    {
+      "id": "mac-library",
+      "origin": "test",
+      "owner": "verikora",
+      "location": "content/app-videos.json",
+      "uses": [
+        {
+          "page": "home",
+          "role": "scene"
+        }
+      ]
     }
   ]
 }

@@ -66,7 +66,7 @@ describe("no public page advertises a charge the code does not make (#373)", () 
   it("no public message promises a price beyond the included volume", async () => {
     for (const locale of ["en", "fr"] as const) {
       const messages = (await import(`@/messages/${locale}.json`)).default as Record<string, unknown>;
-      for (const ns of ["pricing", "landing", "chrome", "terms", "privacy", "download", "docs"]) {
+      for (const ns of ["pricing", "landing", "productPage", "chrome", "terms", "privacy", "download", "docs"]) {
         expect(JSON.stringify(messages[ns]), `${locale} ${ns}`).not.toMatch(
           /overage|per verification beyond|surplus|chaque vérification au-delà|par vérification au-delà|vérification supplémentaire/i,
         );
