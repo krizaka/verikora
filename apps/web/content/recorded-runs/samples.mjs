@@ -22,7 +22,7 @@ Il est interdit d'avoir des enfants dans le logement.`,
 Entre la locatrice Madame Hélène Roy (fictif), domiciliée à Montréal,
 et le locataire Monsieur Karim Haddad (fictif), domicilié à Laval.
 Durée : 12 mois, du 1er septembre 2026 au 31 août 2027.
-Loyer mensuel : 1 120 $, payable le premier jour du mois.
+Loyer mensuel : 1 120 dollars, payable le premier jour du mois.
 Le locataire s'engage à respecter le règlement de l'immeuble, que la locatrice lui remettra après la signature du bail.
 Le locataire renonce à son droit au maintien dans les lieux à la fin du bail.
 `,

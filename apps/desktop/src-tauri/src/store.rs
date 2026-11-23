@@ -1,4 +1,4 @@
-//! The Mac's `DocumentStore` (ADR-0007): the documents Verikora keeps for the person on this Mac — « keep my history » when
+//! The Mac's `DocumentFileStore` (ADR-0007): the documents Verikora keeps for the person on this Mac — « keep my history » when
 //! the workspace allows it — in a folder of the app's own (`~/Library/Application Support/<bundle id>/documents`), never
 //! anywhere else. The page reaches it through `apps/desktop/src/lib/mac-store.ts`, which passes the same contract test as
 //! every other adapter. A key is the port's (lowercase letters, digits, `/_.-`), checked again here: no `..`, no empty or `.`

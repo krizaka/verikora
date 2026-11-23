@@ -40,7 +40,7 @@ import {
 } from "./retention-policy";
 import { addDays, hash, newToken, REQUEST_VALID_DAYS } from "./screening";
 import { type Answer, answersOf, applicantSignalsOf, authenticityReportOf } from "./signal-answers";
-import type { DocumentStore } from "./storage/port";
+import type { DocumentFileStore } from "./storage/port";
 import { DECISION, KIND, WORKSPACE } from "./workspace/decl";
 
 /*
@@ -211,9 +211,9 @@ const policyOf = (ctx: UploadContext, keep: boolean, now: Date): StoragePolicy =
 
 /** Upload-time settings the route reads from the owner's account (where documents go, the retention window, the pre-flight). */
 export interface UploadContext {
-  store: DocumentStore;
+  store: DocumentFileStore;
   /** Where the bytes of a document that is not kept wait for their purge (ADR-0012); the folder of a laptop when absent, none in production without a store. */
-  working?: DocumentStore | null;
+  working?: DocumentFileStore | null;
   purgeAfterHours: number;
   /** The installation's tenant id for the keys of new objects. */
   tenant: string;
@@ -394,7 +394,7 @@ export async function revokeApplicantFile(landlordId: string, id: string, now: D
 export async function purgeApplicationFiles(
   ownerId: string,
   screeningId: string,
-  store: DocumentStore | undefined,
+  store: DocumentFileStore | undefined,
   now?: Date,
   keepIds: readonly string[] = [],
 ): Promise<number> {
@@ -472,7 +472,7 @@ async function keptPastDecision(ownerId: string, screeningId: string): Promise<s
 export async function closeApplicantFile(
   landlordId: string,
   id: string,
-  store: DocumentStore | undefined,
+  store: DocumentFileStore | undefined,
   now: Date,
   headers?: Headers,
   retention: DecisionRetention = DECISION_RETENTION.atDecision,

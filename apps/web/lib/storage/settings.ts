@@ -13,7 +13,7 @@ import {
   replaceOwnS3Key,
   storedSecret,
 } from "./own-providers";
-import type { DocumentStore } from "./port";
+import type { DocumentFileStore } from "./port";
 
 /**
  * Where an owner's kept documents live (ADR-0007): `none` (nothing can be kept), `krizaka` (the store this deployment
@@ -170,7 +170,7 @@ async function registerOrKeep(
  * while the mode is `s3`; a connected cloud while it is `cloud`. After a disconnect the documents it holds still name it: the store answers
  * `STORAGE_DISCONNECTED` to a read instead of pretending nothing is there, and a delete is a no-op (the file is in their cloud, not ours).
  */
-export async function ownS3Store(q: Query, owner: string, own: OwnProviders | null): Promise<DocumentStore | null> {
+export async function ownS3Store(q: Query, owner: string, own: OwnProviders | null): Promise<DocumentFileStore | null> {
   const [row] = await q<Row>(`SELECT ${COLUMNS} FROM storage_settings WHERE owner_id = $1`, [owner]);
   if (!row) {
     return null;
@@ -192,8 +192,8 @@ export async function storeForOwner(
   q: Query,
   owner: string,
   own: OwnProviders | null,
-  krizaka: DocumentStore,
-): Promise<{ store: DocumentStore; settings: StorageChoice }> {
+  krizaka: DocumentFileStore,
+): Promise<{ store: DocumentFileStore; settings: StorageChoice }> {
   const settings = await loadSettings(q, owner);
   if (settings.mode === STORAGE_MODE.none) {
     return { store: noneStore(), settings };

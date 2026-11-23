@@ -13,7 +13,7 @@ import { query } from "@/lib/db";
 import { env } from "@/lib/env";
 import { logError } from "@/lib/log";
 import { migrateOwnS3, type OwnProviders } from "@/lib/storage/own-providers";
-import type { DocumentStore } from "@/lib/storage/port";
+import type { DocumentFileStore } from "@/lib/storage/port";
 import type { MoveDeps } from "@/lib/storage/provider-move";
 import { bootstrapStorage, DATA_KIND, documentsStoreOver, ORG_SCOPE, vaultFrom } from "@/lib/storage/providers";
 
@@ -84,7 +84,7 @@ export const resetProviders = () => {
 };
 
 /** The default store for a kind of data, or null (no vault key, no provider, or one that cannot be opened). */
-export async function defaultStore(dataKind: string = DATA_KIND.documents): Promise<DocumentStore | null> {
+export async function defaultStore(dataKind: string = DATA_KIND.documents): Promise<DocumentFileStore | null> {
   const p = providers();
   return p ? ((await documentsStoreOver(p.service, p.store, dataKind))?.store ?? null) : null;
 }

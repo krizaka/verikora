@@ -4,15 +4,15 @@ Expo (SDK 58, Expo Router) on the Krizaka native kit (`@krizaka/ui/native`) in V
 The same account and the same API as the web; the logic every Krizaka Expo app shares (session, discovery, API client, the auth context `createAuth`) is
 [`@krizaka/app-client`](https://ui.krizaka.com/packages/app-client) (ADR-004).
 
-| Screen | URL (the web's path, under the language) |
-| :-- | :-- |
-| Check a document: camera scan, photo or PDF, the pre-flight, the Sovkora run | `/fr/app/check` |
+| Screen                                                                                     | URL (the web's path, under the language)                        |
+| :----------------------------------------------------------------------------------------- | :-------------------------------------------------------------- |
+| Check a document: camera scan, photo or PDF, the pre-flight, the Sovkora run               | `/fr/app/check`                                                 |
 | A document and its checks, the result with its plain-language closing note, the signed PDF | `/fr/app/documents/<id>/infos` · `/verifications?analysis=<id>` |
-| The library: collections, tags | `/fr/app/library` · `/<library>/<collection>?tags=a,b` |
-| Settings | `/fr/app/settings` |
+| The library: collections, tags                                                             | `/fr/app/library` · `/<library>/<collection>?tags=a,b`          |
+| Settings                                                                                   | `/fr/app/settings`                                              |
 
 **Documents stay on the device** (ADR-0007): the picked file is kept in the app's sandbox (`src/data/device-store.ts`, the
-`DocumentStore` port); only what a check needs goes to the server, which purges it.
+`DocumentFileStore` port); only what a check needs goes to the server, which purges it.
 
 ```bash
 pnpm install            # at the repository root
@@ -27,7 +27,7 @@ pnpm exec expo start    # a development build; EXPO_PUBLIC_APP_URL points it at 
 `APP_ANDROID_CERT_SHA256`, the signing certificate's fingerprint) — and answers 404 until what signs the app is known. `pnpm check:app-links`
 (at the root) checks that `app.json` and those files say the same thing.
 
-**The store** is a `DocumentStore` like the web's and the Mac's (`src/data/device-store.ts`): it passes the shared contract
+**The store** is a `DocumentFileStore` like the web's and the Mac's (`src/data/device-store.ts`): it passes the shared contract
 (`@verikora/core/document-store/contract-kit`, run here by Jest).
 
 Not in this app yet, tracked in krizaka/verikora#155: the update and maintenance gates, push, the Android build in CI.

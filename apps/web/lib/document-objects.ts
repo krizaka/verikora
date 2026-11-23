@@ -1,4 +1,4 @@
-import type { DocumentStore } from "./storage/port";
+import type { DocumentFileStore } from "./storage/port";
 
 /** A row that may have a file in a store: who owns it, where it lives, under which key (ADR-0012). */
 export interface HeldObject {
@@ -9,7 +9,7 @@ export interface HeldObject {
 }
 
 /** Finds the store that holds a document's file (Krizaka's working store, or the owner's own cloud); null when it is not available. */
-export type ObjectHolder = (row: HeldObject) => Promise<DocumentStore | null>;
+export type ObjectHolder = (row: HeldObject) => Promise<DocumentFileStore | null>;
 
 /** The holder of callers that give none: no store is available, so a stored file is never purged half way. */
 export const noHolder: ObjectHolder = async () => null;

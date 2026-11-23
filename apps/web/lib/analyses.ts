@@ -41,7 +41,7 @@ import { withTenantShield } from "./rules/tenant-shield-report";
 import { LAW_TIME_ZONE } from "./rulesets";
 import { appSettings } from "./settings/instance";
 import { sovkora } from "./sovkora";
-import type { DocumentStore } from "./storage/port";
+import type { DocumentFileStore } from "./storage/port";
 
 /**
  * An analysis is an Sovkora run. Starting one sends the document to the Studio that does the job — the compliance
@@ -142,7 +142,7 @@ export async function startAnalysis(
   request: StartAnalysis,
   flowVersionId: string | null = null,
   billedVia: string | null = null,
-  store?: DocumentStore,
+  store?: DocumentFileStore,
 ): Promise<Analysis> {
   if (!isUuid(documentId)) {
     throw refuse(404, "NOT_FOUND", "No such document");

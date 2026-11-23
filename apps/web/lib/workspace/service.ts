@@ -16,7 +16,7 @@ import { transaction } from "../db";
 import { removeObject } from "../document-objects";
 import { refuse } from "../http";
 import { EXTERNAL, HOLDS_BYTES, legacyObjectKey } from "../retention";
-import type { DocumentStore } from "../storage/port";
+import type { DocumentFileStore } from "../storage/port";
 import { KIND, KINDS, OWNER_ROLE, WORKSPACE } from "./decl";
 import { DEFAULT_CONFIGS } from "./defaults";
 
@@ -36,7 +36,7 @@ export const actorOf = (account: { id: string; email: string }): Actor => ({
 export interface WorkspaceOptions {
   clock: Clock;
   /** Where the kept files live (the account's store): needed to purge them when a decision closes a file. */
-  store?: DocumentStore;
+  store?: DocumentFileStore;
   /** The request's headers, for the audit lines' address. */
   headers?: Headers;
   /** Where the layer's events go in the decision's transaction (the webhooks, when the account has them). */

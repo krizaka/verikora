@@ -7,10 +7,10 @@ import { ledgerState } from "../billing";
 import type { ObjectHolder } from "../document-objects";
 import { refuse } from "../http";
 import { EXTERNAL, legacyObjectKey } from "../retention";
-import type { DocumentStore } from "../storage/port";
+import type { DocumentFileStore } from "../storage/port";
 
 /** The store that holds a document: Krizaka's configured one, or the owner's own cloud. */
-export type StoresOf = (owner: CloudOwner) => DocumentStore | null;
+export type StoresOf = (owner: CloudOwner) => DocumentFileStore | null;
 
 /** The holder of a stored file (ADR-0012): the given stores for a kept document, the working store for the rest. */
 export const holderFrom =

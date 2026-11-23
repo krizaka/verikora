@@ -495,7 +495,7 @@ export type DocumentInsight = z.infer<typeof documentInsight>;
 /** The values of a closed set, as the non-empty tuple `z.enum` wants. */
 const valuesOf = <T extends Record<string, string>>(set: T) => Object.values(set) as [T[keyof T], ...T[keyof T][]];
 
-/** Where a document lives: the DocumentStore adapters, the database (the home of a document kept with Krizaka) and the person's device. */
+/** Where a document lives: the DocumentFileStore adapters, the database (the home of a document kept with Krizaka) and the person's device. */
 export const STORAGE_KIND = {
   none: "none",
   database: "database",
@@ -529,7 +529,7 @@ export const STORAGE_MODE = { none: "none", krizaka: "krizaka", s3: "s3", cloud:
 export type StorageMode = (typeof STORAGE_MODE)[keyof typeof STORAGE_MODE];
 export const STORAGE_MODES = valuesOf(STORAGE_MODE);
 
-/** Where a document lives (the DocumentStore adapter that holds it), as the info panel says it (apps/web/lib/storage). */
+/** Where a document lives (the DocumentFileStore adapter that holds it), as the info panel says it (apps/web/lib/storage). */
 export const storageDescriptor = z.object({
   kind: z.enum(valuesOf(STORAGE_KIND)),
   endpoint: z.string().nullable(),

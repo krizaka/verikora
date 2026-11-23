@@ -1,6 +1,6 @@
 import {
   assertDocumentKey,
-  type DocumentStore,
+  type DocumentFileStore,
   DocumentStoreError,
   type DocumentStoreDescriptor,
 } from "@verikora/core";
@@ -32,10 +32,10 @@ const asStorageError = (error: unknown): never => {
 };
 
 /**
- * The Mac's DocumentStore (ADR-0007, verikora#154): the documents Verikora keeps for the person on this Mac, in the app's own
+ * The Mac's DocumentFileStore (ADR-0007, verikora#154): the documents Verikora keeps for the person on this Mac, in the app's own
  * folder. Keys are checked here (the port's rule) and again in Rust, which also refuses a link planted in the folder.
  */
-export function createMacStore(invoke: StoreInvoke): DocumentStore {
+export function createMacStore(invoke: StoreInvoke): DocumentFileStore {
   return {
     async put(key, bytes, meta) {
       await invoke("store_put", {

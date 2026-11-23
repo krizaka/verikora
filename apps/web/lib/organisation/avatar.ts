@@ -1,7 +1,7 @@
 import { type Avatar, storedAvatarKey } from "@krizaka/organize";
 import { AVATAR_KIND, type CollectionAvatar } from "@verikora/core";
 
-import type { DocumentStore } from "../storage/port";
+import type { DocumentFileStore } from "../storage/port";
 import { guard, legacyAvatarKey, organizeOver } from "./organize";
 import type { Query } from "./store";
 
@@ -24,7 +24,7 @@ export const avatarKeys = (owner: string, id: string, version: number) => [
 
 /** Deletes a stored image under both formats (when its collection goes). */
 export const forgetAvatarImage = async (
-  store: DocumentStore | undefined,
+  store: DocumentFileStore | undefined,
   owner: string,
   id: string,
   avatar: CollectionAvatar | null,
@@ -33,7 +33,7 @@ export const forgetAvatarImage = async (
   for (const key of avatarKeys(owner, id, avatar.version)) await store.delete(key).catch(() => undefined);
 };
 
-const withStore = (q: Query, store: DocumentStore | undefined, maxBytes = 0, size = 256) =>
+const withStore = (q: Query, store: DocumentFileStore | undefined, maxBytes = 0, size = 256) =>
   organizeOver(q, store ? { store } : undefined, maxBytes, size);
 
 /** An avatar from the set, or none (`null`). A seed outside the allowed set is refused; a stored image it replaces is deleted. */
@@ -43,7 +43,7 @@ export const setSetAvatar = (
   id: string,
   seed: string | null,
   allowed: readonly string[],
-  store?: DocumentStore,
+  store?: DocumentFileStore,
 ): Promise<void> => guard(() => withStore(q, store).collections.setAvatar(owner, id, seed, { allowedSeeds: allowed }));
 
 export const uploadAvatar = (
@@ -51,7 +51,7 @@ export const uploadAvatar = (
   owner: string,
   id: string,
   file: { name: string; type: string; bytes: Uint8Array },
-  deps: AvatarPolicy & { store: DocumentStore },
+  deps: AvatarPolicy & { store: DocumentFileStore },
 ): Promise<CollectionAvatar> =>
   guard(
     () =>
@@ -61,9 +61,9 @@ export const uploadAvatar = (
   ) as Promise<CollectionAvatar>;
 
 /** The image of an image avatar (null for a set avatar or none). */
-export const readAvatar = (q: Query, owner: string, id: string, store: DocumentStore) =>
+export const readAvatar = (q: Query, owner: string, id: string, store: DocumentFileStore) =>
   guard(() => withStore(q, store).collections.readAvatar(owner, id));
 
 /** Back to no avatar; a stored image is deleted. */
-export const removeAvatar = (q: Query, owner: string, id: string, store?: DocumentStore): Promise<void> =>
+export const removeAvatar = (q: Query, owner: string, id: string, store?: DocumentFileStore): Promise<void> =>
   guard(() => withStore(q, store).collections.removeAvatar(owner, id));

@@ -18,11 +18,14 @@ import { APP_VERSION, contactHref, LICENSE_URL, pagePath, REPO_URL } from "@/lib
  */
 export function ProductFooter({ locale }: Readonly<{ locale: Locale }>) {
   const t = translator(locale);
+  // The family's status words are never drawn in product mode, but they travel in the page payload: « soon » is no offer (export guard).
+  const words = orgFamilyLabels(org, locale);
+  const footerLabels = { ...words, status: { ...words.status, upcoming: t("chrome.footerPlanned") } };
   return (
     <FamilyFooter
       current={BRAND_ID}
       family={false}
-      labels={orgFamilyLabels(org, locale)}
+      labels={footerLabels}
       org={org}
       legal={
         <>

@@ -4,7 +4,7 @@ import { query } from "./db";
 import { DELETION_RULE, HELD_COLUMNS, type HeldRow, recordDeletionReceipt } from "./deletion-receipt";
 import { deleteDocument, isUuid } from "./documents";
 import { refuse } from "./http";
-import type { DocumentStore } from "./storage/port";
+import type { DocumentFileStore } from "./storage/port";
 
 /*
  * The applicant's consent (verikora#131, Loi 25). The subject is the APPLICATION (a screening row, one per applicant and
@@ -164,7 +164,7 @@ export async function attachToApplication(
   ownerId: string,
   documentId: string,
   screeningId: string,
-  store?: DocumentStore,
+  store?: DocumentFileStore,
 ): Promise<void> {
   await query("UPDATE documents SET screening_id = $3 WHERE id = $1 AND owner_id = $2", [
     documentId,
@@ -193,7 +193,7 @@ export async function assertAnalysisAllowed(screeningId: string | null): Promise
 export async function eraseApplication(
   screeningId: string,
   ownerId: string,
-  store: DocumentStore | undefined,
+  store: DocumentFileStore | undefined,
   now: Date,
   headers?: Headers,
 ): Promise<{ documents: number }> {

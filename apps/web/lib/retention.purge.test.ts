@@ -1,4 +1,4 @@
-import type { DocumentStore } from "@verikora/core";
+import type { DocumentFileStore } from "@verikora/core";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import type { HeldRow } from "./deletion-receipt";
@@ -71,7 +71,7 @@ function sweep(candidates: Row[]) {
   });
 }
 
-const storeThat = (deleted: string[], failing = false): DocumentStore =>
+const storeThat = (deleted: string[], failing = false): DocumentFileStore =>
   ({
     delete: async (key: string) => {
       if (failing) {
@@ -79,7 +79,7 @@ const storeThat = (deleted: string[], failing = false): DocumentStore =>
       }
       deleted.push(key);
     },
-  }) as unknown as DocumentStore;
+  }) as unknown as DocumentFileStore;
 
 beforeEach(() => {
   audits.length = 0;

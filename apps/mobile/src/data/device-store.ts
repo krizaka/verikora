@@ -1,6 +1,6 @@
 import {
   assertDocumentKey,
-  type DocumentStore,
+  type DocumentFileStore,
   type DocumentStoreDescriptor,
   isId,
   STORAGE_KIND,
@@ -39,12 +39,12 @@ const DESCRIPTOR: DocumentStoreDescriptor = {
 };
 
 /**
- * The `DocumentStore` port of ADR-0007 for the phone (verikora#155): objects live in the app's sandbox and nowhere else — the
+ * The `DocumentFileStore` port of ADR-0007 for the phone (verikora#155): objects live in the app's sandbox and nowhere else — the
  * files leave the device only for the one check that needs them, which the server purges. A key is one file whose name is the
  * key, percent-encoded, then `@` and the content type (`@` is never in an encoded name, so a key and a longer key stay two files).
  * It passes `documentStoreContract` like every adapter.
  */
-export interface PhoneStore extends DocumentStore {
+export interface PhoneStore extends DocumentFileStore {
   /** Copies a picked file in under a key, without reading it into memory. */
   copyIn(key: string, sourceUri: string, contentType: string): void;
   /** Where the file of a key is (to share or open it), or null. */

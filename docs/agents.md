@@ -195,7 +195,7 @@ These are the defects code review found most often on 2026-10-23. Check them you
 
 ## Storage (ADR-010)
 
-Kept documents go through `@krizaka/storage` (`apps/web/lib/storage/adapter.ts` wraps its `ObjectStore` as the `DocumentStore` port of `@verikora/core`). Keys and signed-link shapes never change (`krizaka-storage.test.ts` proves it on an existing key). The admin picks the provider in the `storage.*` settings; encryption at rest, the vault and the region table (`regions.ts`, `where.ts`) stay here until the package ships them. No local SigV4, Bunny or endpoint copy: change the package.
+Kept documents go through `@krizaka/storage` (`apps/web/lib/storage/adapter.ts` wraps its `ObjectStore` as the `DocumentFileStore` port of `@verikora/core`). Keys and signed-link shapes never change (`krizaka-storage.test.ts` proves it on an existing key). The admin picks the provider in the `storage.*` settings; encryption at rest, the vault and the region table (`regions.ts`, `where.ts`) stay here until the package ships them. No local SigV4, Bunny or endpoint copy: change the package.
 
 ## 9. Anti-slop (ADR-015)
 

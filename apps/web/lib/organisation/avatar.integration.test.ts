@@ -4,7 +4,7 @@ import { beforeAll, describe, expect, it } from "vitest";
 import { migrate, query } from "../db";
 import { photoOfPage } from "../images/fixtures";
 import { memoryStore } from "../storage/memory";
-import type { DocumentStore } from "../storage/port";
+import type { DocumentFileStore } from "../storage/port";
 import { readAvatar, removeAvatar, setSetAvatar, uploadAvatar } from "./avatar";
 import { legacyAvatarKey } from "./organize";
 
@@ -134,7 +134,7 @@ describe.runIf(enabled)("a collection's avatar", () => {
     await expect(setSetAvatar(query, stranger, id, "person", RULES.allowedSeeds)).rejects.toMatchObject({
       status: 404,
     });
-    const broken: DocumentStore = { ...memory(), put: async () => Promise.reject(new Error("down")) };
+    const broken: DocumentFileStore = { ...memory(), put: async () => Promise.reject(new Error("down")) };
     await expect(uploadAvatar(query, owner, id, await photo(), { ...RULES, store: broken })).rejects.toMatchObject({
       body: { code: "AVATAR_STORAGE_UNAVAILABLE" },
     });

@@ -47,6 +47,9 @@ export function exportDirOf(arg, appDir) {
   return dir;
 }
 
+/** The only price the public pages show: the single file, in both languages (the catalogue's seed, `lib/prices/page.test.ts`). */
+export const SINGLE_FILE_PRICE = ["9,99 $", "$9.99"];
+
 /** The shared guard's bin, in the app's dependencies: run by this node, never looked up on the PATH. */
 export const GUARD_BIN = resolve(
   dirname(fileURLToPath(import.meta.url)),
@@ -60,7 +63,15 @@ export function guardArgs(dir, orgModule) {
   const status = orgModule.org.products.find((p) => p.id === "verikora")?.status;
   if (!status) throw new Error("verikora has no status in @krizaka/org");
   const codeNames = Object.keys(orgModule.CODE_NAMES).flatMap((name) => ["--code-name", name]);
-  return [`./${dir}`, "--product", "verikora", "--status", status, ...codeNames];
+  return [
+    `./${dir}`,
+    "--product",
+    "verikora",
+    "--status",
+    status,
+    ...SINGLE_FILE_PRICE.flatMap((a) => ["--allow-amount", a]),
+    ...codeNames,
+  ];
 }
 
 if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {

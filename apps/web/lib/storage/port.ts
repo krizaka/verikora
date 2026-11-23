@@ -1,7 +1,7 @@
-/** The DocumentStore port (ADR-0007) is `@verikora/core`'s, shared with the Mac and the phone. */
+/** The DocumentFileStore port (ADR-0007) is `@verikora/core`'s, shared with the Mac and the phone. */
 export {
   assertDocumentKey,
-  type DocumentStore,
+  type DocumentFileStore,
   type DocumentStoreDescriptor,
   DocumentStoreError,
   type StoredObject,
