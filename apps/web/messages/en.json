@@ -3813,11 +3813,11 @@
       "items": {
         "web-binder": {
           "name": "On the web: the binder",
-          "body": "Sign in, then the binder: your collections and the checks to look at, then a collection and its documents."
+          "body": "A fictitious manager's binder: their files and the documents to look at, then one building and the state of each of its leases."
         },
         "web-report": {
           "name": "On the web: the report",
-          "body": "A document of the library and its report: every finding cites the line it rests on."
+          "body": "A lease from the library and its report: the result first, then the rules checked, each with its state."
         },
         "android-documents": {
           "name": "On Android: the app",
@@ -4433,11 +4433,19 @@
     "account": "Account",
     "settings": "Settings",
     "signOut": "Sign out",
-    "docs": "Documentation"
+    "docs": "Documentation",
+    "footerColumns": {
+      "code": "Public code",
+      "publisher": "Krizaka",
+      "publisherSite": "Who publishes Verikora"
+    },
+    "media": {
+      "recorded": "Recorded by our automated tests, on fictitious demo data, in the development build. No sound."
+    }
   },
   "landing": {
     "title": "Check the file before you offer the unit.",
-    "lead": "For property managers in Québec. Verikora reads the documents an applicant sends and your lease template, and ties every finding to its line and its article of law.",
+    "lead": "For property managers in Québec. Verikora reads the documents in a rental file and your lease template, and ties every finding to its line and its article of law. It sorts; the decision stays yours.",
     "status": {
       "label": "Status",
       "development": "In development: sign-up is closed while we test it on real Québec leases."
@@ -4454,7 +4462,7 @@
       "items": {
         "documents": {
           "title": "The applicant's documents",
-          "text": "Pay stub, bank statement, ID: each document is read, and the PDF is examined as a file (producer, dates, successive saves). An edit is reported at three levels: observed, unusual, inconsistent."
+          "text": "Pay stub, bank statement, employment letter, ID: each document is read, and the PDF is examined as a file (the software that made it, dates, successive saves). An edit is reported at three levels: observed, unusual, inconsistent."
         },
         "template": {
           "title": "Your lease template",
@@ -4468,7 +4476,7 @@
     },
     "proof": {
       "title": "A real report",
-      "lead": "A sample lease, checked in development and recorded as it came back: the report below is the engine's answer, with each finding's rule, line and article of law. Nothing is typed by hand; the counts are read from the run.",
+      "lead": "A sample lease, checked in development and recorded as it came back: each finding gives its rule, its line and its article of law. Nothing is typed by hand; the counts are read from the run.",
       "runLabel": "Run id",
       "dateLabel": "Recorded",
       "rulesetLabel": "Québec rules",
@@ -4487,11 +4495,16 @@
       ]
     },
     "closing": {
-      "title": "This week's files, checked.",
+      "title": "This week's files? Let's try them together.",
       "tenant": "Asked for your documents through Verikora?"
     },
     "visual": {
       "caption": "A real check, recorded as it came back"
+    },
+    "limits": {
+      "title": "What Verikora does not do",
+      "lead": "Every rule cites its article of law. The Québec rules are still waiting for a lawyer's review, and the screen says so: it sorts, it does not give legal advice.",
+      "text": "When a document does not allow a conclusion, the report says so (“Insufficient evidence”) instead of guessing."
     }
   },
   "stage": {

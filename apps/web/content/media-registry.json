@@ -1,0 +1,19 @@
+{
+  "$comment": "Which media a page section shows, by ROLE (krizaka-internal#4634; fields of the asset registry of krizaka-internal#4482: location, owner, origin, uses). `id` is a recording's words id in content/app-videos.json (its flow without the language): the page asks for « the media of role R on page P » and gets every entry listed here, in the page's language. Adding an entry shows it, with no code change. Read by lib/section-media.ts.",
+  "media": [
+    {
+      "id": "web-binder",
+      "origin": "test",
+      "owner": "verikora",
+      "location": "content/app-videos.json",
+      "uses": [{ "page": "home", "role": "what" }]
+    },
+    {
+      "id": "web-report",
+      "origin": "test",
+      "owner": "verikora",
+      "location": "content/app-videos.json",
+      "uses": [{ "page": "docs", "role": "lead" }]
+    }
+  ]
+}

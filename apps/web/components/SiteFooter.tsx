@@ -8,6 +8,7 @@ import { publicBuild } from "@/lib/build-target";
 import { type Locale, translator } from "@/lib/i18n";
 import { indexable } from "@/lib/indexing";
 import { isListed } from "@/lib/listed";
+import { publicFooter } from "@/lib/public-footer";
 import { APP_VERSION, contactHref, LICENSE_URL, pagePath, REPO_URL } from "@/lib/site";
 
 /**
@@ -17,6 +18,27 @@ import { APP_VERSION, contactHref, LICENSE_URL, pagePath, REPO_URL } from "@/lib
  * (`@krizaka/org`), never typed here. « Support » is Krizaka's contact form (kind + product in the link), never an address.
  */
 export function ProductFooter({ locale }: Readonly<{ locale: Locale }>) {
+  return publicBuild ? <PublicFooter locale={locale} /> : <AppFooter locale={locale} />;
+}
+
+/**
+ * The public export's footer (krizaka-internal#4634): the same SiteFooter, drawn from its data (`content/public-footer.json`):
+ * grouped columns of the pages the export holds, then one legal line (the publisher's legal identity), no version.
+ */
+export function PublicFooter({ locale }: Readonly<{ locale: Locale }>) {
+  return (
+    <FamilyFooter
+      current={BRAND_ID}
+      family={false}
+      org={org}
+      config={publicFooter(locale)}
+      aria-label={translator(locale)("chrome.footerLabel")}
+    />
+  );
+}
+
+/** The dev app's footer: every page it serves, its source and contact, the version and the environment. */
+function AppFooter({ locale }: Readonly<{ locale: Locale }>) {
   const t = translator(locale);
   // The family's status words are never drawn in product mode, but they travel in the page payload: « soon » is no offer (export guard).
   const words = orgFamilyLabels(org, locale);
