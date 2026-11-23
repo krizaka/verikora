@@ -13,4 +13,4 @@ jobs:
     permissions:
       contents: read
       issues: write # this job comments on or opens issues
-    uses: krizaka/.github/.github/workflows/feature-surfaces.yml@765d08535145b800cb9db2dbb118588c764313da # main
+    uses: krizaka/.github/.github/workflows/feature-surfaces.yml@84a22e72359caf315d8bf346f4a31cdb22f25997 # main
