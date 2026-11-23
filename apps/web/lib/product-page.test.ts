@@ -102,3 +102,10 @@ describe("product page story and micro-demo (krizaka-internal#4692, iteration 2)
     }
   });
 });
+
+describe("the story does not widen the page (check:overflow, krizaka-internal#4634)", () => {
+  it("clips the story's tilted file sideways, without a scroll container", () => {
+    const css = readFileSync(join(__dirname, "..", "app", "globals.css"), "utf8");
+    expect(css).toMatch(/\.kz-story\s*\{[^}]*overflow-x:\s*clip/);
+  });
+});
