@@ -52,7 +52,7 @@
     ]
   },
   "docs": {
-    "lead": "Comment fonctionne une vérification, et ce que ce site fait de vos données.",
+    "lead": "Comment une vérification se déroule, ce que cite chaque constat, et ce que ce site fait de vos données. Ce site ne reçoit aucun document : les exemples sont enregistrés.",
     "check": {
       "guaranteesLead": "Un rapport est signé, et se vérifie avec la clé de signature :"
     },
@@ -62,5 +62,8 @@
       "sovkora": "Rien n'est vendu, partagé ni utilisé pour entraîner un modèle.",
       "privacy": "Lire l'avis de confidentialité"
     }
+  },
+  "pricing": {
+    "lead": "Le prix d'un dossier vérifié, lu dans notre catalogue. Rien n'est vendu tant que les inscriptions sont fermées ; les prix sont en CAD, et la TPS et la TVQ s'ajoutent."
   }
 }

@@ -52,7 +52,7 @@
     ]
   },
   "docs": {
-    "lead": "How a check works, and what this site does with your data.",
+    "lead": "How a check runs, what each finding cites, and what this site does with your data. This site receives no document: the examples are recorded.",
     "check": {
       "guaranteesLead": "A report is signed, and can be checked against the signing key:"
     },
@@ -62,5 +62,8 @@
       "sovkora": "Nothing is sold, shared or used to train a model.",
       "privacy": "Read the privacy notice"
     }
+  },
+  "pricing": {
+    "lead": "The price of one checked file, read from our catalogue. Nothing is sold while sign-up is closed; prices are in CAD, with GST and QST added."
   }
 }

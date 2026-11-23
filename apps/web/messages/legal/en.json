@@ -162,11 +162,11 @@
       "items": {
         "web-binder": {
           "name": "On the web: the binder",
-          "body": "Sign in, then the binder: your collections and the checks to look at, then a collection and its documents."
+          "body": "A fictitious manager's binder: their files and the documents to look at, then one building and the state of each of its leases."
         },
         "web-report": {
           "name": "On the web: the report",
-          "body": "A document of the library and its report: every finding cites the line it rests on."
+          "body": "A lease from the library and its report: the result first, then the rules checked, each with its state."
         },
         "android-documents": {
           "name": "On Android: the app",

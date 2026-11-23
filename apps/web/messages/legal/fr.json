@@ -162,11 +162,11 @@
       "items": {
         "web-binder": {
           "name": "Sur le web : le classeur",
-          "body": "Connexion, puis le classeur : vos collections et les vérifications à regarder, puis une collection et ses documents."
+          "body": "Le classeur d'un gestionnaire fictif : ses dossiers et les pièces à regarder, puis un immeuble et l'état de chacun de ses baux."
         },
         "web-report": {
           "name": "Sur le web : le rapport",
-          "body": "Un document de la bibliothèque et son rapport : chaque constat cite la ligne sur laquelle il repose."
+          "body": "Un bail de la bibliothèque et son rapport : le résultat d'abord, puis les règles vérifiées, chacune avec son état."
         },
         "android-documents": {
           "name": "Sur Android : l’application",

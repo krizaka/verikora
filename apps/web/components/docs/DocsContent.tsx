@@ -2,6 +2,7 @@ import { DocsArticlePage } from "@krizaka/ui/docs-article-page";
 import { DocsNav } from "@krizaka/ui/docs-nav";
 import Link from "next/link";
 
+import { SectionMedia } from "@/components/media/SectionMedia";
 import { docsSections } from "@/lib/docs";
 import { getDictionary, type Locale } from "@/lib/i18n";
 import { pagePath } from "@/lib/site";
@@ -46,6 +47,8 @@ export function DocsContent({ locale }: Readonly<{ locale: Locale }>) {
       lead={d.lead}
       toc={{ label: d.tocLabel, items: sections }}
     >
+      <SectionMedia page="docs" role="lead" locale={locale} />
+
       <CheckSection locale={locale} />
 
       {sections.some((section) => section.id === "api") ? <ApiSection locale={locale} /> : null}

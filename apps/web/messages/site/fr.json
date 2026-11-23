@@ -36,11 +36,19 @@
     "account": "Compte",
     "settings": "Réglages",
     "signOut": "Se déconnecter",
-    "docs": "Documentation"
+    "docs": "Documentation",
+    "footerColumns": {
+      "code": "Code public",
+      "publisher": "Krizaka",
+      "publisherSite": "Qui publie Verikora"
+    },
+    "media": {
+      "recorded": "Enregistré par nos tests automatiques, sur des données de démonstration fictives, dans la version en développement. Sans son."
+    }
   },
   "landing": {
     "title": "Vérifiez le dossier avant d'offrir le logement.",
-    "lead": "Pour les gestionnaires d'immeubles au Québec. Verikora lit les pièces envoyées par le candidat et votre modèle de bail, et relie chaque constat à sa ligne et à son article de loi.",
+    "lead": "Pour les gestionnaires d'immeubles au Québec. Verikora lit les pièces d'un dossier de location et votre modèle de bail, et relie chaque constat à sa ligne et à son article de loi. Il trie ; la décision reste la vôtre.",
     "status": {
       "label": "Statut",
       "development": "En développement : les inscriptions sont fermées pendant nos essais sur de vrais baux québécois."
@@ -57,7 +65,7 @@
       "items": {
         "documents": {
           "title": "Les pièces du candidat",
-          "text": "Talon de paie, relevé bancaire, pièce d'identité : chaque pièce est lue, et le PDF est examiné comme un fichier (producteur, dates, enregistrements successifs). Une modification est signalée sur trois niveaux : observée, inhabituelle, incohérente."
+          "text": "Talon de paie, relevé bancaire, lettre d'emploi, pièce d'identité : chaque pièce est lue, et le fichier PDF est examiné en tant que fichier (logiciel d'origine, dates, enregistrements successifs). Une modification est signalée sur trois niveaux : observée, inhabituelle, incohérente."
         },
         "template": {
           "title": "Votre modèle de bail",
@@ -71,7 +79,7 @@
     },
     "proof": {
       "title": "Un vrai rapport",
-      "lead": "Un bail d'exemple, vérifié en développement et enregistré tel qu'il est revenu : le rapport ci-dessous est la réponse du moteur, avec la règle, la ligne et l'article de loi de chaque constat. Rien n'est tapé à la main ; les nombres sont lus dans l'exécution.",
+      "lead": "Un bail d'exemple, vérifié en développement et enregistré tel qu'il est revenu : chaque constat donne sa règle, sa ligne et son article de loi. Rien n'est tapé à la main ; les nombres sont lus dans l'exécution.",
       "runLabel": "Numéro d'exécution",
       "dateLabel": "Enregistrée le",
       "rulesetLabel": "Règles du Québec",
@@ -90,11 +98,16 @@
       ]
     },
     "closing": {
-      "title": "Vos dossiers de cette semaine, vérifiés.",
+      "title": "Les dossiers de votre semaine ? Essayons-les ensemble.",
       "tenant": "On vous a demandé vos pièces par Verikora ?"
     },
     "visual": {
       "caption": "Une vraie vérification, enregistrée telle qu'elle est revenue"
+    },
+    "limits": {
+      "title": "Ce que Verikora ne fait pas",
+      "lead": "Chaque règle cite son article de loi. Les règles québécoises attendent encore la relecture d'un avocat, et l'écran le dit : il trie, il ne donne pas d'avis juridique.",
+      "text": "Quand un document ne permet pas de conclure, le rapport le dit (« Éléments insuffisants ») au lieu de deviner."
     }
   },
   "stage": {

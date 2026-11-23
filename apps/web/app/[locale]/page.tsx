@@ -8,6 +8,7 @@ import type { Metadata } from "next";
 import { BarQueryRoot } from "@/components/BarSession";
 import { HeroFinding } from "@/components/home/HeroFinding";
 import { RealReport } from "@/components/home/RealReport";
+import { SectionMedia } from "@/components/media/SectionMedia";
 import { SiteHeader } from "@/components/SiteChrome";
 import { ProductFooter } from "@/components/SiteFooter";
 import { HERO } from "@/content/recorded-runs/samples.mjs";
@@ -93,6 +94,10 @@ export default async function Home({ params }: Readonly<{ params: Promise<{ loca
               };
             })}
           >
+            {/* The media of the « what » section, by role (content/media-registry.json): a recording of our tests, never a typed file. */}
+            <Section spacing="sm">
+              <SectionMedia page="home" role="what" locale={locale} />
+            </Section>
             <Section id="proof" title={d.proof.title} lead={d.proof.lead} spacing="sm" divider>
               <div data-testid="real-report">
                 <RealReport
@@ -128,6 +133,11 @@ export default async function Home({ params }: Readonly<{ params: Promise<{ loca
                   </p>
                 </div>
               </details>
+            </Section>
+            <Section id="limits" title={d.limits.title} lead={d.limits.lead} spacing="sm" divider>
+              <p className="m-0 max-w-[70ch] text-fg-secondary" data-testid="limits">
+                {d.limits.text}
+              </p>
             </Section>
             <Section id="applicant" title={d.applicant.title} lead={d.applicant.lead} spacing="sm" divider>
               <div className="flex flex-wrap items-start gap-4" data-testid="applicant-agrees">
