@@ -60,7 +60,7 @@ const banner = (what) => [
   "",
 ];
 
-function lease(rng, flaw) {
+function lease(rng, flaw, audience = "tenant") {
   const landlord = person(rng);
   const tenant = person(rng);
   const rent = rng.int(9, 19) * 100 + rng.pick([0, 25, 50]);
@@ -107,7 +107,11 @@ function lease(rng, flaw) {
       title: "Clause illégale",
       severity: "BLOCKING",
       explanation:
-        "Interdire les enfants, exiger un dépôt de sécurité et des chèques postdatés sont des clauses que le Code civil du Québec interdit (art. 1899 et 1904).",
+        "Interdire les enfants, exiger un dépôt de sécurité et des chèques postdatés sont des clauses que le Code civil du Québec interdit (art. 1899 et 1904)." +
+        // Seen from the landlord's side (the landlord demo): what the clause costs the person who wrote it.
+        (audience === "landlord"
+          ? " Pour le locateur : ces clauses sont sans effet et exposent le bail à une contestation devant le Tribunal administratif du logement ; à valider par un avocat."
+          : ""),
       present: [clauseA, "dépôt de sécurité", "chèques postdatés"],
     });
   }
@@ -333,6 +337,15 @@ export const SPECS = [
     flaw: "illegal-clause",
     title: "Bail — Rosemont, logement 5 (clause illégale)",
   },
+  // The sample lease of the landlord demo (verikora#4785): read from the landlord's side, in a persona that holds no candidate data.
+  {
+    id: "bail-demo-proprietaire",
+    family: "lease",
+    kind: "lease",
+    flaw: "illegal-clause",
+    audience: "landlord",
+    title: "Bail de démonstration — logement témoin (clause illégale)",
+  },
   {
     id: "contrat-entretien-rosemont",
     family: "contract",
@@ -395,7 +408,7 @@ export const SPECS = [
 ];
 
 const BUILDERS = {
-  lease: (rng, spec) => lease(rng, spec.flaw),
+  lease: (rng, spec) => lease(rng, spec.flaw, spec.audience),
   "pay-stub": (rng, spec) => payStub(rng, spec.flaw),
   "bank-statement": (rng, spec) => bankStatement(rng, spec.flaw),
   "employment-letter": (rng, spec) => employmentLetter(rng, spec.flaw),
@@ -408,6 +421,13 @@ export function buildDocument(spec, seed = DEFAULT_SEED) {
   const { lines, findings, facts } = BUILDERS[spec.family](seededRandom(hashSeed(`${seed}:${spec.id}`)), spec);
   return { ...spec, filename: `${spec.id}.pdf`, lines, findings, ...(facts ? { facts } : {}) };
 }
+
+/** The landlord demo (verikora#4785): one sample lease and its check, no candidate collection, no applicant file, never an administrator. */
+export const PERSONA_DEMO_LANDLORD = {
+  key: "demo-landlord",
+  collections: [{ key: "lease", documents: ["bail-demo-proprietaire"] }],
+  checked: ["bail-demo-proprietaire"],
+};
 
 /** The persona Éric (property manager): his display name, his collections and the documents each one holds. */
 export const PERSONA_ERIC = {

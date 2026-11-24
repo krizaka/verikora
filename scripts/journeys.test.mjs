@@ -4,12 +4,14 @@ import { readdirSync, readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 
 import { castOf } from "@krizaka/org";
+import { PERSONA_DEMO_LANDLORD } from "./demo-documents/index.mjs";
 import { assertNoRetries, budgetProblem, checkCatalogue, validateJourney } from "@krizaka/page-audit/journey";
 
 const DIR = new URL("../apps/web/e2e/journeys/", import.meta.url);
 const index = JSON.parse(readFileSync(new URL("journeys.json", DIR), "utf8"));
 const files = readdirSync(DIR);
-const cast = castOf("verikora").map((p) => p.id);
+// The cast, and the landlord demo persona (seeded next to it, never an administrator: scripts/demo-seed).
+const cast = [...castOf("verikora").map((p) => p.id), PERSONA_DEMO_LANDLORD.key];
 
 describe("the journey catalogue of Verikora", () => {
   it("has a row for every journey file and a file for every row", () => {

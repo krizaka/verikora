@@ -7,3 +7,11 @@ Everything here is fictitious: invented people, addresses (postal codes with a l
 - Admin settings are already filled by the registry's defaults (`lib/settings/registry.ts`).
 - A public copy on Bunny (`site/products/verikora/demo-documents/`) is uploaded by the CTO with krizaka-com's `cdn-assets upload`.
 - `pnpm run dev:seed` also adds the dev pilot code `PILOTDEV1`: a credit code with the purpose « Pilot », **1 free file** (a placeholder: the real number is the founder's, edited in the console), valid 30 days, falling back to paid credits after the file. It is never seeded on a production database.
+
+## The landlord demo (a demo given to a landlord, verikora#4785)
+
+- **Who**: the persona `demo-landlord` (« Démo propriétaire »): a member on the landlord side, **never an administrator**, outside the cast and its fingerprint. It holds one collection, « Bail de démonstration », with one sample lease (`bail-demo-proprietaire`, fictitious, one illegal clause) and its check read from the landlord's side, which cites the Civil Code of Québec (art. 1899 et 1904). It has no candidate collection, no candidate document and no applicant file.
+- **Seed**: `pnpm run demo:seed -- --persona demo-landlord` (dev and local only; `APP_DEMO_ACCOUNT_EMAIL` and `APP_DEMO_ACCOUNT_PASSWORD` name the account, default e-mail `demo-landlord@demo.verikora.test`). CI seeds it in `scripts/ci-visual-start.sh`.
+- **URL the founder opens**: `https://dev.verikora.com/fr/sign-in` (the dev deployment, French first), then the library `/fr/app/documents`. The credentials of the persona are the dev deployment's own (`APP_DEMO_ACCOUNT_*` of the seed run); TO VALIDATE by the CTO: the password set on dev for this account. Sign-ups stay closed.
+- **The 20 minutes**: library (one lease) → its report (the finding quotes the clause and cites the Civil Code) → the signed PDF.
+- **Fallback if the app is down**: the signed PDF of that report. The dry-run journey `landlord-demo` (`apps/web/e2e/journeys/landlord-demo.journey.mjs`) downloads it, checks its seal and keeps it as `demo-fallback-report-*.pdf` next to its screenshots (`test-results/journeys`, the CI artifact). A copy sealed by the dev deployment's own key is the one to take to the demo: download it from the report's menu (« Télécharger le PDF ») on the dev deployment the day before.
