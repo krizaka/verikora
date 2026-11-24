@@ -5,7 +5,7 @@ import { createHash } from "node:crypto";
 import { buildDocument, DEFAULT_SEED, SPECS } from "./catalogue.mjs";
 import { renderPdf } from "./render.mjs";
 
-export { AS_OF, DEFAULT_SEED, PERSONA_ERIC, SPECS } from "./catalogue.mjs";
+export { AS_OF, DEFAULT_SEED, PERSONA_DEMO_LANDLORD, PERSONA_ERIC, SPECS } from "./catalogue.mjs";
 export { WATERMARK } from "./render.mjs";
 
 /** One document: its PDF bytes, its text (what a check reads), the findings it is expected to give. */

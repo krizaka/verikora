@@ -7,7 +7,13 @@ import { mkdir, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 
-import { generateDocument, PERSONA_ERIC, AS_OF, DEFAULT_SEED } from "../demo-documents/index.mjs";
+import {
+  generateDocument,
+  PERSONA_DEMO_LANDLORD,
+  PERSONA_ERIC,
+  AS_OF,
+  DEFAULT_SEED,
+} from "../demo-documents/index.mjs";
 import { CAST_MEMBER, castAccounts, fingerprintOf } from "./cast.mjs";
 
 /** Where the app keeps the bytes of documents on a laptop, in CI and in tests when it has no store (apps/web/lib/storage/local.ts): the seed writes the same folder. */
@@ -24,8 +30,18 @@ const SIDE_LANDLORD = "landlord";
 /** The persona's name comes from the cast; this file adds what the cast does not hold: the collections and documents. */
 export const PERSONAS = {
   [CAST_MEMBER.id]: { ...PERSONA_ERIC, key: CAST_MEMBER.id, name: CAST_MEMBER.displayName, perspective: SIDE_LANDLORD },
+  // The landlord demo (verikora#4785): a member, never an administrator, with one sample lease and no applicant file. Not part of the cast.
+  [PERSONA_DEMO_LANDLORD.key]: {
+    ...PERSONA_DEMO_LANDLORD,
+    name: "Démo propriétaire",
+    perspective: SIDE_LANDLORD,
+    applicantFile: false,
+  },
 };
-export const DEFAULT_EMAILS = { [CAST_MEMBER.id]: `${CAST_MEMBER.id}@demo.verikora.test` };
+export const DEFAULT_EMAILS = {
+  [CAST_MEMBER.id]: `${CAST_MEMBER.id}@demo.verikora.test`,
+  [PERSONA_DEMO_LANDLORD.key]: `${PERSONA_DEMO_LANDLORD.key}@demo.verikora.test`,
+};
 /**
  * What the tenant-shield rules (Section G, payment clauses, verikora#104) give on the demo leases' figures, one list per document: the findings
  * as the app writes them, kept as data because the rules are TypeScript and the seed is not. Generated from the rules and guarded by
@@ -313,7 +329,7 @@ async function seedInTransaction(
     const [count] = await q("SELECT count(*)::int AS n FROM documents WHERE collection_id = $1", [row.id]);
     counts[name] = count.n;
   }
-  await seedOwnerFile(q, owner, persona, seed);
+  if (def.applicantFile !== false) await seedOwnerFile(q, owner, persona, seed);
   return { owner, email: address, name: account.name, collections: counts };
 }
 

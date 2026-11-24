@@ -1,5 +1,21 @@
 [
   {
+    "id": "landlord-demo",
+    "promise": "A landlord who asks for a demo sees Verikora read a sample lease from the landlord's side, with the Civil Code cited, and takes away the signed PDF report, with no candidate data on screen",
+    "persona": "demo-landlord",
+    "platforms": ["web"],
+    "steps": [
+      "sign in as the landlord demo persona",
+      "open the library: one sample lease, no candidate collection or document",
+      "open the report of the sample lease",
+      "read the landlord-side finding with its quoted passage and the Civil Code article",
+      "download the signed PDF report (the fallback if the app is down) and see its seal verified"
+    ],
+    "video": true,
+    "budgetSeconds": 60,
+    "tags": ["critical"]
+  },
+  {
     "id": "lease-report-section-g",
     "promise": "A tenant opens the report of a lease with no notice from the TAL and sees Section G, with its citation",
     "persona": "eric",

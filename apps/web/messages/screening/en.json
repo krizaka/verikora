@@ -435,6 +435,15 @@
           "description": "An empty folder for last year's documents."
         }
       }
+    },
+    "demo-landlord": {
+      "persona": "Landlord demo (fictitious data)",
+      "collections": {
+        "lease": {
+          "name": "Demonstration lease",
+          "description": "A sample, fictitious lease, read from the landlord's side — no real document and no candidate data."
+        }
+      }
     }
   }
 }

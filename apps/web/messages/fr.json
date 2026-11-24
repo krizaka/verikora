@@ -4394,6 +4394,15 @@
           "description": "Dossier vide, pour les documents de l'an dernier."
         }
       }
+    },
+    "demo-landlord": {
+      "persona": "Démo propriétaire (données fictives)",
+      "collections": {
+        "lease": {
+          "name": "Bail de démonstration",
+          "description": "Un bail type, fictif, lu du côté du locateur — aucun document réel ni aucune donnée de candidat."
+        }
+      }
     }
   },
   "meta": {

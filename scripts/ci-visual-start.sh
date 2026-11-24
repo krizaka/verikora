@@ -25,5 +25,7 @@ for _ in $(seq 1 90); do curl -sf http://localhost:3000/api/healthz >/dev/null &
 curl -sf http://localhost:3000/api/healthz >/dev/null
 # The migrations ran at the server's start; now the cast (Éric, Mira, Camille), idempotent.
 APP_DEMO_ACCOUNT_EMAIL=eric@demo.verikora.test APP_DEMO_ACCOUNT_PASSWORD=ci-only-demo-password-0123 node scripts/demo-seed/cli.mjs --cast --reset --check
+# The landlord demo persona (verikora#4785): one sample lease, no candidate data; not part of the cast fingerprint.
+APP_DEMO_ACCOUNT_EMAIL=demo-landlord@demo.verikora.test APP_DEMO_ACCOUNT_PASSWORD=ci-only-demo-password-0123 node scripts/demo-seed/cli.mjs --persona demo-landlord
 date -u +%Y-%m-%dT%H:%M:%SZ > .visual-now
 echo "ready: http://localhost:3000 (dev, the cast seeded)"
