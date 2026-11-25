@@ -6,6 +6,8 @@ region: tor
 alerts:
   - rule: DEPLOYMENT_FAILED
   - rule: DOMAIN_FAILED
+  # A failed nightly schema check (drift, or the database unreachable): DigitalOcean accepts this rule at the app scope only.
+  - rule: JOB_INVOCATION_FAILED
 domains:
   # The development address (krizaka-internal#2659): dev.verikora.com is the app; admin.verikora.com its console (same app, by host).
   # www.verikora.com and the apex are the public face, served by the production team (coming soon), never by this app.
@@ -134,3 +136,21 @@ jobs:
       - { key: DATABASE_URL, scope: RUN_TIME, type: SECRET, value: "__DATABASE_URL__" }
       - { key: DATABASE_CA_CERT, scope: RUN_TIME, type: SECRET, value: "__DATABASE_CA_CERT__" }
       - { key: MEDIA_VAULT_KEY, scope: RUN_TIME, type: SECRET, value: "__MEDIA_VAULT_KEY__" }
+# The nightly schema check (krizaka-internal#4881): the job runs inside the app the dev cluster's firewall trusts, so nothing depends on a machine's IP.
+# Prints « no drift » or the drifted tables and columns (lib/schema-expected.json), exits 1 on drift: the app-level JOB_INVOCATION_FAILED alert mails the owners.
+  - name: schema-drift
+    kind: SCHEDULED
+    schedule:
+      cron: "30 7 * * *"
+      time_zone: Etc/UTC
+    dockerfile_path: deploy/schema-drift/Dockerfile
+    source_dir: /
+    github:
+      repo: krizaka/verikora
+      branch: main
+      deploy_on_push: true
+    instance_count: 1
+    instance_size_slug: apps-s-1vcpu-0.5gb
+    envs:
+      - { key: DATABASE_URL, scope: RUN_TIME, type: SECRET, value: "__DATABASE_URL__" }
+      - { key: DATABASE_CA_CERT, scope: RUN_TIME, type: SECRET, value: "__DATABASE_CA_CERT__" }
