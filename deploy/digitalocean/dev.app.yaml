@@ -136,8 +136,8 @@ jobs:
       - { key: DATABASE_URL, scope: RUN_TIME, type: SECRET, value: "__DATABASE_URL__" }
       - { key: DATABASE_CA_CERT, scope: RUN_TIME, type: SECRET, value: "__DATABASE_CA_CERT__" }
       - { key: MEDIA_VAULT_KEY, scope: RUN_TIME, type: SECRET, value: "__MEDIA_VAULT_KEY__" }
-# The nightly schema check (krizaka-internal#4881): the job runs inside the app the dev cluster's firewall trusts, so nothing depends on a machine's IP.
-# Prints « no drift » or the drifted tables and columns (lib/schema-expected.json), exits 1 on drift: the app-level JOB_INVOCATION_FAILED alert mails the owners.
+  # The nightly schema check (krizaka-internal#4881): the job runs inside the app the dev cluster's firewall trusts, so nothing depends on a machine's IP.
+  # Prints « no drift » or the drifted tables and columns (lib/schema-expected.json), exits 1 on drift: the app-level JOB_INVOCATION_FAILED alert mails the owners.
   - name: schema-drift
     kind: SCHEDULED
     schedule:
