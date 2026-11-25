@@ -13,7 +13,6 @@
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "qa-accounts": "node scripts/qa-accounts.mjs",
-    "db:drift": "esbuild scripts/schema-drift.mts --bundle --platform=node --format=esm --target=node22 --banner:js=\"import{createRequire}from'node:module';const require=createRequire(import.meta.url);\" --log-level=warning --outfile=node_modules/.cache/schema-drift.mjs && node node_modules/.cache/schema-drift.mjs",
     "db:rebuild": "esbuild scripts/db-rebuild.mts --bundle --platform=node --format=esm '--external:@krizaka/*' --external:pg --external:zod '--external:date-fns*' '--external:@date-fns/*' --log-level=warning --outfile=node_modules/.cache/db-rebuild.mjs && node node_modules/.cache/db-rebuild.mjs"
   },
   "dependencies": {
