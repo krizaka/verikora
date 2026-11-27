@@ -5,67 +5,67 @@
     {
       "platform": "android",
       "flow": "documents-en",
-      "seconds": 6.9,
-      "capturedAt": "2026-11-26T15:29:57.699Z",
+      "seconds": 6.3,
+      "capturedAt": "2026-11-27T15:16:52.147Z",
       "files": {
-        "webm": "sites/verikora/download/android-documents-en.4a23daeb31.webm",
-        "mp4": "sites/verikora/download/android-documents-en.1886a647fa.mp4",
-        "poster": "sites/verikora/download/android-documents-en.912c89ab15.jpg"
+        "webm": "sites/verikora/download/android-documents-en.43c15cab98.webm",
+        "mp4": "sites/verikora/download/android-documents-en.e1c37bd0f0.mp4",
+        "poster": "sites/verikora/download/android-documents-en.0c8d4af5c8.jpg"
       }
     },
     {
       "platform": "mac",
       "flow": "library-fr",
-      "seconds": 6.4,
-      "capturedAt": "2026-11-26T15:30:10.121Z",
+      "seconds": 6.6,
+      "capturedAt": "2026-11-27T15:17:07.764Z",
       "files": {
-        "webm": "sites/verikora/download/mac-library-fr.6f4be167ba.webm",
-        "mp4": "sites/verikora/download/mac-library-fr.eb6ec11c48.mp4",
-        "poster": "sites/verikora/download/mac-library-fr.8ea3b911ed.jpg"
+        "webm": "sites/verikora/download/mac-library-fr.3c20aae472.webm",
+        "mp4": "sites/verikora/download/mac-library-fr.1324cee03d.mp4",
+        "poster": "sites/verikora/download/mac-library-fr.e141c741b5.jpg"
       }
     },
     {
       "platform": "web",
       "flow": "binder-en",
-      "seconds": 4.9,
-      "capturedAt": "2026-11-26T15:29:34.138Z",
+      "seconds": 4.3,
+      "capturedAt": "2026-11-27T15:16:28.876Z",
       "files": {
-        "webm": "sites/verikora/download/web-binder-en.2af059fe32.webm",
-        "mp4": "sites/verikora/download/web-binder-en.4ee7096a78.mp4",
-        "poster": "sites/verikora/download/web-binder-en.2e71a9f4f0.jpg"
+        "webm": "sites/verikora/download/web-binder-en.9ae44d8d40.webm",
+        "mp4": "sites/verikora/download/web-binder-en.f776848443.mp4",
+        "poster": "sites/verikora/download/web-binder-en.8edb0037b6.jpg"
       }
     },
     {
       "platform": "web",
       "flow": "binder-fr",
-      "seconds": 4.7,
-      "capturedAt": "2026-11-26T15:29:39.042Z",
+      "seconds": 4.6,
+      "capturedAt": "2026-11-27T15:16:33.867Z",
       "files": {
-        "webm": "sites/verikora/download/web-binder-fr.fc7ff9e087.webm",
-        "mp4": "sites/verikora/download/web-binder-fr.f527d0be20.mp4",
-        "poster": "sites/verikora/download/web-binder-fr.7a7bee0fd9.jpg"
+        "webm": "sites/verikora/download/web-binder-fr.24b9434e49.webm",
+        "mp4": "sites/verikora/download/web-binder-fr.503e3838e6.mp4",
+        "poster": "sites/verikora/download/web-binder-fr.d9d4c646ce.jpg"
       }
     },
     {
       "platform": "web",
       "flow": "report-en",
-      "seconds": 2.8,
-      "capturedAt": "2026-11-26T15:29:42.669Z",
+      "seconds": 3.3,
+      "capturedAt": "2026-11-27T15:16:40.214Z",
       "files": {
-        "webm": "sites/verikora/download/web-report-en.a1c879285b.webm",
-        "mp4": "sites/verikora/download/web-report-en.fe94e02f80.mp4",
-        "poster": "sites/verikora/download/web-report-en.04ef7facb6.jpg"
+        "webm": "sites/verikora/download/web-report-en.064983319f.webm",
+        "mp4": "sites/verikora/download/web-report-en.cf8d69a27a.mp4",
+        "poster": "sites/verikora/download/web-report-en.1c87e64f65.jpg"
       }
     },
     {
       "platform": "web",
       "flow": "report-fr",
       "seconds": 2.7,
-      "capturedAt": "2026-11-26T15:29:46.428Z",
+      "capturedAt": "2026-11-27T15:16:43.297Z",
       "files": {
-        "webm": "sites/verikora/download/web-report-fr.10a6b3df79.webm",
-        "mp4": "sites/verikora/download/web-report-fr.9ea2544fae.mp4",
-        "poster": "sites/verikora/download/web-report-fr.90647351de.jpg"
+        "webm": "sites/verikora/download/web-report-fr.b7c710f0e3.webm",
+        "mp4": "sites/verikora/download/web-report-fr.9fdf40f78d.mp4",
+        "poster": "sites/verikora/download/web-report-fr.9131f0db00.jpg"
       }
     }
   ]
